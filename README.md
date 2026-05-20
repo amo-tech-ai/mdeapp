@@ -2,8 +2,7 @@
 
 The mdeai application — an AI-first, chat-first, map-first discovery and ticketing platform for Medellín. Built on Next.js 16 + CopilotKit 1.55.2 + Mastra + Gemini 3.5 Flash + Supabase.
 
-> Phase 1, Week 1. This repo is the **new** mdeai codebase. The legacy app at `/home/sk/mde/` is frozen reference only.
-
+> Phase 1, Week 1. This repo is the **new** mdeai codebase. 
 ## Architecture
 
 | Layer | Tech |
