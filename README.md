@@ -17,27 +17,6 @@ The mdeai application — an AI-first, chat-first, map-first discovery and ticke
 | Maps | `@vis.gl/react-google-maps` + `@googlemaps/js-markerclusterer` (W5+) |
 | Payments | Stripe (W9+) |
 
-## Hard rules (from `/home/sk/mdeai/CLAUDE.md`)
-
-- Production AI is Gemini only. No `@anthropic-ai/*` SDK. No `@ai-sdk/openai` in `mdeapp/src/**`.
-- Never put service-role keys in `mdeapp/src/**` — they live in `mdeapp/supabase/functions/` only.
-- Every new Supabase table needs RLS enabled + ≥ 1 policy.
-- Every Places API New call includes `X-Goog-FieldMask`.
-- Every `<AdvancedMarker>` has a `mapId` on its parent `<Map>`.
-- CopilotKit pinned at `1.55.2` for Phase 1.
-
-## Local development
-
-```bash
-npm install
-npm run dev          # concurrently: next dev --turbopack (ui :3000) + mastra dev (agent)
-npm run dev:debug    # LOG_LEVEL=debug npm run dev
-npm run build
-npm run audit        # npm audit --audit-level=high
-```
-
-Requires `mdeapp/.env.local` populated with: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`, `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID`, `GOOGLE_GENERATIVE_AI_API_KEY`, `LOG_LEVEL`. See `.env.example`.
-
 ## Project layout
 
 ```
