@@ -3,9 +3,9 @@ import {
   ExperimentalEmptyAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
 } from "@copilotkit/runtime";
-import { MastraAgent } from "@ag-ui/mastra";
 import { NextRequest } from "next/server";
 import { mastra } from "@/mastra";
+import { getLocalAgentsWithLogging } from "@/mastra/copilotkit/logging-mastra-agent";
 
 // 1. You can use any service adapter here for multi-agent support.
 const serviceAdapter = new ExperimentalEmptyAdapter();
@@ -15,8 +15,7 @@ export const POST = async (req: NextRequest) => {
   // 3. Create the CopilotRuntime instance and utilize the Mastra AG-UI
   //    integration to get the remote agents. Cache this for performance.
   const runtime = new CopilotRuntime({
-    // @ts-expect-error - ignore for now, typing error
-    agents: MastraAgent.getLocalAgents({ mastra }),
+    agents: getLocalAgentsWithLogging({ mastra }),
   });
 
   const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({

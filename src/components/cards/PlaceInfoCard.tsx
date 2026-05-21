@@ -1,28 +1,16 @@
-// PlaceInfoCard — mdeai-themed adaptation of CopilotKit's WeatherCard demo.
-// Pattern: tool-based generative UI via `useCopilotAction({ render, available: "disabled" })`.
-// Foundation for W5 RentalCard / VenueCard / GroundedPlaceCard (PRD §20).
+// PlaceInfoCard — generative UI for places (PRD §20). shadcn Card + Badge.
 
-function PinIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="w-12 h-12 text-white/90"
-    >
-      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z" />
-    </svg>
-  );
-}
+import { MapPin } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export interface PlaceInfoCardProps {
   name?: string;
-  category?: string; // e.g. "Café", "Apartment", "Live Music Venue"
-  neighborhood?: string; // e.g. "El Poblado", "Laureles"
-  priceCop?: number; // mock — COP per night / per ticket
-  ratingStars?: number; // 0-5
+  category?: string;
+  neighborhood?: string;
+  priceCop?: number;
+  ratingStars?: number;
   distanceKm?: number;
-  themeColor?: string;
 }
 
 export function PlaceInfoCard({
@@ -32,51 +20,52 @@ export function PlaceInfoCard({
   priceCop,
   ratingStars,
   distanceKm,
-  themeColor = "#0f766e", // mdeai teal default
 }: PlaceInfoCardProps) {
   const priceLabel =
     priceCop !== undefined
-      ? `${priceCop.toLocaleString("es-CO")} COP`
+      ? `${priceCop.toLocaleString("en-US")} COP`
       : "—";
-  const ratingLabel = ratingStars !== undefined ? `${ratingStars.toFixed(1)} ★` : "—";
-  const distLabel = distanceKm !== undefined ? `${distanceKm.toFixed(1)} km` : "—";
+  const ratingLabel =
+    ratingStars !== undefined ? `${ratingStars.toFixed(1)} ★` : "—";
+  const distLabel =
+    distanceKm !== undefined ? `${distanceKm.toFixed(1)} km` : "—";
 
   return (
-    <div
-      style={{ backgroundColor: themeColor }}
-      className="rounded-xl shadow-xl mt-6 mb-4 max-w-md w-full"
-    >
-      <div className="bg-white/15 p-4 w-full">
-        <div className="flex items-center justify-between">
+    <Card className="mt-6 mb-4 max-w-md w-full border-primary/20 bg-primary text-primary-foreground">
+      <CardHeader className="flex flex-row items-start justify-between gap-2 pb-2">
+        <div className="flex flex-col gap-1">
+          <CardTitle className="text-xl capitalize text-primary-foreground">
+            {name}
+          </CardTitle>
+          <Badge
+            variant="secondary"
+            className="w-fit bg-primary-foreground/15 text-primary-foreground"
+          >
+            {category}
+          </Badge>
+        </div>
+        <MapPin className="size-12 shrink-0 opacity-90" aria-hidden />
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <div className="flex items-end justify-between">
+          <p className="text-2xl font-bold">{priceLabel}</p>
+          <p className="text-sm opacity-90">{neighborhood}</p>
+        </div>
+        <div className="grid grid-cols-3 gap-2 border-t border-primary-foreground/30 pt-4 text-center text-sm">
           <div>
-            <h3 className="text-xl font-bold text-white capitalize">{name}</h3>
-            <p className="text-white/90 text-sm">{category}</p>
+            <p className="text-xs opacity-80">Rating</p>
+            <p className="font-medium">{ratingLabel}</p>
           </div>
-          <PinIcon />
-        </div>
-
-        <div className="mt-3 flex items-end justify-between">
-          <div className="text-2xl font-bold text-white">{priceLabel}</div>
-          <div className="text-sm text-white/90">{neighborhood}</div>
-        </div>
-
-        <div className="mt-4 pt-4 border-t border-white/30">
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div>
-              <p className="text-white/80 text-xs">Rating</p>
-              <p className="text-white font-medium">{ratingLabel}</p>
-            </div>
-            <div>
-              <p className="text-white/80 text-xs">Distance</p>
-              <p className="text-white font-medium">{distLabel}</p>
-            </div>
-            <div>
-              <p className="text-white/80 text-xs">Type</p>
-              <p className="text-white font-medium capitalize">{category}</p>
-            </div>
+          <div>
+            <p className="text-xs opacity-80">Distance</p>
+            <p className="font-medium">{distLabel}</p>
+          </div>
+          <div>
+            <p className="text-xs opacity-80">Type</p>
+            <p className="font-medium capitalize">{category}</p>
           </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

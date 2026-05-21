@@ -1,20 +1,25 @@
-// ApprovalPanel — mdeai-themed adaptation of CopilotKit's MoonCard HITL demo.
-// Pattern: human-in-the-loop via `useCopilotAction({ renderAndWaitForResponse })`.
-// Foundation for W3 Roberto's event-publish HITL flow (PRD §17).
-// Strict state machine per PRD §17: PENDING → APPROVED | REJECTED | EDIT.
+"use client";
+
+// ApprovalPanel — HITL demo shell (W4 adds Sheet + renderAndWaitForResponse).
 
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export type ApprovalDecision = "approved" | "edit" | "rejected";
 
 export interface ApprovalPanelProps {
   title?: string;
   description?: string;
-  /** Display summary of what's being approved (e.g., event draft preview). */
   preview?: React.ReactNode;
   status: "inProgress" | "executing" | "complete";
   respond?: (response: string) => void;
-  themeColor?: string;
 }
 
 export function ApprovalPanel({
@@ -23,7 +28,6 @@ export function ApprovalPanel({
   preview,
   status,
   respond,
-  themeColor = "#0f766e", // mdeai teal default
 }: ApprovalPanelProps) {
   const [decision, setDecision] = useState<ApprovalDecision | null>(null);
 
@@ -43,76 +47,66 @@ export function ApprovalPanel({
   };
 
   return (
-    <div
-      style={{ backgroundColor: themeColor }}
-      className="rounded-2xl shadow-xl max-w-md w-full mt-6"
-    >
-      <div className="bg-white/15 backdrop-blur-md p-6 w-full rounded-2xl">
+    <Card className="mt-6 max-w-md w-full border-primary/30">
+      <CardHeader className="text-center">
         {decision === "approved" ? (
-          <div className="text-center">
-            <div className="text-6xl mb-3">✅</div>
-            <h2 className="text-xl font-bold text-white mb-1">Approved</h2>
-            <p className="text-white/90 text-sm">Proceeding with the action.</p>
-          </div>
+          <>
+            <p className="text-5xl mb-2" aria-hidden>
+              ✅
+            </p>
+            <CardTitle>Approved</CardTitle>
+            <CardDescription>Proceeding with the action.</CardDescription>
+          </>
         ) : decision === "edit" ? (
-          <div className="text-center">
-            <div className="text-6xl mb-3">✏️</div>
-            <h2 className="text-xl font-bold text-white mb-1">Edit Requested</h2>
-            <p className="text-white/90 text-sm">User wants to modify the proposal.</p>
-          </div>
+          <>
+            <p className="text-5xl mb-2" aria-hidden>
+              ✏️
+            </p>
+            <CardTitle>Edit requested</CardTitle>
+            <CardDescription>
+              User wants to modify the proposal.
+            </CardDescription>
+          </>
         ) : decision === "rejected" ? (
-          <div className="text-center">
-            <div className="text-6xl mb-3">❌</div>
-            <h2 className="text-xl font-bold text-white mb-1">Rejected</h2>
-            <p className="text-white/90 text-sm">User declined the action.</p>
-          </div>
+          <>
+            <p className="text-5xl mb-2" aria-hidden>
+              ❌
+            </p>
+            <CardTitle>Rejected</CardTitle>
+            <CardDescription>User declined the action.</CardDescription>
+          </>
         ) : (
           <>
-            <div className="text-center mb-5">
-              <div className="text-5xl mb-3">📋</div>
-              <h2 className="text-xl font-bold text-white mb-1">{title}</h2>
-              <p className="text-white/90 text-sm">{description}</p>
-            </div>
-
-            {preview && (
-              <div className="bg-white/10 rounded-lg p-3 mb-4 text-white/95 text-sm">
-                {preview}
-              </div>
-            )}
-
-            {status === "executing" && (
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  onClick={handleApprove}
-                  className="px-3 py-3 rounded-xl bg-white text-black font-bold
-                    shadow-lg hover:shadow-xl transition-all
-                    hover:scale-105 active:scale-95"
-                >
-                  ✅ Approve
-                </button>
-                <button
-                  onClick={handleEdit}
-                  className="px-3 py-3 rounded-xl bg-black/15 text-white font-bold
-                    border-2 border-white/30 shadow-lg
-                    transition-all hover:scale-105 active:scale-95
-                    hover:bg-black/25"
-                >
-                  ✏️ Edit
-                </button>
-                <button
-                  onClick={handleReject}
-                  className="px-3 py-3 rounded-xl bg-black/15 text-white font-bold
-                    border-2 border-white/30 shadow-lg
-                    transition-all hover:scale-105 active:scale-95
-                    hover:bg-black/25"
-                >
-                  ❌ Reject
-                </button>
-              </div>
-            )}
+            <p className="text-5xl mb-2" aria-hidden>
+              📋
+            </p>
+            <CardTitle>{title}</CardTitle>
+            <CardDescription>{description}</CardDescription>
           </>
         )}
-      </div>
-    </div>
+      </CardHeader>
+
+      {decision === null && preview && (
+        <CardContent className="pt-0">
+          <div className="rounded-lg bg-muted p-3 text-sm">{preview}</div>
+        </CardContent>
+      )}
+
+      {decision === null && status === "executing" && (
+        <CardContent className="pt-0">
+          <div className="grid grid-cols-3 gap-2">
+            <Button type="button" onClick={handleApprove}>
+              Approve
+            </Button>
+            <Button type="button" variant="outline" onClick={handleEdit}>
+              Edit
+            </Button>
+            <Button type="button" variant="destructive" onClick={handleReject}>
+              Reject
+            </Button>
+          </div>
+        </CardContent>
+      )}
+    </Card>
   );
 }
