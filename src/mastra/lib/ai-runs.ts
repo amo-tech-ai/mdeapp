@@ -2,7 +2,10 @@
  * Best-effort ai_runs writer for the Mastra runtime (CopilotKit Pattern 1).
  * Never throws — failures are logged and swallowed so chat is never blocked.
  */
-import { createClient } from "@supabase/supabase-js";
+import {
+  createServiceRoleClient,
+  resetServiceRoleClientForTests,
+} from "@/lib/supabase/service";
 
 /** Postgres agent_type enum labels used by mdeapp agents (no `ping` until migration). */
 export type AgentType =
@@ -31,24 +34,16 @@ export interface MastraRunRecord {
   metadata?: Record<string, unknown>;
 }
 
-let _client: ReturnType<typeof createClient> | null = null;
-
-function getServiceClient() {
-  if (_client) return _client;
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) return null;
-  _client = createClient(url, key, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
-  return _client;
+/** @internal Vitest only — clears singleton between tests */
+export function resetAiRunsClientForTests(): void {
+  resetServiceRoleClientForTests();
 }
 
 export async function recordMastraRun(record: MastraRunRecord): Promise<void> {
-  const client = getServiceClient();
+  const client = createServiceRoleClient();
   if (!client) {
     console.warn(
-      "[ai-runs] SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY missing — skipping ai_runs insert",
+      "[ai-runs] Supabase URL/key missing (need SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY, or NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SECRET_KEY) — skipping insert",
     );
     return;
   }

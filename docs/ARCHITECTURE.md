@@ -15,7 +15,7 @@ flowchart LR
     end
     subgraph Vercel["Next.js 16 on Vercel"]
         Route["/api/copilotkit<br/>CopilotRuntime"]
-        Mastra["Mastra in-process<br/>MastraAgent.getLocalAgents"]
+        Mastra["Mastra in-process<br/>getLocalAgentsWithLogging"]
         Agents["pingAgent (W1)<br/>hostEventAgent (W3)<br/>rentalAgent (W5)<br/>routerAgent (W6)<br/>conciergeAgent (W6)"]
     end
     subgraph External["External services"]

@@ -12,6 +12,7 @@
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "verify:supabase": "node --env-file=.env.local scripts/verify-supabase-env.mjs",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "audit": "npm audit --audit-level=high",
