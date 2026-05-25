@@ -44,4 +44,31 @@ next-env.d.ts
 
 .mastra/
 
+# Mastra local dev DB
+mastra-agent-memory.db
+mastra-agent-memory.db-*
+
+# Playwright / smoke artifacts
+test-results/
+playwright-report/
+
+# Local scratch
+tmp/
+workspace/
+
+# IDE / agent tooling (repo-local)
+.agents/
+.codex/
+.cursor/
+.gemini/
+.vscode/
+.zed/
+.mcp.json
+opencode.json
+skills-lock.json
+config/
+
+# Accidental scrape / dump files
+-
+
 .env*.local
