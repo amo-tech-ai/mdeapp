@@ -2,17 +2,67 @@ import { describe, it, expect } from "vitest";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { mastra } from "@/mastra";
-import { pingAgent, MdeState } from "@/mastra/agents";
+import {
+  pingAgent,
+  routerAgent,
+  rentalAgent,
+  conciergeAgent,
+  eventAgent,
+  evaluationAgent,
+  MdeState,
+} from "@/mastra/agents";
+import { hostEventAgent } from "@/mastra/agents/host-event";
 
 const root = resolve(import.meta.dirname, "../..");
 
 describe("mdeapp smoke", () => {
+  it("mastra instance registers legacy port agents", () => {
+    const keys = Object.keys(mastra.listAgents() ?? {});
+    expect(keys).toEqual(
+      expect.arrayContaining([
+        "pingAgent",
+        "routerAgent",
+        "rentalAgent",
+        "conciergeAgent",
+        "eventAgent",
+        "evaluationAgent",
+        "hostEventAgent",
+      ]),
+    );
+    expect(keys).toHaveLength(7);
+  });
+
+  it("hostEventAgent is registered", () => {
+    expect(hostEventAgent.id).toBe("host-event-agent");
+    expect(mastra.getAgentById("host-event-agent")).toBeDefined();
+  });
+
   it("mastra instance has pingAgent registered", () => {
     expect(mastra.getAgentById("ping-agent")).toBeDefined();
   });
 
+  it("mastra instance registers read-only workspace with skills", () => {
+    const ws = mastra.getWorkspace();
+    expect(ws).toBeDefined();
+    expect(ws?.skills).toBeDefined();
+  });
+
   it('pingAgent id is "ping-agent"', () => {
     expect(pingAgent.id).toBe("ping-agent");
+  });
+
+  it("all product agents use gemini-3.5-flash", () => {
+    const agents = [
+      pingAgent,
+      routerAgent,
+      rentalAgent,
+      conciergeAgent,
+      eventAgent,
+      evaluationAgent,
+    ];
+    for (const agent of agents) {
+      expect(JSON.stringify(agent.model)).toMatch(/gemini-3\.5-flash/);
+    }
   });
 
   it("MdeState schema accepts the canonical shape", () => {
