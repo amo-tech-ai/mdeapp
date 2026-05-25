@@ -1,13 +1,12 @@
 "use client";
 
-// ApprovalPanel — HITL demo shell (W4 adds Sheet + renderAndWaitForResponse).
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -19,9 +18,10 @@ export interface ApprovalPanelProps {
   description?: string;
   preview?: React.ReactNode;
   status: "inProgress" | "executing" | "complete";
-  respond?: (response: string) => void;
+  respond?: (response: ApprovalDecision) => void;
 }
 
+/** Generic HITL shell — host wizard uses EventPublishApprovalPanel. */
 export function ApprovalPanel({
   title = "Approval required",
   description = "Review the proposed action.",
@@ -29,84 +29,34 @@ export function ApprovalPanel({
   status,
   respond,
 }: ApprovalPanelProps) {
-  const [decision, setDecision] = useState<ApprovalDecision | null>(null);
+  const [decided, setDecided] = useState<ApprovalDecision | null>(null);
 
-  const handleApprove = () => {
-    setDecision("approved");
-    respond?.("APPROVED — proceed with the action.");
-  };
-
-  const handleEdit = () => {
-    setDecision("edit");
-    respond?.("EDIT — user wants to modify the proposal before approving.");
-  };
-
-  const handleReject = () => {
-    setDecision("rejected");
-    respond?.("REJECTED — user declined the proposed action.");
+  const onClick = (decision: ApprovalDecision) => {
+    if (decided) return;
+    setDecided(decision);
+    respond?.(decision);
   };
 
   return (
-    <Card className="mt-6 max-w-md w-full border-primary/30">
-      <CardHeader className="text-center">
-        {decision === "approved" ? (
-          <>
-            <p className="text-5xl mb-2" aria-hidden>
-              ✅
-            </p>
-            <CardTitle>Approved</CardTitle>
-            <CardDescription>Proceeding with the action.</CardDescription>
-          </>
-        ) : decision === "edit" ? (
-          <>
-            <p className="text-5xl mb-2" aria-hidden>
-              ✏️
-            </p>
-            <CardTitle>Edit requested</CardTitle>
-            <CardDescription>
-              User wants to modify the proposal.
-            </CardDescription>
-          </>
-        ) : decision === "rejected" ? (
-          <>
-            <p className="text-5xl mb-2" aria-hidden>
-              ❌
-            </p>
-            <CardTitle>Rejected</CardTitle>
-            <CardDescription>User declined the action.</CardDescription>
-          </>
-        ) : (
-          <>
-            <p className="text-5xl mb-2" aria-hidden>
-              📋
-            </p>
-            <CardTitle>{title}</CardTitle>
-            <CardDescription>{description}</CardDescription>
-          </>
-        )}
+    <Card className="mt-6 max-w-md w-full border-primary/30" data-testid="approval-panel">
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
-
-      {decision === null && preview && (
-        <CardContent className="pt-0">
-          <div className="rounded-lg bg-muted p-3 text-sm">{preview}</div>
-        </CardContent>
-      )}
-
-      {decision === null && status === "executing" && (
-        <CardContent className="pt-0">
-          <div className="grid grid-cols-3 gap-2">
-            <Button type="button" onClick={handleApprove}>
-              Approve
-            </Button>
-            <Button type="button" variant="outline" onClick={handleEdit}>
-              Edit
-            </Button>
-            <Button type="button" variant="destructive" onClick={handleReject}>
-              Reject
-            </Button>
-          </div>
-        </CardContent>
-      )}
+      {preview ? <CardContent className="pt-0">{preview}</CardContent> : null}
+      {decided === null && status === "executing" ? (
+        <CardFooter className="flex flex-wrap gap-2">
+          <Button type="button" onClick={() => onClick("approved")}>
+            Approve
+          </Button>
+          <Button type="button" variant="outline" onClick={() => onClick("edit")}>
+            Edit
+          </Button>
+          <Button type="button" variant="destructive" onClick={() => onClick("rejected")}>
+            Reject
+          </Button>
+        </CardFooter>
+      ) : null}
     </Card>
   );
 }

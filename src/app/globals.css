@@ -124,7 +124,7 @@ html {
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --ring: oklch(0.696 0.17 175);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -149,5 +149,31 @@ html {
   }
   html {
     @apply font-sans;
+  }
+}
+
+/* MAP-007B — center CopilotChat fills column */
+.mde-center-copilot-chat.copilotKitChat {
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  width: 100%;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.mde-center-copilot-chat .copilotKitMessages {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.mde-center-copilot-chat .copilotKitInput {
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-testid="map-sheet-content"] {
+    transition: none !important;
   }
 }
