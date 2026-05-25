@@ -2,7 +2,11 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { sendMagicLink, type AuthActionResult } from "@/app/auth/actions";
+import {
+  sendMagicLink,
+  signInWithGoogle,
+  type AuthActionResult,
+} from "@/app/auth/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,8 +32,8 @@ export function AuthEmailForm({ mode, nextPath, authError }: AuthEmailFormProps)
   const title = mode === "login" ? "Sign in" : "Create account";
   const description =
     mode === "login"
-      ? "Roberto, Camila, and hosts use the same Supabase project as legacy mdeai. No password — we email a magic link."
-      : "New here? Enter your email and we will send a magic link. First click creates your account.";
+      ? "Sign in with Google or a magic link — no password."
+      : "Create your mdeai account with email or Google. If this email is already registered, you'll sign in instead.";
 
   return (
     <Card className="w-full max-w-md">
@@ -81,6 +85,14 @@ export function AuthEmailForm({ mode, nextPath, authError }: AuthEmailFormProps)
             </Button>
           </form>
         )}
+        {!result?.ok ? (
+          <form action={signInWithGoogle} className="mt-4">
+            <input type="hidden" name="next" value={nextPath} />
+            <Button type="submit" variant="outline" className="w-full">
+              Continue with Google
+            </Button>
+          </form>
+        ) : null}
       </CardContent>
       <CardFooter className="flex flex-col gap-2 text-sm text-muted-foreground">
         {mode === "login" ? (
