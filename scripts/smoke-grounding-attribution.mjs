@@ -34,9 +34,13 @@ async function assertSidecarGroundingLite() {
   const health = await fetch(`${ADK_BASE}/health`);
   if (!health.ok) fail(`ADK sidecar down at ${ADK_BASE}/health → ${health.status}`);
 
+  const headers = { "Content-Type": "application/json" };
+  const token = process.env.ADK_INTERNAL_TOKEN?.trim();
+  if (token) headers.Authorization = `Bearer ${token}`;
+
   const res = await fetch(`${ADK_BASE}/v1/grounding/invoke`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify({
       tool: "search_grounded_places",
       query: QUERY,
@@ -117,15 +121,24 @@ async function main() {
       timeout: TIMEOUT_MS,
     });
 
-    await page.locator('[data-testid="grounding-attribution"]').first().waitFor({
-      state: "visible",
-      timeout: 30_000,
-    });
+    await page
+      .locator(
+        '[data-testid="grounding-attribution"], [data-testid="grounding-attribution-compact"]',
+      )
+      .first()
+      .waitFor({
+        state: "visible",
+        timeout: 30_000,
+      });
 
     await page.waitForTimeout(2500);
 
     const groundedCards = await page.locator('[data-testid="grounded-card"]').count();
-    const attribution = await page.locator('[data-testid="grounding-attribution"]').count();
+    const cardTitles = await page.locator('[data-testid="grounded-card"] h3').allTextContents();
+    const genericPlaceCards = cardTitles.filter((t) => t.trim() === "Place");
+    const attribution = await page.locator(
+      '[data-testid="grounding-attribution"], [data-testid="grounding-attribution-compact"]',
+    ).count();
     const pins = await page.locator('[data-testid="map-pin"]').count();
     const pinLabels = await page.locator("[data-pin-id]").evaluateAll((els) =>
       els.map((el) => el.getAttribute("aria-label")),
@@ -148,6 +161,7 @@ async function main() {
 
     console.log(`✅ Chat grounded UI`);
     console.log(`   query: ${QUERY}`);
+    console.log(`   card titles: ${cardTitles.join(" | ")}`);
     console.log(`   grounded-card count: ${groundedCards}`);
     console.log(`   grounding-attribution count: ${attribution}`);
     console.log(`   map-pin count: ${pins}`);
@@ -156,7 +170,12 @@ async function main() {
     console.log(`   console errors (critical): ${criticalErrors.length}`);
 
     if (groundedCards < 1) fail("Expected ≥1 [data-testid=grounded-card]");
-    if (attribution < 1) fail("Expected [data-testid=grounding-attribution] visible");
+    if (genericPlaceCards.length > 0) {
+      fail(`Expected no generic Place cards, got ${genericPlaceCards.length}`);
+    }
+    if (attribution < 1) {
+      fail("Expected grounding attribution footer (compact or full)");
+    }
     if (pins < 1) fail(`Expected ≥1 map pin, got ${pins}`);
     if (blocked.length) {
       for (const e of blocked) console.log("  •", e.slice(0, 300));
