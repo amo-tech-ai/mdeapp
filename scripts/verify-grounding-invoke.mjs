@@ -14,9 +14,13 @@ async function main() {
   const health = await fetch(`${base}/health`);
   if (!health.ok) fail(`ADK sidecar down at ${base}/health → ${health.status}`);
 
+  const headers = { "Content-Type": "application/json" };
+  const token = process.env.ADK_INTERNAL_TOKEN?.trim();
+  if (token) headers.Authorization = `Bearer ${token}`;
+
   const res = await fetch(`${base}/v1/grounding/invoke`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify({
       tool: "search_grounded_places",
       query: "quiet cafés Laureles Medellín",
@@ -40,6 +44,9 @@ async function main() {
   const first = pins[0];
   if (first.latitude == null || first.mapsUrl == null) {
     fail("pin missing latitude or mapsUrl");
+  }
+  if (!first.title || first.title === "Place") {
+    fail(`pin title must not be generic Place, got: ${first.title}`);
   }
   console.log(`   first: ${first.title} (${first.latitude}, ${first.longitude})`);
   console.log("\n✅ MAP-002 sidecar invoke OK");

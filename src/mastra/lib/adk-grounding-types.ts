@@ -19,7 +19,13 @@ export const adkGroundingInvokeResponseSchema = z.object({
   places: z.array(z.record(z.unknown())).default([]),
   pins: z.array(z.record(z.unknown())).default([]),
   attribution: z
-    .array(z.object({ source: z.string(), placeUri: z.string().url() }))
+    .array(
+      z.object({
+        source: z.string(),
+        placeUri: z.string().url(),
+        title: z.string().optional(),
+      }),
+    )
     .default([]),
   citations: z.array(z.record(z.unknown())).default([]),
   confidence: z.number().default(0),

@@ -1,6 +1,7 @@
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 import { invokeAdkGrounding } from "../lib/adk-grounding-client";
+import { mapAdkGroundingPins } from "../lib/map-adk-grounding-pins";
 import { incrementAndCheckGroundingQuota } from "../lib/grounding-quota";
 
 export const searchGroundedPlacesTool = createTool({
@@ -26,6 +27,7 @@ export const searchGroundedPlacesTool = createTool({
       z.object({
         source: z.string(),
         placeUri: z.string().url(),
+        title: z.string().optional(),
       }),
     ),
     source: z.literal("grounding"),
@@ -52,20 +54,17 @@ export const searchGroundedPlacesTool = createTool({
         metadata: adk.metadata,
       };
     }
-    const results = adk.pins.map((row) => {
-      const r = row as Record<string, unknown>;
-      return {
-        id: String(r.id ?? ""),
-        title: String(r.title ?? "Place"),
-        latitude: Number(r.latitude),
-        longitude: Number(r.longitude),
-        placeId: r.placeId ? String(r.placeId) : undefined,
-        mapsUrl: r.mapsUrl ? String(r.mapsUrl) : undefined,
-      };
-    });
+    const results = mapAdkGroundingPins(adk).map((row) => ({
+      ...row,
+      mapsUrl: row.mapsUrl as string | undefined,
+    }));
+    const attribution = adk.attribution.map((row, index) => ({
+      ...row,
+      title: results[index]?.title,
+    }));
     return {
       results,
-      attribution: adk.attribution,
+      attribution,
       source: "grounding" as const,
       metadata: adk.metadata,
     };

@@ -50,4 +50,27 @@ describe("normalizeToolOutput", () => {
     expect(pins[0]?.title).toBe("Pausa Coffee & Brunch");
     expect(pins[0]?.placeUri).toBe("https://maps.google.com/?cid=123");
   });
+
+  it("maps grounded rows with generic Place title via attribution", () => {
+    const { pins } = normalizeToolOutput("grounded", {
+      source: "grounding",
+      results: [
+        {
+          id: "ChIJabc",
+          title: "Place",
+          latitude: 6.246,
+          longitude: -75.589,
+          mapsUrl: "https://maps.google.com/?cid=123",
+        },
+      ],
+      attribution: [
+        {
+          source: "google_maps_grounding",
+          placeUri: "https://maps.google.com/?cid=123",
+          title: "Pausa Coffee & Brunch - Google Maps",
+        },
+      ],
+    });
+    expect(pins[0]?.title).toBe("Pausa Coffee & Brunch");
+  });
 });

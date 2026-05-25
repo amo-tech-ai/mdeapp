@@ -22,6 +22,11 @@ import { useMapContext } from "@/platform/maps/map-context";
 import { normalizeToolOutput } from "@/platform/maps/normalize-tool-output";
 import { normalizeToolEnvelope } from "@/lib/normalize-tool-envelope";
 import {
+  dedupeAttributionForDisplay,
+  parseGroundedToolResult,
+  shouldShowGroundingAttribution,
+} from "@/lib/parse-grounded-tool-result";
+import {
   getToolRenderErrorMessage,
   isToolRenderEmpty,
   isToolRenderError,
@@ -533,11 +538,11 @@ export function SearchToolRenders() {
         </ToolRenderShell>
       );
     }
-    const envelope = result as {
-      results?: Array<{ id: string; title: string; mapsUrl?: string }>;
-      attribution?: Array<{ source?: string; placeUri?: string }>;
-    };
-    const rows = envelope.results ?? [];
+    const { results: rows, attribution } = parseGroundedToolResult(result);
+    const cardMapsUrls = rows.map((r) => r.mapsUrl).filter(Boolean) as string[];
+    const attributionRows = shouldShowGroundingAttribution(attribution, cardMapsUrls)
+      ? dedupeAttributionForDisplay(attribution, cardMapsUrls)
+      : [];
     return (
       <ToolRenderShell kind="grounded" status={status}>
         {rows.length === 0 ? (
@@ -558,7 +563,24 @@ export function SearchToolRenders() {
                   mapsUrl={r.mapsUrl}
                 />
               ))}
-              <GroundingAttribution rows={envelope.attribution ?? []} />
+              {attributionRows.length > 0 ? (
+                <GroundingAttribution rows={attributionRows} compact />
+              ) : rows.some((r) => r.mapsUrl) ? (
+                <p
+                  className="mt-1 text-xs text-muted-foreground"
+                  data-testid="grounding-attribution-compact"
+                >
+                  Sources:{" "}
+                  <a
+                    href="https://maps.google.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary underline"
+                  >
+                    Google Maps
+                  </a>
+                </p>
+              ) : null}
             </div>
           </>
         )}

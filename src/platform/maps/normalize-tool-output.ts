@@ -1,3 +1,8 @@
+import { normalizeToolEnvelope } from "@/lib/normalize-tool-envelope";
+import {
+  parseGroundedToolResult,
+  resolveGroundedTitle,
+} from "@/lib/parse-grounded-tool-result";
 import {
   mapPinSchema,
   type MapPin,
@@ -19,6 +24,8 @@ function itemToPin(
   item: LatLngItem,
   category: MapPinCategory,
   source: MapPin["source"],
+  index: number,
+  attribution: Array<{ placeUri?: string; title?: string }>,
 ): MapPin | null {
   const lat = item.latitude;
   const lng = item.longitude;
@@ -26,7 +33,12 @@ function itemToPin(
     return null;
   }
 
-  const title = (item.title ?? item.name ?? "").trim() || "Place";
+  const mapsUrl = item.mapsUrl ?? undefined;
+  const title =
+    category === "grounded"
+      ? resolveGroundedTitle(item, index, attribution, mapsUrl)
+      : (item.title ?? item.name ?? "").trim() || "Place";
+
   const pin = {
     id: `${category}-${item.id}`,
     category,
@@ -35,7 +47,7 @@ function itemToPin(
     title,
     subtitle: item.neighborhood,
     placeId: item.placeId ?? undefined,
-    placeUri: item.mapsUrl ?? undefined,
+    placeUri: mapsUrl,
     source,
     meta: { rawId: item.id },
   };
@@ -53,28 +65,48 @@ export function normalizeToolOutput(
   category: MapPinCategory,
   result: unknown,
 ): NormalizedToolOutput {
-  if (!result || typeof result !== "object") {
-    return { pins: [], resultCount: 0 };
+  if (category === "grounded") {
+    const parsed = parseGroundedToolResult(result);
+    const pins: MapPin[] = [];
+    for (const row of parsed.results) {
+      if (row.latitude == null || row.longitude == null) continue;
+      const pin = itemToPin(
+        {
+          id: row.id,
+          title: row.title,
+          latitude: row.latitude,
+          longitude: row.longitude,
+          placeId: row.placeId,
+          mapsUrl: row.mapsUrl,
+        },
+        category,
+        "grounding",
+        pins.length,
+        parsed.attribution,
+      );
+      if (pin) pins.push(pin);
+    }
+    return { pins, resultCount: parsed.results.length };
   }
 
-  const envelope = result as {
-    results?: LatLngItem[];
-    source?: string;
-  };
+  const envelope = normalizeToolEnvelope(result);
+  const rows = (envelope.results ?? []) as LatLngItem[];
+  const root = result && typeof result === "object" ? result : {};
+  const sourceField =
+    (root as { source?: string }).source ?? envelope.source;
 
-  const rows = Array.isArray(envelope.results) ? envelope.results : [];
   const source =
-    envelope.source === "supabase" ||
-    envelope.source === "sql" ||
-    envelope.source === "places"
+    sourceField === "supabase" ||
+    sourceField === "sql" ||
+    sourceField === "places"
       ? "sql"
-      : envelope.source === "grounding"
+      : sourceField === "grounding"
         ? "grounding"
         : "tool";
 
   const pins: MapPin[] = [];
-  for (const row of rows) {
-    const pin = itemToPin(row, category, source);
+  for (const [index, row] of rows.entries()) {
+    const pin = itemToPin(row, category, source, index, []);
     if (pin) pins.push(pin);
   }
 
