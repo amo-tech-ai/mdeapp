@@ -7,6 +7,17 @@ import {
 const DEFAULT_URL = "http://localhost:8000";
 const TIMEOUT_MS = 30_000;
 
+function adkGroundingHeaders(): Record<string, string> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  const token = process.env.ADK_INTERNAL_TOKEN?.trim();
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  return headers;
+}
+
 export type AdkGroundingInvokeInput = {
   query: string;
   pageSize?: number;
@@ -32,7 +43,7 @@ export async function invokeAdkGrounding(
   try {
     const res = await fetch(`${base}/v1/grounding/invoke`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: adkGroundingHeaders(),
       body: JSON.stringify(body),
       signal: controller.signal,
     });

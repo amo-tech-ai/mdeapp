@@ -4,6 +4,7 @@ import { AdvancedMarker, Map } from "@vis.gl/react-google-maps";
 import { MapFocusController } from "@/components/maps/MapFocusController";
 import { MapResizeSignal } from "@/components/maps/MapResizeSignal";
 import { useMapContext } from "@/platform/maps/map-context";
+import { isPinDimmed } from "@/platform/maps/active-map-category";
 import { hasConfiguredMapId } from "@/lib/google-maps-map-id";
 import {
   DEFAULT_MAP_ZOOM,
@@ -32,7 +33,7 @@ export function ChatMap({
   mapResizeSignal?: number;
   mapDomId?: string;
 }) {
-  const { pins, selectedPinId, setSelectedPinId } = useMapContext();
+  const { pins, activeMapCategory, selectedPinId, setSelectedPinId } = useMapContext();
   const mapId = getGoogleMapsMapId();
   const renderablePins = pins.filter((pin) => isValidPinCoord(pin.lat, pin.lng));
   return (
@@ -57,6 +58,7 @@ export function ChatMap({
           ? renderablePins.map((pin) => {
           const selected = selectedPinId === pin.id;
           const color = CATEGORY_COLORS[pin.category] ?? "var(--primary)";
+          const dimmed = isPinDimmed(pin, activeMapCategory);
           return (
             <AdvancedMarker
               key={pin.id}
@@ -68,12 +70,14 @@ export function ChatMap({
                 data-testid="map-pin"
                 data-pin-id={pin.id}
                 data-pin-category={pin.category}
+                data-pin-dimmed={dimmed ? "true" : "false"}
                 role="img"
                 aria-label={`${pin.category}: ${pin.title}`}
                 className="flex size-8 items-center justify-center rounded-full border-2 border-white text-xs font-semibold text-white shadow-md transition-transform"
                 style={{
                   backgroundColor: color,
                   transform: selected ? "scale(1.15)" : "scale(1)",
+                  opacity: dimmed ? 0.35 : 1,
                 }}
               >
                 •

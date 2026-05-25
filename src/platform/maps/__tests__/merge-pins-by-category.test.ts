@@ -37,4 +37,22 @@ describe("mergePinsByCategory", () => {
     ]);
     expect(merged).toHaveLength(1);
   });
+
+  it("keeps rental pins when merging grounded category", () => {
+    const grounded = (id: string, lat: number): MapPin => ({
+      id: `grounded-${id}`,
+      category: "grounded",
+      lat,
+      lng: -75.59,
+      title: `Café ${id}`,
+      source: "grounding",
+    });
+    const existing = [rental("r1", 6.25), rental("r2", 6.251)];
+    const merged = mergePinsByCategory(existing, "grounded", [
+      grounded("c1", 6.246),
+      grounded("c2", 6.247),
+    ]);
+    expect(merged.filter((p) => p.category === "rental")).toHaveLength(2);
+    expect(merged.filter((p) => p.category === "grounded")).toHaveLength(2);
+  });
 });

@@ -29,4 +29,25 @@ describe("normalizeToolOutput", () => {
   it("returns empty for invalid envelope", () => {
     expect(normalizeToolOutput("event", null).pins).toEqual([]);
   });
+
+  it("maps grounded tool rows with mapsUrl to pins", () => {
+    const { pins } = normalizeToolOutput("grounded", {
+      source: "grounding",
+      results: [
+        {
+          id: "ChIJabc",
+          title: "Pausa Coffee & Brunch",
+          latitude: 6.246,
+          longitude: -75.589,
+          placeId: "ChIJabc",
+          mapsUrl: "https://maps.google.com/?cid=123",
+        },
+      ],
+    });
+    expect(pins).toHaveLength(1);
+    expect(pins[0]?.category).toBe("grounded");
+    expect(pins[0]?.source).toBe("grounding");
+    expect(pins[0]?.title).toBe("Pausa Coffee & Brunch");
+    expect(pins[0]?.placeUri).toBe("https://maps.google.com/?cid=123");
+  });
 });

@@ -13,6 +13,34 @@ describe("invokeAdkGrounding", () => {
     expect(out.pins).toEqual([]);
   });
 
+  it("sends Bearer when ADK_INTERNAL_TOKEN is set", async () => {
+    vi.stubEnv("ADK_INTERNAL_TOKEN", "test-secret-token");
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ pins: [], attribution: [], metadata: {} }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    await invokeAdkGrounding({ query: "cafés" });
+    const init = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    expect(init.headers).toMatchObject({
+      Authorization: "Bearer test-secret-token",
+    });
+  });
+
+  it("returns fail-closed on 401 without Bearer", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 401,
+        json: async () => ({ detail: "missing_bearer_token" }),
+      }),
+    );
+    const out = await invokeAdkGrounding({ query: "cafés" });
+    expect(out.metadata?.reason).toBe("adk_unavailable");
+    expect(out.metadata?.status).toBe(401);
+  });
+
   it("parses successful ADK JSON", async () => {
     vi.stubGlobal(
       "fetch",

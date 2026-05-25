@@ -555,7 +555,7 @@ export function SearchToolRenders() {
                   key={r.id}
                   testId="grounded-card"
                   title={r.title}
-                  subtitle={r.mapsUrl ? "Google Maps" : undefined}
+                  mapsUrl={r.mapsUrl}
                 />
               ))}
               <GroundingAttribution rows={envelope.attribution ?? []} />

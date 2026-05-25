@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { EmptyState } from "@/components/empty/empty-state";
 import { useMapContext } from "@/platform/maps/map-context";
+import { pinsForMapResults } from "@/platform/maps/active-map-category";
 import type { MapPin } from "@/platform/contracts";
 
 const CATEGORY_LABEL: Record<string, string> = {
@@ -11,7 +12,7 @@ const CATEGORY_LABEL: Record<string, string> = {
   event: "Event",
   attraction: "Attraction",
   venue: "Venue",
-  grounded: "Place",
+  grounded: "Café / place",
   mock: "Area",
 };
 
@@ -44,15 +45,26 @@ function PinResultRow({
       {pin.subtitle ? (
         <p className="text-xs text-muted-foreground">{pin.subtitle}</p>
       ) : null}
+      {pin.placeUri ? (
+        <a
+          href={pin.placeUri}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-1 inline-block text-xs text-primary underline-offset-2 hover:underline"
+          onClick={(e) => e.stopPropagation()}
+        >
+          Open in Google Maps
+        </a>
+      ) : null}
     </button>
   );
 }
 
 /** MAP-007B — pin list under center chat; synced with MapContext + F50. */
 export function ChatResultsColumn({ compact = false }: { compact?: boolean }) {
-  const { pins, selectedPinId, panToPin } = useMapContext();
+  const { pins, activeMapCategory, selectedPinId, panToPin } = useMapContext();
   const listRef = useRef<HTMLDivElement>(null);
-  const visiblePins = pins.filter((p) => p.source !== "mock");
+  const visiblePins = pinsForMapResults(pins, activeMapCategory);
 
   useEffect(() => {
     if (!selectedPinId || !listRef.current) return;

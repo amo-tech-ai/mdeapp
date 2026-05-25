@@ -14,6 +14,8 @@ import { MOCK_LAYOUT_PIN } from "./map-config";
 
 type MapContextValue = {
   pins: MapPin[];
+  /** Latest tool category that pushed pins — drives map results panel focus */
+  activeMapCategory: MapPinCategory | null;
   selectedPinId: string | null;
   setSelectedPinId: (id: string | null) => void;
   /** Set by focusMapPin frontend tool — ChatMap pans when this changes */
@@ -37,6 +39,8 @@ export function MapContextProvider({
   seedMockPin?: boolean;
 }) {
   const [pins, setPins] = useState<MapPin[]>(seedMockPin ? [MOCK_LAYOUT_PIN] : []);
+  const [activeMapCategory, setActiveMapCategory] =
+    useState<MapPinCategory | null>(null);
   const [selectedPinId, setSelectedPinId] = useState<string | null>(null);
   const [focusPinId, setFocusPinId] = useState<string | null>(null);
 
@@ -51,6 +55,9 @@ export function MapContextProvider({
 
   const mergePins = useCallback(
     (category: MapPinCategory, incoming: MapPin[]) => {
+      if (incoming.length > 0) {
+        setActiveMapCategory(category);
+      }
       setPins((prev) => mergePinsByCategory(prev, category, incoming));
     },
     [],
@@ -58,12 +65,14 @@ export function MapContextProvider({
 
   const clearPins = useCallback(() => {
     setPins(seedMockPin ? [MOCK_LAYOUT_PIN] : []);
+    setActiveMapCategory(null);
     setSelectedPinId(null);
   }, [seedMockPin]);
 
   const value = useMemo(
     () => ({
       pins,
+      activeMapCategory,
       selectedPinId,
       setSelectedPinId,
       focusPinId,
@@ -74,6 +83,7 @@ export function MapContextProvider({
     }),
     [
       pins,
+      activeMapCategory,
       selectedPinId,
       focusPinId,
       panToPin,
