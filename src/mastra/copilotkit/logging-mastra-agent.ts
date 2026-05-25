@@ -13,6 +13,7 @@ import { logAgentRunForTurn } from "@/mastra/lib/log-agent-run";
 export type LoggingMastraAgentConfig = MastraAgentConfig & {
   /** Key in Mastra({ agents: { pingAgent } }) — not agent.id */
   agentMapKey: string;
+  userId?: string | null;
 };
 
 /**
@@ -21,10 +22,12 @@ export type LoggingMastraAgentConfig = MastraAgentConfig & {
  */
 export class LoggingMastraAgent extends MastraAgent {
   private readonly agentMapKey: string;
+  private readonly userId: string | null;
 
   constructor(config: LoggingMastraAgentConfig) {
     super(config);
     this.agentMapKey = config.agentMapKey;
+    this.userId = config.userId ?? null;
   }
 
   override clone(): LoggingMastraAgent {
@@ -34,6 +37,7 @@ export class LoggingMastraAgent extends MastraAgent {
       agent: this.agent,
       resourceId: this.resourceId,
       requestContext: this.requestContext,
+      userId: this.userId,
     });
   }
 
@@ -50,7 +54,7 @@ export class LoggingMastraAgent extends MastraAgent {
       finalize(() => {
         void logAgentRunForTurn({
           agentMapKey: this.agentMapKey,
-          userId: null,
+          userId: this.userId,
           status,
           durationMs: Date.now() - startMs,
           metadata: {
@@ -67,9 +71,15 @@ export class LoggingMastraAgent extends MastraAgent {
 export function getLocalAgentsWithLogging(options: {
   mastra: Mastra;
   resourceId?: string;
+  userId?: string | null;
   requestContext?: RequestContext;
 }): Record<string, LoggingMastraAgent> {
-  const { mastra, resourceId = "anonymous", requestContext } = options;
+  const {
+    mastra,
+    resourceId = "anonymous",
+    userId = null,
+    requestContext,
+  } = options;
   const agents = mastra.listAgents() ?? {};
 
   return Object.entries(agents).reduce<Record<string, LoggingMastraAgent>>(
@@ -80,6 +90,7 @@ export function getLocalAgentsWithLogging(options: {
         agent,
         resourceId,
         requestContext,
+        userId,
       });
       return acc;
     },

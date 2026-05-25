@@ -40,4 +40,21 @@ describe("log-agent-run", () => {
       }),
     );
   });
+
+  it("logAgentRunForTurn propagates authenticated user_id", async () => {
+    await logAgentRunForTurn({
+      agentMapKey: "conciergeAgent",
+      userId: "camila-uuid-123",
+      status: "success",
+      durationMs: 120,
+    });
+
+    expect(recordMastraRun).toHaveBeenCalledWith(
+      expect.objectContaining({
+        user_id: "camila-uuid-123",
+        agent_name: "concierge-agent",
+        agent_type: "general_concierge",
+      }),
+    );
+  });
 });

@@ -1,5 +1,6 @@
-// Mastra tools registry.
-// W1 ping echo: no tools.
-// W3 will add: set_event_basics, set_venue, add_ticket_tier, preview_and_publish (Roberto host flow).
-// W5 will add: search_rentals, search_events, search_grounded_places.
-export {};
+export { classifyIntentTool } from "./classify-intent";
+export { searchRentalsTool } from "./search-rentals";
+export { searchEventsTool } from "./search-events";
+export { searchRestaurantsTool } from "./search-restaurants";
+export { searchAttractionsTool } from "./search-attractions";
+export { searchGroundedPlacesTool } from "./search-grounded-places";

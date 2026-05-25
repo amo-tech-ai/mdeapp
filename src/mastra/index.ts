@@ -1,18 +1,41 @@
 import { Mastra } from "@mastra/core/mastra";
-import { LibSQLStore } from "@mastra/libsql";
-import { pingAgent } from "./agents";
 import { ConsoleLogger, LogLevel } from "@mastra/core/logger";
+import { getMastraStorage } from "./lib/storage";
+import {
+  pingAgent,
+  routerAgent,
+  rentalAgent,
+  conciergeAgent,
+  eventAgent,
+  evaluationAgent,
+  hostEventAgent,
+} from "./agents";
+import {
+  rentalSearchWorkflow,
+  eventDiscoveryWorkflow,
+  conciergeRoutingWorkflow,
+} from "./workflows";
+import { workspace } from "./workspaces";
 
 const LOG_LEVEL = (process.env.LOG_LEVEL as LogLevel) || "info";
 
 export const mastra = new Mastra({
   agents: {
     pingAgent,
+    routerAgent,
+    rentalAgent,
+    conciergeAgent,
+    eventAgent,
+    evaluationAgent,
+    hostEventAgent,
   },
-  storage: new LibSQLStore({
-    id: "mastra-storage",
-    url: ":memory:",
-  }),
+  workflows: {
+    rentalSearchWorkflow,
+    eventDiscoveryWorkflow,
+    conciergeRoutingWorkflow,
+  },
+  workspace,
+  storage: getMastraStorage(),
   logger: new ConsoleLogger({
     level: LOG_LEVEL,
   }),
