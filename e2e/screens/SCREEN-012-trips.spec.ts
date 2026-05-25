@@ -3,6 +3,7 @@ import {
   assertConsoleClean,
   captureScreenEvidence,
   DESKTOP_VIEWPORT,
+  expectProtectedRouteLoginRedirect,
   MOBILE_VIEWPORT,
   watchCriticalConsoleErrors,
 } from "../helpers/screen-evidence";
@@ -15,22 +16,19 @@ test.describe(`${SCREEN_ID} trips dashboard`, () => {
   test.describe("desktop", () => {
     test.use({ viewport: DESKTOP_VIEWPORT });
 
-    test("trips page renders shell and empty sign-in state", async ({ page }) => {
+    test("logged-out /trips redirects to login with next", async ({ page }) => {
       const errors = watchCriticalConsoleErrors(page);
-      const res = await page.goto("/trips", { waitUntil: "domcontentloaded" });
-      expect(res?.status()).toBe(200);
-      await expect(page.getByTestId("trips-dashboard")).toBeVisible();
-      await expect(page.getByTestId("trips-empty-signin")).toBeVisible();
-      await captureScreenEvidence(page, SCREEN_ID, "desktop-trips-empty.png");
+      await expectProtectedRouteLoginRedirect(page, "/trips");
+      await captureScreenEvidence(page, SCREEN_ID, "desktop-trips-login-redirect.png");
       assertConsoleClean(errors);
     });
 
-    test("nav trips link reaches /trips", async ({ page }) => {
+    test("nav trips link reaches login gate", async ({ page }) => {
       const errors = watchCriticalConsoleErrors(page);
       await page.goto("/", { waitUntil: "domcontentloaded" });
       await page.getByTestId("nav-trips-link").click();
-      await expect(page).toHaveURL(/\/trips$/);
-      await expect(page.getByTestId("trips-dashboard")).toBeVisible();
+      await expect(page).toHaveURL(/\/login/);
+      expect(page.url()).toContain("next=%2Ftrips");
       assertConsoleClean(errors);
     });
   });
@@ -38,11 +36,10 @@ test.describe(`${SCREEN_ID} trips dashboard`, () => {
   test.describe("mobile", () => {
     test.use({ viewport: MOBILE_VIEWPORT });
 
-    test("trips page renders on mobile", async ({ page }) => {
+    test("logged-out /trips redirects on mobile", async ({ page }) => {
       const errors = watchCriticalConsoleErrors(page);
-      await page.goto("/trips", { waitUntil: "domcontentloaded" });
-      await expect(page.getByTestId("trips-dashboard")).toBeVisible();
-      await captureScreenEvidence(page, SCREEN_ID, "mobile-trips-empty.png");
+      await expectProtectedRouteLoginRedirect(page, "/trips");
+      await captureScreenEvidence(page, SCREEN_ID, "mobile-trips-login-redirect.png");
       assertConsoleClean(errors);
     });
   });

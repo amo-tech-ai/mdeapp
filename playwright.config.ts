@@ -23,7 +23,7 @@ export default defineConfig({
   webServer: process.env.PW_SKIP_WEBSERVER
     ? undefined
     : {
-        command: "E2E_BYPASS_AUTH=1 npm run dev:ui",
+        command: "npm run dev:ui",
         url: baseURL,
         reuseExistingServer: true,
         timeout: 120_000,

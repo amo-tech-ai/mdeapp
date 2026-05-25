@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 import { collectCriticalConsoleErrors } from "./maps-layout";
 
 const SCREENSHOT_ROOT = path.join(process.cwd(), "tmp", "screenshots");
@@ -44,3 +44,15 @@ export function assertConsoleClean(errors: string[]): void {
 
 export const DESKTOP_VIEWPORT = { width: 1280, height: 900 } as const;
 export const MOBILE_VIEWPORT = { width: 390, height: 844 } as const;
+
+/** AUTH-003 — anonymous users hit middleware → /login?next=… */
+export async function expectProtectedRouteLoginRedirect(
+  page: Page,
+  path: string,
+): Promise<void> {
+  await page.goto(path, { waitUntil: "domcontentloaded" });
+  await expect(page).toHaveURL(/\/login/);
+  const next = encodeURIComponent(path);
+  expect(page.url()).toContain(`next=${next}`);
+  await expect(page.locator('[data-slot="card-title"]', { hasText: "Sign in" })).toBeVisible();
+}

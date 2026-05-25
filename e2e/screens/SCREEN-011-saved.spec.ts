@@ -3,6 +3,7 @@ import {
   assertConsoleClean,
   captureScreenEvidence,
   DESKTOP_VIEWPORT,
+  expectProtectedRouteLoginRedirect,
   MOBILE_VIEWPORT,
   watchCriticalConsoleErrors,
 } from "../helpers/screen-evidence";
@@ -15,22 +16,19 @@ test.describe(`${SCREEN_ID} saved collections`, () => {
   test.describe("desktop", () => {
     test.use({ viewport: DESKTOP_VIEWPORT });
 
-    test("saved page renders shell and empty sign-in state", async ({ page }) => {
+    test("logged-out /saved redirects to login with next", async ({ page }) => {
       const errors = watchCriticalConsoleErrors(page);
-      const res = await page.goto("/saved", { waitUntil: "domcontentloaded" });
-      expect(res?.status()).toBe(200);
-      await expect(page.getByTestId("saved-page")).toBeVisible();
-      await expect(page.getByTestId("saved-empty-signin")).toBeVisible();
-      await captureScreenEvidence(page, SCREEN_ID, "desktop-saved-empty.png");
+      await expectProtectedRouteLoginRedirect(page, "/saved");
+      await captureScreenEvidence(page, SCREEN_ID, "desktop-saved-login-redirect.png");
       assertConsoleClean(errors);
     });
 
-    test("nav saved link reaches /saved", async ({ page }) => {
+    test("nav saved link reaches login gate", async ({ page }) => {
       const errors = watchCriticalConsoleErrors(page);
       await page.goto("/", { waitUntil: "domcontentloaded" });
       await page.getByTestId("nav-saved-link").click();
-      await expect(page).toHaveURL(/\/saved$/);
-      await expect(page.getByTestId("saved-page")).toBeVisible();
+      await expect(page).toHaveURL(/\/login/);
+      expect(page.url()).toContain("next=%2Fsaved");
       assertConsoleClean(errors);
     });
   });
@@ -38,11 +36,10 @@ test.describe(`${SCREEN_ID} saved collections`, () => {
   test.describe("mobile", () => {
     test.use({ viewport: MOBILE_VIEWPORT });
 
-    test("saved page renders on mobile", async ({ page }) => {
+    test("logged-out /saved redirects on mobile", async ({ page }) => {
       const errors = watchCriticalConsoleErrors(page);
-      await page.goto("/saved", { waitUntil: "domcontentloaded" });
-      await expect(page.getByTestId("saved-page")).toBeVisible();
-      await captureScreenEvidence(page, SCREEN_ID, "mobile-saved-empty.png");
+      await expectProtectedRouteLoginRedirect(page, "/saved");
+      await captureScreenEvidence(page, SCREEN_ID, "mobile-saved-login-redirect.png");
       assertConsoleClean(errors);
     });
   });

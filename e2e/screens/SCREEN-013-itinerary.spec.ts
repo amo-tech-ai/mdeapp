@@ -5,6 +5,7 @@ import {
   assertConsoleClean,
   captureScreenEvidence,
   DESKTOP_VIEWPORT,
+  expectProtectedRouteLoginRedirect,
   MOBILE_VIEWPORT,
   watchCriticalConsoleErrors,
 } from "../helpers/screen-evidence";
@@ -18,14 +19,9 @@ test.describe(`${SCREEN_ID} itinerary panel`, () => {
   test.describe("desktop", () => {
     test.use({ viewport: DESKTOP_VIEWPORT });
 
-    test("trip workspace sign-in gate when logged out", async ({ page }) => {
+    test("logged-out trip detail redirects to login with next", async ({ page }) => {
       const errors = watchCriticalConsoleErrors(page);
-      const res = await page.goto(`/trips/${DEMO_TRIP_ID}`, {
-        waitUntil: "domcontentloaded",
-      });
-      expect(res?.status()).toBe(200);
-      await expect(page.getByTestId("trips-workspace")).toBeVisible();
-      await expect(page.getByRole("link", { name: "Sign in" })).toBeVisible();
+      await expectProtectedRouteLoginRedirect(page, `/trips/${DEMO_TRIP_ID}`);
       assertConsoleClean(errors);
     });
 
