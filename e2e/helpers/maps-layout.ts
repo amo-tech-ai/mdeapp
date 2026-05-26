@@ -98,10 +98,15 @@ export async function waitForGroundingAttribution(page: Page) {
     state: "visible",
     timeout: 120_000,
   });
-  await page.locator('[data-testid="grounding-attribution"]').first().waitFor({
-    state: "visible",
-    timeout: 30_000,
-  });
+  await page
+    .locator(
+      '[data-testid="grounding-attribution"], [data-testid="grounding-attribution-compact"]',
+    )
+    .first()
+    .waitFor({
+      state: "visible",
+      timeout: 30_000,
+    });
 }
 
 export function collectCriticalConsoleErrors(

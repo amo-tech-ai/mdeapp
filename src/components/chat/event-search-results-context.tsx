@@ -18,6 +18,7 @@ export type EventSearchResultRow = {
   startsAt: string;
   pricePerTicket: number;
   imageUrl?: string;
+  sourceUrl?: string;
 };
 
 type EventSearchResultsContextValue = {

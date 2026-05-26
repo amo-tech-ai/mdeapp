@@ -25,6 +25,11 @@ export type AdkGroundingInvokeInput = {
   requestId?: string;
 };
 
+export type AdkSearchGroundingInvokeInput = {
+  query: string;
+  requestId?: string;
+};
+
 export async function invokeAdkGrounding(
   input: AdkGroundingInvokeInput,
 ): Promise<AdkGroundingInvokeResponse> {
@@ -58,6 +63,45 @@ export async function invokeAdkGrounding(
     return adkGroundingInvokeResponseSchema.parse({
       metadata: { reason: "adk_unavailable" },
     });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export async function invokeAdkSearchGrounding(
+  input: AdkSearchGroundingInvokeInput,
+): Promise<unknown> {
+  const base = process.env.ADK_GROUNDING_URL?.trim() || DEFAULT_URL;
+  const body = adkGroundingInvokeRequestSchema.parse({
+    tool: "search_grounded_events",
+    query: input.query,
+    requestId: input.requestId,
+  });
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+  try {
+    const res = await fetch(`${base}/v1/grounding/invoke`, {
+      method: "POST",
+      headers: adkGroundingHeaders(),
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      return {
+        citations: [],
+        confidence: 0,
+        metadata: { reason: "adk_unavailable", status: res.status },
+      };
+    }
+    return await res.json();
+  } catch {
+    return {
+      citations: [],
+      confidence: 0,
+      metadata: { reason: "adk_unavailable" },
+    };
   } finally {
     clearTimeout(timer);
   }

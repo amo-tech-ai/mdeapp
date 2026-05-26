@@ -9,7 +9,7 @@ describe("conciergeAgent", () => {
     expect(conciergeAgent.id).toBe("concierge-agent");
   });
 
-  it("registers all five search tools including grounding", async () => {
+  it("registers all search tools including grounding and web events", async () => {
     const tools = await conciergeAgent.listTools();
     const toolIds = Object.values(tools).map((tool) => tool.id);
     expect(toolIds).toEqual(
@@ -19,9 +19,10 @@ describe("conciergeAgent", () => {
         "search-restaurants",
         "search-attractions",
         "search-grounded-places",
+        "search-web-grounded-events",
       ]),
     );
-    expect(toolIds.filter((id) => id.startsWith("search-"))).toHaveLength(5);
+    expect(toolIds.filter((id) => id.startsWith("search-"))).toHaveLength(6);
   });
 
   it("working memory schema accepts concierge state shape", () => {
@@ -63,6 +64,19 @@ describe("conciergeAgent", () => {
     expect(instructions).toContain("do NOT repeat card fields");
     expect(instructions).toContain("event clarification gate");
     expect(instructions).toContain("genericAskPending");
+  });
+
+  it("instructions require web grounding after fresh event queries", async () => {
+    const instructions = await conciergeAgent.getInstructions();
+    expect(instructions).toContain("search-web-grounded-events");
+    expect(instructions).toContain("From the web");
+    expect(instructions).toContain("fewer than 3 rows");
+  });
+
+  it("instructions forbid repeating grounded place names in prose", async () => {
+    const instructions = await conciergeAgent.getInstructions();
+    expect(instructions).toContain("NEVER list cafés or venues by name");
+    expect(instructions).toContain("View on Google Maps");
   });
 
   it("working memory accepts event query with genericAskPending", () => {

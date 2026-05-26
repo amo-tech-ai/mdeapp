@@ -15,4 +15,19 @@ describe("PlaceResultCard", () => {
     expect(html).not.toMatch(/<h3[^>]*>Place<\/h3>/);
     expect(html).toContain("Open in Google Maps");
   });
+
+  it("renders pin sync attrs when onSelect provided", () => {
+    const html = renderToStaticMarkup(
+      <PlaceResultCard
+        testId="grounded-card"
+        title="Café Euge"
+        pinId="grounded-1"
+        selected
+        onSelect={() => undefined}
+        mapsUrl="https://maps.google.com/?cid=1"
+      />,
+    );
+    expect(html).toContain('data-pin-id="grounded-1"');
+    expect(html).toContain('data-selected="true"');
+  });
 });

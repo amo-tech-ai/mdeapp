@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ArrowLeft, Minus, Plus, Share2, Ticket } from "lucide-react";
+import { ArrowLeft, Share2 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   BookingCheckoutModal,
   type BookingCheckoutTarget,
 } from "@/components/modals/booking-checkout-modal";
+import { EventTicketTiers } from "@/components/events/event-ticket-tiers";
 import {
   formatEventSchedule,
   formatTicketPrice,
@@ -15,16 +16,6 @@ import {
 } from "@/lib/events/format-event";
 import type { PublicEventDetail, PublicEventTicket } from "@/lib/events/types";
 import { cn } from "@/lib/utils";
-
-type TierQuantities = Record<string, number>;
-
-function initialQuantities(tickets: PublicEventTicket[]): TierQuantities {
-  const next: TierQuantities = {};
-  for (const tier of tickets) {
-    next[tier.id] = ticketsRemaining(tier.qtyTotal, tier.qtySold) > 0 ? 1 : 0;
-  }
-  return next;
-}
 
 function lowestAvailablePrice(tickets: PublicEventTicket[]): PublicEventTicket | null {
   const available = tickets.filter((t) => ticketsRemaining(t.qtyTotal, t.qtySold) > 0);
@@ -37,9 +28,6 @@ type EventDetailViewProps = {
 };
 
 export function EventDetailView({ event }: EventDetailViewProps) {
-  const [quantities, setQuantities] = useState<TierQuantities>(() =>
-    initialQuantities(event.tickets),
-  );
   const [checkout, setCheckout] = useState<BookingCheckoutTarget | null>(null);
 
   const scheduleLabel = formatEventSchedule(event.startsAt, event.endsAt);
@@ -47,26 +35,11 @@ export function EventDetailView({ event }: EventDetailViewProps) {
   const fromTier = useMemo(() => lowestAvailablePrice(event.tickets), [event.tickets]);
   const returnPath = `/events/${event.slug ?? event.id}`;
 
-  const openCheckout = (tier: PublicEventTicket) => {
-    const qty = quantities[tier.id] ?? 1;
-    if (qty < 1) return;
-    setCheckout({
-      event: { id: event.id, name: event.name },
-      tier,
-      quantity: qty,
-    });
-  };
-
   const primaryTier = fromTier ?? event.tickets[0] ?? null;
   const stickyTotal =
-    primaryTier && (quantities[primaryTier.id] ?? 0) > 0
-      ? formatTicketPrice(
-          primaryTier.priceCents * (quantities[primaryTier.id] ?? 1),
-          primaryTier.currency,
-        )
-      : fromTier
-        ? formatTicketPrice(fromTier.priceCents, fromTier.currency)
-        : "Sold out";
+    primaryTier
+      ? formatTicketPrice(primaryTier.priceCents, primaryTier.currency)
+      : "Sold out";
 
   return (
     <>
@@ -147,118 +120,10 @@ export function EventDetailView({ event }: EventDetailViewProps) {
               <p className="text-sm font-medium text-muted-foreground">Sold out</p>
             )}
 
-            <section aria-labelledby="event-tiers-heading">
-              <h2 id="event-tiers-heading" className="text-lg font-semibold">
-                Tickets
-              </h2>
-              <ul className="mt-3 space-y-3" data-testid="event-tier-list">
-                {event.tickets.length === 0 ? (
-                  <li className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
-                    Ticket tiers coming soon. Check back or ask the concierge in chat.
-                  </li>
-                ) : (
-                  event.tickets.map((tier) => {
-                    const remaining = ticketsRemaining(tier.qtyTotal, tier.qtySold);
-                    const soldOut = remaining === 0;
-                    const qty = quantities[tier.id] ?? 0;
-
-                    return (
-                      <li
-                        key={tier.id}
-                        className="rounded-lg border border-border p-3"
-                        data-testid="event-tier-row"
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <div>
-                            <p className="font-medium">{tier.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {formatTicketPrice(tier.priceCents, tier.currency)}
-                            </p>
-                            {!soldOut && remaining <= 20 ? (
-                              <p className="mt-1 text-xs font-medium text-amber-700 dark:text-amber-400">
-                                {remaining} left
-                              </p>
-                            ) : null}
-                            {soldOut ? (
-                              <p className="mt-1 text-xs font-medium text-muted-foreground">
-                                Sold out
-                              </p>
-                            ) : null}
-                          </div>
-                          {!soldOut ? (
-                            <div className="flex items-center gap-2">
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="icon-sm"
-                                aria-label={`Decrease ${tier.name} quantity`}
-                                disabled={qty <= 0}
-                                onClick={() =>
-                                  setQuantities((prev) => ({
-                                    ...prev,
-                                    [tier.id]: Math.max(0, (prev[tier.id] ?? 0) - 1),
-                                  }))
-                                }
-                              >
-                                <Minus className="size-3.5" />
-                              </Button>
-                              <span
-                                className="min-w-[1.5rem] text-center text-sm font-medium"
-                                data-testid="event-tier-qty"
-                              >
-                                {qty}
-                              </span>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="icon-sm"
-                                aria-label={`Increase ${tier.name} quantity`}
-                                disabled={qty >= remaining}
-                                onClick={() =>
-                                  setQuantities((prev) => ({
-                                    ...prev,
-                                    [tier.id]: Math.min(
-                                      remaining,
-                                      (prev[tier.id] ?? 0) + 1,
-                                    ),
-                                  }))
-                                }
-                              >
-                                <Plus className="size-3.5" />
-                              </Button>
-                            </div>
-                          ) : null}
-                        </div>
-                        {!soldOut ? (
-                          <Button
-                            type="button"
-                            className="mt-3 w-full"
-                            size="sm"
-                            disabled={qty < 1}
-                            data-testid="event-tier-buy"
-                            onClick={() => openCheckout(tier)}
-                          >
-                            <Ticket className="size-3.5" aria-hidden />
-                            Buy {tier.name}
-                          </Button>
-                        ) : null}
-                      </li>
-                    );
-                  })
-                )}
-              </ul>
-            </section>
-
-            {primaryTier && ticketsRemaining(primaryTier.qtyTotal, primaryTier.qtySold) > 0 ? (
-              <Button
-                type="button"
-                className="hidden w-full md:inline-flex"
-                data-testid="event-detail-buy-cta"
-                onClick={() => openCheckout(primaryTier)}
-              >
-                Buy tickets
-              </Button>
-            ) : null}
+            <EventTicketTiers
+              event={event}
+              onCheckout={(target) => setCheckout(target)}
+            />
           </aside>
         </div>
 
@@ -271,7 +136,13 @@ export function EventDetailView({ event }: EventDetailViewProps) {
               type="button"
               className="w-full"
               data-testid="event-detail-mobile-buy-cta"
-              onClick={() => openCheckout(primaryTier)}
+              onClick={() =>
+                setCheckout({
+                  event: { id: event.id, name: event.name },
+                  tier: primaryTier,
+                  quantity: 1,
+                })
+              }
             >
               Buy tickets · {stickyTotal}
             </Button>

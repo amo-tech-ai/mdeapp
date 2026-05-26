@@ -6,6 +6,7 @@ import { ChatNavDrawer } from "@/components/chat/chat-nav-drawer";
 import { ChatWorkflowProvider } from "@/components/chat/chat-workflow-context";
 import { RentalUiProvider } from "@/components/chat/rental-ui-context";
 import { EventSearchResultsProvider } from "@/components/chat/event-search-results-context";
+import { EventLocalChatProvider } from "@/components/chat/event-local-chat-context";
 import { FocusMapPinAction } from "@/components/copilot/focus-map-pin-action";
 import { MapUiSync } from "@/components/copilot/map-ui-sync";
 import { SearchToolRenders } from "@/components/copilot/search-tool-renders";
@@ -20,6 +21,7 @@ export function GeoChatShell() {
     <ChatWorkflowProvider>
       <RentalUiProvider>
         <EventSearchResultsProvider>
+        <EventLocalChatProvider>
         <div className="flex min-h-screen flex-col">
           <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-4 py-3 sm:px-6">
             <div className="flex min-w-0 items-center gap-3">
@@ -45,6 +47,7 @@ export function GeoChatShell() {
           <ScheduleViewingModal />
           <VenueDetailSheet />
         </div>
+        </EventLocalChatProvider>
         </EventSearchResultsProvider>
       </RentalUiProvider>
     </ChatWorkflowProvider>

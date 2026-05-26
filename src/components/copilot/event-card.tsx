@@ -17,6 +17,8 @@ export type EventCardProps = {
   selected?: boolean;
   onSelect?: (id: string) => void;
   onOpenDetails?: () => void;
+  /** Opens venue sheet checkout step without navigating away from chat. */
+  onBuyTickets?: () => void;
 };
 
 function formatStartsAt(iso: string) {
@@ -47,10 +49,11 @@ export function EventCard({
   selected,
   onSelect,
   onOpenDetails,
+  onBuyTickets,
 }: EventCardProps) {
   return (
     <article
-      className={`overflow-hidden rounded-lg border bg-card text-sm shadow-sm ${
+      className={`shrink-0 overflow-hidden rounded-lg border bg-card text-sm shadow-sm ${
         selected ? "border-primary ring-2 ring-primary/30" : "border-border"
       }`}
       data-testid="event-card"
@@ -108,15 +111,30 @@ export function EventCard({
           From ${pricePerTicket.toLocaleString("en-US")}
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
-          <Link
-            href={ticketUrl}
-            data-testid="event-buy-cta"
-            className={cn(buttonVariants({ size: "sm", variant: "default" }))}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Ticket className="size-3.5" aria-hidden />
-            Buy tickets
-          </Link>
+          {onBuyTickets ? (
+            <Button
+              type="button"
+              size="sm"
+              data-testid="event-buy-cta"
+              onClick={(e) => {
+                e.stopPropagation();
+                onBuyTickets();
+              }}
+            >
+              <Ticket className="size-3.5" aria-hidden />
+              Buy tickets
+            </Button>
+          ) : (
+            <Link
+              href={ticketUrl}
+              data-testid="event-buy-cta"
+              className={cn(buttonVariants({ size: "sm", variant: "default" }))}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Ticket className="size-3.5" aria-hidden />
+              Buy tickets
+            </Link>
+          )}
           {sourceUrl && sourceUrl !== ticketUrl && sourceUrl.startsWith("http") ? (
             <a
               href={sourceUrl}

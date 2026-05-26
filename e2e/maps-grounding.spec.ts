@@ -34,9 +34,19 @@ test.describe("MAP-007 grounding UI", () => {
     await sendConciergeMessage(page, GROUNDING_QUERY);
     await waitForGroundingAttribution(page);
 
-    await expect(page.locator('[data-testid="grounding-attribution"]')).toBeVisible();
+    await expect(
+      page.locator(
+        '[data-testid="grounding-attribution"], [data-testid="grounding-attribution-compact"]',
+      ).first(),
+    ).toBeVisible();
     const pins = await page.locator('[data-testid="map-pin"]').count();
     expect(pins).toBeGreaterThanOrEqual(1);
+
+    const rating = page.locator('[data-testid="grounded-card-rating"]');
+    const ratingCount = await rating.count();
+    if (ratingCount > 0) {
+      await expect(rating.first()).toContainText("★");
+    }
 
     expect(collectCriticalConsoleErrors(errors)).toEqual([]);
   });

@@ -2,6 +2,8 @@
 
 import { CopilotChat } from "@copilotkit/react-ui";
 
+import { ConciergeChatInput } from "@/components/chat/concierge-chat-input";
+import { ConciergeChatMessages } from "@/components/chat/concierge-chat-messages";
 import { ChatQueryBar } from "@/components/chat/chat-query-bar";
 import { ChatResultsColumn } from "@/components/chat/chat-results-column";
 import { ChatFilterCopilotInstructions } from "@/components/chat/chat-filter-copilot-instructions";
@@ -35,6 +37,8 @@ export function ChatCenterPanel() {
         <CopilotChat
           className="copilotKitChat--center mde-center-copilot-chat min-h-0 flex-1"
           labels={CONCIERGE_LABELS}
+          Input={ConciergeChatInput}
+          Messages={ConciergeChatMessages}
         />
       </div>
       <EventResultsPanel />

@@ -74,4 +74,56 @@ describe("mapAdkGroundingPins", () => {
     });
     expect(rows[0]?.title).toBe("Café Namazzi");
   });
+
+  it("passes enriched sidecar fields through", () => {
+    const rows = mapAdkGroundingPins({
+      places: [],
+      pins: [
+        {
+          id: "ChIJ1",
+          title: "Pergamino",
+          latitude: 6.24,
+          longitude: -75.58,
+          mapsUrl: "https://maps.google.com/?cid=1",
+          rating: 4.8,
+          userRatingCount: 1700,
+          photoName: "places/ChIJ1/photos/x",
+          openNow: true,
+          priceLevel: "PRICE_LEVEL_MODERATE",
+          types: ["cafe", "food"],
+          fieldMaskVersion: "details-v2-mvp-2026-05-20",
+        },
+      ],
+      attribution: [],
+      citations: [],
+      confidence: 0.9,
+      metadata: {},
+    });
+    expect(rows[0]?.rating).toBe(4.8);
+    expect(rows[0]?.photoName).toContain("photos/");
+    expect(rows[0]?.primaryType).toBe("cafe");
+  });
+
+  it("passes directions and reviews URLs from enrichment", () => {
+    const rows = mapAdkGroundingPins({
+      places: [],
+      pins: [
+        {
+          id: "ChIJ1",
+          title: "Café",
+          latitude: 6.24,
+          longitude: -75.58,
+          mapsUrl: "https://maps.google.com/?cid=1",
+          directionsUrl: "https://maps.google.com/maps/dir//x",
+          reviewsUrl: "https://maps.google.com/maps/reviews/x",
+        },
+      ],
+      attribution: [],
+      citations: [],
+      confidence: 0.9,
+      metadata: {},
+    });
+    expect(rows[0]?.directionsUrl).toContain("/dir/");
+    expect(rows[0]?.reviewsUrl).toContain("/reviews/");
+  });
 });

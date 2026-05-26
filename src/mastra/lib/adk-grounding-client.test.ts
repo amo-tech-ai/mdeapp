@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
-import { invokeAdkGrounding } from "./adk-grounding-client";
+import { invokeAdkGrounding, invokeAdkSearchGrounding } from "./adk-grounding-client";
 
 describe("invokeAdkGrounding", () => {
   afterEach(() => {
@@ -41,6 +41,24 @@ describe("invokeAdkGrounding", () => {
     expect(out.metadata?.status).toBe(401);
   });
 
+  it("forwards locationBias in request body", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ pins: [], attribution: [], metadata: {} }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    await invokeAdkGrounding({
+      query: "cafés",
+      locationBias: { latitude: 6.21, longitude: -75.57 },
+    });
+    const init = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    const body = JSON.parse(String(init.body));
+    expect(body.locationBias).toEqual({
+      latitude: 6.21,
+      longitude: -75.57,
+    });
+  });
+
   it("parses successful ADK JSON", async () => {
     vi.stubGlobal(
       "fetch",
@@ -71,5 +89,27 @@ describe("invokeAdkGrounding", () => {
     const out = await invokeAdkGrounding({ query: "cafés" });
     expect(out.pins).toHaveLength(1);
     expect(out.attribution).toHaveLength(1);
+  });
+});
+
+describe("invokeAdkSearchGrounding", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("posts search_grounded_events tool", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        citations: [],
+        metadata: { reason: "search_disabled" },
+      }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    await invokeAdkSearchGrounding({ query: "events Friday" });
+    const init = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    const body = JSON.parse(String(init.body));
+    expect(body.tool).toBe("search_grounded_events");
+    expect(body.query).toBe("events Friday");
   });
 });

@@ -18,6 +18,18 @@ type LatLngItem = {
   longitude?: number | null;
   placeId?: string | null;
   mapsUrl?: string | null;
+  formattedAddress?: string | null;
+  rating?: number | null;
+  userRatingCount?: number | null;
+  priceLevel?: string | null;
+  openNow?: boolean | null;
+  primaryType?: string | null;
+  summary?: string | null;
+  photoName?: string | null;
+  photoAuthorAttributions?: unknown;
+  directionsUrl?: string | null;
+  reviewsUrl?: string | null;
+  fieldMaskVersion?: string | null;
 };
 
 function itemToPin(
@@ -45,11 +57,48 @@ function itemToPin(
     lat,
     lng,
     title,
-    subtitle: item.neighborhood,
+    subtitle:
+      category === "grounded"
+        ? (item.formattedAddress ?? item.neighborhood ?? undefined)
+        : item.neighborhood,
     placeId: item.placeId ?? undefined,
     placeUri: mapsUrl,
     source,
-    meta: { rawId: item.id },
+    meta: {
+      rawId: item.id,
+      ...(category === "grounded" && item.rating != null
+        ? { rating: item.rating }
+        : {}),
+      ...(category === "grounded" && item.userRatingCount != null
+        ? { userRatingCount: item.userRatingCount }
+        : {}),
+      ...(category === "grounded" && item.photoName
+        ? { photoName: item.photoName }
+        : {}),
+      ...(category === "grounded" &&
+      item.photoAuthorAttributions != null &&
+      Array.isArray(item.photoAuthorAttributions)
+        ? { photoAuthorAttributions: item.photoAuthorAttributions }
+        : {}),
+      ...(category === "grounded" && item.openNow != null
+        ? { openNow: item.openNow }
+        : {}),
+      ...(category === "grounded" && item.priceLevel
+        ? { priceLevel: item.priceLevel }
+        : {}),
+      ...(category === "grounded" && item.primaryType
+        ? { primaryType: item.primaryType }
+        : {}),
+      ...(category === "grounded" && item.summary
+        ? { summary: item.summary }
+        : {}),
+      ...(category === "grounded" && item.directionsUrl
+        ? { directionsUrl: item.directionsUrl }
+        : {}),
+      ...(category === "grounded" && item.reviewsUrl
+        ? { reviewsUrl: item.reviewsUrl }
+        : {}),
+    },
   };
 
   const parsed = mapPinSchema.safeParse(pin);
@@ -78,6 +127,18 @@ export function normalizeToolOutput(
           longitude: row.longitude,
           placeId: row.placeId,
           mapsUrl: row.mapsUrl,
+          formattedAddress: row.formattedAddress,
+          rating: row.rating,
+          userRatingCount: row.userRatingCount,
+          priceLevel: row.priceLevel,
+          openNow: row.openNow,
+          primaryType: row.primaryType,
+          summary: row.summary,
+          photoName: row.photoName,
+          photoAuthorAttributions: row.photoAuthorAttributions,
+          directionsUrl: row.directionsUrl,
+          reviewsUrl: row.reviewsUrl,
+          fieldMaskVersion: row.fieldMaskVersion,
         },
         category,
         "grounding",

@@ -107,6 +107,12 @@ async function main() {
       .first()
       .waitFor({ state: "visible", timeout: 15_000 });
 
+    const newChat = page.getByRole("link", { name: /new chat/i });
+    if (await newChat.isVisible().catch(() => false)) {
+      await newChat.click();
+      await page.waitForLoadState("domcontentloaded");
+    }
+
     const input = page.getByRole("textbox", { name: /type a message/i });
     await input.fill(QUERY);
     await page.getByRole("button", { name: /^send$/i }).click();
@@ -139,7 +145,14 @@ async function main() {
     const attribution = await page.locator(
       '[data-testid="grounding-attribution"], [data-testid="grounding-attribution-compact"]',
     ).count();
+    const webCitationLinks = await page.locator(
+      '[data-testid="web-citation-link"]',
+    ).count();
     const pins = await page.locator('[data-testid="map-pin"]').count();
+    const cafeGlyphs = await page.locator('[data-marker-glyph="cafe"]').count();
+    const mapClustering = await page
+      .locator('[data-testid="chat-map"][data-map-clustering="true"]')
+      .count();
     const pinLabels = await page.locator("[data-pin-id]").evaluateAll((els) =>
       els.map((el) => el.getAttribute("aria-label")),
     );
@@ -164,7 +177,9 @@ async function main() {
     console.log(`   card titles: ${cardTitles.join(" | ")}`);
     console.log(`   grounded-card count: ${groundedCards}`);
     console.log(`   grounding-attribution count: ${attribution}`);
+    console.log(`   web-citation links: ${webCitationLinks}`);
     console.log(`   map-pin count: ${pins}`);
+    console.log(`   cafe-marker-glyph count: ${cafeGlyphs}`);
     console.log(`   pin labels: ${pinLabels.join(" | ")}`);
     console.log(`   screenshot: ${screenshotPath}`);
     console.log(`   console errors (critical): ${criticalErrors.length}`);
@@ -177,6 +192,34 @@ async function main() {
       fail("Expected grounding attribution footer (compact or full)");
     }
     if (pins < 1) fail(`Expected ≥1 map pin, got ${pins}`);
+    if (cafeGlyphs < 1) {
+      fail(
+        `MAP-030: expected ≥1 cafe marker (data-marker-glyph=cafe), got ${cafeGlyphs}`,
+      );
+    }
+    if (pins >= 4 && mapClustering < 1) {
+      fail(
+        `MAP-009: expected data-map-clustering=true on chat-map when ≥4 pins, got ${mapClustering}`,
+      );
+    }
+
+    const noPinsYet = page.locator('[data-testid="results-empty"]');
+    const groundedOnMap = page.locator('[data-testid="results-grounded-on-map"]');
+    if (await noPinsYet.isVisible().catch(() => false)) {
+      fail(
+        "MAP-031: Map results strip must not show results-empty when grounded pins are on the map",
+      );
+    }
+    if (!(await groundedOnMap.isVisible().catch(() => false))) {
+      fail(
+        "MAP-031: expected results-grounded-on-map copy when rich grounded cards hide pin rows",
+      );
+    }
+    if (webCitationLinks > 0) {
+      fail(
+        `Café query must not show MAP-002D web citations, got ${webCitationLinks}`,
+      );
+    }
     if (blocked.length) {
       for (const e of blocked) console.log("  •", e.slice(0, 300));
       fail(`${blocked.length} blocked console error(s)`);

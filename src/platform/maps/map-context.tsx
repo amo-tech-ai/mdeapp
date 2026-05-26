@@ -9,11 +9,15 @@ import {
   type ReactNode,
 } from "react";
 import type { MapPin, MapPinCategory } from "@/platform/contracts";
+import type { MapViewport } from "@/lib/map-ui-summary";
 import { mergePinsByCategory } from "./merge-pins-by-category";
 import { MOCK_LAYOUT_PIN } from "./map-config";
 
 type MapContextValue = {
   pins: MapPin[];
+  /** Latest map camera (F50b) — debounced from MapCameraSync */
+  viewport: MapViewport | null;
+  setViewport: (viewport: MapViewport) => void;
   /** Latest tool category that pushed pins — drives map results panel focus */
   activeMapCategory: MapPinCategory | null;
   selectedPinId: string | null;
@@ -27,6 +31,9 @@ type MapContextValue = {
     incoming: MapPin[],
   ) => void;
   clearPins: () => void;
+  /** Increments after tool merge with ≥2 pins — MapFitBoundsController listens. */
+  fitBoundsToken: number;
+  requestFitBounds: () => void;
 };
 
 const MapContext = createContext<MapContextValue | null>(null);
@@ -43,6 +50,26 @@ export function MapContextProvider({
     useState<MapPinCategory | null>(null);
   const [selectedPinId, setSelectedPinId] = useState<string | null>(null);
   const [focusPinId, setFocusPinId] = useState<string | null>(null);
+  const [viewport, setViewportState] = useState<MapViewport | null>(null);
+  const [fitBoundsToken, setFitBoundsToken] = useState(0);
+
+  const setViewport = useCallback((next: MapViewport) => {
+    setViewportState((prev) => {
+      if (
+        prev &&
+        prev.lat === next.lat &&
+        prev.lng === next.lng &&
+        prev.zoom === next.zoom
+      ) {
+        return prev;
+      }
+      return next;
+    });
+  }, []);
+
+  const requestFitBounds = useCallback(() => {
+    setFitBoundsToken((token) => token + 1);
+  }, []);
 
   const panToPin = useCallback((pinId: string) => {
     setSelectedPinId(pinId);
@@ -72,6 +99,8 @@ export function MapContextProvider({
   const value = useMemo(
     () => ({
       pins,
+      viewport,
+      setViewport,
       activeMapCategory,
       selectedPinId,
       setSelectedPinId,
@@ -80,9 +109,13 @@ export function MapContextProvider({
       clearFocusPinRequest,
       mergePinsByCategory: mergePins,
       clearPins,
+      fitBoundsToken,
+      requestFitBounds,
     }),
     [
       pins,
+      viewport,
+      setViewport,
       activeMapCategory,
       selectedPinId,
       focusPinId,
@@ -90,6 +123,8 @@ export function MapContextProvider({
       clearFocusPinRequest,
       mergePins,
       clearPins,
+      fitBoundsToken,
+      requestFitBounds,
     ],
   );
 

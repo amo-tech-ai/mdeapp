@@ -53,4 +53,22 @@ describe("EventCard", () => {
     expect(html).toContain('data-testid="event-buy-cta"');
     expect(html).toContain(`href="/events/${toolPayload.id}"`);
   });
+
+  it("Buy tickets uses button when onBuyTickets is provided (no navigation href)", () => {
+    const html = renderToStaticMarkup(
+      <EventCard
+        id={`event-${toolPayload.id}`}
+        eventId={toolPayload.id}
+        title={toolPayload.title}
+        venue={toolPayload.venue}
+        neighborhood={toolPayload.neighborhood}
+        startsAt={toolPayload.startsAt}
+        pricePerTicket={toolPayload.pricePerTicket}
+        ticketUrl={`/events/${toolPayload.id}`}
+        onBuyTickets={() => {}}
+      />,
+    );
+    expect(html).toContain('data-testid="event-buy-cta"');
+    expect(html).not.toContain(`href="/events/${toolPayload.id}"`);
+  });
 });

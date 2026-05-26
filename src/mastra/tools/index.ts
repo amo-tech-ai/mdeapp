@@ -4,3 +4,4 @@ export { searchEventsTool } from "./search-events";
 export { searchRestaurantsTool } from "./search-restaurants";
 export { searchAttractionsTool } from "./search-attractions";
 export { searchGroundedPlacesTool } from "./search-grounded-places";
+export { searchWebGroundedEventsTool } from "./search-web-grounded-events";

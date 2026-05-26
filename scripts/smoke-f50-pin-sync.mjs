@@ -60,12 +60,7 @@ async function main() {
     const pinCount = await pin.count();
     if (pinCount < 1) smokeFail(`No map pin with data-pin-id=${pinId}`);
 
-    const pinTransform = await pin.first().evaluate((el) => {
-      const inner = el.closest("[class]") ?? el;
-      return getComputedStyle(inner).transform;
-    });
     console.log(`✅ Card click → selected card (${pinId})`);
-    console.log(`   map pin transform: ${pinTransform}`);
 
     await pin.first().click({ force: true });
     await page.waitForTimeout(1000);

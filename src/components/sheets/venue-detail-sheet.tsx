@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -10,25 +9,16 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Calendar, Ticket } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Calendar } from "lucide-react";
 import { useRentalUi, type VenueDetailTarget } from "@/components/chat/rental-ui-context";
+import { EventVenueDetailBody } from "@/components/sheets/event-venue-detail-body";
+import { usePublicEventDetail } from "@/hooks/use-public-event-detail";
 
-function formatEventDate(iso: string) {
-  try {
-    return new Intl.DateTimeFormat("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-    }).format(new Date(iso));
-  } catch {
-    return iso;
-  }
-}
-
-function RentalDetailBody({ detail }: { detail: Extract<VenueDetailTarget, { kind: "rental" }> }) {
+function RentalDetailBody({
+  detail,
+}: {
+  detail: Extract<VenueDetailTarget, { kind: "rental" }>;
+}) {
   const { openScheduleViewing, closeVenueDetail } = useRentalUi();
 
   return (
@@ -88,48 +78,13 @@ function RentalDetailBody({ detail }: { detail: Extract<VenueDetailTarget, { kin
   );
 }
 
-function EventDetailBody({ detail }: { detail: Extract<VenueDetailTarget, { kind: "event" }> }) {
-  return (
-    <>
-      {detail.imageUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={detail.imageUrl}
-          alt=""
-          className="max-h-48 w-full rounded-lg object-cover"
-        />
-      ) : null}
-      <dl className="grid gap-2 text-sm">
-        <div>
-          <dt className="text-muted-foreground">When</dt>
-          <dd>{formatEventDate(detail.startsAt)}</dd>
-        </div>
-        <div>
-          <dt className="text-muted-foreground">Venue</dt>
-          <dd>{detail.venue}</dd>
-        </div>
-        <div>
-          <dt className="text-muted-foreground">From</dt>
-          <dd>${detail.pricePerTicket.toLocaleString("en-US")} USD</dd>
-        </div>
-      </dl>
-      <SheetFooter className="px-0">
-        <Link
-          href={detail.ticketUrl}
-          data-testid="venue-detail-buy-cta"
-          className={cn(buttonVariants({ variant: "default" }))}
-        >
-          <Ticket className="size-4" aria-hidden />
-          Buy tickets
-        </Link>
-      </SheetFooter>
-    </>
-  );
-}
-
 /** SCREEN-007 — rental/event detail slide-over on `/`. */
 export function VenueDetailSheet() {
-  const { venueDetail, closeVenueDetail } = useRentalUi();
+  const { venueDetail, closeVenueDetail, setEventVenueStep } = useRentalUi();
+  const eventId =
+    venueDetail?.kind === "event" ? venueDetail.eventId : null;
+  const { event: publicEvent, state: loadState, error: loadError } =
+    usePublicEventDetail(eventId);
 
   const priceLabel =
     venueDetail?.kind === "rental" && venueDetail.nightlyPrice != null
@@ -137,6 +92,9 @@ export function VenueDetailSheet() {
       : venueDetail?.kind === "event"
         ? `$${venueDetail.pricePerTicket.toLocaleString("en-US")} ticket`
         : undefined;
+
+  const eventStep =
+    venueDetail?.kind === "event" ? (venueDetail.step ?? "detail") : "detail";
 
   return (
     <Sheet
@@ -149,6 +107,9 @@ export function VenueDetailSheet() {
         side="right"
         className="w-full max-w-md overflow-y-auto sm:max-w-lg"
         data-testid="venue-detail-sheet"
+        data-event-step={
+          venueDetail?.kind === "event" ? eventStep : undefined
+        }
       >
         {venueDetail ? (
           <>
@@ -163,7 +124,14 @@ export function VenueDetailSheet() {
               {venueDetail.kind === "rental" ? (
                 <RentalDetailBody detail={venueDetail} />
               ) : (
-                <EventDetailBody detail={venueDetail} />
+                <EventVenueDetailBody
+                  detail={venueDetail}
+                  step={eventStep}
+                  loadState={loadState}
+                  publicEvent={publicEvent}
+                  loadError={loadError}
+                  onStepChange={setEventVenueStep}
+                />
               )}
             </div>
           </>

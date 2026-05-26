@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { EventCard } from "@/components/copilot/event-card";
 import { useRentalUi } from "@/components/chat/rental-ui-context";
 import { useEventSearchResults } from "@/components/chat/event-search-results-context";
@@ -14,6 +15,15 @@ export function EventResultsPanel() {
   const { rows } = useEventSearchResults();
   const { selectedPinId, panToPin } = useMapContext();
   const { openVenueDetail } = useRentalUi();
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!selectedPinId || !listRef.current) return;
+    const card = listRef.current.querySelector(
+      `[data-pin-id="${selectedPinId}"]`,
+    );
+    card?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [selectedPinId]);
 
   if (rows.length === 0) return null;
 
@@ -26,11 +36,14 @@ export function EventResultsPanel() {
       <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
         Events ({rows.length})
       </h2>
-      <div className="flex max-h-[min(40vh,320px)] flex-col gap-2 overflow-y-auto overflow-x-hidden pr-1">
+      <div
+        ref={listRef}
+        className="flex max-h-[min(40vh,320px)] flex-col gap-2 overflow-y-auto overflow-x-hidden pr-1"
+      >
         {rows.map((e) => {
           const pinId = eventPinId(e.id);
           const ticketUrl = `/events/${e.id}`;
-          const openDetail = () => {
+          const openVenue = (step: "detail" | "checkout") => {
             panToPin(pinId);
             openVenueDetail({
               kind: "event",
@@ -42,7 +55,9 @@ export function EventResultsPanel() {
               startsAt: e.startsAt,
               pricePerTicket: e.pricePerTicket,
               imageUrl: e.imageUrl,
+              sourceUrl: e.sourceUrl,
               ticketUrl,
+              step,
             });
           };
           return (
@@ -56,10 +71,12 @@ export function EventResultsPanel() {
               startsAt={e.startsAt}
               pricePerTicket={e.pricePerTicket}
               imageUrl={e.imageUrl}
+              sourceUrl={e.sourceUrl}
               ticketUrl={ticketUrl}
               selected={selectedPinId === pinId}
               onSelect={() => panToPin(pinId)}
-              onOpenDetails={openDetail}
+              onOpenDetails={() => openVenue("detail")}
+              onBuyTickets={() => openVenue("checkout")}
             />
           );
         })}
