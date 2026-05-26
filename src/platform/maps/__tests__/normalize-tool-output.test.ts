@@ -73,4 +73,26 @@ describe("normalizeToolOutput", () => {
     });
     expect(pins[0]?.title).toBe("Pausa Coffee & Brunch");
   });
+
+  it("maps enriched grounded rows into pin meta", () => {
+    const { pins } = normalizeToolOutput("grounded", {
+      source: "grounding",
+      results: [
+        {
+          id: "ChIJabc",
+          title: "Pergamino",
+          latitude: 6.246,
+          longitude: -75.589,
+          formattedAddress: "Cra 77 #33, Laureles",
+          rating: 4.8,
+          userRatingCount: 120,
+          photoName: "places/ChIJ/photos/x",
+          openNow: false,
+        },
+      ],
+    });
+    expect(pins[0]?.subtitle).toBe("Cra 77 #33, Laureles");
+    expect(pins[0]?.meta?.rating).toBe(4.8);
+    expect(pins[0]?.meta?.photoName).toContain("photos/");
+  });
 });

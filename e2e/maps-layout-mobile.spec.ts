@@ -33,7 +33,7 @@ test.describe("MAP-007B mobile layout", () => {
 
     await fab.click();
     await expect(page.locator('[data-testid="map-sheet-content"]')).toBeVisible();
-    await expect(page.locator('[data-testid="chat-map"]').last()).toBeVisible();
+    await expect(page.locator('[data-testid="chat-map"]')).toHaveCount(1);
 
     await page.keyboard.press("Escape");
     await expect(page.locator('[data-testid="map-sheet-content"]')).toBeHidden({

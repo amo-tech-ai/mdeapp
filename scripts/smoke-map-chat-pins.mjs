@@ -66,6 +66,16 @@ async function main() {
       smokeFail("No rental listing pin on map (only mock pin?)");
     }
 
+    const rentalGlyphs = await page
+      .locator('[data-marker-glyph="rental"]')
+      .count();
+    console.log(`   rental-marker-glyph count: ${rentalGlyphs}`);
+    if (rentalGlyphs < 1) {
+      smokeFail(
+        `MAP-030: expected ≥1 rental marker (data-marker-glyph=rental), got ${rentalGlyphs}`,
+      );
+    }
+
     console.log("\n✅ Browser smoke: map + rental cards + pins");
   } finally {
     await context.close();
