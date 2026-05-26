@@ -2,11 +2,56 @@
 
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useCopilotChatInternal } from "@copilotkit/react-core";
-import { useChatContext, type InputProps } from "@copilotkit/react-ui";
+import type { Message } from "@copilotkit/shared";
 import { useEventSearchFastPath } from "@/hooks/use-event-search-fast-path";
 
+/** Mirrors CopilotKit InputProps — do not import from @copilotkit/react-ui (Input is not exported in 1.55.2). */
+export type ConciergeChatInputProps = {
+  inProgress: boolean;
+  onSend: (text: string) => Promise<Message>;
+  isVisible?: boolean;
+  onStop?: () => void;
+  onUpload?: () => void;
+  hideStopButton?: boolean;
+  chatReady?: boolean;
+};
+
+function SendIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+    </svg>
+  );
+}
+
+function StopIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <rect x="6" y="6" width="12" height="12" rx="1" />
+    </svg>
+  );
+}
+
+function SpinnerIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      className="animate-spin"
+      aria-hidden
+    >
+      <circle cx="12" cy="12" r="9" opacity="0.25" />
+      <path d="M21 12a9 9 0 0 0-9-9" />
+    </svg>
+  );
+}
+
 /**
- * CopilotKit 1.55.2 does not export `Input` — custom send intercept with same DOM/classes as default.
+ * Custom CopilotChat input — plain textarea + send (no @copilotkit/react-ui Input export).
  * Intercepts event clarify/search before CopilotKit runs conciergeAgent.
  */
 export function ConciergeChatInput({
@@ -15,8 +60,7 @@ export function ConciergeChatInput({
   onStop,
   hideStopButton,
   chatReady = true,
-}: InputProps) {
-  const context = useChatContext();
+}: ConciergeChatInputProps) {
   const { interrupt } = useCopilotChatInternal();
   const { handleUserMessage } = useEventSearchFastPath();
   const [text, setText] = useState("");
@@ -39,12 +83,13 @@ export function ConciergeChatInput({
     textareaRef.current?.focus();
   }, [text, inProgress, handleUserMessage, onSend]);
 
-  const buttonIcon =
-    !chatReady
-      ? context.icons.spinnerIcon
-      : canStop
-        ? context.icons.stopIcon
-        : context.icons.sendIcon;
+  const buttonIcon = !chatReady ? (
+    <SpinnerIcon />
+  ) : canStop ? (
+    <StopIcon />
+  ) : (
+    <SendIcon />
+  );
   const buttonAlt = canStop ? "Stop" : !chatReady ? "Loading" : "Send";
 
   return (
@@ -53,7 +98,7 @@ export function ConciergeChatInput({
         <textarea
           ref={textareaRef}
           className="copilotKitTextarea"
-          placeholder={context.labels.placeholder}
+          placeholder="Type a message..."
           value={text}
           rows={1}
           onChange={(e) => setText(e.target.value)}
