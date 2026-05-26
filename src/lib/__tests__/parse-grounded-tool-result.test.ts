@@ -82,6 +82,29 @@ describe("parseGroundedToolResult", () => {
     expect(parsed.results[0]?.title).toBe("Café Namazzi");
     expect(parsed.results[0]?.mapsUrl).toBe("https://maps.google.com/?cid=99");
   });
+
+  it("parses enriched fields from MAP-018B sidecar", () => {
+    const parsed = parseGroundedToolResult({
+      source: "grounding",
+      results: [
+        {
+          id: "ChIJabc",
+          title: "Pergamino",
+          latitude: 6.24,
+          longitude: -75.59,
+          mapsUrl: "https://maps.google.com/?cid=99",
+          rating: 4.8,
+          userRatingCount: 1700,
+          priceLevel: "PRICE_LEVEL_MODERATE",
+          openNow: true,
+          photoName: "places/ChIJ/photos/x",
+          fieldMaskVersion: "details-v2-mvp-2026-05-20",
+        },
+      ],
+    });
+    expect(parsed.results[0]?.rating).toBe(4.8);
+    expect(parsed.results[0]?.photoName).toContain("photos/");
+  });
 });
 
 describe("attribution display helpers", () => {

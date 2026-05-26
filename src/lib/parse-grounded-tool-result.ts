@@ -6,13 +6,30 @@ export type GroundedAttributionRow = {
   title?: string;
 };
 
+export type GroundedPhotoAttribution = {
+  displayName?: string;
+  uri?: string;
+};
+
 export type GroundedToolRow = {
   id: string;
   title: string;
   mapsUrl?: string;
+  directionsUrl?: string;
+  reviewsUrl?: string;
   latitude?: number;
   longitude?: number;
   placeId?: string;
+  rating?: number;
+  userRatingCount?: number;
+  priceLevel?: string;
+  openNow?: boolean | null;
+  formattedAddress?: string;
+  primaryType?: string;
+  summary?: string;
+  photoName?: string;
+  photoAuthorAttributions?: GroundedPhotoAttribution[];
+  fieldMaskVersion?: string;
 };
 
 export type ParsedGroundedToolResult = {
@@ -65,6 +82,23 @@ function readSource(result: unknown): string | undefined {
   return typeof source === "string" ? source : undefined;
 }
 
+function readPhotoAuthorAttributions(
+  row: Record<string, unknown>,
+): GroundedPhotoAttribution[] | undefined {
+  const raw = row.photoAuthorAttributions;
+  if (!Array.isArray(raw)) return undefined;
+  const out: GroundedPhotoAttribution[] = [];
+  for (const item of raw) {
+    if (!item || typeof item !== "object") continue;
+    const rec = item as Record<string, unknown>;
+    const entry: GroundedPhotoAttribution = {};
+    if (typeof rec.displayName === "string") entry.displayName = rec.displayName;
+    if (typeof rec.uri === "string") entry.uri = rec.uri;
+    if (entry.displayName || entry.uri) out.push(entry);
+  }
+  return out.length > 0 ? out : undefined;
+}
+
 /** Normalize CopilotKit / Mastra grounded tool payloads for cards + pins. */
 export function parseGroundedToolResult(result: unknown): ParsedGroundedToolResult {
   let root: unknown = result;
@@ -89,13 +123,47 @@ export function parseGroundedToolResult(result: unknown): ParsedGroundedToolResu
 
   const results = rawRows.map((row, index) => {
     const mapsUrl = row.mapsUrl ?? row.maps_url;
+    const openNow =
+      row.openNow === null
+        ? null
+        : typeof row.openNow === "boolean"
+          ? row.openNow
+          : undefined;
     return {
       id: String(row.id ?? `grounded-${index}`),
       title: resolveGroundedTitle(row, index, attribution, mapsUrl),
       mapsUrl,
+      directionsUrl:
+        typeof row.directionsUrl === "string" ? row.directionsUrl : undefined,
+      reviewsUrl:
+        typeof row.reviewsUrl === "string" ? row.reviewsUrl : undefined,
       latitude: row.latitude,
       longitude: row.longitude,
       placeId: row.placeId,
+      rating: typeof row.rating === "number" ? row.rating : undefined,
+      userRatingCount:
+        typeof row.userRatingCount === "number"
+          ? row.userRatingCount
+          : undefined,
+      priceLevel:
+        typeof row.priceLevel === "string" ? row.priceLevel : undefined,
+      openNow,
+      formattedAddress:
+        typeof row.formattedAddress === "string"
+          ? row.formattedAddress
+          : undefined,
+      primaryType:
+        typeof row.primaryType === "string" ? row.primaryType : undefined,
+      summary: typeof row.summary === "string" ? row.summary : undefined,
+      photoName:
+        typeof row.photoName === "string" ? row.photoName : undefined,
+      photoAuthorAttributions: readPhotoAuthorAttributions(
+        row as Record<string, unknown>,
+      ),
+      fieldMaskVersion:
+        typeof row.fieldMaskVersion === "string"
+          ? row.fieldMaskVersion
+          : undefined,
     };
   });
 
