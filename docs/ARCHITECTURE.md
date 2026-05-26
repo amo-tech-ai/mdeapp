@@ -79,6 +79,7 @@ Workflows: `rentalSearchWorkflow`, `eventDiscoveryWorkflow`, `conciergeRoutingWo
 5. **CopilotKit pinned at 1.55.2.** No v1/v2 mix in one file.
 6. **No HttpAgent / legacy ai-chat.** Mastra in-process only; ADK via HTTP sidecar from Mastra tools.
 7. **Every Places call** includes `X-Goog-FieldMask` (MAP-004+). Every **AdvancedMarker** parent Map has **mapId**.
+8. **Mindtrip map UX (MAP-030):** Lightweight `CategoryMapMarker` on the map; all photos and editorial UI in `SelectedPlaceOverlayCard` via `InfoWindow` — per [store locator best practices](https://developers.google.com/maps/solutions/store-locator/best-practices) and mde-maps [`maps-js-api.md`](../../.agents/skills/mde-maps/references/maps-js-api.md).
 
 ## 6. CopilotKit patterns (Phase 1)
 
