@@ -35,6 +35,8 @@ export type RentalVenueDetail = {
   hostName?: string;
 };
 
+export type EventVenueSheetStep = "detail" | "checkout";
+
 export type EventVenueDetail = {
   kind: "event";
   eventId: string;
@@ -46,6 +48,8 @@ export type EventVenueDetail = {
   pricePerTicket: number;
   imageUrl?: string;
   ticketUrl: string;
+  sourceUrl?: string;
+  step?: EventVenueSheetStep;
 };
 
 export type VenueDetailTarget = RentalVenueDetail | EventVenueDetail;
@@ -57,6 +61,7 @@ type RentalUiContextValue = {
   openScheduleViewing: (target: ScheduleViewingTarget) => void;
   closeScheduleViewing: () => void;
   openVenueDetail: (target: VenueDetailTarget) => void;
+  setEventVenueStep: (step: EventVenueSheetStep) => void;
   closeVenueDetail: () => void;
   setLeadConfirmation: (value: LeadConfirmation | null) => void;
   clearLeadConfirmation: () => void;
@@ -82,7 +87,18 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const openVenueDetail = useCallback((target: VenueDetailTarget) => {
-    setVenueDetail(target);
+    setVenueDetail(
+      target.kind === "event"
+        ? { ...target, step: target.step ?? "detail" }
+        : target,
+    );
+  }, []);
+
+  const setEventVenueStep = useCallback((step: EventVenueSheetStep) => {
+    setVenueDetail((prev) => {
+      if (prev?.kind !== "event") return prev;
+      return { ...prev, step };
+    });
   }, []);
 
   const closeVenueDetail = useCallback(() => {
@@ -101,6 +117,7 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       openScheduleViewing,
       closeScheduleViewing,
       openVenueDetail,
+      setEventVenueStep,
       closeVenueDetail,
       setLeadConfirmation,
       clearLeadConfirmation,
@@ -112,6 +129,7 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       openScheduleViewing,
       closeScheduleViewing,
       openVenueDetail,
+      setEventVenueStep,
       closeVenueDetail,
       clearLeadConfirmation,
     ],
