@@ -106,6 +106,8 @@ MASTRA_REQUIRE_PG=1 npm run check:mastra
 
 Script: [`scripts/check-mastra.mjs`](../scripts/check-mastra.mjs) — agent name match, CopilotKit 1.55.2 pin, deprecated Gemini ids, no service-role in client components, `getLocalAgentsWithLogging` in route. Local `:memory:` LibSQL is allowed until `MASTRA_REQUIRE_PG=1`.
 
+**Local dev pool safety:** If `.env.local` sets `DATABASE_URL`, also set `MASTRA_DEV_LIBSQL=1` so Mastra thread memory uses in-memory LibSQL instead of the Supabase transaction pooler (avoids `EMAXCONN` after repeated `npm run dev` / HMR). Production and Vercel ignore `MASTRA_DEV_LIBSQL`; catalog tools still use anon Supabase JS.
+
 ### Auth + Mastra Studio (AUTH-010)
 
 - **Product chat:** Supabase session cookies → `POST /api/copilotkit` → `getUser()` → Mastra `RequestContext` (Pattern 1). No Bearer token in the browser.

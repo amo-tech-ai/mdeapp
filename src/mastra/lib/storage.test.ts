@@ -3,6 +3,7 @@ import {
   createMastraStorage,
   getMastraStorage,
   resetMastraStorageForTests,
+  shouldUsePostgresStorage,
 } from "./storage";
 
 describe("createMastraStorage", () => {
@@ -43,5 +44,17 @@ describe("createMastraStorage", () => {
     getMastraStorage();
     expect(info).toHaveBeenCalledWith("[mastra-storage] using local dev LibSQL");
     info.mockRestore();
+  });
+
+  it("uses LibSQL when MASTRA_DEV_LIBSQL=1 even if DATABASE_URL is set", () => {
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("MASTRA_DEV_LIBSQL", "1");
+    vi.stubEnv(
+      "DATABASE_URL",
+      "postgresql://postgres.test:secret@aws-1-us-east-1.pooler.supabase.com:6543/postgres",
+    );
+    expect(shouldUsePostgresStorage()).toBe(false);
+    const store = createMastraStorage("test-dev-libsql");
+    expect(store.constructor.name).toBe("LibSQLStore");
   });
 });
