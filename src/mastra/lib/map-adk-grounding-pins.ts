@@ -1,3 +1,4 @@
+import type { EnrichedGroundedPlaceFields } from "./adk-grounding-types";
 import type { AdkGroundingInvokeResponse } from "./adk-grounding-types";
 
 export type GroundedPlaceResult = {
@@ -7,7 +8,9 @@ export type GroundedPlaceResult = {
   longitude: number;
   placeId?: string;
   mapsUrl?: string;
-};
+  directionsUrl?: string;
+  reviewsUrl?: string;
+} & EnrichedGroundedPlaceFields;
 
 const GENERIC_TITLE = /^place$/i;
 
@@ -40,6 +43,71 @@ function resolvePinTitle(
   return raw || "Place";
 }
 
+function pickPrimaryType(row: Record<string, unknown>): string | undefined {
+  if (typeof row.primaryType === "string" && row.primaryType.trim()) {
+    return row.primaryType.trim();
+  }
+  const types = row.types;
+  if (!Array.isArray(types)) return undefined;
+  const preferred = ["cafe", "coffee_shop", "restaurant", "bakery", "bar"];
+  for (const key of preferred) {
+    if (types.includes(key)) return key;
+  }
+  const first = types.find((t) => typeof t === "string");
+  return typeof first === "string" ? first : undefined;
+}
+
+function mapEnrichedFields(row: Record<string, unknown>): EnrichedGroundedPlaceFields {
+  const rating =
+    typeof row.rating === "number" && !Number.isNaN(row.rating)
+      ? row.rating
+      : undefined;
+  const userRatingCount =
+    typeof row.userRatingCount === "number" && row.userRatingCount >= 0
+      ? row.userRatingCount
+      : undefined;
+  const openNow =
+    row.openNow === null
+      ? null
+      : typeof row.openNow === "boolean"
+        ? row.openNow
+        : undefined;
+  const editorial =
+    typeof row.editorialSummary === "string"
+      ? row.editorialSummary
+      : undefined;
+  const summary =
+    typeof row.summary === "string"
+      ? row.summary
+      : editorial;
+
+  return {
+    rating,
+    userRatingCount,
+    priceLevel:
+      typeof row.priceLevel === "string" ? row.priceLevel : undefined,
+    openNow,
+    formattedAddress:
+      typeof row.formattedAddress === "string"
+        ? row.formattedAddress
+        : undefined,
+    primaryType: pickPrimaryType(row),
+    summary,
+    photoName:
+      typeof row.photoName === "string" ? row.photoName : undefined,
+    photoAuthorAttributions: Array.isArray(row.photoAuthorAttributions)
+      ? (row.photoAuthorAttributions as EnrichedGroundedPlaceFields["photoAuthorAttributions"])
+      : undefined,
+    fieldMaskVersion:
+      typeof row.fieldMaskVersion === "string"
+        ? row.fieldMaskVersion
+        : undefined,
+    directionsUrl:
+      typeof row.directionsUrl === "string" ? row.directionsUrl : undefined,
+    reviewsUrl: typeof row.reviewsUrl === "string" ? row.reviewsUrl : undefined,
+  };
+}
+
 /** Map ADK invoke pins/places → Mastra tool results (fail-open on partial rows). */
 export function mapAdkGroundingPins(
   adk: AdkGroundingInvokeResponse,
@@ -56,6 +124,7 @@ export function mapAdkGroundingPins(
       if (Number.isNaN(latitude) || Number.isNaN(longitude)) return null;
 
       const mapsUrl = r.mapsUrl ? String(r.mapsUrl) : undefined;
+      const enriched = mapEnrichedFields(r);
       return {
         id: String(r.id ?? r.placeId ?? `grounded-${index}`),
         title: resolvePinTitle(r, index, attribution),
@@ -63,6 +132,9 @@ export function mapAdkGroundingPins(
         longitude,
         placeId: r.placeId ? String(r.placeId) : undefined,
         mapsUrl,
+        directionsUrl: enriched.directionsUrl,
+        reviewsUrl: enriched.reviewsUrl,
+        ...enriched,
       };
     })
     .filter((row): row is GroundedPlaceResult => row !== null);

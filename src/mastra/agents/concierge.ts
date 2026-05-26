@@ -6,6 +6,7 @@ import { searchEventsTool } from '../tools/search-events';
 import { searchRestaurantsTool } from '../tools/search-restaurants';
 import { searchAttractionsTool } from '../tools/search-attractions';
 import { searchGroundedPlacesTool } from '../tools/search-grounded-places';
+import { searchWebGroundedEventsTool } from '../tools/search-web-grounded-events';
 import { FLASH_MODEL } from "../lib/models";
 import { getDefaultInputProcessors } from "../lib/agent-input-processors";
 import { MapUiStateSchema } from "@/platform/contracts/map-ui-state";
@@ -88,10 +89,12 @@ export const conciergeAgent = new Agent({
 - search-restaurants: cuisine, dinner, lunch, coffee, food recommendations.
 - search-attractions: tours, viewpoints, parks, day trips, Comuna 13, Guatap\u00e9, museums.
 - search-grounded-places: natural-language place discovery (caf\u00e9s, venues, POIs) via Google Maps grounding — use when the user wants real map pins from Google, not only Supabase inventory.
+- search-web-grounded-events: live web search for time-sensitive or unverified event facts (this weekend, tonight, official lineup) — call ONLY after search-events returns few/zero rows OR user asks to verify online. Never use for caf\u00e9/map/rental queries.
 - For caf\u00e9 / coffee / quiet spot / POI requests near a neighborhood (e.g. "quiet caf\u00e9s near Laureles"), call search-grounded-places — not search-restaurants.
+- When mapUi.viewport is set and the user asks about places near what they see on the map, pass search-grounded-places locationBias: { latitude: mapUi.viewport.lat, longitude: mapUi.viewport.lng }.
 
 # Working memory rules (very important)
-You have working memory with: lastIntent, lastRentalQuery, lastRentalResults, selectedListingId, lastEventQuery, lastEventResults, selectedEventId.
+You have working memory with: lastIntent, lastRentalQuery, lastRentalResults, selectedListingId, lastEventQuery, lastEventResults, selectedEventId, mapUi (selectedPinId, pin counts, viewport lat/lng/zoom).
 - Update lastIntent every turn.
 - After any rental search, save lastRentalQuery (the filters you used, including budgetType) and lastRentalResults (id + title + neighborhood + nightly_price for each listing you showed).
 - After any event search, save lastEventQuery and lastEventResults (id + title + venue + date).
@@ -173,6 +176,15 @@ Hard rules for the event gate:
 - After clarify, never ask again — search on the next user message.
 - NEVER say "Found N events" unless search-events ran in the SAME turn.
 
+# Output formatting (grounded places — UI renders photo cards)
+After search-grounded-places, the frontend renders photo cards (rating, price, hours, map pins, Open in Google Maps) — do NOT repeat place names, descriptions, neighborhoods, or Maps links in prose.
+
+Grounded listing rules (critical):
+- NEVER list cafés or venues by name in your reply.
+- NEVER include "View on Google Maps", bullet lists, or numbered lists of places in text.
+- Reply in at most 2 short sentences: (1) how many matches and which area, (2) one follow-up (e.g. "Want laptop-friendly spots or only Laureles?").
+- If the user filters ("quiet for work", "only Poblado"), call search-grounded-places again — do not answer from memory alone.
+
 # Output formatting (events + rentals — UI renders cards)
 After search-events or search-rentals, the frontend renders cards and map pins from the tool — do NOT repeat card fields (title, price, URLs, amenities) in prose.
 
@@ -182,7 +194,14 @@ Event listing rules (critical):
 - Generic city-only "list events" / "what's on in Medellín" → clarify first per event gate above; do NOT search in that turn.
 - If the user asks again to show cards after a search, call search-events again — do not answer from memory alone.
 
-Reply in at most 4 short sentences:
+# Web grounding for fresh events (MAP-002D)
+Call search-web-grounded-events in the same turn ONLY when the query needs live web facts (this weekend, tonight, today, tomorrow, verify online) AND search-events returned fewer than 3 rows OR zero rows.
+If search-events returned 3+ rows and the user did not ask to verify online, skip search-web-grounded-events entirely.
+Never paste web URLs in prose — the UI renders "From the web" citation chips from the tool.
+
+After search-events with results on screen: reply in ONE short sentence only (count + area). Do not name events in prose.
+
+Reply in at most 4 short sentences (rentals / empty / non-event only):
 1. How many matches (e.g. "Found 5 rentals in Laureles under $80/night.").
 2. Top pick: one sentence on the best fit and why.
 3. Next: 2–3 follow-up suggestions (Show cheaper, Schedule viewing #1, Compare #1 and #3, Show more options).
@@ -221,6 +240,7 @@ ${formatEventSourcePromptHint()}`,
     searchRestaurantsTool,
     searchAttractionsTool,
     searchGroundedPlacesTool,
+    searchWebGroundedEventsTool,
   },
   inputProcessors: getDefaultInputProcessors(),
   // @ts-expect-error beta drift: Memory.recall() shape vs MastraMemory (same as pingAgent)

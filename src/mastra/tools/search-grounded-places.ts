@@ -1,8 +1,23 @@
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
+import { enrichedGroundedPlaceFieldsSchema } from "../lib/adk-grounding-types";
 import { invokeAdkGrounding } from "../lib/adk-grounding-client";
 import { mapAdkGroundingPins } from "../lib/map-adk-grounding-pins";
 import { incrementAndCheckGroundingQuota } from "../lib/grounding-quota";
+import { resolveGroundingLocationBias } from "../lib/grounding-location-bias";
+
+const groundedPlaceResultSchema = z
+  .object({
+    id: z.string(),
+    title: z.string(),
+    latitude: z.number(),
+    longitude: z.number(),
+    placeId: z.string().optional(),
+    mapsUrl: z.string().url().optional(),
+    directionsUrl: z.string().url().optional(),
+    reviewsUrl: z.string().url().optional(),
+  })
+  .merge(enrichedGroundedPlaceFieldsSchema);
 
 export const searchGroundedPlacesTool = createTool({
   id: "search-grounded-places",
@@ -11,18 +26,18 @@ export const searchGroundedPlacesTool = createTool({
   inputSchema: z.object({
     query: z.string().min(1).describe("Natural language place search"),
     pageSize: z.number().int().min(1).max(10).default(5).optional(),
-  }),
-  outputSchema: z.object({
-    results: z.array(
-      z.object({
-        id: z.string(),
-        title: z.string(),
+    locationBias: z
+      .object({
         latitude: z.number(),
         longitude: z.number(),
-        placeId: z.string().optional(),
-        mapsUrl: z.string().url().optional(),
-      }),
-    ),
+      })
+      .optional()
+      .describe(
+        "Optional map center — pass mapUi.viewport { lat→latitude, lng→longitude } when search should follow the visible map",
+      ),
+  }),
+  outputSchema: z.object({
+    results: z.array(groundedPlaceResultSchema),
     attribution: z.array(
       z.object({
         source: z.string(),
@@ -33,8 +48,12 @@ export const searchGroundedPlacesTool = createTool({
     source: z.literal("grounding"),
     metadata: z.record(z.unknown()).optional(),
   }),
-  execute: async (inputData: { query: string; pageSize?: number }) => {
-    const { query, pageSize } = inputData;
+  execute: async (inputData: {
+    query: string;
+    pageSize?: number;
+    locationBias?: { latitude: number; longitude: number };
+  }) => {
+    const { query, pageSize, locationBias: inputBias } = inputData;
     const quota = await incrementAndCheckGroundingQuota();
     if (!quota.allowed) {
       return {
@@ -44,7 +63,14 @@ export const searchGroundedPlacesTool = createTool({
         metadata: { reason: quota.reason },
       };
     }
-    const adk = await invokeAdkGrounding({ query, pageSize });
+    const locationBias = resolveGroundingLocationBias({
+      locationBias: inputBias,
+    });
+    const adk = await invokeAdkGrounding({
+      query,
+      pageSize,
+      locationBias,
+    });
     const reason = adk.metadata?.reason;
     if (reason && adk.pins.length === 0) {
       return {
