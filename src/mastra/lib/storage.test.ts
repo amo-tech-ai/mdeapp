@@ -57,4 +57,16 @@ describe("createMastraStorage", () => {
     const store = createMastraStorage("test-dev-libsql");
     expect(store.constructor.name).toBe("LibSQLStore");
   });
+
+  it("uses Postgres when NODE_ENV=production even if MASTRA_DEV_LIBSQL=1", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("MASTRA_DEV_LIBSQL", "1");
+    vi.stubEnv(
+      "DATABASE_URL",
+      "postgresql://postgres.test:secret@aws-1-us-east-1.pooler.supabase.com:6543/postgres",
+    );
+    expect(shouldUsePostgresStorage()).toBe(true);
+    const store = createMastraStorage("test-prod-override");
+    expect(store.constructor.name).toBe("PostgresStore");
+  });
 });
