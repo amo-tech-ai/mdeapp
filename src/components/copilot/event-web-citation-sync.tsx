@@ -68,8 +68,6 @@ function SyncFromToolResult({
       return;
     }
 
-    if (citations.length === 0) return;
-
     const key = `${name}:${JSON.stringify(citations).slice(0, 400)}`;
     if (key === lastKeyRef.current) return;
     lastKeyRef.current = key;

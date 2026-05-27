@@ -198,7 +198,16 @@ function EventResults({ result }: { result: unknown }) {
       sourceUrl?: string;
       mapsUrl?: string | null;
     }>;
-    if (list.length === 0) return;
+    const validCitations = (parsed.webGrounding?.citations ?? []).filter(
+      (c): c is { title: string; url: string; snippet?: string | null } =>
+        typeof c.url === "string" &&
+        c.url.startsWith("http") &&
+        typeof c.title === "string",
+    );
+    if (list.length === 0) {
+      setWebCitations(validCitations);
+      return;
+    }
     setRows(
       list.map((e) => ({
         id: e.id,
@@ -211,17 +220,7 @@ function EventResults({ result }: { result: unknown }) {
         sourceUrl: e.sourceUrl ?? e.mapsUrl ?? undefined,
       })),
     );
-    const web = parsed.webGrounding?.citations ?? [];
-    if (web.length > 0) {
-      setWebCitations(
-        web.filter(
-          (c): c is { title: string; url: string; snippet?: string | null } =>
-            typeof c.url === "string" &&
-            c.url.startsWith("http") &&
-            typeof c.title === "string",
-        ),
-      );
-    }
+    setWebCitations(validCitations);
   }, [result, setRows, setWebCitations]);
 
   useEffect(() => {
