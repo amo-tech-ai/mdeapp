@@ -38,10 +38,20 @@ export function buildEventSearchParams(
   }
 
   if (s.hasCategory || s.hasDateWindow || s.hasNeighborhood) {
+    const answeringClarifyCategoryOnly =
+      q?.genericAskPending === true &&
+      s.hasCategory &&
+      !s.hasDateWindow &&
+      !s.hasNeighborhood;
+
     return {
       category: s.category ?? q?.category,
-      neighborhood: s.neighborhood ?? q?.neighborhood,
-      dateWindow: (s.dateWindow ?? q?.dateWindow ?? "any") as EventDateWindow,
+      neighborhood: answeringClarifyCategoryOnly
+        ? undefined
+        : s.neighborhood ?? q?.neighborhood,
+      dateWindow: (answeringClarifyCategoryOnly
+        ? "any"
+        : (s.dateWindow ?? q?.dateWindow ?? "any")) as EventDateWindow,
       limit: FAST_PATH_LIMIT,
     };
   }
