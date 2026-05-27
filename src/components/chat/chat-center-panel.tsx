@@ -5,8 +5,8 @@ import { CopilotChat } from "@copilotkit/react-ui";
 import { ConciergeChatInput } from "@/components/chat/concierge-chat-input";
 import { ConciergeChatMessages } from "@/components/chat/concierge-chat-messages";
 import { ChatQueryBar } from "@/components/chat/chat-query-bar";
-import { ChatResultsColumn } from "@/components/chat/chat-results-column";
 import { ChatFilterCopilotInstructions } from "@/components/chat/chat-filter-copilot-instructions";
+import { CenterPanelMapResultsSlot } from "@/components/chat/center-panel-map-results-slot";
 import { EventResultsPanel } from "@/components/chat/event-results-panel";
 import { WorkflowProgressStrip } from "@/components/chat/workflow-progress-strip";
 
@@ -42,9 +42,7 @@ export function ChatCenterPanel() {
         />
       </div>
       <EventResultsPanel />
-      <div className="hidden max-h-[200px] shrink-0 border-t border-border sm:block">
-        <ChatResultsColumn compact />
-      </div>
+      <CenterPanelMapResultsSlot />
     </section>
   );
 }

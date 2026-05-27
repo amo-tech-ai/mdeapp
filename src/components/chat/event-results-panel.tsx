@@ -41,7 +41,7 @@ export function EventResultsPanel() {
       </h2>
       <div
         ref={listRef}
-        className="flex max-h-[min(40vh,320px)] flex-col gap-2 overflow-y-auto overflow-x-hidden pr-1"
+        className="flex flex-col gap-2 overflow-x-hidden pr-1"
       >
         {rows.map((e) => {
           const pinId = eventPinId(e.id);
