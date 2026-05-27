@@ -1,7 +1,9 @@
 import type { ConciergeWorkingMemory } from "@/lib/types";
 import type { EventCard, EventCategory } from "@/mastra/tools/search-events";
 import {
+  hasEventFastPathSignals,
   isGenericEventQuery,
+  looksLikeNonEventSearch,
   scoreEventQuery,
   type EventDateWindow,
 } from "@/lib/event-query-classifier";
@@ -30,6 +32,8 @@ export function buildEventSearchParams(
   text: string,
   memory: ConciergeWorkingMemory,
 ): EventSearchApiParams | null {
+  if (looksLikeNonEventSearch(text)) return null;
+
   const s = scoreEventQuery(text);
   const q = memory.lastEventQuery;
 
@@ -37,7 +41,10 @@ export function buildEventSearchParams(
     return { dateWindow: "any", limit: FAST_PATH_LIMIT };
   }
 
-  if (s.hasCategory || s.hasDateWindow || s.hasNeighborhood) {
+  if (
+    (s.hasCategory || s.hasDateWindow || s.hasNeighborhood) &&
+    hasEventFastPathSignals(text, s)
+  ) {
     const answeringClarifyCategoryOnly =
       q?.genericAskPending === true &&
       s.hasCategory &&
@@ -87,6 +94,7 @@ export function canFastPathEventSearch(
   text: string,
   memory: ConciergeWorkingMemory,
 ): boolean {
+  if (looksLikeNonEventSearch(text)) return false;
   if (shouldInstantEventClarify(text, memory)) return false;
   return buildEventSearchParams(text, memory) != null;
 }

@@ -47,6 +47,43 @@ const NEIGHBORHOOD_PATTERNS: Array<{ neighborhood: string; re: RegExp }> = [
 const SHOW_ALL_RE =
   /\b(show all|all events|popular events|top events|everything happening|what'?s on)\b/i;
 
+/** Rental / venue-seeking queries — must not hijack event fast-path. */
+const NON_EVENT_RENTAL_RE =
+  /\b(1\s?br|2\s?br|3\s?br|bedroom|bedrooms|apartment|apartments|rental|rentals|airbnb|under\s+\$?\d+|\/night|per night|monthly|for rent)\b/i;
+
+/** Restaurant / café discovery — not event discovery unless "events" is present. */
+const NON_EVENT_FOOD_VENUE_RE =
+  /\b(caf[eé]s?|coffee shops?|restaurants?|brunch spot|best cafes?|quiet caf[eé]s?)\b/i;
+
+/** True when the message is clearly rental or food-venue search, not events. */
+export function looksLikeNonEventSearch(text: string): boolean {
+  const t = text.trim();
+  if (/\bevents?\b/i.test(t)) return false;
+  return NON_EVENT_RENTAL_RE.test(t) || NON_EVENT_FOOD_VENUE_RE.test(t);
+}
+
+/**
+ * Structured text signals strong enough to run event fast-path (not chip/clarify memory).
+ * Neighborhood alone is never sufficient — e.g. "1BR in Laureles" must reach rental agent.
+ */
+export function hasEventFastPathSignals(
+  text: string,
+  s: EventQuerySignals,
+): boolean {
+  if (looksLikeNonEventSearch(text)) return false;
+  if (s.hasShowAll) return true;
+  if (/\bevents?\b/i.test(text) || /\bwhat'?s on\b/i.test(text)) return true;
+  if (s.hasDateWindow) return true;
+  if (s.hasCategory) {
+    if (s.category === "food") {
+      return /\bevents?\b/i.test(text);
+    }
+    return true;
+  }
+  if (s.hasNeighborhood) return false;
+  return false;
+}
+
 /** Score structured signals from free-text user message. */
 export function scoreEventQuery(text: string): EventQuerySignals {
   const normalized = text.trim();
