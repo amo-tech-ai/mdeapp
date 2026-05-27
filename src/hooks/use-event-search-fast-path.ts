@@ -41,7 +41,7 @@ export function useEventSearchFastPath() {
     name: "conciergeAgent",
   });
   const { clarifyPending, showClarify, showExchange } = useEventLocalChat();
-  const { setRows } = useEventSearchResults();
+  const { setRows, setWebCitations } = useEventSearchResults();
   const { mergePinsByCategory, requestFitBounds } = useMapContext();
   const busyRef = useRef(false);
 
@@ -52,6 +52,7 @@ export function useEventSearchFastPath() {
       memory: ConciergeWorkingMemory,
     ) => {
       const envelope = eventCardsToToolEnvelope(cards);
+      setWebCitations([]);
       setRows(
         cards.map((e) => ({
           id: e.id,
@@ -76,7 +77,7 @@ export function useEventSearchFastPath() {
         lastEventResults: eventCardsToPanelRows(cards),
       });
     },
-    [mergePinsByCategory, requestFitBounds, setRows, setState],
+    [mergePinsByCategory, requestFitBounds, setRows, setWebCitations, setState],
   );
 
   const runSearch = useCallback(

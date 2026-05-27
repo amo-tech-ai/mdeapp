@@ -10,6 +10,7 @@ import { ToolErrorChip } from "@/components/copilot/tool-error-chip";
 import { EmptyState } from "@/components/empty/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GroundingAttribution } from "@/components/maps/GroundingAttribution";
+import { WebCitationList } from "@/components/copilot/web-citation-list";
 import { useRentalUi } from "@/components/chat/rental-ui-context";
 import { useEventSearchResults } from "@/components/chat/event-search-results-context";
 import { useChatWorkflow } from "@/components/chat/chat-workflow-context";
@@ -170,7 +171,7 @@ function RentalResults({ result }: { result: unknown }) {
 function EventResults({ result }: { result: unknown }) {
   const { selectedPinId, panToPin } = useMapContext();
   const { openVenueDetail } = useRentalUi();
-  const { setRows } = useEventSearchResults();
+  const { setRows, setWebCitations } = useEventSearchResults();
   const listRef = useRef<HTMLDivElement>(null);
   const envelope = normalizeToolEnvelope(result);
   const rows = (envelope.results ?? []) as Array<{
@@ -197,7 +198,16 @@ function EventResults({ result }: { result: unknown }) {
       sourceUrl?: string;
       mapsUrl?: string | null;
     }>;
-    if (list.length === 0) return;
+    const validCitations = (parsed.webGrounding?.citations ?? []).filter(
+      (c): c is { title: string; url: string; snippet?: string | null } =>
+        typeof c.url === "string" &&
+        c.url.startsWith("http") &&
+        typeof c.title === "string",
+    );
+    if (list.length === 0) {
+      setWebCitations(validCitations);
+      return;
+    }
     setRows(
       list.map((e) => ({
         id: e.id,
@@ -210,7 +220,8 @@ function EventResults({ result }: { result: unknown }) {
         sourceUrl: e.sourceUrl ?? e.mapsUrl ?? undefined,
       })),
     );
-  }, [result, setRows]);
+    setWebCitations(validCitations);
+  }, [result, setRows, setWebCitations]);
 
   useEffect(() => {
     if (!selectedPinId || !listRef.current) return;
@@ -274,6 +285,24 @@ function EventResults({ result }: { result: unknown }) {
         })}
         </div>
       )}
+      {envelope.webGrounding &&
+      ((envelope.webGrounding.citations?.length ?? 0) > 0 ||
+        envelope.webGrounding.metadata?.reason) ? (
+        <WebCitationList
+          citations={
+            (envelope.webGrounding.citations ?? []) as Array<{
+              title: string;
+              url: string;
+              snippet?: string | null;
+            }>
+          }
+          reason={
+            typeof envelope.webGrounding.metadata?.reason === "string"
+              ? envelope.webGrounding.metadata.reason
+              : null
+          }
+        />
+      ) : null}
     </>
   );
 }
@@ -589,6 +618,63 @@ export function SearchToolRenders() {
   };
   useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.grounded, groundedRender);
   useDisabledToolRender(MASTRA_TOOL_IDS.grounded, groundedRender);
+
+  const webEventsRender = ({
+    status,
+    result,
+  }: {
+    status: string;
+    result: unknown;
+  }) => {
+    if (isToolRenderError(result, status)) {
+      return (
+        <ToolRenderShell kind="event" status={status}>
+          <ToolErrorChip message={getToolRenderErrorMessage(result)} />
+        </ToolRenderShell>
+      );
+    }
+    if (status !== "complete" || !result) {
+      return (
+        <ToolRenderShell kind="event" status={status}>
+          <LoadingCards />
+        </ToolRenderShell>
+      );
+    }
+    const row =
+      result && typeof result === "object"
+        ? (result as Record<string, unknown>)
+        : {};
+    const parsed = (Array.isArray(row.citations) ? row.citations : []).filter(
+      (c): c is { title: string; url: string; snippet?: string | null } =>
+        Boolean(
+          c &&
+            typeof c === "object" &&
+            typeof (c as { url?: string }).url === "string" &&
+            (c as { url: string }).url.startsWith("http") &&
+            typeof (c as { title?: string }).title === "string",
+        ),
+    );
+    const reason =
+      row.metadata && typeof row.metadata === "object"
+        ? (row.metadata as { reason?: string }).reason
+        : null;
+
+    if (parsed.length === 0 && !reason) {
+      return (
+        <ToolRenderShell kind="event" status={status}>
+          <></>
+        </ToolRenderShell>
+      );
+    }
+
+    return (
+      <ToolRenderShell kind="event" status={status}>
+        <WebCitationList citations={parsed} reason={reason} />
+      </ToolRenderShell>
+    );
+  };
+  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.webEvents, webEventsRender);
+  useDisabledToolRender(MASTRA_TOOL_IDS.webEvents, webEventsRender);
 
   return null;
 }
