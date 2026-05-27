@@ -10,6 +10,8 @@ import { EventLocalChatProvider } from "@/components/chat/event-local-chat-conte
 import { FocusMapPinAction } from "@/components/copilot/focus-map-pin-action";
 import { MapUiSync } from "@/components/copilot/map-ui-sync";
 import { SearchToolRenders } from "@/components/copilot/search-tool-renders";
+import { EventWebCitationFetch } from "@/components/copilot/event-web-citation-fetch";
+import { EventWebCitationSync } from "@/components/copilot/event-web-citation-sync";
 import { LeadConfirmationBanner } from "@/components/chat/lead-confirmation-banner";
 import { ScheduleViewingModal } from "@/components/modals/schedule-viewing-modal";
 import { VenueDetailSheet } from "@/components/sheets/venue-detail-sheet";
@@ -37,6 +39,8 @@ export function GeoChatShell() {
           </header>
           <MapsShell>
             <SearchToolRenders />
+            <EventWebCitationSync />
+            <EventWebCitationFetch />
             <MapUiSync />
             <FocusMapPinAction />
             <div className="flex min-h-0 flex-1 flex-col">

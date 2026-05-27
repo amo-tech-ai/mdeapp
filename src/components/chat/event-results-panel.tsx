@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { EventCard } from "@/components/copilot/event-card";
+import { WebCitationList } from "@/components/copilot/web-citation-list";
 import { useRentalUi } from "@/components/chat/rental-ui-context";
 import { useEventSearchResults } from "@/components/chat/event-search-results-context";
 import { useMapContext } from "@/platform/maps/map-context";
@@ -12,7 +13,7 @@ function eventPinId(eventId: string) {
 
 /** Persistent event cards below chat — survives scroll; fed by search-events tool render. */
 export function EventResultsPanel() {
-  const { rows } = useEventSearchResults();
+  const { rows, webCitations } = useEventSearchResults();
   const { selectedPinId, panToPin } = useMapContext();
   const { openVenueDetail } = useRentalUi();
   const listRef = useRef<HTMLDivElement>(null);
@@ -25,7 +26,7 @@ export function EventResultsPanel() {
     card?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [selectedPinId]);
 
-  if (rows.length === 0) return null;
+  if (rows.length === 0 && webCitations.length === 0) return null;
 
   return (
     <section
@@ -33,6 +34,8 @@ export function EventResultsPanel() {
       aria-label="Event results"
       className="shrink-0 border-t border-border bg-background px-2 py-2 sm:px-4"
     >
+      {rows.length > 0 ? (
+        <>
       <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
         Events ({rows.length})
       </h2>
@@ -81,6 +84,13 @@ export function EventResultsPanel() {
           );
         })}
       </div>
+        </>
+      ) : null}
+      {webCitations.length > 0 ? (
+        <div className="mt-2 px-1">
+          <WebCitationList citations={webCitations} />
+        </div>
+      ) : null}
     </section>
   );
 }
