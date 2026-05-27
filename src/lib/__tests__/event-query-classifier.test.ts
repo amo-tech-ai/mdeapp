@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 import {
+  hasEventFastPathSignals,
   isGenericEventQuery,
+  looksLikeNonEventSearch,
   scoreEventQuery,
   eventSubChipPrompt,
 } from "../event-query-classifier";
@@ -39,5 +41,21 @@ describe("event-query-classifier", () => {
     expect(eventSubChipPrompt({ label: "Show all", showAll: true })).toBe(
       "Show all events in Medellín",
     );
+  });
+
+  it("detects non-event rental and café queries", () => {
+    expect(looksLikeNonEventSearch("1BR in Laureles under $80/night")).toBe(
+      true,
+    );
+    expect(looksLikeNonEventSearch("best cafes in Poblado")).toBe(true);
+    expect(looksLikeNonEventSearch("food events in Poblado")).toBe(false);
+  });
+
+  it("neighborhood alone is not event fast-path intent", () => {
+    const s = scoreEventQuery("1BR in Laureles under $80/night");
+    expect(s.hasNeighborhood).toBe(true);
+    expect(
+      hasEventFastPathSignals("1BR in Laureles under $80/night", s),
+    ).toBe(false);
   });
 });

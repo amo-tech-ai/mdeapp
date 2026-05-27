@@ -87,4 +87,38 @@ describe("event-search-fast-path", () => {
   it("does not fast path generic first turn", () => {
     expect(canFastPathEventSearch("list events medellin", {})).toBe(false);
   });
+
+  it("does not fast path rental queries with neighborhood names", () => {
+    expect(
+      canFastPathEventSearch("1BR in Laureles under $80/night", {}),
+    ).toBe(false);
+    expect(buildEventSearchParams("1BR in Laureles under $80/night", {})).toBe(
+      null,
+    );
+  });
+
+  it("does not fast path restaurant/café venue queries", () => {
+    expect(canFastPathEventSearch("best cafes in Poblado", {})).toBe(false);
+    expect(canFastPathEventSearch("restaurants in Poblado", {})).toBe(false);
+    expect(buildEventSearchParams("best cafes in Poblado", {})).toBe(null);
+  });
+
+  it("does not fast path rental when stale event memory exists", () => {
+    const memory: ConciergeWorkingMemory = {
+      lastEventQuery: { category: "music", dateWindow: "any" },
+    };
+    expect(
+      canFastPathEventSearch("1BR in Laureles under $80/night", memory),
+    ).toBe(false);
+  });
+
+  it("still fast paths genuine event queries with neighborhoods", () => {
+    expect(canFastPathEventSearch("music in Poblado", {})).toBe(true);
+    expect(canFastPathEventSearch("nightlife this weekend in Poblado", {})).toBe(
+      true,
+    );
+    expect(buildEventSearchParams("salsa events in Laureles", {})?.category).toBe(
+      "music",
+    );
+  });
 });
