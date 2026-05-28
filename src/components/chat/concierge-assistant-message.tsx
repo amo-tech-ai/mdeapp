@@ -2,12 +2,6 @@
 
 import { AssistantMessage } from "@copilotkit/react-ui";
 import type { Message } from "@copilotkit/shared";
-import {
-  getAssistantMessageText,
-  isToolPayloadChatContent,
-  sanitizeAssistantChatContent,
-  shouldHideAssistantChatContent,
-} from "@/lib/sanitize-assistant-chat-content";
 
 type AssistantMessageProps = Parameters<typeof AssistantMessage>[0];
 
@@ -16,14 +10,26 @@ function hasGenerativeUi(message: Message | undefined): boolean {
     "function";
 }
 
+function getAssistantMessageText(message: Message): string {
+  const content = (message as { content?: unknown }).content;
+  return typeof content === "string" ? content : "";
+}
+
+function isToolPayloadChatContent(raw: string): boolean {
+  const trimmed = raw.trim();
+  return (
+    trimmed.startsWith("{\"results\":") ||
+    trimmed.startsWith("{\"success\":") ||
+    trimmed.includes("\"schedule_viewing_url\"")
+  );
+}
+
 /** Concierge assistant bubble — strips raw tool JSON the model sometimes echoes. */
 export function ConciergeAssistantMessage(props: AssistantMessageProps) {
   const message = props.message;
   const raw = message ? getAssistantMessageText(message) : "";
-  const hideText =
-    isToolPayloadChatContent(raw) ||
-    (Boolean(raw) && shouldHideAssistantChatContent(raw));
-  const content = hideText ? "" : sanitizeAssistantChatContent(raw);
+  const hideText = isToolPayloadChatContent(raw);
+  const content = hideText ? "" : raw;
 
   if (hideText && !hasGenerativeUi(message) && !props.subComponent) {
     return null;

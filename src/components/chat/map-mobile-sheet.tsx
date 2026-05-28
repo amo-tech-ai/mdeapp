@@ -2,7 +2,6 @@
 
 import { useState, useSyncExternalStore } from "react";
 import { Map, MapPin } from "lucide-react";
-import { CafeDetailPanel } from "@/components/cafe/cafe-detail-panel";
 import { useRentalUi } from "@/components/chat/rental-ui-context";
 import { ChatMap } from "@/components/maps/ChatMap";
 import { EmptyState } from "@/components/empty/empty-state";
@@ -120,23 +119,15 @@ export function MapMobileSheet() {
           className="flex max-h-[85vh] min-h-[75vh] flex-col p-0"
           data-testid={cafeDetail ? "cafe-detail-mobile-sheet" : "map-sheet-content"}
         >
-          {cafeDetail ? (
-            <CafeDetailPanel
-              detail={cafeDetail}
-              siblings={cafeSearchSiblings}
-              className="min-h-[75vh]"
-            />
-          ) : (
-            <>
-              <SheetHeader className="border-b border-border px-4 py-3 text-left">
-                <SheetTitle>Map</SheetTitle>
-                <SheetDescription>
-                  Tap a pin or close to return to chat. Escape closes this sheet.
-                </SheetDescription>
-              </SheetHeader>
-              <MapSheetBody open={detailOpen} />
-            </>
-          )}
+          <>
+            <SheetHeader className="border-b border-border px-4 py-3 text-left">
+              <SheetTitle>{cafeDetail ? "Detail" : "Map"}</SheetTitle>
+              <SheetDescription>
+                Tap a pin or close to return to chat. Escape closes this sheet.
+              </SheetDescription>
+            </SheetHeader>
+            <MapSheetBody open={detailOpen} />
+          </>
         </SheetContent>
       </Sheet>
     </div>
