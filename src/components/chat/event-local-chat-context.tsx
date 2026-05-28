@@ -29,11 +29,7 @@ type EventLocalChatContextValue = {
     assistantText: string,
     kind: LocalClarifyKind,
   ) => void;
-  showExchange: (
-    userText: string,
-    assistantText: string,
-    kind?: LocalClarifyKind,
-  ) => void;
+  showExchange: (userText: string, assistantText: string) => void;
   clearLocalMessages: () => void;
 };
 
