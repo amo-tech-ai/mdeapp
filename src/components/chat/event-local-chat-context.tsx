@@ -68,7 +68,7 @@ export function EventLocalChatProvider({ children }: { children: ReactNode }) {
   );
 
   const showExchange = useCallback(
-    (userText: string, assistantText: string, _kind?: LocalClarifyKind) => {
+    (userText: string, assistantText: string) => {
       setClarifyPending(false);
       setClarifyKind(null);
       setMessages((prev) => {

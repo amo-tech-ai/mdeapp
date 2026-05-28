@@ -20,17 +20,35 @@ const restaurant = (id: string, lat: number): MapPin => ({
   source: "tool",
 });
 
+const eventPin = (id: string, lat: number): MapPin => ({
+  id,
+  category: "event",
+  lat,
+  lng: -75.59,
+  title: `Event ${id}`,
+  source: "tool",
+});
+
 describe("mergePinsByCategory", () => {
-  it("does not wipe other categories when merging rentals", () => {
+  it("clears category when incoming is empty", () => {
+    const existing = [rental("r1", 6.25), eventPin("e1", 6.26)];
+    const merged = mergePinsByCategory(existing, "rental", []);
+    expect(merged.filter((p) => p.category === "rental")).toHaveLength(0);
+    expect(merged.filter((p) => p.category === "event")).toHaveLength(1);
+  });
+
+  it("does not wipe other categories when replacing rentals", () => {
     const existing = [rental("r1", 6.25), restaurant("f1", 6.26)];
     const merged = mergePinsByCategory(existing, "rental", [
       rental("r2", 6.251),
     ]);
     expect(merged.filter((p) => p.category === "restaurant")).toHaveLength(1);
-    expect(merged.filter((p) => p.category === "rental")).toHaveLength(2);
+    expect(merged.filter((p) => p.category === "rental")).toHaveLength(1);
+    expect(merged.find((p) => p.id === "r2")).toBeDefined();
+    expect(merged.find((p) => p.id === "r1")).toBeUndefined();
   });
 
-  it("dedupes by id within category", () => {
+  it("dedupes by id within incoming batch", () => {
     const merged = mergePinsByCategory([], "rental", [
       rental("r1", 6.25),
       rental("r1", 6.251),
