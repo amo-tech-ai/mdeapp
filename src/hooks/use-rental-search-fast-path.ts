@@ -52,10 +52,8 @@ export function useRentalSearchFastPath() {
       const envelope = rentalsToToolEnvelope(cards);
       setToolResult(envelope);
       const { pins } = normalizeToolOutput("rental", envelope);
-      if (pins.length > 0) {
-        mergePinsByCategory("rental", pins);
-        if (pins.length >= 2) requestFitBounds();
-      }
+      mergePinsByCategory("rental", pins);
+      if (pins.length >= 2) requestFitBounds();
       setState({
         ...memory,
         lastIntent: "rental_search",

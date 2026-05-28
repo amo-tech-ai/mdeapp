@@ -30,12 +30,22 @@ export async function POST(req: Request) {
   }
 
   const { neighborhood, minBedrooms, maxPricePerNight, limit } = parsed.data;
-  const { results, total, source } = await searchRentals({
-    neighborhood,
-    minBedrooms,
-    maxPricePerNight,
-    limit,
-  });
-
-  return NextResponse.json({ results, total, source });
+  try {
+    const { results, total, source } = await searchRentals({
+      neighborhood,
+      minBedrooms,
+      maxPricePerNight,
+      limit,
+    });
+    return NextResponse.json({ results, total, source });
+  } catch (error) {
+    console.error("[api/rentals/search]", error);
+    return NextResponse.json(
+      {
+        error: "rental_search_failed",
+        message: "Unable to search rentals right now.",
+      },
+      { status: 500 },
+    );
+  }
 }
