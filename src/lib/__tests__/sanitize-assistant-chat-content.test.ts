@@ -36,6 +36,13 @@ ${GROUNDING_SNIPPET}
     expect(sanitizeAssistantChatContent(prose)).toBe(prose);
   });
 
+  it("keeps normal prose that mentions best option and next step", () => {
+    const prose =
+      "The best option for tonight is the salsa show in Poblado. Your next step is to book tickets early.";
+    expect(sanitizeAssistantChatContent(prose)).toBe(prose);
+    expect(shouldHideAssistantChatContent(prose)).toBe(false);
+  });
+
   it("removes duplicated rental results boilerplate", () => {
     const prose = `Here are solid short-term rental options in Medellín:
 **What I searched for**

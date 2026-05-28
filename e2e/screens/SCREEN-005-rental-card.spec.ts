@@ -47,17 +47,17 @@ test.describe(`${SCREEN_ID} rental card polish`, () => {
       await gotoHome(page);
       await sendConciergeMessage(page, RENTAL_QUERY);
       await waitForRentalCards(page);
-      await page.waitForTimeout(1500);
 
       const card = page.locator('[data-testid="rental-card"]').first();
+      await expect(card).toHaveAttribute("data-pin-id", /.+/);
       const pinId = await card.getAttribute("data-pin-id");
-      await card.click();
-      await expect(card).toHaveAttribute("data-selected", "true");
       if (pinId) {
         await expect(
           page.locator(`[data-testid="map-pin"][data-pin-id="${pinId}"]`).first(),
         ).toBeVisible();
       }
+      await card.click();
+      await expect(card).toHaveAttribute("data-selected", "true");
       await expect(page.locator('[data-testid="results-column"]')).toHaveCount(0);
     });
   });

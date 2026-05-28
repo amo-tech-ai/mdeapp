@@ -117,8 +117,7 @@ function stripRentalResultsBoilerplate(content: string): string {
   const hasRentalSections =
     lower.includes("best option") &&
     (lower.includes("next step") || lower.includes("why these match"));
-  if (!hasRentalIntro && !hasRentalSections) return content;
-  if (hasRentalIntro || hasRentalSections) return "";
+  if (hasRentalIntro && hasRentalSections) return "";
   return content;
 }
 

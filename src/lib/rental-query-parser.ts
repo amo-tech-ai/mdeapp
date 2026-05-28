@@ -101,6 +101,13 @@ export function looksLikeRentalSearch(text: string): boolean {
   return RENTAL_INTENT_RE.test(t) || BEDROOM_RE.test(t) || /\/night|per night/i.test(t);
 }
 
+/** Budget, bedrooms, or neighborhood in text — not generic chit-chat. */
+export function hasRentalSignals(text: string): boolean {
+  if (looksLikeRentalSearch(text)) return true;
+  const s = scoreRentalQuery(text);
+  return s.hasBudget || s.hasBedrooms || s.hasNeighborhood;
+}
+
 export function looksLikeNonRentalSearch(text: string): boolean {
   const t = text.trim();
   if (looksLikeRentalSearch(t)) return false;
@@ -196,7 +203,7 @@ export function buildRentalSearchParams(
     ) {
       return merged;
     }
-    if (text.trim().length > 0) {
+    if (hasRentalSignals(text)) {
       return { limit: FAST_PATH_LIMIT };
     }
   }

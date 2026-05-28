@@ -34,4 +34,13 @@ describe("rental-search-fast-path", () => {
   it("does not fast path event queries", () => {
     expect(canFastPathRentalSearch("salsa events this weekend", {})).toBe(false);
   });
+
+  it("does not fast path unrelated text while clarify is pending", () => {
+    const memory: ConciergeWorkingMemory = {
+      lastRentalQuery: { genericAskPending: true },
+    };
+    expect(canFastPathRentalSearch("thanks", memory)).toBe(false);
+    expect(canFastPathRentalSearch("what's the weather", memory)).toBe(false);
+    expect(buildRentalSearchParams("thanks", memory)).toBeNull();
+  });
 });

@@ -63,6 +63,15 @@ export function RentalCard({
     else onSelect?.(id);
   };
 
+  const photoAlt =
+    title && neighborhood
+      ? `${title} rental photo in ${neighborhood}`
+      : title
+        ? `${title} rental photo`
+        : neighborhood
+          ? `Rental photo in ${neighborhood}`
+          : "Listing photo";
+
   return (
     <article
       className={cn(
@@ -191,7 +200,7 @@ export function RentalCard({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={photoUrl}
-              alt=""
+              alt={photoAlt}
               width={200}
               height={120}
               className="h-[120px] w-[200px] rounded-md object-cover"
