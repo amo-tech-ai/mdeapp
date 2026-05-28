@@ -4,17 +4,19 @@ export function pinDedupeKey(pin: MapPin): string {
   return pin.placeId ?? pin.id;
 }
 
-/** Merge new pins into existing list; dedupe within batch and against prior pins. */
+/**
+ * Replace all pins in `category` with `incoming` (deduped by id/placeId).
+ * Empty `incoming` clears that category. Other categories are unchanged.
+ */
 export function mergePinsByCategory(
   existing: MapPin[],
   category: MapPinCategory,
   incoming: MapPin[],
 ): MapPin[] {
   const others = existing.filter((p) => p.category !== category);
-  const sameCategory = existing.filter((p) => p.category === category);
   const byKey = new Map<string, MapPin>();
 
-  for (const pin of [...sameCategory, ...incoming]) {
+  for (const pin of incoming) {
     if (pin.category !== category) continue;
     byKey.set(pinDedupeKey(pin), pin);
   }

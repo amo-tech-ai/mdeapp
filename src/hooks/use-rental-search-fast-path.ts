@@ -82,7 +82,7 @@ export function useRentalSearchFastPath() {
         };
         setSearchMeta({ userText, params });
         applySearchResults(cards, query, memory);
-        showExchange(userText, "", "rental");
+        showExchange(userText, "");
         return true;
       } catch (err) {
         console.error("[rental-fast-path]", err);

@@ -128,7 +128,7 @@ export function useEventSearchFastPath() {
         if (busyRef.current) return true;
         busyRef.current = true;
         try {
-          showClarify(trimmed, EVENT_CLARIFY_MESSAGE);
+          showClarify(trimmed, EVENT_CLARIFY_MESSAGE, "event");
           return true;
         } finally {
           busyRef.current = false;
