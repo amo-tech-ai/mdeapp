@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useCopilotChatInternal } from "@copilotkit/react-core";
 import type { Message } from "@copilotkit/shared";
-import { useEventSearchFastPath } from "@/hooks/use-event-search-fast-path";
+import { useRentalSearchFastPath } from "@/hooks/use-rental-search-fast-path";
 
 /** Mirrors CopilotKit InputProps — do not import from @copilotkit/react-ui (Input is not exported in 1.55.2). */
 export type ConciergeChatInputProps = {
@@ -52,7 +52,7 @@ function SpinnerIcon() {
 
 /**
  * Custom CopilotChat input — plain textarea + send (no @copilotkit/react-ui Input export).
- * Intercepts event clarify/search before CopilotKit runs conciergeAgent.
+ * Intercepts rental clarify/search before CopilotKit runs conciergeAgent.
  */
 export function ConciergeChatInput({
   inProgress,
@@ -62,7 +62,7 @@ export function ConciergeChatInput({
   chatReady = true,
 }: ConciergeChatInputProps) {
   const { interrupt } = useCopilotChatInternal();
-  const { handleUserMessage } = useEventSearchFastPath();
+  const { handleUserMessage: handleRentalMessage } = useRentalSearchFastPath();
   const [text, setText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -76,12 +76,12 @@ export function ConciergeChatInput({
     const trimmed = text.trim();
     if (!trimmed || inProgress) return;
     setText("");
-    const handled = await handleUserMessage(trimmed);
+    const handled = await handleRentalMessage(trimmed);
     if (!handled) {
       await onSend(trimmed);
     }
     textareaRef.current?.focus();
-  }, [text, inProgress, handleUserMessage, onSend]);
+  }, [text, inProgress, handleRentalMessage, onSend]);
 
   const buttonIcon = !chatReady ? (
     <SpinnerIcon />

@@ -5,6 +5,7 @@ import { ChatCanvas } from "@/components/chat/chat-canvas";
 import { ChatNavDrawer } from "@/components/chat/chat-nav-drawer";
 import { ChatWorkflowProvider } from "@/components/chat/chat-workflow-context";
 import { RentalUiProvider } from "@/components/chat/rental-ui-context";
+import { RentalFastPathProvider } from "@/components/chat/rental-fast-path-context";
 import { EventSearchResultsProvider } from "@/components/chat/event-search-results-context";
 import { RichCardResultsProvider } from "@/components/chat/rich-card-results-context";
 import { EventLocalChatProvider } from "@/components/chat/event-local-chat-context";
@@ -23,9 +24,10 @@ export function GeoChatShell() {
   return (
     <ChatWorkflowProvider>
       <RentalUiProvider>
-        <EventSearchResultsProvider>
-          <RichCardResultsProvider>
-            <EventLocalChatProvider>
+        <RentalFastPathProvider>
+          <EventSearchResultsProvider>
+            <RichCardResultsProvider>
+              <EventLocalChatProvider>
               <div className="flex min-h-screen flex-col">
                 <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-4 py-3 sm:px-6">
                   <div className="flex min-w-0 items-center gap-3">
@@ -53,9 +55,10 @@ export function GeoChatShell() {
                 <ScheduleViewingModal />
                 <VenueDetailSheet />
               </div>
-            </EventLocalChatProvider>
-          </RichCardResultsProvider>
-        </EventSearchResultsProvider>
+              </EventLocalChatProvider>
+            </RichCardResultsProvider>
+          </EventSearchResultsProvider>
+        </RentalFastPathProvider>
       </RentalUiProvider>
     </ChatWorkflowProvider>
   );

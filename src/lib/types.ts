@@ -14,6 +14,7 @@ export type ConciergeWorkingMemory = {
     minBedrooms?: number;
     maxPricePerNight?: number;
     budgetType?: "nightly" | "monthly" | "total_trip";
+    genericAskPending?: boolean;
   };
   lastRentalResults?: Array<{
     id: string;
