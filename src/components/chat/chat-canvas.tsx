@@ -3,6 +3,7 @@
 import { ChatCenterPanel } from "@/components/chat/chat-center-panel";
 import { ChatMapPanel } from "@/components/chat/chat-map-panel";
 import { ChatNavRail } from "@/components/chat/chat-nav-rail";
+import { CafeDetailMobileSheet } from "@/components/chat/cafe-detail-mobile-sheet";
 import { MapMobileSheet } from "@/components/chat/map-mobile-sheet";
 
 /**
@@ -25,6 +26,7 @@ export function ChatCanvas() {
         <ChatMapPanel />
       </div>
       <MapMobileSheet />
+      <CafeDetailMobileSheet />
     </>
   );
 }

@@ -4,7 +4,7 @@ import {
   gotoHome,
   GROUNDING_QUERY,
   sendConciergeMessage,
-  waitForGroundedCards,
+  waitForCafeGroundedCards,
 } from "../helpers/maps-layout";
 
 test.describe("SCREEN-021 Phase A café listings", () => {
@@ -24,7 +24,7 @@ test.describe("SCREEN-021 Phase A café listings", () => {
     await page.setViewportSize({ width: 1360, height: 900 });
     await gotoHome(page);
     await sendConciergeMessage(page, GROUNDING_QUERY);
-    await waitForGroundedCards(page);
+    await waitForCafeGroundedCards(page);
 
     const firstCard = page
       .locator('[data-testid="grounded-card"][data-result-kind="cafe"]')
@@ -95,7 +95,7 @@ test.describe("SCREEN-021 Phase A café listings", () => {
     await page.setViewportSize({ width: 1360, height: 900 });
     await gotoHome(page);
     await sendConciergeMessage(page, GROUNDING_QUERY);
-    await waitForGroundedCards(page);
+    await waitForCafeGroundedCards(page);
 
     const firstCard = page
       .locator('[data-testid="grounded-card"][data-result-kind="cafe"]')
@@ -126,7 +126,7 @@ test.describe("SCREEN-021 Phase A café listings", () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await gotoHome(page);
     await sendConciergeMessage(page, GROUNDING_QUERY);
-    await waitForGroundedCards(page);
+    await waitForCafeGroundedCards(page);
 
     const card = page
       .locator('[data-testid="grounded-card"][data-result-kind="cafe"]')
@@ -153,9 +153,9 @@ test.describe("SCREEN-021 Phase A café listings", () => {
     await page.setViewportSize({ width: 1360, height: 900 });
     await gotoHome(page);
     await sendConciergeMessage(page, "best cafes medellin");
-    await waitForGroundedCards(page);
+    await waitForCafeGroundedCards(page);
 
-    const assistantProse = page.locator(".copilotKitAssistantMessage");
+    const assistantProse = page.locator(".copilotKitAssistantMessage").last();
     await expect(assistantProse).not.toContainText(/"source"\s*:\s*"grounding"/);
     await expect(assistantProse).not.toContainText(/"placeId"\s*:\s*"ChIJ/);
     await expect(assistantProse).not.toContainText(/\{"success"\s*:\s*true\}/);

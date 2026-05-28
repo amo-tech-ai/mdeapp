@@ -4,7 +4,7 @@ import {
   gotoHome,
   GROUNDING_QUERY,
   sendConciergeMessage,
-  waitForGroundingAttribution,
+  waitForCafeGroundedCards,
 } from "./helpers/maps-layout";
 
 test.describe("MAP-007 grounding UI", () => {
@@ -32,13 +32,25 @@ test.describe("MAP-007 grounding UI", () => {
 
     await gotoHome(page);
     await sendConciergeMessage(page, GROUNDING_QUERY);
-    await waitForGroundingAttribution(page);
+    await waitForCafeGroundedCards(page);
 
+    const cafeCard = page
+      .locator('[data-testid="grounded-card"][data-result-kind="cafe"]')
+      .first();
+    await expect(cafeCard).toBeVisible();
     await expect(
       page.locator(
         '[data-testid="grounding-attribution"], [data-testid="grounding-attribution-compact"]',
-      ).first(),
+      ),
+    ).toHaveCount(0);
+    await expect(
+      page
+        .locator(
+          '[data-testid="grounded-card-photo-attribution"], [data-testid="grounded-card-rating"]',
+        )
+        .first(),
     ).toBeVisible();
+
     const pins = await page.locator('[data-testid="map-pin"]').count();
     expect(pins).toBeGreaterThanOrEqual(1);
 
