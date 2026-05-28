@@ -43,16 +43,22 @@ test.describe(`${SCREEN_ID} rental card polish`, () => {
       assertConsoleClean(errors);
     });
 
-    test("card click selects pin row (F50 sync)", async ({ page }) => {
+    test("card click selects map pin (F50 sync)", async ({ page }) => {
       await gotoHome(page);
       await sendConciergeMessage(page, RENTAL_QUERY);
       await waitForRentalCards(page);
       await page.waitForTimeout(1500);
 
-      await page.locator('[data-testid="rental-card"]').first().click();
-      const row = page.locator('[data-testid="results-pin-row"]').first();
-      await row.waitFor({ state: "visible", timeout: 30_000 });
-      await expect(row).toHaveAttribute("data-selected", "true");
+      const card = page.locator('[data-testid="rental-card"]').first();
+      const pinId = await card.getAttribute("data-pin-id");
+      await card.click();
+      await expect(card).toHaveAttribute("data-selected", "true");
+      if (pinId) {
+        await expect(
+          page.locator(`[data-testid="map-pin"][data-pin-id="${pinId}"]`).first(),
+        ).toBeVisible();
+      }
+      await expect(page.locator('[data-testid="results-column"]')).toHaveCount(0);
     });
   });
 

@@ -1,14 +1,12 @@
 "use client";
 
 import { MapPin } from "lucide-react";
-import { useRentalUi } from "@/components/chat/rental-ui-context";
 import { ChatMap } from "@/components/maps/ChatMap";
 import { EmptyState } from "@/components/empty/empty-state";
 import { useMapContext } from "@/platform/maps/map-context";
 
-/** MAP-007 sticky map column (desktop) — mode map | cafe detail. */
+/** MAP-007 sticky map column (desktop). */
 export function ChatMapPanel() {
-  const { cafeDetail, rightColumnMode } = useRentalUi();
   const { pins } = useMapContext();
   const visiblePins = pins.filter((pin) => pin.source !== "mock");
   const showEmpty = visiblePins.length === 0;
@@ -16,8 +14,8 @@ export function ChatMapPanel() {
   return (
     <section
       data-testid="map-panel"
-      data-right-column-mode={rightColumnMode}
-      aria-label={rightColumnMode === "detail" ? "Cafe detail" : "Medellín map"}
+      data-right-column-mode="map"
+      aria-label="Medellín map"
       className="relative hidden h-full min-h-0 w-full min-w-0 lg:flex lg:flex-col"
     >
       <div className="relative min-h-0 flex-1 lg:sticky lg:top-0 lg:h-full">
@@ -34,11 +32,6 @@ export function ChatMapPanel() {
               icon={<MapPin className="size-8" />}
               className="pointer-events-auto max-w-xs bg-background/95"
             />
-          </div>
-        ) : null}
-        {cafeDetail ? (
-          <div className="sr-only" aria-hidden>
-            detail mode pending
           </div>
         ) : null}
       </div>

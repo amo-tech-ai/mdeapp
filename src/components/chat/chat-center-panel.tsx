@@ -9,6 +9,7 @@ import { ChatFilterCopilotInstructions } from "@/components/chat/chat-filter-cop
 import { CenterPanelMapResultsSlot } from "@/components/chat/center-panel-map-results-slot";
 import { EventResultsPanel } from "@/components/chat/event-results-panel";
 import { WorkflowProgressStrip } from "@/components/chat/workflow-progress-strip";
+import { RentalFastPathPanel } from "@/components/chat/rental-fast-path-panel";
 
 const CONCIERGE_LABELS = {
   title: "Medellín concierge",
@@ -40,6 +41,7 @@ export function ChatCenterPanel() {
           Input={ConciergeChatInput}
           Messages={ConciergeChatMessages}
         />
+        <RentalFastPathPanel />
       </div>
       <EventResultsPanel />
       <CenterPanelMapResultsSlot />

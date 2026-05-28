@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { useCopilotAction } from "@copilotkit/react-core";
 import type { ReactElement } from "react";
 import { RentalCard } from "@/components/copilot/rental-card";
+import type { RentalSearchMeta } from "@/components/chat/rental-fast-path-context";
 import { EventCard } from "@/components/copilot/event-card";
 import { PlaceResultCard } from "@/components/copilot/place-result-card";
 import { ToolErrorChip } from "@/components/copilot/tool-error-chip";
@@ -13,6 +14,7 @@ import { GroundingAttribution } from "@/components/maps/GroundingAttribution";
 import { WebCitationList } from "@/components/copilot/web-citation-list";
 import { useRentalUi } from "@/components/chat/rental-ui-context";
 import { useEventSearchResults } from "@/components/chat/event-search-results-context";
+import { RichCardResultsRegistrar } from "@/components/chat/rich-card-results-context";
 import { useChatWorkflow } from "@/components/chat/chat-workflow-context";
 import {
   MASTRA_COPILOT_TOOL_ACTIONS,
@@ -78,7 +80,13 @@ function eventPinId(eventId: string) {
   return `event-${eventId}`;
 }
 
-function RentalResults({ result }: { result: unknown }) {
+export function RentalResults({
+  result,
+  searchMeta,
+}: {
+  result: unknown;
+  searchMeta?: RentalSearchMeta;
+}) {
   const { selectedPinId, panToPin } = useMapContext();
   const { openScheduleViewing, openVenueDetail } = useRentalUi();
   const listRef = useRef<HTMLDivElement>(null);
@@ -92,11 +100,14 @@ function RentalResults({ result }: { result: unknown }) {
       photo_url?: string;
       image_url?: string;
       amenities?: string[];
+      tags?: string[];
+      wifi?: boolean;
       availability?: string;
       host_name?: string;
     }>;
   };
   const rows = envelope.results ?? [];
+  const searchParams = searchMeta?.params;
 
   useEffect(() => {
     if (!selectedPinId || !listRef.current) return;
@@ -108,6 +119,7 @@ function RentalResults({ result }: { result: unknown }) {
 
   return (
     <>
+      <RichCardResultsRegistrar category="rental" count={rows.length} />
       <ToolPinsSync category="rental" result={result} />
       {rows.length === 0 ? (
         <EmptyState
@@ -121,7 +133,7 @@ function RentalResults({ result }: { result: unknown }) {
         />
       ) : (
         <div ref={listRef} className="flex flex-col gap-2 py-2">
-          {rows.map((r) => {
+          {rows.map((r, index) => {
           const pinId = rentalPinId(r.id);
           const openDetail = () => {
             panToPin(pinId);
@@ -149,6 +161,12 @@ function RentalResults({ result }: { result: unknown }) {
               nightly_price={r.nightly_price}
               bedrooms={r.bedrooms}
               photoUrl={r.photo_url ?? r.image_url}
+              wifi={r.wifi}
+              amenities={r.amenities}
+              tags={r.tags}
+              availability={r.availability}
+              featured={index === 0}
+              searchParams={searchParams}
               selected={selectedPinId === pinId}
               onSelect={() => panToPin(pinId)}
               onOpenDetails={openDetail}
