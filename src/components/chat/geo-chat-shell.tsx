@@ -17,7 +17,22 @@ import { EventWebCitationSync } from "@/components/copilot/event-web-citation-sy
 import { LeadConfirmationBanner } from "@/components/chat/lead-confirmation-banner";
 import { ScheduleViewingModal } from "@/components/modals/schedule-viewing-modal";
 import { VenueDetailSheet } from "@/components/sheets/venue-detail-sheet";
+import { CafeBookingSheet } from "@/components/sheets/cafe-booking-sheet";
+import { useRentalUi } from "@/components/chat/rental-ui-context";
 import { MapsShell } from "@/components/maps/MapProvider";
+
+function CafeBookingSheetMount() {
+  const { cafeBookingTarget, cafeBookingOpen, closeCafeBooking } = useRentalUi();
+  return (
+    <CafeBookingSheet
+      target={cafeBookingTarget}
+      open={cafeBookingOpen}
+      onOpenChange={(open) => {
+        if (!open) closeCafeBooking();
+      }}
+    />
+  );
+}
 
 /** SCREEN-001 — Mindtrip shell: nav | center CopilotChat | map. */
 export function GeoChatShell() {
@@ -54,6 +69,7 @@ export function GeoChatShell() {
                 </MapsShell>
                 <ScheduleViewingModal />
                 <VenueDetailSheet />
+                <CafeBookingSheetMount />
               </div>
               </EventLocalChatProvider>
             </RichCardResultsProvider>

@@ -2,14 +2,34 @@
 
 import { MapPin } from "lucide-react";
 import { ChatMap } from "@/components/maps/ChatMap";
+import { CafeDetailPanel } from "@/components/cafe/cafe-detail-panel";
+import { useRentalUi } from "@/components/chat/rental-ui-context";
 import { EmptyState } from "@/components/empty/empty-state";
 import { useMapContext } from "@/platform/maps/map-context";
 
 /** MAP-007 sticky map column (desktop). */
 export function ChatMapPanel() {
   const { pins } = useMapContext();
+  const { cafeDetail, cafeSiblings } = useRentalUi();
   const visiblePins = pins.filter((pin) => pin.source !== "mock");
   const showEmpty = visiblePins.length === 0;
+
+  if (cafeDetail) {
+    return (
+      <section
+        data-testid="map-panel"
+        data-right-column-mode="detail"
+        aria-label="Café detail"
+        className="relative hidden h-full min-h-0 w-full min-w-0 lg:flex lg:flex-col"
+      >
+        <CafeDetailPanel
+          detail={cafeDetail}
+          siblings={cafeSiblings}
+          className="h-full"
+        />
+      </section>
+    );
+  }
 
   return (
     <section
