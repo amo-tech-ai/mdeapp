@@ -4,11 +4,12 @@ import { useEffect, useMemo, useRef } from "react";
 import { useCopilotChatInternal } from "@copilotkit/react-core";
 import type { Message } from "@copilotkit/shared";
 import {
-  AssistantMessage,
   UserMessage,
   useChatContext,
   type MessagesProps,
 } from "@copilotkit/react-ui";
+import { ConciergeAssistantMessage, shouldSkipCopilotMessage } from "@/components/chat/concierge-assistant-message";
+import { sanitizeAssistantChatContent } from "@/lib/sanitize-assistant-chat-content";
 import { useEventLocalChat } from "@/components/chat/event-local-chat-context";
 
 function makeInitialMessages(initial: string | string[] | undefined): Message[] {
@@ -28,7 +29,7 @@ export function ConciergeChatMessages(props: MessagesProps) {
   const {
     inProgress,
     children,
-    AssistantMessage: AssistantMessageProp = AssistantMessage,
+    AssistantMessage: AssistantMessageProp = ConciergeAssistantMessage,
     UserMessage: UserMessageProp = UserMessage,
     ImageRenderer,
   } = props;
@@ -54,12 +55,13 @@ export function ConciergeChatMessages(props: MessagesProps) {
     <div className="copilotKitMessages" ref={messagesContainerRef}>
       <div className="copilotKitMessagesContainer">
         {copilotMessages.map((message, index) => {
+          if (shouldSkipCopilotMessage(message)) return null;
           const isCurrentMessage = index === copilotMessages.length - 1;
           const isUser = message.role === "user";
           const Component = isUser ? UserMessageProp : AssistantMessageProp;
           return (
             <Component
-              key={`cpk-${index}-${message.id ?? index}`}
+              key={`cpk-${message.id ?? index}`}
               message={message as never}
               isCurrentMessage={isCurrentMessage && localMessages.length === 0}
               isLoading={false}
@@ -77,12 +79,15 @@ export function ConciergeChatMessages(props: MessagesProps) {
               </div>
             );
           }
+          const assistantText = sanitizeAssistantChatContent(local.content);
           const assistant = (
             <div
               key={local.id}
               className="copilotKitMessage copilotKitAssistantMessage"
             >
-              <p className="whitespace-pre-wrap">{local.content}</p>
+              {assistantText ? (
+                <p className="whitespace-pre-wrap">{assistantText}</p>
+              ) : null}
             </div>
           );
           if (local.isClarify) {

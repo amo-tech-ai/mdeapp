@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { Map, MapPin } from "lucide-react";
+import { CafeDetailPanel } from "@/components/cafe/cafe-detail-panel";
+import { useRentalUi } from "@/components/chat/rental-ui-context";
 import { ChatMap } from "@/components/maps/ChatMap";
 import { EmptyState } from "@/components/empty/empty-state";
 import { Button } from "@/components/ui/button";
@@ -41,18 +43,57 @@ function MapSheetBody({ open }: { open: boolean }) {
   );
 }
 
-/** MAP-007 mobile bottom sheet — map without covering CopilotKit input. */
+function subscribeLgUp(onChange: () => void) {
+  const mq = window.matchMedia("(min-width: 1024px)");
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+
+function getLgUpSnapshot() {
+  return window.matchMedia("(min-width: 1024px)").matches;
+}
+
+function getLgUpServerSnapshot() {
+  return false;
+}
+
+/** MAP-007 mobile bottom sheet — map or café detail without covering chat input. */
 export function MapMobileSheet() {
-  const [open, setOpen] = useState(false);
+  const [userMapOpen, setUserMapOpen] = useState(false);
+  const isLgUp = useSyncExternalStore(
+    subscribeLgUp,
+    getLgUpSnapshot,
+    getLgUpServerSnapshot,
+  );
   const { pins } = useMapContext();
+  const {
+    cafeDetail,
+    cafeSearchSiblings,
+    closeCafeDetail,
+    rightColumnMode,
+  } = useRentalUi();
   const pinCount = pins.filter((p) => p.source !== "mock").length;
+
+  const sheetOpen = !isLgUp && (userMapOpen || cafeDetail != null);
+  const detailOpen = cafeDetail != null && sheetOpen;
 
   return (
     <div
       data-testid="map-mobile-controls"
+      data-right-column-mode={rightColumnMode}
       className="pointer-events-none fixed bottom-[7.5rem] right-4 z-40 lg:hidden"
     >
-      <Sheet open={open} onOpenChange={setOpen}>
+      <Sheet
+        open={sheetOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            closeCafeDetail();
+            setUserMapOpen(false);
+            return;
+          }
+          setUserMapOpen(true);
+        }}
+      >
         <SheetTrigger
           render={
             <Button
@@ -61,29 +102,41 @@ export function MapMobileSheet() {
               className="pointer-events-auto h-11 gap-2 rounded-full px-4 shadow-lg"
               size="default"
               aria-label={
-                pinCount > 0
-                  ? `Open map with ${pinCount} pins`
-                  : "Open map"
+                cafeDetail
+                  ? `Open detail for ${cafeDetail.title}`
+                  : pinCount > 0
+                    ? `Open map with ${pinCount} pins`
+                    : "Open map"
               }
             >
               <Map className="size-4" aria-hidden />
-              Open map
-              {pinCount > 0 ? ` (${pinCount})` : ""}
+              {cafeDetail ? "Detail" : "Open map"}
+              {!cafeDetail && pinCount > 0 ? ` (${pinCount})` : ""}
             </Button>
           }
         />
         <SheetContent
           side="bottom"
           className="flex max-h-[85vh] min-h-[75vh] flex-col p-0"
-          data-testid="map-sheet-content"
+          data-testid={cafeDetail ? "cafe-detail-mobile-sheet" : "map-sheet-content"}
         >
-          <SheetHeader className="border-b border-border px-4 py-3 text-left">
-            <SheetTitle>Map</SheetTitle>
-            <SheetDescription>
-              Tap a pin or close to return to chat. Escape closes this sheet.
-            </SheetDescription>
-          </SheetHeader>
-          <MapSheetBody open={open} />
+          {cafeDetail ? (
+            <CafeDetailPanel
+              detail={cafeDetail}
+              siblings={cafeSearchSiblings}
+              className="min-h-[75vh]"
+            />
+          ) : (
+            <>
+              <SheetHeader className="border-b border-border px-4 py-3 text-left">
+                <SheetTitle>Map</SheetTitle>
+                <SheetDescription>
+                  Tap a pin or close to return to chat. Escape closes this sheet.
+                </SheetDescription>
+              </SheetHeader>
+              <MapSheetBody open={detailOpen} />
+            </>
+          )}
         </SheetContent>
       </Sheet>
     </div>

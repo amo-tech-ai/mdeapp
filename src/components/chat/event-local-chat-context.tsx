@@ -17,12 +17,23 @@ export type EventLocalChatMessage = {
   isClarify?: boolean;
 };
 
+export type LocalClarifyKind = "event" | "rental";
+
 type EventLocalChatContextValue = {
   messages: EventLocalChatMessage[];
-  /** True after EVP-006 clarify — merged into fast-path memory without CoAgent sync. */
+  /** True after canned clarify — merged into fast-path memory without CoAgent sync. */
   clarifyPending: boolean;
-  showClarify: (userText: string, assistantText: string) => void;
-  showExchange: (userText: string, assistantText: string) => void;
+  clarifyKind: LocalClarifyKind | null;
+  showClarify: (
+    userText: string,
+    assistantText: string,
+    kind: LocalClarifyKind,
+  ) => void;
+  showExchange: (
+    userText: string,
+    assistantText: string,
+    kind?: LocalClarifyKind,
+  ) => void;
   clearLocalMessages: () => void;
 };
 
@@ -37,43 +48,66 @@ function nextId() {
 export function EventLocalChatProvider({ children }: { children: ReactNode }) {
   const [messages, setMessages] = useState<EventLocalChatMessage[]>([]);
   const [clarifyPending, setClarifyPending] = useState(false);
+  const [clarifyKind, setClarifyKind] = useState<LocalClarifyKind | null>(null);
 
-  const showClarify = useCallback((userText: string, assistantText: string) => {
-    setClarifyPending(true);
-    setMessages([
-      { id: nextId(), role: "user", content: userText },
-      {
-        id: nextId(),
-        role: "assistant",
-        content: assistantText,
-        isClarify: true,
-      },
-    ]);
-  }, []);
+  const showClarify = useCallback(
+    (userText: string, assistantText: string, kind: LocalClarifyKind) => {
+      setClarifyPending(true);
+      setClarifyKind(kind);
+      setMessages([
+        { id: nextId(), role: "user", content: userText },
+        {
+          id: nextId(),
+          role: "assistant",
+          content: assistantText,
+          isClarify: true,
+        },
+      ]);
+    },
+    [],
+  );
 
-  const showExchange = useCallback((userText: string, assistantText: string) => {
-    setClarifyPending(false);
-    setMessages((prev) => [
-      ...prev,
-      { id: nextId(), role: "user", content: userText },
-      { id: nextId(), role: "assistant", content: assistantText },
-    ]);
-  }, []);
+  const showExchange = useCallback(
+    (userText: string, assistantText: string, _kind?: LocalClarifyKind) => {
+      setClarifyPending(false);
+      setClarifyKind(null);
+      setMessages((prev) => {
+        const next: EventLocalChatMessage[] = [
+          ...prev,
+          { id: nextId(), role: "user", content: userText },
+        ];
+        if (assistantText.trim()) {
+          next.push({ id: nextId(), role: "assistant", content: assistantText });
+        }
+        return next;
+      });
+    },
+    [],
+  );
 
   const clearLocalMessages = useCallback(() => {
     setMessages([]);
     setClarifyPending(false);
+    setClarifyKind(null);
   }, []);
 
   const value = useMemo(
     () => ({
       messages,
       clarifyPending,
+      clarifyKind,
       showClarify,
       showExchange,
       clearLocalMessages,
     }),
-    [messages, clarifyPending, showClarify, showExchange, clearLocalMessages],
+    [
+      messages,
+      clarifyPending,
+      clarifyKind,
+      showClarify,
+      showExchange,
+      clearLocalMessages,
+    ],
   );
 
   return (
