@@ -1,4 +1,4 @@
-import type { Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 
 const RENTAL_QUERY =
   "1BR apartment in Laureles under 80 dollars per night";
@@ -50,9 +50,27 @@ export async function ensureChatInputVisible(page: Page) {
 
 export async function sendConciergeMessage(page: Page, text: string) {
   await ensureChatInputVisible(page);
-  const input = page.getByRole("textbox", { name: /type a message/i });
-  await input.fill(text);
-  await page.getByRole("button", { name: /^send$/i }).click();
+  const input = page.locator(".copilotKitInput textarea").first();
+  await input.click();
+  await input.evaluate((node, value) => {
+    const textarea = node as HTMLTextAreaElement;
+    const setter = Object.getOwnPropertyDescriptor(
+      HTMLTextAreaElement.prototype,
+      "value",
+    )?.set;
+    setter?.call(textarea, value);
+    textarea.dispatchEvent(new Event("input", { bubbles: true }));
+    textarea.dispatchEvent(new Event("change", { bubbles: true }));
+  }, text);
+
+  const send = page.getByRole("button", { name: /^send$/i });
+  await send.waitFor({ state: "visible", timeout: 10_000 });
+  if (await send.isEnabled().catch(() => false)) {
+    await send.click();
+    return;
+  }
+
+  await input.press("Enter");
 }
 
 export async function waitForRentalCards(page: Page) {
@@ -93,20 +111,16 @@ export async function waitForNoEventCards(page: Page, settleMs = 8_000) {
   }
 }
 
-export async function waitForGroundingAttribution(page: Page) {
+export async function waitForGroundedCards(page: Page) {
   await page.locator('[data-testid="grounded-card"]').first().waitFor({
     state: "visible",
     timeout: 120_000,
   });
-  await page
-    .locator(
-      '[data-testid="grounding-attribution"], [data-testid="grounding-attribution-compact"]',
-    )
-    .first()
-    .waitFor({
-      state: "visible",
-      timeout: 30_000,
-    });
+}
+
+/** @deprecated Use waitForGroundedCards — café cards replace attribution footer. */
+export async function waitForGroundingAttribution(page: Page) {
+  await waitForGroundedCards(page);
 }
 
 export function collectCriticalConsoleErrors(
@@ -140,3 +154,28 @@ export async function waitForEventCards(page: Page) {
 }
 
 export { RENTAL_QUERY, GROUNDING_QUERY, EVENT_QUERY };
+
+/** Rich cards own the list — generic Map results strip must stay hidden. */
+export async function assertNoGenericMapResultsList(page: Page) {
+  await expect(page.locator('[data-testid="results-column"]')).toHaveCount(0);
+}
+
+/** Event cards live in chat only — panel is attribution-only. */
+export async function assertSingleEventCardSurface(page: Page) {
+  const chatCards = page.locator(
+    '#copilot-chat-region [data-testid="event-card"]',
+  );
+  const panelCards = page.locator(
+    '[data-testid="event-results-panel"] [data-testid="event-card"]',
+  );
+  await expect(chatCards.first()).toBeVisible();
+  await expect(panelCards).toHaveCount(0);
+}
+
+export async function assertNoDuplicateGroundingLists(page: Page) {
+  await expect(
+    page.locator(
+      '[data-testid="grounding-attribution"], [data-testid="grounding-attribution-compact"]',
+    ),
+  ).toHaveCount(0);
+}

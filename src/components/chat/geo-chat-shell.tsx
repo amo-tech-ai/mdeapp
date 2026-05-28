@@ -6,6 +6,7 @@ import { ChatNavDrawer } from "@/components/chat/chat-nav-drawer";
 import { ChatWorkflowProvider } from "@/components/chat/chat-workflow-context";
 import { RentalUiProvider } from "@/components/chat/rental-ui-context";
 import { EventSearchResultsProvider } from "@/components/chat/event-search-results-context";
+import { RichCardResultsProvider } from "@/components/chat/rich-card-results-context";
 import { EventLocalChatProvider } from "@/components/chat/event-local-chat-context";
 import { FocusMapPinAction } from "@/components/copilot/focus-map-pin-action";
 import { MapUiSync } from "@/components/copilot/map-ui-sync";
@@ -23,35 +24,37 @@ export function GeoChatShell() {
     <ChatWorkflowProvider>
       <RentalUiProvider>
         <EventSearchResultsProvider>
-        <EventLocalChatProvider>
-        <div className="flex min-h-screen flex-col">
-          <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-4 py-3 sm:px-6">
-            <div className="flex min-w-0 items-center gap-3">
-              <ChatNavDrawer />
-              <div className="min-w-0">
-                <h1 className="text-lg font-semibold sm:text-xl">mdeai</h1>
-                <p className="truncate text-xs text-muted-foreground sm:text-sm">
-                  Concierge — rentals, events, food, map
-                </p>
+          <RichCardResultsProvider>
+            <EventLocalChatProvider>
+              <div className="flex min-h-screen flex-col">
+                <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-4 py-3 sm:px-6">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <ChatNavDrawer />
+                    <div className="min-w-0">
+                      <h1 className="text-lg font-semibold sm:text-xl">mdeai</h1>
+                      <p className="truncate text-xs text-muted-foreground sm:text-sm">
+                        Concierge — rentals, events, food, map
+                      </p>
+                    </div>
+                  </div>
+                  <AuthStatus />
+                </header>
+                <MapsShell>
+                  <SearchToolRenders />
+                  <EventWebCitationSync />
+                  <EventWebCitationFetch />
+                  <MapUiSync />
+                  <FocusMapPinAction />
+                  <div className="flex min-h-0 flex-1 flex-col">
+                    <LeadConfirmationBanner />
+                    <ChatCanvas />
+                  </div>
+                </MapsShell>
+                <ScheduleViewingModal />
+                <VenueDetailSheet />
               </div>
-            </div>
-            <AuthStatus />
-          </header>
-          <MapsShell>
-            <SearchToolRenders />
-            <EventWebCitationSync />
-            <EventWebCitationFetch />
-            <MapUiSync />
-            <FocusMapPinAction />
-            <div className="flex min-h-0 flex-1 flex-col">
-              <LeadConfirmationBanner />
-              <ChatCanvas />
-            </div>
-          </MapsShell>
-          <ScheduleViewingModal />
-          <VenueDetailSheet />
-        </div>
-        </EventLocalChatProvider>
+            </EventLocalChatProvider>
+          </RichCardResultsProvider>
         </EventSearchResultsProvider>
       </RentalUiProvider>
     </ChatWorkflowProvider>
