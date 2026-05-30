@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
-import { useCopilotChatInternal } from "@copilotkit/react-core";
+import { useCallback, useEffect, useMemo, useRef, useSyncExternalStore } from "react";
+import { useCopilotChatInternal, useCopilotChat } from "@copilotkit/react-core";
+import { MessageRole, TextMessage } from "@copilotkit/runtime-client-gql";
 import type { Message } from "@copilotkit/shared";
 import {
   UserMessage,
@@ -9,8 +10,16 @@ import {
   type MessagesProps,
 } from "@copilotkit/react-ui";
 import { ConciergeAssistantMessage, shouldSkipCopilotMessage } from "@/components/chat/concierge-assistant-message";
+import { ConciergeThinkingIndicator } from "@/components/chat/concierge-thinking-indicator";
+import { ConciergeErrorNotice } from "@/components/chat/concierge-error-notice";
 import { sanitizeAssistantChatContent } from "@/lib/sanitize-assistant-chat-content";
 import { useEventLocalChat } from "@/components/chat/event-local-chat-context";
+import {
+  clearConciergeError,
+  getConciergeErrorVersion,
+  getConciergeErrorVersionServer,
+  subscribeConciergeError,
+} from "@/lib/concierge-error-store";
 
 function makeInitialMessages(initial: string | string[] | undefined): Message[] {
   if (!initial) return [];
@@ -36,8 +45,33 @@ export function ConciergeChatMessages(props: MessagesProps) {
   const { labels } = useChatContext();
   const { messages: visibleMessages, interrupt } = useCopilotChatInternal();
   const { messages: localMessages } = useEventLocalChat();
+  const { appendMessage } = useCopilotChat();
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Subscribe to the module-level error store — safe for React Compiler (no setState
+  // in effects, no ref reads in render). reportConciergeError() is called from the
+  // <CopilotKit onError> prop in layout.tsx whenever a RUN_ERROR fires.
+  const errorVersion = useSyncExternalStore(
+    subscribeConciergeError,
+    getConciergeErrorVersion,
+    getConciergeErrorVersionServer,
+  );
+
+  // chatError: true only when a failed turn has not yet been acknowledged by a retry
+  // or a new user message. Hidden while inProgress so the thinking indicator takes over.
+  const chatError = !inProgress && errorVersion > 0;
+
+  const handleRetry = useCallback(() => {
+    clearConciergeError();
+    const lastUserMsg = [...visibleMessages].reverse().find((m) => m.role === "user");
+    if (!lastUserMsg) return;
+    const content = typeof lastUserMsg.content === "string" ? lastUserMsg.content : "";
+    if (!content) return;
+    void appendMessage(
+      new TextMessage({ role: MessageRole.User, content }),
+    );
+  }, [visibleMessages, appendMessage]);
 
   const initialMessages = useMemo(
     () => makeInitialMessages(labels.initial),
@@ -100,9 +134,13 @@ export function ConciergeChatMessages(props: MessagesProps) {
           return assistant;
         })}
         {copilotMessages[copilotMessages.length - 1]?.role === "user" &&
-          inProgress &&
           localMessages.length === 0 && (
-            <span className="copilotKitActivityIndicator" aria-hidden />
+            <>
+              {inProgress && !chatError && <ConciergeThinkingIndicator />}
+              {!inProgress && chatError && (
+                <ConciergeErrorNotice onRetry={handleRetry} />
+              )}
+            </>
           )}
         {interrupt}
       </div>

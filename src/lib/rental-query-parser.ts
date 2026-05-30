@@ -15,11 +15,14 @@ export type RentalQuerySignals = {
   hasBedrooms: boolean;
   hasVibeOrUseCase: boolean;
   hasNeighborhood: boolean;
+  hasDateRange: boolean;
+  cityWide: boolean;
   confidence: number;
   neighborhood?: string;
   minBedrooms?: number;
   maxPricePerNight?: number;
   budgetType?: "nightly" | "monthly" | "total_trip";
+  dateRangeLabel?: string;
 };
 
 const RENTAL_INTENT_RE =
@@ -44,6 +47,15 @@ const VIBE_RE =
 
 const MONTHLY_RE = /\b(month|monthly|per month|\/month|mes)\b/i;
 const TRIP_RE = /\b(for the trip|total|10 days|two weeks|\d+\s+days)\b/i;
+const MEDELLIN_CITY_RE = /\bmedell[ií]n\b/i;
+
+function parseDateRangeLabel(text: string): string | undefined {
+  const june = text.match(/\bjune\s+(\d{1,2})\s*(?:to|-)\s*(\d{1,2})\b/i);
+  if (june) return `June ${june[1]}–${june[2]}`;
+  if (/\bthis weekend\b/i.test(text)) return "this weekend";
+  if (/\btomorrow\b/i.test(text)) return "tomorrow";
+  return undefined;
+}
 
 function parseBudget(text: string): {
   maxPricePerNight?: number;
@@ -133,6 +145,9 @@ export function scoreRentalQuery(text: string): RentalQuerySignals {
   const hasBedrooms = minBedrooms != null;
   const hasVibeOrUseCase = VIBE_RE.test(normalized);
   const hasNeighborhood = neighborhood != null;
+  const dateRangeLabel = parseDateRangeLabel(normalized);
+  const hasDateRange = dateRangeLabel != null;
+  const cityWide = MEDELLIN_CITY_RE.test(normalized) && !hasNeighborhood;
 
   let confidence = 0.2;
   if (hasBudget && hasBedrooms) confidence = 0.9;
@@ -141,6 +156,8 @@ export function scoreRentalQuery(text: string): RentalQuerySignals {
   else if (hasVibeOrUseCase && hasNeighborhood) confidence = 0.65;
   else if (hasBudget && hasVibeOrUseCase) confidence = 0.65;
   else if (hasBedrooms) confidence = 0.55;
+  else if (hasBudget && hasDateRange && cityWide) confidence = 0.78;
+  else if (hasBudget && hasDateRange) confidence = 0.72;
   else if (hasBudget) confidence = 0.5;
   else if (hasNeighborhood && RENTAL_INTENT_RE.test(normalized)) confidence = 0.35;
   else if (hasNeighborhood) confidence = 0.35;
@@ -150,11 +167,14 @@ export function scoreRentalQuery(text: string): RentalQuerySignals {
     hasBedrooms,
     hasVibeOrUseCase,
     hasNeighborhood,
+    hasDateRange,
+    cityWide,
     confidence,
     neighborhood,
     minBedrooms,
     maxPricePerNight,
     budgetType,
+    dateRangeLabel,
   };
 }
 

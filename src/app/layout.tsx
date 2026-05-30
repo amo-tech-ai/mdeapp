@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
-import { CopilotKit } from "@copilotkit/react-core";
-import { getCopilotKitClientProps } from "@/lib/copilotkit-client-props";
+import { CopilotKitProvider } from "@/components/copilot/copilot-kit-provider";
 import "./globals.css";
 import "@copilotkit/react-ui/styles.css";
 
@@ -43,9 +42,9 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        <CopilotKit {...getCopilotKitClientProps("conciergeAgent")}>
+        <CopilotKitProvider>
           {children}
-        </CopilotKit>
+        </CopilotKitProvider>
       </body>
     </html>
   );
