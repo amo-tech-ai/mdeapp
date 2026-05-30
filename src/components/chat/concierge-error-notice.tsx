@@ -19,6 +19,7 @@ export function ConciergeErrorNotice({ onRetry }: Props) {
         <button
           type="button"
           onClick={onRetry}
+          aria-label="Try again"
           className="mt-2 flex items-center gap-1 font-medium text-primary hover:underline"
         >
           Try again ↻

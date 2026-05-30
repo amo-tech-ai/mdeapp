@@ -11,6 +11,7 @@ import {
 } from "@copilotkit/react-ui";
 import { ConciergeAssistantMessage, shouldSkipCopilotMessage } from "@/components/chat/concierge-assistant-message";
 import { ConciergeErrorNotice } from "@/components/chat/concierge-error-notice";
+import { ConciergeThinkingIndicator } from "@/components/chat/concierge-thinking-indicator";
 import { sanitizeAssistantChatContent } from "@/lib/sanitize-assistant-chat-content";
 import { useEventLocalChat } from "@/components/chat/event-local-chat-context";
 import {
@@ -19,6 +20,11 @@ import {
   getConciergeErrorVersionServer,
   subscribeConciergeError,
 } from "@/lib/concierge-error-store";
+import {
+  getConciergePendingSendVersion,
+  getConciergePendingSendVersionServer,
+  subscribeConciergePendingSend,
+} from "@/lib/concierge-pending-store";
 
 function makeInitialMessages(initial: string | string[] | undefined): Message[] {
   if (!initial) return [];
@@ -56,10 +62,17 @@ export function ConciergeChatMessages(props: MessagesProps) {
     getConciergeErrorVersion,
     getConciergeErrorVersionServer,
   );
+  const pendingVersion = useSyncExternalStore(
+    subscribeConciergePendingSend,
+    getConciergePendingSendVersion,
+    getConciergePendingSendVersionServer,
+  );
 
   // chatError: true only when a failed turn has not yet been acknowledged by a retry
   // or a new user message. Hidden while inProgress so the thinking indicator takes over.
   const chatError = !inProgress && errorVersion > 0;
+  const showThinking =
+    localMessages.length === 0 && !chatError && (inProgress || pendingVersion > 0);
 
   const handleRetry = useCallback(() => {
     clearConciergeError();
@@ -82,7 +95,7 @@ export function ConciergeChatMessages(props: MessagesProps) {
     const el = messagesContainerRef.current;
     if (!el) return;
     el.scrollTop = el.scrollHeight;
-  }, [copilotMessages.length, localMessages.length, inProgress]);
+  }, [copilotMessages.length, localMessages.length, inProgress, pendingVersion]);
 
   return (
     <div className="copilotKitMessages" ref={messagesContainerRef}>
@@ -132,6 +145,7 @@ export function ConciergeChatMessages(props: MessagesProps) {
           }
           return assistant;
         })}
+        {localMessages.length === 0 && showThinking && <ConciergeThinkingIndicator />}
         {localMessages.length === 0 && !inProgress && chatError && (
           <ConciergeErrorNotice onRetry={handleRetry} />
         )}
