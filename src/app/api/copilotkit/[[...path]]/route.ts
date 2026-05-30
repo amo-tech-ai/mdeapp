@@ -42,19 +42,19 @@ async function handleCopilotKit(req: NextRequest) {
   const unauthorized = assertCopilotKitAuthorized(req);
   if (unauthorized) return unauthorized;
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const requestContext = new RequestContext();
-  const userId = user?.id ?? null;
-  if (userId) {
-    requestContext.set(MASTRA_RESOURCE_ID_KEY, userId);
-    setAuditUserId(requestContext, userId);
-  }
-
   try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    const requestContext = new RequestContext();
+    const userId = user?.id ?? null;
+    if (userId) {
+      requestContext.set(MASTRA_RESOURCE_ID_KEY, userId);
+      setAuditUserId(requestContext, userId);
+    }
+
     return await buildHandler({ userId, requestContext })(req);
   } catch (error) {
     console.error("[copilotkit route failed]", error);
