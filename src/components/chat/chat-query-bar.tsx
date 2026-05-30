@@ -6,6 +6,7 @@ import { MessageRole, TextMessage } from "@copilotkit/runtime-client-gql";
 import type { ConciergeWorkingMemory } from "@/lib/types";
 import { eventSubChipPrompt } from "@/lib/event-query-classifier";
 import { useEventSearchFastPath } from "@/hooks/use-event-search-fast-path";
+import { clearConciergeError } from "@/lib/concierge-error-store";
 import { cn } from "@/lib/utils";
 import {
   CHAT_FILTER_CHIPS,
@@ -42,6 +43,7 @@ export function ChatQueryBar() {
     setLocalState(next);
     setState(next);
     if (!nextActive || isLoading) return;
+    clearConciergeError();
 
     const prompt = eventSubChipPrompt({
       label: chip.label,
