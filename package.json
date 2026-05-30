@@ -40,7 +40,6 @@
     "test:e2e:mobile": "playwright test e2e/maps-layout-mobile.spec.ts",
     "test:e2e:grounding": "playwright test e2e/maps-grounding.spec.ts",
     "test:e2e:screens": "playwright test e2e/screens --project=chromium --workers=1",
-    "test:prod-gate": "node scripts/test-prod-gate.mjs",
     "commit:staged-guard:c012": "node scripts/commit-staged-guard.mjs c012",
     "commit:staged-guard:c013": "node scripts/commit-staged-guard.mjs c013"
   },

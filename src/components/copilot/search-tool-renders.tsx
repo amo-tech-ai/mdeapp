@@ -105,7 +105,6 @@ function toCafeVenueDetail(
     photoName: row.photoName,
     photoAuthorAttributions: row.photoAuthorAttributions,
     fieldMaskVersion: row.fieldMaskVersion,
-    factsCheckedAt: row.fieldMaskVersion,
     rank,
   };
 }

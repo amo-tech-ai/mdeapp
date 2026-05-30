@@ -134,10 +134,13 @@ export const searchGroundedPlacesTool = createTool({
       ...row,
       mapsUrl: row.mapsUrl as string | undefined,
     }));
-    const attribution = adk.attribution.map((row, index) => ({
-      ...row,
-      title: results[index]?.title,
-    }));
+    // Align attribution to the filtered result set by placeUri↔mapsUrl join
+    // (NOT by index — café filtering drops rows, so index zipping mis-pairs
+    // titles and leaves stray entries with undefined titles). See audit B1.
+    const attribution = results.flatMap((row) => {
+      const source = adk.attribution.find((a) => a.placeUri === row.mapsUrl);
+      return source ? [{ ...source, title: row.title }] : [];
+    });
     return {
       results,
       attribution,

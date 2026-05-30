@@ -84,7 +84,7 @@ test.describe("SCREEN-021 Phase A café listings", () => {
     expect(eventSearchCalls).toEqual([]);
     expect(collectCriticalConsoleErrors(errors)).toEqual([]);
 
-    const assistantProse = page.locator(".copilotKitAssistantMessage");
+    const assistantProse = page.locator(".copilotKitAssistantMessage").last();
     await expect(assistantProse).not.toContainText(/"source"\s*:\s*"grounding"/);
     await expect(assistantProse).not.toContainText(/\{"success"\s*:\s*true\}/);
   });

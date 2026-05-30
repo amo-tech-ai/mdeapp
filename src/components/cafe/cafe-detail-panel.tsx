@@ -66,7 +66,7 @@ function mergeDetail(
     mapsUrl: e?.mapsUrl ?? card.mapsUrl,
     directionsUrl: e?.directionsUrl ?? card.directionsUrl,
     reviewsUrl: e?.reviewsUrl ?? card.reviewsUrl,
-    fieldMaskVersion: e?.fieldMaskVersion ?? card.factsCheckedAt,
+    fieldMaskVersion: e?.fieldMaskVersion ?? card.fieldMaskVersion,
     factsCheckedAt: e?.checkedAt ?? card.factsCheckedAt,
   };
 }

@@ -88,9 +88,9 @@ export function CafeBookingSheet({
               </div>
 
               <SheetFooter className="px-0">
-                {target.directionsUrl ?? target.mapsUrl ? (
+                {target.directionsUrl ? (
                   <a
-                    href={target.directionsUrl ?? target.mapsUrl}
+                    href={target.directionsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-border px-2.5 text-sm font-medium text-primary hover:bg-muted"
