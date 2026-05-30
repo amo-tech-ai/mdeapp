@@ -2,6 +2,7 @@ type PlaceResultCardProps = {
   title: string;
   subtitle?: string;
   priceLabel?: string;
+  evidenceText?: string;
   mapsUrl?: string;
   testId: string;
   pinId?: string;
@@ -13,6 +14,7 @@ export function PlaceResultCard({
   title,
   subtitle,
   priceLabel,
+  evidenceText,
   mapsUrl,
   testId,
   pinId,
@@ -60,6 +62,11 @@ export function PlaceResultCard({
       ) : null}
       {priceLabel ? (
         <p className="mt-1 text-xs text-muted-foreground">{priceLabel}</p>
+      ) : null}
+      {evidenceText ? (
+        <p className="mt-1 text-xs text-muted-foreground" data-testid="venue-evidence">
+          {evidenceText}
+        </p>
       ) : null}
     </article>
   );
