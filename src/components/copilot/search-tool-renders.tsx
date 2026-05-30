@@ -433,13 +433,36 @@ function GenericResults({
       pricePerTicket?: number;
       avgPricePerPerson?: number;
       priceUsd?: number;
+      evidence?: Array<{
+        sourceType: string;
+        sourceUrl: string | null;
+        extractedText: string | null;
+      }>;
     }>;
+    rankExplanation?: Array<{ factor: string; score: number; note: string }>;
+    hybridUsed?: boolean;
   };
   const rows = envelope.results ?? [];
+  const rankExplanation = envelope.rankExplanation ?? [];
 
   return (
     <>
       <ToolPinsSync category={category} result={result} />
+      {rankExplanation.length > 0 ? (
+        <div
+          className="rounded-md border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground"
+          data-testid="rank-explanation"
+        >
+          <p className="font-medium text-foreground">Why these results</p>
+          <ul className="mt-1 list-inside list-disc">
+            {rankExplanation.map((entry) => (
+              <li key={`${entry.factor}-${entry.note}`}>
+                {entry.factor} ({entry.score.toFixed(2)}): {entry.note}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
       {rows.length === 0 ? (
         <GenericEmptyState category={category} testId={`${testId}-empty`} />
       ) : (
@@ -460,6 +483,11 @@ function GenericResults({
                         ? "Free"
                         : `$${r.priceUsd}`
                       : undefined
+              }
+              evidenceText={
+                r.evidence?.[0]?.extractedText ??
+                r.evidence?.[0]?.sourceUrl ??
+                undefined
               }
             />
           ))}

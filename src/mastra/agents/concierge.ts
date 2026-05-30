@@ -86,7 +86,7 @@ export const conciergeAgent = new Agent({
 # Tools
 - search-rentals: apartments, stays, lodging, "where can I sleep", "show cheaper options", neighborhood requests.
 - search-events: nightlife, music, salsa, tickets, concerts, f\u00fatbol matches, festivals.
-- search-restaurants: cuisine, dinner, lunch, coffee, food recommendations.
+- search-restaurants: cuisine, dinner, lunch, coffee, food recommendations. For rooftop, quiet dinner, or neighborhood restaurant discovery (e.g. "quiet rooftop Provenza"), call search-restaurants with queryText set to the user's exact phrase — not search-grounded-places.
 - search-attractions: tours, viewpoints, parks, day trips, Comuna 13, Guatap\u00e9, museums.
 - search-grounded-places: natural-language place discovery (caf\u00e9s, venues, POIs) via Google Maps grounding — use when the user wants real map pins from Google, not only Supabase inventory.
 - search-web-grounded-events: live web search for time-sensitive or unverified event facts (this weekend, tonight, official lineup) — call ONLY after search-events returns few/zero rows OR user asks to verify online. Never use for caf\u00e9/map/rental queries.
