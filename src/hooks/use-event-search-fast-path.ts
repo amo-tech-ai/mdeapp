@@ -4,6 +4,7 @@ import { useCallback, useRef } from "react";
 import { useCoAgent } from "@copilotkit/react-core";
 import type { EventCard } from "@/mastra/tools/search-events";
 import { useEventLocalChat } from "@/components/chat/event-local-chat-context";
+import { useEventFastPath } from "@/components/chat/event-fast-path-context";
 import { EVENT_CLARIFY_MESSAGE } from "@/lib/event-clarify-copy";
 import {
   buildEventSearchParams,
@@ -40,7 +41,9 @@ export function useEventSearchFastPath() {
   const { state, setState } = useCoAgent<ConciergeWorkingMemory>({
     name: "conciergeAgent",
   });
-  const { clarifyPending, showClarify, showExchange } = useEventLocalChat();
+  const { clarifyPending, showClarify, showExchange, clearLocalMessages } =
+    useEventLocalChat();
+  const { setToolResult } = useEventFastPath();
   const { setRows, setWebCitations } = useEventSearchResults();
   const { mergePinsByCategory, requestFitBounds } = useMapContext();
   const busyRef = useRef(false);
@@ -52,6 +55,7 @@ export function useEventSearchFastPath() {
       memory: ConciergeWorkingMemory,
     ) => {
       const envelope = eventCardsToToolEnvelope(cards);
+      setToolResult(envelope);
       setWebCitations([]);
       setRows(
         cards.map((e) => ({
@@ -77,7 +81,7 @@ export function useEventSearchFastPath() {
         lastEventResults: eventCardsToPanelRows(cards),
       });
     },
-    [mergePinsByCategory, requestFitBounds, setRows, setWebCitations, setState],
+    [mergePinsByCategory, requestFitBounds, setRows, setToolResult, setWebCitations, setState],
   );
 
   const runSearch = useCallback(
@@ -89,7 +93,14 @@ export function useEventSearchFastPath() {
       if (busyRef.current) return true;
       busyRef.current = true;
       try {
-        const cards = await fetchEventSearch(params);
+        let cards = await fetchEventSearch(params);
+        if (
+          cards.length === 0 &&
+          params.dateWindow &&
+          params.dateWindow !== "any"
+        ) {
+          cards = await fetchEventSearch({ ...params, dateWindow: "any" });
+        }
         const query: ConciergeWorkingMemory["lastEventQuery"] = {
           category: params.category,
           neighborhood: params.neighborhood,
@@ -101,12 +112,13 @@ export function useEventSearchFastPath() {
         return true;
       } catch (err) {
         console.error("[event-fast-path]", err);
+        setToolResult(null);
         return false;
       } finally {
         busyRef.current = false;
       }
     },
-    [applySearchResults, showExchange],
+    [applySearchResults, showExchange, setToolResult],
   );
 
   const handleUserMessage = useCallback(
@@ -128,6 +140,7 @@ export function useEventSearchFastPath() {
         if (busyRef.current) return true;
         busyRef.current = true;
         try {
+          setToolResult(null);
           showClarify(trimmed, EVENT_CLARIFY_MESSAGE, "event");
           return true;
         } finally {
@@ -140,9 +153,10 @@ export function useEventSearchFastPath() {
       const params = buildEventSearchParams(trimmed, memory);
       if (!params) return false;
 
+      clearLocalMessages();
       return runSearch(trimmed, params, memory);
     },
-    [clarifyPending, runSearch, showClarify, state],
+    [clarifyPending, clearLocalMessages, runSearch, setToolResult, showClarify, state],
   );
 
   const handleEventChip = useCallback(

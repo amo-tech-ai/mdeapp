@@ -275,7 +275,7 @@ export function RentalResults({
   );
 }
 
-function EventResults({ result }: { result: unknown }) {
+export function EventResults({ result }: { result: unknown }) {
   const { selectedPinId, panToPin } = useMapContext();
   const { openVenueDetail } = useRentalUi();
   const { setRows, setWebCitations } = useEventSearchResults();
@@ -340,6 +340,7 @@ function EventResults({ result }: { result: unknown }) {
 
   return (
     <>
+      <RichCardResultsRegistrar category="event" count={rows.length} />
       <ToolPinsSync category="event" result={result} />
       {rows.length === 0 ? (
         <EmptyState

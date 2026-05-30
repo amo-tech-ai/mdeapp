@@ -8,11 +8,13 @@ export const scheduleViewingInputSchema = z.object({
   email: z.string().email().max(120),
   phone: z.string().max(40).optional(),
   preferredAt: z.string().min(1).max(40).optional(),
+  tripId: z.string().uuid().optional(),
 });
 
 export type ScheduleViewingInput = z.infer<typeof scheduleViewingInputSchema>;
 
 export type ScheduleViewingResult = {
   leadId: string;
+  showingId?: string;
   message: string;
 };

@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { scheduleViewingInputSchema } from "@/lib/leads/schedule-viewing-schema";
 import { createClient } from "@/lib/supabase/server";
@@ -5,6 +6,22 @@ import {
   getSupabaseAnonAuthHeaders,
   getSupabaseFunctionsBaseUrl,
 } from "@/lib/supabase/edge-functions";
+
+function buildScheduleIdempotencyKey(input: {
+  listingId: string;
+  email: string;
+  name: string;
+  preferredAt?: string;
+}): string {
+  const raw = [
+    input.listingId,
+    input.email.toLowerCase(),
+    input.name.trim().toLowerCase(),
+    input.preferredAt ?? "",
+  ].join("|");
+  const digest = createHash("sha256").update(raw).digest("hex").slice(0, 32);
+  return `sv-${digest}`;
+}
 
 export async function POST(req: Request) {
   let body: unknown;
@@ -50,6 +67,13 @@ export async function POST(req: Request) {
         listing_id: data.listingId,
         listing_title: data.listingTitle,
         preferred_at: data.preferredAt ?? null,
+        trip_id: data.tripId ?? null,
+        idempotency_key: buildScheduleIdempotencyKey({
+          listingId: data.listingId,
+          email: data.email,
+          name: data.name,
+          preferredAt: data.preferredAt,
+        }),
       }),
     },
   );
@@ -58,6 +82,7 @@ export async function POST(req: Request) {
     success?: boolean;
     data?: {
       lead_id?: string;
+      showing_id?: string;
       actions?: Array<{ payload?: { message?: string } }>;
     };
     error?: { message?: string };
@@ -82,6 +107,7 @@ export async function POST(req: Request) {
   return NextResponse.json({
     success: true,
     leadId: edgeJson.data.lead_id,
+    showingId: edgeJson.data.showing_id,
     message,
   });
 }
