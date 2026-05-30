@@ -36,6 +36,15 @@ ${GROUNDING_SNIPPET}
     expect(sanitizeAssistantChatContent(prose)).toBe(prose);
   });
 
+  it("strips a 'Maps grounding' heading the model echoes, keeping the intro", () => {
+    // Cards already show each café (rich CafeResultCard); the model must not
+    // also emit a "Maps grounding" list. Guards the wiring restored after 197394c.
+    const prose = "I found 5 quiet cafés near Laureles.\n\n### Maps grounding";
+    const cleaned = sanitizeAssistantChatContent(prose);
+    expect(cleaned).toBe("I found 5 quiet cafés near Laureles.");
+    expect(cleaned.toLowerCase()).not.toContain("maps grounding");
+  });
+
   it("keeps normal prose that mentions best option and next step", () => {
     const prose =
       "The best option for tonight is the salsa show in Poblado. Your next step is to book tickets early.";

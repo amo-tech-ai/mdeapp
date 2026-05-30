@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import type { GroundedPhotoAttribution } from "@/lib/parse-grounded-tool-result";
 
 export type ScheduleViewingTarget = {
   listingId: string;
@@ -54,15 +55,46 @@ export type EventVenueDetail = {
 
 export type VenueDetailTarget = RentalVenueDetail | EventVenueDetail;
 
+/** Grounded café card + map detail panel (SCREEN-021). */
+export type CafeVenueDetail = {
+  kind: "cafe";
+  pinId: string;
+  title: string;
+  placeId?: string;
+  mapsUrl?: string;
+  directionsUrl?: string;
+  reviewsUrl?: string;
+  rating?: number;
+  userRatingCount?: number;
+  priceLevel?: string;
+  openNow?: boolean | null;
+  formattedAddress?: string;
+  primaryType?: string;
+  summary?: string;
+  photoName?: string;
+  photoAuthorAttributions?: GroundedPhotoAttribution[];
+  fieldMaskVersion?: string;
+  factsCheckedAt?: string;
+  rank?: number;
+};
+
 type RentalUiContextValue = {
   scheduleTarget: ScheduleViewingTarget | null;
   venueDetail: VenueDetailTarget | null;
+  cafeDetail: CafeVenueDetail | null;
+  cafeSiblings: CafeVenueDetail[];
+  cafeBookingTarget: CafeVenueDetail | null;
+  cafeBookingOpen: boolean;
   leadConfirmation: LeadConfirmation | null;
   openScheduleViewing: (target: ScheduleViewingTarget) => void;
   closeScheduleViewing: () => void;
   openVenueDetail: (target: VenueDetailTarget) => void;
   setEventVenueStep: (step: EventVenueSheetStep) => void;
   closeVenueDetail: () => void;
+  openCafeDetail: (detail: CafeVenueDetail, siblings?: CafeVenueDetail[]) => void;
+  closeCafeDetail: () => void;
+  openCafeBooking: (target: CafeVenueDetail) => void;
+  closeCafeBooking: () => void;
   setLeadConfirmation: (value: LeadConfirmation | null) => void;
   clearLeadConfirmation: () => void;
 };
@@ -77,6 +109,11 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
   );
   const [leadConfirmation, setLeadConfirmation] =
     useState<LeadConfirmation | null>(null);
+  const [cafeDetail, setCafeDetail] = useState<CafeVenueDetail | null>(null);
+  const [cafeSiblings, setCafeSiblings] = useState<CafeVenueDetail[]>([]);
+  const [cafeBookingTarget, setCafeBookingTarget] =
+    useState<CafeVenueDetail | null>(null);
+  const [cafeBookingOpen, setCafeBookingOpen] = useState(false);
 
   const openScheduleViewing = useCallback((target: ScheduleViewingTarget) => {
     setScheduleTarget(target);
@@ -105,6 +142,30 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
     setVenueDetail(null);
   }, []);
 
+  const openCafeDetail = useCallback(
+    (detail: CafeVenueDetail, siblings: CafeVenueDetail[] = []) => {
+      setVenueDetail(null);
+      setCafeDetail(detail);
+      setCafeSiblings(siblings);
+    },
+    [],
+  );
+
+  const closeCafeDetail = useCallback(() => {
+    setCafeDetail(null);
+    setCafeSiblings([]);
+  }, []);
+
+  const openCafeBooking = useCallback((target: CafeVenueDetail) => {
+    setCafeBookingTarget(target);
+    setCafeBookingOpen(true);
+  }, []);
+
+  const closeCafeBooking = useCallback(() => {
+    setCafeBookingOpen(false);
+    setCafeBookingTarget(null);
+  }, []);
+
   const clearLeadConfirmation = useCallback(() => {
     setLeadConfirmation(null);
   }, []);
@@ -113,24 +174,40 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
     () => ({
       scheduleTarget,
       venueDetail,
+      cafeDetail,
+      cafeSiblings,
+      cafeBookingTarget,
+      cafeBookingOpen,
       leadConfirmation,
       openScheduleViewing,
       closeScheduleViewing,
       openVenueDetail,
       setEventVenueStep,
       closeVenueDetail,
+      openCafeDetail,
+      closeCafeDetail,
+      openCafeBooking,
+      closeCafeBooking,
       setLeadConfirmation,
       clearLeadConfirmation,
     }),
     [
       scheduleTarget,
       venueDetail,
+      cafeDetail,
+      cafeSiblings,
+      cafeBookingTarget,
+      cafeBookingOpen,
       leadConfirmation,
       openScheduleViewing,
       closeScheduleViewing,
       openVenueDetail,
       setEventVenueStep,
       closeVenueDetail,
+      openCafeDetail,
+      closeCafeDetail,
+      openCafeBooking,
+      closeCafeBooking,
       clearLeadConfirmation,
     ],
   );

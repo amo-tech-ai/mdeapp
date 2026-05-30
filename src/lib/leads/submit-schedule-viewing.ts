@@ -18,6 +18,7 @@ export async function submitScheduleViewing(
   const json = (await res.json()) as {
     success?: boolean;
     leadId?: string;
+    showingId?: string;
     message?: string;
     error?: { message?: string };
   };
@@ -28,6 +29,7 @@ export async function submitScheduleViewing(
 
   return {
     leadId: json.leadId,
+    showingId: json.showingId,
     message: json.message ?? "Viewing request received — we will reach out within 24h.",
   };
 }

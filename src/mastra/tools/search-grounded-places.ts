@@ -2,7 +2,10 @@ import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 import { enrichedGroundedPlaceFieldsSchema } from "../lib/adk-grounding-types";
 import { invokeAdkGrounding } from "../lib/adk-grounding-client";
-import { mapAdkGroundingPins } from "../lib/map-adk-grounding-pins";
+import {
+  mapAdkGroundingPins,
+  type GroundedPlaceResult,
+} from "../lib/map-adk-grounding-pins";
 import { incrementAndCheckGroundingQuota } from "../lib/grounding-quota";
 import { resolveGroundingLocationBias } from "../lib/grounding-location-bias";
 
@@ -18,6 +21,67 @@ const groundedPlaceResultSchema = z
     reviewsUrl: z.string().url().optional(),
   })
   .merge(enrichedGroundedPlaceFieldsSchema);
+
+const CAFE_QUERY =
+  /\b(caf[eé]s?|coffee shops?|quiet caf[eé]s?|top cafes?|list cafes?)\b/i;
+
+export function isCafeGroundingQuery(query: string): boolean {
+  return CAFE_QUERY.test(query);
+}
+
+export function isCafeGroundingIntent(
+  query: string,
+  intent?: string,
+): boolean {
+  if (intent === "cafe") return true;
+  return isCafeGroundingQuery(query);
+}
+
+export function normalizeCafeGroundingQuery(query: string): string {
+  if (!isCafeGroundingQuery(query)) return query;
+  return `${query.trim()}. Prefer specialty coffee roasters and brunch cafés. Exclude bar lounges and nightlife venues.`;
+}
+
+function isBarLoungeDistractor(title: string): boolean {
+  if (/\bskybar\b/i.test(title)) return true;
+  if (/\bbar\s*&\s*lounge\b/i.test(title)) return true;
+  if (/general cafe bar/i.test(title)) return true;
+  if (/\bcaf[eé]\s+noir\s+bar/i.test(title)) return true;
+  return false;
+}
+
+function isCafeCandidateTitle(title: string): boolean {
+  return /\bcaf[eé]|coffee|brunch/i.test(title);
+}
+
+export function filterCafeGroundingRows(
+  rows: GroundedPlaceResult[],
+  query: string,
+  intent?: string,
+): GroundedPlaceResult[] {
+  if (!isCafeGroundingIntent(query, intent)) return rows;
+  return rows.filter((row) => {
+    if (isBarLoungeDistractor(row.title)) return false;
+    return isCafeCandidateTitle(row.title);
+  });
+}
+
+type GroundedAttributionSource = {
+  source: string;
+  placeUri: string;
+  title?: string;
+};
+
+/** Join ADK attribution to filtered rows by mapsUrl — never index-zip (audit B1). */
+export function alignGroundedAttribution(
+  results: Array<{ title: string; mapsUrl?: string }>,
+  adkAttribution: GroundedAttributionSource[],
+): GroundedAttributionSource[] {
+  return results.flatMap((row) => {
+    const source = adkAttribution.find((a) => a.placeUri === row.mapsUrl);
+    return source ? [{ ...source, title: row.title }] : [];
+  });
+}
 
 export const searchGroundedPlacesTool = createTool({
   id: "search-grounded-places",
@@ -53,7 +117,8 @@ export const searchGroundedPlacesTool = createTool({
     pageSize?: number;
     locationBias?: { latitude: number; longitude: number };
   }) => {
-    const { query, pageSize, locationBias: inputBias } = inputData;
+    const { query: rawQuery, pageSize, locationBias: inputBias } = inputData;
+    const query = normalizeCafeGroundingQuery(rawQuery);
     const quota = await incrementAndCheckGroundingQuota();
     if (!quota.allowed) {
       return {
@@ -80,14 +145,13 @@ export const searchGroundedPlacesTool = createTool({
         metadata: adk.metadata,
       };
     }
-    const results = mapAdkGroundingPins(adk).map((row) => ({
+    const mapped = mapAdkGroundingPins(adk);
+    const filtered = filterCafeGroundingRows(mapped, rawQuery);
+    const results = filtered.map((row) => ({
       ...row,
       mapsUrl: row.mapsUrl as string | undefined,
     }));
-    const attribution = adk.attribution.map((row, index) => ({
-      ...row,
-      title: results[index]?.title,
-    }));
+    const attribution = alignGroundedAttribution(results, adk.attribution);
     return {
       results,
       attribution,

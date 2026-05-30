@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useCopilotAction } from "@copilotkit/react-core";
 import type { ReactElement } from "react";
+import { CafeResultCard } from "@/components/copilot/cafe-result-card";
 import { RentalCard } from "@/components/copilot/rental-card";
 import type { RentalSearchMeta } from "@/components/chat/rental-fast-path-context";
 import { EventCard } from "@/components/copilot/event-card";
@@ -10,9 +11,11 @@ import { PlaceResultCard } from "@/components/copilot/place-result-card";
 import { ToolErrorChip } from "@/components/copilot/tool-error-chip";
 import { EmptyState } from "@/components/empty/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
-import { GroundingAttribution } from "@/components/maps/GroundingAttribution";
 import { WebCitationList } from "@/components/copilot/web-citation-list";
-import { useRentalUi } from "@/components/chat/rental-ui-context";
+import {
+  useRentalUi,
+  type CafeVenueDetail,
+} from "@/components/chat/rental-ui-context";
 import { useEventSearchResults } from "@/components/chat/event-search-results-context";
 import { RichCardResultsRegistrar } from "@/components/chat/rich-card-results-context";
 import { useChatWorkflow } from "@/components/chat/chat-workflow-context";
@@ -24,11 +27,7 @@ import type { WorkflowKind } from "@/platform/copilot/workflow-steps";
 import { useMapContext } from "@/platform/maps/map-context";
 import { normalizeToolOutput } from "@/platform/maps/normalize-tool-output";
 import { normalizeToolEnvelope } from "@/lib/normalize-tool-envelope";
-import {
-  dedupeAttributionForDisplay,
-  parseGroundedToolResult,
-  shouldShowGroundingAttribution,
-} from "@/lib/parse-grounded-tool-result";
+import { parseGroundedToolResult } from "@/lib/parse-grounded-tool-result";
 import {
   getToolRenderErrorMessage,
   isToolRenderEmpty,
@@ -78,6 +77,96 @@ function rentalPinId(listingId: string) {
 
 function eventPinId(eventId: string) {
   return `event-${eventId}`;
+}
+
+function groundedPinId(id: string) {
+  return `grounded-${id}`;
+}
+
+function toCafeVenueDetail(
+  row: ReturnType<typeof parseGroundedToolResult>["results"][number],
+  rank: number,
+): CafeVenueDetail {
+  return {
+    kind: "cafe",
+    pinId: groundedPinId(row.id),
+    title: row.title,
+    placeId: row.placeId,
+    mapsUrl: row.mapsUrl,
+    directionsUrl: row.directionsUrl,
+    reviewsUrl: row.reviewsUrl,
+    rating: row.rating,
+    userRatingCount: row.userRatingCount,
+    priceLevel: row.priceLevel,
+    openNow: row.openNow,
+    formattedAddress: row.formattedAddress,
+    primaryType: row.primaryType,
+    summary: row.summary,
+    photoName: row.photoName,
+    photoAuthorAttributions: row.photoAuthorAttributions,
+    fieldMaskVersion: row.fieldMaskVersion,
+    rank,
+  };
+}
+
+function GroundedCafeResults({ result }: { result: unknown }) {
+  const { selectedPinId, panToPin } = useMapContext();
+  const { openCafeDetail, openCafeBooking } = useRentalUi();
+  const listRef = useRef<HTMLDivElement>(null);
+  const { results: rows } = parseGroundedToolResult(result);
+  const cafeRows = rows.map((r, index) => toCafeVenueDetail(r, index + 1));
+
+  useEffect(() => {
+    if (!selectedPinId || !listRef.current) return;
+    const card = listRef.current.querySelector(
+      `[data-pin-id="${selectedPinId}"]`,
+    );
+    card?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [selectedPinId]);
+
+  return (
+    <>
+      <RichCardResultsRegistrar category="grounded" count={rows.length} />
+      <ToolPinsSync category="grounded" result={result} />
+      {rows.length === 0 ? (
+        <EmptyState
+          testId="grounded-empty"
+          title="No places found"
+          description="Try a different query or area."
+        />
+      ) : (
+        <div ref={listRef} className="flex flex-col gap-2 py-2">
+          {cafeRows.map((detail) => (
+            <CafeResultCard
+              key={detail.pinId}
+              testId="grounded-card"
+              pinId={detail.pinId}
+              rank={detail.rank ?? 1}
+              title={detail.title}
+              mapsUrl={detail.mapsUrl}
+              directionsUrl={detail.directionsUrl}
+              reviewsUrl={detail.reviewsUrl}
+              rating={detail.rating}
+              userRatingCount={detail.userRatingCount}
+              priceLevel={detail.priceLevel}
+              openNow={detail.openNow}
+              primaryType={detail.primaryType}
+              summary={detail.summary}
+              formattedAddress={detail.formattedAddress}
+              photoName={detail.photoName}
+              photoAuthorAttributions={detail.photoAuthorAttributions}
+              placeId={detail.placeId}
+              fieldMaskVersion={detail.fieldMaskVersion}
+              selected={selectedPinId === detail.pinId}
+              onSelect={() => panToPin(detail.pinId)}
+              onOpenDetails={() => openCafeDetail(detail, cafeRows)}
+              onBookRequest={() => openCafeBooking(detail)}
+            />
+          ))}
+        </div>
+      )}
+    </>
+  );
 }
 
 export function RentalResults({
@@ -186,7 +275,7 @@ export function RentalResults({
   );
 }
 
-function EventResults({ result }: { result: unknown }) {
+export function EventResults({ result }: { result: unknown }) {
   const { selectedPinId, panToPin } = useMapContext();
   const { openVenueDetail } = useRentalUi();
   const { setRows, setWebCitations } = useEventSearchResults();
@@ -251,6 +340,7 @@ function EventResults({ result }: { result: unknown }) {
 
   return (
     <>
+      <RichCardResultsRegistrar category="event" count={rows.length} />
       <ToolPinsSync category="event" result={result} />
       {rows.length === 0 ? (
         <EmptyState
@@ -483,216 +573,147 @@ function rentalToolRender({
   );
 }
 
+type ToolRenderProps = { status: string; result: unknown };
+
+function eventToolRender({ status, result }: ToolRenderProps): ReactElement {
+  const body = resolveToolBody({
+    status,
+    result,
+    renderResults: <EventResults result={result} />,
+  });
+  return (
+    <ToolRenderShell kind="event" status={status}>
+      {body}
+    </ToolRenderShell>
+  );
+}
+
+function restaurantToolRender({ status, result }: ToolRenderProps): ReactElement {
+  const body = resolveToolBody({
+    status,
+    result,
+    renderResults: (
+      <GenericResults
+        category="restaurant"
+        result={result}
+        testId="restaurant-card"
+      />
+    ),
+  });
+  return (
+    <ToolRenderShell kind="restaurant" status={status}>
+      {body}
+    </ToolRenderShell>
+  );
+}
+
+function attractionToolRender({ status, result }: ToolRenderProps): ReactElement {
+  const body = resolveToolBody({
+    status,
+    result,
+    renderResults: (
+      <GenericResults
+        category="attraction"
+        result={result}
+        testId="attraction-card"
+      />
+    ),
+  });
+  return (
+    <ToolRenderShell kind="attraction" status={status}>
+      {body}
+    </ToolRenderShell>
+  );
+}
+
+function groundedToolRender({ status, result }: ToolRenderProps): ReactElement {
+  const body = resolveToolBody({
+    status,
+    result,
+    renderResults: <GroundedCafeResults result={result} />,
+  });
+  return (
+    <ToolRenderShell kind="grounded" status={status}>
+      {body}
+    </ToolRenderShell>
+  );
+}
+
+function webEventsToolRender({ status, result }: ToolRenderProps): ReactElement {
+  if (isToolRenderError(result, status)) {
+    return (
+      <ToolRenderShell kind="event" status={status}>
+        <ToolErrorChip message={getToolRenderErrorMessage(result)} />
+      </ToolRenderShell>
+    );
+  }
+  if (status !== "complete" || !result) {
+    return (
+      <ToolRenderShell kind="event" status={status}>
+        <LoadingCards />
+      </ToolRenderShell>
+    );
+  }
+  const row =
+    result && typeof result === "object"
+      ? (result as Record<string, unknown>)
+      : {};
+  const parsed = (Array.isArray(row.citations) ? row.citations : []).filter(
+    (c): c is { title: string; url: string; snippet?: string | null } =>
+      Boolean(
+        c &&
+          typeof c === "object" &&
+          typeof (c as { url?: string }).url === "string" &&
+          (c as { url: string }).url.startsWith("http") &&
+          typeof (c as { title?: string }).title === "string",
+      ),
+  );
+  const reason =
+    row.metadata && typeof row.metadata === "object"
+      ? (row.metadata as { reason?: string }).reason
+      : null;
+
+  if (parsed.length === 0 && !reason) {
+    return (
+      <ToolRenderShell kind="event" status={status}>
+        <></>
+      </ToolRenderShell>
+    );
+  }
+
+  return (
+    <ToolRenderShell kind="event" status={status}>
+      <WebCitationList citations={parsed} reason={reason} />
+    </ToolRenderShell>
+  );
+}
+
 function useDisabledToolRender(
   name: string,
-  render: (props: { status: string; result: unknown }) => ReactElement,
+  render: (props: ToolRenderProps) => ReactElement,
 ) {
   useCopilotAction({ name, available: "disabled", render }, []);
 }
 
 export function SearchToolRenders() {
-  const rentalRender = rentalToolRender;
-  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.rentals, rentalRender);
-  useDisabledToolRender(MASTRA_TOOL_IDS.rentals, rentalRender);
-
-  const eventRender = ({ status, result }: { status: string; result: unknown }) => {
-    const body = resolveToolBody({
-      status,
-      result,
-      renderResults: <EventResults result={result} />,
-    });
-    return (
-      <ToolRenderShell kind="event" status={status}>
-        {body}
-      </ToolRenderShell>
-    );
-  };
-  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.events, eventRender);
-  useDisabledToolRender(MASTRA_TOOL_IDS.events, eventRender);
-
-  const restaurantRender = ({
-    status,
-    result,
-  }: {
-    status: string;
-    result: unknown;
-  }) => {
-    const body = resolveToolBody({
-      status,
-      result,
-      renderResults: (
-        <GenericResults
-          category="restaurant"
-          result={result}
-          testId="restaurant-card"
-        />
-      ),
-    });
-    return (
-      <ToolRenderShell kind="restaurant" status={status}>
-        {body}
-      </ToolRenderShell>
-    );
-  };
-  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.restaurants, restaurantRender);
-  useDisabledToolRender(MASTRA_TOOL_IDS.restaurants, restaurantRender);
-
-  const attractionRender = ({
-    status,
-    result,
-  }: {
-    status: string;
-    result: unknown;
-  }) => {
-    const body = resolveToolBody({
-      status,
-      result,
-      renderResults: (
-        <GenericResults
-          category="attraction"
-          result={result}
-          testId="attraction-card"
-        />
-      ),
-    });
-    return (
-      <ToolRenderShell kind="attraction" status={status}>
-        {body}
-      </ToolRenderShell>
-    );
-  };
-  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.attractions, attractionRender);
-  useDisabledToolRender(MASTRA_TOOL_IDS.attractions, attractionRender);
-
-  const groundedRender = ({
-    status,
-    result,
-  }: {
-    status: string;
-    result: unknown;
-  }) => {
-    if (isToolRenderError(result, status)) {
-      return (
-        <ToolRenderShell kind="grounded" status={status}>
-          <ToolErrorChip message={getToolRenderErrorMessage(result)} />
-        </ToolRenderShell>
-      );
-    }
-    if (status !== "complete" || !result) {
-      return (
-        <ToolRenderShell kind="grounded" status={status}>
-          <LoadingCards />
-        </ToolRenderShell>
-      );
-    }
-    const { results: rows, attribution } = parseGroundedToolResult(result);
-    const cardMapsUrls = rows.map((r) => r.mapsUrl).filter(Boolean) as string[];
-    const attributionRows = shouldShowGroundingAttribution(attribution, cardMapsUrls)
-      ? dedupeAttributionForDisplay(attribution, cardMapsUrls)
-      : [];
-    return (
-      <ToolRenderShell kind="grounded" status={status}>
-        {rows.length === 0 ? (
-          <EmptyState
-            testId="grounded-empty"
-            title="No places found"
-            description="Try a different query or area."
-          />
-        ) : (
-          <>
-            <ToolPinsSync category="grounded" result={result} />
-            <div className="flex flex-col gap-2 py-2">
-              {rows.map((r) => (
-                <PlaceResultCard
-                  key={r.id}
-                  testId="grounded-card"
-                  title={r.title}
-                  mapsUrl={r.mapsUrl}
-                />
-              ))}
-              {attributionRows.length > 0 ? (
-                <GroundingAttribution rows={attributionRows} compact />
-              ) : rows.some((r) => r.mapsUrl) ? (
-                <p
-                  className="mt-1 text-xs text-muted-foreground"
-                  data-testid="grounding-attribution-compact"
-                >
-                  Sources:{" "}
-                  <a
-                    href="https://maps.google.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary underline"
-                  >
-                    Google Maps
-                  </a>
-                </p>
-              ) : null}
-            </div>
-          </>
-        )}
-      </ToolRenderShell>
-    );
-  };
-  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.grounded, groundedRender);
-  useDisabledToolRender(MASTRA_TOOL_IDS.grounded, groundedRender);
-
-  const webEventsRender = ({
-    status,
-    result,
-  }: {
-    status: string;
-    result: unknown;
-  }) => {
-    if (isToolRenderError(result, status)) {
-      return (
-        <ToolRenderShell kind="event" status={status}>
-          <ToolErrorChip message={getToolRenderErrorMessage(result)} />
-        </ToolRenderShell>
-      );
-    }
-    if (status !== "complete" || !result) {
-      return (
-        <ToolRenderShell kind="event" status={status}>
-          <LoadingCards />
-        </ToolRenderShell>
-      );
-    }
-    const row =
-      result && typeof result === "object"
-        ? (result as Record<string, unknown>)
-        : {};
-    const parsed = (Array.isArray(row.citations) ? row.citations : []).filter(
-      (c): c is { title: string; url: string; snippet?: string | null } =>
-        Boolean(
-          c &&
-            typeof c === "object" &&
-            typeof (c as { url?: string }).url === "string" &&
-            (c as { url: string }).url.startsWith("http") &&
-            typeof (c as { title?: string }).title === "string",
-        ),
-    );
-    const reason =
-      row.metadata && typeof row.metadata === "object"
-        ? (row.metadata as { reason?: string }).reason
-        : null;
-
-    if (parsed.length === 0 && !reason) {
-      return (
-        <ToolRenderShell kind="event" status={status}>
-          <></>
-        </ToolRenderShell>
-      );
-    }
-
-    return (
-      <ToolRenderShell kind="event" status={status}>
-        <WebCitationList citations={parsed} reason={reason} />
-      </ToolRenderShell>
-    );
-  };
-  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.webEvents, webEventsRender);
-  useDisabledToolRender(MASTRA_TOOL_IDS.webEvents, webEventsRender);
+  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.rentals, rentalToolRender);
+  useDisabledToolRender(MASTRA_TOOL_IDS.rentals, rentalToolRender);
+  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.events, eventToolRender);
+  useDisabledToolRender(MASTRA_TOOL_IDS.events, eventToolRender);
+  useDisabledToolRender(
+    MASTRA_COPILOT_TOOL_ACTIONS.restaurants,
+    restaurantToolRender,
+  );
+  useDisabledToolRender(MASTRA_TOOL_IDS.restaurants, restaurantToolRender);
+  useDisabledToolRender(
+    MASTRA_COPILOT_TOOL_ACTIONS.attractions,
+    attractionToolRender,
+  );
+  useDisabledToolRender(MASTRA_TOOL_IDS.attractions, attractionToolRender);
+  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.grounded, groundedToolRender);
+  useDisabledToolRender(MASTRA_TOOL_IDS.grounded, groundedToolRender);
+  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.webEvents, webEventsToolRender);
+  useDisabledToolRender(MASTRA_TOOL_IDS.webEvents, webEventsToolRender);
 
   return null;
 }

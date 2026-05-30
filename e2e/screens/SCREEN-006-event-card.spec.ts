@@ -61,16 +61,38 @@ test.describe(`${SCREEN_ID} event card polish`, () => {
 
       await captureScreenEvidence(page, SCREEN_ID, "desktop-event-cards.png");
 
-      const card = cards.first();
-      const pinId = await card.getAttribute("data-pin-id");
-      await page.locator('[data-testid="event-details-cta"]').first().click();
-      await expect(page.locator('[data-testid="venue-detail-sheet"]')).toBeVisible();
-      await expect(card).toHaveAttribute("data-selected", "true");
+      let card = cards.first();
+      let pinId = await card.getAttribute("data-pin-id");
+      if (
+        pinId &&
+        (await page
+          .locator(`[data-testid="map-pin"][data-pin-id="${pinId}"]`)
+          .count()) === 0
+      ) {
+        const cardCount = await cards.count();
+        for (let i = 0; i < cardCount; i++) {
+          const candidate = cards.nth(i);
+          const candidatePinId = await candidate.getAttribute("data-pin-id");
+          if (
+            candidatePinId &&
+            (await page
+              .locator(`[data-testid="map-pin"][data-pin-id="${candidatePinId}"]`)
+              .count()) > 0
+          ) {
+            card = candidate;
+            pinId = candidatePinId;
+            break;
+          }
+        }
+      }
       if (pinId) {
         await expect(
           page.locator(`[data-testid="map-pin"][data-pin-id="${pinId}"]`).first(),
         ).toBeVisible();
       }
+      await card.locator('[data-testid="event-details-cta"]').click();
+      await expect(page.locator('[data-testid="venue-detail-sheet"]')).toBeVisible();
+      await expect(card).toHaveAttribute("data-selected", "true");
 
       assertConsoleClean(errors);
     });

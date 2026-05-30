@@ -118,6 +118,35 @@ export async function waitForGroundedCards(page: Page) {
   });
 }
 
+/** Café grounding cards — retry with explicit tool nudge on agent flake. */
+export async function waitForCafeGroundedCards(page: Page) {
+  const cafeCard = page
+    .locator('[data-testid="grounded-card"][data-result-kind="cafe"]')
+    .first();
+  try {
+    await cafeCard.waitFor({ state: "visible", timeout: 120_000 });
+  } catch {
+    await sendConciergeMessage(
+      page,
+      "Show me quiet cafés near Laureles with photos and ratings on the map.",
+    );
+    await cafeCard.waitFor({ state: "visible", timeout: 120_000 });
+  }
+}
+
+/** Wait until CopilotKit finishes the current turn (streaming → idle). */
+export async function waitForCopilotIdle(page: Page, timeout = 120_000) {
+  await ensureChatInputVisible(page);
+  const send = page.locator('[data-testid="copilot-chat-ready"]').first();
+  await send.waitFor({ state: "attached", timeout: 15_000 });
+  await expect(send)
+    .toHaveAttribute("data-copilotkit-in-progress", "true", { timeout: 30_000 })
+    .catch(() => undefined);
+  await expect(send).toHaveAttribute("data-copilotkit-in-progress", "false", {
+    timeout,
+  });
+}
+
 /** @deprecated Use waitForGroundedCards — café cards replace attribution footer. */
 export async function waitForGroundingAttribution(page: Page) {
   await waitForGroundedCards(page);

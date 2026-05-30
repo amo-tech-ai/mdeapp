@@ -10,6 +10,7 @@ import { CenterPanelMapResultsSlot } from "@/components/chat/center-panel-map-re
 import { EventResultsPanel } from "@/components/chat/event-results-panel";
 import { WorkflowProgressStrip } from "@/components/chat/workflow-progress-strip";
 import { RentalFastPathPanel } from "@/components/chat/rental-fast-path-panel";
+import { EventFastPathPanel } from "@/components/chat/event-fast-path-panel";
 
 const CONCIERGE_LABELS = {
   title: "Medellín concierge",
@@ -42,6 +43,7 @@ export function ChatCenterPanel() {
           Messages={ConciergeChatMessages}
         />
         <RentalFastPathPanel />
+        <EventFastPathPanel />
       </div>
       <EventResultsPanel />
       <CenterPanelMapResultsSlot />

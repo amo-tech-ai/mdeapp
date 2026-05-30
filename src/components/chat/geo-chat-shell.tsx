@@ -6,6 +6,7 @@ import { ChatNavDrawer } from "@/components/chat/chat-nav-drawer";
 import { ChatWorkflowProvider } from "@/components/chat/chat-workflow-context";
 import { RentalUiProvider } from "@/components/chat/rental-ui-context";
 import { RentalFastPathProvider } from "@/components/chat/rental-fast-path-context";
+import { EventFastPathProvider } from "@/components/chat/event-fast-path-context";
 import { EventSearchResultsProvider } from "@/components/chat/event-search-results-context";
 import { RichCardResultsProvider } from "@/components/chat/rich-card-results-context";
 import { EventLocalChatProvider } from "@/components/chat/event-local-chat-context";
@@ -17,7 +18,22 @@ import { EventWebCitationSync } from "@/components/copilot/event-web-citation-sy
 import { LeadConfirmationBanner } from "@/components/chat/lead-confirmation-banner";
 import { ScheduleViewingModal } from "@/components/modals/schedule-viewing-modal";
 import { VenueDetailSheet } from "@/components/sheets/venue-detail-sheet";
+import { CafeBookingSheet } from "@/components/sheets/cafe-booking-sheet";
+import { useRentalUi } from "@/components/chat/rental-ui-context";
 import { MapsShell } from "@/components/maps/MapProvider";
+
+function CafeBookingSheetMount() {
+  const { cafeBookingTarget, cafeBookingOpen, closeCafeBooking } = useRentalUi();
+  return (
+    <CafeBookingSheet
+      target={cafeBookingTarget}
+      open={cafeBookingOpen}
+      onOpenChange={(open) => {
+        if (!open) closeCafeBooking();
+      }}
+    />
+  );
+}
 
 /** SCREEN-001 — Mindtrip shell: nav | center CopilotChat | map. */
 export function GeoChatShell() {
@@ -25,6 +41,7 @@ export function GeoChatShell() {
     <ChatWorkflowProvider>
       <RentalUiProvider>
         <RentalFastPathProvider>
+          <EventFastPathProvider>
           <EventSearchResultsProvider>
             <RichCardResultsProvider>
               <EventLocalChatProvider>
@@ -54,10 +71,12 @@ export function GeoChatShell() {
                 </MapsShell>
                 <ScheduleViewingModal />
                 <VenueDetailSheet />
+                <CafeBookingSheetMount />
               </div>
               </EventLocalChatProvider>
             </RichCardResultsProvider>
           </EventSearchResultsProvider>
+          </EventFastPathProvider>
         </RentalFastPathProvider>
       </RentalUiProvider>
     </ChatWorkflowProvider>

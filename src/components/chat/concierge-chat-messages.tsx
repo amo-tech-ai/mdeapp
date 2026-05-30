@@ -9,6 +9,7 @@ import {
   type MessagesProps,
 } from "@copilotkit/react-ui";
 import { ConciergeAssistantMessage, shouldSkipCopilotMessage } from "@/components/chat/concierge-assistant-message";
+import { sanitizeAssistantChatContent } from "@/lib/sanitize-assistant-chat-content";
 import { useEventLocalChat } from "@/components/chat/event-local-chat-context";
 
 function makeInitialMessages(initial: string | string[] | undefined): Message[] {
@@ -78,7 +79,7 @@ export function ConciergeChatMessages(props: MessagesProps) {
               </div>
             );
           }
-          const assistantText = local.content;
+          const assistantText = sanitizeAssistantChatContent(local.content);
           const assistant = (
             <div
               key={local.id}
