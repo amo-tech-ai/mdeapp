@@ -77,16 +77,22 @@ function SyncFromToolResult({
   return null;
 }
 
+function DefaultToolCitationBridge(props: {
+  name: string;
+  status: string;
+  result?: unknown;
+}) {
+  return (
+    <SyncFromToolResult
+      name={props.name}
+      status={props.status}
+      result={props.result}
+    />
+  );
+}
+
 /** MAP-002D — sync web citations from AG-UI tool results into EventResultsPanel. */
 export function EventWebCitationSync() {
-  useDefaultTool({
-    render: (props: { name: string; status: string; result?: unknown }) => (
-      <SyncFromToolResult
-        name={props.name}
-        status={props.status}
-        result={props.result}
-      />
-    ),
-  });
+  useDefaultTool({ render: DefaultToolCitationBridge });
   return null;
 }

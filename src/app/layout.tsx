@@ -28,6 +28,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* beforeInteractive belongs in <head> — avoids React 19 warning when sibling to client CopilotKit */}
+        <Script id="mde-maps-auth-failure" strategy="beforeInteractive">
+          {`window.__mdeMapsAuthFailed=false;window.gm_authFailure=function(){window.__mdeMapsAuthFailed=true;window.dispatchEvent(new CustomEvent("mde-maps-auth-failure"));};`}
+        </Script>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -37,9 +43,6 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        <Script id="mde-maps-auth-failure" strategy="beforeInteractive">
-          {`window.__mdeMapsAuthFailed=false;window.gm_authFailure=function(){window.__mdeMapsAuthFailed=true;window.dispatchEvent(new CustomEvent("mde-maps-auth-failure"));};`}
-        </Script>
         <CopilotKit {...getCopilotKitClientProps("conciergeAgent")}>
           {children}
         </CopilotKit>

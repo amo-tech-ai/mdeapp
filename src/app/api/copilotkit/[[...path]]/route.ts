@@ -38,7 +38,7 @@ function buildHandler(options: {
   }).handleRequest;
 }
 
-export const POST = async (req: NextRequest) => {
+async function handleCopilotKit(req: NextRequest) {
   const unauthorized = assertCopilotKitAuthorized(req);
   if (unauthorized) return unauthorized;
 
@@ -60,4 +60,8 @@ export const POST = async (req: NextRequest) => {
     console.error("[copilotkit route failed]", error);
     return new Response("CopilotKit route failed", { status: 500 });
   }
-};
+}
+
+/** Catch-all so GET /api/copilotkit/info and POST /api/copilotkit both reach the Hono handler. */
+export const GET = handleCopilotKit;
+export const POST = handleCopilotKit;

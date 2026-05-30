@@ -18,6 +18,7 @@ describe("getCopilotKitClientProps", () => {
     expect(props).toEqual({
       agent: "conciergeAgent",
       runtimeUrl: "/api/copilotkit",
+      useSingleEndpoint: true,
       showDevConsole: false,
     });
     expect("publicApiKey" in props).toBe(false);
@@ -32,6 +33,7 @@ describe("getCopilotKitClientProps", () => {
     expect(props).toEqual({
       agent: "hostEventAgent",
       runtimeUrl: "/api/copilotkit",
+      useSingleEndpoint: true,
       showDevConsole: false,
     });
   });

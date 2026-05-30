@@ -1,7 +1,13 @@
 type CopilotAgentName = "conciergeAgent" | "hostEventAgent";
 
 type CopilotKitClientProps =
-  | { agent: CopilotAgentName; runtimeUrl: string; publicApiKey?: never; showDevConsole: false }
+  | {
+      agent: CopilotAgentName;
+      runtimeUrl: string;
+      useSingleEndpoint: true;
+      publicApiKey?: never;
+      showDevConsole: false;
+    }
   | { agent: CopilotAgentName; publicApiKey: string; runtimeUrl?: never; showDevConsole: false };
 
 /**
@@ -18,5 +24,10 @@ export function getCopilotKitClientProps(agent: CopilotAgentName): CopilotKitCli
   // after dev restarts a stale .next chunk causes ChunkLoadError for that bundle.
   const inspectorOff = { showDevConsole: false as const };
 
-  return { runtimeUrl: "/api/copilotkit", agent, ...inspectorOff };
+  return {
+    runtimeUrl: "/api/copilotkit",
+    useSingleEndpoint: true,
+    agent,
+    ...inspectorOff,
+  };
 }

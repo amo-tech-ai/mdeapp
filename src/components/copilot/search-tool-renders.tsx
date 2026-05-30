@@ -572,164 +572,147 @@ function rentalToolRender({
   );
 }
 
+type ToolRenderProps = { status: string; result: unknown };
+
+function eventToolRender({ status, result }: ToolRenderProps): ReactElement {
+  const body = resolveToolBody({
+    status,
+    result,
+    renderResults: <EventResults result={result} />,
+  });
+  return (
+    <ToolRenderShell kind="event" status={status}>
+      {body}
+    </ToolRenderShell>
+  );
+}
+
+function restaurantToolRender({ status, result }: ToolRenderProps): ReactElement {
+  const body = resolveToolBody({
+    status,
+    result,
+    renderResults: (
+      <GenericResults
+        category="restaurant"
+        result={result}
+        testId="restaurant-card"
+      />
+    ),
+  });
+  return (
+    <ToolRenderShell kind="restaurant" status={status}>
+      {body}
+    </ToolRenderShell>
+  );
+}
+
+function attractionToolRender({ status, result }: ToolRenderProps): ReactElement {
+  const body = resolveToolBody({
+    status,
+    result,
+    renderResults: (
+      <GenericResults
+        category="attraction"
+        result={result}
+        testId="attraction-card"
+      />
+    ),
+  });
+  return (
+    <ToolRenderShell kind="attraction" status={status}>
+      {body}
+    </ToolRenderShell>
+  );
+}
+
+function groundedToolRender({ status, result }: ToolRenderProps): ReactElement {
+  const body = resolveToolBody({
+    status,
+    result,
+    renderResults: <GroundedCafeResults result={result} />,
+  });
+  return (
+    <ToolRenderShell kind="grounded" status={status}>
+      {body}
+    </ToolRenderShell>
+  );
+}
+
+function webEventsToolRender({ status, result }: ToolRenderProps): ReactElement {
+  if (isToolRenderError(result, status)) {
+    return (
+      <ToolRenderShell kind="event" status={status}>
+        <ToolErrorChip message={getToolRenderErrorMessage(result)} />
+      </ToolRenderShell>
+    );
+  }
+  if (status !== "complete" || !result) {
+    return (
+      <ToolRenderShell kind="event" status={status}>
+        <LoadingCards />
+      </ToolRenderShell>
+    );
+  }
+  const row =
+    result && typeof result === "object"
+      ? (result as Record<string, unknown>)
+      : {};
+  const parsed = (Array.isArray(row.citations) ? row.citations : []).filter(
+    (c): c is { title: string; url: string; snippet?: string | null } =>
+      Boolean(
+        c &&
+          typeof c === "object" &&
+          typeof (c as { url?: string }).url === "string" &&
+          (c as { url: string }).url.startsWith("http") &&
+          typeof (c as { title?: string }).title === "string",
+      ),
+  );
+  const reason =
+    row.metadata && typeof row.metadata === "object"
+      ? (row.metadata as { reason?: string }).reason
+      : null;
+
+  if (parsed.length === 0 && !reason) {
+    return (
+      <ToolRenderShell kind="event" status={status}>
+        <></>
+      </ToolRenderShell>
+    );
+  }
+
+  return (
+    <ToolRenderShell kind="event" status={status}>
+      <WebCitationList citations={parsed} reason={reason} />
+    </ToolRenderShell>
+  );
+}
+
 function useDisabledToolRender(
   name: string,
-  render: (props: { status: string; result: unknown }) => ReactElement,
+  render: (props: ToolRenderProps) => ReactElement,
 ) {
   useCopilotAction({ name, available: "disabled", render }, []);
 }
 
 export function SearchToolRenders() {
-  const rentalRender = rentalToolRender;
-  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.rentals, rentalRender);
-  useDisabledToolRender(MASTRA_TOOL_IDS.rentals, rentalRender);
-
-  const eventRender = ({ status, result }: { status: string; result: unknown }) => {
-    const body = resolveToolBody({
-      status,
-      result,
-      renderResults: <EventResults result={result} />,
-    });
-    return (
-      <ToolRenderShell kind="event" status={status}>
-        {body}
-      </ToolRenderShell>
-    );
-  };
-  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.events, eventRender);
-  useDisabledToolRender(MASTRA_TOOL_IDS.events, eventRender);
-
-  const restaurantRender = ({
-    status,
-    result,
-  }: {
-    status: string;
-    result: unknown;
-  }) => {
-    const body = resolveToolBody({
-      status,
-      result,
-      renderResults: (
-        <GenericResults
-          category="restaurant"
-          result={result}
-          testId="restaurant-card"
-        />
-      ),
-    });
-    return (
-      <ToolRenderShell kind="restaurant" status={status}>
-        {body}
-      </ToolRenderShell>
-    );
-  };
-  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.restaurants, restaurantRender);
-  useDisabledToolRender(MASTRA_TOOL_IDS.restaurants, restaurantRender);
-
-  const attractionRender = ({
-    status,
-    result,
-  }: {
-    status: string;
-    result: unknown;
-  }) => {
-    const body = resolveToolBody({
-      status,
-      result,
-      renderResults: (
-        <GenericResults
-          category="attraction"
-          result={result}
-          testId="attraction-card"
-        />
-      ),
-    });
-    return (
-      <ToolRenderShell kind="attraction" status={status}>
-        {body}
-      </ToolRenderShell>
-    );
-  };
-  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.attractions, attractionRender);
-  useDisabledToolRender(MASTRA_TOOL_IDS.attractions, attractionRender);
-
-  const groundedRender = ({
-    status,
-    result,
-  }: {
-    status: string;
-    result: unknown;
-  }) => {
-    const body = resolveToolBody({
-      status,
-      result,
-      renderResults: <GroundedCafeResults result={result} />,
-    });
-    return (
-      <ToolRenderShell kind="grounded" status={status}>
-        {body}
-      </ToolRenderShell>
-    );
-  };
-  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.grounded, groundedRender);
-  useDisabledToolRender(MASTRA_TOOL_IDS.grounded, groundedRender);
-
-  const webEventsRender = ({
-    status,
-    result,
-  }: {
-    status: string;
-    result: unknown;
-  }) => {
-    if (isToolRenderError(result, status)) {
-      return (
-        <ToolRenderShell kind="event" status={status}>
-          <ToolErrorChip message={getToolRenderErrorMessage(result)} />
-        </ToolRenderShell>
-      );
-    }
-    if (status !== "complete" || !result) {
-      return (
-        <ToolRenderShell kind="event" status={status}>
-          <LoadingCards />
-        </ToolRenderShell>
-      );
-    }
-    const row =
-      result && typeof result === "object"
-        ? (result as Record<string, unknown>)
-        : {};
-    const parsed = (Array.isArray(row.citations) ? row.citations : []).filter(
-      (c): c is { title: string; url: string; snippet?: string | null } =>
-        Boolean(
-          c &&
-            typeof c === "object" &&
-            typeof (c as { url?: string }).url === "string" &&
-            (c as { url: string }).url.startsWith("http") &&
-            typeof (c as { title?: string }).title === "string",
-        ),
-    );
-    const reason =
-      row.metadata && typeof row.metadata === "object"
-        ? (row.metadata as { reason?: string }).reason
-        : null;
-
-    if (parsed.length === 0 && !reason) {
-      return (
-        <ToolRenderShell kind="event" status={status}>
-          <></>
-        </ToolRenderShell>
-      );
-    }
-
-    return (
-      <ToolRenderShell kind="event" status={status}>
-        <WebCitationList citations={parsed} reason={reason} />
-      </ToolRenderShell>
-    );
-  };
-  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.webEvents, webEventsRender);
-  useDisabledToolRender(MASTRA_TOOL_IDS.webEvents, webEventsRender);
+  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.rentals, rentalToolRender);
+  useDisabledToolRender(MASTRA_TOOL_IDS.rentals, rentalToolRender);
+  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.events, eventToolRender);
+  useDisabledToolRender(MASTRA_TOOL_IDS.events, eventToolRender);
+  useDisabledToolRender(
+    MASTRA_COPILOT_TOOL_ACTIONS.restaurants,
+    restaurantToolRender,
+  );
+  useDisabledToolRender(MASTRA_TOOL_IDS.restaurants, restaurantToolRender);
+  useDisabledToolRender(
+    MASTRA_COPILOT_TOOL_ACTIONS.attractions,
+    attractionToolRender,
+  );
+  useDisabledToolRender(MASTRA_TOOL_IDS.attractions, attractionToolRender);
+  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.grounded, groundedToolRender);
+  useDisabledToolRender(MASTRA_TOOL_IDS.grounded, groundedToolRender);
+  useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.webEvents, webEventsToolRender);
+  useDisabledToolRender(MASTRA_TOOL_IDS.webEvents, webEventsToolRender);
 
   return null;
 }

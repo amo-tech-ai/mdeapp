@@ -120,9 +120,11 @@ function checkServiceRoleLeaks() {
 
 /** 5 — Pattern 1 bridge in copilotkit route */
 function checkCopilotRoute() {
-  const route = read("src/app/api/copilotkit/route.ts");
+  const route = read("src/app/api/copilotkit/[[...path]]/route.ts");
   if (!route.includes("getLocalAgentsWithLogging")) {
-    failures.push("api/copilotkit/route.ts must use getLocalAgentsWithLogging");
+    failures.push(
+      "api/copilotkit/[[...path]]/route.ts must use getLocalAgentsWithLogging",
+    );
   }
 }
 
