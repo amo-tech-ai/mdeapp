@@ -5,6 +5,8 @@ import { useCopilotChatInternal } from "@copilotkit/react-core";
 import type { Message } from "@copilotkit/shared";
 import { useRentalSearchFastPath } from "@/hooks/use-rental-search-fast-path";
 import { useEventSearchFastPath } from "@/hooks/use-event-search-fast-path";
+import { clearConciergeError } from "@/lib/concierge-error-store";
+import { ConciergeThinkingIndicator } from "@/components/chat/concierge-thinking-indicator";
 
 /** Mirrors CopilotKit InputProps — do not import from @copilotkit/react-ui (Input is not exported in 1.55.2). */
 export type ConciergeChatInputProps = {
@@ -77,6 +79,7 @@ export function ConciergeChatInput({
   const send = useCallback(async () => {
     const trimmed = text.trim();
     if (!trimmed || inProgress) return;
+    clearConciergeError();
     setText("");
     const handledRental = await handleRentalMessage(trimmed);
     if (handledRental) return;
@@ -98,6 +101,7 @@ export function ConciergeChatInput({
 
   return (
     <div className="copilotKitInputContainer">
+      {canStop && <ConciergeThinkingIndicator />}
       <div className="copilotKitInput">
         <textarea
           ref={textareaRef}
