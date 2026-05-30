@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  alignGroundedAttribution,
   filterCafeGroundingRows,
   isCafeGroundingIntent,
   isCafeGroundingQuery,
@@ -67,5 +68,33 @@ describe("search-grounded-places café quality filter", () => {
     ] satisfies GroundedPlaceResult[];
 
     expect(filterCafeGroundingRows(rows, "museums in centro")).toEqual(rows);
+  });
+
+  it("aligns attribution by placeUri after café filtering drops rows (B1)", () => {
+    const adkAttribution = [
+      {
+        source: "maps",
+        placeUri: "https://maps.google.com/?cid=bar",
+        title: "Wrong Bar Title",
+      },
+      {
+        source: "maps",
+        placeUri: "https://maps.google.com/?cid=cafe",
+        title: "Stale Café Title",
+      },
+    ];
+    const results = [
+      {
+        title: "Gardenia Brunch & Coffee",
+        mapsUrl: "https://maps.google.com/?cid=cafe",
+      },
+    ];
+    expect(alignGroundedAttribution(results, adkAttribution)).toEqual([
+      {
+        source: "maps",
+        placeUri: "https://maps.google.com/?cid=cafe",
+        title: "Gardenia Brunch & Coffee",
+      },
+    ]);
   });
 });

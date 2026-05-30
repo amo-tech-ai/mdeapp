@@ -66,6 +66,23 @@ export function filterCafeGroundingRows(
   });
 }
 
+type GroundedAttributionSource = {
+  source: string;
+  placeUri: string;
+  title?: string;
+};
+
+/** Join ADK attribution to filtered rows by mapsUrl — never index-zip (audit B1). */
+export function alignGroundedAttribution(
+  results: Array<{ title: string; mapsUrl?: string }>,
+  adkAttribution: GroundedAttributionSource[],
+): GroundedAttributionSource[] {
+  return results.flatMap((row) => {
+    const source = adkAttribution.find((a) => a.placeUri === row.mapsUrl);
+    return source ? [{ ...source, title: row.title }] : [];
+  });
+}
+
 export const searchGroundedPlacesTool = createTool({
   id: "search-grounded-places",
   description:
@@ -134,13 +151,7 @@ export const searchGroundedPlacesTool = createTool({
       ...row,
       mapsUrl: row.mapsUrl as string | undefined,
     }));
-    // Align attribution to the filtered result set by placeUri↔mapsUrl join
-    // (NOT by index — café filtering drops rows, so index zipping mis-pairs
-    // titles and leaves stray entries with undefined titles). See audit B1.
-    const attribution = results.flatMap((row) => {
-      const source = adk.attribution.find((a) => a.placeUri === row.mapsUrl);
-      return source ? [{ ...source, title: row.title }] : [];
-    });
+    const attribution = alignGroundedAttribution(results, adk.attribution);
     return {
       results,
       attribution,
