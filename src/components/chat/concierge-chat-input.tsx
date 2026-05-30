@@ -1,11 +1,18 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { useCopilotChatInternal } from "@copilotkit/react-core";
 import type { Message } from "@copilotkit/shared";
 import { useRentalSearchFastPath } from "@/hooks/use-rental-search-fast-path";
 import { useEventSearchFastPath } from "@/hooks/use-event-search-fast-path";
 import { clearConciergeError } from "@/lib/concierge-error-store";
+import {
+  clearConciergePendingSend,
+  getConciergePendingSendVersion,
+  getConciergePendingSendVersionServer,
+  setConciergePendingSend,
+  subscribeConciergePendingSend,
+} from "@/lib/concierge-pending-store";
 import { ConciergeThinkingIndicator } from "@/components/chat/concierge-thinking-indicator";
 
 /** Mirrors CopilotKit InputProps — do not import from @copilotkit/react-ui (Input is not exported in 1.55.2). */
@@ -69,12 +76,24 @@ export function ConciergeChatInput({
   const { handleUserMessage: handleEventMessage } = useEventSearchFastPath();
   const [text, setText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const pendingVersion = useSyncExternalStore(
+    subscribeConciergePendingSend,
+    getConciergePendingSendVersion,
+    getConciergePendingSendVersionServer,
+  );
+  const showThinking = inProgress || pendingVersion > 0;
 
   const canSend = useMemo(
     () => !inProgress && text.trim().length > 0 && !interrupt,
     [inProgress, text, interrupt],
   );
   const canStop = inProgress && !hideStopButton;
+
+  useEffect(() => {
+    if (!inProgress) {
+      clearConciergePendingSend();
+    }
+  }, [inProgress]);
 
   const send = useCallback(async () => {
     const trimmed = text.trim();
@@ -85,6 +104,7 @@ export function ConciergeChatInput({
     if (handledRental) return;
     const handledEvent = await handleEventMessage(trimmed);
     if (!handledEvent) {
+      setConciergePendingSend(true);
       await onSend(trimmed);
     }
     textareaRef.current?.focus();
@@ -101,7 +121,7 @@ export function ConciergeChatInput({
 
   return (
     <div className="copilotKitInputContainer">
-      {canStop && <ConciergeThinkingIndicator />}
+      {showThinking && <ConciergeThinkingIndicator />}
       <div className="copilotKitInput">
         <textarea
           ref={textareaRef}

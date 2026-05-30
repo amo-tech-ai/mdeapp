@@ -28,6 +28,7 @@ describe("ConciergeErrorNotice (UX-002)", () => {
     );
     expect(html).toContain("Try again");
     expect(html).toContain('type="button"');
+    expect(html).toContain('aria-label="Try again"');
   });
 
   it("wraps in copilotKit assistant message classes", () => {
