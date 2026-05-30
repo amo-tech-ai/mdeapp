@@ -75,7 +75,7 @@ function parseBudget(text: string): {
       budgetType: "total_trip",
     };
   }
-  if (amount >= 400 && !/\/\s*night|per night/i.test(text)) {
+  if (amount >= 400 && !/\bnight(?:ly)?\b/i.test(text)) {
     return { maxPricePerNight: Math.round(amount / 30), budgetType: "monthly" };
   }
   return { maxPricePerNight: amount, budgetType: "nightly" };
