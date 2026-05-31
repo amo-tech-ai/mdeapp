@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "task": "DATA-005",
+  "kind": "nightclub",
+  "city": "Medellín",
+  "anchors": [
+    {
+      "name": "Dulce Jesús Mío",
+      "search_query": "Dulce Jesus Mio Medellín bar Provenza",
+      "neighborhood": "Provenza",
+      "place_type": "bar",
+      "tags": ["themed", "reggaeton", "tourist-friendly", "live-music"],
+      "confidence_score": 98,
+      "listing_sources": ["nightlife-curated-v1"],
+      "why_special": "Iconic Antioquian-themed bar — staple Provenza nightlife for visitors.",
+      "ai_vibe_summary": "High-energy themed bar with reggaeton and classic paisa kitsch — loud, fun, tourist-safe crowd."
+    },
+    {
+      "name": "360 Rooftop Bar",
+      "search_query": "360 Rooftop Bar Restaurante Medellín Provenza",
+      "neighborhood": "Provenza",
+      "place_type": "bar",
+      "tags": ["rooftop", "cocktails", "reggaeton"],
+      "confidence_score": 96,
+      "listing_sources": ["nightlife-curated-v1"],
+      "why_special": "Provenza rooftop with city views and DJ sets.",
+      "ai_vibe_summary": "Upscale rooftop cocktails and reggaeton with skyline views."
+    },
+    {
+      "name": "Envy Roof Bar",
+      "search_query": "Envy Roof Bar Medellín Provenza",
+      "neighborhood": "Provenza",
+      "place_type": "bar",
+      "tags": ["rooftop", "cocktails", "dress-code"],
+      "confidence_score": 95,
+      "listing_sources": ["nightlife-curated-v1"],
+      "why_special": "Provenza rooftop cocktail bar popular with weekend crowds.",
+      "ai_vibe_summary": "Stylish rooftop bar — dress up, cocktails, late-night Provenza energy."
+    },
+    {
+      "name": "Salon Amador",
+      "search_query": "Salon Amador Medellín nightclub",
+      "neighborhood": "Provenza",
+      "place_type": "nightclub",
+      "tags": ["electronic", "techno", "late-night"],
+      "confidence_score": 94,
+      "listing_sources": ["nightlife-curated-v1"],
+      "why_special": "Medellín electronic music institution near Provenza.",
+      "ai_vibe_summary": "Underground electronic club for house and techno — late-night crowd."
+    },
+    {
+      "name": "VIVO Medellín",
+      "search_query": "La House Provenza Medellín nightclub",
+      "neighborhood": "Provenza",
+      "place_type": "nightclub",
+      "tags": ["reggaeton", "latin", "late-night"],
+      "confidence_score": 93,
+      "listing_sources": ["nightlife-curated-v1"],
+      "why_special": "Large-format Provenza nightclub (La House) for reggaeton and crossover hits.",
+      "ai_vibe_summary": "Big-room reggaeton club — peak weekend energy in Provenza."
+    },
+    {
+      "name": "Red Bar Medellín",
+      "search_query": "Red Bar Medellín El Poblado",
+      "neighborhood": "El Poblado",
+      "place_type": "bar",
+      "tags": ["cocktails", "expat-friendly", "late-night"],
+      "confidence_score": 90,
+      "listing_sources": ["nightlife-curated-v1"],
+      "why_special": "Long-running Poblado cocktail bar with steady expat traffic.",
+      "ai_vibe_summary": "Casual cocktail bar — good pre-game before Provenza clubs."
+    },
+    {
+      "name": "Bendito Seas",
+      "search_query": "Bendito Seas Parque Lleras Medellín",
+      "neighborhood": "Manila",
+      "place_type": "nightclub",
+      "tags": ["reggaeton", "latin", "late-night"],
+      "confidence_score": 92,
+      "listing_sources": ["nightlife-curated-v1"],
+      "why_special": "Manila reggaeton club — crossover hits and local crowd.",
+      "ai_vibe_summary": "Reggaeton-forward Manila club — younger local weekend scene."
+    },
+    {
+      "name": "Palma Pitón Manila",
+      "search_query": "Palma Pitón Manila Medellín nightclub",
+      "neighborhood": "Manila",
+      "place_type": "nightclub",
+      "tags": ["reggaeton", "latin", "late-night"],
+      "confidence_score": 88,
+      "listing_sources": ["nightlife-curated-v1"],
+      "why_special": "Manila nightclub — reggaeton and crossover nights.",
+      "ai_vibe_summary": "Latin reggaeton club in Manila — lively local weekend scene."
+    },
+    {
+      "name": "818 DISTRICT",
+      "search_query": "818 DISTRICT Laureles Medellín",
+      "neighborhood": "Laureles",
+      "place_type": "nightclub",
+      "tags": ["reggaeton", "crossover", "late-night"],
+      "confidence_score": 91,
+      "listing_sources": ["nightlife-curated-v1"],
+      "why_special": "Laureles nightlife district — alternative to Poblado circuit.",
+      "ai_vibe_summary": "Neighborhood club district — Laureles locals, less touristy than Provenza."
+    },
+    {
+      "name": "La Octava Bar",
+      "search_query": "La Octava Bar Medellín El Poblado",
+      "neighborhood": "El Poblado",
+      "place_type": "bar",
+      "tags": ["reggaeton", "crossover", "late-night"],
+      "confidence_score": 87,
+      "listing_sources": ["nightlife-curated-v1"],
+      "why_special": "Poblado bar with reggaeton and crossover nights.",
+      "ai_vibe_summary": "Late-night bar — reggaeton weekends near Provenza."
+    },
+    {
+      "name": "Son Havana",
+      "search_query": "Son Havana Medellín Laureles salsa bar",
+      "neighborhood": "Laureles",
+      "place_type": "bar",
+      "tags": ["live-music", "salsa", "late-night"],
+      "confidence_score": 89,
+      "listing_sources": ["nightlife-curated-v1"],
+      "why_special": "Live salsa and Cuban music — Laureles nightlife staple.",
+      "ai_vibe_summary": "Live salsa bar — dancing, bands, mixed tourist/local crowd."
+    },
+    {
+      "name": "La Ruana de Juana",
+      "search_query": "La Ruana de Juana Medellín El Poblado bar",
+      "neighborhood": "El Poblado",
+      "place_type": "bar",
+      "tags": ["local", "reggaeton", "late-night"],
+      "confidence_score": 86,
+      "listing_sources": ["nightlife-curated-v1"],
+      "why_special": "Classic Laureles bar with crossover and reggaeton nights.",
+      "ai_vibe_summary": "Neighborhood bar — reggaeton weekends, local Laureles vibe."
+    },
+    {
+      "name": "Bar Chupitos Provenza",
+      "search_query": "Bar Chupitos Provenza Medellín",
+      "neighborhood": "Provenza",
+      "place_type": "bar",
+      "tags": ["shooters", "pre-game", "tourist-friendly"],
+      "confidence_score": 85,
+      "listing_sources": ["nightlife-curated-v1"],
+      "why_special": "Provenza shooter bar — common pre-club stop.",
+      "ai_vibe_summary": "High-energy shooter bar — pre-game crowd before bigger clubs."
+    }
+  ]
+}
