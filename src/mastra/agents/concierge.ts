@@ -7,6 +7,7 @@ import { searchRestaurantsTool } from '../tools/search-restaurants';
 import { searchAttractionsTool } from '../tools/search-attractions';
 import { searchGroundedPlacesTool } from '../tools/search-grounded-places';
 import { searchWebGroundedEventsTool } from '../tools/search-web-grounded-events';
+import { extractIntentSlotsTool } from '../tools/extract-intent-slots';
 import { FLASH_MODEL } from "../lib/models";
 import { getDefaultInputProcessors } from "../lib/agent-input-processors";
 import { MapUiStateSchema } from "@/platform/contracts/map-ui-state";
@@ -14,7 +15,7 @@ import { formatEventSourcePromptHint } from "@/lib/events/trusted-event-sources"
 
 export const conciergeWorkingMemorySchema = z.object({
   lastIntent: z
-    .enum(['rental_search', 'event_discovery', 'chitchat', 'unknown'])
+    .enum(['rental_search', 'event_discovery', 'restaurant_search', 'cafe_search', 'chitchat', 'unknown'])
     .optional()
     .describe('Most recent classified user intent in this thread'),
   lastRentalQuery: z
@@ -235,6 +236,7 @@ Never reply with an empty list and no recovery.
 ${formatEventSourcePromptHint()}`,
   model: FLASH_MODEL,
   tools: {
+    extractIntentSlotsTool,
     searchRentalsTool,
     searchEventsTool,
     searchRestaurantsTool,
