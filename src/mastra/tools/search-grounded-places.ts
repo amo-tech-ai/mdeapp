@@ -9,6 +9,14 @@ import {
 import { incrementAndCheckGroundingQuota } from "../lib/grounding-quota";
 import { resolveGroundingLocationBias } from "../lib/grounding-location-bias";
 import { searchRestaurants, type Restaurant } from "./search-restaurants";
+import {
+  isCoffeeVenueQuery,
+  searchCafeVenueAnchors,
+  venueAnchorMapsUrl,
+  venueAnchorSummary,
+  venueAnchorToCoordinates,
+  type VenueAnchorRow,
+} from "./search-venue-anchors";
 
 const groundedPlaceResultSchema = z
   .object({
@@ -104,24 +112,46 @@ function restaurantToGroundedRow(r: Restaurant): GroundedPlaceResult {
   };
 }
 
+function anchorToGroundedRow(row: VenueAnchorRow): GroundedPlaceResult {
+  const { latitude, longitude } = venueAnchorToCoordinates(row);
+  return {
+    id: row.id,
+    title: row.name,
+    latitude,
+    longitude,
+    placeId: row.google_place_id,
+    mapsUrl: venueAnchorMapsUrl(row.google_place_id),
+    summary: venueAnchorSummary(row),
+    formattedAddress: row.neighborhood ?? undefined,
+    primaryType: "coffee_shop",
+  };
+}
+
 /**
- * Fallback when ADK grounding is unavailable — returns curated restaurant/café
- * rows from Supabase (or the in-process fallback list) mapped to GroundedPlaceResult.
+ * Fallback when ADK grounding is unavailable — café queries use venue_anchors
+ * (DATA-035); other queries use curated restaurants.
  */
 async function curatedFallback(
   rawQuery: string,
   pageSize: number,
 ): Promise<GroundedPlaceResult[]> {
   const neighborhood = neighborhoodFromGroundingQuery(rawQuery);
-  const isCoffee = /\b(coffee|caf[eé]|espresso)\b/i.test(rawQuery);
+  const isCoffee = isCoffeeVenueQuery(rawQuery);
+
+  if (isCoffee) {
+    const anchors = await searchCafeVenueAnchors({
+      neighborhood,
+      limit: pageSize,
+    });
+    if (anchors.length > 0) return anchors.map(anchorToGroundedRow);
+  }
+
   const { results } = await searchRestaurants({
     neighborhood,
     cuisine: isCoffee ? ("cafe" as const) : undefined,
     limit: pageSize,
   });
   if (results.length > 0) return results.map(restaurantToGroundedRow);
-  // B-10: if cuisine-filtered search returned empty (Supabase gap or no matching fallback),
-  // retry without cuisine filter to surface any neighborhood results.
   if (isCoffee) {
     const { results: broader } = await searchRestaurants({
       neighborhood,
