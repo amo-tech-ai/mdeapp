@@ -67,4 +67,15 @@ describe("event-query-classifier", () => {
       hasEventFastPathSignals("1BR in Laureles under $80/night", s),
     ).toBe(false);
   });
+
+  it("restaurant / dining queries are non-event even after a prior event search (B-09)", () => {
+    // These queries were misrouting to /api/events/search due to event memory
+    // after "salsa events this weekend" set lastEventQuery.category = "music"
+    expect(looksLikeNonEventSearch("quiet rooftop dinner in Provenza")).toBe(true);
+    expect(looksLikeNonEventSearch("rooftop dinner Poblado")).toBe(true);
+    expect(looksLikeNonEventSearch("nice place for lunch in Laureles")).toBe(true);
+    expect(looksLikeNonEventSearch("bistro near Parque Lleras")).toBe(true);
+    // "dinner events" still reaches event path (contains "events")
+    expect(looksLikeNonEventSearch("dinner events this weekend")).toBe(false);
+  });
 });
