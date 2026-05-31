@@ -7,6 +7,7 @@ import { searchRestaurantsTool } from '../tools/search-restaurants';
 import { searchAttractionsTool } from '../tools/search-attractions';
 import { searchGroundedPlacesTool } from '../tools/search-grounded-places';
 import { searchWebGroundedEventsTool } from '../tools/search-web-grounded-events';
+import { extractIntentSlotsTool } from '../tools/extract-intent-slots';
 import { FLASH_MODEL } from "../lib/models";
 import { getDefaultInputProcessors } from "../lib/agent-input-processors";
 import { MapUiStateSchema } from "@/platform/contracts/map-ui-state";
@@ -14,7 +15,7 @@ import { formatEventSourcePromptHint } from "@/lib/events/trusted-event-sources"
 
 export const conciergeWorkingMemorySchema = z.object({
   lastIntent: z
-    .enum(['rental_search', 'event_discovery', 'chitchat', 'unknown'])
+    .enum(['rental_search', 'event_discovery', 'restaurant_search', 'cafe_search', 'chitchat', 'unknown'])
     .optional()
     .describe('Most recent classified user intent in this thread'),
   lastRentalQuery: z
@@ -86,7 +87,7 @@ export const conciergeAgent = new Agent({
 # Tools
 - search-rentals: apartments, stays, lodging, "where can I sleep", "show cheaper options", neighborhood requests.
 - search-events: nightlife, music, salsa, tickets, concerts, f\u00fatbol matches, festivals.
-- search-restaurants: cuisine, dinner, lunch, coffee, food recommendations.
+- search-restaurants: cuisine, dinner, lunch, coffee, food recommendations. For rooftop, quiet dinner, or neighborhood restaurant discovery (e.g. "quiet rooftop Provenza"), call search-restaurants with queryText set to the user's exact phrase — not search-grounded-places.
 - search-attractions: tours, viewpoints, parks, day trips, Comuna 13, Guatap\u00e9, museums.
 - search-grounded-places: natural-language place discovery (caf\u00e9s, venues, POIs) via Google Maps grounding — use when the user wants real map pins from Google, not only Supabase inventory.
 - search-web-grounded-events: live web search for time-sensitive or unverified event facts (this weekend, tonight, official lineup) — call ONLY after search-events returns few/zero rows OR user asks to verify online. Never use for caf\u00e9/map/rental queries.
@@ -235,6 +236,7 @@ Never reply with an empty list and no recovery.
 ${formatEventSourcePromptHint()}`,
   model: FLASH_MODEL,
   tools: {
+    extractIntentSlotsTool,
     searchRentalsTool,
     searchEventsTool,
     searchRestaurantsTool,

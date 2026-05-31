@@ -3,6 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { extractNeighborhood } from './search-events';
 import { runAuditedSearch } from '../lib/run-audited-search';
+import { searchRestaurantsIntelligent } from '../lib/intelligence-restaurant-search';
+import { writeSearchLog, type RankExplanationEntry } from '../lib/search-logs';
 
 const cuisineEnum = z.enum([
   'colombian',
@@ -78,6 +80,8 @@ export type RestaurantQuery = {
   maxPricePerPerson?: number;
   minRating?: number;
   limit?: number;
+  /** Natural-language query — enables hybrid + venue_signals (SEARCH-003). */
+  queryText?: string;
 };
 
 export type RestaurantSource = 'supabase' | 'fallback';
@@ -89,6 +93,7 @@ interface RestaurantRow {
   price_level: number;
   address: string | null;
   city: string | null;
+  neighborhood: string | null;
   latitude: number | string | null;
   longitude: number | string | null;
   primary_image_url: string | null;
@@ -155,7 +160,7 @@ function rowToRestaurant(row: RestaurantRow): Restaurant {
     id: row.id,
     name: row.name,
     cuisine: mapCuisineFromTypes(row.cuisine_types),
-    neighborhood: extractNeighborhood(row.address, row.city),
+    neighborhood: row.neighborhood ?? extractNeighborhood(row.address, row.city),
     priceTier: priceLevelToTier(pl),
     avgPricePerPerson: estimateAvgPriceFromLevel(pl),
     currency: 'USD',
@@ -190,15 +195,74 @@ function applyRestaurantFilters(rows: Restaurant[], query: RestaurantQuery): Res
   return results;
 }
 
+export type RestaurantSearchResult = {
+  results: Restaurant[];
+  total: number;
+  source: RestaurantSource;
+  hybridUsed?: boolean;
+  rankExplanation?: RankExplanationEntry[];
+};
+
 export async function searchRestaurants(
   query: RestaurantQuery,
-): Promise<{ results: Restaurant[]; total: number; source: RestaurantSource }> {
+): Promise<RestaurantSearchResult> {
   const limit = query.limit ?? 5;
+
+  if (query.queryText?.trim()) {
+    const started = Date.now();
+    let intel: Awaited<ReturnType<typeof searchRestaurantsIntelligent>> | null = null;
+    try {
+      intel = await searchRestaurantsIntelligent(query);
+    } catch (err) {
+      console.warn('[search-restaurants] intelligent search failed:', err instanceof Error ? err.message : err);
+    }
+    const latencyMs = Date.now() - started;
+
+    // Apply filters after intelligent search; fall back to curated list on empty/error.
+    const intelFiltered = intel?.results?.length
+      ? applyRestaurantFilters(intel.results, query)
+      : [];
+
+    if (intelFiltered.length === 0) {
+      console.warn('[search-restaurants] intelligent path empty — using curated fallback');
+      const fallback = applyRestaurantFilters(FALLBACK_RESTAURANTS, query);
+      await writeSearchLog({
+        queryText: query.queryText,
+        slots: intel?.slots,
+        toolName: 'search-restaurants',
+        resultsCount: fallback.length,
+        latencyMs,
+        hybridUsed: false,
+        groundingUsed: false,
+      });
+      return { results: fallback.slice(0, limit), total: fallback.length, source: 'fallback' };
+    }
+
+    // Log final count (after filters) — not pre-filter count.
+    await writeSearchLog({
+      queryText: query.queryText,
+      slots: intel?.slots,
+      toolName: 'search-restaurants',
+      resultsCount: intelFiltered.length,
+      latencyMs,
+      hybridUsed: intel?.hybridUsed,
+      groundingUsed: false,
+      rankExplanation: intel?.rankExplanation,
+    });
+    return {
+      results: intelFiltered.slice(0, limit),
+      total: intelFiltered.length,
+      source: intel?.source ?? 'fallback',
+      hybridUsed: intel?.hybridUsed,
+      rankExplanation: intel?.rankExplanation,
+    };
+  }
+
   const client = getSupabaseClient();
 
   const returnFallback = (
     reason: 'no_client' | 'error' | 'empty_db',
-  ): { results: Restaurant[]; total: number; source: RestaurantSource } => {
+  ): RestaurantSearchResult => {
     if (reason !== 'no_client') {
       console.warn(`[search-restaurants] ${reason} — using fallback list`);
     } else {
@@ -215,14 +279,22 @@ export async function searchRestaurants(
   let q = client
     .from('restaurants')
     .select(
-      'id, name, cuisine_types, price_level, address, city, latitude, longitude, primary_image_url, rating, tags, google_place_id, maps_url, ai_summary',
+      'id, name, cuisine_types, price_level, address, city, neighborhood, latitude, longitude, primary_image_url, rating, tags, google_place_id, maps_url, ai_summary',
     )
     .eq('is_active', true)
     .order('rating', { ascending: false, nullsFirst: false })
     .limit(48);
 
   if (query.neighborhood) {
-    q = q.or(`address.ilike.%${query.neighborhood}%,city.ilike.%${query.neighborhood}%`);
+    // Strip PostgREST-special chars (commas, parens, dots) before filter string interpolation.
+    const safeNeighborhood = query.neighborhood
+      .replace(/[^a-zA-ZáéíóúüñÁÉÍÓÚÜÑ0-9\s\-]/g, "")
+      .trim();
+    if (safeNeighborhood) {
+      q = q.or(
+        `neighborhood.ilike.%${safeNeighborhood}%,address.ilike.%${safeNeighborhood}%,city.ilike.%${safeNeighborhood}%`,
+      );
+    }
   }
 
   const { data, error } = await q;
@@ -256,16 +328,44 @@ export const searchRestaurantsTool = createTool({
     maxPricePerPerson: z.number().positive().optional().describe('USD'),
     minRating: z.number().min(0).max(5).optional(),
     limit: z.number().int().min(1).max(20).default(5),
+    queryText: z
+      .string()
+      .optional()
+      .describe('Natural-language search e.g. quiet rooftop dinner in Provenza'),
   }),
   outputSchema: z.object({
-    results: z.array(restaurantSchema),
+    results: z.array(
+      restaurantSchema.extend({
+        rankScore: z.number().optional(),
+        evidence: z
+          .array(
+            z.object({
+              sourceType: z.string(),
+              sourceUrl: z.string().nullable(),
+              extractedText: z.string().nullable(),
+            }),
+          )
+          .optional(),
+      }),
+    ),
     total: z.number(),
     source: z.enum(['supabase', 'fallback']),
+    hybridUsed: z.boolean().optional(),
+    rankExplanation: z
+      .array(
+        z.object({
+          factor: z.string(),
+          score: z.number(),
+          note: z.string(),
+        }),
+      )
+      .optional(),
   }),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   execute: async (inputData: RestaurantQuery, context?: any) => {
-    const { cuisine, neighborhood, maxPricePerPerson, minRating, limit = 5 } = inputData;
-    const { results, total, source } = await runAuditedSearch(
+    const { cuisine, neighborhood, maxPricePerPerson, minRating, limit = 5, queryText } =
+      inputData;
+    const { results, total, source, hybridUsed, rankExplanation } = await runAuditedSearch(
       'search-restaurants',
       searchRestaurants,
       {
@@ -274,6 +374,7 @@ export const searchRestaurantsTool = createTool({
         maxPricePerPerson,
         minRating,
         limit,
+        queryText,
       },
       context,
     );
@@ -295,15 +396,18 @@ export const searchRestaurantsTool = createTool({
           sourceUrl: r.sourceUrl,
           latitude: r.latitude ?? null,
           longitude: r.longitude ?? null,
-          // MASTRA-048: enrichment fields — null until enrich-places.ts + cache-ai-summaries.ts run
           placeId: r.placeId ?? null,
           mapsUrl: r.mapsUrl ?? null,
           aiSummary: r.aiSummary ?? null,
+          rankScore: 'rankScore' in r ? (r as { rankScore?: number }).rankScore : undefined,
+          evidence: 'evidence' in r ? (r as { evidence?: unknown[] }).evidence : undefined,
         })),
         source,
+        hybridUsed: hybridUsed ?? false,
+        rankExplanation: rankExplanation ?? [],
       },
     });
 
-    return { results, total, source };
+    return { results, total, source, hybridUsed, rankExplanation };
   },
 });
