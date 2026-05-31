@@ -291,29 +291,6 @@ export const searchEventsTool = createTool({
       context,
     );
 
-    await context?.writer?.custom({
-      type: 'data-mdeai-actions',
-      data: {
-        kind: 'event_results',
-        cards: results.map((e) => ({
-          id: e.id,
-          title: e.title,
-          category: e.category,
-          venue: e.venue,
-          neighborhood: e.neighborhood,
-          startsAt: e.startsAt,
-          pricePerTicket: e.pricePerTicket,
-          currency: e.currency,
-          imageUrl: e.imageUrl,
-          sourceUrl: e.sourceUrl ?? e.mapsUrl ?? `https://mdeai.co/events/${e.id}`,
-          latitude: e.latitude ?? null,
-          longitude: e.longitude ?? null,
-          mapsUrl: e.mapsUrl ?? null,
-        })),
-        source,
-      },
-    });
-
     return { results, total, source };
   },
 });
