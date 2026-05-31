@@ -9,6 +9,7 @@ import { RENTAL_CLARIFY_MESSAGE } from "@/lib/rental-clarify-copy";
 import {
   buildRentalSearchParams,
   canFastPathRentalSearch,
+  fastPathRentalSummary,
   rentalsToPanelRows,
   rentalsToToolEnvelope,
   shouldInstantRentalClarify,
@@ -82,7 +83,7 @@ export function useRentalSearchFastPath() {
         };
         setSearchMeta({ userText, params });
         applySearchResults(cards, query, memory);
-        showExchange(userText, "");
+        showExchange(userText, fastPathRentalSummary(cards.length));
         return true;
       } catch (err) {
         console.error("[rental-fast-path]", err);

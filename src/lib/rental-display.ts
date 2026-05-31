@@ -108,5 +108,5 @@ export function fastPathRentalSummary(count: number): string {
   if (count === 0) {
     return "No rentals matched — try a wider budget or another neighborhood.";
   }
-  return "";
+  return `Found ${count} rental${count === 1 ? "" : "s"} — see cards below and pins on the map.`;
 }
