@@ -5,7 +5,7 @@ import { useCopilotChatInternal } from "@copilotkit/react-core";
 import type { Message } from "@copilotkit/shared";
 import { useRentalSearchFastPath } from "@/hooks/use-rental-search-fast-path";
 import { useEventSearchFastPath } from "@/hooks/use-event-search-fast-path";
-import { clearConciergeError } from "@/lib/concierge-error-store";
+import { clearConciergeError, reportConciergeError } from "@/lib/concierge-error-store";
 import {
   clearConciergePendingSend,
   getConciergePendingSendVersion,
@@ -105,7 +105,12 @@ export function ConciergeChatInput({
     const handledEvent = await handleEventMessage(trimmed);
     if (!handledEvent) {
       setConciergePendingSend(true);
-      await onSend(trimmed);
+      try {
+        await onSend(trimmed);
+      } catch {
+        clearConciergePendingSend();
+        reportConciergeError();
+      }
     }
     textareaRef.current?.focus();
   }, [text, inProgress, handleRentalMessage, handleEventMessage, onSend]);
