@@ -5,6 +5,7 @@ import { useCoAgent } from "@copilotkit/react-core";
 import type { EventCard } from "@/mastra/tools/search-events";
 import { useEventLocalChat } from "@/components/chat/event-local-chat-context";
 import { useEventFastPath } from "@/components/chat/event-fast-path-context";
+import { useRentalFastPath } from "@/components/chat/rental-fast-path-context";
 import { EVENT_CLARIFY_MESSAGE } from "@/lib/event-clarify-copy";
 import {
   buildEventSearchParams,
@@ -44,6 +45,8 @@ export function useEventSearchFastPath() {
   const { clarifyPending, showClarify, showExchange, clearLocalMessages } =
     useEventLocalChat();
   const { setToolResult } = useEventFastPath();
+  const { setToolResult: setRentalToolResult, setSearchMeta: setRentalSearchMeta } =
+    useRentalFastPath();
   const { setRows, setWebCitations } = useEventSearchResults();
   const { mergePinsByCategory, requestFitBounds } = useMapContext();
   const busyRef = useRef(false);
@@ -54,6 +57,9 @@ export function useEventSearchFastPath() {
       query: ConciergeWorkingMemory["lastEventQuery"],
       memory: ConciergeWorkingMemory,
     ) => {
+      setRentalToolResult(null);
+      setRentalSearchMeta(null);
+      mergePinsByCategory("rental", []);
       const envelope = eventCardsToToolEnvelope(cards);
       setToolResult(envelope);
       setWebCitations([]);
@@ -81,7 +87,7 @@ export function useEventSearchFastPath() {
         lastEventResults: eventCardsToPanelRows(cards),
       });
     },
-    [mergePinsByCategory, requestFitBounds, setRows, setToolResult, setWebCitations, setState],
+    [mergePinsByCategory, requestFitBounds, setRows, setToolResult, setWebCitations, setState, setRentalToolResult, setRentalSearchMeta],
   );
 
   const runSearch = useCallback(

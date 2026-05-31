@@ -5,6 +5,7 @@ import { useCoAgent } from "@copilotkit/react-core";
 import type { Rental } from "@/mastra/tools/search-rentals";
 import { useEventLocalChat } from "@/components/chat/event-local-chat-context";
 import { useRentalFastPath } from "@/components/chat/rental-fast-path-context";
+import { useEventFastPath } from "@/components/chat/event-fast-path-context";
 import { RENTAL_CLARIFY_MESSAGE } from "@/lib/rental-clarify-copy";
 import {
   buildRentalSearchParams,
@@ -18,9 +19,15 @@ import type { ConciergeWorkingMemory } from "@/lib/types";
 import { useMapContext } from "@/platform/maps/map-context";
 import { normalizeToolOutput } from "@/platform/maps/normalize-tool-output";
 
+type RentalSearchResponse = {
+  results: Rental[];
+  hybridUsed?: boolean;
+  rankExplanation?: Array<{ factor: string; score: number; note: string }>;
+};
+
 async function fetchRentalSearch(
   params: RentalSearchApiParams,
-): Promise<Rental[]> {
+): Promise<RentalSearchResponse> {
   const res = await fetch("/api/rentals/search", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -29,8 +36,7 @@ async function fetchRentalSearch(
   if (!res.ok) {
     throw new Error(`rental search failed: ${res.status}`);
   }
-  const data = (await res.json()) as { results: Rental[] };
-  return data.results ?? [];
+  return (await res.json()) as RentalSearchResponse;
 }
 
 export function useRentalSearchFastPath() {
@@ -40,6 +46,7 @@ export function useRentalSearchFastPath() {
   const { clarifyPending, clarifyKind, showClarify, showExchange, clearLocalMessages } =
     useEventLocalChat();
   const { setToolResult, setSearchMeta } = useRentalFastPath();
+  const { setToolResult: setEventToolResult } = useEventFastPath();
   const { mergePinsByCategory, requestFitBounds } = useMapContext();
   const busyRef = useRef(false);
 
@@ -48,8 +55,11 @@ export function useRentalSearchFastPath() {
       cards: Rental[],
       query: ConciergeWorkingMemory["lastRentalQuery"],
       memory: ConciergeWorkingMemory,
+      meta?: { hybridUsed?: boolean; rankExplanation?: Array<{ factor: string; score: number; note: string }> },
     ) => {
-      const envelope = rentalsToToolEnvelope(cards);
+      setEventToolResult(null);
+      mergePinsByCategory("event", []);
+      const envelope = rentalsToToolEnvelope(cards, meta);
       setToolResult(envelope);
       const { pins } = normalizeToolOutput("rental", envelope);
       mergePinsByCategory("rental", pins);
@@ -61,7 +71,7 @@ export function useRentalSearchFastPath() {
         lastRentalResults: rentalsToPanelRows(cards),
       });
     },
-    [mergePinsByCategory, requestFitBounds, setState, setToolResult],
+    [mergePinsByCategory, requestFitBounds, setState, setToolResult, setEventToolResult],
   );
 
   const runSearch = useCallback(
@@ -73,7 +83,7 @@ export function useRentalSearchFastPath() {
       if (busyRef.current) return true;
       busyRef.current = true;
       try {
-        const cards = await fetchRentalSearch(params);
+        const { results: cards, hybridUsed, rankExplanation } = await fetchRentalSearch(params);
         const query: ConciergeWorkingMemory["lastRentalQuery"] = {
           neighborhood: params.neighborhood,
           minBedrooms: params.minBedrooms,
@@ -81,7 +91,7 @@ export function useRentalSearchFastPath() {
           genericAskPending: false,
         };
         setSearchMeta({ userText, params });
-        applySearchResults(cards, query, memory);
+        applySearchResults(cards, query, memory, { hybridUsed, rankExplanation });
         showExchange(userText, "");
         return true;
       } catch (err) {

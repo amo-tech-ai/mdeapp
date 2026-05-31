@@ -10,6 +10,7 @@ const bodySchema = z.object({
   minBedrooms: z.number().int().min(0).optional(),
   maxPricePerNight: z.number().positive().optional(),
   limit: z.number().int().min(1).max(20).optional().default(8),
+  queryText: z.string().optional(),
 });
 
 /** Fast path — rental search without conciergeAgent round-trip. */
@@ -29,15 +30,16 @@ export async function POST(req: Request) {
     );
   }
 
-  const { neighborhood, minBedrooms, maxPricePerNight, limit } = parsed.data;
+  const { neighborhood, minBedrooms, maxPricePerNight, limit, queryText } = parsed.data;
   try {
-    const { results, total, source } = await searchRentals({
+    const { results, total, source, hybridUsed, rankExplanation } = await searchRentals({
       neighborhood,
       minBedrooms,
       maxPricePerNight,
       limit,
+      queryText,
     });
-    return NextResponse.json({ results, total, source });
+    return NextResponse.json({ results, total, source, hybridUsed, rankExplanation });
   } catch (error) {
     console.error("[api/rentals/search]", error);
     return NextResponse.json(
