@@ -52,7 +52,8 @@ export function buildEventSearchParams(
       !s.hasNeighborhood;
 
     return {
-      category: s.category ?? q?.category,
+      // UX-019 Option B L55: never inherit stale category when current message has none.
+      category: s.hasCategory ? s.category : undefined,
       neighborhood: answeringClarifyCategoryOnly
         ? undefined
         : s.neighborhood ?? q?.neighborhood,
@@ -78,14 +79,7 @@ export function buildEventSearchParams(
     }
   }
 
-  if (q?.category || q?.neighborhood || (q?.dateWindow && q.dateWindow !== "any")) {
-    return {
-      category: q.category,
-      neighborhood: q.neighborhood,
-      dateWindow: (q.dateWindow ?? "any") as EventDateWindow,
-      limit: FAST_PATH_LIMIT,
-    };
-  }
+  // UX-019 Option B L81: bare follow-ups ("ok", "and there?") must not replay memory alone.
 
   return null;
 }
