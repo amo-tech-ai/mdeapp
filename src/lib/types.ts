@@ -8,7 +8,7 @@ export type MdeState = {
 
 /** Mirrors conciergeWorkingMemorySchema — keep in sync with concierge.ts */
 export type ConciergeWorkingMemory = {
-  lastIntent?: "rental_search" | "event_discovery" | "chitchat" | "unknown";
+  lastIntent?: "rental_search" | "event_discovery" | "restaurant_search" | "cafe_search" | "chitchat" | "unknown";
   lastRentalQuery?: {
     neighborhood?: string;
     minBedrooms?: number;

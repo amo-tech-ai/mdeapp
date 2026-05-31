@@ -90,4 +90,18 @@ describe("conciergeAgent", () => {
     });
     expect(parsed.lastEventQuery?.category).toBe("nightlife");
   });
+
+  it("registers extract-intent-slots tool for INT-001 routing", async () => {
+    const tools = await conciergeAgent.listTools();
+    const toolIds = Object.values(tools).map((tool) => tool.id);
+    expect(toolIds).toContain("extract-intent-slots");
+  });
+
+  it("working memory accepts restaurant_search and cafe_search intents", () => {
+    const restaurant = conciergeWorkingMemorySchema.parse({ lastIntent: "restaurant_search" });
+    expect(restaurant.lastIntent).toBe("restaurant_search");
+
+    const cafe = conciergeWorkingMemorySchema.parse({ lastIntent: "cafe_search" });
+    expect(cafe.lastIntent).toBe("cafe_search");
+  });
 });
