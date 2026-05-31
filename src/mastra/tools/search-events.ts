@@ -88,7 +88,9 @@ export function bogotaEndOfDay(d: Date): Date {
 export type DateWindow = 'tonight' | 'this_weekend' | 'this_week' | 'next_week' | 'any';
 
 export function dateWindow(window: DateWindow | undefined): { gte?: string; lte?: string } {
-  if (!window || window === 'any') return {};
+  // Always filter to future events — never surface past events regardless of window.
+  const nowIso = new Date().toISOString();
+  if (!window || window === 'any') return { gte: nowIso };
 
   const now = nowBogota();
   const dayOfWeek = now.getUTCDay(); // 0=Sun, 1=Mon, ... 6=Sat (in Bogota time)

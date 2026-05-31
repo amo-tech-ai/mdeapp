@@ -94,21 +94,26 @@ export function useEventSearchFastPath() {
       busyRef.current = true;
       try {
         let cards = await fetchEventSearch(params);
+        let usedFallback = false;
         if (
           cards.length === 0 &&
           params.dateWindow &&
           params.dateWindow !== "any"
         ) {
           cards = await fetchEventSearch({ ...params, dateWindow: "any" });
+          usedFallback = cards.length > 0;
         }
         const query: ConciergeWorkingMemory["lastEventQuery"] = {
           category: params.category,
           neighborhood: params.neighborhood,
-          dateWindow: params.dateWindow ?? "any",
+          dateWindow: usedFallback ? "any" : (params.dateWindow ?? "any"),
           genericAskPending: false,
         };
         applySearchResults(cards, query, memory);
-        showExchange(userText, fastPathAssistantSummary(cards.length));
+        const summary = usedFallback
+          ? `Nothing for ${params.dateWindow?.replace("_", " ")} — showing ${cards.length} upcoming event${cards.length === 1 ? "" : "s"} instead.`
+          : fastPathAssistantSummary(cards.length);
+        showExchange(userText, summary);
         return true;
       } catch (err) {
         console.error("[event-fast-path]", err);
