@@ -119,7 +119,17 @@ async function curatedFallback(
     cuisine: isCoffee ? ("cafe" as const) : undefined,
     limit: pageSize,
   });
-  return results.map(restaurantToGroundedRow);
+  if (results.length > 0) return results.map(restaurantToGroundedRow);
+  // B-10: if cuisine-filtered search returned empty (Supabase gap or no matching fallback),
+  // retry without cuisine filter to surface any neighborhood results.
+  if (isCoffee) {
+    const { results: broader } = await searchRestaurants({
+      neighborhood,
+      limit: pageSize,
+    });
+    return broader.map(restaurantToGroundedRow);
+  }
+  return [];
 }
 
 /** Join ADK attribution to filtered rows by mapsUrl — never index-zip (audit B1). */
