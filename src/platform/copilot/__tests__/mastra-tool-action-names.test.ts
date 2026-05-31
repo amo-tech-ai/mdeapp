@@ -22,4 +22,24 @@ describe("MASTRA_COPILOT_TOOL_ACTIONS", () => {
     expect(renders).toContain("MASTRA_COPILOT_TOOL_ACTIONS.rentals");
     expect(renders).toContain("MASTRA_TOOL_IDS.rentals");
   });
+
+  it("UX-T-014 search tools do not use writer.custom — cards via useCopilotAction render", () => {
+    const toolFiles = [
+      "src/mastra/tools/search-restaurants.ts",
+      "src/mastra/tools/search-rentals.ts",
+      "src/mastra/tools/search-events.ts",
+      "src/mastra/tools/search-attractions.ts",
+      "src/mastra/tools/search-grounded-places.ts",
+    ];
+    for (const file of toolFiles) {
+      const text = readFileSync(join(process.cwd(), file), "utf8");
+      expect(text).not.toMatch(/writer\?\.custom\s*\(/);
+    }
+    const renders = readFileSync(
+      join(process.cwd(), "src/components/copilot/search-tool-renders.tsx"),
+      "utf8",
+    );
+    expect(renders).not.toMatch(/writer\?\.custom\s*\(/);
+    expect(renders).toContain("useDisabledToolRender");
+  });
 });

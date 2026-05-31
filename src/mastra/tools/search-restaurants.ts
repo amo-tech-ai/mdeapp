@@ -425,35 +425,6 @@ export const searchRestaurantsTool = createTool({
       context,
     );
 
-    await context?.writer?.custom({
-      type: 'data-mdeai-actions',
-      data: {
-        kind: 'restaurant_results',
-        cards: results.map((r) => ({
-          id: r.id,
-          name: r.name,
-          cuisine: r.cuisine,
-          neighborhood: r.neighborhood,
-          priceTier: r.priceTier,
-          avgPricePerPerson: r.avgPricePerPerson,
-          rating: r.rating,
-          vibe: r.vibe,
-          imageUrl: r.imageUrl,
-          sourceUrl: r.sourceUrl,
-          latitude: r.latitude ?? null,
-          longitude: r.longitude ?? null,
-          placeId: r.placeId ?? null,
-          mapsUrl: r.mapsUrl ?? null,
-          aiSummary: r.aiSummary ?? null,
-          rankScore: 'rankScore' in r ? (r as { rankScore?: number }).rankScore : undefined,
-          evidence: 'evidence' in r ? (r as { evidence?: unknown[] }).evidence : undefined,
-        })),
-        source,
-        hybridUsed: hybridUsed ?? false,
-        rankExplanation: rankExplanation ?? [],
-      },
-    });
-
     return { results, total, source, hybridUsed, rankExplanation };
   },
 });
