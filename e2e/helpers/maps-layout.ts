@@ -41,6 +41,12 @@ export async function waitForCopilotRuntime(page: Page) {
 export async function ensureChatInputVisible(page: Page) {
   const input = page.locator(".copilotKitInput textarea").first();
   if (await input.isVisible().catch(() => false)) return;
+
+  const canvas = page.locator('[data-testid="chat-canvas"]');
+  if (await canvas.isVisible().catch(() => false)) {
+    await canvas.click();
+  }
+
   const open = page.getByRole("button", { name: /open chat/i });
   if (await open.isVisible().catch(() => false)) {
     await open.click();
@@ -64,10 +70,11 @@ export async function sendConciergeMessage(page: Page, text: string) {
   }, text);
 
   const send = page.getByRole("button", { name: /^send$/i });
-  await send.waitFor({ state: "visible", timeout: 10_000 });
-  if (await send.isEnabled().catch(() => false)) {
-    await send.click();
-    return;
+  if (await send.isVisible().catch(() => false)) {
+    if (await send.isEnabled().catch(() => false)) {
+      await send.click();
+      return;
+    }
   }
 
   await input.press("Enter");
