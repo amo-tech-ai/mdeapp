@@ -31,6 +31,16 @@ describe("extractIntentSlotsHeuristic — rental hero", () => {
     expect(out.action).not.toBe("agent");
   });
 
+  it("June 5 to 7 label uses parsed numbers not hardcoded range", () => {
+    const out = extractIntentSlotsHeuristic(
+      "apartment june 5 to 7 in Laureles under $100/night",
+    );
+    expect(out.intent).toBe("rental_search");
+    expect(out.slots.dateRange?.label).toBe("June 5–7");
+    expect(out.slots.dateRange?.start).toBe("2026-06-05");
+    expect(out.slots.dateRange?.end).toBe("2026-06-07");
+  });
+
   it("fast-path 1BR Laureles $80/night", () => {
     const out = extractIntentSlotsHeuristic("1BR in Laureles under $80/night");
     expect(out.intent).toBe("rental_search");
@@ -72,5 +82,25 @@ describe("extractIntentSlotsHeuristic — restaurant", () => {
     expect(out.intent).toBe("restaurant_search");
     expect(out.slots.neighborhood).toBe("Provenza");
     expect(out.slots.queryText).toContain("rooftop");
+  });
+
+  it("extracts timeOfDay, groupSize, occasion from restaurant query", () => {
+    const out = extractIntentSlotsHeuristic(
+      "dinner for 4 people date night restaurant El Poblado",
+    );
+    expect(out.intent).toBe("restaurant_search");
+    expect(out.slots.timeOfDay).toBe("dinner");
+    expect(out.slots.groupSize).toBe(4);
+    expect(out.slots.occasion).toBe("date-night");
+    expect(out.slots.neighborhood).toBe("El Poblado");
+  });
+
+  it("extracts brunch and friends occasion", () => {
+    const out = extractIntentSlotsHeuristic(
+      "brunch restaurant with friends in Laureles",
+    );
+    expect(out.intent).toBe("restaurant_search");
+    expect(out.slots.timeOfDay).toBe("brunch");
+    expect(out.slots.occasion).toBe("friends");
   });
 });

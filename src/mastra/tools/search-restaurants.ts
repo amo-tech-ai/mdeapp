@@ -210,26 +210,49 @@ export async function searchRestaurants(
 
   if (query.queryText?.trim()) {
     const started = Date.now();
-    const intel = await searchRestaurantsIntelligent(query);
+    let intel: Awaited<ReturnType<typeof searchRestaurantsIntelligent>> | null = null;
+    try {
+      intel = await searchRestaurantsIntelligent(query);
+    } catch (err) {
+      console.warn('[search-restaurants] intelligent search failed:', err instanceof Error ? err.message : err);
+    }
     const latencyMs = Date.now() - started;
+
+    const intelFiltered = intel?.results?.length
+      ? applyRestaurantFilters(intel.results, query)
+      : [];
+
+    if (intelFiltered.length === 0) {
+      console.warn('[search-restaurants] intelligent path empty — using curated fallback');
+      const fallback = applyRestaurantFilters(FALLBACK_RESTAURANTS, query);
+      await writeSearchLog({
+        queryText: query.queryText,
+        slots: intel?.slots,
+        toolName: 'search-restaurants',
+        resultsCount: fallback.length,
+        latencyMs,
+        hybridUsed: false,
+        groundingUsed: false,
+      });
+      return { results: fallback.slice(0, limit), total: fallback.length, source: 'fallback' };
+    }
+
     await writeSearchLog({
       queryText: query.queryText,
-      slots: intel.slots,
+      slots: intel?.slots,
       toolName: 'search-restaurants',
-      resultsCount: intel.results.length,
+      resultsCount: intelFiltered.length,
       latencyMs,
-      hybridUsed: intel.hybridUsed,
+      hybridUsed: intel?.hybridUsed,
       groundingUsed: false,
-      rankExplanation: intel.rankExplanation,
+      rankExplanation: intel?.rankExplanation,
     });
-    let results = intel.results;
-    results = applyRestaurantFilters(results, query);
     return {
-      results: results.slice(0, limit),
-      total: results.length,
-      source: intel.source,
-      hybridUsed: intel.hybridUsed,
-      rankExplanation: intel.rankExplanation,
+      results: intelFiltered.slice(0, limit),
+      total: intelFiltered.length,
+      source: intel?.source ?? 'fallback',
+      hybridUsed: intel?.hybridUsed,
+      rankExplanation: intel?.rankExplanation,
     };
   }
 

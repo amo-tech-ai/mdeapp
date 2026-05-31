@@ -1,4 +1,16 @@
+import { createHash } from "node:crypto";
 import { createServiceRoleClient } from "@/lib/supabase/service";
+
+/** Truncate to 256 chars so raw PII-containing queries are never stored in full. */
+function truncateQuery(s: string): string {
+  return s.length > 256 ? `${s.slice(0, 256)}…` : s;
+}
+
+/** One-way SHA-256 prefix so session/user can still be correlated without storing raw IDs. */
+function hashId(id: string | undefined): string | null {
+  if (!id) return null;
+  return createHash("sha256").update(id).digest("hex").slice(0, 16);
+}
 
 export type RankExplanationEntry = {
   factor: string;
@@ -31,7 +43,7 @@ export async function writeSearchLog(payload: SearchLogPayload): Promise<string 
   const { data, error } = await client
     .from("search_logs" as "restaurants")
     .insert({
-      query_text: payload.queryText,
+      query_text: truncateQuery(payload.queryText),
       intent: payload.intent ?? null,
       slots: payload.slots ?? {},
       tool_name: payload.toolName,
@@ -40,8 +52,8 @@ export async function writeSearchLog(payload: SearchLogPayload): Promise<string 
       hybrid_used: payload.hybridUsed ?? false,
       grounding_used: payload.groundingUsed ?? false,
       rank_explanation: payload.rankExplanation ?? [],
-      session_id: payload.sessionId ?? null,
-      user_id: payload.userId ?? null,
+      session_id: hashId(payload.sessionId),
+      user_id: hashId(payload.userId),
     } as never)
     .select("id")
     .single();

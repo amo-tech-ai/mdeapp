@@ -46,6 +46,10 @@ export const sharedSlotsSchema = z.object({
   vibes: z.array(z.string()).optional(),
   needs: z.array(z.string()).optional(),
   queryText: z.string().optional(),
+  // Restaurant-specific slots (INT-001 extension)
+  timeOfDay: z.enum(["lunch", "dinner", "brunch", "late-night"]).optional(),
+  groupSize: z.number().int().min(1).optional(),
+  occasion: z.enum(["date-night", "business", "family", "friends"]).optional(),
 });
 
 export const intentSlotExtractionSchema = z.object({
@@ -111,7 +115,7 @@ function parseDateRange(text: string): SharedSlots["dateRange"] {
     return {
       start: `2026-06-${june[1].padStart(2, "0")}`,
       end: `2026-06-${june[2].padStart(2, "0")}`,
-      label: "June 1–30",
+      label: `June ${june[1]}–${june[2]}`,
     };
   }
   if (/\bthis weekend\b/i.test(text)) {
@@ -205,13 +209,31 @@ export function extractIntentSlotsHeuristic(text: string): IntentSlotExtraction 
     let neighborhood: string | undefined;
     if (/provenza/i.test(normalized)) neighborhood = "Provenza";
     else if (/poblado/i.test(normalized)) neighborhood = "El Poblado";
+
+    let timeOfDay: "lunch" | "dinner" | "brunch" | "late-night" | undefined;
+    if (/\blunch\b/i.test(normalized)) timeOfDay = "lunch";
+    else if (/\bbrunch\b/i.test(normalized)) timeOfDay = "brunch";
+    else if (/\blate.?night\b/i.test(normalized)) timeOfDay = "late-night";
+    else if (/\bdinner\b/i.test(normalized)) timeOfDay = "dinner";
+
+    const groupMatch =
+      normalized.match(/\bfor\s+(\d+)\s+(?:people|persons|guests)\b/i) ||
+      normalized.match(/\bparty\s+of\s+(\d+)\b/i);
+    const groupSize = groupMatch ? parseInt(groupMatch[1], 10) : undefined;
+
+    let occasion: "date-night" | "business" | "family" | "friends" | undefined;
+    if (/\bdate.?night\b/i.test(normalized)) occasion = "date-night";
+    else if (/\bbusiness\b/i.test(normalized)) occasion = "business";
+    else if (/\bfamily\b/i.test(normalized)) occasion = "family";
+    else if (/\bfriends\b/i.test(normalized)) occasion = "friends";
+
     const confidence = neighborhood ? 0.82 : 0.6;
     return {
       intent: "restaurant_search",
       confidence,
       action: confidenceToAction(confidence),
       reason: "restaurant / food keywords",
-      slots: { neighborhood, queryText: normalized },
+      slots: { neighborhood, queryText: normalized, timeOfDay, groupSize, occasion },
     };
   }
 
