@@ -47,7 +47,7 @@ export function MapRefererHelp() {
         </li>
         <li>
           <strong>Maps JavaScript API enabled</strong> — APIs &amp; Services →
-          Library → enable "Maps JavaScript API" (causes{" "}
+          Library → enable &quot;Maps JavaScript API&quot; (causes{" "}
           <code>ApiNotActivatedMapError</code>).
         </li>
       </ol>
