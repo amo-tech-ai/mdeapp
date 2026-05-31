@@ -183,7 +183,7 @@ export function RentalCard({
               variant="outline"
               data-testid="rental-save-cta"
               disabled
-              title="Saved collections ship with SCREEN-011"
+              title="Save for later (coming soon)"
               onClick={(e) => {
                 e.stopPropagation();
                 onSave?.();
@@ -212,7 +212,7 @@ export function RentalCard({
             className="hidden h-[120px] w-[200px] shrink-0 items-center justify-center rounded-md bg-muted text-xs text-muted-foreground sm:flex"
             aria-hidden
           >
-            Photo soon
+            Photo
           </div>
         )}
       </div>

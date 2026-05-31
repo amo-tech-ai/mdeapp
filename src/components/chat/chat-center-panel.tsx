@@ -2,6 +2,7 @@
 
 import { CopilotChat } from "@copilotkit/react-ui";
 
+import { ConciergeAgentErrorBridge } from "@/components/copilot/concierge-agent-error-bridge";
 import { ConciergeChatInput } from "@/components/chat/concierge-chat-input";
 import { ConciergeChatMessages } from "@/components/chat/concierge-chat-messages";
 import { ChatQueryBar } from "@/components/chat/chat-query-bar";
@@ -36,6 +37,7 @@ export function ChatCenterPanel() {
         aria-relevant="additions"
         className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden px-2 pb-2 pt-1 sm:px-4"
       >
+        <ConciergeAgentErrorBridge />
         <CopilotChat
           className="copilotKitChat--center mde-center-copilot-chat min-h-0 flex-1"
           labels={CONCIERGE_LABELS}

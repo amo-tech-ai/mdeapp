@@ -1,10 +1,19 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { useCopilotChatInternal } from "@copilotkit/react-core";
 import type { Message } from "@copilotkit/shared";
 import { useRentalSearchFastPath } from "@/hooks/use-rental-search-fast-path";
 import { useEventSearchFastPath } from "@/hooks/use-event-search-fast-path";
+import { clearConciergeError, reportConciergeError } from "@/lib/concierge-error-store";
+import {
+  clearConciergePendingSend,
+  getConciergePendingSendVersion,
+  getConciergePendingSendVersionServer,
+  setConciergePendingSend,
+  subscribeConciergePendingSend,
+} from "@/lib/concierge-pending-store";
+import { ConciergeThinkingIndicator } from "@/components/chat/concierge-thinking-indicator";
 
 /** Mirrors CopilotKit InputProps — do not import from @copilotkit/react-ui (Input is not exported in 1.55.2). */
 export type ConciergeChatInputProps = {
@@ -67,6 +76,12 @@ export function ConciergeChatInput({
   const { handleUserMessage: handleEventMessage } = useEventSearchFastPath();
   const [text, setText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const pendingVersion = useSyncExternalStore(
+    subscribeConciergePendingSend,
+    getConciergePendingSendVersion,
+    getConciergePendingSendVersionServer,
+  );
+  const showThinking = inProgress || pendingVersion > 0;
 
   const canSend = useMemo(
     () => !inProgress && text.trim().length > 0 && !interrupt,
@@ -74,15 +89,28 @@ export function ConciergeChatInput({
   );
   const canStop = inProgress && !hideStopButton;
 
+  useEffect(() => {
+    if (!inProgress) {
+      clearConciergePendingSend();
+    }
+  }, [inProgress]);
+
   const send = useCallback(async () => {
     const trimmed = text.trim();
     if (!trimmed || inProgress) return;
+    clearConciergeError();
     setText("");
     const handledRental = await handleRentalMessage(trimmed);
     if (handledRental) return;
     const handledEvent = await handleEventMessage(trimmed);
     if (!handledEvent) {
-      await onSend(trimmed);
+      setConciergePendingSend(true);
+      try {
+        await onSend(trimmed);
+      } catch {
+        clearConciergePendingSend();
+        reportConciergeError();
+      }
     }
     textareaRef.current?.focus();
   }, [text, inProgress, handleRentalMessage, handleEventMessage, onSend]);
@@ -98,6 +126,7 @@ export function ConciergeChatInput({
 
   return (
     <div className="copilotKitInputContainer">
+      {showThinking && <ConciergeThinkingIndicator />}
       <div className="copilotKitInput">
         <textarea
           ref={textareaRef}
