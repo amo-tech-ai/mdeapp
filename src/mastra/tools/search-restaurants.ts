@@ -210,26 +210,51 @@ export async function searchRestaurants(
 
   if (query.queryText?.trim()) {
     const started = Date.now();
-    const intel = await searchRestaurantsIntelligent(query);
+    let intel: Awaited<ReturnType<typeof searchRestaurantsIntelligent>> | null = null;
+    try {
+      intel = await searchRestaurantsIntelligent(query);
+    } catch (err) {
+      console.warn('[search-restaurants] intelligent search failed:', err instanceof Error ? err.message : err);
+    }
     const latencyMs = Date.now() - started;
+
+    // Apply filters after intelligent search; fall back to curated list on empty/error.
+    const intelFiltered = intel?.results?.length
+      ? applyRestaurantFilters(intel.results, query)
+      : [];
+
+    if (intelFiltered.length === 0) {
+      console.warn('[search-restaurants] intelligent path empty — using curated fallback');
+      const fallback = applyRestaurantFilters(FALLBACK_RESTAURANTS, query);
+      await writeSearchLog({
+        queryText: query.queryText,
+        slots: intel?.slots,
+        toolName: 'search-restaurants',
+        resultsCount: fallback.length,
+        latencyMs,
+        hybridUsed: false,
+        groundingUsed: false,
+      });
+      return { results: fallback.slice(0, limit), total: fallback.length, source: 'fallback' };
+    }
+
+    // Log final count (after filters) — not pre-filter count.
     await writeSearchLog({
       queryText: query.queryText,
-      slots: intel.slots,
+      slots: intel?.slots,
       toolName: 'search-restaurants',
-      resultsCount: intel.results.length,
+      resultsCount: intelFiltered.length,
       latencyMs,
-      hybridUsed: intel.hybridUsed,
+      hybridUsed: intel?.hybridUsed,
       groundingUsed: false,
-      rankExplanation: intel.rankExplanation,
+      rankExplanation: intel?.rankExplanation,
     });
-    let results = intel.results;
-    results = applyRestaurantFilters(results, query);
     return {
-      results: results.slice(0, limit),
-      total: results.length,
-      source: intel.source,
-      hybridUsed: intel.hybridUsed,
-      rankExplanation: intel.rankExplanation,
+      results: intelFiltered.slice(0, limit),
+      total: intelFiltered.length,
+      source: intel?.source ?? 'fallback',
+      hybridUsed: intel?.hybridUsed,
+      rankExplanation: intel?.rankExplanation,
     };
   }
 
@@ -261,9 +286,15 @@ export async function searchRestaurants(
     .limit(48);
 
   if (query.neighborhood) {
-    q = q.or(
-      `neighborhood.ilike.%${query.neighborhood}%,address.ilike.%${query.neighborhood}%,city.ilike.%${query.neighborhood}%`,
-    );
+    // Strip PostgREST-special chars (commas, parens, dots) before filter string interpolation.
+    const safeNeighborhood = query.neighborhood
+      .replace(/[^a-zA-ZáéíóúüñÁÉÍÓÚÜÑ0-9\s\-]/g, "")
+      .trim();
+    if (safeNeighborhood) {
+      q = q.or(
+        `neighborhood.ilike.%${safeNeighborhood}%,address.ilike.%${safeNeighborhood}%,city.ilike.%${safeNeighborhood}%`,
+      );
+    }
   }
 
   const { data, error } = await q;

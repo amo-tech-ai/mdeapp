@@ -1,25 +1,11 @@
 #!/usr/bin/env npx tsx
 /**
  * MIS-M1 golden query smoke — requires Supabase env in mdeapp/.env.local
- * Run: cd mdeapp && npx tsx scripts/intelligence/golden-queries-smoke.ts
+ * Run: cd mdeapp && npx tsx --env-file=.env.local scripts/intelligence/golden-queries-smoke.ts
  */
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import { searchRestaurantsIntelligent } from "../../src/mastra/lib/intelligence-restaurant-search";
 
-function loadEnv() {
-  const path = resolve(process.cwd(), ".env.local");
-  const raw = readFileSync(path, "utf8");
-  for (const line of raw.split("\n")) {
-    const m = line.match(/^([A-Z0-9_]+)=(.*)$/);
-    if (m && !process.env[m[1]]) {
-      process.env[m[1]] = m[2].replace(/^"|"$/g, "");
-    }
-  }
-}
-
 async function main() {
-  loadEnv();
   const queryText = "quiet rooftop Provenza";
   const result = await searchRestaurantsIntelligent({
     queryText,

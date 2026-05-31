@@ -73,4 +73,24 @@ describe("extractIntentSlotsHeuristic — restaurant", () => {
     expect(out.slots.neighborhood).toBe("Provenza");
     expect(out.slots.queryText).toContain("rooftop");
   });
+
+  it("extracts timeOfDay, groupSize, occasion from restaurant query", () => {
+    const out = extractIntentSlotsHeuristic(
+      "dinner for 4 people date night restaurant El Poblado",
+    );
+    expect(out.intent).toBe("restaurant_search");
+    expect(out.slots.timeOfDay).toBe("dinner");
+    expect(out.slots.groupSize).toBe(4);
+    expect(out.slots.occasion).toBe("date-night");
+    expect(out.slots.neighborhood).toBe("El Poblado");
+  });
+
+  it("extracts brunch and friends occasion", () => {
+    const out = extractIntentSlotsHeuristic(
+      "brunch restaurant with friends in Laureles",
+    );
+    expect(out.intent).toBe("restaurant_search");
+    expect(out.slots.timeOfDay).toBe("brunch");
+    expect(out.slots.occasion).toBe("friends");
+  });
 });
