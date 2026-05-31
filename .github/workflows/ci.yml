@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+env:
+  # Opt into Node.js 24 runner for GitHub Actions (required before 2026-06-16).
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   ci:
     name: lint · test · build
