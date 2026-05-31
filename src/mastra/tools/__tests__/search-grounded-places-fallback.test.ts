@@ -34,6 +34,18 @@ vi.mock("../search-venue-anchors", () => ({
 import { invokeAdkGrounding } from "../../lib/adk-grounding-client";
 import { searchRestaurants } from "../search-restaurants";
 import { searchGroundedPlacesTool } from "../search-grounded-places";
+import { adkUnavailableMock } from "./grounded-places-test-helpers";
+
+type GroundedOut = {
+  results: { title?: string; placeId?: string; latitude?: number; longitude?: number }[];
+  source: string;
+  metadata?: Record<string, unknown>;
+};
+
+async function runGrounded(query: string): Promise<GroundedOut> {
+  const out = await searchGroundedPlacesTool.execute!({ query }, {} as never);
+  return out as GroundedOut;
+}
 
 const cafeRow = {
   id: "rst_lau_cafe_001",
@@ -60,20 +72,16 @@ describe("searchGroundedPlacesTool fallback", () => {
   });
 
   it("GM-P0-06 returns curated fallback when ADK unavailable (403)", async () => {
-    vi.mocked(invokeAdkGrounding).mockResolvedValue({
-      pins: [],
-      attribution: [],
-      metadata: { reason: "adk_unavailable", status: 403 },
-    });
+    vi.mocked(invokeAdkGrounding).mockResolvedValue(
+      adkUnavailableMock({ reason: "adk_unavailable", status: 403 }),
+    );
     vi.mocked(searchRestaurants).mockResolvedValue({
       results: [cafeRow],
       total: 1,
       source: "fallback",
     });
 
-    const out = await searchGroundedPlacesTool.execute!({
-      query: "specialty coffee Laureles",
-    });
+    const out = await runGrounded("specialty coffee Laureles");
 
     expect(out.results.length).toBeGreaterThan(0);
     expect(out.results[0]?.title).toBe("Pergamino Café");
@@ -82,40 +90,28 @@ describe("searchGroundedPlacesTool fallback", () => {
   });
 
   it("GM-P2-04 returns empty results without throwing when ADK and fallback empty", async () => {
-    vi.mocked(invokeAdkGrounding).mockResolvedValue({
-      pins: [],
-      attribution: [],
-      metadata: { reason: "adk_unavailable" },
-    });
+    vi.mocked(invokeAdkGrounding).mockResolvedValue(adkUnavailableMock());
     vi.mocked(searchRestaurants).mockResolvedValue({
       results: [],
       total: 0,
       source: "fallback",
     });
 
-    const out = await searchGroundedPlacesTool.execute!({
-      query: "coffee Laureles",
-    });
+    const out = await runGrounded("coffee Laureles");
 
     expect(out.results).toEqual([]);
     expect(out.source).toBe("grounding");
   });
 
   it("GM-P0-07 uses restaurant coordinates in fallback rows", async () => {
-    vi.mocked(invokeAdkGrounding).mockResolvedValue({
-      pins: [],
-      attribution: [],
-      metadata: { reason: "adk_unavailable" },
-    });
+    vi.mocked(invokeAdkGrounding).mockResolvedValue(adkUnavailableMock());
     vi.mocked(searchRestaurants).mockResolvedValue({
       results: [cafeRow],
       total: 1,
       source: "fallback",
     });
 
-    const out = await searchGroundedPlacesTool.execute!({
-      query: "quiet café Laureles",
-    });
+    const out = await runGrounded("quiet café Laureles");
 
     expect(out.results[0]?.placeId).toBe("ChIJtest");
     expect(out.results[0]?.longitude).toBe(-75.5843);

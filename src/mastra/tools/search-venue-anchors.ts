@@ -63,9 +63,9 @@ export async function searchCafeVenueAnchors(params: {
     return [];
   }
 
-  return (data ?? []).filter(
-    (row): row is VenueAnchorRow =>
-      Boolean(row.google_place_id) && typeof row.name === "string",
+  const rows = (data ?? []) as VenueAnchorRow[];
+  return rows.filter(
+    (row) => Boolean(row.google_place_id) && typeof row.name === "string",
   );
 }
 

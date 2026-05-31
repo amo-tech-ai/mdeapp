@@ -35,6 +35,18 @@ import { invokeAdkGrounding } from "../../lib/adk-grounding-client";
 import { searchRestaurants } from "../search-restaurants";
 import { searchCafeVenueAnchors } from "../search-venue-anchors";
 import { searchGroundedPlacesTool } from "../search-grounded-places";
+import { adkUnavailableMock } from "./grounded-places-test-helpers";
+
+type GroundedOut = {
+  results: { title?: string; placeId?: string; latitude?: number; longitude?: number }[];
+  source: string;
+  metadata?: Record<string, unknown>;
+};
+
+async function runGrounded(query: string): Promise<GroundedOut> {
+  const out = await searchGroundedPlacesTool.execute!({ query }, {} as never);
+  return out as GroundedOut;
+}
 
 const anchorRow = {
   id: "anchor-1",
@@ -56,16 +68,12 @@ describe("searchGroundedPlacesTool café venue_anchors fallback (UX-T-013)", () 
   });
 
   it("returns venue_anchors rows when ADK unavailable and query is coffee", async () => {
-    vi.mocked(invokeAdkGrounding).mockResolvedValue({
-      pins: [],
-      attribution: [],
-      metadata: { reason: "adk_unavailable", status: 403 },
-    });
+    vi.mocked(invokeAdkGrounding).mockResolvedValue(
+      adkUnavailableMock({ reason: "adk_unavailable", status: 403 }),
+    );
     vi.mocked(searchCafeVenueAnchors).mockResolvedValue([anchorRow]);
 
-    const out = await searchGroundedPlacesTool.execute!({
-      query: "good specialty coffee in Laureles",
-    });
+    const out = await runGrounded("good specialty coffee in Laureles");
 
     expect(searchCafeVenueAnchors).toHaveBeenCalledWith(
       expect.objectContaining({ neighborhood: expect.stringMatching(/laureles/i), limit: 5 }),
@@ -78,11 +86,7 @@ describe("searchGroundedPlacesTool café venue_anchors fallback (UX-T-013)", () 
   });
 
   it("falls through to searchRestaurants when anchors empty", async () => {
-    vi.mocked(invokeAdkGrounding).mockResolvedValue({
-      pins: [],
-      attribution: [],
-      metadata: { reason: "adk_unavailable" },
-    });
+    vi.mocked(invokeAdkGrounding).mockResolvedValue(adkUnavailableMock());
     vi.mocked(searchCafeVenueAnchors).mockResolvedValue([]);
     vi.mocked(searchRestaurants).mockResolvedValue({
       results: [],
@@ -90,9 +94,7 @@ describe("searchGroundedPlacesTool café venue_anchors fallback (UX-T-013)", () 
       source: "fallback",
     });
 
-    const out = await searchGroundedPlacesTool.execute!({
-      query: "specialty coffee Laureles",
-    });
+    const out = await runGrounded("specialty coffee Laureles");
 
     expect(searchCafeVenueAnchors).toHaveBeenCalled();
     expect(searchRestaurants).toHaveBeenCalled();
@@ -100,20 +102,14 @@ describe("searchGroundedPlacesTool café venue_anchors fallback (UX-T-013)", () 
   });
 
   it("does not query venue_anchors for non-coffee restaurant queries", async () => {
-    vi.mocked(invokeAdkGrounding).mockResolvedValue({
-      pins: [],
-      attribution: [],
-      metadata: { reason: "adk_unavailable" },
-    });
+    vi.mocked(invokeAdkGrounding).mockResolvedValue(adkUnavailableMock());
     vi.mocked(searchRestaurants).mockResolvedValue({
       results: [],
       total: 0,
       source: "fallback",
     });
 
-    await searchGroundedPlacesTool.execute!({
-      query: "quiet rooftop dinner in Provenza",
-    });
+    await runGrounded("quiet rooftop dinner in Provenza");
 
     expect(searchCafeVenueAnchors).not.toHaveBeenCalled();
     expect(searchRestaurants).toHaveBeenCalled();
