@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "task": "DATA-035",
+  "kind": "cafe",
+  "city": "Medellín",
+  "anchors": [
+    {
+      "name": "Rituales Compañía de Café",
+      "neighborhood": "Laureles",
+      "tags": ["third-wave", "wifi-friendly", "specialty-coffee"],
+      "confidence_score": 98,
+      "listing_sources": ["03-cafe-laureles.md"],
+      "why_special": "Single-origin coffee from Barrio La Sierra with full farmer traceability.",
+      "ai_vibe_summary": "Community-driven artisan coffee shop balancing education with a focused morning environment.",
+      "contact": { "website": "https://ritualescafe.co", "instagram": "@ritualescafe" }
+    },
+    {
+      "name": "Pergamino Café Laureles",
+      "search_query": "Pergamino Cafe Laureles Medellín",
+      "neighborhood": "Laureles",
+      "tags": ["third-wave", "coworking-friendly", "wifi-friendly"],
+      "confidence_score": 96,
+      "listing_sources": ["03-cafe-laureles.md"],
+      "why_special": "Laureles outpost of Medellín's flagship third-wave brand.",
+      "ai_vibe_summary": "High-energy modern specialty coffee hub for remote workers.",
+      "contact": { "website": "https://pergamino.co", "instagram": "@pergaminocafe" }
+    },
+    {
+      "name": "Café Revolución",
+      "neighborhood": "Laureles",
+      "tags": ["expat-friendly", "brunch", "wifi-friendly"],
+      "confidence_score": 95,
+      "listing_sources": ["03-cafe-laureles.md"],
+      "why_special": "Neighborhood favorite since 2014 with warm expat community.",
+      "ai_vibe_summary": "Cozy social neighborhood expat hub with home-style comfort.",
+      "contact": { "instagram": "@caferevolucion" }
+    },
+    {
+      "name": "Semilla Café Coworking",
+      "neighborhood": "Laureles",
+      "tags": ["coworking-friendly", "third-wave", "wifi-friendly"],
+      "confidence_score": 94,
+      "listing_sources": ["03-cafe-laureles.md"],
+      "why_special": "Hybrid café + structured coworking zones near Primer Parque.",
+      "ai_vibe_summary": "Professional coworking café with dedicated quiet membership areas."
+    },
+    {
+      "name": "Café Namazzi",
+      "neighborhood": "Laureles",
+      "tags": ["specialty-coffee", "aesthetic"],
+      "confidence_score": 92,
+      "listing_sources": ["03-cafe-laureles.md"],
+      "why_special": "Curated Laureles café in local directory packs.",
+      "ai_vibe_summary": "Stylish neighborhood café for specialty coffee seekers."
+    },
+    {
+      "name": "Délmuri Coffee",
+      "neighborhood": "Laureles",
+      "tags": ["third-wave", "quiet"],
+      "confidence_score": 90,
+      "listing_sources": ["03-cafe-laureles.md"],
+      "why_special": "Laureles third-wave roastery café.",
+      "ai_vibe_summary": "Quiet specialty coffee focused on origin-forward cups."
+    },
+    {
+      "name": "Naturalia Café",
+      "neighborhood": "Laureles",
+      "tags": ["organic", "brunch", "wifi-friendly"],
+      "confidence_score": 88,
+      "listing_sources": ["03-cafe-laureles.md"],
+      "why_special": "Health-forward café with organic menu options.",
+      "ai_vibe_summary": "Calm organic café for brunch and light remote work."
+    },
+    {
+      "name": "Amelier Café Laureles",
+      "search_query": "Amelier Cafe Laureles Medellín",
+      "neighborhood": "Laureles",
+      "tags": ["coworking-friendly", "brunch"],
+      "confidence_score": 87,
+      "listing_sources": ["03-cafe-laureles.md"],
+      "why_special": "Café-brunch concept with laptop-friendly seating.",
+      "ai_vibe_summary": "Brunch-forward coworking café in Laureles."
+    },
+    {
+      "name": "Pausa Café & Brunch",
+      "neighborhood": "Laureles",
+      "tags": ["brunch", "wifi-friendly"],
+      "confidence_score": 86,
+      "listing_sources": ["03-cafe-laureles.md"],
+      "why_special": "All-day brunch café in Laureles.",
+      "ai_vibe_summary": "Relaxed brunch café with steady morning laptop crowd."
+    },
+    {
+      "name": "Botswana Café Creativo",
+      "neighborhood": "Laureles",
+      "tags": ["creative", "aesthetic", "wifi-friendly"],
+      "confidence_score": 85,
+      "listing_sources": ["03-cafe-laureles.md"],
+      "why_special": "Creative café space in Laureles listings pack.",
+      "ai_vibe_summary": "Art-forward café with creative community vibe."
+    },
+    {
+      "name": "Pergamino Calle 10B",
+      "search_query": "Pergamino Calle 10B El Poblado Medellín",
+      "neighborhood": "El Poblado",
+      "tags": ["third-wave", "wifi-friendly", "specialty-coffee"],
+      "confidence_score": 98,
+      "listing_sources": ["04-pablado-cafes.md"],
+      "why_special": "Iconic El Poblado flagship specialty café.",
+      "ai_vibe_summary": "Creative retro third-wave flagship for nomads and visitors.",
+      "contact": { "website": "https://co.pergamino.co", "instagram": "@pergaminocafe" }
+    },
+    {
+      "name": "Hija Mía Coffee Roasters",
+      "search_query": "Hija Mia Coffee Roasters Manila Medellín",
+      "neighborhood": "El Poblado",
+      "tags": ["roastery", "wifi-friendly", "specialty-coffee"],
+      "confidence_score": 96,
+      "listing_sources": ["04-pablado-cafes.md"],
+      "why_special": "Manila roaster-café with in-house roasting.",
+      "ai_vibe_summary": "Roastery café popular with remote workers and flat-white fans.",
+      "contact": { "website": "https://www.hijamiacoffee.com", "instagram": "@hijamiacoffee" }
+    },
+    {
+      "name": "Urbania Café",
+      "search_query": "Urbania Cafe El Poblado Medellín",
+      "neighborhood": "El Poblado",
+      "tags": ["specialty-coffee", "ethical", "quiet"],
+      "confidence_score": 95,
+      "listing_sources": ["04-pablado-cafes.md"],
+      "why_special": "Colombian specialty brand with social mission.",
+      "ai_vibe_summary": "Quiet ethical specialty coffee for focused work.",
+      "contact": { "website": "https://www.urbaniacafe.com" }
+    },
+    {
+      "name": "Café Velvet",
+      "search_query": "Cafe Velvet Via Primavera Medellín",
+      "neighborhood": "El Poblado",
+      "tags": ["brunch", "wifi-friendly", "aesthetic"],
+      "confidence_score": 94,
+      "listing_sources": ["04-pablado-cafes.md"],
+      "why_special": "Via Primavera brunch café with outdoor seating.",
+      "ai_vibe_summary": "Aesthetic Via Primavera café for quiet work and brunch."
+    },
+    {
+      "name": "Café Noir",
+      "search_query": "Cafe Noir El Poblado Medellín",
+      "neighborhood": "El Poblado",
+      "tags": ["upscale", "evening", "specialty-coffee"],
+      "confidence_score": 92,
+      "listing_sources": ["04-pablado-cafes.md"],
+      "why_special": "Luxury café-bar lounge in El Poblado.",
+      "ai_vibe_summary": "Sophisticated evening café with artisanal coffee and cocktails.",
+      "contact": { "website": "https://www.cafenoircolombia.com" }
+    },
+    {
+      "name": "Amelier Café El Poblado",
+      "search_query": "Amelier Cafe El Poblado Medellín",
+      "neighborhood": "El Poblado",
+      "tags": ["coworking-friendly", "brunch", "group-work"],
+      "confidence_score": 90,
+      "listing_sources": ["04-pablado-cafes.md"],
+      "why_special": "Coworking café at Cl. 9A #37-48.",
+      "ai_vibe_summary": "Group-friendly coworking brunch café in Poblado."
+    },
+    {
+      "name": "Café Quindío Vía Primavera",
+      "search_query": "Cafe Quindio Via Primavera Medellín",
+      "neighborhood": "El Poblado",
+      "tags": ["brand-cafe", "aesthetic"],
+      "confidence_score": 88,
+      "listing_sources": ["04-pablado-cafes.md"],
+      "why_special": "National Colombian coffee brand Vía Primavera location.",
+      "ai_vibe_summary": "Classic Colombian brand café on Via Primavera."
+    },
+    {
+      "name": "Pergamino Vía Primavera",
+      "search_query": "Pergamino Via Primavera Medellín",
+      "neighborhood": "El Poblado",
+      "tags": ["third-wave", "tourist-friendly"],
+      "confidence_score": 88,
+      "listing_sources": ["04-pablado-cafes.md"],
+      "why_special": "Pergamino Vía Primavera storefront.",
+      "ai_vibe_summary": "Reliable tourist-friendly Pergamino on Via Primavera."
+    }
+  ]
+}

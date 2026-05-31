@@ -3,7 +3,7 @@
  * DATA-005 — Verify nightclub/bar anchors via Places Text Search and emit SQL inserts.
  * Usage:
  *   node --env-file=.env.local scripts/seed-nightclub-anchors.mjs --dry-run
- *   node --env-file=.env.local scripts/seed-nightclub-anchors.mjs --write-sql ../tasks/venues/seeds/venue_anchors_nightclubs.sql
+ *   node --env-file=.env.local scripts/seed-nightclub-anchors.mjs --write-sql supabase/migrations/<timestamp>_data005_venue_anchors_nightclubs.sql
  *
  * Requires GOOGLE_PLACES_API_KEY (server-only). Never prints full API keys.
  */
@@ -13,10 +13,9 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
-const REPO = resolve(ROOT, "..");
-const CURATED = join(REPO, "tasks/venues/seeds/nightclubs-medellin.curated.json");
-const VERIFY_LOG = join(REPO, "tasks/testing/evidence/DATA-005-places-verify.log");
-const CSV_OUT = join(REPO, "tasks/venues/seeds/nightclubs-medellin.csv");
+const CURATED = join(ROOT, "supabase/seeds/venues/nightclubs-medellin.curated.json");
+const VERIFY_LOG = join(ROOT, "../tasks/testing/evidence/DATA-005-places-verify.log");
+const CSV_OUT = join(ROOT, "supabase/seeds/venues/nightclubs-medellin.csv");
 const FIELD_MASK = "places.id,places.displayName,places.location";
 
 const placesKey =

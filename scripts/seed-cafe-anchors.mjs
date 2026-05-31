@@ -3,7 +3,7 @@
  * DATA-035 — Verify café anchors via Places Text Search and emit SQL inserts.
  * Usage:
  *   node --env-file=.env.local scripts/seed-cafe-anchors.mjs --dry-run
- *   node --env-file=.env.local scripts/seed-cafe-anchors.mjs --write-sql ../tasks/venues/seeds/venue_anchors_cafes.sql
+ *   node --env-file=.env.local scripts/seed-cafe-anchors.mjs --write-sql supabase/migrations/<timestamp>_data035_venue_anchors_cafes.sql
  *
  * Requires GOOGLE_PLACES_API_KEY (server-only). Never prints full API keys.
  */
@@ -13,9 +13,8 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
-const REPO = resolve(ROOT, "..");
-const CURATED = join(REPO, "tasks/venues/seeds/cafes-medellin.curated.json");
-const VERIFY_LOG = join(REPO, "tasks/testing/evidence/DATA-035-places-verify.log");
+const CURATED = join(ROOT, "supabase/seeds/venues/cafes-medellin.curated.json");
+const VERIFY_LOG = join(ROOT, "../tasks/testing/evidence/DATA-035-places-verify.log");
 const FIELD_MASK = "places.id,places.displayName,places.location";
 
 const placesKey =
