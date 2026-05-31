@@ -53,7 +53,7 @@ const NON_EVENT_RENTAL_RE =
 
 /** Restaurant / café discovery — not event discovery unless "events" is present. */
 const NON_EVENT_FOOD_VENUE_RE =
-  /\b(caf[eé]s?|coffee shops?|restaurants?|brunch spot|best cafes?|quiet caf[eé]s?)\b/i;
+  /\b(caf[eé]s?|coffee|espresso|barista|coffee shops?|specialty coffee|restaurants?|brunch spots?|best cafes?|quiet caf[eé]s?|juice bar|smoothie|dinner|lunch|rooftop|bistro|dine|eatery|lounge)\b/i;
 
 /** True when the message is clearly rental or food-venue search, not events. */
 export function looksLikeNonEventSearch(text: string): boolean {

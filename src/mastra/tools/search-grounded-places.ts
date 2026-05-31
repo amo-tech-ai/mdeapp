@@ -8,6 +8,7 @@ import {
 } from "../lib/map-adk-grounding-pins";
 import { incrementAndCheckGroundingQuota } from "../lib/grounding-quota";
 import { resolveGroundingLocationBias } from "../lib/grounding-location-bias";
+import { searchRestaurants, type Restaurant } from "./search-restaurants";
 
 const groundedPlaceResultSchema = z
   .object({
@@ -72,6 +73,65 @@ type GroundedAttributionSource = {
   title?: string;
 };
 
+// Medellín city center — used when a restaurant has no stored coordinates.
+const MDE_LAT = 6.2442;
+const MDE_LNG = -75.5812;
+
+/** Extract a neighborhood hint from a free-text grounding query. */
+function neighborhoodFromGroundingQuery(query: string): string | undefined {
+  const m = query.match(
+    /\b(laureles|poblado|el\s+poblado|envigado|bel[eé]n|estadio|provenza|el\s+centro)\b/i,
+  );
+  return m?.[0];
+}
+
+/**
+ * Map a curated Restaurant row to the GroundedPlaceResult shape expected by
+ * parseGroundedToolResult / GroundedCafeResults. Used when ADK is unavailable.
+ */
+function restaurantToGroundedRow(r: Restaurant): GroundedPlaceResult {
+  return {
+    id: r.id,
+    title: r.name,
+    latitude: r.latitude ?? MDE_LAT,
+    longitude: r.longitude ?? MDE_LNG,
+    placeId: r.placeId ?? undefined,
+    mapsUrl: (r.mapsUrl ?? undefined) as string | undefined,
+    rating: r.rating > 0 ? r.rating : undefined,
+    summary: (r.aiSummary ?? r.vibe.slice(0, 3).join(" · ")) || undefined,
+    formattedAddress: r.neighborhood,
+    primaryType: r.cuisine === "cafe" ? "coffee_shop" : "restaurant",
+  };
+}
+
+/**
+ * Fallback when ADK grounding is unavailable — returns curated restaurant/café
+ * rows from Supabase (or the in-process fallback list) mapped to GroundedPlaceResult.
+ */
+async function curatedFallback(
+  rawQuery: string,
+  pageSize: number,
+): Promise<GroundedPlaceResult[]> {
+  const neighborhood = neighborhoodFromGroundingQuery(rawQuery);
+  const isCoffee = /\b(coffee|caf[eé]|espresso)\b/i.test(rawQuery);
+  const { results } = await searchRestaurants({
+    neighborhood,
+    cuisine: isCoffee ? ("cafe" as const) : undefined,
+    limit: pageSize,
+  });
+  if (results.length > 0) return results.map(restaurantToGroundedRow);
+  // B-10: if cuisine-filtered search returned empty (Supabase gap or no matching fallback),
+  // retry without cuisine filter to surface any neighborhood results.
+  if (isCoffee) {
+    const { results: broader } = await searchRestaurants({
+      neighborhood,
+      limit: pageSize,
+    });
+    return broader.map(restaurantToGroundedRow);
+  }
+  return [];
+}
+
 /** Join ADK attribution to filtered rows by mapsUrl — never index-zip (audit B1). */
 export function alignGroundedAttribution(
   results: Array<{ title: string; mapsUrl?: string }>,
@@ -121,6 +181,20 @@ export const searchGroundedPlacesTool = createTool({
     const query = normalizeCafeGroundingQuery(rawQuery);
     const quota = await incrementAndCheckGroundingQuota();
     if (!quota.allowed) {
+      // Quota exceeded — degrade to curated restaurant results
+      try {
+        const fallbackResults = await curatedFallback(rawQuery, pageSize ?? 5);
+        if (fallbackResults.length > 0) {
+          return {
+            results: fallbackResults,
+            attribution: [],
+            source: "grounding" as const,
+            metadata: { reason: quota.reason, fallback: "curated" },
+          };
+        }
+      } catch (err) {
+        console.warn("[search-grounded-places] quota fallback failed:", err);
+      }
       return {
         results: [],
         attribution: [],
@@ -138,6 +212,20 @@ export const searchGroundedPlacesTool = createTool({
     });
     const reason = adk.metadata?.reason;
     if (reason && adk.pins.length === 0) {
+      // ADK unavailable (permission / network) — degrade to curated restaurant results
+      try {
+        const fallbackResults = await curatedFallback(rawQuery, pageSize ?? 5);
+        if (fallbackResults.length > 0) {
+          return {
+            results: fallbackResults,
+            attribution: [],
+            source: "grounding" as const,
+            metadata: { ...adk.metadata, fallback: "curated" },
+          };
+        }
+      } catch (err) {
+        console.warn("[search-grounded-places] adk fallback failed:", err);
+      }
       return {
         results: [],
         attribution: [],

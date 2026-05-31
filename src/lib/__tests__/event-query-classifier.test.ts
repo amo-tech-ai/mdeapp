@@ -51,11 +51,31 @@ describe("event-query-classifier", () => {
     expect(looksLikeNonEventSearch("food events in Poblado")).toBe(false);
   });
 
+  it("detects coffee / espresso queries as non-event (B-04)", () => {
+    // The exact user query that was misrouting to /api/events/search
+    expect(looksLikeNonEventSearch("good specialty coffee in Laureles")).toBe(true);
+    expect(looksLikeNonEventSearch("best coffee in Poblado")).toBe(true);
+    expect(looksLikeNonEventSearch("quiet espresso bar near Parque Lleras")).toBe(true);
+    // "coffee events" still reaches event path (contains "events")
+    expect(looksLikeNonEventSearch("coffee events this weekend")).toBe(false);
+  });
+
   it("neighborhood alone is not event fast-path intent", () => {
     const s = scoreEventQuery("1BR in Laureles under $80/night");
     expect(s.hasNeighborhood).toBe(true);
     expect(
       hasEventFastPathSignals("1BR in Laureles under $80/night", s),
     ).toBe(false);
+  });
+
+  it("restaurant / dining queries are non-event even after a prior event search (B-09)", () => {
+    // These queries were misrouting to /api/events/search due to event memory
+    // after "salsa events this weekend" set lastEventQuery.category = "music"
+    expect(looksLikeNonEventSearch("quiet rooftop dinner in Provenza")).toBe(true);
+    expect(looksLikeNonEventSearch("rooftop dinner Poblado")).toBe(true);
+    expect(looksLikeNonEventSearch("nice place for lunch in Laureles")).toBe(true);
+    expect(looksLikeNonEventSearch("bistro near Parque Lleras")).toBe(true);
+    // "dinner events" still reaches event path (contains "events")
+    expect(looksLikeNonEventSearch("dinner events this weekend")).toBe(false);
   });
 });
