@@ -324,32 +324,6 @@ export const searchRestaurantsTool = createTool({
       context,
     );
 
-    await context?.writer?.custom({
-      type: 'data-mdeai-actions',
-      data: {
-        kind: 'restaurant_results',
-        cards: results.map((r) => ({
-          id: r.id,
-          name: r.name,
-          cuisine: r.cuisine,
-          neighborhood: r.neighborhood,
-          priceTier: r.priceTier,
-          avgPricePerPerson: r.avgPricePerPerson,
-          rating: r.rating,
-          vibe: r.vibe,
-          imageUrl: r.imageUrl,
-          sourceUrl: r.sourceUrl,
-          latitude: r.latitude ?? null,
-          longitude: r.longitude ?? null,
-          // MASTRA-048: enrichment fields — null until enrich-places.ts + cache-ai-summaries.ts run
-          placeId: r.placeId ?? null,
-          mapsUrl: r.mapsUrl ?? null,
-          aiSummary: r.aiSummary ?? null,
-        })),
-        source,
-      },
-    });
-
     return { results, total, source };
   },
 });

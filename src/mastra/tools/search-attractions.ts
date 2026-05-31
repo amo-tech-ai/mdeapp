@@ -288,32 +288,6 @@ export const searchAttractionsTool = createTool({
       context,
     );
 
-    await context?.writer?.custom({
-      type: 'data-mdeai-actions',
-      data: {
-        kind: 'attraction_results',
-        cards: results.map((a) => ({
-          id: a.id,
-          name: a.name,
-          category: a.category,
-          neighborhood: a.neighborhood,
-          priceUsd: a.priceUsd,
-          durationMinutes: a.durationMinutes,
-          rating: a.rating,
-          tags: a.tags,
-          imageUrl: a.imageUrl,
-          sourceUrl: a.sourceUrl,
-          latitude: a.latitude ?? null,
-          longitude: a.longitude ?? null,
-          placeId: a.placeId ?? null,
-          mapsUrl: a.mapsUrl ?? null,
-          aiSummary: a.aiSummary ?? null,
-        })),
-        source,
-        ...(error ? { error } : {}),
-      },
-    });
-
     return { results, total, source, ...(error ? { error } : {}) };
   },
 });
