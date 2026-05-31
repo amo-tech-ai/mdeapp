@@ -364,27 +364,6 @@ export const searchRentalsTool = createTool({
       context,
     );
 
-    // Emit structured UI data so the frontend can render inline cards + map pins
-    await context?.writer?.custom({
-      type: 'data-mdeai-actions',
-      data: {
-        kind: 'rental_results',
-        cards: results.map((r) => ({
-          id: r.id,
-          title: r.title,
-          neighborhood: r.neighborhood,
-          price_daily: r.nightly_price,
-          bedrooms: r.bedrooms,
-          amenities: r.amenities,
-          image: r.image,
-          source_url: r.source_url,
-          latitude: r.latitude ?? null,
-          longitude: r.longitude ?? null,
-        })),
-        source,
-      },
-    });
-
     return {
       results: results.map((r) => ({
         id: r.id,
