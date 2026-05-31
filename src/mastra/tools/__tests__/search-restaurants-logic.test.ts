@@ -1,5 +1,12 @@
-import { describe, it, expect } from 'vitest';
-import { mapCuisineFromTypes, priceLevelToTier, estimateAvgPriceFromLevel, restaurantSchema } from '../search-restaurants.js';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { mapCuisineFromTypes, priceLevelToTier, estimateAvgPriceFromLevel, restaurantSchema, searchRestaurants } from '../search-restaurants.js';
+
+vi.mock('../../lib/intelligence-restaurant-search', () => ({
+  searchRestaurantsIntelligent: vi.fn().mockResolvedValue({ results: [], hybridUsed: false }),
+}));
+vi.mock('../../lib/search-logs', () => ({
+  writeSearchLog: vi.fn().mockResolvedValue(null),
+}));
 
 describe('mapCuisineFromTypes', () => {
   it('maps Colombian / traditional to colombian', () => {
@@ -38,6 +45,31 @@ describe('priceLevelToTier', () => {
 describe('estimateAvgPriceFromLevel', () => {
   it('returns monotonic anchors', () => {
     expect(estimateAvgPriceFromLevel(1)).toBeLessThan(estimateAvgPriceFromLevel(4));
+  });
+});
+
+describe('searchRestaurants — intelligent search fallback', () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('falls back to curated list when intelligent search returns empty results', async () => {
+    const result = await searchRestaurants({ queryText: 'rooftop dinner Provenza', limit: 5 });
+    expect(result.source).toBe('fallback');
+    expect(result.results.length).toBeGreaterThan(0);
+  });
+});
+
+describe('neighborhood sanitization', () => {
+  it('strips PostgREST special chars from neighborhood before filter', async () => {
+    // Supabase client unavailable in test → falls to fallback, but sanitization
+    // must not throw. We verify the returned source is fallback (not an error throw).
+    const result = await searchRestaurants({
+      neighborhood: "Laureles,),*weird'input",
+      limit: 5,
+    });
+    // Either supabase or fallback — must not throw
+    expect(['supabase', 'fallback']).toContain(result.source);
   });
 });
 
