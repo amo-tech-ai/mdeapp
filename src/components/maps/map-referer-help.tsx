@@ -24,35 +24,40 @@ export function MapRefererHelp() {
       className="flex h-full min-h-[280px] flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-amber-500/50 bg-amber-500/5 p-6 text-center text-sm"
     >
       <p className="font-medium text-foreground">
-        Google Maps blocked this page (RefererNotAllowedMapError)
+        Google Maps authentication failed
       </p>
       <p className="max-w-md text-muted-foreground">
-        The browser key in Google Cloud must allow your dev origin. Add this
-        HTTP referrer to the key used by{" "}
+        Check these three things in GCP for the key used by{" "}
         <code className="text-xs">NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code>:
       </p>
-      <code
-        data-testid="map-referer-required"
-        className="rounded bg-muted px-3 py-2 text-xs"
-      >
-        {requiredReferrer}
-      </code>
-      <p className="max-w-md text-xs text-muted-foreground">
-        GCP → APIs &amp; Services → Credentials → your Maps JavaScript browser
-        key → Application restrictions → HTTP referrers. Also allow:{" "}
-        {DEV_REFERRERS.join(", ")}. Prefer{" "}
-        <a href="http://localhost:3001/" className="underline">
-          http://localhost:3001/
-        </a>{" "}
-        (<code className="text-xs">npm run dev</code> pins UI to port 3001).
-      </p>
+      <ol className="max-w-md list-decimal text-left text-xs text-muted-foreground space-y-1 pl-4">
+        <li>
+          <strong>Billing enabled</strong> — GCP → Billing → confirm the project
+          has an active billing account (causes{" "}
+          <code>BillingNotEnabledMapError</code>).
+        </li>
+        <li>
+          <strong>HTTP referrer allowed</strong> — APIs &amp; Services →
+          Credentials → browser key → Application restrictions → add{" "}
+          <code data-testid="map-referer-required" className="break-all">
+            {requiredReferrer}
+          </code>{" "}
+          and <code>{DEV_REFERRERS.join(", ")}</code> (causes{" "}
+          <code>RefererNotAllowedMapError</code>).
+        </li>
+        <li>
+          <strong>Maps JavaScript API enabled</strong> — APIs &amp; Services →
+          Library → enable "Maps JavaScript API" (causes{" "}
+          <code>ApiNotActivatedMapError</code>).
+        </li>
+      </ol>
       <a
-        href="https://developers.google.com/maps/documentation/javascript/error-messages#referer-not-allowed-map-error"
+        href="https://developers.google.com/maps/documentation/javascript/error-messages"
         target="_blank"
         rel="noopener noreferrer"
         className="text-xs text-primary underline"
       >
-        Google: referer-not-allowed-map-error
+        Google Maps JS API error reference
       </a>
     </div>
   );
