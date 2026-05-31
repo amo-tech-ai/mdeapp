@@ -121,4 +121,30 @@ describe("event-search-fast-path", () => {
       "music",
     );
   });
+
+  describe("UX-019 Option B memory guard (UX-T-019)", () => {
+    const afterSalsaMemory: ConciergeWorkingMemory = {
+      lastEventQuery: { category: "music", dateWindow: "any" },
+    };
+
+    it("Option A regression: dinner after event memory does not fast-path", () => {
+      expect(
+        buildEventSearchParams("quiet rooftop dinner in Provenza", afterSalsaMemory),
+      ).toBeNull();
+      expect(
+        canFastPathEventSearch("quiet rooftop dinner in Provenza", afterSalsaMemory),
+      ).toBe(false);
+    });
+
+    it("L55: Provenza tonight does not inherit stale category from prior salsa search", () => {
+      const params = buildEventSearchParams("Provenza tonight", afterSalsaMemory);
+      expect(params?.category).toBeUndefined();
+      expect(params?.dateWindow).toBe("tonight");
+    });
+
+    it("L81: bare follow-up does not replay last event query", () => {
+      expect(buildEventSearchParams("ok", afterSalsaMemory)).toBeNull();
+      expect(canFastPathEventSearch("and there?", afterSalsaMemory)).toBe(false);
+    });
+  });
 });
