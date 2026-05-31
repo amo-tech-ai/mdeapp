@@ -79,9 +79,20 @@ describe('dateWindow', () => {
     vi.useRealTimers();
   });
 
-  it('returns empty bounds for "any" and undefined', () => {
-    expect(dateWindow('any')).toEqual({});
-    expect(dateWindow(undefined)).toEqual({});
+  it('"any" and undefined return a gte: now filter (no lte) to exclude past events', () => {
+    const before = new Date().toISOString();
+    const anyBounds = dateWindow('any');
+    const undefBounds = dateWindow(undefined);
+    const after = new Date().toISOString();
+
+    // Both should have gte set to approximately now (no lte — no upper bound)
+    expect(anyBounds.lte).toBeUndefined();
+    expect(undefBounds.lte).toBeUndefined();
+    expect(anyBounds.gte).toBeDefined();
+    expect(undefBounds.gte).toBeDefined();
+    // gte must be within the test window
+    expect(anyBounds.gte! >= before).toBe(true);
+    expect(anyBounds.gte! <= after).toBe(true);
   });
 
   it('tonight: gte ≤ lte, both fall on today (2026-05-13 in Bogota)', () => {
