@@ -5,6 +5,7 @@ import {
   type Rental,
   type RentalQuery,
   rowToRental,
+  sortForMonthlyStay,
 } from "../tools/search-rentals";
 
 export type RentalIntelligenceSlots = {
@@ -159,6 +160,8 @@ export async function searchRentalsIntelligent(
     if (typeof query.maxPricePerNight === "number") {
       q = q.lte("price_daily", query.maxPricePerNight);
     }
+    if (query.checkIn) q = q.or(`available_to.is.null,available_to.gte.${query.checkIn}`);
+    if (query.checkOut) q = q.or(`available_from.is.null,available_from.lte.${query.checkOut}`);
     const { data } = await q;
     const apartments = data ?? [];
     hybridRows = apartments.map((r: Record<string, unknown>) => ({
@@ -184,14 +187,22 @@ export async function searchRentalsIntelligent(
   const aptMap = new Map<string, Record<string, unknown>>();
 
   if (ids.length) {
-    const { data: aptRows } = await client
+    let aptQ = client
       .from("apartments")
       .select(
         "id, title, neighborhood, bedrooms, price_daily, wifi_speed, amenities, images, host_name, source_url, available_from, available_to, pet_friendly, parking_included, minimum_stay_days, slug, latitude, longitude",
       )
       .in("id", ids);
+    if (query.checkIn) aptQ = aptQ.or(`available_to.is.null,available_to.gte.${query.checkIn}`);
+    if (query.checkOut) aptQ = aptQ.or(`available_from.is.null,available_from.lte.${query.checkOut}`);
+    const { data: aptRows } = await aptQ;
     for (const row of aptRows ?? []) {
       aptMap.set(row.id as string, row as Record<string, unknown>);
+    }
+    // Remove hybridRows that didn't survive the availability filter
+    if (query.checkIn || query.checkOut) {
+      const availableIds = new Set(aptMap.keys());
+      hybridRows = hybridRows.filter((r) => availableIds.has(r.id));
     }
   }
 
@@ -278,7 +289,7 @@ export async function searchRentalsIntelligent(
     });
   }
 
-  const results: IntelligenceRentalResult[] = scored.slice(0, limit).map(({ row, rankScore, sig }) => {
+  let results: IntelligenceRentalResult[] = scored.slice(0, limit).map(({ row, rankScore, sig }) => {
     const apt = aptMap.get(row.id);
     if (apt) {
       const rental = rowToRental(apt as unknown as import("../tools/search-rentals").ApartmentRow);
@@ -308,6 +319,10 @@ export async function searchRentalsIntelligent(
       signalSource: sig?.source ?? undefined,
     };
   });
+
+  if (query.stayType === "monthly") {
+    results = sortForMonthlyStay(results);
+  }
 
   return {
     results,

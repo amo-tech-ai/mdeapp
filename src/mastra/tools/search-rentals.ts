@@ -138,7 +138,18 @@ function deriveTags(row: {
   return tags.length ? tags : ['walkable'];
 }
 
-function sortForMonthlyStay(results: Rental[]): Rental[] {
+export function isAvailableForStay(
+  row: { available_from: string | null; available_to: string | null },
+  checkIn?: string,
+  checkOut?: string,
+): boolean {
+  if (!checkIn && !checkOut) return true;
+  if (checkOut && row.available_from && row.available_from > checkOut) return false;
+  if (checkIn && row.available_to && row.available_to < checkIn) return false;
+  return true;
+}
+
+export function sortForMonthlyStay<T extends Rental>(results: T[]): T[] {
   return [...results].sort((a, b) => {
     const aLong = a.tags.includes('long-stay') ? 0 : 1;
     const bLong = b.tags.includes('long-stay') ? 0 : 1;
