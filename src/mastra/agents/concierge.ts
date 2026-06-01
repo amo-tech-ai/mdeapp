@@ -24,6 +24,10 @@ export const conciergeWorkingMemorySchema = z.object({
       minBedrooms: z.number().optional(),
       maxPricePerNight: z.number().optional(),
       budgetType: z.enum(['nightly', 'monthly', 'total_trip']).optional(),
+      genericAskPending: z
+        .boolean()
+        .optional()
+        .describe('True after a clarify question; clear when user picks category/date or search runs'),
     })
     .optional()
     .describe('Last rental query the user asked about — refine from here on follow-ups'),

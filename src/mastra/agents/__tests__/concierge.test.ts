@@ -57,6 +57,17 @@ describe("conciergeAgent", () => {
     expect(parsed.lastRentalQuery?.maxPricePerNight).toBe(56);
   });
 
+  it("working memory preserves rental query genericAskPending", () => {
+    const parsed = conciergeWorkingMemorySchema.parse({
+      lastIntent: "rental_search",
+      lastRentalQuery: {
+        neighborhood: "Laureles",
+        genericAskPending: true,
+      },
+    });
+    expect(parsed.lastRentalQuery?.genericAskPending).toBe(true);
+  });
+
   it("instructions require refining rentals on show cheaper", async () => {
     const instructions = await conciergeAgent.getInstructions();
     expect(instructions).toContain("show cheaper options");
