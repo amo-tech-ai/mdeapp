@@ -1,19 +1,32 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useCoAgent } from "@copilotkit/react-core";
-import type { ConciergeWorkingMemory } from "@/lib/types";
+import { useConciergeCoAgent } from "@/components/chat/concierge-coagent-context";
 import { buildMapUiSummary } from "@/lib/map-ui-summary";
 import { useMapContext } from "@/platform/maps/map-context";
 
 const DEBOUNCE_MS = 300;
 
+function roundViewport(viewport: {
+  lat: number;
+  lng: number;
+  zoom: number;
+}): { lat: number; lng: number; zoom: number } {
+  return {
+    lat: Math.round(viewport.lat * 1e5) / 1e5,
+    lng: Math.round(viewport.lng * 1e5) / 1e5,
+    zoom: Math.round(viewport.zoom * 100) / 100,
+  };
+}
+
 /** Pushes MapContext summary into concierge working memory (debounced). */
 export function MapUiSync() {
   const { pins, selectedPinId, viewport } = useMapContext();
-  const { setState } = useCoAgent<ConciergeWorkingMemory>({
-    name: "conciergeAgent",
-  });
+  const { setState } = useConciergeCoAgent();
+  const setStateRef = useRef(setState);
+  useEffect(() => {
+    setStateRef.current = setState;
+  }, [setState]);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastPushedRef = useRef<string>("");
 
@@ -23,17 +36,17 @@ export function MapUiSync() {
       const mapUi = buildMapUiSummary(
         pins,
         selectedPinId,
-        viewport ?? undefined,
+        viewport ? roundViewport(viewport) : undefined,
       );
       const fingerprint = JSON.stringify(mapUi);
       if (fingerprint === lastPushedRef.current) return;
       lastPushedRef.current = fingerprint;
-      setState((prev) => ({ ...(prev ?? {}), mapUi }));
+      setStateRef.current((prev) => ({ ...(prev ?? {}), mapUi }));
     }, DEBOUNCE_MS);
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [pins, selectedPinId, viewport, setState]);
+  }, [pins, selectedPinId, viewport]);
 
   return null;
 }

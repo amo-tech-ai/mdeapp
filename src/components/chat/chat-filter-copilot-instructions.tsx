@@ -1,6 +1,7 @@
 "use client";
 
-import { useCoAgent, useCopilotAdditionalInstructions } from "@copilotkit/react-core";
+import { useCopilotAdditionalInstructions } from "@copilotkit/react-core";
+import { useConciergeCoAgent } from "@/components/chat/concierge-coagent-context";
 import type { ConciergeWorkingMemory } from "@/lib/types";
 import {
   isChipActive,
@@ -37,7 +38,7 @@ function buildEventsInstructions(
 
 /** F39 — Events filter + sub-chip scope injected into concierge turns. */
 export function ChatFilterCopilotInstructions() {
-  const { state } = useCoAgent<ConciergeWorkingMemory>({ name: "conciergeAgent" });
+  const { state } = useConciergeCoAgent();
   const memory = state ?? {};
   const eventsChip = CHAT_FILTER_CHIPS.find((c) => c.id === "events");
   const eventsMode =

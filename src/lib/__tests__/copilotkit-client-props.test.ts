@@ -15,12 +15,19 @@ describe("getCopilotKitClientProps", () => {
 
     const props = getCopilotKitClientProps("conciergeAgent");
 
-    expect(props).toEqual({
+    expect(props).toMatchObject({
       agent: "conciergeAgent",
       runtimeUrl: "/api/copilotkit",
       useSingleEndpoint: true,
       showDevConsole: false,
+      headers: {},
+      properties: {},
+      agents__unsafe_dev_only: {},
+      selfManagedAgents: {},
     });
+    const again = getCopilotKitClientProps("conciergeAgent");
+    expect(again.headers).toBe(props.headers);
+    expect(again.selfManagedAgents).toBe(props.selfManagedAgents);
     expect("publicApiKey" in props).toBe(false);
   });
 
@@ -30,12 +37,15 @@ describe("getCopilotKitClientProps", () => {
 
     const props = getCopilotKitClientProps("hostEventAgent");
 
-    expect(props).toEqual({
+    expect(props).toMatchObject({
       agent: "hostEventAgent",
       runtimeUrl: "/api/copilotkit",
       useSingleEndpoint: true,
       showDevConsole: false,
     });
+    expect(getCopilotKitClientProps("hostEventAgent").headers).toBe(
+      getCopilotKitClientProps("conciergeAgent").headers,
+    );
   });
 
   it("never passes publicApiKey for either agent, regardless of the Cloud env var", () => {

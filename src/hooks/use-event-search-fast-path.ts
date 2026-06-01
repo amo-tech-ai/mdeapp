@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useRef } from "react";
-import { useCoAgent } from "@copilotkit/react-core";
+import { useConciergeCoAgent } from "@/components/chat/concierge-coagent-context";
 import type { EventCard } from "@/mastra/tools/search-events";
 import { useEventLocalChat } from "@/components/chat/event-local-chat-context";
 import { useEventFastPath } from "@/components/chat/event-fast-path-context";
@@ -39,9 +39,7 @@ async function fetchEventSearch(
 }
 
 export function useEventSearchFastPath() {
-  const { state, setState } = useCoAgent<ConciergeWorkingMemory>({
-    name: "conciergeAgent",
-  });
+  const { state, setState } = useConciergeCoAgent();
   const { clarifyPending, showClarify, showExchange, clearLocalMessages } =
     useEventLocalChat();
   const { setToolResult } = useEventFastPath();

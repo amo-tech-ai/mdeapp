@@ -51,14 +51,19 @@ export function EventCard({
   onOpenDetails,
   onBuyTickets,
 }: EventCardProps) {
+  const cardLabel = `Event: ${title}${neighborhood ? `, ${neighborhood}` : ""}`;
+
   return (
     <article
-      className={`shrink-0 overflow-hidden rounded-lg border bg-card text-sm shadow-sm ${
-        selected ? "border-primary ring-2 ring-primary/30" : "border-border"
-      }`}
+      className={cn(
+        "shrink-0 overflow-hidden rounded-lg border bg-card text-sm shadow-sm",
+        selected ? "border-primary ring-2 ring-primary/30" : "border-border",
+      )}
       data-testid="event-card"
+      data-result-kind="event"
       data-pin-id={id}
       data-selected={selected ? "true" : "false"}
+      aria-label={cardLabel}
     >
       {imageUrl ? (
         // eslint-disable-next-line @next/next/no-img-element

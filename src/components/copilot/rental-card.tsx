@@ -72,6 +72,8 @@ export function RentalCard({
           ? `Rental photo in ${neighborhood}`
           : "Listing photo";
 
+  const cardLabel = `Rental: ${title}${neighborhood ? `, ${neighborhood}` : ""}`;
+
   return (
     <article
       className={cn(
@@ -80,8 +82,10 @@ export function RentalCard({
         featured && "border-primary/40 bg-primary/[0.02]",
       )}
       data-testid="rental-card"
+      data-result-kind="rental"
       data-pin-id={id}
       data-selected={selected ? "true" : "false"}
+      aria-label={cardLabel}
     >
       <div className="flex gap-3 p-3">
         <div

@@ -5,6 +5,7 @@ type PlaceResultCardProps = {
   evidenceText?: string;
   mapsUrl?: string;
   testId: string;
+  resultKind?: string;
   pinId?: string;
   selected?: boolean;
   onSelect?: () => void;
@@ -17,21 +18,25 @@ export function PlaceResultCard({
   evidenceText,
   mapsUrl,
   testId,
+  resultKind,
   pinId,
   selected,
   onSelect,
 }: PlaceResultCardProps) {
   const interactive = Boolean(onSelect && pinId);
   const previewPin = () => onSelect?.();
+  const kind = resultKind ?? testId.replace(/-card$/, "");
 
   return (
     <article
-      className={`rounded-lg border bg-card p-3 text-sm shadow-sm ${
+      className={`overflow-hidden rounded-lg border bg-card p-3 text-sm shadow-sm ${
         selected ? "border-primary ring-2 ring-primary/30" : "border-border"
       } ${interactive ? "cursor-pointer" : ""}`}
       data-testid={testId}
+      data-result-kind={kind}
       data-pin-id={pinId}
       data-selected={selected ? "true" : "false"}
+      aria-label={interactive ? `Open details for ${title}` : undefined}
       onMouseEnter={interactive ? previewPin : undefined}
       onFocus={interactive ? previewPin : undefined}
       onClick={interactive ? onSelect : undefined}
