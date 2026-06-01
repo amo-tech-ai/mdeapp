@@ -63,6 +63,31 @@ describe("DomainResults", () => {
     expect(html).toContain("Mal De Ojo");
   });
 
+  it("renders AttractionCard for attraction rows", () => {
+    const html = renderToStaticMarkup(
+      React.createElement(DomainResults, {
+        category: "attraction",
+        testId: "attraction-card",
+        result: {
+          results: [
+            {
+              id: "a1",
+              name: "Arví Park",
+              neighborhood: "Santa Elena",
+              category: "park",
+              priceUsd: 0,
+              rating: 4.6,
+              imageUrl: "https://example.com/arvi.jpg",
+            },
+          ],
+        },
+      }),
+    );
+    expect(html).toContain('data-pin-id="attraction-a1"');
+    expect(html).toContain('data-testid="attraction-card-rating"');
+    expect(html).toContain('data-result-kind="attraction"');
+  });
+
   it("renders attraction empty state test id", () => {
     const html = renderToStaticMarkup(
       React.createElement(DomainResults, {

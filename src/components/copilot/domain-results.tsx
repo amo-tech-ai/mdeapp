@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { PlaceResultCard } from "@/components/copilot/place-result-card";
+import { AttractionCard } from "@/components/copilot/attraction-card";
 import { RestaurantCard } from "@/components/copilot/restaurant-card";
 import { ToolPinsSync } from "@/components/copilot/tool-pins-sync";
 import { EmptyState } from "@/components/empty/empty-state";
@@ -20,10 +21,13 @@ type PlaceRow = {
   name?: string;
   neighborhood?: string;
   cuisine?: string;
+  category?: string;
   priceTier?: string;
   pricePerTicket?: number;
   avgPricePerPerson?: number;
   priceUsd?: number;
+  durationMinutes?: number;
+  bestTimeOfDay?: string;
   rating?: number;
   imageUrl?: string;
   mapsUrl?: string | null;
@@ -150,6 +154,43 @@ export function DomainResults({
                   cuisine={r.cuisine}
                   priceTier={r.priceTier}
                   avgPricePerPerson={r.avgPricePerPerson}
+                  rating={r.rating}
+                  imageUrl={r.imageUrl}
+                  mapsUrl={r.mapsUrl}
+                  aiSummary={r.aiSummary}
+                  pinId={pinId}
+                  selected={selectedPinId === pinId}
+                  onSelect={() => panToPin(pinId)}
+                  onOpenDetails={openDetail}
+                />
+              );
+            }
+
+            if (category === "attraction") {
+              const openDetail = () => {
+                panToPin(pinId);
+                openCafeDetail({
+                  kind: "cafe",
+                  pinId,
+                  title,
+                  placeId: r.placeId ?? undefined,
+                  mapsUrl: r.mapsUrl ?? undefined,
+                  rating: r.rating,
+                  formattedAddress: r.neighborhood,
+                  summary: r.aiSummary ?? undefined,
+                  rank: index + 1,
+                });
+              };
+              return (
+                <AttractionCard
+                  key={r.id}
+                  testId={testId}
+                  title={title}
+                  neighborhood={r.neighborhood}
+                  category={r.category}
+                  priceUsd={r.priceUsd}
+                  durationMinutes={r.durationMinutes}
+                  bestTimeOfDay={r.bestTimeOfDay}
                   rating={r.rating}
                   imageUrl={r.imageUrl}
                   mapsUrl={r.mapsUrl}
