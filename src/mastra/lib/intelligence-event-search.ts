@@ -99,7 +99,7 @@ function hybridToEventCard(row: HybridEventRow, rankScore?: number, signalSource
     id: row.id,
     title: row.name,
     category: mapCategory(row.event_type),
-    venue: extractNeighborhood(row.address, row.city),
+    venue: row.address ?? "Medellin",
     neighborhood: extractNeighborhood(row.address, row.city),
     startsAt: row.event_start_time ?? new Date().toISOString(),
     pricePerTicket: num(row.ticket_price_min) ?? 0,
@@ -176,7 +176,10 @@ export async function searchEventsIntelligent(
     const window = dateWindow(dw);
     if (window.gte) q = q.gte("event_start_time", window.gte);
     if (window.lte) q = q.lte("event_start_time", window.lte);
-    const { data } = await q;
+    const { data, error } = await q;
+    if (error) {
+      throw new Error(`structured event query failed: ${error.message}`);
+    }
     hybridRows = (data ?? []).map((r: Record<string, unknown>) => ({
       id: String(r.id),
       name: String(r.name),
@@ -194,15 +197,28 @@ export async function searchEventsIntelligent(
     }));
   }
 
+  // Explicit category / maxPrice filters apply to both paths — the hybrid RPC
+  // ranks semantically and cannot pre-filter, so enforce them here.
+  if (query.category) {
+    hybridRows = hybridRows.filter((r) => mapCategory(r.event_type) === query.category);
+  }
+  if (typeof query.maxPricePerTicket === "number") {
+    const maxPrice = query.maxPricePerTicket;
+    hybridRows = hybridRows.filter((r) => (num(r.ticket_price_min) ?? 0) <= maxPrice);
+  }
+
   const ids = hybridRows.map((r) => r.id);
   const signalMap = new Map<string, EventSignalRow>();
   if (ids.length) {
-    const { data: signals } = await client
+    const { data: signals, error: signalsError } = await client
       .from("event_signals")
       .select(
         "event_id, hype_score, music_energy, fashion_score, networking_quality, nightlife_score, local_vs_tourist, confidence, source, evidence",
       )
       .in("event_id", ids);
+    if (signalsError) {
+      console.warn("[intelligence-event-search] event_signals lookup failed:", signalsError.message);
+    }
     for (const s of (signals ?? []) as EventSignalRow[]) {
       signalMap.set(s.event_id, s);
     }

@@ -221,26 +221,33 @@ export async function searchEvents(
   const limit = query.limit ?? 5;
 
   if (query.queryText?.trim()) {
-    const started = Date.now();
-    const intel = await searchEventsIntelligent(query);
-    const latencyMs = Date.now() - started;
-    await writeSearchLog({
-      queryText: query.queryText,
-      slots: intel.slots,
-      toolName: 'search-events',
-      resultsCount: intel.results.length,
-      latencyMs,
-      hybridUsed: intel.hybridUsed,
-      groundingUsed: false,
-      rankExplanation: intel.rankExplanation,
-    });
-    return {
-      results: intel.results.slice(0, limit),
-      total: intel.total,
-      source: intel.source,
-      hybridUsed: intel.hybridUsed,
-      rankExplanation: intel.rankExplanation,
-    };
+    try {
+      const started = Date.now();
+      const intel = await searchEventsIntelligent(query);
+      const latencyMs = Date.now() - started;
+      await writeSearchLog({
+        queryText: query.queryText,
+        slots: intel.slots,
+        toolName: 'search-events',
+        resultsCount: intel.results.length,
+        latencyMs,
+        hybridUsed: intel.hybridUsed,
+        groundingUsed: false,
+        rankExplanation: intel.rankExplanation,
+      });
+      return {
+        results: intel.results.slice(0, limit),
+        total: intel.total,
+        source: intel.source,
+        hybridUsed: intel.hybridUsed,
+        rankExplanation: intel.rankExplanation,
+      };
+    } catch (err) {
+      console.warn(
+        '[search-events] intelligent search failed, falling back to structured search:',
+        (err as Error).message,
+      );
+    }
   }
 
   const client = getSupabaseClient();
