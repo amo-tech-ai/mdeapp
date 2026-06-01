@@ -46,6 +46,10 @@ describe("EventCard", () => {
     );
 
     expect(html).toContain('data-testid="event-card"');
+    expect(html).toContain('data-result-kind="event"');
+    expect(html).toContain(
+      'aria-label="Event: Salsa Night at Lleras, El Poblado"',
+    );
     expect(html).toContain(toolPayload.title);
     expect(html).toContain(toolPayload.venue);
     expect(html).toContain(toolPayload.neighborhood);

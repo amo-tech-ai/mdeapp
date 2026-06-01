@@ -46,6 +46,9 @@
     "test:e2e:restaurant-fast-path": "playwright test e2e/restaurant-card-fast-path.spec.ts --project=chromium --workers=1",
     "test:e2e:concierge-run-error": "playwright test e2e/concierge-run-error.spec.ts --project=chromium --workers=1",
     "test:e2e:p0-focused": "npm run test:e2e:copilot-budget && npm run test:e2e:restaurant-fast-path && npm run test:e2e:concierge-run-error",
+    "test:e2e:live-audit": "playwright test e2e/live-audit-verticals.spec.ts --project=chromium --workers=1",
+    "test:e2e:card-unification": "playwright test e2e/card-unification.spec.ts --project=chromium --workers=1",
+    "test:e2e:visual-cards": "playwright test e2e/visual-all-cards.spec.ts --project=chromium --workers=1",
     "commit:staged-guard:c012": "node scripts/commit-staged-guard.mjs c012",
     "commit:staged-guard:c013": "node scripts/commit-staged-guard.mjs c013"
   },

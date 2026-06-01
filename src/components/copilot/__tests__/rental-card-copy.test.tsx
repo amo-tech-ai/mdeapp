@@ -30,4 +30,21 @@ describe("UX-027 rental card copy leaks (UX-T-027 / CU-P0-07)", () => {
     expect(html).not.toMatch(/SCREEN-/);
     expect(html).not.toMatch(/Photo soon/i);
   });
+
+  it("UX-021 exposes data-result-kind and aria-label on interactive card", () => {
+    const html = renderToStaticMarkup(
+      <RentalCard
+        id="rental-1"
+        listingId="apt-1"
+        title="1BR Laureles"
+        neighborhood="Laureles"
+        nightly_price={75}
+        bedrooms={1}
+        onSelect={() => undefined}
+      />,
+    );
+    expect(html).toContain('data-result-kind="rental"');
+    expect(html).toContain('aria-label="Rental: 1BR Laureles, Laureles"');
+    expect(html).toContain('data-result-kind="rental"');
+  });
 });
