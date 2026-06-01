@@ -7,7 +7,8 @@ import { CafeResultCard } from "@/components/copilot/cafe-result-card";
 import { RentalCard } from "@/components/copilot/rental-card";
 import type { RentalSearchMeta } from "@/components/chat/rental-fast-path-context";
 import { EventCard } from "@/components/copilot/event-card";
-import { PlaceResultCard } from "@/components/copilot/place-result-card";
+import { DomainResults } from "@/components/copilot/domain-results";
+import { ToolPinsSync } from "@/components/copilot/tool-pins-sync";
 import { ToolErrorChip } from "@/components/copilot/tool-error-chip";
 import { EmptyState } from "@/components/empty/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,7 +26,6 @@ import {
 } from "@/platform/copilot/mastra-tool-action-names";
 import type { WorkflowKind } from "@/platform/copilot/workflow-steps";
 import { useMapContext } from "@/platform/maps/map-context";
-import { normalizeToolOutput } from "@/platform/maps/normalize-tool-output";
 import { normalizeToolEnvelope } from "@/lib/normalize-tool-envelope";
 import { parseGroundedToolResult } from "@/lib/parse-grounded-tool-result";
 import {
@@ -33,30 +33,6 @@ import {
   isToolRenderEmpty,
   isToolRenderError,
 } from "@/lib/tool-render-state";
-import type { MapPinCategory } from "@/platform/contracts";
-
-function ToolPinsSync({
-  category,
-  result,
-}: {
-  category: MapPinCategory;
-  result: unknown;
-}) {
-  const { mergePinsByCategory } = useMapContext();
-  const lastMergedKeyRef = useRef("");
-
-  useEffect(() => {
-    const { pins } = normalizeToolOutput(category, result);
-    if (pins.length === 0) return;
-    const key = `${category}:${pins.map((p) => p.id).sort().join(",")}`;
-    if (key === lastMergedKeyRef.current) return;
-    lastMergedKeyRef.current = key;
-    mergePinsByCategory(category, pins);
-  }, [category, result, mergePinsByCategory]);
-
-  return null;
-}
-
 function WorkflowStatusReporter({
   kind,
   status,
@@ -416,126 +392,22 @@ export function EventResults({ result }: { result: unknown }) {
 }
 
 export function RestaurantResults({ result }: { result: unknown }) {
-  const envelope = normalizeToolEnvelope(result);
-  const count = envelope.results?.length ?? 0;
   return (
-    <>
-      <RichCardResultsRegistrar category="restaurant" count={count} />
-      <GenericResults
-        category="restaurant"
-        result={result}
-        testId="restaurant-card"
-      />
-    </>
+    <DomainResults
+      category="restaurant"
+      result={result}
+      testId="restaurant-card"
+    />
   );
 }
 
-function GenericResults({
-  category,
-  result,
-  testId,
-}: {
-  category: MapPinCategory;
-  result: unknown;
-  testId: string;
-}) {
-  const envelope = result as {
-    results?: Array<{
-      id: string;
-      title?: string;
-      name?: string;
-      neighborhood?: string;
-      pricePerTicket?: number;
-      avgPricePerPerson?: number;
-      priceUsd?: number;
-      evidence?: Array<{
-        sourceType: string;
-        sourceUrl: string | null;
-        extractedText: string | null;
-      }>;
-    }>;
-    rankExplanation?: Array<{ factor: string; score: number; note: string }>;
-    hybridUsed?: boolean;
-  };
-  const rows = envelope.results ?? [];
-  const rankExplanation = envelope.rankExplanation ?? [];
-
+export function AttractionResults({ result }: { result: unknown }) {
   return (
-    <>
-      <ToolPinsSync category={category} result={result} />
-      {rankExplanation.length > 0 ? (
-        <div
-          className="rounded-md border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground"
-          data-testid="rank-explanation"
-        >
-          <p className="font-medium text-foreground">Why these results</p>
-          <ul className="mt-1 list-inside list-disc">
-            {rankExplanation.map((entry) => (
-              <li key={`${entry.factor}-${entry.note}`}>
-                {entry.factor} ({entry.score.toFixed(2)}): {entry.note}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-      {rows.length === 0 ? (
-        <GenericEmptyState category={category} testId={`${testId}-empty`} />
-      ) : (
-        <div className="flex flex-col gap-2 py-2">
-          {rows.map((r) => (
-            <PlaceResultCard
-              key={r.id}
-              testId={testId}
-              title={r.title ?? r.name ?? "Result"}
-              subtitle={r.neighborhood}
-              priceLabel={
-                r.pricePerTicket != null
-                  ? `$${r.pricePerTicket} ticket`
-                  : r.avgPricePerPerson != null
-                    ? `$${r.avgPricePerPerson}/person`
-                    : r.priceUsd != null
-                      ? r.priceUsd === 0
-                        ? "Free"
-                        : `$${r.priceUsd}`
-                      : undefined
-              }
-              evidenceText={
-                r.evidence?.[0]?.extractedText ??
-                r.evidence?.[0]?.sourceUrl ??
-                undefined
-              }
-            />
-          ))}
-        </div>
-      )}
-    </>
-  );
-}
-
-function GenericEmptyState({
-  category,
-  testId,
-}: {
-  category: MapPinCategory;
-  testId: string;
-}) {
-  const copy =
-    category === "restaurant"
-      ? {
-          title: "No restaurants found",
-          description: "Try another cuisine or neighborhood.",
-        }
-      : category === "attraction"
-        ? {
-            title: "No attractions found",
-            description: "Try a broader area or activity type.",
-          }
-        : {
-            title: "No places found",
-            description: "Try rephrasing your search.",
-          };
-  return (
-    <EmptyState testId={testId} title={copy.title} description={copy.description} />
+    <DomainResults
+      category="attraction"
+      result={result}
+      testId="attraction-card"
+    />
   );
 }
 
@@ -635,13 +507,7 @@ function restaurantToolRender({ status, result }: ToolRenderProps): ReactElement
   const body = resolveToolBody({
     status,
     result,
-    renderResults: (
-      <GenericResults
-        category="restaurant"
-        result={result}
-        testId="restaurant-card"
-      />
-    ),
+    renderResults: <RestaurantResults result={result} />,
   });
   return (
     <ToolRenderShell kind="restaurant" status={status}>
@@ -654,13 +520,7 @@ function attractionToolRender({ status, result }: ToolRenderProps): ReactElement
   const body = resolveToolBody({
     status,
     result,
-    renderResults: (
-      <GenericResults
-        category="attraction"
-        result={result}
-        testId="attraction-card"
-      />
-    ),
+    renderResults: <AttractionResults result={result} />,
   });
   return (
     <ToolRenderShell kind="attraction" status={status}>
