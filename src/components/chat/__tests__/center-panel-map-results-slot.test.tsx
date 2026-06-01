@@ -24,6 +24,7 @@ describe("CenterPanelMapResultsSlot", () => {
     vi.mocked(useRichCardResults).mockReturnValue({
       counts: { event: 2 },
       setRichCardCount: vi.fn(),
+      clearRichCardCounts: vi.fn(),
       hasRichCards: (c) => c === "event",
       shouldSuppressGenericMapResults: (c) => c === "event",
     });
@@ -38,6 +39,7 @@ describe("CenterPanelMapResultsSlot", () => {
     vi.mocked(useRichCardResults).mockReturnValue({
       counts: { grounded: 2 },
       setRichCardCount: vi.fn(),
+      clearRichCardCounts: vi.fn(),
       hasRichCards: (c) => c === "grounded",
       shouldSuppressGenericMapResults: (c) => c === "grounded",
     });
@@ -52,6 +54,7 @@ describe("CenterPanelMapResultsSlot", () => {
     vi.mocked(useRichCardResults).mockReturnValue({
       counts: {},
       setRichCardCount: vi.fn(),
+      clearRichCardCounts: vi.fn(),
       hasRichCards: () => false,
       shouldSuppressGenericMapResults: () => false,
     });

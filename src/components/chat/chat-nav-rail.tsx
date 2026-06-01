@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Heart, Luggage, MapPin, MessageSquarePlus, Sparkles } from "lucide-react";
+import { useConciergeSession } from "@/components/chat/concierge-session-context";
 
 /** MAP-007B left nav rail (Mindtrip-style stub; routes expand in Phase 2). */
 export function ChatNavRail({
@@ -9,6 +11,14 @@ export function ChatNavRail({
 }: {
   testId?: string;
 }) {
+  const router = useRouter();
+  const { startNewChat } = useConciergeSession();
+
+  function onNewChat() {
+    startNewChat();
+    router.push("/");
+  }
+
   return (
     <nav
       data-testid={testId}
@@ -21,13 +31,15 @@ export function ChatNavRail({
       </div>
       <ul className="flex flex-col gap-1 text-sm">
         <li>
-          <Link
-            href="/"
+          <button
+            type="button"
+            data-testid="nav-new-chat"
             className="inline-flex h-8 w-full items-center justify-start gap-2 rounded-lg bg-secondary px-3 text-sm font-medium text-secondary-foreground"
+            onClick={onNewChat}
           >
             <MessageSquarePlus className="size-4" aria-hidden />
             New chat
-          </Link>
+          </button>
         </li>
         <li>
           <span

@@ -18,6 +18,7 @@ import {
 type RichCardResultsContextValue = {
   counts: RichCardCounts;
   setRichCardCount: (category: MapPinCategory, count: number) => void;
+  clearRichCardCounts: () => void;
   hasRichCards: (category: MapPinCategory | null) => boolean;
   shouldSuppressGenericMapResults: (activeMapCategory: MapPinCategory | null) => boolean;
 };
@@ -45,6 +46,10 @@ export function RichCardResultsProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const clearRichCardCounts = useCallback(() => {
+    setCounts({});
+  }, []);
+
   const hasRichCards = useCallback(
     (category: MapPinCategory | null) => {
       if (!category) return false;
@@ -63,10 +68,17 @@ export function RichCardResultsProvider({ children }: { children: ReactNode }) {
     () => ({
       counts,
       setRichCardCount,
+      clearRichCardCounts,
       hasRichCards,
       shouldSuppressGenericMapResults: suppressGenericMapResults,
     }),
-    [counts, setRichCardCount, hasRichCards, suppressGenericMapResults],
+    [
+      counts,
+      setRichCardCount,
+      clearRichCardCounts,
+      hasRichCards,
+      suppressGenericMapResults,
+    ],
   );
 
   return (

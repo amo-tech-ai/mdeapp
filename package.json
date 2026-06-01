@@ -50,7 +50,8 @@
     "test:e2e:card-unification": "playwright test e2e/card-unification.spec.ts --project=chromium --workers=1",
     "test:e2e:visual-cards": "playwright test e2e/visual-all-cards.spec.ts --project=chromium --workers=1",
     "commit:staged-guard:c012": "node scripts/commit-staged-guard.mjs c012",
-    "commit:staged-guard:c013": "node scripts/commit-staged-guard.mjs c013"
+    "commit:staged-guard:c013": "node scripts/commit-staged-guard.mjs c013",
+    "test:e2e:new-chat": "playwright test e2e/concierge-new-chat.spec.ts --project=chromium --workers=1"
   },
   "dependencies": {
     "@ag-ui/client": "0.0.52",
