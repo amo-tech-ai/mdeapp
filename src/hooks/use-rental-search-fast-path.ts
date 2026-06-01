@@ -107,6 +107,8 @@ export function useRentalSearchFastPath() {
           minBedrooms: params.minBedrooms,
           maxPricePerNight: params.maxPricePerNight,
           genericAskPending: false,
+          checkIn: params.checkIn,
+          checkOut: params.checkOut,
         };
         const sig = scoreRentalQuery(userText);
         logRoutingDecision({

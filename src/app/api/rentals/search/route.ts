@@ -11,6 +11,9 @@ const bodySchema = z.object({
   maxPricePerNight: z.number().positive().optional(),
   limit: z.number().int().min(1).max(20).optional().default(8),
   queryText: z.string().optional(),
+  checkIn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  checkOut: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  stayType: z.enum(["nightly", "monthly", "total_trip"]).optional(),
 });
 
 /** Fast path — rental search without conciergeAgent round-trip. */
@@ -30,7 +33,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const { neighborhood, minBedrooms, maxPricePerNight, limit, queryText } = parsed.data;
+  const { neighborhood, minBedrooms, maxPricePerNight, limit, queryText, checkIn, checkOut, stayType } = parsed.data;
   try {
     const { results, total, source, hybridUsed, rankExplanation } = await searchRentals({
       neighborhood,
@@ -38,6 +41,9 @@ export async function POST(req: Request) {
       maxPricePerNight,
       limit,
       queryText,
+      checkIn,
+      checkOut,
+      stayType,
     });
     return NextResponse.json({ results, total, source, hybridUsed, rankExplanation });
   } catch (error) {
