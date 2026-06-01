@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useRef } from "react";
-import { useCoAgent } from "@copilotkit/react-core";
+import { useConciergeCoAgent } from "@/components/chat/concierge-coagent-context";
 import type { Rental } from "@/mastra/tools/search-rentals";
 import { useEventLocalChat } from "@/components/chat/event-local-chat-context";
 import { useRentalFastPath } from "@/components/chat/rental-fast-path-context";
@@ -35,9 +35,7 @@ async function fetchRentalSearch(
 }
 
 export function useRentalSearchFastPath() {
-  const { state, setState } = useCoAgent<ConciergeWorkingMemory>({
-    name: "conciergeAgent",
-  });
+  const { state, setState } = useConciergeCoAgent();
   const { clarifyPending, clarifyKind, showClarify, showExchange, clearLocalMessages } =
     useEventLocalChat();
   const { setToolResult, setSearchMeta } = useRentalFastPath();

@@ -7,7 +7,7 @@ import { reportConciergeError } from "@/lib/concierge-error-store";
 
 /** Client wrapper so `onError` (a function) can be passed to <CopilotKit> without
  *  violating Next.js App Router's "no functions from Server Components" rule. */
-export function CopilotKitProvider({ children }: { children: ReactNode }) {
+export function MdeCopilotKitProvider({ children }: { children: ReactNode }) {
   return (
     <CopilotKit
       {...getCopilotKitClientProps("conciergeAgent")}
