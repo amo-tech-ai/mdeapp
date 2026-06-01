@@ -3,7 +3,7 @@
  * Fail if two live migrations share the same 14-digit prefix (PR-17 / #23 collision guard).
  * Ignores supabase/migrations/_archive-not-on-remote/
  */
-import { readdirSync, statSync } from "node:fs";
+import { readdirSync } from "node:fs";
 import { join } from "node:path";
 
 const migrationsDir = join(process.cwd(), "supabase/migrations");
