@@ -1,0 +1,2 @@
+# verify_jwt=false: anonymous checkout allowed; buyer_email + access_token carry identity (see index.ts).
+verify_jwt = false

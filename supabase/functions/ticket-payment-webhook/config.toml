@@ -1,0 +1,2 @@
+# verify_jwt=false: Stripe webhook HMAC signature only; Stripe sends no Supabase JWT.
+verify_jwt = false

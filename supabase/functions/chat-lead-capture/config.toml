@@ -1,0 +1,2 @@
+# verify_jwt=false: optional anonymous leads; Bearer JWT validated manually in index.ts via getUserId().
+verify_jwt = false
