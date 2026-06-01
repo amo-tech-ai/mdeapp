@@ -1,6 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const baseURL = process.env.SMOKE_BASE_URL ?? "http://localhost:3001";
+const baseURL =
+  process.env.PROD_SMOKE_BASE_URL?.trim() ||
+  process.env.SMOKE_BASE_URL ||
+  "http://localhost:3001";
 
 export default defineConfig({
   testDir: "./e2e",
