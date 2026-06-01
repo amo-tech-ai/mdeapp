@@ -13,6 +13,7 @@ const bodySchema = z.object({
     .optional()
     .default("any"),
   limit: z.number().int().min(1).max(20).optional().default(10),
+  queryText: z.string().optional(),
 });
 
 /** Fast path — Supabase event search without conciergeAgent (EVP-006 perf). */
@@ -32,13 +33,24 @@ export async function POST(req: Request) {
     );
   }
 
-  const { category, neighborhood, dateWindow, limit } = parsed.data;
-  const { results, total, source } = await searchEvents({
-    category,
-    neighborhood,
-    dateWindow,
-    limit,
-  });
-
-  return NextResponse.json({ results, total, source });
+  const { category, neighborhood, dateWindow, limit, queryText } = parsed.data;
+  try {
+    const { results, total, source, hybridUsed, rankExplanation } = await searchEvents({
+      category,
+      neighborhood,
+      dateWindow,
+      limit,
+      queryText,
+    });
+    return NextResponse.json({ results, total, source, hybridUsed, rankExplanation });
+  } catch (error) {
+    console.error("[api/events/search]", error);
+    return NextResponse.json(
+      {
+        error: "event_search_failed",
+        message: "Unable to search events right now.",
+      },
+      { status: 500 },
+    );
+  }
 }
