@@ -1,0 +1,365 @@
+{
+  "schema_version": 1,
+  "task": "DATA-035",
+  "signed_off_by": "DATA-003",
+  "applied_at": "2026-05-30T00:19:20.395Z",
+  "kind": "cafe",
+  "city": "Medellín",
+  "anchor_count": 17,
+  "anchors": [
+    {
+      "id": "1b3f24ab-34d5-4e28-a5df-23fbbf66baa0",
+      "name": "Amelier Café El Poblado",
+      "google_place_id": "ChIJ7arRSNUpRI4R_yoq0TDSjSs",
+      "neighborhood": "El Poblado",
+      "latitude": 6.2089535,
+      "longitude": -75.5672067,
+      "tags": [
+        "coworking-friendly",
+        "brunch",
+        "group-work"
+      ],
+      "confidence_score": 90,
+      "listing_sources": [
+        "04-pablado-cafes.md"
+      ],
+      "why_special": "Coworking café at Cl. 9A #37-48.",
+      "ai_vibe_summary": "Group-friendly coworking brunch café in Poblado.",
+      "contact": {}
+    },
+    {
+      "id": "a7e2c990-8476-4693-8c4b-d4d64ad08cb1",
+      "name": "Café Noir",
+      "google_place_id": "ChIJ6bs39KgpRI4RqAxz1fHkl38",
+      "neighborhood": "El Poblado",
+      "latitude": 6.2074437,
+      "longitude": -75.5681251,
+      "tags": [
+        "upscale",
+        "evening",
+        "specialty-coffee"
+      ],
+      "confidence_score": 92,
+      "listing_sources": [
+        "04-pablado-cafes.md"
+      ],
+      "why_special": "Luxury café-bar lounge in El Poblado.",
+      "ai_vibe_summary": "Sophisticated evening café with artisanal coffee and cocktails.",
+      "contact": {
+        "website": "https://www.cafenoircolombia.com"
+      }
+    },
+    {
+      "id": "d89d3626-f291-4160-936b-d53aac42c248",
+      "name": "Café Quindío Vía Primavera",
+      "google_place_id": "ChIJd2TcTAApRI4RG6oHLp0d7Lw",
+      "neighborhood": "El Poblado",
+      "latitude": 6.2079395,
+      "longitude": -75.566992,
+      "tags": [
+        "brand-cafe",
+        "aesthetic"
+      ],
+      "confidence_score": 88,
+      "listing_sources": [
+        "04-pablado-cafes.md"
+      ],
+      "why_special": "National Colombian coffee brand Vía Primavera location.",
+      "ai_vibe_summary": "Classic Colombian brand café on Via Primavera.",
+      "contact": {}
+    },
+    {
+      "id": "df3ebf41-cdd2-4dde-a70f-6132e1d7b9a3",
+      "name": "Café Velvet",
+      "google_place_id": "ChIJXUCqDNQpRI4RKLeAcaPhClA",
+      "neighborhood": "El Poblado",
+      "latitude": 6.2408718,
+      "longitude": -75.5920674,
+      "tags": [
+        "brunch",
+        "wifi-friendly",
+        "aesthetic"
+      ],
+      "confidence_score": 94,
+      "listing_sources": [
+        "04-pablado-cafes.md"
+      ],
+      "why_special": "Via Primavera brunch café with outdoor seating.",
+      "ai_vibe_summary": "Aesthetic Via Primavera café for quiet work and brunch.",
+      "contact": {}
+    },
+    {
+      "id": "5faf8004-4c9d-4743-ab76-95d6e4070db2",
+      "name": "Hija Mía Coffee Roasters",
+      "google_place_id": "ChIJd-HheCwoRI4RUuNYh8mFofw",
+      "neighborhood": "El Poblado",
+      "latitude": 6.2124613,
+      "longitude": -75.5708741,
+      "tags": [
+        "roastery",
+        "wifi-friendly",
+        "specialty-coffee"
+      ],
+      "confidence_score": 96,
+      "listing_sources": [
+        "04-pablado-cafes.md"
+      ],
+      "why_special": "Manila roaster-café with in-house roasting.",
+      "ai_vibe_summary": "Roastery café popular with remote workers and flat-white fans.",
+      "contact": {
+        "website": "https://www.hijamiacoffee.com",
+        "instagram": "@hijamiacoffee"
+      }
+    },
+    {
+      "id": "a5b68394-8ef3-4ea2-8d54-4d6bbe137d8e",
+      "name": "Pergamino Calle 10B",
+      "google_place_id": "ChIJmyfHJngpRI4RLQG7fWFfH_I",
+      "neighborhood": "El Poblado",
+      "latitude": 6.2107137,
+      "longitude": -75.565759,
+      "tags": [
+        "third-wave",
+        "wifi-friendly",
+        "specialty-coffee"
+      ],
+      "confidence_score": 98,
+      "listing_sources": [
+        "04-pablado-cafes.md"
+      ],
+      "why_special": "Iconic El Poblado flagship specialty café.",
+      "ai_vibe_summary": "Creative retro third-wave flagship for nomads and visitors.",
+      "contact": {
+        "website": "https://co.pergamino.co",
+        "instagram": "@pergaminocafe"
+      }
+    },
+    {
+      "id": "026cfc6e-807b-4b31-b1a1-43cd5455f63d",
+      "name": "Pergamino Vía Primavera",
+      "google_place_id": "ChIJAwOZ5ikoRI4RWqsKH3Ve1gI",
+      "neighborhood": "El Poblado",
+      "latitude": 6.2083135,
+      "longitude": -75.5671227,
+      "tags": [
+        "third-wave",
+        "tourist-friendly"
+      ],
+      "confidence_score": 88,
+      "listing_sources": [
+        "04-pablado-cafes.md"
+      ],
+      "why_special": "Pergamino Vía Primavera storefront.",
+      "ai_vibe_summary": "Reliable tourist-friendly Pergamino on Via Primavera.",
+      "contact": {}
+    },
+    {
+      "id": "33c43a66-c478-4472-8351-19bc7717b550",
+      "name": "Urbania Café",
+      "google_place_id": "ChIJ1QrC3yooRI4RZ18CGQQG63s",
+      "neighborhood": "El Poblado",
+      "latitude": 6.2097901,
+      "longitude": -75.5727771,
+      "tags": [
+        "specialty-coffee",
+        "ethical",
+        "quiet"
+      ],
+      "confidence_score": 95,
+      "listing_sources": [
+        "04-pablado-cafes.md"
+      ],
+      "why_special": "Colombian specialty brand with social mission.",
+      "ai_vibe_summary": "Quiet ethical specialty coffee for focused work.",
+      "contact": {
+        "website": "https://www.urbaniacafe.com"
+      }
+    },
+    {
+      "id": "7efb1f32-3999-404d-8d73-56f079835a84",
+      "name": "Amelier Café Laureles",
+      "google_place_id": "ChIJp_baYN8pRI4RqTsdj_HJ1W0",
+      "neighborhood": "Laureles",
+      "latitude": 6.2499968,
+      "longitude": -75.5906547,
+      "tags": [
+        "coworking-friendly",
+        "brunch"
+      ],
+      "confidence_score": 87,
+      "listing_sources": [
+        "03-cafe-laureles.md"
+      ],
+      "why_special": "Café-brunch concept with laptop-friendly seating.",
+      "ai_vibe_summary": "Brunch-forward coworking café in Laureles.",
+      "contact": {}
+    },
+    {
+      "id": "ca251fd4-7979-4a0c-b51a-effd711cc73e",
+      "name": "Botswana Café Creativo",
+      "google_place_id": "ChIJlYRAUE4pRI4RD_kjt-mHSuw",
+      "neighborhood": "Laureles",
+      "latitude": 6.2453781,
+      "longitude": -75.5972782,
+      "tags": [
+        "creative",
+        "aesthetic",
+        "wifi-friendly"
+      ],
+      "confidence_score": 85,
+      "listing_sources": [
+        "03-cafe-laureles.md"
+      ],
+      "why_special": "Creative café space in Laureles listings pack.",
+      "ai_vibe_summary": "Art-forward café with creative community vibe.",
+      "contact": {}
+    },
+    {
+      "id": "bae551a6-78d2-41d3-ad4d-e2af0abf6588",
+      "name": "Café Namazzi",
+      "google_place_id": "ChIJ13TZTwApRI4R6nj62_0XA4Y",
+      "neighborhood": "Laureles",
+      "latitude": 6.2395304,
+      "longitude": -75.5994391,
+      "tags": [
+        "specialty-coffee",
+        "aesthetic"
+      ],
+      "confidence_score": 92,
+      "listing_sources": [
+        "03-cafe-laureles.md"
+      ],
+      "why_special": "Curated Laureles café in local directory packs.",
+      "ai_vibe_summary": "Stylish neighborhood café for specialty coffee seekers.",
+      "contact": {}
+    },
+    {
+      "id": "5975c9b0-1822-47bc-af2d-3f0c4e6880b9",
+      "name": "Café Revolución",
+      "google_place_id": "ChIJY3PNMaEpRI4RI_KC4_QQWd0",
+      "neighborhood": "Laureles",
+      "latitude": 6.2459636,
+      "longitude": -75.592226,
+      "tags": [
+        "expat-friendly",
+        "brunch",
+        "wifi-friendly"
+      ],
+      "confidence_score": 95,
+      "listing_sources": [
+        "03-cafe-laureles.md"
+      ],
+      "why_special": "Neighborhood favorite since 2014 with warm expat community.",
+      "ai_vibe_summary": "Cozy social neighborhood expat hub with home-style comfort.",
+      "contact": {
+        "instagram": "@caferevolucion"
+      }
+    },
+    {
+      "id": "f81d7cab-5261-4b97-aa30-b91d1254239b",
+      "name": "Naturalia Café",
+      "google_place_id": "ChIJMRCXA6IpRI4Rm1T8IKltV5w",
+      "neighborhood": "Laureles",
+      "latitude": 6.2457351,
+      "longitude": -75.589723,
+      "tags": [
+        "organic",
+        "brunch",
+        "wifi-friendly"
+      ],
+      "confidence_score": 88,
+      "listing_sources": [
+        "03-cafe-laureles.md"
+      ],
+      "why_special": "Health-forward café with organic menu options.",
+      "ai_vibe_summary": "Calm organic café for brunch and light remote work.",
+      "contact": {}
+    },
+    {
+      "id": "00f6ad1a-884c-4123-b165-798a423a76e0",
+      "name": "Pausa Café & Brunch",
+      "google_place_id": "ChIJGwyAX0kpRI4R0MrZuOjjmlo",
+      "neighborhood": "Laureles",
+      "latitude": 6.2465989,
+      "longitude": -75.5895984,
+      "tags": [
+        "brunch",
+        "wifi-friendly"
+      ],
+      "confidence_score": 86,
+      "listing_sources": [
+        "03-cafe-laureles.md"
+      ],
+      "why_special": "All-day brunch café in Laureles.",
+      "ai_vibe_summary": "Relaxed brunch café with steady morning laptop crowd.",
+      "contact": {}
+    },
+    {
+      "id": "2aa4f319-f2be-4a18-8270-bed824600276",
+      "name": "Pergamino Café Laureles",
+      "google_place_id": "ChIJzcFcU8spRI4RKdDH5QXv8LU",
+      "neighborhood": "Laureles",
+      "latitude": 6.2413788,
+      "longitude": -75.5961869,
+      "tags": [
+        "third-wave",
+        "coworking-friendly",
+        "wifi-friendly"
+      ],
+      "confidence_score": 96,
+      "listing_sources": [
+        "03-cafe-laureles.md"
+      ],
+      "why_special": "Laureles outpost of Medellín's flagship third-wave brand.",
+      "ai_vibe_summary": "High-energy modern specialty coffee hub for remote workers.",
+      "contact": {
+        "website": "https://pergamino.co",
+        "instagram": "@pergaminocafe"
+      }
+    },
+    {
+      "id": "39dbcfad-8e46-4631-9b5d-0cdc67fd1774",
+      "name": "Rituales Compañía de Café",
+      "google_place_id": "ChIJQ-PPmKEpRI4RhZKQdct4w6Q",
+      "neighborhood": "Laureles",
+      "latitude": 6.2455727,
+      "longitude": -75.5952334,
+      "tags": [
+        "third-wave",
+        "wifi-friendly",
+        "specialty-coffee"
+      ],
+      "confidence_score": 98,
+      "listing_sources": [
+        "03-cafe-laureles.md"
+      ],
+      "why_special": "Single-origin coffee from Barrio La Sierra with full farmer traceability.",
+      "ai_vibe_summary": "Community-driven artisan coffee shop balancing education with a focused morning environment.",
+      "contact": {
+        "website": "https://ritualescafe.co",
+        "instagram": "@ritualescafe"
+      }
+    },
+    {
+      "id": "7e2cdb49-c9d7-4548-9128-3d4754acf295",
+      "name": "Semilla Café Coworking",
+      "google_place_id": "ChIJt22VcKMpRI4RBfxl2xT31yM",
+      "neighborhood": "Laureles",
+      "latitude": 6.2457659,
+      "longitude": -75.5927856,
+      "tags": [
+        "coworking-friendly",
+        "third-wave",
+        "wifi-friendly"
+      ],
+      "confidence_score": 94,
+      "listing_sources": [
+        "03-cafe-laureles.md"
+      ],
+      "why_special": "Hybrid café + structured coworking zones near Primer Parque.",
+      "ai_vibe_summary": "Professional coworking café with dedicated quiet membership areas.",
+      "contact": {}
+    }
+  ],
+  "notes": "Délmuri Coffee merged with Amelier Laureles (shared place_id). Curated pack had 18; live DB has 17 unique rows."
+}
