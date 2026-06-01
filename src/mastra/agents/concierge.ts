@@ -27,7 +27,7 @@ export const conciergeWorkingMemorySchema = z.object({
       genericAskPending: z
         .boolean()
         .optional()
-        .describe('True after a clarify question; clear when user picks category/date or search runs'),
+        .describe('True after a clarify question; clear when user provides budget/bedrooms/neighborhood or search runs'),
     })
     .optional()
     .describe('Last rental query the user asked about — refine from here on follow-ups'),
