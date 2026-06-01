@@ -6,6 +6,7 @@ import {
   looksLikeNonEventSearch,
   scoreEventQuery,
   type EventDateWindow,
+  type EventQuerySignals,
 } from "@/lib/event-query-classifier";
 
 export type EventSearchApiParams = {
@@ -13,9 +14,33 @@ export type EventSearchApiParams = {
   neighborhood?: string;
   dateWindow?: EventDateWindow;
   limit?: number;
+  /** Natural-language query for hybrid_search_events + event_signals (high-intent only). */
+  queryText?: string;
 };
 
 const FAST_PATH_LIMIT = 10;
+
+/**
+ * High-intent event vocabulary the server intelligence layer can actually rank on
+ * (mirrors parseEventIntelligenceSlots in intelligence-event-search.ts). Only these
+ * queries carry queryText so the hybrid RPC + event_signals boosts fire — broad
+ * browses ("show all", bare category) stay structured to avoid noisy semantic ranking.
+ */
+const HIGH_INTENT_EVENT_RE =
+  /\b(salsa|live music|concert|concerts|band|dj|nightlife|club|clubs|party|parties|fashion|runway|networking|meetup|professional|this weekend|weekend|tonight)\b/i;
+
+/** Attach queryText only for high-intent event queries (mirrors rentals' attachQueryText). */
+function attachEventQueryText(
+  params: EventSearchApiParams,
+  text: string,
+  s: EventQuerySignals,
+): EventSearchApiParams {
+  const highIntentDate = s.dateWindow === "this_weekend" || s.dateWindow === "tonight";
+  if (highIntentDate || HIGH_INTENT_EVENT_RE.test(text)) {
+    return { ...params, queryText: text.trim() };
+  }
+  return params;
+}
 
 /** Show canned clarify without calling conciergeAgent. */
 export function shouldInstantEventClarify(
@@ -51,17 +76,21 @@ export function buildEventSearchParams(
       !s.hasDateWindow &&
       !s.hasNeighborhood;
 
-    return {
-      // UX-019 Option B L55: never inherit stale category when current message has none.
-      category: s.hasCategory ? s.category : undefined,
-      neighborhood: answeringClarifyCategoryOnly
-        ? undefined
-        : s.neighborhood ?? q?.neighborhood,
-      dateWindow: (answeringClarifyCategoryOnly
-        ? "any"
-        : (s.dateWindow ?? q?.dateWindow ?? "any")) as EventDateWindow,
-      limit: FAST_PATH_LIMIT,
-    };
+    return attachEventQueryText(
+      {
+        // UX-019 Option B L55: never inherit stale category when current message has none.
+        category: s.hasCategory ? s.category : undefined,
+        neighborhood: answeringClarifyCategoryOnly
+          ? undefined
+          : s.neighborhood ?? q?.neighborhood,
+        dateWindow: (answeringClarifyCategoryOnly
+          ? "any"
+          : (s.dateWindow ?? q?.dateWindow ?? "any")) as EventDateWindow,
+        limit: FAST_PATH_LIMIT,
+      },
+      text,
+      s,
+    );
   }
 
   if (q?.genericAskPending) {
@@ -72,7 +101,7 @@ export function buildEventSearchParams(
       limit: FAST_PATH_LIMIT,
     };
     if (merged.category || merged.neighborhood || merged.dateWindow !== "any") {
-      return merged;
+      return attachEventQueryText(merged, text, s);
     }
     if (text.trim().length > 0) {
       return { dateWindow: "any", limit: FAST_PATH_LIMIT };
@@ -119,7 +148,13 @@ export function eventCardsToPanelRows(
   }));
 }
 
-export function eventCardsToToolEnvelope(cards: EventCard[]) {
+export function eventCardsToToolEnvelope(
+  cards: EventCard[],
+  meta?: {
+    hybridUsed?: boolean;
+    rankExplanation?: Array<{ factor: string; score: number; note: string }>;
+  },
+) {
   return {
     results: cards.map((e) => ({
       id: e.id,
@@ -138,6 +173,8 @@ export function eventCardsToToolEnvelope(cards: EventCard[]) {
     })),
     total: cards.length,
     source: "supabase" as const,
+    hybridUsed: meta?.hybridUsed,
+    rankExplanation: meta?.rankExplanation,
   };
 }
 
