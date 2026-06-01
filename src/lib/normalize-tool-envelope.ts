@@ -8,6 +8,8 @@ export function normalizeToolEnvelope(result: unknown): {
   results?: unknown[];
   total?: number;
   source?: string;
+  hybridUsed?: boolean;
+  rankExplanation?: Array<{ factor: string; score: number; note: string }>;
   webGrounding?: WebGroundingEnvelope;
 } {
   let value = result;
@@ -23,12 +25,16 @@ export function normalizeToolEnvelope(result: unknown): {
     results?: unknown[];
     total?: number;
     source?: string;
+    hybridUsed?: boolean;
+    rankExplanation?: Array<{ factor: string; score: number; note: string }>;
     webGrounding?: WebGroundingEnvelope;
   };
   return {
     results: Array.isArray(envelope.results) ? envelope.results : [],
     total: envelope.total,
     source: envelope.source,
+    hybridUsed: envelope.hybridUsed,
+    rankExplanation: envelope.rankExplanation,
     webGrounding: envelope.webGrounding,
   };
 }

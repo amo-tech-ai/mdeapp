@@ -170,8 +170,11 @@ export function RentalResults({
       availability?: string;
       host_name?: string;
     }>;
+    rankExplanation?: Array<{ factor: string; score: number; note: string }>;
+    hybridUsed?: boolean;
   };
   const rows = envelope.results ?? [];
+  const rankExplanation = envelope.rankExplanation ?? [];
   const searchParams = searchMeta?.params;
 
   useEffect(() => {
@@ -186,6 +189,21 @@ export function RentalResults({
     <>
       <RichCardResultsRegistrar category="rental" count={rows.length} />
       <ToolPinsSync category="rental" result={result} />
+      {rankExplanation.length > 0 ? (
+        <div
+          className="rounded-md border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground"
+          data-testid="rank-explanation-rental"
+        >
+          <p className="font-medium text-foreground">Why these rentals</p>
+          <ul className="mt-1 list-inside list-disc">
+            {rankExplanation.map((entry) => (
+              <li key={`${entry.factor}-${entry.note}`}>
+                {entry.factor} ({entry.score.toFixed(2)}): {entry.note}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
       {rows.length === 0 ? (
         <EmptyState
           testId="rentals-empty"
@@ -257,6 +275,7 @@ export function EventResults({ result }: { result: unknown }) {
   const { setRows, setWebCitations } = useEventSearchResults();
   const listRef = useRef<HTMLDivElement>(null);
   const envelope = normalizeToolEnvelope(result);
+  const rankExplanation = envelope.rankExplanation ?? [];
   const rows = (envelope.results ?? []) as Array<{
     id: string;
     title: string;
@@ -318,6 +337,21 @@ export function EventResults({ result }: { result: unknown }) {
     <>
       <RichCardResultsRegistrar category="event" count={rows.length} />
       <ToolPinsSync category="event" result={result} />
+      {rankExplanation.length > 0 ? (
+        <div
+          className="rounded-md border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground"
+          data-testid="rank-explanation-event"
+        >
+          <p className="font-medium text-foreground">Why these events</p>
+          <ul className="mt-1 list-inside list-disc">
+            {rankExplanation.map((entry) => (
+              <li key={`${entry.factor}-${entry.note}`}>
+                {entry.factor} ({entry.score.toFixed(2)}): {entry.note}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
       {rows.length === 0 ? (
         <EmptyState
           testId="events-empty"

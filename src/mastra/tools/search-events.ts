@@ -10,6 +10,8 @@ import { createTool } from '@mastra/core/tools';
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { runAuditedSearch } from '../lib/run-audited-search';
+import { searchEventsIntelligent } from '../lib/intelligence-event-search';
+import { writeSearchLog } from '../lib/search-logs';
 
 // ── Schema ────────────────────────────────────────────────────────────────────
 
@@ -202,13 +204,46 @@ export type EventQuery = {
   maxPricePerTicket?: number;
   dateWindow?: DateWindow;
   limit?: number;
+  queryText?: string;
+};
+
+export type EventSearchResult = {
+  results: EventCard[];
+  total: number;
+  source: 'supabase' | 'fallback';
+  hybridUsed?: boolean;
+  rankExplanation?: import('../lib/search-logs').RankExplanationEntry[];
 };
 
 export async function searchEvents(
   query: EventQuery,
-): Promise<{ results: EventCard[]; total: number; source: 'supabase' | 'fallback' }> {
-  const client = getSupabaseClient();
+): Promise<EventSearchResult> {
   const limit = query.limit ?? 5;
+
+  if (query.queryText?.trim()) {
+    const started = Date.now();
+    const intel = await searchEventsIntelligent(query);
+    const latencyMs = Date.now() - started;
+    await writeSearchLog({
+      queryText: query.queryText,
+      slots: intel.slots,
+      toolName: 'search-events',
+      resultsCount: intel.results.length,
+      latencyMs,
+      hybridUsed: intel.hybridUsed,
+      groundingUsed: false,
+      rankExplanation: intel.rankExplanation,
+    });
+    return {
+      results: intel.results.slice(0, limit),
+      total: intel.total,
+      source: intel.source,
+      hybridUsed: intel.hybridUsed,
+      rankExplanation: intel.rankExplanation,
+    };
+  }
+
+  const client = getSupabaseClient();
 
   if (!client) {
     console.warn('[search-events] Supabase client unavailable — returning empty');
@@ -269,16 +304,42 @@ export const searchEventsTool = createTool({
       .optional()
       .default('any'),
     limit: z.number().int().min(1).max(20).default(5),
+    queryText: z
+      .string()
+      .optional()
+      .describe('Natural-language event search e.g. salsa this weekend in Medellín'),
   }),
   outputSchema: z.object({
-    results: z.array(eventSchema),
+    results: z.array(
+      eventSchema.extend({
+        rankScore: z.number().optional(),
+        evidenceText: z.string().nullable().optional(),
+      }),
+    ),
     total: z.number(),
     source: z.enum(['supabase', 'fallback']),
+    hybridUsed: z.boolean().optional(),
+    rankExplanation: z
+      .array(
+        z.object({
+          factor: z.string(),
+          score: z.number(),
+          note: z.string(),
+        }),
+      )
+      .optional(),
   }),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   execute: async (inputData: EventQuery & { dateWindow?: DateWindow }, context?: any) => {
-    const { category, neighborhood, maxPricePerTicket, dateWindow: dw, limit = 5 } = inputData;
-    const { results, total, source } = await runAuditedSearch(
+    const {
+      category,
+      neighborhood,
+      maxPricePerTicket,
+      dateWindow: dw,
+      limit = 5,
+      queryText,
+    } = inputData;
+    const { results, total, source, hybridUsed, rankExplanation } = await runAuditedSearch(
       'search-events',
       searchEvents,
       {
@@ -287,10 +348,11 @@ export const searchEventsTool = createTool({
         maxPricePerTicket,
         dateWindow: dw,
         limit,
+        queryText,
       },
       context,
     );
 
-    return { results, total, source };
+    return { results, total, source, hybridUsed, rankExplanation };
   },
 });

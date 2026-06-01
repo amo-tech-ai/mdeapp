@@ -13,7 +13,10 @@ export {
   shouldInstantRentalClarify,
 };
 
-export function rentalsToToolEnvelope(cards: Rental[]) {
+export function rentalsToToolEnvelope(
+  cards: Rental[],
+  meta?: { hybridUsed?: boolean; rankExplanation?: Array<{ factor: string; score: number; note: string }> },
+) {
   return {
     results: cards.map((r) => ({
       id: r.id,
@@ -35,6 +38,8 @@ export function rentalsToToolEnvelope(cards: Rental[]) {
     })),
     total: cards.length,
     source: "supabase" as const,
+    hybridUsed: meta?.hybridUsed,
+    rankExplanation: meta?.rankExplanation,
   };
 }
 

@@ -2,6 +2,8 @@ import { createTool } from '@mastra/core/tools';
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { runAuditedSearch } from '../lib/run-audited-search';
+import { searchRentalsIntelligent } from '../lib/intelligence-rental-search';
+import { writeSearchLog } from '../lib/search-logs';
 
 export const rentalSchema = z.object({
   id: z.string(),
@@ -29,6 +31,15 @@ export type RentalQuery = {
   minBedrooms?: number;
   maxPricePerNight?: number;
   limit?: number;
+  queryText?: string;
+};
+
+export type RentalSearchResult = {
+  results: Rental[];
+  total: number;
+  source: 'supabase' | 'mock';
+  hybridUsed?: boolean;
+  rankExplanation?: import('../lib/search-logs').RankExplanationEntry[];
 };
 
 let _client: ReturnType<typeof createClient> | null = null;
@@ -44,7 +55,7 @@ function getSupabaseClient() {
   return _client;
 }
 
-interface ApartmentRow {
+export interface ApartmentRow {
   id: string;
   title: string;
   neighborhood: string;
@@ -65,7 +76,7 @@ interface ApartmentRow {
   longitude: number | null;
 }
 
-function rowToRental(r: ApartmentRow): Rental {
+export function rowToRental(r: ApartmentRow): Rental {
   return rentalSchema.parse({
     id: r.id,
     title: r.title,
@@ -312,9 +323,35 @@ function searchRentalsFromMock(query: RentalQuery): { results: Rental[]; total: 
 // internally async — callers that need real DB data should await searchRentals())
 export async function searchRentals(
   query: RentalQuery,
-): Promise<{ results: Rental[]; total: number; source: 'supabase' | 'mock' }> {
+): Promise<RentalSearchResult> {
+  const limit = query.limit ?? 8;
+
+  if (query.queryText?.trim()) {
+    const started = Date.now();
+    const intel = await searchRentalsIntelligent(query);
+    const latencyMs = Date.now() - started;
+    await writeSearchLog({
+      queryText: query.queryText,
+      slots: intel.slots,
+      toolName: 'search-rentals',
+      resultsCount: intel.results.length,
+      latencyMs,
+      hybridUsed: intel.hybridUsed,
+      groundingUsed: false,
+      rankExplanation: intel.rankExplanation,
+    });
+    return {
+      results: intel.results.slice(0, limit),
+      total: intel.total,
+      source: intel.source,
+      hybridUsed: intel.hybridUsed,
+      rankExplanation: intel.rankExplanation,
+    };
+  }
+
   try {
-    return await searchRentalsFromSupabase(query);
+    const { results, total, source } = await searchRentalsFromSupabase(query);
+    return { results, total, source };
   } catch (err) {
     console.warn(
       '[search-rentals] Supabase query failed, falling back to mock:',
@@ -333,34 +370,37 @@ export const searchRentalsTool = createTool({
     minBedrooms: z.number().int().min(0).optional(),
     maxPricePerNight: z.number().positive().optional().describe('USD per night'),
     limit: z.number().int().min(1).max(20).default(8),
+    queryText: z
+      .string()
+      .optional()
+      .describe('Natural-language rental search e.g. digital nomad rental in Laureles near cafes'),
   }),
   outputSchema: z.object({
     results: z.array(
-      z.object({
-        id: z.string(),
-        title: z.string(),
-        neighborhood: z.string(),
-        bedrooms: z.number(),
-        nightly_price: z.number(),
-        host_name: z.string().optional(),
-        wifi: z.boolean().optional(),
-        amenities: z.array(z.string()).optional(),
-        availability: z.string().optional(),
-        source_url: z.string().optional(),
-        schedule_viewing_url: z.string().optional(),
-        latitude: z.number().optional(),
-        longitude: z.number().optional(),
+      rentalSchema.extend({
+        rankScore: z.number().optional(),
+        evidenceText: z.string().nullable().optional(),
       }),
     ),
     source: z.enum(['supabase', 'mock']),
+    hybridUsed: z.boolean().optional(),
+    rankExplanation: z
+      .array(
+        z.object({
+          factor: z.string(),
+          score: z.number(),
+          note: z.string(),
+        }),
+      )
+      .optional(),
   }),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   execute: async (inputData: RentalQuery, context?: any) => {
-    const { neighborhood, minBedrooms, maxPricePerNight, limit = 8 } = inputData;
-    const { results, source } = await runAuditedSearch(
+    const { neighborhood, minBedrooms, maxPricePerNight, limit = 8, queryText } = inputData;
+    const { results, source, hybridUsed, rankExplanation } = await runAuditedSearch(
       'search-rentals',
       searchRentals,
-      { neighborhood, minBedrooms, maxPricePerNight, limit },
+      { neighborhood, minBedrooms, maxPricePerNight, limit, queryText },
       context,
     );
 
@@ -371,16 +411,23 @@ export const searchRentalsTool = createTool({
         neighborhood: r.neighborhood,
         bedrooms: r.bedrooms,
         nightly_price: r.nightly_price,
+        currency: r.currency,
         host_name: r.host_name,
         wifi: r.wifi,
         amenities: r.amenities,
+        tags: r.tags,
         availability: r.availability,
+        image: r.image,
         source_url: r.source_url,
         schedule_viewing_url: r.schedule_viewing_url,
         latitude: r.latitude,
         longitude: r.longitude,
+        rankScore: "rankScore" in r ? (r as { rankScore?: number }).rankScore : undefined,
+        evidenceText: "evidenceText" in r ? (r as { evidenceText?: string | null }).evidenceText : undefined,
       })),
       source,
+      hybridUsed,
+      rankExplanation,
     };
   },
 });

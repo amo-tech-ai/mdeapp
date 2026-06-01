@@ -32,10 +32,37 @@ const groundedPlaceResultSchema = z
   .merge(enrichedGroundedPlaceFieldsSchema);
 
 const CAFE_QUERY =
-  /\b(caf[eé]s?|coffee shops?|quiet caf[eé]s?|top cafes?|list cafes?)\b/i;
+  /\b(caf[eé]s?|coffee shops?|quiet caf[eé]s?|top cafes?|list cafes?|coworking|wifi|wi-fi|laptop[- ]friendly)\b/i;
+
+const NIGHTLIFE_QUERY =
+  /\b(nightlife|salsa bar|hidden bar|rooftop cocktails?|rooftop bar|live music bar|locals go to)\b/i;
 
 export function isCafeGroundingQuery(query: string): boolean {
   return CAFE_QUERY.test(query);
+}
+
+export function isNightlifeGroundingQuery(query: string): boolean {
+  return NIGHTLIFE_QUERY.test(query);
+}
+
+export function normalizeVenueGroundingQuery(query: string): string {
+  const q = query.trim();
+  if (isCafeGroundingQuery(q)) {
+    if (/\b(wifi|wi-fi|laptop|cowork|remote work)\b/i.test(q)) {
+      return `${q}. Prefer cafés with reliable Wi-Fi, power outlets, and laptop-friendly seating in Medellín. Exclude bars and nightclubs.`;
+    }
+    return `${q}. Prefer specialty coffee roasters and brunch cafés. Exclude bar lounges and nightlife venues.`;
+  }
+  if (isNightlifeGroundingQuery(q)) {
+    if (/\bsalsa\b/i.test(q)) {
+      return `${q}. Prefer authentic salsa bars and live salsa venues locals visit in Medellín. Exclude generic tourist clubs.`;
+    }
+    if (/\brooftop\b/i.test(q)) {
+      return `${q}. Prefer rooftop bars and cocktail terraces with views in Medellín.`;
+    }
+    return `${q}. Prefer nightlife venues and bars locals recommend in Medellín.`;
+  }
+  return q;
 }
 
 export function isCafeGroundingIntent(
@@ -47,8 +74,7 @@ export function isCafeGroundingIntent(
 }
 
 export function normalizeCafeGroundingQuery(query: string): string {
-  if (!isCafeGroundingQuery(query)) return query;
-  return `${query.trim()}. Prefer specialty coffee roasters and brunch cafés. Exclude bar lounges and nightlife venues.`;
+  return normalizeVenueGroundingQuery(query);
 }
 
 function isBarLoungeDistractor(title: string): boolean {
@@ -208,7 +234,7 @@ export const searchGroundedPlacesTool = createTool({
     locationBias?: { latitude: number; longitude: number };
   }) => {
     const { query: rawQuery, pageSize, locationBias: inputBias } = inputData;
-    const query = normalizeCafeGroundingQuery(rawQuery);
+    const query = normalizeVenueGroundingQuery(rawQuery);
     const quota = await incrementAndCheckGroundingQuota();
     if (!quota.allowed) {
       // Quota exceeded — degrade to curated restaurant results
