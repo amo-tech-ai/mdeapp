@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Ticket } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { CardInteractionProps, ResultKind } from "@/components/cards/card-interaction-props";
 
 export type EventCardProps = {
   id: string;
@@ -19,6 +20,9 @@ export type EventCardProps = {
   onOpenDetails?: () => void;
   /** Opens venue sheet checkout step without navigating away from chat. */
   onBuyTickets?: () => void;
+} & Omit<CardInteractionProps, "onSelect" | "pinId"> & {
+  onSelect?: (id: string) => void;
+  resultKind?: ResultKind;
 };
 
 function formatStartsAt(iso: string) {

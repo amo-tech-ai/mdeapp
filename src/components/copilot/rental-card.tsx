@@ -9,6 +9,7 @@ import {
 import type { RentalSearchApiParams } from "@/lib/rental-query-parser";
 import { cn } from "@/lib/utils";
 import { Calendar, Heart } from "lucide-react";
+import type { CardInteractionProps, ResultKind } from "@/components/cards/card-interaction-props";
 
 export type RentalCardProps = RentalResultRow & {
   id: string;
@@ -21,6 +22,10 @@ export type RentalCardProps = RentalResultRow & {
   onSchedule?: () => void;
   onSave?: () => void;
   onOpenDetails?: () => void;
+} & Omit<CardInteractionProps, "onSelect"> & {
+  /** Unifies to `() => void` in UX-024; callers pass listing id today. */
+  onSelect?: (id: string) => void;
+  resultKind?: ResultKind;
 };
 
 export function RentalCard({

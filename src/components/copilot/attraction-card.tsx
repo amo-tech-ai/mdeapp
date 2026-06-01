@@ -6,6 +6,7 @@ import { formatGroundedRating } from "@/lib/places-display";
 import { mapsDeepLinksEnabled } from "@/lib/maps-deep-links";
 import { cn } from "@/lib/utils";
 import { ExternalLink, Info, MapPin } from "lucide-react";
+import type { CardInteractionProps, ResultKind } from "@/components/cards/card-interaction-props";
 
 export type AttractionCardProps = {
   title: string;
@@ -19,10 +20,8 @@ export type AttractionCardProps = {
   mapsUrl?: string | null;
   aiSummary?: string | null;
   testId?: string;
-  pinId: string;
-  selected?: boolean;
-  onSelect?: () => void;
-  onOpenDetails?: () => void;
+} & CardInteractionProps & {
+  resultKind?: ResultKind;
 };
 
 function categoryLabel(category?: string): string | null {
