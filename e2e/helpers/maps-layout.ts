@@ -182,6 +182,30 @@ export async function waitForEventCards(page: Page) {
   }
 }
 
+/** Event fast-path only — no agent nudge (avoids CopilotKit POST storm in budget e2e). */
+export async function waitForEventCardsFastPath(page: Page, timeout = 90_000) {
+  await page.locator('[data-testid="event-card"]').first().waitFor({
+    state: "visible",
+    timeout,
+  });
+}
+
+export const RESTAURANT_FAST_PATH_QUERY = "suggest restaurants medellin";
+
+/** Restaurant cards from fast-path panel (no CopilotKit tool render). */
+export async function waitForRestaurantCards(page: Page) {
+  const panel = page.locator('[data-testid="restaurant-fast-path-panel"]');
+  const card = page.locator('[data-testid="restaurant-card"]').first();
+  try {
+    await panel.waitFor({ state: "visible", timeout: 90_000 });
+    await card.waitFor({ state: "visible", timeout: 30_000 });
+  } catch {
+    throw new Error(
+      "Restaurant fast-path cards did not render — ensure UX-036 feat slice is on disk and dev server restarted.",
+    );
+  }
+}
+
 export { RENTAL_QUERY, GROUNDING_QUERY, EVENT_QUERY };
 
 /** Rich cards own the list — generic Map results strip must stay hidden. */
