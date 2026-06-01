@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import { useConciergeCoAgent } from "@/components/chat/concierge-coagent-context";
-import type { ConciergeWorkingMemory } from "@/lib/types";
 import { buildMapUiSummary } from "@/lib/map-ui-summary";
 import { useMapContext } from "@/platform/maps/map-context";
 
@@ -25,7 +24,9 @@ export function MapUiSync() {
   const { pins, selectedPinId, viewport } = useMapContext();
   const { setState } = useConciergeCoAgent();
   const setStateRef = useRef(setState);
-  setStateRef.current = setState;
+  useEffect(() => {
+    setStateRef.current = setState;
+  }, [setState]);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastPushedRef = useRef<string>("");
 

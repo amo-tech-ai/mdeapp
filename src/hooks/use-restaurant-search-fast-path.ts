@@ -14,7 +14,6 @@ import {
   restaurantsToToolEnvelope,
   type RestaurantSearchApiParams,
 } from "@/lib/restaurant-search-fast-path";
-import type { ConciergeWorkingMemory } from "@/lib/types";
 import { useMapContext } from "@/platform/maps/map-context";
 import { normalizeToolOutput } from "@/platform/maps/normalize-tool-output";
 

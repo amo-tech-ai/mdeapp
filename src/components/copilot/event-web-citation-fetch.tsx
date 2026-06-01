@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import { useCopilotChat } from "@copilotkit/react-core";
 import { useConciergeCoAgent } from "@/components/chat/concierge-coagent-context";
 import { useEventSearchResults } from "@/components/chat/event-search-results-context";
-import type { ConciergeWorkingMemory } from "@/lib/types";
 import { shouldChainWebGrounding } from "@/mastra/lib/attach-web-grounding";
 
 /** MAP-002D — load web citations after concierge turn (EventResultsPanel). */
