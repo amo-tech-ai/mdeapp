@@ -30,6 +30,10 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: Migration timestamp uniqueness (PR-17)
+        if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
+        run: node scripts/check-migration-timestamps.mjs
+
       - name: Lint
         run: npm run lint
 
