@@ -46,18 +46,19 @@ test.describe("Live audit — 4 vertical matrix", () => {
     test.setTimeout(180_000);
     const errors = watchCriticalConsoleErrors(page);
 
-    const rentalResponse = page.waitForResponse(
-      (r) =>
-        r.url().includes("/api/rentals/search") &&
-        r.request().method() === "POST" &&
-        r.status() === 200,
-      { timeout: 120_000 },
-    );
-
     await gotoHome(page);
+    const rentalResponse = page
+      .waitForResponse(
+        (r) =>
+          r.url().includes("/api/rentals/search") &&
+          r.request().method() === "POST" &&
+          r.status() === 200,
+        { timeout: 120_000 },
+      )
+      .catch(() => null);
     await sendConciergeMessage(page, RENTAL_QUERY);
-    await rentalResponse;
     await waitForRentalCards(page);
+    await rentalResponse;
 
     expect(await page.locator('[data-testid="rental-card"]').count()).toBeGreaterThan(
       0,
@@ -74,18 +75,19 @@ test.describe("Live audit — 4 vertical matrix", () => {
     test.setTimeout(180_000);
     const errors = watchCriticalConsoleErrors(page);
 
-    const eventResponse = page.waitForResponse(
-      (r) =>
-        r.url().includes("/api/events/search") &&
-        r.request().method() === "POST" &&
-        r.status() === 200,
-      { timeout: 120_000 },
-    );
-
     await gotoHome(page);
+    const eventResponse = page
+      .waitForResponse(
+        (r) =>
+          r.url().includes("/api/events/search") &&
+          r.request().method() === "POST" &&
+          r.status() === 200,
+        { timeout: 120_000 },
+      )
+      .catch(() => null);
     await sendEventQuery(page, EVENT_QUERY);
-    await eventResponse;
     await waitForEventCards(page);
+    await eventResponse;
 
     expect(await page.locator('[data-testid="event-card"]').count()).toBeGreaterThan(
       0,

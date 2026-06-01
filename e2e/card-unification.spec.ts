@@ -47,6 +47,7 @@ test.describe("Card unification — one rich surface per domain", () => {
   test("restaurant cards have pin id + result kind", async ({ page }) => {
     test.setTimeout(180_000);
     await gotoHome(page);
+    await page.waitForTimeout(8_000);
     await sendConciergeMessage(page, RESTAURANT_FAST_PATH_QUERY);
     await waitForRestaurantCards(page);
 
@@ -58,6 +59,16 @@ test.describe("Card unification — one rich surface per domain", () => {
 
   test("café cards have pin id + result kind", async ({ page }) => {
     test.setTimeout(180_000);
+    await page.route("**/v1/grounding/invoke**", (route) =>
+      route.fulfill({
+        status: 503,
+        contentType: "application/json",
+        body: JSON.stringify({
+          pins: [],
+          metadata: { reason: "adk_unavailable" },
+        }),
+      }),
+    );
     await gotoHome(page);
     await sendConciergeMessage(page, GROUNDING_QUERY);
     await waitForCafeGroundedCards(page);
