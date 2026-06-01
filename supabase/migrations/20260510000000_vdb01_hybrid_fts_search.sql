@@ -1,0 +1,14 @@
+-- =============================================================================
+-- VDB-01 — Hybrid Full-Text + Semantic Search
+-- Applied as 4 sub-migrations via Supabase MCP (all succeeded):
+--   20260510_vdb01_fts_helper_function     — public.fts_spanish()
+--   20260510_vdb01_fts_array_helper        — public.fts_array_to_text()
+--   20260510_vdb01_fts_columns_and_indexes — fts_content columns + GIN indexes
+--   20260510_vdb01_hybrid_search_rpcs      — 3 hybrid_search_* RPCs
+--
+-- Note on immutability: Supabase Postgres marks both regconfigin (text→regconfig
+-- cast) and array_to_string as STABLE, blocking GENERATED ALWAYS AS ... STORED.
+-- Immutable wrappers (fts_spanish, fts_array_to_text) bypass this safely because
+-- both spanish config and array concatenation are truly deterministic.
+-- =============================================================================
+-- (SQL applied directly via MCP; this file is the audit record.)
