@@ -9,6 +9,7 @@ import { RentalUiProvider } from "@/components/chat/rental-ui-context";
 import { RentalFastPathProvider } from "@/components/chat/rental-fast-path-context";
 import { EventFastPathProvider } from "@/components/chat/event-fast-path-context";
 import { RestaurantFastPathProvider } from "@/components/chat/restaurant-fast-path-context";
+import { GroundedFastPathProvider } from "@/components/chat/grounded-fast-path-context";
 import { EventSearchResultsProvider } from "@/components/chat/event-search-results-context";
 import { RichCardResultsProvider } from "@/components/chat/rich-card-results-context";
 import { EventLocalChatProvider } from "@/components/chat/event-local-chat-context";
@@ -46,6 +47,7 @@ export function GeoChatShell() {
           <RentalFastPathProvider>
             <EventFastPathProvider>
               <RestaurantFastPathProvider>
+                <GroundedFastPathProvider>
                 <EventSearchResultsProvider>
                   <RichCardResultsProvider>
                     <EventLocalChatProvider>
@@ -80,6 +82,7 @@ export function GeoChatShell() {
                     </EventLocalChatProvider>
                   </RichCardResultsProvider>
                 </EventSearchResultsProvider>
+                </GroundedFastPathProvider>
               </RestaurantFastPathProvider>
             </EventFastPathProvider>
           </RentalFastPathProvider>
