@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { prepareRestaurantSearchResults } from "@/lib/restaurant-place-photo";
 import { searchRestaurants } from "@/mastra/tools/search-restaurants";
 
 export const runtime = "nodejs";
@@ -48,5 +49,7 @@ export async function POST(req: Request) {
     limit,
   });
 
-  return NextResponse.json({ results, total, source });
+  const enriched = await prepareRestaurantSearchResults(results);
+
+  return NextResponse.json({ results: enriched, total, source });
 }
