@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { CopilotKit } from "@copilotkit/react-core";
+import { ConciergeCoAgentProvider } from "@/components/chat/concierge-coagent-context";
 import { getCopilotKitClientProps } from "@/lib/copilotkit-client-props";
 import { reportConciergeError } from "@/lib/concierge-error-store";
 
@@ -13,7 +14,7 @@ export function MdeCopilotKitProvider({ children }: { children: ReactNode }) {
       {...getCopilotKitClientProps("conciergeAgent")}
       onError={reportConciergeError}
     >
-      {children}
+      <ConciergeCoAgentProvider>{children}</ConciergeCoAgentProvider>
     </CopilotKit>
   );
 }

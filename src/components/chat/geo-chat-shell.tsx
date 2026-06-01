@@ -3,7 +3,6 @@
 import { AuthStatus } from "@/components/auth/auth-status";
 import { ChatCanvas } from "@/components/chat/chat-canvas";
 import { ChatNavDrawer } from "@/components/chat/chat-nav-drawer";
-import { ConciergeCoAgentProvider } from "@/components/chat/concierge-coagent-context";
 import { ChatWorkflowProvider } from "@/components/chat/chat-workflow-context";
 import { RentalUiProvider } from "@/components/chat/rental-ui-context";
 import { RentalFastPathProvider } from "@/components/chat/rental-fast-path-context";
@@ -43,7 +42,6 @@ function CafeBookingSheetMount() {
 export function GeoChatShell() {
   return (
     <ChatWorkflowProvider>
-      <ConciergeCoAgentProvider>
         <RentalUiProvider>
           <RentalFastPathProvider>
             <EventFastPathProvider>
@@ -90,7 +88,6 @@ export function GeoChatShell() {
             </EventFastPathProvider>
           </RentalFastPathProvider>
         </RentalUiProvider>
-      </ConciergeCoAgentProvider>
     </ChatWorkflowProvider>
   );
 }
