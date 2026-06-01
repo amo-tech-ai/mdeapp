@@ -22,6 +22,7 @@ export function PlaceResultCard({
   onSelect,
 }: PlaceResultCardProps) {
   const interactive = Boolean(onSelect && pinId);
+  const previewPin = () => onSelect?.();
 
   return (
     <article
@@ -31,6 +32,8 @@ export function PlaceResultCard({
       data-testid={testId}
       data-pin-id={pinId}
       data-selected={selected ? "true" : "false"}
+      onMouseEnter={interactive ? previewPin : undefined}
+      onFocus={interactive ? previewPin : undefined}
       onClick={interactive ? onSelect : undefined}
       onKeyDown={
         interactive

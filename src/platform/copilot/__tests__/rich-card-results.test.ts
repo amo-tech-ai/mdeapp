@@ -21,6 +21,12 @@ describe("rich-card-results", () => {
       shouldSuppressGenericMapResults({ grounded: 3 }, "grounded"),
     ).toBe(true);
     expect(
+      shouldSuppressGenericMapResults({ restaurant: 5 }, "restaurant"),
+    ).toBe(true);
+    expect(
+      shouldSuppressGenericMapResults({ attraction: 2 }, "attraction"),
+    ).toBe(true);
+    expect(
       shouldSuppressGenericMapResults({ rental: 5 }, "event"),
     ).toBe(false);
     expect(shouldSuppressGenericMapResults({}, "event")).toBe(false);

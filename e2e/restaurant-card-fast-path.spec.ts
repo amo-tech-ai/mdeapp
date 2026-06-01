@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import {
   RESTAURANT_FAST_PATH_QUERY,
+  assertNoGenericMapResultsList,
   gotoHome,
   sendConciergeMessage,
   waitForAssistantReply,
@@ -38,5 +39,13 @@ test.describe("Restaurant card fast path", () => {
 
     await expect(page.locator('[data-testid="restaurant-fast-path-panel"]')).toBeVisible();
     await expect(page.locator('[data-testid="restaurant-card-empty"]')).toHaveCount(0);
+    await assertNoGenericMapResultsList(page);
+
+    const firstCard = page.locator('[data-testid="restaurant-card"]').first();
+    await expect(firstCard).toHaveAttribute("data-pin-id", /.+/);
+    await expect(firstCard).toHaveAttribute("data-result-kind", "restaurant");
+    await expect(
+      page.locator('[data-testid="restaurant-card-photo"], [data-testid="restaurant-card-photo-placeholder"]').first(),
+    ).toBeVisible();
   });
 });
