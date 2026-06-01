@@ -5,6 +5,7 @@ import { useCoAgent } from "@copilotkit/react-core";
 import type { EventCard } from "@/mastra/tools/search-events";
 import { useEventLocalChat } from "@/components/chat/event-local-chat-context";
 import { useEventFastPath } from "@/components/chat/event-fast-path-context";
+import { useRestaurantFastPath } from "@/components/chat/restaurant-fast-path-context";
 import { EVENT_CLARIFY_MESSAGE } from "@/lib/event-clarify-copy";
 import {
   buildEventSearchParams,
@@ -44,6 +45,7 @@ export function useEventSearchFastPath() {
   const { clarifyPending, showClarify, showExchange, clearLocalMessages } =
     useEventLocalChat();
   const { setToolResult } = useEventFastPath();
+  const { setToolResult: setRestaurantToolResult } = useRestaurantFastPath();
   const { setRows, setWebCitations } = useEventSearchResults();
   const { mergePinsByCategory, requestFitBounds } = useMapContext();
   const busyRef = useRef(false);
@@ -93,6 +95,7 @@ export function useEventSearchFastPath() {
       if (busyRef.current) return true;
       busyRef.current = true;
       try {
+        setRestaurantToolResult(null);
         let cards = await fetchEventSearch(params);
         let usedFallback = false;
         if (
@@ -123,7 +126,7 @@ export function useEventSearchFastPath() {
         busyRef.current = false;
       }
     },
-    [applySearchResults, showExchange, setToolResult],
+    [applySearchResults, showExchange, setToolResult, setRestaurantToolResult],
   );
 
   const handleUserMessage = useCallback(
@@ -146,7 +149,8 @@ export function useEventSearchFastPath() {
         busyRef.current = true;
         try {
           setToolResult(null);
-          showClarify(trimmed, EVENT_CLARIFY_MESSAGE, "event");
+        setRestaurantToolResult(null);
+        showClarify(trimmed, EVENT_CLARIFY_MESSAGE, "event");
           return true;
         } finally {
           busyRef.current = false;
@@ -161,7 +165,7 @@ export function useEventSearchFastPath() {
       clearLocalMessages();
       return runSearch(trimmed, params, memory);
     },
-    [clarifyPending, clearLocalMessages, runSearch, setToolResult, showClarify, state],
+    [clarifyPending, clearLocalMessages, runSearch, setToolResult, setRestaurantToolResult, showClarify, state],
   );
 
   const handleEventChip = useCallback(
