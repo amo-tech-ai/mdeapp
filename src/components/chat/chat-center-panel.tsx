@@ -14,6 +14,7 @@ import { RentalFastPathPanel } from "@/components/chat/rental-fast-path-panel";
 import { EventFastPathPanel } from "@/components/chat/event-fast-path-panel";
 import { RestaurantFastPathPanel } from "@/components/chat/restaurant-fast-path-panel";
 import { GroundedFastPathPanel } from "@/components/chat/grounded-fast-path-panel";
+import { useConciergeSession } from "@/components/chat/concierge-session-context";
 
 const CONCIERGE_LABELS = {
   title: "Medellín concierge",
@@ -23,12 +24,15 @@ const CONCIERGE_LABELS = {
 
 /** SCREEN-001 — center column: query bar · workflow strip · CopilotChat · results. */
 export function ChatCenterPanel() {
+  const { sessionKey } = useConciergeSession();
+
   return (
     <section
       data-testid="center-chat-panel"
       aria-label="Concierge chat"
       className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden"
     >
+      <div key={sessionKey} className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
       <ChatQueryBar />
       <ChatFilterCopilotInstructions />
       <WorkflowProgressStrip />
@@ -50,6 +54,7 @@ export function ChatCenterPanel() {
         <EventFastPathPanel />
         <GroundedFastPathPanel />
         <RestaurantFastPathPanel />
+      </div>
       </div>
       <EventResultsPanel />
       <CenterPanelMapResultsSlot />
