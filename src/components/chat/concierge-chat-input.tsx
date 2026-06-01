@@ -6,6 +6,7 @@ import type { Message } from "@copilotkit/shared";
 import { useRentalSearchFastPath } from "@/hooks/use-rental-search-fast-path";
 import { useEventSearchFastPath } from "@/hooks/use-event-search-fast-path";
 import { useRestaurantSearchFastPath } from "@/hooks/use-restaurant-search-fast-path";
+import { useGroundedSearchFastPath } from "@/hooks/use-grounded-search-fast-path";
 import { clearConciergeError, reportConciergeError } from "@/lib/concierge-error-store";
 import {
   clearConciergePendingSend,
@@ -77,6 +78,8 @@ export function ConciergeChatInput({
   const { handleUserMessage: handleEventMessage } = useEventSearchFastPath();
   const { handleUserMessage: handleRestaurantMessage } =
     useRestaurantSearchFastPath();
+  const { handleUserMessage: handleGroundedMessage } =
+    useGroundedSearchFastPath();
   const [text, setText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const pendingVersion = useSyncExternalStore(
@@ -107,6 +110,8 @@ export function ConciergeChatInput({
     if (handledRental) return;
     const handledEvent = await handleEventMessage(trimmed);
     if (handledEvent) return;
+    const handledGrounded = await handleGroundedMessage(trimmed);
+    if (handledGrounded) return;
     const handledRestaurant = await handleRestaurantMessage(trimmed);
     if (!handledRestaurant) {
       setConciergePendingSend(true);
@@ -123,6 +128,7 @@ export function ConciergeChatInput({
     inProgress,
     handleRentalMessage,
     handleEventMessage,
+    handleGroundedMessage,
     handleRestaurantMessage,
     onSend,
   ]);

@@ -85,7 +85,7 @@ function toCafeVenueDetail(
   };
 }
 
-function GroundedCafeResults({ result }: { result: unknown }) {
+export function GroundedCafeResults({ result }: { result: unknown }) {
   const { selectedPinId, panToPin } = useMapContext();
   const { openCafeDetail, openCafeBooking } = useRentalUi();
   const listRef = useRef<HTMLDivElement>(null);
