@@ -1,0 +1,61 @@
+# UX-034 / SAN-322 — nightly synthetic prod smoke (4 verticals + artifacts).
+name: Prod synthetic smoke
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  prod-smoke:
+    name: prod 4-query smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    if: ${{ vars.PROD_SMOKE_ENABLED == 'true' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium --with-deps
+
+      - name: Validate prod smoke config
+        env:
+          PROD_SMOKE_BASE_URL: ${{ vars.PROD_SMOKE_BASE_URL }}
+        run: |
+          if [ -z "${PROD_SMOKE_BASE_URL}" ]; then
+            echo "::error::Repository variable PROD_SMOKE_BASE_URL is required (e.g. https://www.mdeai.co)"
+            exit 1
+          fi
+
+      - name: Run prod synthetic smoke
+        env:
+          PROD_SMOKE_BASE_URL: ${{ vars.PROD_SMOKE_BASE_URL }}
+          SMOKE_BASE_URL: ${{ vars.PROD_SMOKE_BASE_URL }}
+          PROD_SMOKE_OUT_DIR: ${{ github.workspace }}/tmp/prod-synthetic-smoke
+          PW_SKIP_WEBSERVER: "1"
+        run: |
+          npx playwright test e2e/prod-synthetic-smoke.spec.ts --project=chromium --workers=1
+
+      - name: Upload smoke artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prod-synthetic-smoke-${{ github.run_id }}
+          path: tmp/prod-synthetic-smoke/**
+          if-no-files-found: ignore
