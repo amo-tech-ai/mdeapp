@@ -55,9 +55,9 @@ export function ChatCenterPanel() {
         <GroundedFastPathPanel />
         <RestaurantFastPathPanel />
       </div>
-      </div>
       <EventResultsPanel />
       <CenterPanelMapResultsSlot />
+      </div>
     </section>
   );
 }
