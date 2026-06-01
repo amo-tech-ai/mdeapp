@@ -1,0 +1,316 @@
+{
+  "schema_version": 1,
+  "tasks": ["DATA-003", "DATA-004", "DATA-005", "DATA-006"],
+  "date": "2026-05-30",
+  "project": "zkwcbyxiwklihegjhuql",
+  "description": "Persona golden queries for venue discovery eval. Café (DATA-003), restaurant (DATA-004 catalog), nightclub (DATA-005).",
+  "primary_tool": "search-grounded-places",
+  "kinds": {
+    "cafe": {
+      "persona": "Sarah",
+      "surface": "/chat",
+      "intent": "cafe",
+      "tool": "search-grounded-places",
+      "anchor_table": "venue_anchors",
+      "queries": [
+        {
+          "id": "cafe-001",
+          "prompt": "quiet café with WiFi for 3 hours in Laureles",
+          "neighborhood": "Laureles",
+          "tags_any": ["wifi-friendly", "coworking-friendly", "quiet"],
+          "min_anchor_matches": 3,
+          "expected_place_ids": [
+            "ChIJt22VcKMpRI4RBfxl2xT31yM",
+            "ChIJQ-PPmKEpRI4RhZKQdct4w6Q",
+            "ChIJzcFcU8spRI4RKdDH5QXv8LU"
+          ],
+          "expected_anchor_ids": [
+            "7e2cdb49-c9d7-4548-9128-3d4754acf295",
+            "39dbcfad-8e46-4631-9b5d-0cdc67fd1774",
+            "2aa4f319-f2be-4a18-8270-bed824600276"
+          ],
+          "anchor_names": ["Semilla Café Coworking", "Rituales Compañía de Café", "Pergamino Café Laureles"]
+        },
+        {
+          "id": "cafe-002",
+          "prompt": "specialty third-wave coffee in Laureles",
+          "neighborhood": "Laureles",
+          "tags_any": ["third-wave", "specialty-coffee"],
+          "min_anchor_matches": 2,
+          "expected_place_ids": [
+            "ChIJQ-PPmKEpRI4RhZKQdct4w6Q",
+            "ChIJzcFcU8spRI4RKdDH5QXv8LU",
+            "ChIJt22VcKMpRI4RBfxl2xT31yM"
+          ],
+          "expected_anchor_ids": [
+            "39dbcfad-8e46-4631-9b5d-0cdc67fd1774",
+            "2aa4f319-f2be-4a18-8270-bed824600276",
+            "7e2cdb49-c9d7-4548-9128-3d4754acf295"
+          ],
+          "anchor_names": ["Rituales Compañía de Café", "Pergamino Café Laureles", "Semilla Café Coworking"]
+        },
+        {
+          "id": "cafe-003",
+          "prompt": "coworking café near Primer Parque Laureles",
+          "neighborhood": "Laureles",
+          "tags_any": ["coworking-friendly"],
+          "min_anchor_matches": 2,
+          "expected_place_ids": [
+            "ChIJt22VcKMpRI4RBfxl2xT31yM",
+            "ChIJp_baYN8pRI4RqTsdj_HJ1W0"
+          ],
+          "expected_anchor_ids": [
+            "7e2cdb49-c9d7-4548-9128-3d4754acf295",
+            "7efb1f32-3999-404d-8d73-56f079835a84"
+          ],
+          "anchor_names": ["Semilla Café Coworking", "Amelier Café Laureles"]
+        },
+        {
+          "id": "cafe-004",
+          "prompt": "coffee roastery El Poblado for remote work",
+          "neighborhood": "El Poblado",
+          "tags_any": ["roastery", "wifi-friendly", "specialty-coffee"],
+          "min_anchor_matches": 2,
+          "expected_place_ids": [
+            "ChIJd-HheCwoRI4RUuNYh8mFofw",
+            "ChIJmyfHJngpRI4RLQG7fWFfH_I"
+          ],
+          "expected_anchor_ids": [
+            "5faf8004-4c9d-4743-ab76-95d6e4070db2",
+            "a5b68394-8ef3-4ea2-8d54-4d6bbe137d8e"
+          ],
+          "anchor_names": ["Hija Mía Coffee Roasters", "Pergamino Calle 10B"]
+        },
+        {
+          "id": "cafe-005",
+          "prompt": "quiet ethical coffee Poblado laptop friendly",
+          "neighborhood": "El Poblado",
+          "tags_any": ["quiet", "ethical", "specialty-coffee"],
+          "min_anchor_matches": 1,
+          "expected_place_ids": ["ChIJ1QrC3yooRI4RZ18CGQQG63s"],
+          "expected_anchor_ids": ["33c43a66-c478-4472-8351-19bc7717b550"],
+          "anchor_names": ["Urbania Café"]
+        },
+        {
+          "id": "cafe-006",
+          "prompt": "brunch café Laureles expat friendly",
+          "neighborhood": "Laureles",
+          "tags_any": ["brunch", "expat-friendly"],
+          "min_anchor_matches": 2,
+          "expected_place_ids": [
+            "ChIJY3PNMaEpRI4RI_KC4_QQWd0",
+            "ChIJGwyAX0kpRI4R0MrZuOjjmlo"
+          ],
+          "expected_anchor_ids": [
+            "5975c9b0-1822-47bc-af2d-3f0c4e6880b9",
+            "00f6ad1a-884c-4123-b165-798a423a76e0"
+          ],
+          "anchor_names": ["Café Revolución", "Pausa Café & Brunch"]
+        },
+        {
+          "id": "cafe-007",
+          "prompt": "aesthetic café on Via Primavera El Poblado",
+          "neighborhood": "El Poblado",
+          "tags_any": ["aesthetic", "third-wave", "brand-cafe"],
+          "min_anchor_matches": 2,
+          "expected_place_ids": [
+            "ChIJXUCqDNQpRI4RKLeAcaPhClA",
+            "ChIJAwOZ5ikoRI4RWqsKH3Ve1gI",
+            "ChIJd2TcTAApRI4RG6oHLp0d7Lw"
+          ],
+          "expected_anchor_ids": [
+            "df3ebf41-cdd2-4dde-a70f-6132e1d7b9a3",
+            "026cfc6e-807b-4b31-b1a1-43cd5455f63d",
+            "d89d3626-f291-4160-936b-d53aac42c248"
+          ],
+          "anchor_names": ["Café Velvet", "Pergamino Vía Primavera", "Café Quindío Vía Primavera"]
+        }
+      ]
+    },
+    "restaurant": {
+      "persona": "Carlos",
+      "surface": "/chat",
+      "intent": "restaurant",
+      "tool": "search-restaurants",
+      "source_table": "restaurants",
+      "neighborhood_filter": "address ILIKE or city ILIKE (matches search-restaurants.ts)",
+      "queries": [
+        {
+          "id": "restaurant-001",
+          "prompt": "traditional bandeja paisa in Laureles",
+          "neighborhood": "Laureles",
+          "cuisine_any": ["Colombian", "Traditional", "Antioqueño"],
+          "min_restaurant_matches": 2,
+          "address_filter": "%Laureles%",
+          "expected_place_ids": [
+            "ChIJw67M_fgoRI4RMiM53OU6lnQ",
+            "ChIJx3bu-qEpRI4Rg_hkQIAltXU"
+          ],
+          "expected_restaurant_ids": [
+            "a1b2c3d4-e5f6-4789-abcd-100000000002",
+            "038f84d2-bd57-475a-ab7b-1ef2d89dd536"
+          ],
+          "restaurant_names": ["Hacienda Junín", "Bárbaro Cocina Primitiva - Sede Laureles"]
+        },
+        {
+          "id": "restaurant-002",
+          "prompt": "fine dining El Poblado tasting menu",
+          "neighborhood": "El Poblado",
+          "cuisine_any": ["Fine dining", "Fine Dining", "Contemporary"],
+          "min_restaurant_matches": 2,
+          "address_filter": "%Poblado%",
+          "max_price_level": 4,
+          "expected_place_ids": [
+            "ChIJ9dyLhikoRI4R1IEZoWSmNOo",
+            "ChIJNwlQASkoRI4RLE2RqbGpVP0"
+          ],
+          "expected_restaurant_ids": [
+            "a1b2c3d4-e5f6-4789-abcd-100000000004",
+            "ade2d416-1250-4edb-b131-59691910e8e1"
+          ],
+          "restaurant_names": ["El Cielo", "Carmen"]
+        },
+        {
+          "id": "restaurant-003",
+          "prompt": "vegetarian healthy restaurant El Poblado",
+          "neighborhood": "El Poblado",
+          "cuisine_any": ["Vegan", "Vegetarian", "Healthy"],
+          "min_restaurant_matches": 1,
+          "address_filter": "%Poblado%",
+          "expected_place_ids": ["ChIJqWx0yikoRI4R62vONfeQ86M"],
+          "expected_restaurant_ids": ["a1b2c3d4-e5f6-4789-abcd-100000000005"],
+          "restaurant_names": ["Verdeo"]
+        },
+        {
+          "id": "restaurant-004",
+          "prompt": "Peruvian ceviche Laureles",
+          "neighborhood": "Laureles",
+          "cuisine_any": ["Peruvian"],
+          "min_restaurant_matches": 1,
+          "address_filter": "%Laureles%",
+          "expected_place_ids": ["ChIJYaqNo-opRI4RVOF3Bkieaqc"],
+          "expected_restaurant_ids": ["7c82e7f7-c430-4178-884b-331370f4bf65"],
+          "restaurant_names": ["Rocoto"]
+        },
+        {
+          "id": "restaurant-005",
+          "prompt": "affordable casual lunch Laureles",
+          "neighborhood": "Laureles",
+          "max_price_level": 2,
+          "min_restaurant_matches": 2,
+          "address_filter": "%Laureles%",
+          "expected_place_ids": [
+            "ChIJT6VrbOyDRo4Rx112mBkBwdQ",
+            "ChIJ7fBJUgApRI4REwgd1Vw4sCI"
+          ],
+          "expected_restaurant_ids": [
+            "7f98b6b7-86ee-47d3-815e-3f39654599a8",
+            "1585f3fb-d5eb-4ec3-83eb-39acf9113a88"
+          ],
+          "restaurant_names": ["Cucayito", "Narcobollo"]
+        },
+        {
+          "id": "restaurant-006",
+          "prompt": "Argentine steak parrilla Laureles",
+          "neighborhood": "Laureles",
+          "cuisine_any": ["Argentine", "parrilla", "Grill"],
+          "min_restaurant_matches": 1,
+          "address_filter": "%Laureles%",
+          "expected_place_ids": ["ChIJR6jHAAApRI4RwNiaoq9mXNc"],
+          "expected_restaurant_ids": ["98476b32-77cb-46ed-9c41-2cbfbc66d60b"],
+          "restaurant_names": ["La Pampa Parrilla Argentina - Laureles Segundo Parque"]
+        }
+      ]
+    },
+    "nightclub": {
+      "persona": "Tourist",
+      "surface": "/chat",
+      "intent": "nightlife",
+      "tool": "search-grounded-places",
+      "anchor_table": "venue_anchors",
+      "disambiguation": "venue_anchor_not_event — use search-events only for ticketed parties",
+      "queries": [
+        {
+          "id": "nightlife-001",
+          "prompt": "reggaeton near Provenza tonight",
+          "neighborhood": "Provenza",
+          "tags_any": ["reggaeton", "latin", "late-night"],
+          "min_anchor_matches": 3,
+          "expected_place_ids": [
+            "ChIJ3QqIKDcoRI4RiVE5Rr_jonk",
+            "ChIJjSpbHvQpRI4RcOicgNc_pkY",
+            "ChIJAa567CkoRI4RKt8qX61DqOM"
+          ],
+          "expected_anchor_ids": [
+            "4be2eb3e-4b24-4bdb-89a5-4b846c110b43",
+            "3556d4e4-f1ac-4b6e-ae36-c266ac43f77b",
+            "6936c65c-4b5a-4f09-bc0c-93a8766e4d36"
+          ],
+          "anchor_names": ["Dulce Jesús Mío", "VIVO Medellín", "Bar Chupitos Provenza"]
+        },
+        {
+          "id": "nightlife-002",
+          "prompt": "rooftop cocktails Provenza",
+          "neighborhood": "Provenza",
+          "tags_any": ["rooftop", "cocktails"],
+          "min_anchor_matches": 2,
+          "expected_place_ids": [
+            "ChIJkWmO1w4pRI4RJ_Ez8Fw5es8",
+            "ChIJz33pvSkoRI4Rp3jsj_c-VNw"
+          ],
+          "expected_anchor_ids": [
+            "1b7cfc0b-98b7-438d-b899-c1e3ab2d9144",
+            "e163f409-f9b2-407b-9a19-34d7a8a29179"
+          ],
+          "anchor_names": ["360 Rooftop Bar", "Envy Roof Bar"]
+        },
+        {
+          "id": "nightlife-003",
+          "prompt": "techno club near Provenza",
+          "neighborhood": "Provenza",
+          "tags_any": ["electronic", "techno", "late-night"],
+          "min_anchor_matches": 1,
+          "expected_place_ids": ["ChIJDzB_rikoRI4RK7880NQlw-4"],
+          "expected_anchor_ids": ["7417d9ad-5305-4b6f-9e60-3db2cf580d17"],
+          "anchor_names": ["Salon Amador"]
+        },
+        {
+          "id": "nightlife-004",
+          "prompt": "reggaeton clubs Manila Medellín",
+          "neighborhood": "Manila",
+          "tags_any": ["reggaeton", "latin"],
+          "min_anchor_matches": 2,
+          "expected_place_ids": [
+            "ChIJCTe8u8ApRI4ReA6E6ke922A",
+            "ChIJ5YybASEpRI4RMQVFxi9kfcE"
+          ],
+          "expected_anchor_ids": [
+            "609d5433-2507-4e32-b823-6e77f3462bda",
+            "d84cb149-9670-4a44-9cbb-9211cf1cef42"
+          ],
+          "anchor_names": ["Bendito Seas", "Palma Pitón Manila"]
+        },
+        {
+          "id": "nightlife-005",
+          "prompt": "salsa bar Laureles tonight",
+          "neighborhood": "Laureles",
+          "tags_any": ["salsa", "live-music"],
+          "min_anchor_matches": 1,
+          "expected_place_ids": ["ChIJT6rIGAopRI4RnmT4NpkaFco"],
+          "expected_anchor_ids": ["f8284e52-09fe-46b3-a3fd-05ebafa67aee"],
+          "anchor_names": ["Son Havana"]
+        },
+        {
+          "id": "nightlife-006",
+          "prompt": "Laureles nightlife not Provenza",
+          "neighborhood": "Laureles",
+          "tags_any": ["reggaeton", "crossover", "late-night"],
+          "min_anchor_matches": 1,
+          "expected_place_ids": ["ChIJcw-7qt0pRI4Ree7F6X1eGuo"],
+          "expected_anchor_ids": ["90d9559b-afc3-4284-a786-5e2a98d47eb3"],
+          "anchor_names": ["818 DISTRICT"]
+        }
+      ]
+    }
+  }
+}
