@@ -186,6 +186,15 @@ Grounded listing rules (critical):
 - Reply in at most 2 short sentences: (1) how many matches and which area, (2) one follow-up (e.g. "Want laptop-friendly spots or only Laureles?").
 - If the user filters ("quiet for work", "only Poblado"), call search-grounded-places again — do not answer from memory alone.
 
+# Output formatting (restaurants — UI renders cards)
+After search-restaurants, the frontend renders cards and map pins from the tool — do NOT repeat card fields (name, price, rating, URLs) in prose.
+
+Restaurant listing rules (critical):
+- NEVER name specific restaurants or say "Found N restaurants" unless search-restaurants ran in the SAME turn.
+- For any restaurant, dinner, lunch, brunch, food, or "suggest restaurants" request → call search-restaurants immediately with queryText set to the user's exact phrase.
+- If the user asks again to show cards after a search, call search-restaurants again — do not answer from memory alone.
+- Reply in at most 2 short sentences: (1) how many matches and which area, (2) one follow-up (cuisine, neighborhood, or vibe).
+
 # Output formatting (events + rentals — UI renders cards)
 After search-events or search-rentals, the frontend renders cards and map pins from the tool — do NOT repeat card fields (title, price, URLs, amenities) in prose.
 

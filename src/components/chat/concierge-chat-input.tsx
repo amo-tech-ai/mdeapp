@@ -5,6 +5,7 @@ import { useCopilotChatInternal } from "@copilotkit/react-core";
 import type { Message } from "@copilotkit/shared";
 import { useRentalSearchFastPath } from "@/hooks/use-rental-search-fast-path";
 import { useEventSearchFastPath } from "@/hooks/use-event-search-fast-path";
+import { useRestaurantSearchFastPath } from "@/hooks/use-restaurant-search-fast-path";
 import { clearConciergeError, reportConciergeError } from "@/lib/concierge-error-store";
 import {
   clearConciergePendingSend,
@@ -74,6 +75,8 @@ export function ConciergeChatInput({
   const { interrupt } = useCopilotChatInternal();
   const { handleUserMessage: handleRentalMessage } = useRentalSearchFastPath();
   const { handleUserMessage: handleEventMessage } = useEventSearchFastPath();
+  const { handleUserMessage: handleRestaurantMessage } =
+    useRestaurantSearchFastPath();
   const [text, setText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const pendingVersion = useSyncExternalStore(
@@ -103,7 +106,9 @@ export function ConciergeChatInput({
     const handledRental = await handleRentalMessage(trimmed);
     if (handledRental) return;
     const handledEvent = await handleEventMessage(trimmed);
-    if (!handledEvent) {
+    if (handledEvent) return;
+    const handledRestaurant = await handleRestaurantMessage(trimmed);
+    if (!handledRestaurant) {
       setConciergePendingSend(true);
       try {
         await onSend(trimmed);
@@ -113,7 +118,14 @@ export function ConciergeChatInput({
       }
     }
     textareaRef.current?.focus();
-  }, [text, inProgress, handleRentalMessage, handleEventMessage, onSend]);
+  }, [
+    text,
+    inProgress,
+    handleRentalMessage,
+    handleEventMessage,
+    handleRestaurantMessage,
+    onSend,
+  ]);
 
   const buttonIcon = !chatReady ? (
     <SpinnerIcon />

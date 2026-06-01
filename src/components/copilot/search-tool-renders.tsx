@@ -415,6 +415,21 @@ export function EventResults({ result }: { result: unknown }) {
   );
 }
 
+export function RestaurantResults({ result }: { result: unknown }) {
+  const envelope = normalizeToolEnvelope(result);
+  const count = envelope.results?.length ?? 0;
+  return (
+    <>
+      <RichCardResultsRegistrar category="restaurant" count={count} />
+      <GenericResults
+        category="restaurant"
+        result={result}
+        testId="restaurant-card"
+      />
+    </>
+  );
+}
+
 function GenericResults({
   category,
   result,
