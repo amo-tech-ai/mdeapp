@@ -8,18 +8,36 @@ export type RentalSearchApiParams = {
   minBedrooms?: number;
   maxPricePerNight?: number;
   limit?: number;
+  /** Natural-language query for hybrid_search_listings + rental_signals. */
+  queryText?: string;
 };
+
+function attachQueryText(
+  params: RentalSearchApiParams,
+  text: string,
+  s: RentalQuerySignals,
+): RentalSearchApiParams {
+  if (s.confidence >= 0.6 || s.hasNomad || s.hasCafeOrGym || s.hasVibeOrUseCase) {
+    return { ...params, queryText: text.trim() };
+  }
+  return params;
+}
 
 export type RentalQuerySignals = {
   hasBudget: boolean;
   hasBedrooms: boolean;
   hasVibeOrUseCase: boolean;
   hasNeighborhood: boolean;
+  hasDateRange: boolean;
+  hasNomad: boolean;
+  hasCafeOrGym: boolean;
+  cityWide: boolean;
   confidence: number;
   neighborhood?: string;
   minBedrooms?: number;
   maxPricePerNight?: number;
   budgetType?: "nightly" | "monthly" | "total_trip";
+  dateRangeLabel?: string;
 };
 
 const RENTAL_INTENT_RE =
@@ -40,10 +58,23 @@ const BEDROOM_RE =
   /\b(\d+)\s?(?:br|bed(?:room)?s?)\b|\b(studio|one bedroom|1 bedroom|2 bedroom|3 bedroom)\b/i;
 
 const VIBE_RE =
-  /\b(remote work|remote-work|nightlife|family|quiet|long[- ]term|monthly|workspace|pet[- ]friendly)\b/i;
+  /\b(remote work|remote-work|digital nomad|nomad|nightlife|family|quiet|long[- ]term|monthly|workspace|pet[- ]friendly|wifi|cowork)\b/i;
+
+const CAFE_GYM_RE = /\b(caf[eé]s?|coffee|gym|gyms|coworking)\b/i;
+
+const NOMAD_RE = /\b(digital nomad|nomad|remote work|remote-work|work from|workspace|wifi|cowork)\b/i;
 
 const MONTHLY_RE = /\b(month|monthly|per month|\/month|mes)\b/i;
 const TRIP_RE = /\b(for the trip|total|10 days|two weeks|\d+\s+days)\b/i;
+const MEDELLIN_CITY_RE = /\bmedell[ií]n\b/i;
+
+function parseDateRangeLabel(text: string): string | undefined {
+  const june = text.match(/\bjune\s+(\d{1,2})\s*(?:to|-)\s*(\d{1,2})\b/i);
+  if (june) return `June ${june[1]}–${june[2]}`;
+  if (/\bthis weekend\b/i.test(text)) return "this weekend";
+  if (/\btomorrow\b/i.test(text)) return "tomorrow";
+  return undefined;
+}
 
 function parseBudget(text: string): {
   maxPricePerNight?: number;
@@ -132,15 +163,26 @@ export function scoreRentalQuery(text: string): RentalQuerySignals {
     /\b(cheap|budget|luxury|affordable|under\s+\$)\b/i.test(normalized);
   const hasBedrooms = minBedrooms != null;
   const hasVibeOrUseCase = VIBE_RE.test(normalized);
+  const hasNomad = NOMAD_RE.test(normalized);
+  const hasCafeOrGym = CAFE_GYM_RE.test(normalized);
+  const hasQuiet = /\bquiet\b/i.test(normalized);
   const hasNeighborhood = neighborhood != null;
+  const dateRangeLabel = parseDateRangeLabel(normalized);
+  const hasDateRange = dateRangeLabel != null;
+  const cityWide = MEDELLIN_CITY_RE.test(normalized) && !hasNeighborhood;
 
   let confidence = 0.2;
   if (hasBudget && hasBedrooms) confidence = 0.9;
+  else if (hasBudget && hasNeighborhood && budgetType === "monthly") confidence = 0.76;
   else if (hasBudget && hasNeighborhood) confidence = 0.75;
+  else if (hasNomad && hasNeighborhood) confidence = 0.72;
   else if (hasBedrooms && hasNeighborhood) confidence = 0.7;
   else if (hasVibeOrUseCase && hasNeighborhood) confidence = 0.65;
+  else if (hasQuiet && hasCafeOrGym && hasNeighborhood) confidence = 0.62;
   else if (hasBudget && hasVibeOrUseCase) confidence = 0.65;
   else if (hasBedrooms) confidence = 0.55;
+  else if (hasBudget && hasDateRange && cityWide) confidence = 0.78;
+  else if (hasBudget && hasDateRange) confidence = 0.72;
   else if (hasBudget) confidence = 0.5;
   else if (hasNeighborhood && RENTAL_INTENT_RE.test(normalized)) confidence = 0.35;
   else if (hasNeighborhood) confidence = 0.35;
@@ -150,11 +192,16 @@ export function scoreRentalQuery(text: string): RentalQuerySignals {
     hasBedrooms,
     hasVibeOrUseCase,
     hasNeighborhood,
+    hasDateRange,
+    cityWide,
+    hasNomad,
+    hasCafeOrGym,
     confidence,
     neighborhood,
     minBedrooms,
     maxPricePerNight,
     budgetType,
+    dateRangeLabel,
   };
 }
 
@@ -201,40 +248,52 @@ export function buildRentalSearchParams(
       merged.minBedrooms != null ||
       merged.maxPricePerNight != null
     ) {
-      return merged;
+      return attachQueryText(merged, text, s);
     }
     if (hasRentalSignals(text)) {
-      return { limit: FAST_PATH_LIMIT };
+      return attachQueryText({ limit: FAST_PATH_LIMIT }, text, s);
     }
   }
 
   if (memory.lastRentalQuery && !memory.lastRentalQuery.genericAskPending) {
-    return {
-      neighborhood: s.neighborhood ?? q?.neighborhood,
-      minBedrooms: s.minBedrooms ?? q?.minBedrooms,
-      maxPricePerNight: s.maxPricePerNight ?? q?.maxPricePerNight,
-      limit: FAST_PATH_LIMIT,
-    };
+    return attachQueryText(
+      {
+        neighborhood: s.neighborhood ?? q?.neighborhood,
+        minBedrooms: s.minBedrooms ?? q?.minBedrooms,
+        maxPricePerNight: s.maxPricePerNight ?? q?.maxPricePerNight,
+        limit: FAST_PATH_LIMIT,
+      },
+      text,
+      s,
+    );
   }
 
   if (!looksLikeRentalSearch(text)) return null;
 
   if (s.hasBudget && s.hasNeighborhood) {
-    return {
-      neighborhood: s.neighborhood,
-      minBedrooms: s.minBedrooms,
-      maxPricePerNight: s.maxPricePerNight,
-      limit: FAST_PATH_LIMIT,
-    };
+    return attachQueryText(
+      {
+        neighborhood: s.neighborhood,
+        minBedrooms: s.minBedrooms,
+        maxPricePerNight: s.maxPricePerNight,
+        limit: FAST_PATH_LIMIT,
+      },
+      text,
+      s,
+    );
   }
 
   if (s.confidence >= 0.6) {
-    return {
-      neighborhood: s.neighborhood,
-      minBedrooms: s.minBedrooms,
-      maxPricePerNight: s.maxPricePerNight,
-      limit: FAST_PATH_LIMIT,
-    };
+    return attachQueryText(
+      {
+        neighborhood: s.neighborhood,
+        minBedrooms: s.minBedrooms,
+        maxPricePerNight: s.maxPricePerNight,
+        limit: FAST_PATH_LIMIT,
+      },
+      text,
+      s,
+    );
   }
 
   if (
@@ -242,12 +301,16 @@ export function buildRentalSearchParams(
     q?.minBedrooms != null ||
     q?.maxPricePerNight != null
   ) {
-    return {
-      neighborhood: q.neighborhood,
-      minBedrooms: q.minBedrooms,
-      maxPricePerNight: q.maxPricePerNight,
-      limit: FAST_PATH_LIMIT,
-    };
+    return attachQueryText(
+      {
+        neighborhood: q.neighborhood,
+        minBedrooms: q.minBedrooms,
+        maxPricePerNight: q.maxPricePerNight,
+        limit: FAST_PATH_LIMIT,
+      },
+      text,
+      s,
+    );
   }
 
   return null;
