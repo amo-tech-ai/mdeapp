@@ -5,13 +5,14 @@ import {
   getPlaceDetails,
   normalizePlaceId,
 } from "@/mastra/lib/google-places-client";
+import type { Json } from "@/lib/supabase/database.types";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 
 const PLACE_DETAILS_CACHE_TTL_DAYS = 7;
 
 export type PlaceDetailsCacheRead =
   | { hit: true; payload: unknown }
-  | { hit: false; reason: "miss" | "expired" | "no_db" };
+  | { hit: false; reason: "miss" | "no_db" };
 
 export type PlaceDetailsFetchResult = {
   raw: unknown;
@@ -62,19 +63,18 @@ export async function readPlaceDetailsFromCache(
 
   const id = normalizePlaceId(placeId);
   const { data, error } = await client
-    .from("place_details_cache" as "restaurants")
-    .select("payload, expires_at")
+    .from("place_details_cache")
+    .select("payload")
     .eq("place_id", id)
     .eq("field_mask_version", PLACE_DETAILS_FIELD_MASK_VERSION)
     .gt("expires_at", new Date().toISOString())
     .maybeSingle();
 
-  const row = data as { payload?: unknown } | null;
-  if (error || !row?.payload) {
+  if (error || !data?.payload) {
     return { hit: false, reason: "miss" };
   }
 
-  return { hit: true, payload: row.payload };
+  return { hit: true, payload: data.payload };
 }
 
 /** Upsert masked getPlace payload after a cache miss (VEN-014 / MAP-005). */
@@ -89,7 +89,7 @@ export async function writePlaceDetailsToCache(
   const id = normalizePlaceId(placeId);
   const { latitude, longitude } = readLatLng(place);
 
-  await client.from("place_details_cache" as "restaurants").upsert(
+  await client.from("place_details_cache").upsert(
     {
       place_id: id,
       field_mask_version: PLACE_DETAILS_FIELD_MASK_VERSION,
@@ -97,10 +97,10 @@ export async function writePlaceDetailsToCache(
       google_maps_uri: extractPlaceUri(place),
       latitude,
       longitude,
-      payload: place,
+      payload: place as Json,
       photo_name_primary: readPhotoPrimary(place),
       expires_at: cacheExpiresAt(),
-    } as never,
+    },
     { onConflict: "place_id,field_mask_version" },
   );
 }
