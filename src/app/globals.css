@@ -173,7 +173,9 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-testid="map-sheet-content"] {
+  [data-slot="sheet-content"],
+  [data-slot="sheet-overlay"] {
     transition: none !important;
+    animation: none !important;
   }
 }
