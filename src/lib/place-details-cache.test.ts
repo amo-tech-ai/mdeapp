@@ -21,7 +21,11 @@ vi.mock("@/lib/supabase/service", () => ({
   createServiceRoleClient: createServiceRoleClientMock,
 }));
 
-import { PLACE_DETAILS_FIELD_MASK_VERSION } from "@/mastra/lib/google-places-client";
+import {
+  PlacesRequestError,
+  PLACE_DETAILS_FIELD_MASK_VERSION,
+} from "@/mastra/lib/google-places-client";
+import { resetPlacesNegativeCacheForTests } from "@/lib/place-details-negative-cache";
 import {
   fetchPlaceDetailsWithCache,
   readPlaceDetailsFromCache,
@@ -42,6 +46,7 @@ function mockCacheSelectRow(payload: unknown | null, error: unknown = null) {
 
 describe("place-details-cache (VEN-014)", () => {
   beforeEach(() => {
+    resetPlacesNegativeCacheForTests();
     getPlaceDetailsMock.mockReset();
     fromMock.mockReset();
     createServiceRoleClientMock.mockClear();
@@ -102,6 +107,27 @@ describe("place-details-cache (VEN-014)", () => {
       "field_mask_version",
       PLACE_DETAILS_FIELD_MASK_VERSION,
     );
+  });
+
+  it("negative-caches Places failures and skips repeated getPlaceDetails", async () => {
+    const maybeSingle = vi.fn(async () => ({ data: null, error: null }));
+    const gt = vi.fn(() => ({ maybeSingle }));
+    const eqMask = vi.fn(() => ({ gt }));
+    const eqId = vi.fn(() => ({ eq: eqMask }));
+    const select = vi.fn(() => ({ eq: eqId }));
+    fromMock.mockReturnValue({ select, upsert: vi.fn() });
+
+    getPlaceDetailsMock.mockRejectedValue(
+      new PlacesRequestError("Places getPlace failed"),
+    );
+
+    await expect(fetchPlaceDetailsWithCache("ChIJNegative")).rejects.toThrow(
+      PlacesRequestError,
+    );
+    await expect(fetchPlaceDetailsWithCache("ChIJNegative")).rejects.toThrow(
+      /negative cache/i,
+    );
+    expect(getPlaceDetailsMock).toHaveBeenCalledTimes(1);
   });
 
   it("returns miss when service client unavailable", async () => {
