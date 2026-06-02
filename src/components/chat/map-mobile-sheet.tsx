@@ -11,7 +11,6 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
 import { useMapContext } from "@/platform/maps/map-context";
 
@@ -66,49 +65,50 @@ export function MapMobileSheet() {
   const { pins } = useMapContext();
   const pinCount = pins.filter((p) => p.source !== "mock").length;
 
+  // Forget "open map" intent when crossing to lg so the sheet doesn't auto-reopen on return to mobile.
+  const [wasLgUp, setWasLgUp] = useState(isLgUp);
+  if (isLgUp !== wasLgUp) {
+    setWasLgUp(isLgUp);
+    if (isLgUp && userMapOpen) setUserMapOpen(false);
+  }
+
   const sheetOpen = !isLgUp && userMapOpen;
 
   return (
     <div
       data-testid="map-mobile-controls"
       data-right-column-mode="map"
-      className="pointer-events-none fixed bottom-[7.5rem] right-4 z-40 lg:hidden"
+      className="pointer-events-none fixed bottom-[calc(7.5rem+env(safe-area-inset-bottom,0px))] right-4 z-40 lg:hidden"
     >
-      <Sheet
-        open={sheetOpen}
-        onOpenChange={setUserMapOpen}
+      <Button
+        type="button"
+        data-testid="map-sheet-trigger"
+        className="pointer-events-auto h-11 gap-2 rounded-full px-4 shadow-lg"
+        size="default"
+        aria-label={pinCount > 0 ? `Open map with ${pinCount} pins` : "Open map"}
+        aria-haspopup="dialog"
+        aria-expanded={sheetOpen}
+        aria-controls="map-sheet-content"
+        onClick={() => setUserMapOpen(true)}
       >
-        <SheetTrigger
-          render={
-            <Button
-              type="button"
-              data-testid="map-sheet-trigger"
-              className="pointer-events-auto h-11 gap-2 rounded-full px-4 shadow-lg"
-              size="default"
-              aria-label={
-                pinCount > 0 ? `Open map with ${pinCount} pins` : "Open map"
-              }
-            >
-              <Map className="size-4" aria-hidden />
-              Open map
-              {pinCount > 0 ? ` (${pinCount})` : ""}
-            </Button>
-          }
-        />
+        <Map className="size-4" aria-hidden />
+        Open map
+        {pinCount > 0 ? ` (${pinCount})` : ""}
+      </Button>
+      <Sheet open={sheetOpen} onOpenChange={setUserMapOpen}>
         <SheetContent
+          id="map-sheet-content"
           side="bottom"
-          className="flex max-h-[85vh] min-h-[75vh] flex-col p-0"
+          className="flex max-h-[calc(85dvh-env(safe-area-inset-bottom,0px))] min-h-[75dvh] flex-col p-0 pb-[env(safe-area-inset-bottom,0px)]"
           data-testid="map-sheet-content"
         >
-          <>
-            <SheetHeader className="border-b border-border px-4 py-3 text-left">
-              <SheetTitle>Map</SheetTitle>
-              <SheetDescription>
-                Tap a pin or close to return to chat. Escape closes this sheet.
-              </SheetDescription>
-            </SheetHeader>
-            <MapSheetBody open={sheetOpen} />
-          </>
+          <SheetHeader className="border-b border-border px-4 py-3 text-left">
+            <SheetTitle>Map</SheetTitle>
+            <SheetDescription>
+              Tap a pin or close to return to chat. Escape closes this sheet.
+            </SheetDescription>
+          </SheetHeader>
+          <MapSheetBody open={sheetOpen} />
         </SheetContent>
       </Sheet>
     </div>
