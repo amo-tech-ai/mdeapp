@@ -719,51 +719,6 @@ function webEventsToolRender({ status, result }: ToolRenderProps): ReactElement 
   );
 }
 
-function venueBookingToolRender({ status, result }: ToolRenderProps): ReactElement {
-  if (status === "inProgress" || status === "executing") {
-    return (
-      <div
-        data-testid="venue-booking-pending"
-        className="my-2 text-sm text-muted-foreground"
-      >
-        Submitting booking request…
-      </div>
-    );
-  }
-
-  if (isToolRenderError(result, status)) {
-    return (
-      <ToolErrorChip
-        message={getToolRenderErrorMessage(result)}
-        testId="venue-booking-error"
-      />
-    );
-  }
-
-  const body = normalizeToolEnvelope(result);
-  const bookingRequestId =
-    body &&
-    typeof body === "object" &&
-    typeof (body as { bookingRequestId?: string }).bookingRequestId === "string"
-      ? (body as { bookingRequestId: string }).bookingRequestId
-      : null;
-
-  if (!bookingRequestId) return <></>;
-
-  return (
-    <div
-      data-testid="venue-booking-confirmation"
-      className="my-2 rounded-lg border bg-muted/40 px-3 py-2 text-sm"
-    >
-      <p className="font-medium">Booking request received</p>
-      <p className="mt-1 text-muted-foreground">
-        Status: pending — our team will follow up on WhatsApp. Ref{" "}
-        {bookingRequestId.slice(0, 8)}…
-      </p>
-    </div>
-  );
-}
-
 function useDisabledToolRender(
   name: string,
   render: (props: ToolRenderProps) => ReactElement,
@@ -790,11 +745,6 @@ export function SearchToolRenders() {
   useDisabledToolRender(MASTRA_TOOL_IDS.grounded, groundedToolRender);
   useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.webEvents, webEventsToolRender);
   useDisabledToolRender(MASTRA_TOOL_IDS.webEvents, webEventsToolRender);
-  useDisabledToolRender(
-    MASTRA_COPILOT_TOOL_ACTIONS.venueBooking,
-    venueBookingToolRender,
-  );
-  useDisabledToolRender(MASTRA_TOOL_IDS.venueBooking, venueBookingToolRender);
 
   return null;
 }

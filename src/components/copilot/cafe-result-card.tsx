@@ -1,14 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  ResultCardActions,
-  ResultCardBadges,
-  ResultCardBody,
-  ResultCardFooter,
-  ResultCardHeader,
-  ResultCardMedia,
-  ResultCardShell,
-} from "@/components/cards/result-card-shell";
 import type { GroundedPhotoAttribution } from "@/lib/parse-grounded-tool-result";
 import { mapsDeepLinksEnabled } from "@/lib/maps-deep-links";
 import { placesPhotoProxyUrl } from "@/lib/places-photo-proxy";
@@ -18,6 +9,7 @@ import {
   priceLevelToLabel,
   primaryTypeToLabel,
 } from "@/lib/places-display";
+import { cn } from "@/lib/utils";
 import { CalendarCheck, ExternalLink, Info, MapPin } from "lucide-react";
 import type { CardInteractionProps, ResultKind } from "@/components/cards/card-interaction-props";
 
@@ -44,6 +36,7 @@ export type CafeResultCardProps = {
   mediaPlaceholderLabel?: string;
   onBookRequest?: () => void;
 } & CardInteractionProps & {
+  /** Café rows use `data-result-kind="cafe"`; defaults to cafe when omitted. */
   resultKind?: ResultKind;
 };
 
@@ -109,37 +102,6 @@ function CafeMapLinks({
   );
 }
 
-function photoAttributionNodes(
-  photoAuthorAttributions?: GroundedPhotoAttribution[],
-) {
-  if (!photoAuthorAttributions?.length) return null;
-  return (
-    <p
-      className="mt-0.5 max-w-24 text-[10px] leading-tight text-muted-foreground"
-      data-testid="grounded-card-photo-attribution"
-    >
-      {photoAuthorAttributions.map((a, i) => (
-        <span key={`${a.displayName ?? i}-${a.uri ?? ""}`}>
-          {i > 0 ? ", " : null}
-          {a.uri && a.displayName ? (
-            <a
-              href={a.uri}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline-offset-1 hover:underline"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {a.displayName}
-            </a>
-          ) : (
-            (a.displayName ?? a.uri)
-          )}
-        </span>
-      ))}
-    </p>
-  );
-}
-
 export function CafeResultCard({
   title,
   rank,
@@ -184,46 +146,106 @@ export function CafeResultCard({
   };
 
   return (
-    <ResultCardShell
-      pinId={pinId}
-      resultKind={resultKind}
-      selected={selected}
-      testId={testId}
-      onSelect={onSelect}
-      mapSync
+    <article
+      className={cn(
+        "overflow-hidden rounded-lg border bg-card text-sm shadow-sm transition",
+        selected ? "border-primary ring-2 ring-primary/30" : "border-border",
+      )}
+      data-testid={testId}
+      data-result-kind={resultKind}
+      data-pin-id={pinId}
+      data-selected={selected ? "true" : "false"}
+      onMouseEnter={preview}
+      onFocus={preview}
     >
-      <ResultCardBody
-        onSelect={onSelect}
-        onOpenDetails={onOpenDetails}
-        detailAriaLabel={`Open details for ${title}`}
+      <div
+        className="flex gap-3 p-3"
+        role={onOpenDetails ? "button" : undefined}
+        tabIndex={onOpenDetails ? 0 : undefined}
+        aria-label={`Open details for ${title}`}
+        onClick={onOpenDetails ? openDetails : preview}
+        onKeyDown={
+          onOpenDetails
+            ? (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  openDetails();
+                }
+              }
+            : undefined
+        }
       >
-        <ResultCardMedia
-          photoSrc={photoSrc}
-          placeholderLabel={mediaPlaceholderLabel}
-          attribution={photoAttributionNodes(photoAuthorAttributions)}
-        />
+        {photoSrc ? (
+          <div className="shrink-0">
+            <div
+              className="relative h-24 w-24 overflow-hidden rounded-md bg-muted"
+              data-testid="grounded-card-photo"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- Places photo proxy URL; dynamic signed media */}
+              <img
+                src={photoSrc}
+                alt=""
+                width={96}
+                height={96}
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
+            </div>
+            {photoAuthorAttributions && photoAuthorAttributions.length > 0 ? (
+              <p
+                className="mt-0.5 max-w-24 text-[10px] leading-tight text-muted-foreground"
+                data-testid="grounded-card-photo-attribution"
+              >
+                {photoAuthorAttributions.map((a, i) => (
+                  <span key={`${a.displayName ?? i}-${a.uri ?? ""}`}>
+                    {i > 0 ? ", " : null}
+                    {a.uri && a.displayName ? (
+                      <a
+                        href={a.uri}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline-offset-1 hover:underline"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {a.displayName}
+                      </a>
+                    ) : (
+                      (a.displayName ?? a.uri)
+                    )}
+                  </span>
+                ))}
+              </p>
+            ) : null}
+          </div>
+        ) : (
+          <div
+            className="flex h-24 w-24 shrink-0 items-center justify-center rounded-md bg-muted text-xs text-muted-foreground"
+            data-testid="grounded-card-photo-placeholder"
+            aria-hidden
+          >
+            {mediaPlaceholderLabel}
+          </div>
+        )}
 
         <div className="min-w-0 flex-1">
-          <ResultCardHeader
-            eyebrow={
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
               <p className="text-[11px] font-medium uppercase tracking-normal text-muted-foreground">
                 Match #{rank}
               </p>
-            }
-            title={title}
-            trailing={
-              ratingText ? (
-                <p
-                  className="shrink-0 text-xs font-medium text-foreground"
-                  data-testid="grounded-card-rating"
-                >
-                  ★ {ratingText}
-                </p>
-              ) : null
-            }
-          />
+              <h3 className="font-medium leading-snug">{title}</h3>
+            </div>
+            {ratingText ? (
+              <p
+                className="shrink-0 text-xs font-medium text-foreground"
+                data-testid="grounded-card-rating"
+              >
+                ★ {ratingText}
+              </p>
+            ) : null}
+          </div>
 
-          <ResultCardBadges>
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
             <Badge variant="secondary">{typeLabel}</Badge>
             {priceLabel ? <Badge variant="outline">{priceLabel}</Badge> : null}
             {hoursLabel ? (
@@ -234,7 +256,7 @@ export function CafeResultCard({
                 {hoursLabel}
               </Badge>
             ) : null}
-          </ResultCardBadges>
+          </div>
 
           {blurb ? (
             <p className="mt-2 line-clamp-2 text-xs leading-5 text-muted-foreground">
@@ -257,15 +279,15 @@ export function CafeResultCard({
             ) : null}
           </div>
         </div>
-      </ResultCardBody>
+      </div>
 
-      <ResultCardFooter>
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t px-3 py-2">
         <CafeMapLinks
           mapsUrl={mapsUrl}
           directionsUrl={directionsUrl}
           reviewsUrl={reviewsUrl}
         />
-        <ResultCardActions>
+        <div className="flex flex-wrap gap-1.5">
           <Button
             type="button"
             size="sm"
@@ -291,8 +313,8 @@ export function CafeResultCard({
             <CalendarCheck className="size-3.5" aria-hidden />
             Request
           </Button>
-        </ResultCardActions>
-      </ResultCardFooter>
-    </ResultCardShell>
+        </div>
+      </div>
+    </article>
   );
 }

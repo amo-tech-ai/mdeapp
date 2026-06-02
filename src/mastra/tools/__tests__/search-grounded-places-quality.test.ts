@@ -75,6 +75,11 @@ describe("search-grounded-places café quality filter", () => {
 
   it("detects nightlife discovery queries", () => {
     expect(isNightlifeGroundingQuery("salsa bars in Poblado")).toBe(true);
+    expect(
+      isNightlifeGroundingQuery(
+        "Where can I find salsa bars locals go to at night in Poblado?",
+      ),
+    ).toBe(true);
     expect(isNightlifeGroundingQuery("quiet cafés near Laureles")).toBe(false);
     expect(resolveVenueGroundingKind("rooftop cocktails provenza")).toBe(
       "nightlife",
