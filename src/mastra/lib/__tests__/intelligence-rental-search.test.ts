@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { parseRentalIntelligenceSlots } from "../intelligence-rental-search";
 import { isAvailableForStay, sortForMonthlyStay } from "../../tools/search-rentals";
 import type { Rental } from "../../tools/search-rentals";
