@@ -33,6 +33,7 @@ export function ChatNavRail({
   return (
     <nav
       data-testid={testId}
+      data-active-thread-id={activeThreadId ?? ""}
       aria-label="Concierge navigation"
       className="flex h-full min-h-0 flex-col gap-4"
     >

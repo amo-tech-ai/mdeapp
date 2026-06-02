@@ -48,13 +48,34 @@ test.describe(`${SCREEN_ID} chat nav rail`, () => {
       }
     });
 
-    test("new chat button is interactive", async ({ page }) => {
+    test("new chat clears active thread and stays on home", async ({ page }) => {
       const errors = watchCriticalConsoleErrors(page);
       await gotoHome(page);
-      await expect(page.locator('[data-testid="nav-new-chat"]')).toBeVisible();
+
+      const rail = page.locator('[data-testid="nav-rail"]');
+      await expect(rail).toBeVisible();
+
+      // Wait for thread list to settle
+      await page.waitForFunction(
+        () => document.querySelector('[data-testid="nav-rail"] .animate-pulse') === null,
+        { timeout: 5000 },
+      );
+
+      // If threads are present, click the first to establish an active state
+      const firstThread = page.locator('[data-testid="nav-thread-item"]').first();
+      if ((await firstThread.count()) > 0) {
+        await firstThread.click();
+        await expect(rail).toHaveAttribute("data-active-thread-id", /.+/);
+      }
+
       await page.locator('[data-testid="nav-new-chat"]').click();
+
+      // URL stays on home
       await expect(page).toHaveURL("/");
-      await expect(page.locator('[data-testid="nav-rail"]')).toBeVisible();
+      // Active thread is cleared — attribute present but empty
+      await expect(rail).toHaveAttribute("data-active-thread-id", "");
+      // Chat region is still usable
+      await expect(page.locator('[data-testid="copilot-chat-region"]')).toBeVisible();
       assertConsoleClean(errors);
     });
 
