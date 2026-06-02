@@ -9,10 +9,7 @@ import { assertCopilotKitAuthorized } from "@/lib/copilotkit-auth";
 import { createClient } from "@/lib/supabase/server";
 import { mastra } from "@/mastra";
 import { getLocalAgentsWithLogging } from "@/mastra/copilotkit/logging-mastra-agent";
-import {
-  setAuditAccessToken,
-  setAuditUserId,
-} from "@/mastra/lib/tool-audit-context";
+import { setAuditUserId } from "@/mastra/lib/tool-audit-context";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -50,18 +47,12 @@ async function handleCopilotKit(req: NextRequest) {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
 
     const requestContext = new RequestContext();
     const userId = user?.id ?? null;
     if (userId) {
       requestContext.set(MASTRA_RESOURCE_ID_KEY, userId);
       setAuditUserId(requestContext, userId);
-    }
-    if (session?.access_token) {
-      setAuditAccessToken(requestContext, session.access_token);
     }
 
     return await buildHandler({ userId, requestContext })(req);
