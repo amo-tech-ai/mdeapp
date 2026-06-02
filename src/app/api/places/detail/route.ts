@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
+import { fetchPlaceDetailsWithCache } from "@/lib/place-details-cache";
 import { normalizePlaceDetails } from "@/lib/place-details";
 import {
-  getPlaceDetails,
   normalizePlaceId,
   PlacesConfigError,
   PlacesRequestError,
@@ -17,7 +17,7 @@ export async function GET(req: Request) {
   const placeId = normalizePlaceId(rawId);
 
   try {
-    const raw = await getPlaceDetails({ placeId });
+    const { raw, cacheHit } = await fetchPlaceDetailsWithCache(placeId);
     const details = normalizePlaceDetails(raw);
     if (!details) {
       return NextResponse.json({ error: "place_not_found" }, { status: 404 });
@@ -25,6 +25,7 @@ export async function GET(req: Request) {
     return NextResponse.json(details, {
       headers: {
         "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
+        "X-Places-Cache": cacheHit ? "hit" : "miss",
       },
     });
   } catch (err) {
