@@ -4,8 +4,13 @@ import {
   extractPlaceUri,
   getPlaceDetails,
   normalizePlaceId,
+  PlacesRequestError,
 } from "@/mastra/lib/google-places-client";
 import type { Json } from "@/lib/supabase/database.types";
+import {
+  getPlacesNegativeCacheUntil,
+  recordPlacesNegativeCache,
+} from "@/lib/place-details-negative-cache";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 
 const PLACE_DETAILS_CACHE_TTL_DAYS = 7;
@@ -109,12 +114,26 @@ export async function writePlaceDetailsToCache(
 export async function fetchPlaceDetailsWithCache(
   placeId: string,
 ): Promise<PlaceDetailsFetchResult> {
+  const id = normalizePlaceId(placeId);
+  if (getPlacesNegativeCacheUntil(id)) {
+    throw new PlacesRequestError(
+      "Places detail temporarily unavailable (negative cache)",
+    );
+  }
+
   const cached = await readPlaceDetailsFromCache(placeId);
   if (cached.hit) {
     return { raw: cached.payload, cacheHit: true };
   }
 
-  const raw = await getPlaceDetails({ placeId });
-  await writePlaceDetailsToCache(placeId, raw);
-  return { raw, cacheHit: false };
+  try {
+    const raw = await getPlaceDetails({ placeId: id });
+    await writePlaceDetailsToCache(placeId, raw);
+    return { raw, cacheHit: false };
+  } catch (err) {
+    if (err instanceof PlacesRequestError) {
+      recordPlacesNegativeCache(id);
+    }
+    throw err;
+  }
 }

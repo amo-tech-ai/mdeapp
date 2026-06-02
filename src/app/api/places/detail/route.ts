@@ -30,10 +30,22 @@ export async function GET(req: Request) {
     });
   } catch (err) {
     if (err instanceof PlacesConfigError) {
-      return NextResponse.json({ error: "places_not_configured" }, { status: 503 });
+      return NextResponse.json(
+        { error: "places_not_configured" },
+        {
+          status: 503,
+          headers: { "Cache-Control": "private, max-age=600" },
+        },
+      );
     }
     if (err instanceof PlacesRequestError) {
-      return NextResponse.json({ error: "places_request_failed" }, { status: 502 });
+      return NextResponse.json(
+        { error: "places_request_failed" },
+        {
+          status: 502,
+          headers: { "Cache-Control": "private, max-age=600" },
+        },
+      );
     }
     return NextResponse.json({ error: "internal_error" }, { status: 500 });
   }

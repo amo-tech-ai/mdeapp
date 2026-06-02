@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { PlaceDetailsDto } from "@/lib/place-details";
+import { fetchPlaceDetailsDto } from "@/lib/place-details-client-fetch";
 
 type PlaceDetailsState =
   | { status: "idle" }
@@ -12,33 +13,30 @@ type PlaceDetailsState =
 export function usePlaceDetails(placeId?: string) {
   const [state, setState] = useState<PlaceDetailsState>({ status: "idle" });
 
-  const load = useCallback(async (id: string, signal: AbortSignal) => {
-    setState({ status: "loading" });
-    try {
-      const res = await fetch(
-        `/api/places/detail?placeId=${encodeURIComponent(id)}`,
-        { signal },
-      );
-      if (!res.ok) {
+  useEffect(() => {
+    if (!placeId) return;
+
+    const controller = new AbortController();
+    let cancelled = false;
+
+    const run = async () => {
+      setState({ status: "loading" });
+      const result = await fetchPlaceDetailsDto(placeId, controller.signal);
+      if (cancelled || controller.signal.aborted) return;
+      if (result === "error") {
         setState({ status: "error" });
         return;
       }
-      const data = (await res.json()) as PlaceDetailsDto;
-      setState({ status: "ready", data });
-    } catch {
-      // A newer placeId aborted this request — drop the stale response.
-      if (signal.aborted) return;
-      setState({ status: "error" });
-    }
-  }, []);
+      setState({ status: "ready", data: result });
+    };
 
-  useEffect(() => {
-    if (!placeId) return;
-    const controller = new AbortController();
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch on placeId change
-    void load(placeId, controller.signal);
-    return () => controller.abort();
-  }, [placeId, load]);
+    void run();
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
+  }, [placeId]);
 
   if (!placeId) return { status: "idle" } as const;
   return state;
