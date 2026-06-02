@@ -11,9 +11,10 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import type { NightlifeVenueDetail } from "@/components/chat/rental-ui-context";
-import { CalendarCheck, ExternalLink, MapPin } from "lucide-react";
+import { useRentalUi } from "@/components/chat/rental-ui-context";
+import { VenueBookingForm } from "@/components/sheets/venue-booking-form";
+import { ExternalLink, MapPin } from "lucide-react";
 
-/** Phase A stub — real persist lands in VEN-021 (separate PR). */
 export function NightlifeBookingSheet({
   target,
   open,
@@ -23,6 +24,8 @@ export function NightlifeBookingSheet({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { setVenueBookingConfirmation } = useRentalUi();
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
@@ -41,18 +44,29 @@ export function NightlifeBookingSheet({
             </SheetHeader>
 
             <div className="flex flex-col gap-4 px-4 pb-4 text-sm">
-              <div className="rounded-lg border bg-muted/40 p-3">
-                <div className="flex items-start gap-2">
-                  <CalendarCheck className="mt-0.5 size-4 text-primary" aria-hidden />
-                  <div>
-                    <p className="font-medium">Booking stub for Phase A</p>
-                    <p className="mt-1 text-muted-foreground">
-                      No request is sent yet. Persistence ships in VEN-021 after
-                      schema + RLS are verified.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              {target.placeId ? (
+                <VenueBookingForm
+                  venueKind="nightclub"
+                  placeId={target.placeId}
+                  venueTitle={target.title}
+                  onSuccess={(result) => {
+                    setVenueBookingConfirmation({
+                      requestId: result.requestId,
+                      message: result.message,
+                      venueTitle: target.title,
+                    });
+                    onOpenChange(false);
+                  }}
+                />
+              ) : (
+                <p
+                  className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-destructive"
+                  data-testid="nightlife-booking-missing-place-id"
+                >
+                  This listing is missing a verified Place ID — booking requests
+                  cannot be saved yet.
+                </p>
+              )}
 
               <SheetFooter className="px-0">
                 {target.directionsUrl ? (
@@ -86,7 +100,9 @@ export function NightlifeBookingSheet({
 
               <div className="flex flex-wrap gap-1.5">
                 <Badge variant="secondary">Google-verified candidate</Badge>
-                {target.placeId ? <Badge variant="outline">Place ID verified</Badge> : null}
+                {target.placeId ? (
+                  <Badge variant="outline">Place ID verified</Badge>
+                ) : null}
               </div>
             </div>
           </>

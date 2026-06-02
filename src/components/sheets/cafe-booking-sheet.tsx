@@ -11,7 +11,9 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import type { CafeVenueDetail } from "@/components/chat/rental-ui-context";
-import { CalendarCheck, ExternalLink, MapPin } from "lucide-react";
+import { useRentalUi } from "@/components/chat/rental-ui-context";
+import { VenueBookingForm } from "@/components/sheets/venue-booking-form";
+import { ExternalLink, MapPin } from "lucide-react";
 
 export function CafeBookingSheet({
   target,
@@ -22,6 +24,8 @@ export function CafeBookingSheet({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { setVenueBookingConfirmation } = useRentalUi();
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
@@ -40,18 +44,29 @@ export function CafeBookingSheet({
             </SheetHeader>
 
             <div className="flex flex-col gap-4 px-4 pb-4 text-sm">
-              <div className="rounded-lg border bg-muted/40 p-3">
-                <div className="flex items-start gap-2">
-                  <CalendarCheck className="mt-0.5 size-4 text-primary" aria-hidden />
-                  <div>
-                    <p className="font-medium">Booking stub for Phase A</p>
-                    <p className="mt-1 text-muted-foreground">
-                      No request is sent yet. Phase C writes pending requests
-                      after `CAFE-001` adds the private table and RLS.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              {target.placeId ? (
+                <VenueBookingForm
+                  venueKind="cafe"
+                  placeId={target.placeId}
+                  venueTitle={target.title}
+                  onSuccess={(result) => {
+                    setVenueBookingConfirmation({
+                      requestId: result.requestId,
+                      message: result.message,
+                      venueTitle: target.title,
+                    });
+                    onOpenChange(false);
+                  }}
+                />
+              ) : (
+                <p
+                  className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-destructive"
+                  data-testid="cafe-booking-missing-place-id"
+                >
+                  This listing is missing a verified Place ID — booking requests
+                  cannot be saved yet.
+                </p>
+              )}
 
               <dl className="grid gap-3">
                 {target.rating != null ? (
@@ -81,7 +96,9 @@ export function CafeBookingSheet({
 
               <div className="flex flex-wrap gap-1.5">
                 <Badge variant="secondary">Google-verified candidate</Badge>
-                {target.placeId ? <Badge variant="outline">Place ID verified</Badge> : null}
+                {target.placeId ? (
+                  <Badge variant="outline">Place ID verified</Badge>
+                ) : null}
                 {target.factsCheckedAt ? (
                   <Badge variant="outline">Facts checked {target.factsCheckedAt}</Badge>
                 ) : null}

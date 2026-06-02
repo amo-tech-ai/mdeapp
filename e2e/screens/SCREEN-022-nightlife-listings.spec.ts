@@ -45,8 +45,12 @@ test.describe("SCREEN-022 Phase A nightlife listings", () => {
     await detailPanel.locator('[data-testid="nightlife-detail-booking-cta"]').click();
     const bookingSheet = page.locator('[data-testid="nightlife-booking-sheet"]');
     await expect(bookingSheet).toBeVisible();
-    await expect(bookingSheet).toContainText(/Booking stub for Phase A/i);
-    await expect(bookingSheet).toContainText(/No request is sent yet/i);
+    await expect(bookingSheet).toContainText(/pending/i);
+    await expect(
+      bookingSheet.locator(
+        '[data-testid="venue-booking-form"], [data-testid="venue-booking-sign-in-gate"]',
+      ),
+    ).toBeVisible();
 
     await bookingSheet.locator('[data-slot="sheet-close"]').click();
     await expect(bookingSheet).toHaveCount(0);
