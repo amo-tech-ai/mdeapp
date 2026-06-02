@@ -17,7 +17,7 @@ export function ChatNavRail({
   const router = useRouter();
   const { startNewChat } = useConciergeSession();
   const { activeThreadId, setActiveThreadId, clearActiveThread } = useThreadNav();
-  const { threads, loading } = useNavThreads();
+  const { threads, loading, error } = useNavThreads();
 
   function onNewChat() {
     clearActiveThread();
@@ -65,6 +65,15 @@ export function ChatNavRail({
                 aria-hidden
               />
             ))}
+          </li>
+        ) : error ? (
+          <li>
+            <span
+              className="block rounded-md px-3 py-2 text-xs text-destructive"
+              data-testid="nav-threads-error"
+            >
+              Couldn&apos;t load chats
+            </span>
           </li>
         ) : threads.length > 0 ? (
           threads.map((thread) => (

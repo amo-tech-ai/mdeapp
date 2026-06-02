@@ -22,7 +22,8 @@ export async function GET() {
 
   const service = createServiceRoleClient();
   if (!service) {
-    return NextResponse.json({ threads: [] });
+    console.error("[/api/threads] service role client unavailable");
+    return NextResponse.json({ error: "Threads service unavailable" }, { status: 503 });
   }
 
   const { data, error } = await service
@@ -32,7 +33,10 @@ export async function GET() {
     .order('"updatedAt"', { ascending: false })
     .limit(20);
 
-  if (error) console.error("[/api/threads]", error.message);
+  if (error) {
+    console.error("[/api/threads]", error.message);
+    return NextResponse.json({ error: "Failed to load threads" }, { status: 500 });
+  }
 
   const rows = (data ?? []) as Array<{ id: unknown; title: unknown; updatedAt: unknown }>;
   const threads: NavThread[] = rows.map((row) => ({
