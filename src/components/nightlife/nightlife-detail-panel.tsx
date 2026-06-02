@@ -211,6 +211,19 @@ export function NightlifeDetailPanel({
           <p className="mt-3 text-sm leading-relaxed text-foreground">{summary}</p>
         ) : null}
 
+        {enrichment.status === "loading" ? (
+          <p className="mt-3 text-sm text-muted-foreground">Loading place details…</p>
+        ) : null}
+
+        {enrichment.status === "error" ? (
+          <p
+            className="mt-3 text-sm text-muted-foreground"
+            data-testid="place-details-unavailable"
+          >
+            Place details are temporarily unavailable. Summary above is from your search.
+          </p>
+        ) : null}
+
         <dl className="mt-4 grid gap-3 text-sm">
           <div data-testid="nightlife-detail-cover">
             <dt className="text-muted-foreground">Cover</dt>

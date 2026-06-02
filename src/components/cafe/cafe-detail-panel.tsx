@@ -350,6 +350,16 @@ export function CafeDetailPanel({
                 <p className="text-sm text-muted-foreground">Loading place details…</p>
               ) : null}
 
+              {enrichment.status === "error" ? (
+                <p
+                  className="text-sm text-muted-foreground"
+                  data-testid="place-details-unavailable"
+                >
+                  Place details are temporarily unavailable. Hours and contact may be
+                  missing — summary above is from your search.
+                </p>
+              ) : null}
+
               {merged.weekdayDescriptions.length > 0 ? (
                 <div>
                   <p className="text-xs font-medium uppercase text-muted-foreground">
