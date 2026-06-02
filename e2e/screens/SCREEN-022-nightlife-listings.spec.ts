@@ -48,6 +48,9 @@ test.describe("SCREEN-022 Phase A nightlife listings", () => {
     await expect(bookingSheet).toContainText(/Booking stub for Phase A/i);
     await expect(bookingSheet).toContainText(/No request is sent yet/i);
 
+    await bookingSheet.locator('[data-slot="sheet-close"]').click();
+    await expect(bookingSheet).toHaveCount(0);
+
     await detailPanel.locator('[data-testid="nightlife-detail-close"]').click();
     await expect(detailPanel).toHaveCount(0);
 

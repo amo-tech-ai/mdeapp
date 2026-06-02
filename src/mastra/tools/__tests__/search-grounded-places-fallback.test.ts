@@ -118,4 +118,16 @@ describe("searchGroundedPlacesTool fallback", () => {
     expect(out.results[0]?.placeId).toBe("ChIJtest");
     expect(out.results[0]?.longitude).toBe(-75.5843);
   });
+
+  it("returns empty nightlife fallback without restaurant rows when anchors empty", async () => {
+    const { isNightlifeVenueQuery } = await import("../search-venue-anchors");
+    vi.mocked(isNightlifeVenueQuery).mockReturnValue(true);
+    vi.mocked(invokeAdkGrounding).mockResolvedValue(adkUnavailableMock());
+
+    const out = await runGrounded("salsa bars in Poblado");
+
+    expect(out.results).toEqual([]);
+    expect(out.metadata?.venueKind).toBe("nightlife");
+    expect(searchRestaurants).not.toHaveBeenCalled();
+  });
 });

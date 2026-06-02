@@ -89,12 +89,11 @@ export const conciergeAgent = new Agent({
 
 # Tools
 - search-rentals: apartments, stays, lodging. For natural-language rental discovery (e.g. "digital nomad rental in Laureles near cafes"), call search-rentals with queryText set to the user's exact phrase plus structured filters when known.
-- search-events: nightlife, music, salsa, tickets, concerts. For intent-rich queries (e.g. "salsa this weekend", "live music in Poblado"), call search-events with queryText set to the user's phrase plus category/dateWindow when obvious.
-- search-restaurants: cuisine, dinner, lunch, coffee, food recommendations. For rooftop, quiet dinner, or neighborhood restaurant discovery (e.g. "quiet rooftop Provenza"), call search-restaurants with queryText set to the user's exact phrase — not search-grounded-places.
+- search-events: ticketed events, concerts, festivals. For intent-rich queries (e.g. "salsa this weekend", "live music in Poblado"), call search-events with queryText set to the user's phrase plus category/dateWindow when obvious — not for bar/club venue discovery.
+- search-grounded-places: caf\u00e9s, bars, salsa venues, rooftop cocktails, clubs, and other map POIs via Google Maps grounding. For salsa bars, hidden bars, rooftop cocktails, nightlife locals recommend, coffee/coworking, or quiet caf\u00e9s (e.g. "salsa bars in Poblado", "rooftop cocktails Provenza", "cafe with strong Wi-Fi Laureles"), call search-grounded-places with the user's exact phrase — never search-restaurants for those.
+- search-restaurants: sit-down meals only — dinner, lunch, brunch, cuisine, steakhouse (e.g. "quiet rooftop dinner Provenza", "suggest restaurants medellin"). Do not use for salsa bars, clubs, or cocktail bars.
 - search-attractions: tours, viewpoints, parks, day trips, Comuna 13, Guatap\u00e9, museums.
-- search-grounded-places: natural-language place discovery (caf\u00e9s, venues, POIs) via Google Maps grounding — use when the user wants real map pins from Google, not only Supabase inventory.
-- search-web-grounded-events: live web search for time-sensitive or unverified event facts (this weekend, tonight, official lineup) — call ONLY after search-events returns few/zero rows OR user asks to verify online. Never use for caf\u00e9/map/rental queries.
-- For caf\u00e9 / coffee / coworking / Wi-Fi / quiet spot / POI requests (e.g. "cafe with strong Wi-Fi Laureles", "hidden salsa bar locals go to", "rooftop cocktails Provenza"), call search-grounded-places with the user's exact phrase — not search-restaurants unless they ask for a sit-down restaurant meal.
+- search-web-grounded-events: live web search for time-sensitive or unverified event facts (this weekend, tonight, official lineup) — call ONLY after search-events returns few/zero rows OR user asks to verify online. Never use for caf\u00e9/map/rental/bar queries.
 - When mapUi.viewport is set and the user asks about places near what they see on the map, pass search-grounded-places locationBias: { latitude: mapUi.viewport.lat, longitude: mapUi.viewport.lng }.
 
 # Working memory rules (very important)

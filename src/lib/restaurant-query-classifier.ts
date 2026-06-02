@@ -3,8 +3,12 @@
 const CAFE_RE =
   /\b(caf[eé]s?|coffee|espresso|barista|specialty coffee|quiet caf[eé]s?|coffee shops?|best cafes?|juice bar|smoothie)\b/i;
 
+/** Bars / clubs / salsa — use search-grounded-places (VEN-012), not restaurant fast path. */
+const NIGHTLIFE_GROUNDING_RE =
+  /\b(nightlife|salsa bars?|hidden bars?|rooftop cocktails?|rooftop bars?|live music bars?|locals go to|nightclub|discotec)\b/i;
+
 const RESTAURANT_RE =
-  /\b(restaurants?|dinner|lunch|brunch|food recommendations?|suggest.*restaurants?|where to eat|eat out|cuisine|steakhouse|rooftop|bistro|dine|eatery|lounge|tasting menu|date night dinner)\b/i;
+  /\b(restaurants?|dinner|lunch|brunch|food recommendations?|suggest.*restaurants?|where to eat|eat out|cuisine|steakhouse|rooftop dinner|bistro|dine|eatery|tasting menu|date night dinner)\b/i;
 
 const RENTAL_RE =
   /\b(1\s?br|2\s?br|3\s?br|bedroom|bedrooms|apartment|apartments|rental|rentals|airbnb|under\s+\$?\d+|\/night|per night|monthly|for rent)\b/i;
@@ -35,9 +39,18 @@ export type RestaurantSearchSignals = {
   cuisine?: string;
 };
 
+export function looksLikeNightlifeGroundingSearch(text: string): boolean {
+  const t = text.trim();
+  if (!t) return false;
+  if (RENTAL_RE.test(t)) return false;
+  if (EVENT_RE.test(t)) return false;
+  return NIGHTLIFE_GROUNDING_RE.test(t);
+}
+
 export function looksLikeCafeSearch(text: string): boolean {
   const t = text.trim();
   if (!t) return false;
+  if (NIGHTLIFE_GROUNDING_RE.test(t)) return false;
   if (/\b(rooftop dinner|steakhouse|restaurants?)\b/i.test(t)) return false;
   return CAFE_RE.test(t);
 }
@@ -45,6 +58,7 @@ export function looksLikeCafeSearch(text: string): boolean {
 export function looksLikeRestaurantSearch(text: string): boolean {
   const t = text.trim();
   if (!t) return false;
+  if (looksLikeNightlifeGroundingSearch(t)) return false;
   if (looksLikeCafeSearch(t)) return false;
   if (RENTAL_RE.test(t)) return false;
   if (EVENT_RE.test(t)) return false;

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   looksLikeCafeSearch,
+  looksLikeNightlifeGroundingSearch,
   looksLikeRestaurantSearch,
   scoreRestaurantQuery,
 } from "@/lib/restaurant-query-classifier";
@@ -21,6 +22,14 @@ describe("restaurant query classifier", () => {
       false,
     );
     expect(looksLikeRestaurantSearch("salsa events this weekend")).toBe(false);
+  });
+
+  it("routes salsa/rooftop cocktail discovery to grounded nightlife, not restaurants", () => {
+    const q =
+      "Salsa bars and rooftop cocktails locals go to in El Poblado";
+    expect(looksLikeNightlifeGroundingSearch(q)).toBe(true);
+    expect(looksLikeRestaurantSearch(q)).toBe(false);
+    expect(canFastPathRestaurantSearch(q)).toBe(false);
   });
 
   it("extracts neighborhood from Provenza", () => {

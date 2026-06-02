@@ -229,6 +229,7 @@ async function curatedFallback(
     if (anchors.length > 0) {
       return anchors.map((row) => anchorToGroundedRow(row, "night_club"));
     }
+    return [];
   }
 
   if (isCoffee) {
