@@ -9,6 +9,7 @@ import {
   UserMessage,
   useChatContext,
   type MessagesProps,
+  type UserMessageProps,
 } from "@copilotkit/react-ui";
 import { ConciergeAssistantMessage, shouldSkipCopilotMessage } from "@/components/chat/concierge-assistant-message";
 import { ConciergeErrorNotice } from "@/components/chat/concierge-error-notice";
@@ -20,6 +21,15 @@ import {
   getConciergeErrorVersionServer,
   subscribeConciergeError,
 } from "@/lib/concierge-error-store";
+
+/** Stable e2e + analytics hook for user bubbles (CopilotKit thread + fast-path local). */
+function ConciergeUserMessage(props: UserMessageProps) {
+  return (
+    <div data-testid="concierge-user-message">
+      <UserMessage {...props} />
+    </div>
+  );
+}
 
 function makeInitialMessages(initial: string | string[] | undefined): Message[] {
   if (!initial) return [];
@@ -39,7 +49,7 @@ export function ConciergeChatMessages(props: MessagesProps) {
     inProgress,
     children,
     AssistantMessage: AssistantMessageProp = ConciergeAssistantMessage,
-    UserMessage: UserMessageProp = UserMessage,
+    UserMessage: UserMessageProp = ConciergeUserMessage,
     ImageRenderer,
   } = props;
   const { labels } = useChatContext();
@@ -114,6 +124,7 @@ export function ConciergeChatMessages(props: MessagesProps) {
                 return (
                   <div
                     key={local.id}
+                    data-testid="concierge-user-message"
                     className="copilotKitMessage copilotKitUserMessage"
                   >
                     <p>{local.content}</p>
