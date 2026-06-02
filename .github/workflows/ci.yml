@@ -1,53 +1,16 @@
-name: CI
+# Superseded by floor.yml (PR-16 / SAN-458). Kept for manual re-runs only.
+name: CI (legacy)
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
-
-env:
-  # Opt into Node.js 24 runner for GitHub Actions (required before 2026-06-16).
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   ci:
     name: lint · test · build
     runs-on: ubuntu-latest
     timeout-minutes: 15
-
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install
-        run: npm ci
-
-      - name: Migration timestamp uniqueness (PR-17)
-        if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
-        run: node scripts/check-migration-timestamps.mjs
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Test
-        run: npm test
-
-      - name: Build
-        run: npm run build
-        env:
-          NEXT_TELEMETRY_DISABLED: 1
-          # Real values must be added as GitHub repository secrets.
-          # Build succeeds with empty strings; runtime features require real keys.
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
-          GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      - run: echo "Use .github/workflows/floor.yml — npm run floor is the required gate."
