@@ -8,7 +8,7 @@ import {
 } from "../helpers/maps-layout";
 
 test.describe("SCREEN-021 Phase A café listings", () => {
-  test("renders ranked café cards, map sync, detail panel, and booking stub", async ({
+  test("renders ranked café cards, map sync, detail panel, and booking sheet", async ({
     page,
   }) => {
     test.setTimeout(180_000);
@@ -69,8 +69,12 @@ test.describe("SCREEN-021 Phase A café listings", () => {
     await detailPanel.locator('[data-testid="cafe-detail-booking-cta"]').click();
     const bookingSheet = page.locator('[data-testid="cafe-booking-sheet"]');
     await expect(bookingSheet).toBeVisible();
-    await expect(bookingSheet).toContainText(/Booking stub for Phase A/);
-    await expect(bookingSheet).toContainText(/No request is sent yet/);
+    await expect(bookingSheet).toContainText(/pending/i);
+    await expect(
+      bookingSheet.locator(
+        '[data-testid="venue-booking-form"], [data-testid="venue-booking-sign-in-gate"]',
+      ),
+    ).toBeVisible();
     await bookingSheet.locator('[data-slot="sheet-close"]').click();
     await expect(bookingSheet).toHaveCount(0);
     await expect(detailPanel).toBeVisible();

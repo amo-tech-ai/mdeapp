@@ -22,6 +22,12 @@ export type LeadConfirmation = {
   listingTitle: string;
 };
 
+export type VenueBookingConfirmation = {
+  requestId: string;
+  message: string;
+  venueTitle: string;
+};
+
 export type RentalVenueDetail = {
   kind: "rental";
   listingId: string;
@@ -112,6 +118,7 @@ type RentalUiContextValue = {
   nightlifeBookingTarget: NightlifeVenueDetail | null;
   nightlifeBookingOpen: boolean;
   leadConfirmation: LeadConfirmation | null;
+  venueBookingConfirmation: VenueBookingConfirmation | null;
   openScheduleViewing: (target: ScheduleViewingTarget) => void;
   closeScheduleViewing: () => void;
   openVenueDetail: (target: VenueDetailTarget) => void;
@@ -130,6 +137,8 @@ type RentalUiContextValue = {
   closeNightlifeBooking: () => void;
   setLeadConfirmation: (value: LeadConfirmation | null) => void;
   clearLeadConfirmation: () => void;
+  setVenueBookingConfirmation: (value: VenueBookingConfirmation | null) => void;
+  clearVenueBookingConfirmation: () => void;
 };
 
 const RentalUiContext = createContext<RentalUiContextValue | null>(null);
@@ -142,6 +151,8 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
   );
   const [leadConfirmation, setLeadConfirmation] =
     useState<LeadConfirmation | null>(null);
+  const [venueBookingConfirmation, setVenueBookingConfirmation] =
+    useState<VenueBookingConfirmation | null>(null);
   const [cafeDetail, setCafeDetail] = useState<CafeVenueDetail | null>(null);
   const [cafeSiblings, setCafeSiblings] = useState<CafeVenueDetail[]>([]);
   const [cafeBookingTarget, setCafeBookingTarget] =
@@ -239,6 +250,10 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
     setLeadConfirmation(null);
   }, []);
 
+  const clearVenueBookingConfirmation = useCallback(() => {
+    setVenueBookingConfirmation(null);
+  }, []);
+
   const value = useMemo(
     () => ({
       scheduleTarget,
@@ -252,6 +267,7 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       nightlifeBookingTarget,
       nightlifeBookingOpen,
       leadConfirmation,
+      venueBookingConfirmation,
       openScheduleViewing,
       closeScheduleViewing,
       openVenueDetail,
@@ -267,6 +283,8 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       closeNightlifeBooking,
       setLeadConfirmation,
       clearLeadConfirmation,
+      setVenueBookingConfirmation,
+      clearVenueBookingConfirmation,
     }),
     [
       scheduleTarget,
@@ -280,6 +298,7 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       nightlifeBookingTarget,
       nightlifeBookingOpen,
       leadConfirmation,
+      venueBookingConfirmation,
       openScheduleViewing,
       closeScheduleViewing,
       openVenueDetail,
@@ -294,6 +313,8 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       openNightlifeBooking,
       closeNightlifeBooking,
       clearLeadConfirmation,
+      setVenueBookingConfirmation,
+      clearVenueBookingConfirmation,
     ],
   );
 

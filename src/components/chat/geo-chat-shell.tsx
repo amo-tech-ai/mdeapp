@@ -19,6 +19,7 @@ import { SearchToolRenders } from "@/components/copilot/search-tool-renders";
 import { EventWebCitationFetch } from "@/components/copilot/event-web-citation-fetch";
 import { EventWebCitationSync } from "@/components/copilot/event-web-citation-sync";
 import { LeadConfirmationBanner } from "@/components/chat/lead-confirmation-banner";
+import { VenueBookingConfirmationBanner } from "@/components/chat/venue-booking-confirmation-banner";
 import { ScheduleViewingModal } from "@/components/modals/schedule-viewing-modal";
 import { VenueDetailSheet } from "@/components/sheets/venue-detail-sheet";
 import { CafeBookingSheet } from "@/components/sheets/cafe-booking-sheet";
@@ -90,6 +91,7 @@ export function GeoChatShell() {
                           <FocusMapPinAction />
                           <div className="flex min-h-0 flex-1 flex-col">
                             <LeadConfirmationBanner />
+                            <VenueBookingConfirmationBanner />
                             <ChatCanvas />
                           </div>
                         </MapsShell>
