@@ -5,6 +5,9 @@ const RENTAL_QUERY =
 
 const GROUNDING_QUERY = "Quiet cafés near Laureles";
 
+const NIGHTLIFE_GROUNDING_QUERY =
+  "Salsa bars and rooftop cocktails locals go to in El Poblado";
+
 const EVENT_QUERY = "salsa events this weekend in Medellín";
 
 export async function gotoHome(page: Page) {
@@ -206,7 +209,28 @@ export async function waitForRestaurantCards(page: Page) {
   }
 }
 
-export { RENTAL_QUERY, GROUNDING_QUERY, EVENT_QUERY };
+/** Nightlife grounding cards — retry with explicit tool nudge on agent flake. */
+export async function waitForNightlifeGroundedCards(page: Page) {
+  const card = page
+    .locator('[data-testid="nightlife-card"][data-result-kind="nightlife"]')
+    .first();
+  try {
+    await card.waitFor({ state: "visible", timeout: 120_000 });
+  } catch {
+    await sendConciergeMessage(
+      page,
+      "Use search-grounded-places for salsa bars and rooftop cocktails in El Poblado with map pins.",
+    );
+    await card.waitFor({ state: "visible", timeout: 120_000 });
+  }
+}
+
+export {
+  RENTAL_QUERY,
+  GROUNDING_QUERY,
+  NIGHTLIFE_GROUNDING_QUERY,
+  EVENT_QUERY,
+};
 
 /** Rich cards own the list — generic Map results strip must stay hidden. */
 export async function assertNoGenericMapResultsList(page: Page) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 import { useCopilotAction } from "@copilotkit/react-core";
 import type { ReactElement } from "react";
 import { CafeResultCard } from "@/components/copilot/cafe-result-card";
@@ -16,7 +16,10 @@ import { WebCitationList } from "@/components/copilot/web-citation-list";
 import {
   useRentalUi,
   type CafeVenueDetail,
+  type NightlifeVenueDetail,
 } from "@/components/chat/rental-ui-context";
+import { readGroundedVenueKind } from "@/lib/grounded-venue-kind";
+import type { ParsedGroundedToolResult } from "@/lib/parse-grounded-tool-result";
 import { useEventSearchResults } from "@/components/chat/event-search-results-context";
 import { RichCardResultsRegistrar } from "@/components/chat/rich-card-results-context";
 import { useChatWorkflow } from "@/components/chat/chat-workflow-context";
@@ -59,12 +62,10 @@ function groundedPinId(id: string) {
   return `grounded-${id}`;
 }
 
-function toCafeVenueDetail(
-  row: ReturnType<typeof parseGroundedToolResult>["results"][number],
-  rank: number,
-): CafeVenueDetail {
+type GroundedRow = ParsedGroundedToolResult["results"][number];
+
+function groundedRowToBase(row: GroundedRow, rank: number) {
   return {
-    kind: "cafe",
     pinId: groundedPinId(row.id),
     title: row.title,
     placeId: row.placeId,
@@ -85,6 +86,104 @@ function toCafeVenueDetail(
   };
 }
 
+function toCafeVenueDetail(row: GroundedRow, rank: number): CafeVenueDetail {
+  return {
+    kind: "cafe",
+    ...groundedRowToBase(row, rank),
+  };
+}
+
+function toNightlifeVenueDetail(
+  row: GroundedRow,
+  rank: number,
+): NightlifeVenueDetail {
+  return {
+    kind: "nightlife",
+    ...groundedRowToBase(row, rank),
+  };
+}
+
+function useGroundedListScroll(listRef: RefObject<HTMLDivElement | null>) {
+  const { selectedPinId } = useMapContext();
+  useEffect(() => {
+    if (!selectedPinId || !listRef.current) return;
+    const card = listRef.current.querySelector(
+      `[data-pin-id="${selectedPinId}"]`,
+    );
+    card?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [selectedPinId, listRef]);
+}
+
+export function GroundedPlaceResults({ result }: { result: unknown }) {
+  const venueKind = readGroundedVenueKind(result);
+  if (venueKind === "nightlife") {
+    return <GroundedNightlifeResults result={result} />;
+  }
+  return <GroundedCafeResults result={result} />;
+}
+
+export function GroundedNightlifeResults({ result }: { result: unknown }) {
+  const { selectedPinId, panToPin } = useMapContext();
+  const { openNightlifeDetail, openNightlifeBooking } = useRentalUi();
+  const listRef = useRef<HTMLDivElement>(null);
+  const { results: rows } = parseGroundedToolResult(result);
+  const nightlifeRows = rows.map((r, index) =>
+    toNightlifeVenueDetail(r, index + 1),
+  );
+
+  useGroundedListScroll(listRef);
+
+  return (
+    <>
+      <RichCardResultsRegistrar category="grounded" count={rows.length} />
+      <ToolPinsSync category="grounded" result={result} />
+      {rows.length === 0 ? (
+        <EmptyState
+          testId="grounded-empty"
+          title="No nightlife venues found"
+          description="Try salsa bars, rooftop cocktails, or another neighborhood."
+        />
+      ) : (
+        <div ref={listRef} className="flex flex-col gap-2 py-2">
+          {nightlifeRows.map((detail) => (
+            <CafeResultCard
+              key={detail.pinId}
+              testId="nightlife-card"
+              resultKind="nightlife"
+              detailsTestId="nightlife-details-cta"
+              bookingTestId="nightlife-booking-cta"
+              mediaPlaceholderLabel="Bar"
+              pinId={detail.pinId}
+              rank={detail.rank ?? 1}
+              title={detail.title}
+              mapsUrl={detail.mapsUrl}
+              directionsUrl={detail.directionsUrl}
+              reviewsUrl={detail.reviewsUrl}
+              rating={detail.rating}
+              userRatingCount={detail.userRatingCount}
+              priceLevel={detail.priceLevel}
+              openNow={detail.openNow}
+              primaryType={detail.primaryType}
+              summary={detail.summary}
+              formattedAddress={detail.formattedAddress}
+              photoName={detail.photoName}
+              photoAuthorAttributions={detail.photoAuthorAttributions}
+              placeId={detail.placeId}
+              fieldMaskVersion={detail.fieldMaskVersion}
+              selected={selectedPinId === detail.pinId}
+              onSelect={() => panToPin(detail.pinId)}
+              onOpenDetails={() =>
+                openNightlifeDetail(detail, nightlifeRows)
+              }
+              onBookRequest={() => openNightlifeBooking(detail)}
+            />
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
 export function GroundedCafeResults({ result }: { result: unknown }) {
   const { selectedPinId, panToPin } = useMapContext();
   const { openCafeDetail, openCafeBooking } = useRentalUi();
@@ -92,13 +191,7 @@ export function GroundedCafeResults({ result }: { result: unknown }) {
   const { results: rows } = parseGroundedToolResult(result);
   const cafeRows = rows.map((r, index) => toCafeVenueDetail(r, index + 1));
 
-  useEffect(() => {
-    if (!selectedPinId || !listRef.current) return;
-    const card = listRef.current.querySelector(
-      `[data-pin-id="${selectedPinId}"]`,
-    );
-    card?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-  }, [selectedPinId]);
+  useGroundedListScroll(listRef);
 
   return (
     <>
@@ -116,6 +209,7 @@ export function GroundedCafeResults({ result }: { result: unknown }) {
             <CafeResultCard
               key={detail.pinId}
               testId="grounded-card"
+              resultKind="cafe"
               pinId={detail.pinId}
               rank={detail.rank ?? 1}
               title={detail.title}
@@ -567,7 +661,7 @@ function groundedToolRender({ status, result }: ToolRenderProps): ReactElement {
   const body = resolveToolBody({
     status,
     result,
-    renderResults: <GroundedCafeResults result={result} />,
+    renderResults: <GroundedPlaceResults result={result} />,
   });
   return (
     <ToolRenderShell kind="grounded" status={status}>
@@ -625,6 +719,51 @@ function webEventsToolRender({ status, result }: ToolRenderProps): ReactElement 
   );
 }
 
+function venueBookingToolRender({ status, result }: ToolRenderProps): ReactElement {
+  if (status === "inProgress" || status === "executing") {
+    return (
+      <div
+        data-testid="venue-booking-pending"
+        className="my-2 text-sm text-muted-foreground"
+      >
+        Submitting booking request…
+      </div>
+    );
+  }
+
+  if (isToolRenderError(result, status)) {
+    return (
+      <ToolErrorChip
+        message={getToolRenderErrorMessage(result)}
+        testId="venue-booking-error"
+      />
+    );
+  }
+
+  const body = normalizeToolEnvelope(result);
+  const bookingRequestId =
+    body &&
+    typeof body === "object" &&
+    typeof (body as { bookingRequestId?: string }).bookingRequestId === "string"
+      ? (body as { bookingRequestId: string }).bookingRequestId
+      : null;
+
+  if (!bookingRequestId) return <></>;
+
+  return (
+    <div
+      data-testid="venue-booking-confirmation"
+      className="my-2 rounded-lg border bg-muted/40 px-3 py-2 text-sm"
+    >
+      <p className="font-medium">Booking request received</p>
+      <p className="mt-1 text-muted-foreground">
+        Status: pending — our team will follow up on WhatsApp. Ref{" "}
+        {bookingRequestId.slice(0, 8)}…
+      </p>
+    </div>
+  );
+}
+
 function useDisabledToolRender(
   name: string,
   render: (props: ToolRenderProps) => ReactElement,
@@ -651,6 +790,11 @@ export function SearchToolRenders() {
   useDisabledToolRender(MASTRA_TOOL_IDS.grounded, groundedToolRender);
   useDisabledToolRender(MASTRA_COPILOT_TOOL_ACTIONS.webEvents, webEventsToolRender);
   useDisabledToolRender(MASTRA_TOOL_IDS.webEvents, webEventsToolRender);
+  useDisabledToolRender(
+    MASTRA_COPILOT_TOOL_ACTIONS.venueBooking,
+    venueBookingToolRender,
+  );
+  useDisabledToolRender(MASTRA_TOOL_IDS.venueBooking, venueBookingToolRender);
 
   return null;
 }

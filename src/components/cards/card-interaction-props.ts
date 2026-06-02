@@ -4,6 +4,7 @@ import type { MapPinCategory } from "@/platform/contracts";
 export type ResultKind =
   | "rental"
   | "cafe"
+  | "nightlife"
   | "event"
   | "restaurant"
   | "attraction"
@@ -45,6 +46,7 @@ export type DetailPanelOpener = (payload: {
 export const DEFAULT_TEST_IDS: Record<ResultKind, string> = {
   rental: "rental-card",
   cafe: "grounded-card",
+  nightlife: "nightlife-card",
   event: "event-card",
   restaurant: "restaurant-card",
   attraction: "attraction-card",

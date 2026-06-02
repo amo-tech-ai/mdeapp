@@ -30,6 +30,13 @@ export function isCoffeeVenueQuery(query: string): boolean {
   return /\b(coffee|caf[eé]|espresso|specialty coffee)\b/i.test(query);
 }
 
+/** True when the query targets bars, clubs, or nightlife venues. */
+export function isNightlifeVenueQuery(query: string): boolean {
+  return /\b(nightlife|salsa bar|hidden bar|rooftop|cocktails?|nightclub|discotec|locals go to)\b/i.test(
+    query,
+  );
+}
+
 function num(v: number | string | null | undefined): number | undefined {
   if (v === null || v === undefined) return undefined;
   const n = typeof v === "string" ? Number(v) : v;
@@ -60,6 +67,39 @@ export async function searchCafeVenueAnchors(params: {
   const { data, error } = await query;
   if (error) {
     console.warn("[search-venue-anchors]", error.message);
+    return [];
+  }
+
+  const rows = (data ?? []) as VenueAnchorRow[];
+  return rows.filter(
+    (row) => Boolean(row.google_place_id) && typeof row.name === "string",
+  );
+}
+
+/** Read curated nightclub rows from public.venue_anchors (DATA-035). */
+export async function searchNightclubVenueAnchors(params: {
+  neighborhood?: string;
+  limit: number;
+}): Promise<VenueAnchorRow[]> {
+  const client = getSupabaseClient();
+  if (!client) return [];
+
+  let query = client
+    .from("venue_anchors")
+    .select(
+      "id, kind, name, google_place_id, neighborhood, latitude, longitude, tags, metadata",
+    )
+    .eq("kind", "nightclub")
+    .eq("is_active", true)
+    .limit(params.limit);
+
+  if (params.neighborhood) {
+    query = query.ilike("neighborhood", `%${params.neighborhood}%`);
+  }
+
+  const { data, error } = await query;
+  if (error) {
+    console.warn("[search-venue-anchors] nightclub", error.message);
     return [];
   }
 

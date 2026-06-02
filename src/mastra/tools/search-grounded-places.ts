@@ -11,7 +11,9 @@ import { resolveGroundingLocationBias } from "../lib/grounding-location-bias";
 import { searchRestaurants, type Restaurant } from "./search-restaurants";
 import {
   isCoffeeVenueQuery,
+  isNightlifeVenueQuery,
   searchCafeVenueAnchors,
+  searchNightclubVenueAnchors,
   venueAnchorMapsUrl,
   venueAnchorSummary,
   venueAnchorToCoordinates,
@@ -35,7 +37,7 @@ const CAFE_QUERY =
   /\b(caf[eé]s?|coffee shops?|quiet caf[eé]s?|top cafes?|list cafes?|coworking|wifi|wi-fi|laptop[- ]friendly)\b/i;
 
 const NIGHTLIFE_QUERY =
-  /\b(nightlife|salsa bar|hidden bar|rooftop cocktails?|rooftop bar|live music bar|locals go to)\b/i;
+  /\b(nightlife|salsa bars?|hidden bars?|rooftop cocktails?|rooftop bars?|live music bars?|locals go to)\b/i;
 
 export function isCafeGroundingQuery(query: string): boolean {
   return CAFE_QUERY.test(query);
@@ -70,7 +72,43 @@ export function isCafeGroundingIntent(
   intent?: string,
 ): boolean {
   if (intent === "cafe") return true;
+  if (intent === "nightlife") return false;
   return isCafeGroundingQuery(query);
+}
+
+export function isNightlifeGroundingIntent(
+  query: string,
+  intent?: string,
+): boolean {
+  if (intent === "nightlife") return true;
+  return isNightlifeGroundingQuery(query);
+}
+
+export type VenueGroundingKind = "cafe" | "nightlife" | "general";
+
+export function resolveVenueGroundingKind(query: string): VenueGroundingKind {
+  if (isNightlifeGroundingQuery(query)) return "nightlife";
+  if (isCafeGroundingQuery(query)) return "cafe";
+  return "general";
+}
+
+function isNightlifeCandidateTitle(title: string): boolean {
+  return /\b(bar|club|salsa|rooftop|nightlife|discotec|lounge|cocktail|night)\b/i.test(
+    title,
+  );
+}
+
+export function filterNightlifeGroundingRows(
+  rows: GroundedPlaceResult[],
+  query: string,
+  intent?: string,
+): GroundedPlaceResult[] {
+  if (!isNightlifeGroundingIntent(query, intent)) return rows;
+  const nightlife = rows.filter(
+    (row) =>
+      isNightlifeCandidateTitle(row.title) && !isBarLoungeDistractor(row.title),
+  );
+  return nightlife.length > 0 ? nightlife : rows;
 }
 
 export function normalizeCafeGroundingQuery(query: string): string {
@@ -138,7 +176,10 @@ function restaurantToGroundedRow(r: Restaurant): GroundedPlaceResult {
   };
 }
 
-function anchorToGroundedRow(row: VenueAnchorRow): GroundedPlaceResult {
+function anchorToGroundedRow(
+  row: VenueAnchorRow,
+  primaryType: string,
+): GroundedPlaceResult {
   const { latitude, longitude } = venueAnchorToCoordinates(row);
   return {
     id: row.id,
@@ -149,7 +190,7 @@ function anchorToGroundedRow(row: VenueAnchorRow): GroundedPlaceResult {
     mapsUrl: venueAnchorMapsUrl(row.google_place_id),
     summary: venueAnchorSummary(row),
     formattedAddress: row.neighborhood ?? undefined,
-    primaryType: "coffee_shop",
+    primaryType,
   };
 }
 
@@ -157,19 +198,47 @@ function anchorToGroundedRow(row: VenueAnchorRow): GroundedPlaceResult {
  * Fallback when ADK grounding is unavailable — café queries use venue_anchors
  * (DATA-035); other queries use curated restaurants.
  */
+function withVenueKindMetadata<T extends Record<string, unknown>>(
+  payload: T,
+  rawQuery: string,
+): T & { metadata: Record<string, unknown> } {
+  const venueKind = resolveVenueGroundingKind(rawQuery);
+  const existing =
+    payload.metadata && typeof payload.metadata === "object"
+      ? (payload.metadata as Record<string, unknown>)
+      : {};
+  return {
+    ...payload,
+    metadata: { ...existing, venueKind },
+  };
+}
+
 async function curatedFallback(
   rawQuery: string,
   pageSize: number,
 ): Promise<GroundedPlaceResult[]> {
   const neighborhood = neighborhoodFromGroundingQuery(rawQuery);
   const isCoffee = isCoffeeVenueQuery(rawQuery);
+  const isNightlife = isNightlifeVenueQuery(rawQuery);
+
+  if (isNightlife) {
+    const anchors = await searchNightclubVenueAnchors({
+      neighborhood,
+      limit: pageSize,
+    });
+    if (anchors.length > 0) {
+      return anchors.map((row) => anchorToGroundedRow(row, "night_club"));
+    }
+  }
 
   if (isCoffee) {
     const anchors = await searchCafeVenueAnchors({
       neighborhood,
       limit: pageSize,
     });
-    if (anchors.length > 0) return anchors.map(anchorToGroundedRow);
+    if (anchors.length > 0) {
+      return anchors.map((row) => anchorToGroundedRow(row, "coffee_shop"));
+    }
   }
 
   const { results } = await searchRestaurants({
@@ -241,22 +310,28 @@ export const searchGroundedPlacesTool = createTool({
       try {
         const fallbackResults = await curatedFallback(rawQuery, pageSize ?? 5);
         if (fallbackResults.length > 0) {
-          return {
-            results: fallbackResults,
-            attribution: [],
-            source: "grounding" as const,
-            metadata: { reason: quota.reason, fallback: "curated" },
-          };
+          return withVenueKindMetadata(
+            {
+              results: fallbackResults,
+              attribution: [],
+              source: "grounding" as const,
+              metadata: { reason: quota.reason, fallback: "curated" },
+            },
+            rawQuery,
+          );
         }
       } catch (err) {
         console.warn("[search-grounded-places] quota fallback failed:", err);
       }
-      return {
-        results: [],
-        attribution: [],
-        source: "grounding" as const,
-        metadata: { reason: quota.reason },
-      };
+      return withVenueKindMetadata(
+        {
+          results: [],
+          attribution: [],
+          source: "grounding" as const,
+          metadata: { reason: quota.reason },
+        },
+        rawQuery,
+      );
     }
     const locationBias = resolveGroundingLocationBias({
       locationBias: inputBias,
@@ -272,35 +347,45 @@ export const searchGroundedPlacesTool = createTool({
       try {
         const fallbackResults = await curatedFallback(rawQuery, pageSize ?? 5);
         if (fallbackResults.length > 0) {
-          return {
-            results: fallbackResults,
-            attribution: [],
-            source: "grounding" as const,
-            metadata: { ...adk.metadata, fallback: "curated" },
-          };
+          return withVenueKindMetadata(
+            {
+              results: fallbackResults,
+              attribution: [],
+              source: "grounding" as const,
+              metadata: { ...adk.metadata, fallback: "curated" },
+            },
+            rawQuery,
+          );
         }
       } catch (err) {
         console.warn("[search-grounded-places] adk fallback failed:", err);
       }
-      return {
-        results: [],
-        attribution: [],
-        source: "grounding" as const,
-        metadata: adk.metadata,
-      };
+      return withVenueKindMetadata(
+        {
+          results: [],
+          attribution: [],
+          source: "grounding" as const,
+          metadata: adk.metadata,
+        },
+        rawQuery,
+      );
     }
     const mapped = mapAdkGroundingPins(adk);
-    const filtered = filterCafeGroundingRows(mapped, rawQuery);
+    const cafeFiltered = filterCafeGroundingRows(mapped, rawQuery);
+    const filtered = filterNightlifeGroundingRows(cafeFiltered, rawQuery);
     const results = filtered.map((row) => ({
       ...row,
       mapsUrl: row.mapsUrl as string | undefined,
     }));
     const attribution = alignGroundedAttribution(results, adk.attribution);
-    return {
-      results,
-      attribution,
-      source: "grounding" as const,
-      metadata: adk.metadata,
-    };
+    return withVenueKindMetadata(
+      {
+        results,
+        attribution,
+        source: "grounding" as const,
+        metadata: adk.metadata,
+      },
+      rawQuery,
+    );
   },
 });

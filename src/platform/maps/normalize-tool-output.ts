@@ -1,4 +1,5 @@
 import { normalizeToolEnvelope } from "@/lib/normalize-tool-envelope";
+import { readGroundedVenueKind } from "@/lib/grounded-venue-kind";
 import {
   parseGroundedToolResult,
   resolveGroundedTitle,
@@ -38,6 +39,7 @@ function itemToPin(
   source: MapPin["source"],
   index: number,
   attribution: Array<{ placeUri?: string; title?: string }>,
+  venueKind?: string,
 ): MapPin | null {
   const lat = item.latitude;
   const lng = item.longitude;
@@ -98,6 +100,9 @@ function itemToPin(
       ...(category === "grounded" && item.reviewsUrl
         ? { reviewsUrl: item.reviewsUrl }
         : {}),
+      ...(category === "grounded" && venueKind
+        ? { venueKind }
+        : {}),
     },
   };
 
@@ -116,6 +121,8 @@ export function normalizeToolOutput(
 ): NormalizedToolOutput {
   if (category === "grounded") {
     const parsed = parseGroundedToolResult(result);
+    const venueKind =
+      parsed.venueKind ?? readGroundedVenueKind(result);
     const pins: MapPin[] = [];
     for (const row of parsed.results) {
       if (row.latitude == null || row.longitude == null) continue;
@@ -144,6 +151,7 @@ export function normalizeToolOutput(
         "grounding",
         pins.length,
         parsed.attribution,
+        venueKind,
       );
       if (pin) pins.push(pin);
     }

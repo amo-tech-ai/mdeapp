@@ -1,5 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  ResultCardActions,
+  ResultCardBadges,
+  ResultCardBody,
+  ResultCardFooter,
+  ResultCardHeader,
+  ResultCardMedia,
+  ResultCardShell,
+} from "@/components/cards/result-card-shell";
 import type { GroundedPhotoAttribution } from "@/lib/parse-grounded-tool-result";
 import { mapsDeepLinksEnabled } from "@/lib/maps-deep-links";
 import { placesPhotoProxyUrl } from "@/lib/places-photo-proxy";
@@ -9,7 +18,6 @@ import {
   priceLevelToLabel,
   primaryTypeToLabel,
 } from "@/lib/places-display";
-import { cn } from "@/lib/utils";
 import { CalendarCheck, ExternalLink, Info, MapPin } from "lucide-react";
 import type { CardInteractionProps, ResultKind } from "@/components/cards/card-interaction-props";
 
@@ -31,9 +39,11 @@ export type CafeResultCardProps = {
   placeId?: string;
   fieldMaskVersion?: string;
   testId?: string;
+  detailsTestId?: string;
+  bookingTestId?: string;
+  mediaPlaceholderLabel?: string;
   onBookRequest?: () => void;
 } & CardInteractionProps & {
-  /** Café rows use `data-result-kind="cafe"`; defaults to cafe when omitted. */
   resultKind?: ResultKind;
 };
 
@@ -99,6 +109,37 @@ function CafeMapLinks({
   );
 }
 
+function photoAttributionNodes(
+  photoAuthorAttributions?: GroundedPhotoAttribution[],
+) {
+  if (!photoAuthorAttributions?.length) return null;
+  return (
+    <p
+      className="mt-0.5 max-w-24 text-[10px] leading-tight text-muted-foreground"
+      data-testid="grounded-card-photo-attribution"
+    >
+      {photoAuthorAttributions.map((a, i) => (
+        <span key={`${a.displayName ?? i}-${a.uri ?? ""}`}>
+          {i > 0 ? ", " : null}
+          {a.uri && a.displayName ? (
+            <a
+              href={a.uri}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline-offset-1 hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {a.displayName}
+            </a>
+          ) : (
+            (a.displayName ?? a.uri)
+          )}
+        </span>
+      ))}
+    </p>
+  );
+}
+
 export function CafeResultCard({
   title,
   rank,
@@ -117,7 +158,11 @@ export function CafeResultCard({
   placeId,
   fieldMaskVersion,
   testId = "cafe-result-card",
+  detailsTestId = "cafe-details-cta",
+  bookingTestId = "cafe-booking-cta",
+  mediaPlaceholderLabel = "Cafe",
   pinId,
+  resultKind = "cafe",
   selected,
   onSelect,
   onOpenDetails,
@@ -125,7 +170,9 @@ export function CafeResultCard({
 }: CafeResultCardProps) {
   const ratingText = formatGroundedRating(rating, userRatingCount);
   const priceLabel = priceLevelToLabel(priceLevel);
-  const typeLabel = primaryTypeToLabel(primaryType) ?? "Cafe";
+  const typeLabel =
+    primaryTypeToLabel(primaryType) ??
+    (resultKind === "nightlife" ? "Nightlife" : "Cafe");
   const hoursLabel = openNowLabel(openNow);
   const photoSrc = photoName ? placesPhotoProxyUrl(photoName) : null;
   const blurb = summary?.trim() || formattedAddress?.trim() || null;
@@ -137,106 +184,46 @@ export function CafeResultCard({
   };
 
   return (
-    <article
-      className={cn(
-        "overflow-hidden rounded-lg border bg-card text-sm shadow-sm transition",
-        selected ? "border-primary ring-2 ring-primary/30" : "border-border",
-      )}
-      data-testid={testId}
-      data-result-kind="cafe"
-      data-pin-id={pinId}
-      data-selected={selected ? "true" : "false"}
-      onMouseEnter={preview}
-      onFocus={preview}
+    <ResultCardShell
+      pinId={pinId}
+      resultKind={resultKind}
+      selected={selected}
+      testId={testId}
+      onSelect={onSelect}
+      mapSync
     >
-      <div
-        className="flex gap-3 p-3"
-        role={onOpenDetails ? "button" : undefined}
-        tabIndex={onOpenDetails ? 0 : undefined}
-        aria-label={`Open details for ${title}`}
-        onClick={onOpenDetails ? openDetails : preview}
-        onKeyDown={
-          onOpenDetails
-            ? (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  openDetails();
-                }
-              }
-            : undefined
-        }
+      <ResultCardBody
+        onSelect={onSelect}
+        onOpenDetails={onOpenDetails}
+        detailAriaLabel={`Open details for ${title}`}
       >
-        {photoSrc ? (
-          <div className="shrink-0">
-            <div
-              className="relative h-24 w-24 overflow-hidden rounded-md bg-muted"
-              data-testid="grounded-card-photo"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element -- Places photo proxy URL; dynamic signed media */}
-              <img
-                src={photoSrc}
-                alt=""
-                width={96}
-                height={96}
-                className="h-full w-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            {photoAuthorAttributions && photoAuthorAttributions.length > 0 ? (
-              <p
-                className="mt-0.5 max-w-24 text-[10px] leading-tight text-muted-foreground"
-                data-testid="grounded-card-photo-attribution"
-              >
-                {photoAuthorAttributions.map((a, i) => (
-                  <span key={`${a.displayName ?? i}-${a.uri ?? ""}`}>
-                    {i > 0 ? ", " : null}
-                    {a.uri && a.displayName ? (
-                      <a
-                        href={a.uri}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="underline-offset-1 hover:underline"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {a.displayName}
-                      </a>
-                    ) : (
-                      (a.displayName ?? a.uri)
-                    )}
-                  </span>
-                ))}
-              </p>
-            ) : null}
-          </div>
-        ) : (
-          <div
-            className="flex h-24 w-24 shrink-0 items-center justify-center rounded-md bg-muted text-xs text-muted-foreground"
-            data-testid="grounded-card-photo-placeholder"
-            aria-hidden
-          >
-            Cafe
-          </div>
-        )}
+        <ResultCardMedia
+          photoSrc={photoSrc}
+          placeholderLabel={mediaPlaceholderLabel}
+          attribution={photoAttributionNodes(photoAuthorAttributions)}
+        />
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
+          <ResultCardHeader
+            eyebrow={
               <p className="text-[11px] font-medium uppercase tracking-normal text-muted-foreground">
                 Match #{rank}
               </p>
-              <h3 className="font-medium leading-snug">{title}</h3>
-            </div>
-            {ratingText ? (
-              <p
-                className="shrink-0 text-xs font-medium text-foreground"
-                data-testid="grounded-card-rating"
-              >
-                ★ {ratingText}
-              </p>
-            ) : null}
-          </div>
+            }
+            title={title}
+            trailing={
+              ratingText ? (
+                <p
+                  className="shrink-0 text-xs font-medium text-foreground"
+                  data-testid="grounded-card-rating"
+                >
+                  ★ {ratingText}
+                </p>
+              ) : null
+            }
+          />
 
-          <div className="mt-1.5 flex flex-wrap gap-1.5">
+          <ResultCardBadges>
             <Badge variant="secondary">{typeLabel}</Badge>
             {priceLabel ? <Badge variant="outline">{priceLabel}</Badge> : null}
             {hoursLabel ? (
@@ -247,7 +234,7 @@ export function CafeResultCard({
                 {hoursLabel}
               </Badge>
             ) : null}
-          </div>
+          </ResultCardBadges>
 
           {blurb ? (
             <p className="mt-2 line-clamp-2 text-xs leading-5 text-muted-foreground">
@@ -270,20 +257,20 @@ export function CafeResultCard({
             ) : null}
           </div>
         </div>
-      </div>
+      </ResultCardBody>
 
-      <div className="flex flex-wrap items-center justify-between gap-2 border-t px-3 py-2">
+      <ResultCardFooter>
         <CafeMapLinks
           mapsUrl={mapsUrl}
           directionsUrl={directionsUrl}
           reviewsUrl={reviewsUrl}
         />
-        <div className="flex flex-wrap gap-1.5">
+        <ResultCardActions>
           <Button
             type="button"
             size="sm"
             variant="outline"
-            data-testid="cafe-details-cta"
+            data-testid={detailsTestId}
             onClick={(e) => {
               e.stopPropagation();
               openDetails();
@@ -294,7 +281,7 @@ export function CafeResultCard({
           <Button
             type="button"
             size="sm"
-            data-testid="cafe-booking-cta"
+            data-testid={bookingTestId}
             onClick={(e) => {
               e.stopPropagation();
               preview();
@@ -304,8 +291,8 @@ export function CafeResultCard({
             <CalendarCheck className="size-3.5" aria-hidden />
             Request
           </Button>
-        </div>
-      </div>
-    </article>
+        </ResultCardActions>
+      </ResultCardFooter>
+    </ResultCardShell>
   );
 }
