@@ -28,15 +28,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        {/* beforeInteractive belongs in <head> — avoids React 19 warning when sibling to client CopilotKit */}
-        <Script id="mde-maps-auth-failure" strategy="beforeInteractive">
-          {`window.__mdeMapsAuthFailed=false;window.gm_authFailure=function(){window.__mdeMapsAuthFailed=true;window.dispatchEvent(new CustomEvent("mde-maps-auth-failure"));};`}
-        </Script>
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* beforeInteractive in body (not <head>) — runs before Maps; React 19-safe via src file */}
+        <Script
+          id="mde-maps-auth-bootstrap"
+          strategy="beforeInteractive"
+          src="/mde-maps-auth-bootstrap.js"
+        />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-background focus:px-3 focus:py-2 focus:shadow-md"
