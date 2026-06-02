@@ -97,22 +97,19 @@ export function ChatNavRail({
           </li>
         )}
 
-        {/* Saved — disabled until Phase 4 */}
+        {/* Saved — live at /saved */}
         <li className="mt-2 border-t pt-2">
-          <Tooltip>
-            <TooltipTrigger
-              data-testid="nav-saved-link"
-              aria-disabled="true"
-              className="inline-flex h-8 w-full cursor-not-allowed items-center justify-start gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground/50"
-            >
-              <Heart className="size-4 shrink-0" aria-hidden />
-              Saved
-            </TooltipTrigger>
-            <TooltipContent side="right">Available in Phase 4</TooltipContent>
-          </Tooltip>
+          <a
+            href="/saved"
+            data-testid="nav-saved-link"
+            className="inline-flex h-8 w-full items-center justify-start gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
+            <Heart className="size-4 shrink-0" aria-hidden />
+            Saved
+          </a>
         </li>
 
-        {/* Trips — disabled until Phase 4 */}
+        {/* Trips — shell page exists, full feature Phase 2 */}
         <li>
           <Tooltip>
             <TooltipTrigger
@@ -123,7 +120,7 @@ export function ChatNavRail({
               <Luggage className="size-4 shrink-0" aria-hidden />
               Trips
             </TooltipTrigger>
-            <TooltipContent side="right">Available in Phase 4</TooltipContent>
+            <TooltipContent side="right">Coming soon</TooltipContent>
           </Tooltip>
         </li>
       </ul>

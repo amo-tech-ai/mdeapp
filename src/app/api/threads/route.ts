@@ -25,12 +25,14 @@ export async function GET() {
     return NextResponse.json({ threads: [] });
   }
 
-  const { data } = await service
+  const { data, error } = await service
     .from("mastra_threads")
     .select('id, title, "updatedAt"')
     .eq("resourceId", user.id)
     .order('"updatedAt"', { ascending: false })
     .limit(20);
+
+  if (error) console.error("[/api/threads]", error.message);
 
   const rows = (data ?? []) as Array<{ id: unknown; title: unknown; updatedAt: unknown }>;
   const threads: NavThread[] = rows.map((row) => ({
