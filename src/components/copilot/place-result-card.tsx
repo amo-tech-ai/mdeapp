@@ -1,3 +1,5 @@
+import type { CardInteractionProps, ResultKind } from "@/components/cards/card-interaction-props";
+
 type PlaceResultCardProps = {
   title: string;
   subtitle?: string;
@@ -5,10 +7,8 @@ type PlaceResultCardProps = {
   evidenceText?: string;
   mapsUrl?: string;
   testId: string;
-  resultKind?: string;
-  pinId?: string;
-  selected?: boolean;
-  onSelect?: () => void;
+} & Partial<Pick<CardInteractionProps, "pinId" | "selected" | "onSelect" | "onOpenDetails">> & {
+  resultKind?: ResultKind;
 };
 
 export function PlaceResultCard({

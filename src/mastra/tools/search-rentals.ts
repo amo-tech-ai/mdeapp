@@ -32,6 +32,9 @@ export type RentalQuery = {
   maxPricePerNight?: number;
   limit?: number;
   queryText?: string;
+  checkIn?: string;
+  checkOut?: string;
+  stayType?: "nightly" | "monthly" | "total_trip";
 };
 
 export type RentalSearchResult = {
@@ -135,6 +138,26 @@ function deriveTags(row: {
   return tags.length ? tags : ['walkable'];
 }
 
+export function isAvailableForStay(
+  row: { available_from: string | null; available_to: string | null },
+  checkIn?: string,
+  checkOut?: string,
+): boolean {
+  if (!checkIn && !checkOut) return true;
+  if (checkOut && row.available_from && row.available_from > checkOut) return false;
+  if (checkIn && row.available_to && row.available_to < checkIn) return false;
+  return true;
+}
+
+export function sortForMonthlyStay<T extends Rental>(results: T[]): T[] {
+  return [...results].sort((a, b) => {
+    const aLong = a.tags.includes('long-stay') ? 0 : 1;
+    const bLong = b.tags.includes('long-stay') ? 0 : 1;
+    if (aLong !== bLong) return aLong - bLong;
+    return a.nightly_price - b.nightly_price;
+  });
+}
+
 async function searchRentalsFromSupabase(
   query: RentalQuery,
 ): Promise<{ results: Rental[]; total: number; source: 'supabase' }> {
@@ -163,13 +186,24 @@ async function searchRentalsFromSupabase(
   if (typeof query.maxPricePerNight === 'number') {
     q = q.lte('price_daily', query.maxPricePerNight);
   }
+  if (query.checkIn) {
+    // available_to IS NULL (open-ended) OR available_to >= checkIn
+    q = q.or(`available_to.is.null,available_to.gte.${query.checkIn}`);
+  }
+  if (query.checkOut) {
+    // available_from IS NULL (available now) OR available_from <= checkOut
+    q = q.or(`available_from.is.null,available_from.lte.${query.checkOut}`);
+  }
 
   const { data, error } = await q;
   if (error) {
     throw new Error(error.message);
   }
 
-  const results = ((data ?? []) as ApartmentRow[]).map(rowToRental);
+  let results = ((data ?? []) as ApartmentRow[]).map(rowToRental);
+  if (query.stayType === 'monthly') {
+    results = sortForMonthlyStay(results);
+  }
   return { results, total: results.length, source: 'supabase' };
 }
 

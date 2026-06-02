@@ -16,9 +16,28 @@ import {
   shouldInstantRentalClarify,
   type RentalSearchApiParams,
 } from "@/lib/rental-search-fast-path";
+import { logRoutingDecision } from "@/lib/intelligence-telemetry";
+import { scoreRentalQuery } from "@/lib/rental-query-parser";
 import type { ConciergeWorkingMemory } from "@/lib/types";
 import { useMapContext } from "@/platform/maps/map-context";
 import { normalizeToolOutput } from "@/platform/maps/normalize-tool-output";
+
+import type { RentalQuerySignals } from "@/lib/rental-query-parser";
+
+function buildRentalSlots(
+  s: RentalQuerySignals,
+): Record<string, string | number | boolean> {
+  const slots: Record<string, string | number | boolean> = {};
+  if (s.neighborhood) slots.neighborhood = s.neighborhood;
+  if (s.maxPricePerNight != null) slots.maxPricePerNight = s.maxPricePerNight;
+  if (s.minBedrooms != null) slots.bedrooms = s.minBedrooms;
+  if (s.budgetType) slots.budgetType = s.budgetType;
+  if (s.cityWide) slots.cityWide = true;
+  if (s.dateRangeLabel) slots.dateRange = s.dateRangeLabel;
+  if (s.hasBudget) slots.hasBudget = true;
+  if (s.hasBedrooms) slots.hasBedrooms = true;
+  return slots;
+}
 
 type RentalSearchResponse = {
   results: Rental[];
@@ -88,7 +107,19 @@ export function useRentalSearchFastPath() {
           minBedrooms: params.minBedrooms,
           maxPricePerNight: params.maxPricePerNight,
           genericAskPending: false,
+          checkIn: params.checkIn,
+          checkOut: params.checkOut,
         };
+        const sig = scoreRentalQuery(userText);
+        logRoutingDecision({
+          intent: "rental_search",
+          slots: buildRentalSlots(sig),
+          confidence: sig.confidence,
+          action: "search_now",
+          source: "fast-path",
+          resultCount: cards.length,
+          ts: new Date().toISOString(),
+        });
         setSearchMeta({ userText, params });
         applySearchResults(cards, query, memory, { hybridUsed, rankExplanation });
         showExchange(userText, fastPathRentalSummary(cards.length));
@@ -126,6 +157,15 @@ export function useRentalSearchFastPath() {
         if (busyRef.current) return true;
         busyRef.current = true;
         try {
+          const sig = scoreRentalQuery(trimmed);
+          logRoutingDecision({
+            intent: "rental_search",
+            slots: buildRentalSlots(sig),
+            confidence: sig.confidence,
+            action: "clarify",
+            source: "clarify-branch",
+            ts: new Date().toISOString(),
+          });
           setToolResult(null);
           setSearchMeta(null);
           showClarify(trimmed, RENTAL_CLARIFY_MESSAGE, "rental");

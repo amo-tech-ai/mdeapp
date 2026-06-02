@@ -11,6 +11,7 @@ import {
 } from "@/lib/places-display";
 import { cn } from "@/lib/utils";
 import { CalendarCheck, ExternalLink, Info, MapPin } from "lucide-react";
+import type { CardInteractionProps, ResultKind } from "@/components/cards/card-interaction-props";
 
 export type CafeResultCardProps = {
   title: string;
@@ -30,11 +31,10 @@ export type CafeResultCardProps = {
   placeId?: string;
   fieldMaskVersion?: string;
   testId?: string;
-  pinId: string;
-  selected?: boolean;
-  onSelect?: () => void;
-  onOpenDetails?: () => void;
   onBookRequest?: () => void;
+} & CardInteractionProps & {
+  /** Café rows use `data-result-kind="cafe"`; defaults to cafe when omitted. */
+  resultKind?: ResultKind;
 };
 
 function CafeMapLinks({

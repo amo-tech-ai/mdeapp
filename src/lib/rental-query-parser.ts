@@ -10,6 +10,11 @@ export type RentalSearchApiParams = {
   limit?: number;
   /** Natural-language query for hybrid_search_listings + rental_signals. */
   queryText?: string;
+  /** ISO date YYYY-MM-DD — start of stay window */
+  checkIn?: string;
+  /** ISO date YYYY-MM-DD — end of stay window */
+  checkOut?: string;
+  stayType?: "nightly" | "monthly" | "total_trip";
 };
 
 function attachQueryText(
@@ -17,10 +22,16 @@ function attachQueryText(
   text: string,
   s: RentalQuerySignals,
 ): RentalSearchApiParams {
+  const dated: RentalSearchApiParams = {
+    ...params,
+    ...(s.checkIn && { checkIn: s.checkIn }),
+    ...(s.checkOut && { checkOut: s.checkOut }),
+    ...(s.budgetType && { stayType: s.budgetType }),
+  };
   if (s.confidence >= 0.6 || s.hasNomad || s.hasCafeOrGym || s.hasVibeOrUseCase) {
-    return { ...params, queryText: text.trim() };
+    return { ...dated, queryText: text.trim() };
   }
-  return params;
+  return dated;
 }
 
 export type RentalQuerySignals = {
@@ -38,6 +49,8 @@ export type RentalQuerySignals = {
   maxPricePerNight?: number;
   budgetType?: "nightly" | "monthly" | "total_trip";
   dateRangeLabel?: string;
+  checkIn?: string;
+  checkOut?: string;
 };
 
 const RENTAL_INTENT_RE =
@@ -68,12 +81,51 @@ const MONTHLY_RE = /\b(month|monthly|per month|\/month|mes)\b/i;
 const TRIP_RE = /\b(for the trip|total|10 days|two weeks|\d+\s+days)\b/i;
 const MEDELLIN_CITY_RE = /\bmedell[ií]n\b/i;
 
-function parseDateRangeLabel(text: string): string | undefined {
-  const june = text.match(/\bjune\s+(\d{1,2})\s*(?:to|-)\s*(\d{1,2})\b/i);
-  if (june) return `June ${june[1]}–${june[2]}`;
-  if (/\bthis weekend\b/i.test(text)) return "this weekend";
-  if (/\btomorrow\b/i.test(text)) return "tomorrow";
-  return undefined;
+const MONTH_IDX: Record<string, number> = {
+  jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
+  jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11,
+};
+
+const DATE_RANGE_RE =
+  /\b(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s+(\d{1,2})\s*(?:to|-)\s*(\d{1,2})\b/i;
+
+function parseDateRange(text: string): { label?: string; checkIn?: string; checkOut?: string } {
+  const m = text.match(DATE_RANGE_RE);
+  if (m) {
+    const monthIdx = MONTH_IDX[m[1].toLowerCase().slice(0, 3)] ?? -1;
+    if (monthIdx >= 0) {
+      const startDay = Number(m[2]);
+      const endDay = Number(m[3]);
+      const ref = new Date();
+      let year = ref.getFullYear();
+      if (new Date(year, monthIdx, endDay) < ref) year++;
+      const pad = (n: number) => String(n).padStart(2, "0");
+      const mon = pad(monthIdx + 1);
+      const monthLabel = m[1][0].toUpperCase() + m[1].slice(1).toLowerCase();
+      return {
+        label: `${monthLabel} ${startDay}–${endDay}`,
+        checkIn: `${year}-${mon}-${pad(startDay)}`,
+        checkOut: `${year}-${mon}-${pad(endDay)}`,
+      };
+    }
+  }
+  if (/\bthis weekend\b/i.test(text)) {
+    const ref = new Date();
+    const daysToSat = (6 - ref.getDay() + 7) % 7 || 7;
+    const sat = new Date(ref);
+    sat.setDate(ref.getDate() + daysToSat);
+    const sun = new Date(sat);
+    sun.setDate(sat.getDate() + 1);
+    const fmt = (d: Date) => d.toISOString().slice(0, 10);
+    return { label: "this weekend", checkIn: fmt(sat), checkOut: fmt(sun) };
+  }
+  if (/\btomorrow\b/i.test(text)) {
+    const tom = new Date();
+    tom.setDate(tom.getDate() + 1);
+    const d = tom.toISOString().slice(0, 10);
+    return { label: "tomorrow", checkIn: d, checkOut: d };
+  }
+  return {};
 }
 
 function parseBudget(text: string): {
@@ -167,7 +219,7 @@ export function scoreRentalQuery(text: string): RentalQuerySignals {
   const hasCafeOrGym = CAFE_GYM_RE.test(normalized);
   const hasQuiet = /\bquiet\b/i.test(normalized);
   const hasNeighborhood = neighborhood != null;
-  const dateRangeLabel = parseDateRangeLabel(normalized);
+  const { label: dateRangeLabel, checkIn, checkOut } = parseDateRange(normalized);
   const hasDateRange = dateRangeLabel != null;
   const cityWide = MEDELLIN_CITY_RE.test(normalized) && !hasNeighborhood;
 
@@ -202,6 +254,8 @@ export function scoreRentalQuery(text: string): RentalQuerySignals {
     maxPricePerNight,
     budgetType,
     dateRangeLabel,
+    checkIn,
+    checkOut,
   };
 }
 
@@ -241,6 +295,9 @@ export function buildRentalSearchParams(
       neighborhood: s.neighborhood ?? q.neighborhood,
       minBedrooms: s.minBedrooms ?? q.minBedrooms,
       maxPricePerNight: s.maxPricePerNight ?? q.maxPricePerNight,
+      checkIn: s.checkIn ?? q.checkIn,
+      checkOut: s.checkOut ?? q.checkOut,
+      stayType: s.budgetType ?? q.budgetType,
       limit: FAST_PATH_LIMIT,
     };
     if (
@@ -261,6 +318,9 @@ export function buildRentalSearchParams(
         neighborhood: s.neighborhood ?? q?.neighborhood,
         minBedrooms: s.minBedrooms ?? q?.minBedrooms,
         maxPricePerNight: s.maxPricePerNight ?? q?.maxPricePerNight,
+        checkIn: q?.checkIn,
+        checkOut: q?.checkOut,
+        stayType: q?.budgetType,
         limit: FAST_PATH_LIMIT,
       },
       text,
@@ -306,6 +366,9 @@ export function buildRentalSearchParams(
         neighborhood: q.neighborhood,
         minBedrooms: q.minBedrooms,
         maxPricePerNight: q.maxPricePerNight,
+        checkIn: q.checkIn,
+        checkOut: q.checkOut,
+        stayType: q.budgetType,
         limit: FAST_PATH_LIMIT,
       },
       text,
