@@ -2,8 +2,21 @@ export const MEDELLIN_CENTER = { lat: 6.2442, lng: -75.5812 } as const;
 
 export const DEFAULT_MAP_ZOOM = 13;
 
+let warnedMissingMapsApiKey = false;
+
 export function getGoogleMapsApiKey(): string | undefined {
-  return process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  if (
+    !key &&
+    process.env.NODE_ENV === "development" &&
+    !warnedMissingMapsApiKey
+  ) {
+    warnedMissingMapsApiKey = true;
+    console.warn(
+      "[maps] NEXT_PUBLIC_GOOGLE_MAPS_API_KEY not set; map disabled",
+    );
+  }
+  return key;
 }
 
 export {
