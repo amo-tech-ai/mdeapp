@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useSyncExternalStore } from "react";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { useCopilotChatInternal, useCopilotChat } from "@copilotkit/react-core";
 import { MessageRole, TextMessage } from "@copilotkit/runtime-client-gql";
 import type { Message } from "@copilotkit/shared";
@@ -47,6 +48,7 @@ export function ConciergeChatMessages(props: MessagesProps) {
   const { appendMessage } = useCopilotChat();
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const hydrated = useHydrated();
 
   // reportConciergeError() via ConciergeAgentErrorBridge + ConciergeChatInput onSend catch.
   const errorVersion = useSyncExternalStore(
@@ -72,16 +74,22 @@ export function ConciergeChatMessages(props: MessagesProps) {
     () => makeInitialMessages(labels.initial),
     [labels.initial],
   );
-  const copilotMessages = [...initialMessages, ...visibleMessages];
+  const copilotMessages = hydrated
+    ? [...initialMessages, ...visibleMessages]
+    : initialMessages;
 
   useEffect(() => {
     const el = messagesContainerRef.current;
     if (!el) return;
     el.scrollTop = el.scrollHeight;
-  }, [copilotMessages.length, localMessages.length, inProgress]);
+  }, [copilotMessages.length, localMessages.length, inProgress, hydrated]);
 
   return (
-    <div className="copilotKitMessages" ref={messagesContainerRef}>
+    <div
+      className="copilotKitMessages"
+      ref={messagesContainerRef}
+      suppressHydrationWarning
+    >
       <div className="copilotKitMessagesContainer">
         {copilotMessages.map((message, index) => {
           if (shouldSkipCopilotMessage(message)) return null;
@@ -100,38 +108,43 @@ export function ConciergeChatMessages(props: MessagesProps) {
             />
           );
         })}
-        {localMessages.map((local) => {
-          if (local.role === "user") {
-            return (
-              <div key={local.id} className="copilotKitMessage copilotKitUserMessage">
-                <p>{local.content}</p>
-              </div>
-            );
-          }
-          const assistantText = sanitizeAssistantChatContent(local.content);
-          const assistant = (
-            <div
-              key={local.id}
-              className="copilotKitMessage copilotKitAssistantMessage"
-            >
-              {assistantText ? (
-                <p className="whitespace-pre-wrap">{assistantText}</p>
-              ) : null}
-            </div>
-          );
-          if (local.isClarify) {
-            return (
-              <div key={local.id} data-testid="event-clarify">
-                {assistant}
-              </div>
-            );
-          }
-          return assistant;
-        })}
-        {localMessages.length === 0 && !inProgress && chatError && (
+        {hydrated
+          ? localMessages.map((local) => {
+              if (local.role === "user") {
+                return (
+                  <div
+                    key={local.id}
+                    className="copilotKitMessage copilotKitUserMessage"
+                  >
+                    <p>{local.content}</p>
+                  </div>
+                );
+              }
+              const assistantText = sanitizeAssistantChatContent(local.content);
+              const assistant = (
+                <div
+                  key={local.id}
+                  className="copilotKitMessage copilotKitAssistantMessage"
+                >
+                  {assistantText ? (
+                    <p className="whitespace-pre-wrap">{assistantText}</p>
+                  ) : null}
+                </div>
+              );
+              if (local.isClarify) {
+                return (
+                  <div key={local.id} data-testid="event-clarify">
+                    {assistant}
+                  </div>
+                );
+              }
+              return assistant;
+            })
+          : null}
+        {hydrated && localMessages.length === 0 && !inProgress && chatError && (
           <ConciergeErrorNotice onRetry={handleRetry} />
         )}
-        {interrupt}
+        {hydrated ? interrupt : null}
       </div>
       <footer className="copilotKitMessagesFooter" ref={messagesEndRef}>
         {children}

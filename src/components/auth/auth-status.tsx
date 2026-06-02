@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { useSession } from "@/hooks/use-session";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 
 export function AuthStatus() {
+  const hydrated = useHydrated();
   const { user, loading } = useSession();
 
-  if (loading) {
+  if (!hydrated || loading) {
     return (
       <p className="text-xs text-muted-foreground" aria-live="polite">
         Checking session…

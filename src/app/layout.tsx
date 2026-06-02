@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
-import { Analytics } from "@vercel/analytics/next";
+import { VercelAnalyticsClient } from "@/components/analytics/vercel-analytics-client";
 import { MdeCopilotKitProvider } from "@/components/copilot/copilot-kit-provider";
 import "./globals.css";
 import "@copilotkit/react-ui/styles.css";
@@ -46,7 +46,7 @@ export default function RootLayout({
         <MdeCopilotKitProvider>
           {children}
         </MdeCopilotKitProvider>
-        <Analytics />
+        <VercelAnalyticsClient />
       </body>
     </html>
   );
