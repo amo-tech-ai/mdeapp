@@ -32,10 +32,13 @@ export type GroundedToolRow = {
   fieldMaskVersion?: string;
 };
 
+export type GroundedVenueKind = "cafe" | "nightlife" | "general";
+
 export type ParsedGroundedToolResult = {
   results: GroundedToolRow[];
   attribution: GroundedAttributionRow[];
   source?: string;
+  venueKind?: GroundedVenueKind;
 };
 
 const GENERIC_TITLE = /^place$/i;
@@ -82,6 +85,16 @@ function readSource(result: unknown): string | undefined {
   return typeof source === "string" ? source : undefined;
 }
 
+function readVenueKind(result: unknown): GroundedVenueKind | undefined {
+  if (!result || typeof result !== "object") return undefined;
+  const meta = (result as { metadata?: Record<string, unknown> }).metadata;
+  const kind = meta?.venueKind;
+  if (kind === "cafe" || kind === "nightlife" || kind === "general") {
+    return kind;
+  }
+  return undefined;
+}
+
 function readPhotoAuthorAttributions(
   row: Record<string, unknown>,
 ): GroundedPhotoAttribution[] | undefined {
@@ -116,6 +129,7 @@ export function parseGroundedToolResult(result: unknown): ParsedGroundedToolResu
   const envelope = normalizeToolEnvelope(root);
   const attribution = readAttribution(root);
   const source = readSource(root) ?? envelope.source;
+  const venueKind = readVenueKind(root);
 
   const rawRows = (envelope.results ?? []) as Array<
     GroundedToolRow & { name?: string; maps_url?: string }
@@ -167,7 +181,7 @@ export function parseGroundedToolResult(result: unknown): ParsedGroundedToolResu
     };
   });
 
-  return { results, attribution, source };
+  return { results, attribution, source, venueKind };
 }
 
 /** Hide attribution bullets when every card already exposes the same Maps URL. */

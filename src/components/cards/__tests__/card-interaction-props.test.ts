@@ -10,6 +10,7 @@ describe("card-interaction-props", () => {
     const kinds: ResultKind[] = [
       "rental",
       "cafe",
+      "nightlife",
       "event",
       "restaurant",
       "attraction",

@@ -20,7 +20,9 @@ vi.mock("../search-venue-anchors", () => ({
   isCoffeeVenueQuery: vi.fn((q: string) =>
     /\b(coffee|caf[eé]|espresso|specialty coffee)\b/i.test(q),
   ),
+  isNightlifeVenueQuery: vi.fn(() => false),
   searchCafeVenueAnchors: vi.fn(),
+  searchNightclubVenueAnchors: vi.fn().mockResolvedValue([]),
   venueAnchorMapsUrl: vi.fn(
     (id: string) => `https://www.google.com/maps/search/?api=1&query_place_id=${id}`,
   ),

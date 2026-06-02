@@ -105,6 +105,22 @@ describe("parseGroundedToolResult", () => {
     expect(parsed.results[0]?.rating).toBe(4.8);
     expect(parsed.results[0]?.photoName).toContain("photos/");
   });
+
+  it("reads venueKind from metadata", () => {
+    const parsed = parseGroundedToolResult({
+      source: "grounding",
+      metadata: { venueKind: "nightlife" },
+      results: [
+        {
+          id: "n1",
+          title: "Salsa Bar",
+          latitude: 6.24,
+          longitude: -75.59,
+        },
+      ],
+    });
+    expect(parsed.venueKind).toBe("nightlife");
+  });
 });
 
 describe("attribution display helpers", () => {

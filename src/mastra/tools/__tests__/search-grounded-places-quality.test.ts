@@ -2,9 +2,12 @@ import { describe, expect, it } from "vitest";
 import {
   alignGroundedAttribution,
   filterCafeGroundingRows,
+  filterNightlifeGroundingRows,
   isCafeGroundingIntent,
   isCafeGroundingQuery,
+  isNightlifeGroundingQuery,
   normalizeCafeGroundingQuery,
+  resolveVenueGroundingKind,
 } from "../search-grounded-places";
 import type { GroundedPlaceResult } from "../../lib/map-adk-grounding-pins";
 
@@ -68,6 +71,36 @@ describe("search-grounded-places café quality filter", () => {
     ] satisfies GroundedPlaceResult[];
 
     expect(filterCafeGroundingRows(rows, "museums in centro")).toEqual(rows);
+  });
+
+  it("detects nightlife discovery queries", () => {
+    expect(isNightlifeGroundingQuery("salsa bars in Poblado")).toBe(true);
+    expect(
+      isNightlifeGroundingQuery(
+        "Where can I find salsa bars locals go to at night in Poblado?",
+      ),
+    ).toBe(true);
+    expect(isNightlifeGroundingQuery("quiet cafés near Laureles")).toBe(false);
+    expect(resolveVenueGroundingKind("rooftop cocktails provenza")).toBe(
+      "nightlife",
+    );
+  });
+
+  it("prefers nightlife titles for nightlife queries", () => {
+    const rows = [
+      { id: "1", title: "Gardenia Brunch & Coffee", latitude: 1, longitude: 1 },
+      { id: "2", title: "Salsa Bar El Tibiri", latitude: 1, longitude: 1 },
+      { id: "3", title: "Rooftop Lounge Medellín", latitude: 1, longitude: 1 },
+    ] satisfies GroundedPlaceResult[];
+
+    const filtered = filterNightlifeGroundingRows(
+      rows,
+      "salsa bars locals go to in Medellín",
+    );
+    expect(filtered.map((r) => r.title)).toEqual([
+      "Salsa Bar El Tibiri",
+      "Rooftop Lounge Medellín",
+    ]);
   });
 
   it("aligns attribution by placeUri after café filtering drops rows (B1)", () => {

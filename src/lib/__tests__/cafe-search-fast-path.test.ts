@@ -17,6 +17,14 @@ describe("cafe-search-fast-path", () => {
     expect(canFastPathCafeSearch("suggest restaurants medellin")).toBe(false);
   });
 
+  it("matches SCREEN-022 nightlife grounding query", () => {
+    const q =
+      "Salsa bars and rooftop cocktails locals go to in El Poblado";
+    expect(canFastPathCafeSearch(q)).toBe(true);
+    expect(buildCafeSearchParams(q)?.neighborhood).toBe("El Poblado");
+    expect(fastPathCafeSummary(3, "El Poblado", q)).toMatch(/nightlife venue/);
+  });
+
   it("summarizes card count for Camila", () => {
     expect(fastPathCafeSummary(5, "Laureles")).toMatch(/Found 5 specialty coffee shops/);
     expect(fastPathCafeSummary(0)).toMatch(/No cafés matched/);

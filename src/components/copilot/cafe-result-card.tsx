@@ -31,6 +31,9 @@ export type CafeResultCardProps = {
   placeId?: string;
   fieldMaskVersion?: string;
   testId?: string;
+  detailsTestId?: string;
+  bookingTestId?: string;
+  mediaPlaceholderLabel?: string;
   onBookRequest?: () => void;
 } & CardInteractionProps & {
   /** Café rows use `data-result-kind="cafe"`; defaults to cafe when omitted. */
@@ -117,7 +120,11 @@ export function CafeResultCard({
   placeId,
   fieldMaskVersion,
   testId = "cafe-result-card",
+  detailsTestId = "cafe-details-cta",
+  bookingTestId = "cafe-booking-cta",
+  mediaPlaceholderLabel = "Cafe",
   pinId,
+  resultKind = "cafe",
   selected,
   onSelect,
   onOpenDetails,
@@ -125,7 +132,9 @@ export function CafeResultCard({
 }: CafeResultCardProps) {
   const ratingText = formatGroundedRating(rating, userRatingCount);
   const priceLabel = priceLevelToLabel(priceLevel);
-  const typeLabel = primaryTypeToLabel(primaryType) ?? "Cafe";
+  const typeLabel =
+    primaryTypeToLabel(primaryType) ??
+    (resultKind === "nightlife" ? "Nightlife" : "Cafe");
   const hoursLabel = openNowLabel(openNow);
   const photoSrc = photoName ? placesPhotoProxyUrl(photoName) : null;
   const blurb = summary?.trim() || formattedAddress?.trim() || null;
@@ -143,7 +152,7 @@ export function CafeResultCard({
         selected ? "border-primary ring-2 ring-primary/30" : "border-border",
       )}
       data-testid={testId}
-      data-result-kind="cafe"
+      data-result-kind={resultKind}
       data-pin-id={pinId}
       data-selected={selected ? "true" : "false"}
       onMouseEnter={preview}
@@ -214,7 +223,7 @@ export function CafeResultCard({
             data-testid="grounded-card-photo-placeholder"
             aria-hidden
           >
-            Cafe
+            {mediaPlaceholderLabel}
           </div>
         )}
 
@@ -283,7 +292,7 @@ export function CafeResultCard({
             type="button"
             size="sm"
             variant="outline"
-            data-testid="cafe-details-cta"
+            data-testid={detailsTestId}
             onClick={(e) => {
               e.stopPropagation();
               openDetails();
@@ -294,7 +303,7 @@ export function CafeResultCard({
           <Button
             type="button"
             size="sm"
-            data-testid="cafe-booking-cta"
+            data-testid={bookingTestId}
             onClick={(e) => {
               e.stopPropagation();
               preview();

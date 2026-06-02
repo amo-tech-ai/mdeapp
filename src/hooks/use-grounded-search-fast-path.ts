@@ -77,7 +77,10 @@ export function useGroundedSearchFastPath() {
         setRestaurantToolResult(null);
         const envelope = await fetchGroundedSearch(params);
         const count = applySearchResults(envelope);
-        showExchange(userText, fastPathCafeSummary(count, params.neighborhood));
+        showExchange(
+          userText,
+          fastPathCafeSummary(count, params.neighborhood, userText),
+        );
         return true;
       } catch (err) {
         console.error("[grounded-fast-path]", err);
