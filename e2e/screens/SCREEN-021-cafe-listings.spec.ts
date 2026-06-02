@@ -113,12 +113,10 @@ test.describe("SCREEN-021 Phase A café listings", () => {
 
     await prompt.click();
     await expect(detailPanel).toBeVisible();
-    // Fast path appends local user bubbles after the CopilotKit thread — never use .last().
-    const promptNeedle = promptText.slice(0, 24);
     const chatUserBubble = page
       .locator('[data-testid="copilot-chat-region"]')
-      .locator('[data-testid="concierge-user-message"], .copilotKitUserMessage')
-      .filter({ hasText: promptNeedle });
+      .locator('[data-testid="concierge-user-message"]')
+      .filter({ hasText: promptText });
     await expect(chatUserBubble.first()).toBeVisible({ timeout: 30_000 });
   });
 

@@ -23,7 +23,7 @@ import {
 } from "@/lib/concierge-error-store";
 
 /** Stable e2e + analytics hook for user bubbles (CopilotKit thread + fast-path local). */
-function ConciergeUserMessage(props: UserMessageProps) {
+export function ConciergeUserMessage(props: UserMessageProps) {
   return (
     <div data-testid="concierge-user-message">
       <UserMessage {...props} />
@@ -49,9 +49,10 @@ export function ConciergeChatMessages(props: MessagesProps) {
     inProgress,
     children,
     AssistantMessage: AssistantMessageProp = ConciergeAssistantMessage,
-    UserMessage: UserMessageProp = ConciergeUserMessage,
     ImageRenderer,
   } = props;
+  // CopilotChat passes DefaultUserMessage — always use our wrapper for stable testids.
+  const UserMessageProp = ConciergeUserMessage;
   const { labels } = useChatContext();
   const { messages: visibleMessages, interrupt } = useCopilotChatInternal();
   const { messages: localMessages } = useEventLocalChat();
