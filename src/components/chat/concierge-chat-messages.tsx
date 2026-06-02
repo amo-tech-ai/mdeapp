@@ -9,6 +9,7 @@ import {
   UserMessage,
   useChatContext,
   type MessagesProps,
+  type UserMessageProps,
 } from "@copilotkit/react-ui";
 import { ConciergeAssistantMessage, shouldSkipCopilotMessage } from "@/components/chat/concierge-assistant-message";
 import { ConciergeErrorNotice } from "@/components/chat/concierge-error-notice";
@@ -20,6 +21,15 @@ import {
   getConciergeErrorVersionServer,
   subscribeConciergeError,
 } from "@/lib/concierge-error-store";
+
+/** Stable e2e + analytics hook for user bubbles (CopilotKit thread + fast-path local). */
+export function ConciergeUserMessage(props: UserMessageProps) {
+  return (
+    <div data-testid="concierge-user-message">
+      <UserMessage {...props} />
+    </div>
+  );
+}
 
 function makeInitialMessages(initial: string | string[] | undefined): Message[] {
   if (!initial) return [];
@@ -39,9 +49,10 @@ export function ConciergeChatMessages(props: MessagesProps) {
     inProgress,
     children,
     AssistantMessage: AssistantMessageProp = ConciergeAssistantMessage,
-    UserMessage: UserMessageProp = UserMessage,
     ImageRenderer,
   } = props;
+  // CopilotChat passes DefaultUserMessage — always use our wrapper for stable testids.
+  const UserMessageProp = ConciergeUserMessage;
   const { labels } = useChatContext();
   const { messages: visibleMessages, interrupt } = useCopilotChatInternal();
   const { messages: localMessages } = useEventLocalChat();
@@ -114,6 +125,7 @@ export function ConciergeChatMessages(props: MessagesProps) {
                 return (
                   <div
                     key={local.id}
+                    data-testid="concierge-user-message"
                     className="copilotKitMessage copilotKitUserMessage"
                   >
                     <p>{local.content}</p>

@@ -113,9 +113,11 @@ test.describe("SCREEN-021 Phase A café listings", () => {
 
     await prompt.click();
     await expect(detailPanel).toBeVisible();
-    await expect(page.locator(".copilotKitUserMessage").last()).toContainText(
-      promptText.slice(0, 24),
-    );
+    const chatUserBubble = page
+      .locator('[data-testid="copilot-chat-region"]')
+      .locator('[data-testid="concierge-user-message"]')
+      .filter({ hasText: promptText });
+    await expect(chatUserBubble.first()).toBeVisible({ timeout: 30_000 });
   });
 
   test("keeps café cards usable on mobile without horizontal overflow", async ({
