@@ -65,6 +65,13 @@ export function MapMobileSheet() {
   const { pins } = useMapContext();
   const pinCount = pins.filter((p) => p.source !== "mock").length;
 
+  // Forget "open map" intent when crossing to lg so the sheet doesn't auto-reopen on return to mobile.
+  const [wasLgUp, setWasLgUp] = useState(isLgUp);
+  if (isLgUp !== wasLgUp) {
+    setWasLgUp(isLgUp);
+    if (isLgUp && userMapOpen) setUserMapOpen(false);
+  }
+
   const sheetOpen = !isLgUp && userMapOpen;
 
   return (
