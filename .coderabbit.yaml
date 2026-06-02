@@ -1,0 +1,13 @@
+language: en-US
+
+reviews:
+  profile: chill
+  request_changes_workflow: false
+
+  finishing_touches:
+    docstrings:
+      enabled: false
+
+  tools:
+    github-checks:
+      enabled: true
