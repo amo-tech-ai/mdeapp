@@ -120,6 +120,12 @@ async function probePlacesKey() {
       );
       return;
     }
+    if (res.status === 403) {
+      warnings.push(
+        `Places API probe HTTP 403 (DATA-008) — not a MAP-008B Map ID blocker: ${text.slice(0, 80)}`,
+      );
+      return;
+    }
     errors.push(`Places API probe HTTP ${res.status}: ${text.slice(0, 120)}`);
     return;
   }
