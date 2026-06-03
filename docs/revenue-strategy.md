@@ -9,6 +9,8 @@
 
 This plan moves from **market reality → revenue menu → AI services → marketplace design → pricing → partnerships → demand engine → financials → prioritization → an executable roadmap.** The single most important conclusion is in [Phase 10](#phase-10--final-recommendation): MDE should monetize as an **AI marketing + lead-gen agency first**, and let the **marketplace/commission business compound underneath it** — not the other way around. This avoids the classic marketplace trap (lots of users, no revenue in year one).
 
+> **Chunked deep-dive:** this file is the executive master. For the detailed, per-phase working version (deeper tables, worked examples, playbooks, checklists), see [`docs/strategy/`](strategy/00-index.md) — one chunk per phase.
+
 ---
 
 ## Table of contents
