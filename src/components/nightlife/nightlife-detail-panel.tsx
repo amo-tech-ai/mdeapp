@@ -25,6 +25,7 @@ import {
 import { placesPhotoProxyUrl } from "@/lib/places-photo-proxy";
 import { useMapContext } from "@/platform/maps/map-context";
 import { cn } from "@/lib/utils";
+import { VenueBookingStatusChip } from "@/components/venues/venue-booking-status-chip";
 
 const SAFETY_COPY_KEY = "mdeai-nightlife-safety-shown";
 
@@ -173,6 +174,9 @@ export function NightlifeDetailPanel({
           </div>
         </div>
         <h2 className="mt-2 text-lg font-semibold leading-snug">{detail.title}</h2>
+        <div className="mt-2">
+          <VenueBookingStatusChip placeId={detail.placeId} uiKind="nightlife" />
+        </div>
         <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
           {ratingText ? (
             <span className="inline-flex items-center gap-1 font-medium text-foreground">
