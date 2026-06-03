@@ -24,9 +24,12 @@ test.describe("AUTH-005 auth guards", () => {
   }) => {
     // /me/tickets/[id] is the guest QR view (email link carries ?token=). The
     // middleware guard is exact-match on /me/tickets, so deeper paths must pass.
-    await page.goto("/me/tickets/00000000-0000-0000-0000-000000000000");
+    const res = await page.goto("/me/tickets/00000000-0000-0000-0000-000000000000");
     expect(page.url()).not.toContain("/login");
     expect(page.url()).toContain("/me/tickets/");
+    // A missing ticket may 404, but the public guest path must never 5xx —
+    // that would be a real regression, which a URL-only check would miss.
+    expect(res?.status()).toBeLessThan(500);
   });
 
   test("login page renders passwordless options", async ({ page }) => {
