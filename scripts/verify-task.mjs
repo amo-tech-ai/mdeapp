@@ -66,6 +66,13 @@ const REGISTRY = {
     vitest: ["src/lib/__tests__/google-maps-map-id.test.ts"],
     extra: ["npm run verify:maps-env"],
   },
+  "MAP-002B": {
+    vitest: ["src/mastra/lib/adk-grounding-client.test.ts"],
+    extra: [
+      "npm run verify:cloud-run-grounding",
+      "npm run verify:grounding",
+    ],
+  },
   "AUTH-011": {
     extra: ["npm run verify:console:boot"],
   },
