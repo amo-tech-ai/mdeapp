@@ -60,7 +60,7 @@ const REGISTRY = {
   },
   "VEN-031": {
     vitest: ["src/components/venues/", "src/lib/venues/"],
-    e2e: ["e2e/screens/"],
+    e2e: ["e2e/screens/VEN-035-venue-release.spec.ts"],
   },
   "MAP-008B": {
     vitest: ["src/lib/__tests__/google-maps-map-id.test.ts"],
