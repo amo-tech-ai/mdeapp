@@ -3,6 +3,10 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseEnv } from "./env";
 
 const PROTECTED_PREFIXES = ["/host", "/trips", "/saved"];
+// Exact paths that require a session without protecting their subpaths.
+// /me/tickets (wallet list) needs auth, but /me/tickets/[id]?token= is the
+// guest ticket-view flow and must stay reachable without a session.
+const PROTECTED_EXACT = ["/me/tickets"];
 
 /**
  * Supabase falls back to Site URL with `?code=` when redirectTo is missing from
@@ -10,7 +14,10 @@ const PROTECTED_PREFIXES = ["/host", "/trips", "/saved"];
  */
 function relaySupabaseAuthQuery(request: NextRequest): NextResponse | null {
   const { pathname, searchParams } = request.nextUrl;
-  if (pathname === "/auth/callback") {
+  // /auth/callback consumes ?code; /login is this relay's own destination and
+  // renders ?error itself. Relaying either back through here would loop the
+  // browser into ERR_TOO_MANY_REDIRECTS (e.g. user denies Google consent).
+  if (pathname === "/auth/callback" || pathname === "/login") {
     return null;
   }
 
@@ -33,6 +40,9 @@ function relaySupabaseAuthQuery(request: NextRequest): NextResponse | null {
 }
 
 function isProtectedPath(pathname: string) {
+  if (PROTECTED_EXACT.includes(pathname)) {
+    return true;
+  }
   return PROTECTED_PREFIXES.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
