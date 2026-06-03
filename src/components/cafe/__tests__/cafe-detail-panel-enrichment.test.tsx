@@ -24,6 +24,10 @@ vi.mock("@/platform/maps/map-context", () => ({
   useMapContext: () => ({ panToPin: vi.fn() }),
 }));
 
+vi.mock("@/components/venues/venue-booking-status-chip", () => ({
+  VenueBookingStatusChip: () => null,
+}));
+
 const detail: CafeVenueDetail = {
   kind: "cafe",
   pinId: "cafe-1",
