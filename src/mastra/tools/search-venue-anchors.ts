@@ -109,6 +109,50 @@ export async function searchNightclubVenueAnchors(params: {
   );
 }
 
+/** Browse `/nightlife` — surfaces Supabase/config failures instead of empty grid. */
+export async function searchNightclubVenueAnchorsForBrowse(params: {
+  neighborhood?: string;
+  limit: number;
+}): Promise<{ rows: VenueAnchorRow[]; error: string | null }> {
+  const client = getSupabaseClient();
+  if (!client) {
+    return {
+      rows: [],
+      error: "Could not load nightlife venues. Try again in a moment.",
+    };
+  }
+
+  let query = client
+    .from("venue_anchors")
+    .select(
+      "id, kind, name, google_place_id, neighborhood, latitude, longitude, tags, metadata",
+    )
+    .eq("kind", "nightclub")
+    .eq("is_active", true)
+    .limit(params.limit);
+
+  if (params.neighborhood) {
+    query = query.ilike("neighborhood", `%${params.neighborhood}%`);
+  }
+
+  const { data, error } = await query;
+  if (error) {
+    console.warn("[search-venue-anchors] nightclub browse", error.message);
+    return {
+      rows: [],
+      error: "Could not load nightlife venues. Try again in a moment.",
+    };
+  }
+
+  const rows = (data ?? []) as VenueAnchorRow[];
+  return {
+    rows: rows.filter(
+      (row) => Boolean(row.google_place_id) && typeof row.name === "string",
+    ),
+    error: null,
+  };
+}
+
 export function venueAnchorSummary(row: VenueAnchorRow): string | undefined {
   const meta = row.metadata;
   if (meta && typeof meta.ai_vibe_summary === "string") {

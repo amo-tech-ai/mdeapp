@@ -1,31 +1,50 @@
-import Link from "next/link";
-import { MoonStar } from "lucide-react";
-import { EmptyState } from "@/components/empty/empty-state";
+import {
+  loadNightlifeListings,
+  normalizeSearchParam,
+  type NightlifeVibe,
+} from "@/lib/nightlife-browse";
+import { NightlifeBrowseView } from "@/components/nightlife/nightlife-browse-view";
 
 export const metadata = {
   title: "Nightlife · mdeai",
+  description:
+    "Browse clubs and bars in Medellín — neighborhoods, vibes, and map-ready listings.",
 };
 
-/** SCREEN-022 browse shell — blocked on VEN-013 polish; chat nightlife works today. */
-export default function NightlifePage() {
+const VIBE_VALUES = new Set<string>([
+  "reggaeton",
+  "rooftop",
+  "salsa",
+  "cocktails",
+  "live-music",
+]);
+
+type NightlifePageProps = {
+  searchParams: Promise<{
+    neighborhood?: string | string[];
+    vibe?: string | string[];
+  }>;
+};
+
+export default async function NightlifePage({ searchParams }: NightlifePageProps) {
+  const params = await searchParams;
+  const neighborhood = normalizeSearchParam(params.neighborhood);
+  const vibeRaw = normalizeSearchParam(params.vibe);
+  const vibe =
+    vibeRaw && VIBE_VALUES.has(vibeRaw) ? (vibeRaw as NightlifeVibe) : undefined;
+
+  const { results, error } = await loadNightlifeListings({
+    neighborhood,
+    vibe,
+    limit: 24,
+  });
+
   return (
-    <main
-      data-testid="nightlife-browse-placeholder"
-      className="mx-auto flex min-h-screen max-w-lg flex-col items-center justify-center px-4 py-12"
-    >
-      <EmptyState
-        testId="nightlife-placeholder"
-        title="Nightlife browse coming soon"
-        description="Ask the concierge for salsa bars, rooftop cocktails, and clubs in Provenza or La 70."
-        icon={<MoonStar className="size-8" aria-hidden />}
-      />
-      <Link
-        href="/"
-        className="mt-6 text-sm font-medium text-primary hover:underline"
-        data-testid="nightlife-back-to-chat"
-      >
-        Open concierge chat
-      </Link>
-    </main>
+    <NightlifeBrowseView
+      results={results}
+      error={error}
+      neighborhood={neighborhood ?? null}
+      vibe={vibe ?? null}
+    />
   );
 }
