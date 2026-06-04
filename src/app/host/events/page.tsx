@@ -28,7 +28,7 @@ export default async function HostEventsPage() {
   // and keeps `user` non-null for the query below.
   if (!user) redirect("/login?next=/host/events");
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("events")
     .select(
       "id, name, slug, status, address, city, event_start_time, primary_image_url, ticket_price_min, ticket_url",
@@ -36,6 +36,13 @@ export default async function HostEventsPage() {
     .eq("organizer_id", user.id)
     .order("event_start_time", { ascending: false })
     .limit(50);
+
+  // Log + render a distinct error state — a failed query must not masquerade as
+  // an empty list (would hide a broken column/RLS bug). Convention mirrors
+  // loadUserTrips: degrade gracefully, don't throw (no error boundary exists).
+  if (error) {
+    console.error("[host-events] failed to load events:", error.message);
+  }
 
   const events = ((data ?? []) as HostEventRow[]).map(eventRowToHostCardProps);
 
@@ -66,7 +73,14 @@ export default async function HostEventsPage() {
         </div>
       </div>
 
-      {events.length === 0 ? (
+      {error ? (
+        <EmptyState
+          testId="host-events-error"
+          title="Couldn't load your events"
+          description="Something went wrong fetching your events. Refresh to try again."
+          icon={<CalendarPlus className="size-8" />}
+        />
+      ) : events.length === 0 ? (
         <>
           <EmptyState
             testId="host-events-empty"
