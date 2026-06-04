@@ -1,12 +1,96 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Heart, Luggage, MapPin, MessageSquarePlus, Sparkles } from "lucide-react";
+import {
+  Building2,
+  CalendarDays,
+  Coffee,
+  Heart,
+  type LucideIcon,
+  Luggage,
+  MapPin,
+  MessageSquarePlus,
+  Sparkles,
+  Ticket,
+  User,
+  UtensilsCrossed,
+  Wine,
+} from "lucide-react";
 import { useConciergeSession } from "@/components/chat/concierge-session-context";
 import { useThreadNav } from "@/lib/chat/thread-nav-context";
 import { useNavThreads } from "@/lib/chat/use-nav-threads";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+
+/**
+ * One sidebar destination. `href: null` renders a disabled "Coming soon"
+ * placeholder (matching the Trips pattern) for pages not yet live per sitemap.md.
+ */
+type NavItem = {
+  slug: string;
+  label: string;
+  href: string | null;
+  Icon: LucideIcon;
+};
+
+// Status mirrors sitemap.md: live verticals link out; SHELL/MVP/POST are placeholders.
+const EXPLORE_ITEMS: NavItem[] = [
+  { slug: "restaurants", label: "Restaurants", href: "/restaurants", Icon: UtensilsCrossed },
+  { slug: "cafes", label: "Cafés", href: null, Icon: Coffee },
+  { slug: "nightlife", label: "Nightlife", href: "/nightlife", Icon: Wine },
+  { slug: "rentals", label: "Rentals", href: null, Icon: Building2 },
+  { slug: "events", label: "Events", href: null, Icon: CalendarDays },
+];
+
+const LIBRARY_ITEMS: NavItem[] = [
+  { slug: "saved", label: "Saved", href: "/saved", Icon: Heart },
+  { slug: "tickets", label: "Tickets", href: "/me/tickets", Icon: Ticket },
+  { slug: "trips", label: "Trips", href: null, Icon: Luggage },
+  { slug: "profile", label: "Profile", href: null, Icon: User },
+];
+
+function NavItemRow({ item }: { item: NavItem }) {
+  const { Icon, slug, label, href } = item;
+  if (href) {
+    return (
+      <li>
+        <a
+          href={href}
+          data-testid={`nav-${slug}-link`}
+          className="inline-flex h-8 w-full items-center justify-start gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+        >
+          <Icon className="size-4 shrink-0" aria-hidden />
+          {label}
+        </a>
+      </li>
+    );
+  }
+  return (
+    <li>
+      <Tooltip>
+        <TooltipTrigger
+          data-testid={`nav-${slug}-link`}
+          aria-disabled="true"
+          className="inline-flex h-8 w-full cursor-not-allowed items-center justify-start gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground/50"
+        >
+          <Icon className="size-4 shrink-0" aria-hidden />
+          {label}
+        </TooltipTrigger>
+        <TooltipContent side="right">Coming soon</TooltipContent>
+      </Tooltip>
+    </li>
+  );
+}
+
+function NavSectionLabel({ children }: { children: string }) {
+  return (
+    <li className="mt-2 border-t pt-2">
+      <span className="block px-3 pb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground/70">
+        {children}
+      </span>
+    </li>
+  );
+}
 
 /** SCREEN-002 — chat nav rail with thread list + new chat + nav links. */
 export function ChatNavRail({
@@ -107,32 +191,17 @@ export function ChatNavRail({
           </li>
         )}
 
-        {/* Saved — live at /saved */}
-        <li className="mt-2 border-t pt-2">
-          <a
-            href="/saved"
-            data-testid="nav-saved-link"
-            className="inline-flex h-8 w-full items-center justify-start gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-          >
-            <Heart className="size-4 shrink-0" aria-hidden />
-            Saved
-          </a>
-        </li>
+        {/* Explore — live verticals (link) + not-yet-live placeholders (sitemap.md) */}
+        <NavSectionLabel>Explore</NavSectionLabel>
+        {EXPLORE_ITEMS.map((item) => (
+          <NavItemRow key={item.slug} item={item} />
+        ))}
 
-        {/* Trips — shell page exists, full feature Phase 2 */}
-        <li>
-          <Tooltip>
-            <TooltipTrigger
-              data-testid="nav-trips-link"
-              aria-disabled="true"
-              className="inline-flex h-8 w-full cursor-not-allowed items-center justify-start gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground/50"
-            >
-              <Luggage className="size-4 shrink-0" aria-hidden />
-              Trips
-            </TooltipTrigger>
-            <TooltipContent side="right">Coming soon</TooltipContent>
-          </Tooltip>
-        </li>
+        {/* Library — personal pages */}
+        <NavSectionLabel>Library</NavSectionLabel>
+        {LIBRARY_ITEMS.map((item) => (
+          <NavItemRow key={item.slug} item={item} />
+        ))}
       </ul>
 
       <p className="mt-auto text-xs text-muted-foreground">
