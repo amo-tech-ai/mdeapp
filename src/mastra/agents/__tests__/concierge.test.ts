@@ -90,6 +90,15 @@ describe("conciergeAgent", () => {
     expect(instructions).toContain("View on Google Maps");
   });
 
+  it("instructions tell agent to pass search-grounded-places intent for nightlife and cafés", async () => {
+    const instructions = await conciergeAgent.getInstructions();
+    expect(instructions).toContain('intent: "nightlife"');
+    expect(instructions).toContain('intent: "cafe"');
+    expect(instructions).toContain('intent "nightlife"');
+    expect(instructions).toContain("popular venues in Provenza tonight");
+    expect(instructions).toContain("search-events");
+  });
+
   it("working memory accepts event query with genericAskPending", () => {
     const parsed = conciergeWorkingMemorySchema.parse({
       lastIntent: "event_discovery",
