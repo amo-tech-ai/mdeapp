@@ -9,7 +9,7 @@ import {
   isNightlifeGroundingQuery,
   normalizeCafeGroundingQuery,
   resolveVenueGroundingKind,
-  searchGroundedPlacesTool,
+  searchGroundedPlacesInputSchema,
   venueGroundingIntentSchema,
 } from "../search-grounded-places";
 import type { GroundedPlaceResult } from "../../lib/map-adk-grounding-pins";
@@ -128,7 +128,7 @@ describe("search-grounded-places café quality filter", () => {
 
   it("accepts optional intent on tool inputSchema", () => {
     expect(
-      searchGroundedPlacesTool.inputSchema?.parse({
+      searchGroundedPlacesInputSchema.parse({
         query: "rooftop cocktails Provenza",
         intent: "nightlife",
       }).intent,
