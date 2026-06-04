@@ -44,8 +44,14 @@ type GroundedOut = {
   metadata?: Record<string, unknown>;
 };
 
-async function runGrounded(query: string): Promise<GroundedOut> {
-  const out = await searchGroundedPlacesTool.execute!({ query }, {} as never);
+async function runGrounded(
+  query: string,
+  intent?: "cafe" | "general" | "nightlife",
+): Promise<GroundedOut> {
+  const out = await searchGroundedPlacesTool.execute!(
+    { query, ...(intent ? { intent } : {}) },
+    {} as never,
+  );
   return out as GroundedOut;
 }
 
@@ -127,6 +133,30 @@ describe("searchGroundedPlacesTool fallback", () => {
     const out = await runGrounded("salsa bars in Poblado");
 
     expect(out.results).toEqual([]);
+    expect(out.metadata?.venueKind).toBe("nightlife");
+    expect(searchRestaurants).not.toHaveBeenCalled();
+  });
+
+  it("uses nightclub anchors when intent=nightlife without nightlife keywords", async () => {
+    const { searchNightclubVenueAnchors, isNightlifeVenueQuery } = await import(
+      "../search-venue-anchors",
+    );
+    vi.mocked(isNightlifeVenueQuery).mockReturnValue(false);
+    vi.mocked(searchNightclubVenueAnchors).mockResolvedValue([
+      {
+        id: "club-1",
+        name: "VIVO Medellín",
+        google_place_id: "ChIJvivo",
+        neighborhood: "Provenza",
+        tags: ["reggaeton"],
+        summary: null,
+      },
+    ] as never);
+    vi.mocked(invokeAdkGrounding).mockResolvedValue(adkUnavailableMock());
+
+    const out = await runGrounded("popular venues tonight", "nightlife");
+
+    expect(out.results[0]?.title).toBe("VIVO Medellín");
     expect(out.metadata?.venueKind).toBe("nightlife");
     expect(searchRestaurants).not.toHaveBeenCalled();
   });

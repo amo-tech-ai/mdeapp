@@ -5,9 +5,12 @@ import {
   filterNightlifeGroundingRows,
   isCafeGroundingIntent,
   isCafeGroundingQuery,
+  isNightlifeGroundingIntent,
   isNightlifeGroundingQuery,
   normalizeCafeGroundingQuery,
   resolveVenueGroundingKind,
+  searchGroundedPlacesInputSchema,
+  venueGroundingIntentSchema,
 } from "../search-grounded-places";
 import type { GroundedPlaceResult } from "../../lib/map-adk-grounding-pins";
 
@@ -101,6 +104,38 @@ describe("search-grounded-places café quality filter", () => {
       "Salsa Bar El Tibiri",
       "Rooftop Lounge Medellín",
     ]);
+  });
+
+  it("forces nightlife filter when intent=nightlife even if query is generic", () => {
+    expect(
+      isNightlifeGroundingIntent("highly rated venues in El Poblado", "nightlife"),
+    ).toBe(true);
+    const rows = [
+      { id: "1", title: "Gardenia Brunch & Coffee", latitude: 1, longitude: 1 },
+      { id: "2", title: "Rooftop Lounge Medellín", latitude: 1, longitude: 1 },
+    ] satisfies GroundedPlaceResult[];
+
+    const filtered = filterNightlifeGroundingRows(
+      rows,
+      "highly rated venues in El Poblado",
+      "nightlife",
+    );
+    expect(filtered.map((r) => r.title)).toEqual(["Rooftop Lounge Medellín"]);
+    expect(
+      resolveVenueGroundingKind("quiet cafés near Laureles", "nightlife"),
+    ).toBe("nightlife");
+  });
+
+  it("accepts optional intent on tool inputSchema", () => {
+    expect(
+      searchGroundedPlacesInputSchema.parse({
+        query: "rooftop cocktails Provenza",
+        intent: "nightlife",
+      }).intent,
+    ).toBe("nightlife");
+    expect(() =>
+      venueGroundingIntentSchema.parse("restaurant"),
+    ).toThrow();
   });
 
   it("aligns attribution by placeUri after café filtering drops rows (B1)", () => {
