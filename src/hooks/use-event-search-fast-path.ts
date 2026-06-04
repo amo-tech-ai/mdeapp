@@ -24,9 +24,15 @@ import { useMapContext } from "@/platform/maps/map-context";
 import { normalizeToolOutput } from "@/platform/maps/normalize-tool-output";
 import type { FilterChipDef } from "@/platform/copilot/chat-filter-chips";
 
+type EventSearchResponse = {
+  results: EventCard[];
+  hybridUsed?: boolean;
+  rankExplanation?: Array<{ factor: string; score: number; note: string }>;
+};
+
 async function fetchEventSearch(
   params: EventSearchApiParams,
-): Promise<EventCard[]> {
+): Promise<EventSearchResponse> {
   const res = await fetch("/api/events/search", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -35,8 +41,8 @@ async function fetchEventSearch(
   if (!res.ok) {
     throw new Error(`event search failed: ${res.status}`);
   }
-  const data = (await res.json()) as { results: EventCard[] };
-  return data.results ?? [];
+  const data = (await res.json()) as EventSearchResponse;
+  return { ...data, results: data.results ?? [] };
 }
 
 export function useEventSearchFastPath() {
@@ -56,11 +62,15 @@ export function useEventSearchFastPath() {
       cards: EventCard[],
       query: ConciergeWorkingMemory["lastEventQuery"],
       memory: ConciergeWorkingMemory,
+      meta?: {
+        hybridUsed?: boolean;
+        rankExplanation?: Array<{ factor: string; score: number; note: string }>;
+      },
     ) => {
       setRentalToolResult(null);
       setRentalSearchMeta(null);
       mergePinsByCategory("rental", []);
-      const envelope = eventCardsToToolEnvelope(cards);
+      const envelope = eventCardsToToolEnvelope(cards, meta);
       setToolResult(envelope);
       setWebCitations([]);
       setRows(
@@ -100,14 +110,18 @@ export function useEventSearchFastPath() {
       busyRef.current = true;
       try {
         setRestaurantToolResult(null);
-        let cards = await fetchEventSearch(params);
+        let { results: cards, hybridUsed, rankExplanation } =
+          await fetchEventSearch(params);
         let usedFallback = false;
         if (
           cards.length === 0 &&
           params.dateWindow &&
           params.dateWindow !== "any"
         ) {
-          cards = await fetchEventSearch({ ...params, dateWindow: "any" });
+          const fallback = await fetchEventSearch({ ...params, dateWindow: "any" });
+          cards = fallback.results;
+          hybridUsed = fallback.hybridUsed;
+          rankExplanation = fallback.rankExplanation;
           usedFallback = cards.length > 0;
         }
         const query: ConciergeWorkingMemory["lastEventQuery"] = {
@@ -116,7 +130,7 @@ export function useEventSearchFastPath() {
           dateWindow: usedFallback ? "any" : (params.dateWindow ?? "any"),
           genericAskPending: false,
         };
-        applySearchResults(cards, query, memory);
+        applySearchResults(cards, query, memory, { hybridUsed, rankExplanation });
         const summary = usedFallback
           ? `Nothing for ${params.dateWindow?.replace("_", " ")} — showing ${cards.length} upcoming event${cards.length === 1 ? "" : "s"} instead.`
           : fastPathAssistantSummary(cards.length);

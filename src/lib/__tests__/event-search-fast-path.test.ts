@@ -147,4 +147,39 @@ describe("event-search-fast-path", () => {
       expect(canFastPathEventSearch("and there?", afterSalsaMemory)).toBe(false);
     });
   });
+
+  describe("SEARCH-002 queryText gate (high-intent only)", () => {
+    it("attaches queryText for salsa this weekend", () => {
+      expect(buildEventSearchParams("salsa this weekend", {})?.queryText).toBe(
+        "salsa this weekend",
+      );
+    });
+
+    it("attaches queryText for nightlife this weekend in Poblado", () => {
+      expect(
+        buildEventSearchParams("nightlife this weekend in Poblado", {})?.queryText,
+      ).toBe("nightlife this weekend in Poblado");
+    });
+
+    it("attaches queryText for fashion and networking intents", () => {
+      expect(
+        buildEventSearchParams("fashion events tonight", {})?.queryText,
+      ).toBe("fashion events tonight");
+      expect(
+        buildEventSearchParams("networking events this weekend", {})?.queryText,
+      ).toBe("networking events this weekend");
+    });
+
+    it("omits queryText for broad category browse (music events)", () => {
+      const params = buildEventSearchParams("music events in Medellín", {});
+      expect(params?.category).toBe("music");
+      expect(params?.queryText).toBeUndefined();
+    });
+
+    it("omits queryText for show-all browse", () => {
+      expect(
+        buildEventSearchParams("show all events in Medellín", {})?.queryText,
+      ).toBeUndefined();
+    });
+  });
 });
