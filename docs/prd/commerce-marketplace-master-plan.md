@@ -504,7 +504,7 @@ sequenceDiagram
 4. **Expand verticals** (events/experiences/creators) once the fashion core has liquidity.
 
 ### Final prioritized implementation order (Core → MVP → Advanced)
-```
+```text
 CORE      1 Deploy Medusa headless (Hetzner/Coolify) + own Postgres
           2 Stripe payment module; reuse Stripe org
           3 Mastra commerce tools (product_search, cart, checkout) → Store API

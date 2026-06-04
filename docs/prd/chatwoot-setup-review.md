@@ -40,7 +40,7 @@ The plan says "WhatsApp channel" but omits the rules that *break* most launches:
 
 "Connect Agent Bot webhook to Mastra" hides the part that needs a spec:
 
-```
+```text
 Chatwoot → POST /api/chatwoot-bridge   (webhook: message_created)
   verify HMAC signature (X-Chatwoot-Signature)  ← REQUIRED, omitted in plan
   ignore if message.sender.type == "agent_bot"  ← prevent self-loops

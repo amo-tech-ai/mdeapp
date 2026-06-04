@@ -93,7 +93,7 @@ Each journey shows: flow → revenue lines → **revenue state machine** → per
 ### 2.1 Events (G1)
 
 **Flow**
-```
+```text
 Camila/Andrés: "Best salsa events this weekend"
 → conciergeAgent (intent: event_discovery)
 → eventAgent → search-events → Event cards + map pins
@@ -107,7 +107,7 @@ Camila/Andrés: "Best salsa events this weekend"
 **Revenue lines:** ticket commission · buyer service fee · featured event fee · sponsor ads · VIP upgrades
 
 **Revenue state machine**
-```
+```text
 cart_created → checkout_started → payment_authorized → paid
   → ticket_issued → attended → settled (payout to organizer, app fee retained)
                               ↘ refunded / disputed (reverse app fee)
@@ -133,7 +133,7 @@ cart_created → checkout_started → payment_authorized → paid
 ### 2.2 Restaurants (booking request)
 
 **Flow**
-```
+```text
 Camila: "Best steakhouse in Medellín"
 → conciergeAgent (intent: restaurant_search) → search-restaurants
 → Restaurant card → detail panel
@@ -143,7 +143,7 @@ Camila: "Best steakhouse in Medellín"
 **Revenue lines:** reservation fee · featured placement · sponsored listing · AI marketing package (retainer)
 
 **State machine**
-```
+```text
 request_created → sent_to_venue → confirmed → seated → billed
                                             ↘ no_show / cancelled
 ```
@@ -161,7 +161,7 @@ request_created → sent_to_venue → confirmed → seated → billed
 ### 2.3 Rentals (G2)
 
 **Flow**
-```
+```text
 Camila: "2 bedroom apartment in Laureles under $1500"
 → conciergeAgent (intent: rental_search) → rentalAgent → search-rentals
 → Rental cards + map pins
@@ -173,7 +173,7 @@ Camila: "2 bedroom apartment in Laureles under $1500"
 **Revenue lines:** lead fee · qualified-lead fee · lease commission · property marketing package
 
 **State machine (the lead lifecycle — core to MDE)**
-```
+```text
 lead_captured → enriched → qualified → delivered_to_broker → billed
    → viewing_scheduled → lease_signed → commission_invoiced
                                       ↘ disqualified (no charge) / expired
@@ -198,7 +198,7 @@ lead_captured → enriched → qualified → delivered_to_broker → billed
 ### 2.4 Tourism (booking)
 
 **Flow**
-```
+```text
 Tourist: "Best coffee tour near Medellín"
 → conciergeAgent → search-attractions → Experience card
 → Booking → Stripe → confirmation (QR/voucher)
@@ -207,7 +207,7 @@ Tourist: "Best coffee tour near Medellín"
 **Revenue lines:** experience commission (15–20%) · operator subscription · featured experiences
 
 **State machine**
-```
+```text
 booking_created → paid → voucher_issued → redeemed → settled (operator payout − app fee)
 ```
 
@@ -217,7 +217,7 @@ booking_created → paid → voucher_issued → redeemed → settled (operator p
 
 ### 2.5 Nightlife (booking request)
 
-```
+```text
 Camila: "rooftop with bottle service tonight"
 → conciergeAgent → nightlife card → VIP table request → deposit (Stripe) → confirmed
 ```
@@ -248,7 +248,7 @@ Camila: "rooftop with bottle service tonight"
 
 ### 3.3 Split-payment workflow ($100 example)
 
-```
+```text
 Customer pays $100 (Checkout, Apple/Google Pay)
   → PaymentIntent on MDE account
   → application_fee_amount = $15  (MDE take)

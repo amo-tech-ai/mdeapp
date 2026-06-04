@@ -13,7 +13,7 @@
 1. **All 7 agents can only *search*.** None can *sell*. There is no checkout tool, no lead-qualify tool, no upsell tool in `src/mastra/tools/`. The AI is a concierge that can't close.
 2. **There is no marketplace rail.** No Stripe Connect, no `application_fee`, no destination charges, no operator payouts. You cannot pay a tour operator or restaurant today. "Marketplace" is aspirational.
 3. **There is no recurring-revenue infra.** No `subscriptions` table, no Stripe Billing. The highest-margin, fastest-cash line (AI agency retainers + business SaaS) needs almost none of the complex grounding work already done — yet it isn't productized.
-4. **The stack is over-claimed.** `package.json` wires **Gemini only** — no OpenAI, no OpenClaw, no Cloudinary, no ADK SDK as app deps (ADK is a sidecar). WhatsApp exists as *tables* (`whatsapp_*`, `wa_outbox`) but no live send loop in the app.
+4. **The stack is over-claimed.** Current production wiring is **Gemini only** (direct dependency: `@ai-sdk/google`) — no OpenAI, no OpenClaw, no Cloudinary, no ADK SDK as direct app deps (ADK is a sidecar). Other strategy docs refer to OpenAI/Claude/OpenClaw/Cloudinary as *planned/assumed* providers, not installed dependencies. WhatsApp exists as *tables* (`whatsapp_*`, `wa_outbox`) but no live send loop in the app.
 
 **If revenue is the goal, the next 90 days should add almost no new discovery features.** They should productize the agency, add Stripe Connect + subscriptions, and give agents tools that transact.
 

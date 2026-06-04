@@ -21,7 +21,7 @@
 - **Description:** Package AI marketing/automation services (content, reviews, WhatsApp, concierge setup) into Starter/Growth/Pro tiers with public pricing + a "free AI audit" lead magnet. Delivered on the existing stack.
 - **Business value:** Fastest cash; acquires marketplace supply for free; dogfoods the product.
 - **Revenue impact:** ⭐⭐⭐⭐⭐ ($300–$1,500/mo per client; target 10–15 → $5–10k MRR)
-- **Complexity:** M · **Dependencies:** none (manual delivery OK) · **Stack:** Next.js landing, Mastra Marketing Agent (C7), WhatsApp, Supabase · **Effort:** 2–3 wk
+- **Complexity:** M · **Dependencies:** none (manual delivery OK; C7 Marketing Agent later *enhances scale*, not a prerequisite) · **Stack:** Next.js landing, WhatsApp, Supabase · **Effort:** 2–3 wk
 - **Why first:** 80–95% margin, no infra, bills from week 3.
 
 ### C2 — `create_checkout` Mastra tool + shared checkout widget `[exists→extend]` · **Score 96**
@@ -330,7 +330,7 @@
 Stripe Connect marketplace (M1) → Q2 (services/leads don't need it). Full tourism (A3) and fashion (A4) marketplaces → 6–18 mo. "AI operating system" (A7) and multi-city (A9) → Advanced. Personalization (A5) after revenue rails exist.
 
 ### What to remove / park
-`pingAgent` from prod registration (C13). Park `evaluationAgent` (W8, not prod). Collapse `routerAgent` into the concierge routing path. Stop adding discovery/grounding sophistication — the search engine is already 9/10 against a 4/10 revenue system. Shelve fashion as anything but a PR flywheel until Yr2.
+`pingAgent` from prod registration (C13). Park `evaluationAgent` (scorer agent, not production-wired). Collapse `routerAgent` into the concierge routing path. Stop adding discovery/grounding sophistication — the search engine is already 9/10 against a 4/10 revenue system. Shelve fashion as anything but a PR flywheel until Yr2.
 
 ### What generates revenue fastest
 1. **AI agency retainers (C1)** — bills in weeks, 80–95% margin, no infra.
@@ -347,9 +347,11 @@ Stripe Connect marketplace (M1) → Q2 (services/leads don't need it). Full tour
 |---|---|---|
 | AI agency retainers (15 × ~$667) | C1, C7 | $10,000 |
 | (early) featured listings + lead billing | C5, C4, C9 | upside |
+
 **Gate:** C1, C3, C7. **No Connect needed.**
 
 ### Path to $50k MRR (~6 months)
+
 | Source | Tasks | Monthly |
 |---|---|---|
 | Agency (services) | C1,C7 | $15,000 |
@@ -357,9 +359,11 @@ Stripe Connect marketplace (M1) → Q2 (services/leads don't need it). Full tour
 | Rental leads (qualified) | C4,C8 | $10,000 |
 | Tourism + nightlife transactions | M3,C10 | $10,000 |
 | Featured listings + sponsorship | C5,M5 | $5,000 |
+
 **Gate:** C-series complete + M1 (Connect), M2 (`/business`), M3, M4.
 
 ### Path to $100k MRR (~12–18 months)
+
 | Source | Tasks | Monthly |
 |---|---|---|
 | Agency | C1,C7 | $20,000 |
@@ -368,6 +372,7 @@ Stripe Connect marketplace (M1) → Q2 (services/leads don't need it). Full tour
 | Tourism marketplace | M3,A3 | $10,000 |
 | Events (tickets + promo) | C2,C15 | $10,000 |
 | Marketplace take-rate (Connect) | M1,A1 | $15,000 |
+
 **Gate:** full MVP + A1 (bundles), A3 (tourism marketplace). **Driver: NRR > 110% + GMV ramp — retention, not just new logos.**
 
 ---

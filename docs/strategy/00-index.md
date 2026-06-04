@@ -34,7 +34,7 @@ Stage 3 (18 mo+):   + marketplace take-rate at scale + ads/sponsorship → margi
 - **Currency:** USD; planning FX 4,000 COP/USD. Service prices quoted in USD where the buyer is expat/B2B; local-only SMB prices noted in COP-equivalent ranges.
 - **Commission columns:** *Industry std* (incumbents) · *Startup-friendly* (wins supply) · *Recommended* (MDE launch rate, justified by bundled AI value).
 - **Confidence:** numbers are benchmark + modeled estimates, not signed terms. Replace with partner actuals as deals land.
-- **Stack assumed:** Next.js/CopilotKit · Mastra · Gemini/OpenAI/Claude · Supabase + pgvector · Google Maps · Stripe · WhatsApp.
+- **Stack assumed:** Next.js/CopilotKit · Mastra · Gemini (current production wiring; OpenAI/Claude planned/optional routing) · Supabase + pgvector · Google Maps · Stripe · WhatsApp. See [`strategic-audit.md`](../strategic-audit.md) §0 for what is wired today vs. roadmap.
 
 ## Status tracker (fill in as you execute)
 

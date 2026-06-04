@@ -50,6 +50,8 @@ monthly ROI report (auto-generated) → renewal/upsell
 
 ## 3.5 OpenClaw / Instagram Intelligence — compliant lead discovery
 
+> **Status: planned/optional — not currently implemented.** OpenClaw is not wired into the current app stack (see [`strategic-audit.md`](../strategic-audit.md) §0). This section describes a proposed capability and its compliance guardrails, not a shipped integration.
+
 **Goal:** discover & qualify businesses, influencers, restaurants, events, and talent as inbound for both marketplace supply and agency clients — legally.
 
 ### Allowed (do this)

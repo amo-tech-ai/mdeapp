@@ -119,6 +119,16 @@ flowchart TB
 - IG/FB = discovery → **always funnel to WhatsApp** for the booking/payment step.
 - Web widget is *not* a replacement for CopilotKit — it's the **handoff destination** when the web concierge needs a human.
 
+### 4.1 WhatsApp compliance requirements (mandatory — ban risk if ignored)
+
+> These are production-blocking. Violating the 24-hour window is one of the most common causes of WhatsApp Business Account bans. Hardening detail in [`chatwoot-setup-review.md §2`](chatwoot-setup-review.md).
+
+- **24-hour customer service window:** free-form replies are allowed only within 24h of the user's last inbound message. **Outside the window, send only Meta-approved templates.** The bot/bridge (§7) must check conversation window state before any free-form reply and fall back to a template (or suppress) when outside it.
+- **Template approval:** submit re-engagement/proactive templates for Meta approval early (hours–days).
+- **Opt-in:** proactive messaging requires documented opt-in — reuse `whatsapp_subscriptions` as the consent ledger (Ley 1581).
+- **STOP handling:** honor unsubscribe immediately; suppress further messaging.
+- **Rate-limit tiers:** new WABAs start at ~250 conversations/day and scale with quality rating — plan campaign volume accordingly.
+
 ---
 
 ## 5. Core Chatwoot Features (how mdeai uses each)
@@ -181,6 +191,8 @@ flowchart TB
 
 **Handoff confidence model:** Mastra returns `{reply, confidence, intent, needs_human}`. If `needs_human || confidence < 0.6 || intent ∈ {payment_dispute, complaint, vip, complex_relocation}` → add `needs-human` label, assign team, post private note. Otherwise bot replies directly.
 
+**WhatsApp window check (mandatory in the bridge):** before any free-form WhatsApp reply, the bridge must check the 24-hour customer-service window (§4.1). Inside the window → reply normally; outside → send an approved template or suppress. Never emit a free-form WhatsApp message outside the window.
+
 ---
 
 ## 8. WhatsApp Workflows
@@ -188,7 +200,7 @@ flowchart TB
 Legend per flow: **U**ser · **AI** (Mastra) · **CW** (Chatwoot) · **M**astra tools · **H**uman.
 
 ### 8.1 Rental inquiry
-```
+```text
 U: "2BR Laureles under $1500"
 CW: inbox→bot, create contact, label intent:rental
 AI: Router→Rental; M: search-rentals (+grounding); reply 3 cards + photos
@@ -200,7 +212,7 @@ $$: qualified-lead fee billed (lead_billing)
 ```
 
 ### 8.2 Restaurant booking
-```
+```text
 U: "table for 4 tonight 8pm, steak"
 AI: Restaurant; M: search-restaurants; propose 2; book_request
 CW: conversation attr listing_id, payment_status=n/a
@@ -209,7 +221,7 @@ $$: reservation fee / retainer attribution
 ```
 
 ### 8.3 Nightlife concierge
-```
+```text
 U: "rooftop bottle service tonight"
 AI: Nightlife; propose venues + min spend
 AI: Booking agent → create_checkout (deposit) → Stripe payment link in chat
@@ -219,7 +231,7 @@ $$: 10–15% table fee
 ```
 
 ### 8.4 Event ticketing
-```
+```text
 U: "salsa tickets this weekend"
 AI: Event; M: search-events; create_checkout (G1)
 U: pays → ticket-payment-webhook → QR delivered into WhatsApp
@@ -227,7 +239,7 @@ $$: 5% + $0.40 commission; upsell VIP via Sales/Booking agent
 ```
 
 ### 8.5 Relocation assistance (premium)
-```
+```text
 U: "moving to Medellín for 3 months, need apartment + essentials"
 AI: Concierge orchestrates: Rental(lead) + Trip(bundle) + checklist
 CW: label relocation, vip; assign senior concierge early (high-touch)
@@ -236,7 +248,7 @@ $$: relocation package ($300–$1,500) + rental commission
 ```
 
 ### 8.6 General concierge
-```
+```text
 U: open-ended question
 AI: Concierge + grounding; answer or route to a vertical agent
 If ambiguous/low confidence → needs-human → CW assign
@@ -424,7 +436,7 @@ Chatwoot and CopilotKit **coexist**: CopilotKit is the rich **web** concierge (c
 
 > **Chatwoot + WhatsApp + Mastra + Google Places + Supabase. One vertical: Rentals.**
 
-```
+```text
 WhatsApp → Chatwoot inbox → Agent Bot → bridge → Mastra(Rental+grounding)
 → 3 listings → schedule viewing → G2 lead → Supabase → human broker handoff
 → bill qualified lead
@@ -480,6 +492,7 @@ WhatsApp → Chatwoot inbox → Agent Bot → bridge → Mastra(Rental+grounding
 ### Implementation checklist (Phase 1–2)
 - [ ] Deploy Chatwoot via Coolify on Hetzner (Postgres, Redis, S3-compatible storage, backups).
 - [ ] WhatsApp Cloud API inbox + business verification + templates approved.
+- [ ] WhatsApp 24-hour window check in the bridge (§4.1) — template fallback outside the window.
 - [ ] `/api/chatwoot-bridge` + n8n webhook router (retry/dedupe).
 - [ ] Contact/conversation mirror tables + required `intent` attribute + audit logs.
 - [ ] Wire Router/Concierge/Rental agents; bilingual replies.
