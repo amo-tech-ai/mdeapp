@@ -1,9 +1,19 @@
 import {
-  searchNightclubVenueAnchors,
+  searchNightclubVenueAnchorsForBrowse,
   venueAnchorMapsUrl,
   venueAnchorSummary,
   type VenueAnchorRow,
 } from "@/mastra/tools/search-venue-anchors";
+
+/** Next.js may pass duplicate query keys as `string[]`. */
+export function normalizeSearchParam(
+  value: string | string[] | undefined,
+): string | undefined {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (typeof raw !== "string") return undefined;
+  const trimmed = raw.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+}
 
 export type NightlifeVibe =
   | "reggaeton"
@@ -60,20 +70,17 @@ export async function loadNightlifeListings(filters: {
   vibe?: NightlifeVibe;
   limit?: number;
 }): Promise<{ results: NightlifeListing[]; error: string | null }> {
-  try {
-    const rows = await searchNightclubVenueAnchors({
-      neighborhood: filters.neighborhood,
-      limit: filters.limit ?? 24,
-    });
-    let results = rows.map(mapVenueAnchorToNightlifeListing);
-    if (filters.vibe) {
-      results = results.filter((row) => matchesNightlifeVibe(row, filters.vibe!));
-    }
-    return { results, error: null };
-  } catch {
-    return {
-      results: [],
-      error: "Could not load nightlife venues. Try again in a moment.",
-    };
+  const { rows, error } = await searchNightclubVenueAnchorsForBrowse({
+    neighborhood: filters.neighborhood,
+    limit: filters.limit ?? 24,
+  });
+  if (error) {
+    return { results: [], error };
   }
+
+  let results = rows.map(mapVenueAnchorToNightlifeListing);
+  if (filters.vibe) {
+    results = results.filter((row) => matchesNightlifeVibe(row, filters.vibe!));
+  }
+  return { results, error: null };
 }

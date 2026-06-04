@@ -1,5 +1,6 @@
 import {
   loadNightlifeListings,
+  normalizeSearchParam,
   type NightlifeVibe,
 } from "@/lib/nightlife-browse";
 import { NightlifeBrowseView } from "@/components/nightlife/nightlife-browse-view";
@@ -19,13 +20,16 @@ const VIBE_VALUES = new Set<string>([
 ]);
 
 type NightlifePageProps = {
-  searchParams: Promise<{ neighborhood?: string; vibe?: string }>;
+  searchParams: Promise<{
+    neighborhood?: string | string[];
+    vibe?: string | string[];
+  }>;
 };
 
 export default async function NightlifePage({ searchParams }: NightlifePageProps) {
   const params = await searchParams;
-  const neighborhood = params.neighborhood?.trim() || undefined;
-  const vibeRaw = params.vibe?.trim();
+  const neighborhood = normalizeSearchParam(params.neighborhood);
+  const vibeRaw = normalizeSearchParam(params.vibe);
   const vibe =
     vibeRaw && VIBE_VALUES.has(vibeRaw) ? (vibeRaw as NightlifeVibe) : undefined;
 
