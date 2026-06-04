@@ -115,4 +115,18 @@ describe("conciergeAgent", () => {
     const cafe = conciergeWorkingMemorySchema.parse({ lastIntent: "cafe_search" });
     expect(cafe.lastIntent).toBe("cafe_search");
   });
+
+  it("working memory rental genericAskPending defaults to undefined when omitted", () => {
+    const parsed = conciergeWorkingMemorySchema.parse({
+      lastRentalQuery: { neighborhood: "Poblado" },
+    });
+    expect(parsed.lastRentalQuery?.genericAskPending).toBeUndefined();
+  });
+
+  it("working memory preserves rental query genericAskPending false", () => {
+    const parsed = conciergeWorkingMemorySchema.parse({
+      lastRentalQuery: { genericAskPending: false },
+    });
+    expect(parsed.lastRentalQuery?.genericAskPending).toBe(false);
+  });
 });
