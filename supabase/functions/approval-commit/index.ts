@@ -1,6 +1,7 @@
 import { getCorsHeaders, errorBody, jsonResponse } from "../_shared/http.ts";
 import { getServiceClient, getUserId } from "../_shared/supabase-clients.ts";
 import { slugifyEventTitle } from "./slugify.ts";
+import { buildEventInsert } from "./build-event-insert.ts";
 
 const jr = jsonResponse;
 
@@ -121,25 +122,7 @@ Deno.serve(async (req: Request) => {
   const slug = slugifyEventTitle(draft.title);
   const { data: eventRow, error: eventErr } = await service
     .from("events")
-    .insert({
-      source: "host_wizard",
-      name: draft.title,
-      description: draft.description ?? null,
-      address: draft.venue ?? null,
-      city: "Medellín",
-      country: "CO",
-      event_start_time: draft.dateIso,
-      ticket_price_min: draft.priceMinCop ?? null,
-      currency: "cop",
-      slug,
-      status: "published",
-      created_by: userId,
-      details: {
-        neighborhood: draft.neighborhood ?? null,
-        capacity: draft.capacity ?? null,
-        ticket_tiers: draft.ticketTiers ?? [],
-      },
-    })
+    .insert(buildEventInsert(draft, userId, slug))
     .select("id, slug")
     .single();
 

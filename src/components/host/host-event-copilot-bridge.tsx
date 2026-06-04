@@ -128,11 +128,12 @@ export function HostEventCopilotBridge({ children }: HostEventCopilotBridgeProps
           });
         }}
         respond={(decision) => {
-          if (decision === "approved") {
-            setDraft({ status: "pending_approval" });
-          } else if (decision === "rejected") {
+          // On approve, the wizard publishes straight to `published` — `onPublished`
+          // owns that state transition (with the event id/slug). Do NOT set
+          // `pending_approval` here, or it races and clobbers the published status.
+          if (decision === "rejected") {
             setDraft({ status: "rejected" });
-          } else {
+          } else if (decision !== "approved") {
             setDraft({ status: "draft" });
           }
           respond?.(decision);
