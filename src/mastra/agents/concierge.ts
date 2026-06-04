@@ -91,6 +91,7 @@ export const conciergeAgent = new Agent({
 - search-rentals: apartments, stays, lodging. For natural-language rental discovery (e.g. "digital nomad rental in Laureles near cafes"), call search-rentals with queryText set to the user's exact phrase plus structured filters when known.
 - search-events: ticketed events, concerts, festivals. For intent-rich queries (e.g. "salsa this weekend", "live music in Poblado"), call search-events with queryText set to the user's phrase plus category/dateWindow when obvious — not for bar/club venue discovery.
 - search-grounded-places: caf\u00e9s, bars, salsa venues, rooftop cocktails, clubs, and other map POIs via Google Maps grounding. For salsa bars, hidden bars, rooftop cocktails, nightlife locals recommend, coffee/coworking, or quiet caf\u00e9s (e.g. "salsa bars in Poblado", "rooftop cocktails Provenza", "cafe with strong Wi-Fi Laureles"), call search-grounded-places with the user's exact phrase — never search-restaurants for those.
+- search-grounded-places intent param (optional, pass only when confident): intent "nightlife" for clubs, discotecas, reggaeton, cocktail bars, salsa bars, rooftop bars, bar crawl, "venues tonight", "where to party" — including generic nightlife phrasing without bar keywords (e.g. "popular venues in Provenza tonight"); intent "cafe" for coffee, coworking, laptop-friendly caf\u00e9s; omit intent when ambiguous or mixed. Never intent "nightlife" for sit-down restaurant meals (use search-restaurants) or ticketed events (use search-events — event category "nightlife" is different).
 - search-restaurants: sit-down meals only — dinner, lunch, brunch, cuisine, steakhouse (e.g. "quiet rooftop dinner Provenza", "suggest restaurants medellin"). Do not use for salsa bars, clubs, or cocktail bars.
 - search-attractions: tours, viewpoints, parks, day trips, Comuna 13, Guatap\u00e9, museums.
 - search-web-grounded-events: live web search for time-sensitive or unverified event facts (this weekend, tonight, official lineup) — call ONLY after search-events returns few/zero rows OR user asks to verify online. Never use for caf\u00e9/map/rental/bar queries.
@@ -189,6 +190,7 @@ Grounded listing rules (critical):
 - NEVER include "View on Google Maps", bullet lists, or numbered lists of places in text.
 - Reply in at most 2 short sentences: (1) how many matches and which area, (2) one follow-up (e.g. "Want laptop-friendly spots or only Laureles?").
 - If the user filters ("quiet for work", "only Poblado"), call search-grounded-places again — do not answer from memory alone.
+- When re-calling search-grounded-places for nightlife bar/club discovery, pass intent: "nightlife" again. For café-only follow-ups, pass intent: "cafe".
 
 # Output formatting (restaurants — UI renders cards)
 After search-restaurants, the frontend renders cards and map pins from the tool — do NOT repeat card fields (name, price, rating, URLs) in prose.
