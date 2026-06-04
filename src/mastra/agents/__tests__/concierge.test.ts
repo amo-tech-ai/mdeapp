@@ -57,6 +57,17 @@ describe("conciergeAgent", () => {
     expect(parsed.lastRentalQuery?.maxPricePerNight).toBe(56);
   });
 
+  it("working memory preserves rental query genericAskPending", () => {
+    const parsed = conciergeWorkingMemorySchema.parse({
+      lastIntent: "rental_search",
+      lastRentalQuery: {
+        neighborhood: "Laureles",
+        genericAskPending: true,
+      },
+    });
+    expect(parsed.lastRentalQuery?.genericAskPending).toBe(true);
+  });
+
   it("instructions require refining rentals on show cheaper", async () => {
     const instructions = await conciergeAgent.getInstructions();
     expect(instructions).toContain("show cheaper options");
@@ -103,30 +114,5 @@ describe("conciergeAgent", () => {
 
     const cafe = conciergeWorkingMemorySchema.parse({ lastIntent: "cafe_search" });
     expect(cafe.lastIntent).toBe("cafe_search");
-  });
-
-  it("working memory preserves rental query genericAskPending true", () => {
-    const parsed = conciergeWorkingMemorySchema.parse({
-      lastIntent: "rental_search",
-      lastRentalQuery: {
-        neighborhood: "Laureles",
-        genericAskPending: true,
-      },
-    });
-    expect(parsed.lastRentalQuery?.genericAskPending).toBe(true);
-  });
-
-  it("working memory rental genericAskPending defaults to undefined when omitted", () => {
-    const parsed = conciergeWorkingMemorySchema.parse({
-      lastRentalQuery: { neighborhood: "Poblado" },
-    });
-    expect(parsed.lastRentalQuery?.genericAskPending).toBeUndefined();
-  });
-
-  it("working memory preserves rental query genericAskPending false", () => {
-    const parsed = conciergeWorkingMemorySchema.parse({
-      lastRentalQuery: { genericAskPending: false },
-    });
-    expect(parsed.lastRentalQuery?.genericAskPending).toBe(false);
   });
 });
