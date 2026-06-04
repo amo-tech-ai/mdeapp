@@ -71,23 +71,41 @@ test.describe(SUITE, () => {
       assertConsoleHygiene(errors);
     });
 
-    test("SCREEN-022 /nightlife — placeholder → concierge chat", async ({
+    test("SCREEN-022 /nightlife — grid, cards, back to chat", async ({
       page,
     }) => {
       const errors = attachConsoleWatcher(page);
       await gotoBrowseRoute(page, "/nightlife");
 
+      await expect(page.getByTestId("nightlife-page")).toBeVisible();
       await expect(
-        page.getByTestId("nightlife-browse-placeholder"),
+        page.getByRole("heading", { name: "Nightlife" }),
       ).toBeVisible();
-      await expect(page.getByTestId("nightlife-placeholder")).toBeVisible();
-      await expect(page.getByTestId("nightlife-back-to-chat")).toBeVisible();
+      await expect(page.getByTestId("nightlife-grid")).toBeVisible();
+      await expect(
+        page.locator('[data-testid^="nightlife-card-"]').first(),
+      ).toBeVisible();
+      await expect(page.getByTestId("nightlife-safety-notice")).toBeVisible();
 
-      await page.getByTestId("nightlife-back-to-chat").click();
+      await page.getByRole("link", { name: "Back to chat" }).click();
       await expect(page).toHaveURL(/\/(\?|$)/);
       await expect(page.locator('[data-testid="chat-canvas"]')).toBeVisible();
 
       assertConsoleHygiene(errors);
+    });
+
+    test("SCREEN-022 /nightlife — Provenza neighborhood filter", async ({
+      page,
+    }) => {
+      await gotoBrowseRoute(page, "/nightlife");
+      const neighborhoodFilters = page.getByRole("group", {
+        name: "Neighborhood filters",
+      });
+      await neighborhoodFilters.getByRole("link", { name: "Provenza" }).click();
+      await expect(page).toHaveURL(/neighborhood=Provenza/, { timeout: 15_000 });
+      await expect(
+        neighborhoodFilters.getByRole("link", { name: "Provenza" }),
+      ).toHaveAttribute("aria-pressed", "true");
     });
   });
 
