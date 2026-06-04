@@ -12,6 +12,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { draftToEventCardProps } from "@/lib/events/draft-to-event-card";
+import {
+  resolveApprovalCommit,
+  type ApprovalCommitResponse,
+} from "@/lib/events/resolve-approval-commit";
 import type { EventDraftState } from "@/lib/types";
 import type { ApprovalDecision } from "@/lib/events/approval-decision";
 
@@ -56,26 +60,25 @@ export function EventPublishApprovalPanel({
           approvalRequestId: draft.approvalRequestId,
         }),
       });
-      const json = (await res.json()) as {
-        success?: boolean;
-        error?: { message?: string };
-        eventId?: string;
-        slug?: string;
-        approvalRequestId?: string;
-      };
+      const json = (await res.json()) as ApprovalCommitResponse;
 
-      if (!res.ok || !json.success) {
-        throw new Error(json.error?.message ?? "Approval commit failed");
+      const outcome = resolveApprovalCommit(decision, res.ok, json);
+      if (outcome.kind === "error") {
+        // Includes the "approved but no eventId/slug" case — do NOT respond as
+        // approved and do NOT lock the panel, so the host can retry.
+        setError(outcome.message);
+        setSubmitting(false);
+        return;
       }
 
-      setDecided(true);
-      if (decision === "approved" && json.eventId && json.slug) {
+      if (outcome.kind === "published") {
         onPublished?.({
-          eventId: json.eventId,
-          slug: json.slug,
-          approvalRequestId: json.approvalRequestId,
+          eventId: outcome.eventId,
+          slug: outcome.slug,
+          approvalRequestId: outcome.approvalRequestId,
         });
       }
+      setDecided(true);
       respond(decision);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Approval commit failed");
