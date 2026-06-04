@@ -106,6 +106,9 @@ export function ConciergeChatInput({
     if (!trimmed || inProgress) return;
     clearConciergeError();
     setText("");
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
     const handledRental = await handleRentalMessage(trimmed);
     if (handledRental) return;
     const handledEvent = await handleEventMessage(trimmed);
@@ -152,7 +155,15 @@ export function ConciergeChatInput({
           placeholder="Type a message..."
           value={text}
           rows={1}
-          onChange={(e) => setText(e.target.value)}
+          enterKeyHint="send"
+          inputMode="text"
+          onChange={(e) => {
+            setText(e.target.value);
+            // Auto-grow with content, capped at 160px (then the textarea scrolls).
+            const el = e.currentTarget;
+            el.style.height = "auto";
+            el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();

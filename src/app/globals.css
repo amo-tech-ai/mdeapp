@@ -179,3 +179,36 @@ html {
     animation: none !important;
   }
 }
+
+/* MOB-CK-001 — CopilotKit v1.55.2 mobile best practices.
+   globals.css is imported BEFORE @copilotkit/react-ui/styles.css (layout.tsx), so
+   CK wins on equal specificity — hence !important on properties CK already sets
+   (textarea font-size, container padding-bottom). Properties CK does not set
+   (min-*, overscroll-behavior-y) need no !important. */
+.copilotKitInput > textarea {
+  /* iOS Safari auto-zooms inputs < 16px on focus; CK ships 0.875rem (14px). */
+  font-size: 1rem !important;
+}
+.copilotKitInputControlButton {
+  /* WCAG 2.5.5 touch target; CK ships 24x24px. */
+  min-width: 44px;
+  min-height: 44px;
+}
+.copilotKitInputContainer {
+  /* Keep the composer above the iOS home indicator; preserve CK's 15px floor. */
+  padding-bottom: max(15px, env(safe-area-inset-bottom)) !important;
+}
+.copilotKitMessages {
+  /* Stop the page pull-to-refresh from firing while scrolling messages. */
+  overscroll-behavior-y: contain;
+}
+@media (prefers-reduced-motion: reduce) {
+  .copilotKitInputControlButton,
+  .copilotKitActivityDot1,
+  .copilotKitActivityDot2,
+  .copilotKitActivityDot3 {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}
