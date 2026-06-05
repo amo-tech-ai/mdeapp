@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { VenueCardShell } from "@/components/browse/venue-card-shell";
 import type { GroundedPhotoAttribution } from "@/lib/parse-grounded-tool-result";
 import { mapsDeepLinksEnabled } from "@/lib/maps-deep-links";
 import { placesPhotoProxyUrl } from "@/lib/places-photo-proxy";
@@ -9,7 +10,6 @@ import {
   priceLevelToLabel,
   primaryTypeToLabel,
 } from "@/lib/places-display";
-import { cn } from "@/lib/utils";
 import { CalendarCheck, ExternalLink, Info, MapPin } from "lucide-react";
 import type { CardInteractionProps, ResultKind } from "@/components/cards/card-interaction-props";
 
@@ -145,176 +145,167 @@ export function CafeResultCard({
     onOpenDetails?.();
   };
 
-  return (
-    <article
-      className={cn(
-        "overflow-hidden rounded-lg border bg-card text-sm shadow-sm transition",
-        selected ? "border-primary ring-2 ring-primary/30" : "border-border",
-      )}
-      data-testid={testId}
-      data-result-kind={resultKind}
-      data-pin-id={pinId}
-      data-selected={selected ? "true" : "false"}
-      onMouseEnter={preview}
-      onFocus={preview}
-    >
+  const media = photoSrc ? (
+    <div className="shrink-0">
       <div
-        className="flex gap-3 p-3"
-        role={onOpenDetails ? "button" : undefined}
-        tabIndex={onOpenDetails ? 0 : undefined}
-        aria-label={`Open details for ${title}`}
-        onClick={onOpenDetails ? openDetails : preview}
-        onKeyDown={
-          onOpenDetails
-            ? (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  openDetails();
-                }
-              }
-            : undefined
-        }
+        className="relative h-24 w-24 overflow-hidden rounded-md bg-muted"
+        data-testid="grounded-card-photo"
       >
-        {photoSrc ? (
-          <div className="shrink-0">
-            <div
-              className="relative h-24 w-24 overflow-hidden rounded-md bg-muted"
-              data-testid="grounded-card-photo"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element -- Places photo proxy URL; dynamic signed media */}
-              <img
-                src={photoSrc}
-                alt=""
-                width={96}
-                height={96}
-                className="h-full w-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            {photoAuthorAttributions && photoAuthorAttributions.length > 0 ? (
-              <p
-                className="mt-0.5 max-w-24 text-[10px] leading-tight text-muted-foreground"
-                data-testid="grounded-card-photo-attribution"
-              >
-                {photoAuthorAttributions.map((a, i) => (
-                  <span key={`${a.displayName ?? i}-${a.uri ?? ""}`}>
-                    {i > 0 ? ", " : null}
-                    {a.uri && a.displayName ? (
-                      <a
-                        href={a.uri}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="underline-offset-1 hover:underline"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {a.displayName}
-                      </a>
-                    ) : (
-                      (a.displayName ?? a.uri)
-                    )}
-                  </span>
-                ))}
-              </p>
-            ) : null}
-          </div>
-        ) : (
-          <div
-            className="flex h-24 w-24 shrink-0 items-center justify-center rounded-md bg-muted text-xs text-muted-foreground"
-            data-testid="grounded-card-photo-placeholder"
-            aria-hidden
-          >
-            {mediaPlaceholderLabel}
-          </div>
-        )}
-
-        <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <p className="text-[11px] font-medium uppercase tracking-normal text-muted-foreground">
-                Match #{rank}
-              </p>
-              <h3 className="font-medium leading-snug">{title}</h3>
-            </div>
-            {ratingText ? (
-              <p
-                className="shrink-0 text-xs font-medium text-foreground"
-                data-testid="grounded-card-rating"
-              >
-                ★ {ratingText}
-              </p>
-            ) : null}
-          </div>
-
-          <div className="mt-1.5 flex flex-wrap gap-1.5">
-            <Badge variant="secondary">{typeLabel}</Badge>
-            {priceLabel ? <Badge variant="outline">{priceLabel}</Badge> : null}
-            {hoursLabel ? (
-              <Badge
-                variant={openNow === true ? "secondary" : "outline"}
-                data-testid="grounded-card-hours"
-              >
-                {hoursLabel}
-              </Badge>
-            ) : null}
-          </div>
-
-          {blurb ? (
-            <p className="mt-2 line-clamp-2 text-xs leading-5 text-muted-foreground">
-              {blurb}
-            </p>
-          ) : null}
-
-          <div className="mt-2 flex flex-wrap gap-1.5 text-[11px] text-muted-foreground">
-            <span className="inline-flex items-center gap-1 rounded bg-muted px-1.5 py-0.5">
-              <Info className="size-3" aria-hidden />
-              Google-verified candidate
-            </span>
-            {placeId ? (
-              <span className="rounded bg-muted px-1.5 py-0.5">Place ID</span>
-            ) : null}
-            {fieldMaskVersion ? (
-              <span className="rounded bg-muted px-1.5 py-0.5">
-                Places fields checked
-              </span>
-            ) : null}
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-2 border-t px-3 py-2">
-        <CafeMapLinks
-          mapsUrl={mapsUrl}
-          directionsUrl={directionsUrl}
-          reviewsUrl={reviewsUrl}
+        {/* eslint-disable-next-line @next/next/no-img-element -- Places photo proxy URL; dynamic signed media */}
+        <img
+          src={photoSrc}
+          alt=""
+          width={96}
+          height={96}
+          className="h-full w-full object-cover"
+          loading="lazy"
         />
-        <div className="flex flex-wrap gap-1.5">
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            data-testid={detailsTestId}
-            onClick={(e) => {
-              e.stopPropagation();
-              openDetails();
-            }}
-          >
-            Details
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            data-testid={bookingTestId}
-            onClick={(e) => {
-              e.stopPropagation();
-              preview();
-              onBookRequest?.();
-            }}
-          >
-            <CalendarCheck className="size-3.5" aria-hidden />
-            Request
-          </Button>
-        </div>
       </div>
-    </article>
+      {photoAuthorAttributions && photoAuthorAttributions.length > 0 ? (
+        <p
+          className="mt-0.5 max-w-24 text-[10px] leading-tight text-muted-foreground"
+          data-testid="grounded-card-photo-attribution"
+        >
+          {photoAuthorAttributions.map((a, i) => (
+            <span key={`${a.displayName ?? i}-${a.uri ?? ""}`}>
+              {i > 0 ? ", " : null}
+              {a.uri && a.displayName ? (
+                <a
+                  href={a.uri}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline-offset-1 hover:underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {a.displayName}
+                </a>
+              ) : (
+                (a.displayName ?? a.uri)
+              )}
+            </span>
+          ))}
+        </p>
+      ) : null}
+    </div>
+  ) : (
+    <div
+      className="flex h-24 w-24 shrink-0 items-center justify-center rounded-md bg-muted text-xs text-muted-foreground"
+      data-testid="grounded-card-photo-placeholder"
+      aria-hidden
+    >
+      {mediaPlaceholderLabel}
+    </div>
+  );
+
+  return (
+    <VenueCardShell
+      testId={testId}
+      resultKind={resultKind}
+      pinId={pinId}
+      selected={selected}
+      onPreview={preview}
+      bodyRole={onOpenDetails ? "button" : undefined}
+      bodyTabIndex={onOpenDetails ? 0 : undefined}
+      bodyAriaLabel={`Open details for ${title}`}
+      onBodyClick={onOpenDetails ? openDetails : preview}
+      onBodyKeyDown={
+        onOpenDetails
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                openDetails();
+              }
+            }
+          : undefined
+      }
+      media={media}
+      footer={
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t px-3 py-2">
+          <CafeMapLinks
+            mapsUrl={mapsUrl}
+            directionsUrl={directionsUrl}
+            reviewsUrl={reviewsUrl}
+          />
+          <div className="flex flex-wrap gap-1.5">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              data-testid={detailsTestId}
+              onClick={(e) => {
+                e.stopPropagation();
+                openDetails();
+              }}
+            >
+              Details
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              data-testid={bookingTestId}
+              onClick={(e) => {
+                e.stopPropagation();
+                preview();
+                onBookRequest?.();
+              }}
+            >
+              <CalendarCheck className="size-3.5" aria-hidden />
+              Request
+            </Button>
+          </div>
+        </div>
+      }
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-[11px] font-medium uppercase tracking-normal text-muted-foreground">
+            Match #{rank}
+          </p>
+          <h3 className="font-medium leading-snug">{title}</h3>
+        </div>
+        {ratingText ? (
+          <p
+            className="shrink-0 text-xs font-medium text-foreground"
+            data-testid="grounded-card-rating"
+          >
+            ★ {ratingText}
+          </p>
+        ) : null}
+      </div>
+
+      <div className="mt-1.5 flex flex-wrap gap-1.5">
+        <Badge variant="secondary">{typeLabel}</Badge>
+        {priceLabel ? <Badge variant="outline">{priceLabel}</Badge> : null}
+        {hoursLabel ? (
+          <Badge
+            variant={openNow === true ? "secondary" : "outline"}
+            data-testid="grounded-card-hours"
+          >
+            {hoursLabel}
+          </Badge>
+        ) : null}
+      </div>
+
+      {blurb ? (
+        <p className="mt-2 line-clamp-2 text-xs leading-5 text-muted-foreground">
+          {blurb}
+        </p>
+      ) : null}
+
+      <div className="mt-2 flex flex-wrap gap-1.5 text-[11px] text-muted-foreground">
+        <span className="inline-flex items-center gap-1 rounded bg-muted px-1.5 py-0.5">
+          <Info className="size-3" aria-hidden />
+          Google-verified candidate
+        </span>
+        {placeId ? (
+          <span className="rounded bg-muted px-1.5 py-0.5">Place ID</span>
+        ) : null}
+        {fieldMaskVersion ? (
+          <span className="rounded bg-muted px-1.5 py-0.5">
+            Places fields checked
+          </span>
+        ) : null}
+      </div>
+    </VenueCardShell>
   );
 }
