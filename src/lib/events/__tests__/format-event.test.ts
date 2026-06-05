@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { isEventLookupUuid } from "@/lib/events/event-lookup";
 import {
+  formatEventCardPrice,
   formatEventSchedule,
   formatTicketPrice,
   ticketsRemaining,
@@ -19,6 +20,21 @@ describe("isEventLookupUuid", () => {
 describe("formatTicketPrice", () => {
   it("formats COP centavos", () => {
     expect(formatTicketPrice(4_000_000, "COP")).toBe("$40,000 COP");
+  });
+});
+
+describe("formatEventCardPrice", () => {
+  it("formats USD as a plain $ amount (unchanged from prior card output)", () => {
+    expect(formatEventCardPrice(1500, "USD")).toBe("$1,500");
+  });
+
+  it("suffixes COP to disambiguate from the shared $ sign", () => {
+    expect(formatEventCardPrice(80000, "COP")).toBe("$80,000 COP");
+  });
+
+  it("defaults unknown/null currency to USD form", () => {
+    expect(formatEventCardPrice(50, null)).toBe("$50");
+    expect(formatEventCardPrice(50, undefined)).toBe("$50");
   });
 });
 

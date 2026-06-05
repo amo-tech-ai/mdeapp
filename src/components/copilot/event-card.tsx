@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Ticket } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { formatEventCardPrice } from "@/lib/events/format-event";
 import type { CardInteractionProps, ResultKind } from "@/components/cards/card-interaction-props";
 
 export type EventCardProps = {
@@ -12,6 +13,8 @@ export type EventCardProps = {
   neighborhood: string;
   startsAt: string;
   pricePerTicket: number;
+  /** EventCard.currency — "USD" or "COP". Defaults to USD when omitted. */
+  currency?: string;
   imageUrl?: string;
   ticketUrl: string;
   sourceUrl?: string;
@@ -47,6 +50,7 @@ export function EventCard({
   neighborhood,
   startsAt,
   pricePerTicket,
+  currency,
   imageUrl,
   ticketUrl,
   sourceUrl,
@@ -117,7 +121,7 @@ export function EventCard({
           {formatStartsAt(startsAt)}
         </p>
         <p className="mt-1 inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
-          From ${pricePerTicket.toLocaleString("en-US")}
+          From {formatEventCardPrice(pricePerTicket, currency)}
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
           {onBuyTickets ? (

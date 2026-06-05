@@ -16,6 +16,7 @@ import { writeSearchLog } from '../lib/search-logs';
 // ── Schema ────────────────────────────────────────────────────────────────────
 
 const categoryEnum = z.enum(['music', 'food', 'culture', 'sport', 'nightlife']);
+const currencyEnum = z.enum(['USD', 'COP']);
 
 const eventSchema = z.object({
   id: z.string(),
@@ -25,7 +26,7 @@ const eventSchema = z.object({
   neighborhood: z.string(),
   startsAt: z.string().describe('ISO 8601'),
   pricePerTicket: z.number(),
-  currency: z.literal('USD'),
+  currency: currencyEnum,
   imageUrl: z.string(),
   latitude: z.number().optional(),
   longitude: z.number().optional(),
@@ -36,6 +37,18 @@ const eventSchema = z.object({
 
 export type EventCard = z.infer<typeof eventSchema>;
 export type EventCategory = z.infer<typeof categoryEnum>;
+export type EventCurrency = z.infer<typeof currencyEnum>;
+
+// ── Currency normalization ────────────────────────────────────────────────────
+// public.events stores a mix of 'USD' and 'COP' (verified 2026-06-05: 32 USD /
+// 17 COP). Pass the DB value through rather than hardcoding — labeling a COP
+// price as USD overstates the USD equivalent ~4000× (e.g. $80,000 COP ≈ $19 USD
+// looks like $80,000 USD on the card). Unknown/null falls back to USD.
+export function normalizeEventCurrency(
+  currency: string | null | undefined,
+): EventCurrency {
+  return currency?.toUpperCase() === 'COP' ? 'COP' : 'USD';
+}
 
 // ── DB event_type -> EventCard category mapping ───────────────────────────────
 
@@ -187,7 +200,7 @@ function rowToCard(row: EventRow): EventCard {
     neighborhood: extractNeighborhood(row.address, row.city),
     startsAt: row.event_start_time,
     pricePerTicket: row.ticket_price_min ?? 0,
-    currency: 'USD',
+    currency: normalizeEventCurrency(row.currency),
     imageUrl: row.primary_image_url ?? '',
     latitude: row.latitude ?? undefined,
     longitude: row.longitude ?? undefined,

@@ -79,4 +79,32 @@ describe("recordMastraRun", () => {
     );
     expect(insert).toHaveBeenCalled();
   });
+
+  it("clears the timeout timer after a successful insert (no leaked timer)", async () => {
+    vi.useFakeTimers();
+    try {
+      process.env.SUPABASE_URL = "https://example.supabase.co";
+      process.env.SUPABASE_SERVICE_ROLE_KEY = "test-service-role";
+
+      const insert = vi.fn().mockResolvedValue({ error: null });
+      vi.mocked(createClient).mockReturnValue({
+        from: () => ({ insert }),
+      } as unknown as ReturnType<typeof createClient>);
+
+      await recordMastraRun({
+        user_id: null,
+        agent_name: "ping-agent",
+        agent_type: "general_concierge",
+        status: "success",
+      });
+
+      expect(insert).toHaveBeenCalled();
+      // The 500ms deadline timer must be cleared in `finally`; otherwise it
+      // stays pending ~500ms per call and keeps the Node event loop warm
+      // under chat load.
+      expect(vi.getTimerCount()).toBe(0);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });
