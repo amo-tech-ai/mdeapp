@@ -42,7 +42,8 @@ export type EventCurrency = z.infer<typeof currencyEnum>;
 // ── Currency normalization ────────────────────────────────────────────────────
 // public.events stores a mix of 'USD' and 'COP' (verified 2026-06-05: 32 USD /
 // 17 COP). Pass the DB value through rather than hardcoding — labeling a COP
-// price as USD understates it ~4000x on the card. Unknown/null falls back to USD.
+// price as USD overstates the USD equivalent ~4000× (e.g. $80,000 COP ≈ $19 USD
+// looks like $80,000 USD on the card). Unknown/null falls back to USD.
 export function normalizeEventCurrency(
   currency: string | null | undefined,
 ): EventCurrency {

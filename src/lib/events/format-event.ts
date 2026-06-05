@@ -14,7 +14,8 @@ export function formatTicketPrice(priceCents: number, currency: string): string 
  * Format a whole-unit event price — EventCard.pricePerTicket, NOT cents — with
  * its currency. USD keeps the prior "$1,500" card output (zero behavior change),
  * while COP is suffixed: the "$" sign is shared with the peso, so "$80,000"
- * alone reads as USD and badly misstates a peso price. Unknown/null → USD form.
+ * alone reads as USD and overstates the price ~4000× ($80,000 COP ≈ $19 USD).
+ * Unknown/null → USD form.
  */
 export function formatEventCardPrice(
   price: number,
