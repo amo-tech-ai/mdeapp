@@ -1,5 +1,6 @@
 import { createStep, createWorkflow } from '@mastra/core/workflows';
 import { z } from 'zod';
+import { formatEventCardPrice } from '@/lib/events/format-event';
 import { searchEvents } from '../tools/search-events';
 
 const categoryEnum = z.enum(['music', 'food', 'culture', 'sport', 'nightlife']);
@@ -12,7 +13,7 @@ const eventSchema = z.object({
   neighborhood: z.string(),
   startsAt: z.string(),
   pricePerTicket: z.number(),
-  currency: z.literal('USD'),
+  currency: z.enum(['USD', 'COP']),
   imageUrl: z.string(),
 });
 
@@ -66,7 +67,7 @@ const formatStep = createStep({
       id: e.id,
       headline: e.title,
       subline: `${e.venue} · ${e.neighborhood} · ${e.category}`,
-      priceLabel: `$${e.pricePerTicket}`,
+      priceLabel: `From ${formatEventCardPrice(e.pricePerTicket, e.currency)}`,
       imageUrl: e.imageUrl,
     }));
     return { cards, total: inputData.total };
