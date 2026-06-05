@@ -1,7 +1,9 @@
 # 📊 MDE AI — Progress Dashboard
 
 > Single-glance status for the platform: **where each feature stands** and **how well each tech-stack component applies best practices.**
-> _Last updated: 2026-06-04 · Source: Linear (Sanjiovani MVP scope, 105 issues) + codebase audit + 63 merged PRs._
+> _Last updated: 2026-06-05 · Source: Linear (Sanjiovani MVP scope) + codebase audit + merged PRs._
+
+> **Two MVP lenses:** This dashboard scores **product vertical breadth + revenue readiness** (~17–24% weighted). Phase 1 **exit checklist** readiness is tracked separately in [`tasks/MVP-REQUIRED.md`](https://github.com/amo-tech-ai/mdeai/blob/main/tasks/MVP-REQUIRED.md) (~98% foundation shipped; G1/G2/G3 commerce gates still open). Do not conflate the two percentages.
 
 ## Legend
 
@@ -23,7 +25,7 @@
 | **MVP completion** | ~17% done · **~24% weighted** | 🟡 |
 | **Engineering best-practices grade** | **B+ (≈85/100)** | 🟢 |
 | **Verticals live end-to-end** | 1 of 5 (Venues) | 🟡 |
-| **Merged PRs** | 63 | 🟢 |
+| **Merged PRs** | 64+ | 🟢 |
 | **Revenue features live** | Booking requests only (no payment loop yet) | 🔴 |
 
 ---
@@ -36,7 +38,7 @@
 | **Google Maps / Places** | 🟢 | 90 | **A−** | Field-mask on every call, single-pin-writer, mapId discipline, Places cache |
 | **Next.js / React** | 🟢 | 88 | **A−** | Next 16 App Router + RSC, React 19, Turbopack, pinned deps |
 | **pgvector** | 🟡 | 87 | **B+** | Hybrid FTS + per-entity embeddings — wiring still in review |
-| **Testing / CI** | 🟢 | 86 | **B+** | `floor` gate, 91 Vitest, Playwright e2e, CodeRabbit/Vercel/Supabase preview |
+| **Testing / CI** | 🟢 | 86 | **B+** | `floor` gate, **519** Vitest (`npm test -- --run`), Playwright e2e, CodeRabbit/Vercel/Supabase preview |
 | **UI** (shadcn / Tailwind 4) | 🟢 | 85 | **B+** | Design-token reuse, no-new-colors discipline |
 | **CopilotKit** | 🟢 | 85 | **B+** | Pinned 1.55.2, clean Pattern-1 runtime, generative cards |
 | **Stripe** | 🟡 | 82 | **B+** | Excellent ticketing (idempotent, oversell-safe, webhook=truth); no Connect/Billing |
