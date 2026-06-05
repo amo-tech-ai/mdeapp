@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowLeft, UtensilsCrossed } from "lucide-react";
+import { UtensilsCrossed } from "lucide-react";
+import { BrowseLayout } from "@/components/browse/BrowseLayout";
 import { RestaurantCard } from "@/components/copilot/restaurant-card";
 import { EmptyState } from "@/components/empty/empty-state";
 import type { Restaurant } from "@/mastra/tools/search-restaurants";
@@ -54,95 +55,73 @@ export function RestaurantBrowseView({
 }: RestaurantBrowseViewProps) {
   const retryHref = buildFilterUrl({ neighborhood, cuisine });
 
+  const filterBar = (
+    <>
+      <div>
+        <p className="mb-2 text-xs font-medium text-muted-foreground">
+          Neighborhood
+        </p>
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Neighborhood filters">
+          {NEIGHBORHOODS.map((n) => {
+            const active = neighborhood === n;
+            return (
+              <Link
+                key={n}
+                href={buildFilterUrl({
+                  neighborhood: toggleNeighborhood(neighborhood, n),
+                  cuisine,
+                })}
+                aria-pressed={active}
+                data-testid={`restaurants-filter-neighborhood-${n.toLowerCase().replace(/\s+/g, "-")}`}
+                className={`inline-flex min-h-9 items-center rounded-full border px-3 text-sm transition ${
+                  active
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border bg-background hover:bg-muted"
+                }`}
+              >
+                {n}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      <div>
+        <p className="mb-2 text-xs font-medium text-muted-foreground">Cuisine</p>
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Cuisine filters">
+          {CUISINES.map(({ value, label }) => {
+            const active = cuisine === value;
+            return (
+              <Link
+                key={value}
+                href={buildFilterUrl({
+                  neighborhood,
+                  cuisine: toggleCuisine(cuisine, value),
+                })}
+                aria-pressed={active}
+                data-testid={`restaurants-filter-cuisine-${value}`}
+                className={`inline-flex min-h-9 items-center rounded-full border px-3 text-sm transition ${
+                  active
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border bg-background hover:bg-muted"
+                }`}
+              >
+                {label}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </>
+  );
+
   return (
-    <main
-      data-testid="restaurants-browse"
-      className="mx-auto min-h-screen max-w-6xl px-4 py-6 sm:px-6"
+    <BrowseLayout
+      testId="restaurants-browse"
+      title="Restaurants"
+      subtitle="Food & dining in Medellín — browse without chat"
+      filterBar={filterBar}
     >
-      <header className="sticky top-0 z-10 -mx-4 border-b border-border bg-background/95 px-4 py-4 backdrop-blur sm:-mx-6 sm:px-6">
-        <div className="flex items-start gap-3">
-          <Link
-            href="/"
-            aria-label="Back to chat"
-            className="mt-1 inline-flex min-h-10 min-w-10 items-center justify-center rounded-md border border-border hover:bg-muted"
-          >
-            <ArrowLeft className="size-4" aria-hidden />
-          </Link>
-          <div className="min-w-0 flex-1">
-            <h1 className="font-serif text-2xl font-semibold">Restaurants</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Food &amp; dining in Medellín — browse without chat
-            </p>
-          </div>
-          <Link
-            href="/"
-            className="hidden text-sm text-primary hover:underline sm:inline"
-          >
-            Ask concierge
-          </Link>
-        </div>
-
-        <div className="mt-4 space-y-3">
-          <div>
-            <p className="mb-2 text-xs font-medium text-muted-foreground">
-              Neighborhood
-            </p>
-            <div className="flex flex-wrap gap-2" role="group" aria-label="Neighborhood filters">
-              {NEIGHBORHOODS.map((n) => {
-                const active = neighborhood === n;
-                return (
-                  <Link
-                    key={n}
-                    href={buildFilterUrl({
-                      neighborhood: toggleNeighborhood(neighborhood, n),
-                      cuisine,
-                    })}
-                    aria-pressed={active}
-                    data-testid={`restaurants-filter-neighborhood-${n.toLowerCase().replace(/\s+/g, "-")}`}
-                    className={`inline-flex min-h-9 items-center rounded-full border px-3 text-sm transition ${
-                      active
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border bg-background hover:bg-muted"
-                    }`}
-                  >
-                    {n}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-
-          <div>
-            <p className="mb-2 text-xs font-medium text-muted-foreground">
-              Cuisine
-            </p>
-            <div className="flex flex-wrap gap-2" role="group" aria-label="Cuisine filters">
-              {CUISINES.map(({ value, label }) => {
-                const active = cuisine === value;
-                return (
-                  <Link
-                    key={value}
-                    href={buildFilterUrl({
-                      neighborhood,
-                      cuisine: toggleCuisine(cuisine, value),
-                    })}
-                    aria-pressed={active}
-                    data-testid={`restaurants-filter-cuisine-${value}`}
-                    className={`inline-flex min-h-9 items-center rounded-full border px-3 text-sm transition ${
-                      active
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border bg-background hover:bg-muted"
-                    }`}
-                  >
-                    {label}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </header>
-
       <section className="mt-6" aria-label="Restaurant listings">
         {error ? (
           <div
@@ -193,6 +172,6 @@ export function RestaurantBrowseView({
           </div>
         ) : null}
       </section>
-    </main>
+    </BrowseLayout>
   );
 }
