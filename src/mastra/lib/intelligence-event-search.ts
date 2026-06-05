@@ -6,6 +6,7 @@ import {
   type EventQuery,
   mapCategory,
   extractNeighborhood,
+  normalizeEventCurrency,
   dateWindow,
   type DateWindow,
 } from "../tools/search-events";
@@ -28,6 +29,7 @@ type HybridEventRow = {
   city: string | null;
   event_start_time: string | null;
   ticket_price_min: number | string | null;
+  currency?: string | null;
   primary_image_url: string | null;
   similarity: number | null;
   latitude?: number | string | null;
@@ -103,7 +105,7 @@ function hybridToEventCard(row: HybridEventRow, rankScore?: number, signalSource
     neighborhood: extractNeighborhood(row.address, row.city),
     startsAt: row.event_start_time ?? new Date().toISOString(),
     pricePerTicket: num(row.ticket_price_min) ?? 0,
-    currency: "USD",
+    currency: normalizeEventCurrency(row.currency),
     imageUrl: row.primary_image_url ?? "",
     latitude: num(row.latitude),
     longitude: num(row.longitude),
@@ -166,7 +168,7 @@ export async function searchEventsIntelligent(
     let q = client
       .from("events")
       .select(
-        "id, name, event_type, address, city, event_start_time, ticket_price_min, primary_image_url, latitude, longitude, maps_url",
+        "id, name, event_type, address, city, event_start_time, ticket_price_min, currency, primary_image_url, latitude, longitude, maps_url",
       )
       .eq("is_active", true)
       .eq("status", "published")
@@ -189,6 +191,7 @@ export async function searchEventsIntelligent(
       city: r.city as string | null,
       event_start_time: r.event_start_time as string | null,
       ticket_price_min: r.ticket_price_min as number | null,
+      currency: r.currency as string | null,
       primary_image_url: r.primary_image_url as string | null,
       similarity: 0,
       latitude: r.latitude as number | null,

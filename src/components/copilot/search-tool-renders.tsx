@@ -377,6 +377,7 @@ export function EventResults({ result }: { result: unknown }) {
     neighborhood: string;
     startsAt: string;
     pricePerTicket: number;
+    currency?: string;
     imageUrl?: string;
     sourceUrl?: string;
   }>;
@@ -486,6 +487,7 @@ export function EventResults({ result }: { result: unknown }) {
               neighborhood={e.neighborhood}
               startsAt={e.startsAt}
               pricePerTicket={e.pricePerTicket}
+              currency={e.currency}
               imageUrl={e.imageUrl}
               ticketUrl={ticketUrl}
               sourceUrl={e.sourceUrl}
