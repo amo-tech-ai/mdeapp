@@ -22,6 +22,8 @@ describe("RestaurantCard", () => {
       />,
     );
     expect(html).toContain('data-testid="restaurant-card-photo"');
+    expect(html).toContain("absolute inset-0");
+    expect(html).toContain("aspect-[16/10]");
     expect(html).toContain('data-testid="restaurant-card-rating"');
     expect(html).toContain("★ 4.5");
     expect(html).toContain("$22/person");
@@ -39,5 +41,21 @@ describe("RestaurantCard", () => {
     );
     expect(html).toContain('data-testid="restaurant-card-photo-placeholder"');
     expect(html).not.toContain('data-testid="restaurant-card-photo"');
+    expect(html).toContain("aspect-[16/10]");
+  });
+
+  it("renders full-width cover media for browse layout", () => {
+    const html = renderToStaticMarkup(
+      <RestaurantCard
+        title="Browse Spot"
+        imageUrl="https://example.com/photo.jpg"
+        mediaLayout="cover"
+        composition="nova"
+        testId="restaurant-card"
+      />,
+    );
+    expect(html).toContain("aspect-[16/10]");
+    expect(html).toContain("w-full");
+    expect(html).toContain("object-cover");
   });
 });
