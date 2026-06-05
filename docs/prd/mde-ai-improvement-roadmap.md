@@ -3,6 +3,7 @@
 > A build plan to take MDE AI from "great foundation, ~20% built" to a **revenue-generating, WhatsApp-native, Medellín-expert AI concierge** across Trips, Rentals, Restaurants, Cafés, and Nightlife — with booking + payment, deeper search, and a growth engine.
 > **Grounded in current state (2026-06):** Venues vertical live (Nightlife ~70%, Restaurants ~55%), Rentals in progress (~10%), Trips blocked (~5%), 63 PRs merged, MVP ~17–24% complete. Engineering best-practices grade **B+**; DB/Maps/Next.js at A-level.
 > **Companion docs:** [`strategic-audit.md`](../strategic-audit.md), [`task-backlog.md`](../task-backlog.md), [`revenue-engine-prd.md`](revenue-engine-prd.md), [`chatwoot-integration-plan.md`](chatwoot-integration-plan.md), [`commerce-marketplace-master-plan.md`](commerce-marketplace-master-plan.md).
+> **Revenue execution order (authoritative):** [`INDEX-revenue.md`](https://github.com/amo-tech-ai/mdeai/blob/main/tasks/revenue/INDEX-revenue.md) in the **mdeai** planning repo — R1 = **C13 → C1 → C2** before R2+; this roadmap’s phases are narrative sequencing, not the Linear import order.
 
 ## The throughline
 
@@ -50,6 +51,8 @@ The foundation is A-grade — improvement is **not** a rebuild. It's three moves
 ## Phase 1 — The Transaction Layer + Venues to 100% (Weeks 2–6)
 
 **Goal:** the concierge stops dead-ending. Search → book → **pay** in one conversation. Finish Restaurants, Cafés, Nightlife.
+
+> **R1 gate (post-MVP):** Before `create_checkout` ships, run **C13 agent cleanup → C1 agency → C2 checkout** per [`INDEX-revenue.md`](https://github.com/amo-tech-ai/mdeai/blob/main/tasks/revenue/INDEX-revenue.md) (Linear: SAN-550 → SAN-552 → SAN-551). Phase 1 tasks below map to those specs; do not skip C13.
 
 ### Core build
 | Task | Tech | Detail |
@@ -189,7 +192,7 @@ Phase 4  WhatsApp/Chatwoot ─────────────────�
 Phase 5  Knowledge base / search / speed ───────────────┘
 ```
 
-- **Critical path to revenue:** Phase 0 → Phase 1 (`create_checkout`) → Phase 2 (lead billing) → Phase 6 (subscriptions/ads).
+- **Critical path to revenue:** Phase 0 → **R1 (C13→C1→C2)** → Phase 2 (lead billing) → Phase 6 (subscriptions/ads). See [`INDEX-revenue.md`](https://github.com/amo-tech-ai/mdeai/blob/main/tasks/revenue/INDEX-revenue.md).
 - **Phases 4 & 5 run in parallel** once Phase 1 lands (shared Mastra brain).
 - **Phase 3 (Trips) must not start before SAN-275** (create-trip modal).
 
@@ -233,4 +236,4 @@ Phase 5  Knowledge base / search / speed ─────────────
 - [ ] Cafés page → live (clone venues recipe).
 - [ ] Cap WIP ≤4; daily merge ritual; weekly Linear+GitHub scorecard.
 
-> _Improvement Roadmap v1 — phase order = execution order. Foundation is A-grade; the work is letting the AI transact and cloning the proven vertical pattern across Trips, Rentals, Restaurants, Cafés, Nightlife — on WhatsApp, with a Medellín-expert brain._
+> _Improvement Roadmap v1.1 — narrative phase order above; **Linear/import order** = [`INDEX-revenue.md`](https://github.com/amo-tech-ai/mdeai/blob/main/tasks/revenue/INDEX-revenue.md). Foundation is A-grade; the work is letting the AI transact and cloning the proven vertical pattern across Trips, Rentals, Restaurants, Cafés, Nightlife — on WhatsApp, with a Medellín-expert brain._
