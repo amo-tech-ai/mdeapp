@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { CalendarDays } from "lucide-react";
 import { BrowseLayout } from "@/components/browse/BrowseLayout";
-import { EventCard } from "@/components/copilot/event-card";
+import { EventBrowseCard } from "@/components/events/event-browse-card";
 import { EventBrowseFilters } from "@/components/events/event-browse-filters";
 import { EmptyState } from "@/components/empty/empty-state";
 import { Button } from "@/components/ui/button";
@@ -114,20 +114,7 @@ export function EventBrowseView({
             data-testid="events-grid"
           >
             {results.map((event) => (
-              <EventCard
-                key={event.id}
-                id={event.id}
-                eventId={event.eventId}
-                title={event.title}
-                venue={event.venue}
-                neighborhood={event.neighborhood}
-                startsAt={event.startsAt}
-                pricePerTicket={event.pricePerTicket}
-                currency={event.currency}
-                imageUrl={event.imageUrl}
-                ticketUrl={event.ticketUrl}
-                detailsHref={`/events/${event.slug}`}
-              />
+              <EventBrowseCard key={event.id} event={event} />
             ))}
           </div>
         ) : null}
