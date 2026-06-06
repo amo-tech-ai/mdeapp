@@ -2,6 +2,9 @@ import { RequestContext } from "@mastra/core/request-context";
 import { describe, expect, it } from "vitest";
 import {
   getToolSpans,
+  getTokenUsage,
+  MDEAI_TOKEN_USAGE_KEY,
+  recordTokenUsage,
   recordToolSpan,
   summarizeToolSpans,
   type ToolSpan,
@@ -33,6 +36,34 @@ describe("recordToolSpan / getToolSpans (AGT-00C)", () => {
     expect(() => recordToolSpan(undefined, { tool: "x", ms: 1, status: "ok", ts: 1 })).not.toThrow();
     expect(getToolSpans(undefined)).toEqual([]);
     expect(getToolSpans({})).toEqual([]);
+  });
+});
+
+describe("recordTokenUsage / getTokenUsage (AGT-00C)", () => {
+  it("ignores non-finite token deltas", () => {
+    const { context, requestContext } = ctxWithRequestContext();
+    recordTokenUsage(context, {
+      input_tokens: Number.NaN,
+      output_tokens: Infinity,
+      total_tokens: -5,
+    });
+    expect(getTokenUsage(context)).toBeNull();
+    recordTokenUsage(context, { input_tokens: 10, output_tokens: 5 });
+    expect(getTokenUsage(context)).toEqual({
+      input_tokens: 10,
+      output_tokens: 5,
+      total_tokens: 15,
+    });
+    requestContext.set(MDEAI_TOKEN_USAGE_KEY, {
+      input_tokens: Number.NaN,
+      output_tokens: 2,
+      total_tokens: 2,
+    });
+    expect(getTokenUsage(context)).toEqual({
+      input_tokens: 0,
+      output_tokens: 2,
+      total_tokens: 2,
+    });
   });
 });
 

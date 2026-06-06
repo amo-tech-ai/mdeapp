@@ -78,6 +78,35 @@ export interface ToolSpanSummary {
   failed_tools: string[];
 }
 
+function finiteTokenCount(value: unknown): number {
+  return typeof value === "number" && Number.isFinite(value) && value >= 0
+    ? value
+    : 0;
+}
+
+function normalizeStoredTokenUsage(raw: unknown): TokenUsage | null {
+  if (!raw || typeof raw !== "object") return null;
+  const record = raw as Record<string, unknown>;
+  const input_tokens = finiteTokenCount(record.input_tokens);
+  const output_tokens = finiteTokenCount(record.output_tokens);
+  const total_tokens = finiteTokenCount(record.total_tokens);
+  if (
+    total_tokens === 0 &&
+    input_tokens === 0 &&
+    output_tokens === 0 &&
+    !("input_tokens" in record) &&
+    !("output_tokens" in record) &&
+    !("total_tokens" in record)
+  ) {
+    return null;
+  }
+  return {
+    input_tokens,
+    output_tokens,
+    total_tokens: total_tokens || input_tokens + output_tokens,
+  };
+}
+
 /** Merge token usage into the shared RequestContext (additive). */
 export function recordTokenUsage(
   context: unknown,
@@ -85,37 +114,28 @@ export function recordTokenUsage(
 ): void {
   const requestContext = resolveRequestContext(context);
   if (!requestContext) return;
-  const existing = requestContext.get(MDEAI_TOKEN_USAGE_KEY);
-  const prior: TokenUsage =
-    existing &&
-    typeof existing === "object" &&
-    "input_tokens" in existing &&
-    "output_tokens" in existing
-      ? (existing as TokenUsage)
-      : { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
+  const inputDelta = finiteTokenCount(usage.input_tokens);
+  const outputDelta = finiteTokenCount(usage.output_tokens);
+  const totalDelta =
+    usage.total_tokens !== undefined
+      ? finiteTokenCount(usage.total_tokens)
+      : inputDelta + outputDelta;
+  if (inputDelta === 0 && outputDelta === 0 && totalDelta === 0) return;
+
+  const prior =
+    normalizeStoredTokenUsage(requestContext.get(MDEAI_TOKEN_USAGE_KEY)) ??
+    ({ input_tokens: 0, output_tokens: 0, total_tokens: 0 } satisfies TokenUsage);
   const next: TokenUsage = {
-    input_tokens: prior.input_tokens + (usage.input_tokens ?? 0),
-    output_tokens: prior.output_tokens + (usage.output_tokens ?? 0),
-    total_tokens:
-      prior.total_tokens +
-      (usage.total_tokens ??
-        (usage.input_tokens ?? 0) + (usage.output_tokens ?? 0)),
+    input_tokens: prior.input_tokens + inputDelta,
+    output_tokens: prior.output_tokens + outputDelta,
+    total_tokens: prior.total_tokens + totalDelta,
   };
   requestContext.set(MDEAI_TOKEN_USAGE_KEY, next);
 }
 
 export function getTokenUsage(context: unknown): TokenUsage | null {
   const requestContext = resolveRequestContext(context);
-  const existing = requestContext?.get(MDEAI_TOKEN_USAGE_KEY);
-  if (
-    !existing ||
-    typeof existing !== "object" ||
-    !("input_tokens" in existing) ||
-    !("output_tokens" in existing)
-  ) {
-    return null;
-  }
-  return existing as TokenUsage;
+  return normalizeStoredTokenUsage(requestContext?.get(MDEAI_TOKEN_USAGE_KEY));
 }
 
 /** Pure aggregation for `ai_runs.metadata` — unit-tested independently. */

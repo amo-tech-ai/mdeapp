@@ -70,28 +70,53 @@ describe("buildTurnTelemetryMetadata (AGT-00C)", () => {
 });
 
 describe("logTurnTelemetryDebug", () => {
+  const samplePayload = {
+    telemetry_version: TELEMETRY_SCHEMA_VERSION,
+    agent_map_key: "conciergeAgent",
+    model_name: "gemini-3.5-flash",
+    turn_status: "success" as const,
+    turn_duration_ms: 1,
+    integration: "copilotkit-pattern-1" as const,
+    tool_spans: [],
+    tool_count: 0,
+    tool_ms_total: 0,
+    slowest_tool: null,
+    slowest_tool_ms: 0,
+    tool_error_count: 0,
+    failed_tools: [] as string[],
+    input_tokens: 0,
+    output_tokens: 0,
+    total_tokens: 0,
+  };
+
   it("no-ops unless LOG_LEVEL=debug", async () => {
-    const { logTurnTelemetryDebug } = await import("./mastra-telemetry");
-    const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
-    logTurnTelemetryDebug({
-      telemetry_version: TELEMETRY_SCHEMA_VERSION,
-      agent_map_key: "conciergeAgent",
-      model_name: "gemini-3.5-flash",
-      turn_status: "success",
-      turn_duration_ms: 1,
-      integration: "copilotkit-pattern-1",
-      tool_spans: [],
-      tool_count: 0,
-      tool_ms_total: 0,
-      slowest_tool: null,
-      slowest_tool_ms: 0,
-      tool_error_count: 0,
-      failed_tools: [],
-      input_tokens: 0,
-      output_tokens: 0,
-      total_tokens: 0,
-    });
-    expect(debugSpy).not.toHaveBeenCalled();
-    debugSpy.mockRestore();
+    const prev = process.env.LOG_LEVEL;
+    process.env.LOG_LEVEL = "info";
+    try {
+      const { logTurnTelemetryDebug } = await import("./mastra-telemetry");
+      const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
+      logTurnTelemetryDebug(samplePayload);
+      expect(debugSpy).not.toHaveBeenCalled();
+      debugSpy.mockRestore();
+    } finally {
+      if (prev === undefined) delete process.env.LOG_LEVEL;
+      else process.env.LOG_LEVEL = prev;
+    }
+  });
+
+  it("logs JSON when LOG_LEVEL=debug", async () => {
+    const prev = process.env.LOG_LEVEL;
+    process.env.LOG_LEVEL = "debug";
+    try {
+      const { logTurnTelemetryDebug } = await import("./mastra-telemetry");
+      const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
+      logTurnTelemetryDebug(samplePayload);
+      expect(debugSpy).toHaveBeenCalledOnce();
+      expect(debugSpy.mock.calls[0]?.[0]).toBe("[mastra-telemetry]");
+      debugSpy.mockRestore();
+    } finally {
+      if (prev === undefined) delete process.env.LOG_LEVEL;
+      else process.env.LOG_LEVEL = prev;
+    }
   });
 });

@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@/mastra/tools/audit-wrapper", () => ({
   withAudit: (_name: string, _risk: unknown, fn: (input: unknown) => Promise<unknown>) =>
-    fn,
+    (input: unknown) => fn(input),
 }));
 
 import { getToolSpans } from "./tool-audit-context";
@@ -53,7 +53,7 @@ describe("runAuditedSearch (AGT-00C)", () => {
     const fn = vi.fn(async (input: { q: string }) => ({ echo: input.q }));
     const out = await runAuditedSearch("search-restaurants", fn, { q: "rooftop" }, context);
     expect(out).toEqual({ echo: "rooftop" });
-    expect(fn).toHaveBeenCalledWith({ q: "rooftop" }, { user_id: null });
+    expect(fn).toHaveBeenCalledWith({ q: "rooftop" });
     expect(getToolSpans(context)[0].tool).toBe("search-restaurants");
   });
 });

@@ -83,7 +83,7 @@ export class LoggingMastraAgent extends MastraAgent {
           modelName: telemetry.model_name,
           input_tokens: telemetry.input_tokens,
           output_tokens: telemetry.output_tokens,
-          metadata: telemetry,
+          metadata: telemetry as Record<string, unknown>,
         });
       }),
     );
