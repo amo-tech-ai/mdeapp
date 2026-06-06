@@ -3,7 +3,6 @@ import { RequestContext } from "@mastra/core/request-context";
 import { describe, expect, it, vi } from "vitest";
 import {
   buildTurnTelemetryMetadata,
-  logTurnTelemetryDebug,
   resolveAgentModelName,
   TELEMETRY_SCHEMA_VERSION,
   type TurnTelemetryPayload,
