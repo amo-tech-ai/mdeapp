@@ -3,8 +3,10 @@ import { RequestContext } from "@mastra/core/request-context";
 import { describe, expect, it, vi } from "vitest";
 import {
   buildTurnTelemetryMetadata,
+  logTurnTelemetryDebug,
   resolveAgentModelName,
   TELEMETRY_SCHEMA_VERSION,
+  type TurnTelemetryPayload,
 } from "./mastra-telemetry";
 import {
   getTokenUsage,
@@ -70,20 +72,20 @@ describe("buildTurnTelemetryMetadata (AGT-00C)", () => {
 });
 
 describe("logTurnTelemetryDebug", () => {
-  const samplePayload = {
+  const samplePayload: TurnTelemetryPayload = {
     telemetry_version: TELEMETRY_SCHEMA_VERSION,
     agent_map_key: "conciergeAgent",
     model_name: "gemini-3.5-flash",
-    turn_status: "success" as const,
+    turn_status: "success",
     turn_duration_ms: 1,
-    integration: "copilotkit-pattern-1" as const,
+    integration: "copilotkit-pattern-1",
     tool_spans: [],
     tool_count: 0,
     tool_ms_total: 0,
     slowest_tool: null,
     slowest_tool_ms: 0,
     tool_error_count: 0,
-    failed_tools: [] as string[],
+    failed_tools: [],
     input_tokens: 0,
     output_tokens: 0,
     total_tokens: 0,
