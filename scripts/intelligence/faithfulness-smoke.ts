@@ -56,6 +56,13 @@ const FIXTURES: Fixture[] = [
     reply: "Sure — what neighborhood and monthly budget are you working with?",
     expectFaithful: true,
   },
+  {
+    id: "FAITH-05-fabricated-venue",
+    // Real venues Carmen / O.C.I. returned; reply invents a rooftop bar.
+    toolOutputs: [{ results: [{ name: "Carmen" }, { name: "O.C.I." }] }],
+    reply: "For the best views, head to Skyline Rooftop Medellín — it beats Carmen and O.C.I.",
+    expectFaithful: false,
+  },
 ];
 
 export type FaithfulnessSummary = {

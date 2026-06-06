@@ -76,6 +76,27 @@ describe("faithfulness core — evaluateFaithfulness", () => {
   });
 });
 
+describe("faithfulness core — venue hallucination (SAN-590)", () => {
+  // Two real Medellín venues the search tool returned this turn.
+  const VENUE_TOOL_OUTPUT: FaithfulnessInput = {
+    toolOutputs: [{ results: [{ name: "Carmen" }, { name: "O.C.I." }] }],
+  };
+
+  it("flags an invented venue (Skyline Rooftop Medellín) as unfaithful", () => {
+    const verdict = evaluateFaithfulness(VENUE_TOOL_OUTPUT, {
+      reply:
+        "For the best views, head to Skyline Rooftop Medellín — it beats Carmen and O.C.I.",
+    });
+    expect(verdict.faithful).toBe(false);
+    expect(verdict.score).toBeLessThan(1);
+    expect(
+      verdict.unsupportedClaims.some(
+        (c) => c.type === "entity" && c.claim.includes("Skyline"),
+      ),
+    ).toBe(true);
+  });
+});
+
 describe("faithfulnessScorer (Mastra createScorer) — heuristic path", () => {
   it("registers with the expected id/name/description", () => {
     expect(faithfulnessScorer.id).toBe("faithfulness");
