@@ -43,4 +43,32 @@ describe("POST /api/grounded/search", () => {
       expect.anything(),
     );
   });
+
+  it("forwards intent nightlife to grounded tool", async () => {
+    vi.mocked(searchGroundedPlacesTool.execute!).mockResolvedValue({
+      results: [],
+      attribution: [],
+      source: "grounding",
+    });
+
+    const res = await POST(
+      new Request("http://localhost/api/grounded/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: "popular venues tonight in Provenza",
+          intent: "nightlife",
+        }),
+      }),
+    );
+
+    expect(res.status).toBe(200);
+    expect(searchGroundedPlacesTool.execute).toHaveBeenCalledWith(
+      expect.objectContaining({
+        intent: "nightlife",
+        query: expect.stringMatching(/Provenza/i),
+      }),
+      expect.anything(),
+    );
+  });
 });

@@ -68,6 +68,12 @@ describe("event-query-classifier", () => {
     ).toBe(false);
   });
 
+  it("generic venues tonight is non-event (VEN-025 / SAN-549 follow-up)", () => {
+    const q = "popular venues tonight in Provenza";
+    expect(looksLikeNonEventSearch(q)).toBe(true);
+    expect(hasEventFastPathSignals(q, scoreEventQuery(q))).toBe(false);
+  });
+
   it("restaurant / dining queries are non-event even after a prior event search (B-09)", () => {
     // These queries were misrouting to /api/events/search due to event memory
     // after "salsa events this weekend" set lastEventQuery.category = "music"

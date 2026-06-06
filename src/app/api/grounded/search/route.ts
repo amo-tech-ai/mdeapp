@@ -9,6 +9,7 @@ const bodySchema = z.object({
   query: z.string().min(1),
   neighborhood: z.string().optional(),
   limit: z.number().int().min(1).max(10).optional().default(5),
+  intent: z.enum(["cafe", "nightlife", "general"]).optional(),
 });
 
 /** Fast path — grounded café search without relying on conciergeAgent tool calls. */
@@ -28,14 +29,18 @@ export async function POST(req: Request) {
     );
   }
 
-  const { query, neighborhood, limit } = parsed.data;
+  const { query, neighborhood, limit, intent } = parsed.data;
   const searchQuery = neighborhood
     ? `${query.trim()} near ${neighborhood}`
     : query.trim();
 
   try {
     const out = await searchGroundedPlacesTool.execute!(
-      { query: searchQuery, pageSize: limit },
+      {
+        query: searchQuery,
+        pageSize: limit,
+        ...(intent ? { intent } : {}),
+      },
       {} as never,
     );
     const results = (out as { results?: unknown[] }).results ?? [];

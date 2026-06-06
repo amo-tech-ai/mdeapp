@@ -24,6 +24,12 @@ describe("restaurant query classifier", () => {
     expect(looksLikeRestaurantSearch("salsa events this weekend")).toBe(false);
   });
 
+  it("routes generic venues tonight to grounded nightlife, not events or restaurants", () => {
+    const q = "popular venues tonight in Provenza";
+    expect(looksLikeNightlifeGroundingSearch(q)).toBe(true);
+    expect(looksLikeRestaurantSearch(q)).toBe(false);
+  });
+
   it("routes salsa/rooftop cocktail discovery to grounded nightlife, not restaurants", () => {
     const q =
       "Salsa bars and rooftop cocktails locals go to in El Poblado";

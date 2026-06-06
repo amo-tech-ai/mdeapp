@@ -3,6 +3,7 @@
  * concierge agent applies the same rules via prompt (F39).
  */
 import type { EventCategory } from "@/mastra/tools/search-events";
+import { looksLikeNightlifeGroundingSearch } from "@/lib/restaurant-query-classifier";
 
 export type EventDateWindow =
   | "tonight"
@@ -55,11 +56,15 @@ const NON_EVENT_RENTAL_RE =
 const NON_EVENT_FOOD_VENUE_RE =
   /\b(caf[eé]s?|coffee|espresso|barista|coffee shops?|specialty coffee|restaurants?|brunch spots?|best cafes?|quiet caf[eé]s?|juice bar|smoothie|dinner|lunch|rooftop|bistro|dine|eatery|lounge)\b/i;
 
-/** True when the message is clearly rental or food-venue search, not events. */
+/** True when the message is clearly rental, food-venue, or map nightlife POI search — not ticketed events. */
 export function looksLikeNonEventSearch(text: string): boolean {
   const t = text.trim();
   if (/\bevents?\b/i.test(t)) return false;
-  return NON_EVENT_RENTAL_RE.test(t) || NON_EVENT_FOOD_VENUE_RE.test(t);
+  return (
+    NON_EVENT_RENTAL_RE.test(t) ||
+    NON_EVENT_FOOD_VENUE_RE.test(t) ||
+    looksLikeNightlifeGroundingSearch(t)
+  );
 }
 
 /**
