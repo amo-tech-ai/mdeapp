@@ -38,6 +38,15 @@ const REGISTRY = {
     ],
     extra: ["npm run smoke:golden-queries"],
   },
+  "INT-021": {
+    vitest: [
+      "src/mastra/lib/__tests__/intelligence-restaurant-venue-wrapper.test.ts",
+      "src/mastra/lib/__tests__/intelligence-restaurant-search.test.ts",
+      "src/mastra/lib/__tests__/intelligence-anchor-search.test.ts",
+      "src/lib/__tests__/restaurant-search-fast-path.test.ts",
+      "src/lib/__tests__/cafe-search-fast-path.test.ts",
+    ],
+  },
   "DATA-041": {
     vitest: ["src/mastra/lib/__tests__/intelligence-restaurant-search.test.ts"],
     extra: ["npm run verify:mis-phase1"],
