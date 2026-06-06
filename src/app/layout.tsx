@@ -20,6 +20,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "mdeai — concierge for Medellín",
   description: "AI-first discovery for Medellín: rentals, events, nightlife.",
+  verification: {
+    other: {
+      "facebook-domain-verification": "wmr9neyx8mb29ylutvn51addm6lb2w",
+    },
+  },
 };
 
 export const viewport: Viewport = {
