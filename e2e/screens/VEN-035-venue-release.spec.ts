@@ -54,18 +54,23 @@ test.describe(SUITE, () => {
       ).toHaveAttribute("aria-pressed", "true");
     });
 
-    test("SCREEN-028 /cafes — placeholder → concierge chat", async ({
+    test("SCREEN-028 /cafes — grid, cards, back to chat", async ({
       page,
     }) => {
       const errors = attachConsoleWatcher(page);
       await gotoBrowseRoute(page, "/cafes");
 
-      await expect(page.getByTestId("cafes-browse-placeholder")).toBeVisible();
-      await expect(page.getByTestId("cafes-placeholder")).toBeVisible();
-      await expect(page.getByTestId("cafes-back-to-chat")).toBeVisible();
+      await expect(page.getByTestId("cafes-browse").first()).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Cafés" })).toBeVisible();
+      await expect(page.getByTestId("cafes-grid")).toBeVisible();
+      await expect(
+        page.locator('[data-testid^="cafe-card-"]').first(),
+      ).toBeVisible();
 
-      await page.getByTestId("cafes-back-to-chat").click();
-      await expect(page).toHaveURL(/\/(\?|$)/);
+      await Promise.all([
+        page.waitForURL(/\/(\?|$)/, { timeout: 15_000 }),
+        page.getByRole("link", { name: "Back to chat" }).click(),
+      ]);
       await expect(page.locator('[data-testid="chat-canvas"]')).toBeVisible();
 
       assertConsoleHygiene(errors);
