@@ -23,7 +23,7 @@ comment on column public.bookings.partner_id is
   'Supply-side partner fulfilling this booking (restaurant, tour, showing, etc.).';
 
 comment on column public.bookings.partner_status is
-  'Partner approval state for HITL flows (SAN-686).';
+  'Partner approval state for HITL flows (SAN-686). App layer must ignore when partner_id IS NULL (consumer-only bookings).';
 
 create index if not exists idx_bookings_partner_status
   on public.bookings (partner_id, partner_status)

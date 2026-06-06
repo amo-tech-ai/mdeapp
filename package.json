@@ -33,6 +33,7 @@
     "smoke:golden-queries": "npx tsx --env-file=.env.local scripts/intelligence/golden-queries-smoke.ts",
     "verify:maps-env": "node --env-file=.env.local scripts/verify-maps-env.mjs",
     "verify:task": "node scripts/verify-task.mjs",
+    "verify:partner-schema": "node scripts/verify-partner-schema-gate.mjs",
     "check:mastra": "node scripts/check-mastra.mjs",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

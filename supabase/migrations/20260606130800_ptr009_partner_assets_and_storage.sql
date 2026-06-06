@@ -15,7 +15,7 @@ create table if not exists public.partner_assets (
 );
 
 comment on table public.partner_assets is
-  'Partner-uploaded files metadata. Files live in storage bucket partner-assets.';
+  'Partner-uploaded files metadata. Storage path: partner-assets/{partner_id}/{filename}.';
 
 create index if not exists idx_partner_assets_partner_id
   on public.partner_assets (partner_id);
@@ -77,12 +77,19 @@ values (
 )
 on conflict (id) do nothing;
 
+-- Storage RLS — folder-scoped: partner-assets/{partner_id}/{filename}
+-- (was bucket-wide in an earlier draft; folded in here so ptr009 is safe stand-alone — 06f R4)
 drop policy if exists partner_assets_storage_insert on storage.objects;
 create policy partner_assets_storage_insert
   on storage.objects
   for insert
   to authenticated
-  with check (bucket_id = 'partner-assets');
+  with check (
+    bucket_id = 'partner-assets'
+    and (storage.foldername(name))[1] in (
+      select pid::text from public.partner_ids_for_user() as pid
+    )
+  );
 
 drop policy if exists partner_assets_storage_select_member on storage.objects;
 create policy partner_assets_storage_select_member
@@ -92,31 +99,50 @@ create policy partner_assets_storage_select_member
   using (
     bucket_id = 'partner-assets'
     and (
-      owner = (select auth.uid())
+      (storage.foldername(name))[1] in (
+        select pid::text from public.partner_ids_for_user() as pid
+      )
       or (select public.is_admin())
     )
   );
 
-drop policy if exists partner_assets_storage_update_own on storage.objects;
-create policy partner_assets_storage_update_own
+drop policy if exists partner_assets_storage_update_member on storage.objects;
+create policy partner_assets_storage_update_member
   on storage.objects
   for update
   to authenticated
-  using (bucket_id = 'partner-assets' and owner = (select auth.uid()))
-  with check (bucket_id = 'partner-assets' and owner = (select auth.uid()));
+  using (
+    bucket_id = 'partner-assets'
+    and (
+      (storage.foldername(name))[1] in (
+        select pid::text from public.partner_ids_for_user() as pid
+      )
+      or (select public.is_admin())
+    )
+  )
+  with check (
+    bucket_id = 'partner-assets'
+    and (
+      (storage.foldername(name))[1] in (
+        select pid::text from public.partner_ids_for_user() as pid
+      )
+      or (select public.is_admin())
+    )
+  );
 
-drop policy if exists partner_assets_storage_delete_own on storage.objects;
-create policy partner_assets_storage_delete_own
+drop policy if exists partner_assets_storage_delete_member on storage.objects;
+create policy partner_assets_storage_delete_member
   on storage.objects
   for delete
   to authenticated
-  using (bucket_id = 'partner-assets' and owner = (select auth.uid()));
-
-drop policy if exists partner_assets_storage_service_role on storage.objects;
-create policy partner_assets_storage_service_role
-  on storage.objects
-  to service_role
-  using (bucket_id = 'partner-assets')
-  with check (bucket_id = 'partner-assets');
+  using (
+    bucket_id = 'partner-assets'
+    and (
+      (storage.foldername(name))[1] in (
+        select pid::text from public.partner_ids_for_user() as pid
+      )
+      or (select public.is_admin())
+    )
+  );
 
 commit;

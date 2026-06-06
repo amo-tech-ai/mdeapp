@@ -22,7 +22,7 @@ create table if not exists public.revenue_ledger (
 );
 
 comment on table public.revenue_ledger is
-  'Immutable revenue attribution rows for partner payouts and dashboard GMV.';
+  'Append-only revenue attribution; corrections via service_role edge functions only.';
 
 create index if not exists idx_revenue_ledger_partner_created
   on public.revenue_ledger (partner_id, created_at desc);
@@ -50,21 +50,6 @@ create policy revenue_ledger_insert_service
   to service_role
   with check (true);
 
-drop policy if exists revenue_ledger_update_admin on public.revenue_ledger;
-create policy revenue_ledger_update_admin
-  on public.revenue_ledger
-  for update
-  to authenticated
-  using ((select public.is_admin()))
-  with check ((select public.is_admin()));
-
-drop policy if exists revenue_ledger_delete_admin on public.revenue_ledger;
-create policy revenue_ledger_delete_admin
-  on public.revenue_ledger
-  for delete
-  to authenticated
-  using ((select public.is_admin()));
-
 drop policy if exists revenue_ledger_service_role on public.revenue_ledger;
 create policy revenue_ledger_service_role
   on public.revenue_ledger
@@ -72,6 +57,7 @@ create policy revenue_ledger_service_role
   using (true)
   with check (true);
 
-grant all on table public.revenue_ledger to authenticated, service_role;
+grant select on table public.revenue_ledger to authenticated;
+grant all on table public.revenue_ledger to service_role;
 
 commit;

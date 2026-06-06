@@ -13,27 +13,41 @@
 -- No app code changes required. Background job / edge function behaviour is unchanged.
 
 -- ============================================================
--- 1. email_outbox
+-- 1. email_outbox (skip when table absent — shadow replay)
 -- ============================================================
 
-DROP POLICY "email_outbox service_role" ON public.email_outbox;
+DO $$
+BEGIN
+  IF to_regclass('public.email_outbox') IS NOT NULL THEN
+    DROP POLICY IF EXISTS "email_outbox service_role" ON public.email_outbox;
+    DROP POLICY IF EXISTS email_outbox_service_role_only ON public.email_outbox;
 
-CREATE POLICY "email_outbox_service_role_only"
-  ON public.email_outbox
-  FOR ALL
-  TO service_role
-  USING (true)
-  WITH CHECK (true);
+    CREATE POLICY email_outbox_service_role_only
+      ON public.email_outbox
+      FOR ALL
+      TO service_role
+      USING (true)
+      WITH CHECK (true);
+  END IF;
+END
+$$;
 
 -- ============================================================
--- 2. delivery_receipts
+-- 2. delivery_receipts (skip when table absent — shadow replay)
 -- ============================================================
 
-DROP POLICY "delivery_receipts service_role" ON public.delivery_receipts;
+DO $$
+BEGIN
+  IF to_regclass('public.delivery_receipts') IS NOT NULL THEN
+    DROP POLICY IF EXISTS "delivery_receipts service_role" ON public.delivery_receipts;
+    DROP POLICY IF EXISTS delivery_receipts_service_role_only ON public.delivery_receipts;
 
-CREATE POLICY "delivery_receipts_service_role_only"
-  ON public.delivery_receipts
-  FOR ALL
-  TO service_role
-  USING (true)
-  WITH CHECK (true);
+    CREATE POLICY delivery_receipts_service_role_only
+      ON public.delivery_receipts
+      FOR ALL
+      TO service_role
+      USING (true)
+      WITH CHECK (true);
+  END IF;
+END
+$$;
