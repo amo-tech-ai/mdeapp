@@ -1,4 +1,10 @@
-/** Client-safe query slot extraction (INT-021 / SEARCH-003). No Mastra or Supabase imports. */
+/**
+ * Client-safe query slot extraction (INT-021 / SEARCH-003). No Mastra or Supabase imports.
+ *
+ * `parseIntelligenceSlots` populates common neighborhood and vibe slots from raw query text.
+ * Route classifiers (`restaurant-query-classifier`, venue wrapper) set `wantsNightlife` and
+ * `wantsSpecialtyCoffee` when the query matches café or nightclub anchor patterns.
+ */
 
 export type IntelligenceSlots = {
   neighborhood?: string;

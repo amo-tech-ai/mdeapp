@@ -22,7 +22,22 @@ const serviceAdapter = new ExperimentalEmptyAdapter();
 /** Keep ai_runs writes alive after the CopilotKit SSE response (Vercel serverless). */
 const persistTurnLog: PersistTurnLog = (opts) => {
   after(async () => {
-    await logAgentRunForTurn(opts);
+    try {
+      await logAgentRunForTurn(opts);
+    } catch (error) {
+      const meta = opts.metadata ?? {};
+      console.error("[copilotkit ai_runs persist failed]", {
+        agentMapKey: opts.agentMapKey,
+        status: opts.status,
+        threadId:
+          (typeof meta.thread_id === "string" ? meta.thread_id : null) ??
+          (typeof meta.threadId === "string" ? meta.threadId : null),
+        runId:
+          (typeof meta.run_id === "string" ? meta.run_id : null) ??
+          (typeof meta.runId === "string" ? meta.runId : null),
+        error,
+      });
+    }
   });
 };
 
