@@ -17,7 +17,7 @@ import {
   venueAnchorMapsUrl,
   venueAnchorSummary,
   venueAnchorToCoordinates,
-  type VenueAnchorRow,
+  type RankedVenueAnchorRow,
 } from "./search-venue-anchors";
 
 const groundedPlaceResultSchema = z
@@ -190,10 +190,16 @@ function restaurantToGroundedRow(r: Restaurant): GroundedPlaceResult {
 }
 
 function anchorToGroundedRow(
-  row: VenueAnchorRow,
+  row: RankedVenueAnchorRow,
   primaryType: string,
 ): GroundedPlaceResult {
   const { latitude, longitude } = venueAnchorToCoordinates(row);
+  const citation = row.evidence?.[0]?.extractedText;
+  const baseSummary = venueAnchorSummary(row);
+  const summary =
+    citation && baseSummary
+      ? `${baseSummary} — ${citation}`
+      : citation ?? baseSummary;
   return {
     id: row.id,
     title: row.name,
@@ -201,10 +207,10 @@ function anchorToGroundedRow(
     longitude,
     placeId: row.google_place_id,
     mapsUrl: venueAnchorMapsUrl(row.google_place_id),
-    summary: venueAnchorSummary(row),
+    summary,
     formattedAddress: row.neighborhood ?? undefined,
     primaryType,
-  };
+  } as GroundedPlaceResult;
 }
 
 /**
@@ -244,6 +250,7 @@ async function curatedFallback(
     const anchors = await searchNightclubVenueAnchors({
       neighborhood,
       limit: pageSize,
+      queryText: rawQuery,
     });
     if (anchors.length > 0) {
       return anchors.map((row) => anchorToGroundedRow(row, "night_club"));
@@ -255,6 +262,7 @@ async function curatedFallback(
     const anchors = await searchCafeVenueAnchors({
       neighborhood,
       limit: pageSize,
+      queryText: rawQuery,
     });
     if (anchors.length > 0) {
       return anchors.map((row) => anchorToGroundedRow(row, "coffee_shop"));

@@ -1,4 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
+import { createServiceRoleClient } from "@/lib/supabase/service";
+import {
+  rankVenueAnchorRows,
+  type AnchorEvidence,
+  type AnchorSignalRow,
+} from "../lib/intelligence-anchor-search";
 
 export type VenueAnchorRow = {
   id: string;
@@ -12,6 +18,15 @@ export type VenueAnchorRow = {
   metadata: Record<string, unknown> | null;
 };
 
+export type RankedVenueAnchorRow = VenueAnchorRow & {
+  rankScore?: number;
+  signalSource?: string;
+  evidence?: AnchorEvidence[];
+};
+
+const ANCHOR_SIGNAL_SELECT =
+  "venue_anchor_id, quiet_score, date_night_score, rooftop_score, digital_nomad_score, wifi_score, cocktail_score, brunch_score, hidden_gem_score, nightlife_score, local_authenticity_score, touristy_score, service_score, value_score, confidence, source";
+
 let _client: ReturnType<typeof createClient> | null = null;
 
 function getSupabaseClient() {
@@ -23,6 +38,94 @@ function getSupabaseClient() {
     auth: { autoRefreshToken: false, persistSession: false },
   });
   return _client;
+}
+
+async function fetchAnchorSignals(
+  anchorIds: string[],
+): Promise<Map<string, AnchorSignalRow>> {
+  const map = new Map<string, AnchorSignalRow>();
+  if (!anchorIds.length) return map;
+  const client = getSupabaseClient();
+  if (!client) return map;
+
+  const { data, error } = await client
+    .from("venue_signals")
+    .select(ANCHOR_SIGNAL_SELECT)
+    .in("venue_anchor_id", anchorIds);
+  if (error) {
+    console.warn("[search-venue-anchors] venue_signals", error.message);
+    return map;
+  }
+  for (const row of (data ?? []) as AnchorSignalRow[]) {
+    map.set(row.venue_anchor_id, row);
+  }
+  return map;
+}
+
+async function fetchAnchorEvidence(
+  anchorIds: string[],
+): Promise<Map<string, AnchorEvidence[]>> {
+  const map = new Map<string, AnchorEvidence[]>();
+  if (!anchorIds.length) return map;
+
+  const service = createServiceRoleClient();
+  const client = service ?? getSupabaseClient();
+  if (!client) return map;
+
+  const { data, error } = await client
+    .from("venue_source_evidence")
+    .select("venue_anchor_id, source_type, source_url, extracted_text")
+    .in("venue_anchor_id", anchorIds);
+  if (error) {
+    console.warn("[search-venue-anchors] venue_source_evidence", error.message);
+    return map;
+  }
+  for (const row of (data ?? []) as Array<{
+    venue_anchor_id: string;
+    source_type: string;
+    source_url: string | null;
+    extracted_text: string | null;
+  }>) {
+    const list = map.get(row.venue_anchor_id) ?? [];
+    list.push({
+      sourceType: row.source_type,
+      sourceUrl: row.source_url,
+      extractedText: row.extracted_text,
+    });
+    map.set(row.venue_anchor_id, list);
+  }
+  return map;
+}
+
+async function rankAnchors(
+  rows: VenueAnchorRow[],
+  params: {
+    queryText?: string;
+    neighborhood?: string;
+    venueKind: "cafe" | "nightclub";
+  },
+): Promise<RankedVenueAnchorRow[]> {
+  if (!rows.length) return [];
+
+  const ids = rows.map((r) => r.id);
+  const [signalMap, evidenceMap] = await Promise.all([
+    fetchAnchorSignals(ids),
+    fetchAnchorEvidence(ids),
+  ]);
+
+  const ranked = rankVenueAnchorRows(rows, {
+    queryText: params.queryText,
+    neighborhood: params.neighborhood,
+    venueKind: params.venueKind,
+    signalMap,
+  });
+
+  return ranked.map(({ row, rankScore, signal }) => ({
+    ...row,
+    rankScore,
+    signalSource: signal?.source ?? undefined,
+    evidence: evidenceMap.get(row.id),
+  }));
 }
 
 /** True when the query is café/coffee discovery (not generic restaurant). */
@@ -43,14 +146,22 @@ function num(v: number | string | null | undefined): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
+function filterValidAnchors(rows: VenueAnchorRow[]): VenueAnchorRow[] {
+  return rows.filter(
+    (row) => Boolean(row.google_place_id) && typeof row.name === "string",
+  );
+}
+
 /** Read curated café rows from public.venue_anchors (DATA-035). RLS: public select. */
 export async function searchCafeVenueAnchors(params: {
   neighborhood?: string;
   limit: number;
-}): Promise<VenueAnchorRow[]> {
+  queryText?: string;
+}): Promise<RankedVenueAnchorRow[]> {
   const client = getSupabaseClient();
   if (!client) return [];
 
+  const fetchLimit = Math.max(params.limit * 3, params.limit);
   let query = client
     .from("venue_anchors")
     .select(
@@ -58,7 +169,7 @@ export async function searchCafeVenueAnchors(params: {
     )
     .eq("kind", "cafe")
     .eq("is_active", true)
-    .limit(params.limit);
+    .limit(fetchLimit);
 
   if (params.neighborhood) {
     query = query.ilike("neighborhood", `%${params.neighborhood}%`);
@@ -70,17 +181,21 @@ export async function searchCafeVenueAnchors(params: {
     return [];
   }
 
-  const rows = (data ?? []) as VenueAnchorRow[];
-  return rows.filter(
-    (row) => Boolean(row.google_place_id) && typeof row.name === "string",
-  );
+  const rows = filterValidAnchors((data ?? []) as VenueAnchorRow[]);
+  const ranked = await rankAnchors(rows, {
+    queryText: params.queryText,
+    neighborhood: params.neighborhood,
+    venueKind: "cafe",
+  });
+  return ranked.slice(0, params.limit);
 }
 
 /** Browse `/cafes` — surfaces Supabase/config failures instead of empty grid. */
 export async function searchCafeVenueAnchorsForBrowse(params: {
   neighborhood?: string;
   limit: number;
-}): Promise<{ rows: VenueAnchorRow[]; error: string | null }> {
+  queryText?: string;
+}): Promise<{ rows: RankedVenueAnchorRow[]; error: string | null }> {
   const client = getSupabaseClient();
   if (!client) {
     return {
@@ -89,6 +204,7 @@ export async function searchCafeVenueAnchorsForBrowse(params: {
     };
   }
 
+  const fetchLimit = Math.max(params.limit * 3, params.limit);
   let query = client
     .from("venue_anchors")
     .select(
@@ -96,7 +212,7 @@ export async function searchCafeVenueAnchorsForBrowse(params: {
     )
     .eq("kind", "cafe")
     .eq("is_active", true)
-    .limit(params.limit);
+    .limit(fetchLimit);
 
   if (params.neighborhood) {
     query = query.ilike("neighborhood", `%${params.neighborhood}%`);
@@ -111,23 +227,25 @@ export async function searchCafeVenueAnchorsForBrowse(params: {
     };
   }
 
-  const rows = (data ?? []) as VenueAnchorRow[];
-  return {
-    rows: rows.filter(
-      (row) => Boolean(row.google_place_id) && typeof row.name === "string",
-    ),
-    error: null,
-  };
+  const rows = filterValidAnchors((data ?? []) as VenueAnchorRow[]);
+  const ranked = await rankAnchors(rows, {
+    queryText: params.queryText,
+    neighborhood: params.neighborhood,
+    venueKind: "cafe",
+  });
+  return { rows: ranked.slice(0, params.limit), error: null };
 }
 
 /** Read curated nightclub rows from public.venue_anchors (DATA-035). */
 export async function searchNightclubVenueAnchors(params: {
   neighborhood?: string;
   limit: number;
-}): Promise<VenueAnchorRow[]> {
+  queryText?: string;
+}): Promise<RankedVenueAnchorRow[]> {
   const client = getSupabaseClient();
   if (!client) return [];
 
+  const fetchLimit = Math.max(params.limit * 3, params.limit);
   let query = client
     .from("venue_anchors")
     .select(
@@ -135,7 +253,7 @@ export async function searchNightclubVenueAnchors(params: {
     )
     .eq("kind", "nightclub")
     .eq("is_active", true)
-    .limit(params.limit);
+    .limit(fetchLimit);
 
   if (params.neighborhood) {
     query = query.ilike("neighborhood", `%${params.neighborhood}%`);
@@ -147,17 +265,21 @@ export async function searchNightclubVenueAnchors(params: {
     return [];
   }
 
-  const rows = (data ?? []) as VenueAnchorRow[];
-  return rows.filter(
-    (row) => Boolean(row.google_place_id) && typeof row.name === "string",
-  );
+  const rows = filterValidAnchors((data ?? []) as VenueAnchorRow[]);
+  const ranked = await rankAnchors(rows, {
+    queryText: params.queryText,
+    neighborhood: params.neighborhood,
+    venueKind: "nightclub",
+  });
+  return ranked.slice(0, params.limit);
 }
 
 /** Browse `/nightlife` — surfaces Supabase/config failures instead of empty grid. */
 export async function searchNightclubVenueAnchorsForBrowse(params: {
   neighborhood?: string;
   limit: number;
-}): Promise<{ rows: VenueAnchorRow[]; error: string | null }> {
+  queryText?: string;
+}): Promise<{ rows: RankedVenueAnchorRow[]; error: string | null }> {
   const client = getSupabaseClient();
   if (!client) {
     return {
@@ -166,6 +288,7 @@ export async function searchNightclubVenueAnchorsForBrowse(params: {
     };
   }
 
+  const fetchLimit = Math.max(params.limit * 3, params.limit);
   let query = client
     .from("venue_anchors")
     .select(
@@ -173,7 +296,7 @@ export async function searchNightclubVenueAnchorsForBrowse(params: {
     )
     .eq("kind", "nightclub")
     .eq("is_active", true)
-    .limit(params.limit);
+    .limit(fetchLimit);
 
   if (params.neighborhood) {
     query = query.ilike("neighborhood", `%${params.neighborhood}%`);
@@ -188,13 +311,13 @@ export async function searchNightclubVenueAnchorsForBrowse(params: {
     };
   }
 
-  const rows = (data ?? []) as VenueAnchorRow[];
-  return {
-    rows: rows.filter(
-      (row) => Boolean(row.google_place_id) && typeof row.name === "string",
-    ),
-    error: null,
-  };
+  const rows = filterValidAnchors((data ?? []) as VenueAnchorRow[]);
+  const ranked = await rankAnchors(rows, {
+    queryText: params.queryText,
+    neighborhood: params.neighborhood,
+    venueKind: "nightclub",
+  });
+  return { rows: ranked.slice(0, params.limit), error: null };
 }
 
 export function venueAnchorSummary(row: VenueAnchorRow): string | undefined {

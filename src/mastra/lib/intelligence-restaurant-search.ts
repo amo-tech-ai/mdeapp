@@ -20,7 +20,15 @@ export type IntelligenceSlots = {
   wantsSalsa?: boolean;
   wantsBrunch?: boolean;
   wantsCocktails?: boolean;
+  wantsDateNight?: boolean;
   wantsHiddenGem?: boolean;
+  wantsAntiTouristy?: boolean;
+  wantsValue?: boolean;
+  wantsService?: boolean;
+  /** Nightclub anchor queries (DATA-041-R05). */
+  wantsNightlife?: boolean;
+  /** Café specialty queries (DATA-041-R05). */
+  wantsSpecialtyCoffee?: boolean;
 };
 
 export type RestaurantEvidence = {
@@ -55,6 +63,7 @@ type HybridRow = {
 type SignalRow = {
   restaurant_id: string;
   quiet_score: number | null;
+  date_night_score: number | null;
   rooftop_score: number | null;
   digital_nomad_score: number | null;
   wifi_score: number | null;
@@ -63,10 +72,31 @@ type SignalRow = {
   hidden_gem_score: number | null;
   nightlife_score: number | null;
   local_authenticity_score: number | null;
+  touristy_score: number | null;
+  service_score: number | null;
+  value_score: number | null;
   confidence: number | null;
   source: string | null;
   evidence: Record<string, unknown> | null;
 };
+
+type SignalBoostInput = Pick<
+  SignalRow,
+  | "quiet_score"
+  | "date_night_score"
+  | "rooftop_score"
+  | "digital_nomad_score"
+  | "wifi_score"
+  | "cocktail_score"
+  | "brunch_score"
+  | "hidden_gem_score"
+  | "nightlife_score"
+  | "local_authenticity_score"
+  | "touristy_score"
+  | "service_score"
+  | "value_score"
+  | "confidence"
+>;
 
 function getAnonClient() {
   const url = process.env.SUPABASE_URL;
@@ -93,25 +123,52 @@ export function parseIntelligenceSlots(queryText: string): IntelligenceSlots {
   else if (/manila/.test(q)) slots.neighborhood = "Manila";
   if (/rooftop/.test(q)) slots.wantsRooftop = true;
   if (/quiet/.test(q)) slots.wantsQuiet = true;
-  if (/cowork|nomad|wifi|work from/.test(q)) slots.wantsNomad = true;
+  if (/cowork|nomad|wifi|work from|work spot|laptop|remote work/.test(q)) {
+    slots.wantsNomad = true;
+  }
   if (/salsa/.test(q)) slots.wantsSalsa = true;
   if (/brunch/.test(q)) slots.wantsBrunch = true;
-  if (/cocktail|romantic/.test(q)) slots.wantsCocktails = true;
+  if (/cocktail/.test(q)) slots.wantsCocktails = true;
+  if (/romantic|date night|anniversary/.test(q)) slots.wantsDateNight = true;
   if (/hidden|local|locals/.test(q)) slots.wantsHiddenGem = true;
+  if (/not touristy|avoid tourist|tourist trap|non-touristy|non touristy/.test(q)) {
+    slots.wantsAntiTouristy = true;
+  }
+  if (/under \$?\d+|budget|cheap|value|affordable/.test(q)) slots.wantsValue = true;
+  if (/good service|great service|excellent service/.test(q)) slots.wantsService = true;
   return slots;
 }
 
-function signalBoost(slots: IntelligenceSlots, s: SignalRow): number {
+/** Exported for SEARCH-003 / DATA-041-R04 unit tests. */
+export function computeSignalBoost(
+  slots: IntelligenceSlots,
+  s: SignalBoostInput,
+): number {
   if ((s.confidence ?? 0) < 0.6) return 0;
   let boost = 0;
   if (slots.wantsRooftop) boost += (s.rooftop_score ?? 0) * 0.35;
   if (slots.wantsQuiet) boost += (s.quiet_score ?? 0) * 0.25;
-  if (slots.wantsNomad) boost += ((s.digital_nomad_score ?? 0) + (s.wifi_score ?? 0)) * 0.15;
+  if (slots.wantsNomad) {
+    boost += Math.min(
+      0.15,
+      ((s.digital_nomad_score ?? 0) + (s.wifi_score ?? 0)) * 0.15,
+    );
+  }
   if (slots.wantsBrunch) boost += (s.brunch_score ?? 0) * 0.2;
   if (slots.wantsCocktails) boost += (s.cocktail_score ?? 0) * 0.25;
+  if (slots.wantsDateNight) boost += (s.date_night_score ?? 0) * 0.3;
   if (slots.wantsHiddenGem) boost += (s.hidden_gem_score ?? 0) * 0.3;
-  if (slots.wantsSalsa) boost += (s.nightlife_score ?? 0) * 0.2 + (s.local_authenticity_score ?? 0) * 0.15;
+  if (slots.wantsAntiTouristy) boost -= (s.touristy_score ?? 0) * 0.25;
+  if (slots.wantsValue) boost += (s.value_score ?? 0) * 0.2;
+  if (slots.wantsService) boost += (s.service_score ?? 0) * 0.15;
+  if (slots.wantsSalsa) {
+    boost += (s.nightlife_score ?? 0) * 0.2 + (s.local_authenticity_score ?? 0) * 0.15;
+  }
   return boost;
+}
+
+function signalBoost(slots: IntelligenceSlots, s: SignalRow): number {
+  return computeSignalBoost(slots, s);
 }
 
 function hybridToRestaurant(
@@ -231,7 +288,7 @@ export async function searchRestaurantsIntelligent(
     const { data: signals } = await client
       .from("venue_signals")
       .select(
-        "restaurant_id, quiet_score, rooftop_score, digital_nomad_score, wifi_score, cocktail_score, brunch_score, hidden_gem_score, nightlife_score, local_authenticity_score, confidence, source, evidence",
+        "restaurant_id, quiet_score, date_night_score, rooftop_score, digital_nomad_score, wifi_score, cocktail_score, brunch_score, hidden_gem_score, nightlife_score, local_authenticity_score, touristy_score, service_score, value_score, confidence, source, evidence",
       )
       .in("restaurant_id", ids);
     for (const s of (signals ?? []) as SignalRow[]) {
