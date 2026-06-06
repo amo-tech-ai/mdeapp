@@ -75,15 +75,14 @@ test.describe("SCREEN-027 /events browse", () => {
     assertConsoleHygiene(errors);
   });
 
-  test("sidebar Events nav remains disabled before SAN-584", async ({
-    page,
-  }) => {
+  test("sidebar Events nav links to browse catalog", async ({ page }) => {
     const errors = attachConsoleWatcher(page);
     await gotoBrowseRoute(page, "/");
-    await expect(page.getByTestId("nav-events-link")).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
+    const eventsLink = page.getByTestId("nav-events-link");
+    await expect(eventsLink).not.toHaveAttribute("aria-disabled", "true");
+    await eventsLink.click();
+    await expect(page).toHaveURL(/\/events/, { timeout: 15_000 });
+    await expect(page.getByTestId("events-browse").first()).toBeVisible();
     assertConsoleHygiene(errors);
   });
 
