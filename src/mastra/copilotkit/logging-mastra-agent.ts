@@ -104,6 +104,28 @@ export class LoggingMastraAgent extends MastraAgent {
   }
 }
 
+/** Phase-1 CopilotKit runtime allowlist (AGT-00D / SAN-591). */
+export const RUNTIME_AGENT_ALLOWLIST = new Set([
+  "conciergeAgent",
+  "hostEventAgent",
+  "pingAgent",
+]);
+
+function resolveRuntimeAllowlist(): Set<string> {
+  const raw = process.env.MASTRA_RUNTIME_AGENT_ALLOWLIST?.trim();
+  if (raw) {
+    return new Set(raw.split(",").map((s) => s.trim()).filter(Boolean));
+  }
+  return RUNTIME_AGENT_ALLOWLIST;
+}
+
+function filterRuntimeAgents<T extends Record<string, unknown>>(agents: T): T {
+  const allowlist = resolveRuntimeAllowlist();
+  return Object.fromEntries(
+    Object.entries(agents).filter(([key]) => allowlist.has(key)),
+  ) as T;
+}
+
 export function getLocalAgentsWithLogging(options: {
   mastra: Mastra;
   resourceId?: string;
@@ -118,7 +140,7 @@ export function getLocalAgentsWithLogging(options: {
     requestContext,
     persistTurnLog,
   } = options;
-  const agents = mastra.listAgents() ?? {};
+  const agents = filterRuntimeAgents(mastra.listAgents() ?? {});
 
   return Object.entries(agents).reduce<Record<string, LoggingMastraAgent>>(
     (acc, [agentMapKey, agent]) => {
