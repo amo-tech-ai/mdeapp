@@ -9,6 +9,10 @@ import type { RequestContext } from "@mastra/core/request-context";
 import { Observable } from "rxjs";
 import { finalize, tap } from "rxjs/operators";
 import { logAgentRunForTurn } from "@/mastra/lib/log-agent-run";
+import {
+  getToolSpans,
+  summarizeToolSpans,
+} from "@/mastra/lib/tool-audit-context";
 
 export type LoggingMastraAgentConfig = MastraAgentConfig & {
   /** Key in Mastra({ agents: { pingAgent } }) — not agent.id */
@@ -52,6 +56,11 @@ export class LoggingMastraAgent extends MastraAgent {
         },
       }),
       finalize(() => {
+        // AGT-00C — fold per-tool timing spans (accumulated on the shared
+        // RequestContext by runAuditedSearch) into ai_runs.metadata.
+        const toolSummary = summarizeToolSpans(
+          getToolSpans({ requestContext: this.requestContext }),
+        );
         void logAgentRunForTurn({
           agentMapKey: this.agentMapKey,
           userId: this.userId,
@@ -61,6 +70,7 @@ export class LoggingMastraAgent extends MastraAgent {
             thread_id: input.threadId,
             run_id: input.runId,
             integration: "copilotkit-pattern-1",
+            ...toolSummary,
           },
         });
       }),
