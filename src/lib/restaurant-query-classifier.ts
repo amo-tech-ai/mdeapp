@@ -7,6 +7,13 @@ const CAFE_RE =
 const NIGHTLIFE_GROUNDING_RE =
   /\b(nightlife|salsa bars?|hidden bars?|rooftop cocktails?|rooftop bars?|live music bars?|locals go to|nightclub|discotec)\b/i;
 
+/** Generic POI nightlife (no "events" word) — e.g. SAN-549 / VEN-025 prod gap. */
+const GENERIC_NIGHTLIFE_VENUE_RE =
+  /\b((popular\s+)?venues?|clubs?|discotecas?|where to party|party spots?)\b/i;
+
+const NIGHTLIFE_TIME_RE =
+  /\b(tonight|this evening|today evening|this weekend|weekend)\b/i;
+
 const RESTAURANT_RE =
   /\b(restaurants?|dinner|lunch|brunch|food recommendations?|suggest.*restaurants?|where to eat|eat out|cuisine|steakhouse|rooftop dinner|bistro|dine|eatery|tasting menu|date night dinner)\b/i;
 
@@ -39,12 +46,37 @@ export type RestaurantSearchSignals = {
   cuisine?: string;
 };
 
+/** Ticketed listings — must stay on search-events, not grounded nightlife POIs. */
+export function looksLikeTicketedEventSearch(text: string): boolean {
+  return EVENT_RE.test(text.trim());
+}
+
+export function looksLikeGenericNightlifeVenueSearch(text: string): boolean {
+  const t = text.trim();
+  if (!t || looksLikeTicketedEventSearch(t)) return false;
+  if (RENTAL_RE.test(t)) return false;
+  return GENERIC_NIGHTLIFE_VENUE_RE.test(t) && NIGHTLIFE_TIME_RE.test(t);
+}
+
+/** Ticketed inventory phrasing — "nightlife this weekend", not map POI bars. */
+function looksLikeEventCategoryNightlifeDiscovery(text: string): boolean {
+  const t = text.trim();
+  if (looksLikeTicketedEventSearch(t) || looksLikeGenericNightlifeVenueSearch(t)) {
+    return false;
+  }
+  if (!/\bnightlife\b/i.test(t)) return false;
+  return NIGHTLIFE_TIME_RE.test(t) || /\b(this week|next week)\b/i.test(t);
+}
+
 export function looksLikeNightlifeGroundingSearch(text: string): boolean {
   const t = text.trim();
   if (!t) return false;
   if (RENTAL_RE.test(t)) return false;
-  if (EVENT_RE.test(t)) return false;
-  return NIGHTLIFE_GROUNDING_RE.test(t);
+  if (looksLikeTicketedEventSearch(t)) return false;
+  if (looksLikeEventCategoryNightlifeDiscovery(t)) return false;
+  return (
+    NIGHTLIFE_GROUNDING_RE.test(t) || looksLikeGenericNightlifeVenueSearch(t)
+  );
 }
 
 export function looksLikeCafeSearch(text: string): boolean {

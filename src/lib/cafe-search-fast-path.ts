@@ -8,6 +8,7 @@ export type CafeSearchApiParams = {
   query: string;
   neighborhood?: string;
   limit?: number;
+  intent?: "cafe" | "nightlife";
 };
 
 const FAST_PATH_LIMIT = 5;
@@ -22,6 +23,7 @@ export function buildCafeSearchParams(text: string): CafeSearchApiParams | null 
     query: trimmed,
     neighborhood,
     limit: FAST_PATH_LIMIT,
+    intent: looksLikeNightlifeGroundingSearch(trimmed) ? "nightlife" : "cafe",
   };
 }
 

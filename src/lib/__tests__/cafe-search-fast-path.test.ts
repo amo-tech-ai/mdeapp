@@ -17,6 +17,16 @@ describe("cafe-search-fast-path", () => {
     expect(canFastPathCafeSearch("suggest restaurants medellin")).toBe(false);
   });
 
+  it("passes intent nightlife for generic venues tonight (VEN-025)", () => {
+    const q = "popular venues tonight in Provenza";
+    expect(canFastPathCafeSearch(q)).toBe(true);
+    expect(buildCafeSearchParams(q)).toMatchObject({
+      intent: "nightlife",
+      neighborhood: "El Poblado",
+    });
+    expect(fastPathCafeSummary(4, "El Poblado", q)).toMatch(/nightlife venue/);
+  });
+
   it("matches SCREEN-022 nightlife grounding query", () => {
     const q =
       "Salsa bars and rooftop cocktails locals go to in El Poblado";
