@@ -9,6 +9,8 @@ const config = [
       "coverage/**",
       ".mastra/**",
       "dist/**",
+      "github/**",
+      "CopilotKit/**",
     ],
   },
   ...nextCoreWebVitals,
