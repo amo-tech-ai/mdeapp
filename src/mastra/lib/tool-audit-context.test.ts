@@ -2,6 +2,9 @@ import { RequestContext } from "@mastra/core/request-context";
 import { describe, expect, it } from "vitest";
 import {
   getToolSpans,
+  getTokenUsage,
+  MDEAI_TOKEN_USAGE_KEY,
+  recordTokenUsage,
   recordToolSpan,
   summarizeToolSpans,
   type ToolSpan,
@@ -36,6 +39,34 @@ describe("recordToolSpan / getToolSpans (AGT-00C)", () => {
   });
 });
 
+describe("recordTokenUsage / getTokenUsage (AGT-00C)", () => {
+  it("ignores non-finite token deltas", () => {
+    const { context, requestContext } = ctxWithRequestContext();
+    recordTokenUsage(context, {
+      input_tokens: Number.NaN,
+      output_tokens: Infinity,
+      total_tokens: -5,
+    });
+    expect(getTokenUsage(context)).toBeNull();
+    recordTokenUsage(context, { input_tokens: 10, output_tokens: 5 });
+    expect(getTokenUsage(context)).toEqual({
+      input_tokens: 10,
+      output_tokens: 5,
+      total_tokens: 15,
+    });
+    requestContext.set(MDEAI_TOKEN_USAGE_KEY, {
+      input_tokens: Number.NaN,
+      output_tokens: 2,
+      total_tokens: 2,
+    });
+    expect(getTokenUsage(context)).toEqual({
+      input_tokens: 0,
+      output_tokens: 2,
+      total_tokens: 2,
+    });
+  });
+});
+
 describe("summarizeToolSpans (AGT-00C ai_runs.metadata)", () => {
   it("sums duration and identifies the slowest tool", () => {
     const spans: ToolSpan[] = [
@@ -49,6 +80,19 @@ describe("summarizeToolSpans (AGT-00C ai_runs.metadata)", () => {
       tool_ms_total: 1120,
       slowest_tool: "search_grounded_places",
       slowest_tool_ms: 940,
+      tool_error_count: 0,
+      failed_tools: [],
+    });
+  });
+
+  it("counts failed tools separately from ok spans", () => {
+    const spans: ToolSpan[] = [
+      { tool: "search-restaurants", ms: 200, status: "ok", ts: 1 },
+      { tool: "search-grounded-places", ms: 50, status: "error", ts: 2 },
+    ];
+    expect(summarizeToolSpans(spans)).toMatchObject({
+      tool_error_count: 1,
+      failed_tools: ["search-grounded-places"],
     });
   });
 
@@ -59,6 +103,8 @@ describe("summarizeToolSpans (AGT-00C ai_runs.metadata)", () => {
       tool_ms_total: 0,
       slowest_tool: null,
       slowest_tool_ms: 0,
+      tool_error_count: 0,
+      failed_tools: [],
     });
   });
 });
