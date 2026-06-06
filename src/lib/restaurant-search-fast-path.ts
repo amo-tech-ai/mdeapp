@@ -1,8 +1,5 @@
 import type { Restaurant } from "@/mastra/tools/search-restaurants";
-import {
-  looksLikeRestaurantSearch,
-  scoreRestaurantQuery,
-} from "@/lib/restaurant-query-classifier";
+import { analyzeVenueIntelligenceQuery } from "@/mastra/lib/intelligence-restaurant-venue-wrapper";
 
 export type RestaurantSearchApiParams = {
   neighborhood?: string;
@@ -16,13 +13,15 @@ const FAST_PATH_LIMIT = 5;
 export function buildRestaurantSearchParams(
   text: string,
 ): RestaurantSearchApiParams | null {
-  if (!looksLikeRestaurantSearch(text)) return null;
+  const analysis = analyzeVenueIntelligenceQuery(text);
+  if (analysis.route !== "restaurant_hybrid" || analysis.action !== "search_now") {
+    return null;
+  }
 
-  const s = scoreRestaurantQuery(text);
   return {
-    neighborhood: s.neighborhood,
-    cuisine: s.cuisine,
-    queryText: text.trim(),
+    neighborhood: analysis.slots.neighborhood,
+    cuisine: analysis.slots.cuisine,
+    queryText: analysis.slots.queryText,
     limit: FAST_PATH_LIMIT,
   };
 }
