@@ -4,18 +4,42 @@ import {
   copilotRuntimeNextJSAppRouterEndpoint,
 } from "@copilotkit/runtime";
 import { MASTRA_RESOURCE_ID_KEY, RequestContext } from "@mastra/core/request-context";
-import { NextRequest } from "next/server";
+import { NextRequest, after } from "next/server";
 import { assertCopilotKitAuthorized } from "@/lib/copilotkit-auth";
 import { createClient } from "@/lib/supabase/server";
 import { mastra } from "@/mastra";
 import { getLocalAgentsWithLogging } from "@/mastra/copilotkit/logging-mastra-agent";
 import { setAuditUserId } from "@/mastra/lib/tool-audit-context";
+import { logAgentRunForTurn } from "@/mastra/lib/log-agent-run";
+import type { PersistTurnLog } from "@/mastra/copilotkit/logging-mastra-agent";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 const serviceAdapter = new ExperimentalEmptyAdapter();
+
+/** Keep ai_runs writes alive after the CopilotKit SSE response (Vercel serverless). */
+const persistTurnLog: PersistTurnLog = (opts) => {
+  after(async () => {
+    try {
+      await logAgentRunForTurn(opts);
+    } catch (error) {
+      const meta = opts.metadata ?? {};
+      console.error("[copilotkit ai_runs persist failed]", {
+        agentMapKey: opts.agentMapKey,
+        status: opts.status,
+        threadId:
+          (typeof meta.thread_id === "string" ? meta.thread_id : null) ??
+          (typeof meta.threadId === "string" ? meta.threadId : null),
+        runId:
+          (typeof meta.run_id === "string" ? meta.run_id : null) ??
+          (typeof meta.runId === "string" ? meta.runId : null),
+        error,
+      });
+    }
+  });
+};
 
 function buildHandler(options: {
   userId: string | null;
@@ -28,6 +52,7 @@ function buildHandler(options: {
       resourceId,
       userId: options.userId,
       requestContext: options.requestContext,
+      persistTurnLog,
     }),
   });
 

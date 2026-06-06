@@ -14,7 +14,7 @@ import {
 import {
   parseIntelligenceSlots,
   type IntelligenceSlots,
-} from "./intelligence-restaurant-search";
+} from "@/lib/intelligence-slots";
 
 export type VenueIntelligenceRoute =
   | "restaurant_hybrid"

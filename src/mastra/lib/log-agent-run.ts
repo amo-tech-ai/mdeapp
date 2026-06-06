@@ -14,16 +14,7 @@ const AGENT_MAP_KEY_TO_LOGGING: Record<string, AgentLoggingMeta> = {
   conciergeAgent: { agentName: "concierge-agent", agentType: "general_concierge" },
 };
 
-export function resolveAgentLoggingMeta(agentMapKey: string): AgentLoggingMeta {
-  const mapped = AGENT_MAP_KEY_TO_LOGGING[agentMapKey];
-  if (mapped) return mapped;
-  return {
-    agentName: agentMapKey.replace(/([A-Z])/g, "-$1").toLowerCase().replace(/^-/, ""),
-    agentType: "general_concierge",
-  };
-}
-
-export async function logAgentRunForTurn(opts: {
+export type TurnLogInput = {
   agentMapKey: string;
   userId: string | null;
   status: AiRunStatus;
@@ -34,7 +25,18 @@ export async function logAgentRunForTurn(opts: {
   inputSummary?: Record<string, unknown>;
   outputSummary?: Record<string, unknown>;
   metadata?: Record<string, unknown>;
-}): Promise<void> {
+};
+
+export function resolveAgentLoggingMeta(agentMapKey: string): AgentLoggingMeta {
+  const mapped = AGENT_MAP_KEY_TO_LOGGING[agentMapKey];
+  if (mapped) return mapped;
+  return {
+    agentName: agentMapKey.replace(/([A-Z])/g, "-$1").toLowerCase().replace(/^-/, ""),
+    agentType: "general_concierge",
+  };
+}
+
+export async function logAgentRunForTurn(opts: TurnLogInput): Promise<void> {
   const { agentName, agentType } = resolveAgentLoggingMeta(opts.agentMapKey);
   const inputTokens = opts.input_tokens ?? 0;
   const outputTokens = opts.output_tokens ?? 0;
