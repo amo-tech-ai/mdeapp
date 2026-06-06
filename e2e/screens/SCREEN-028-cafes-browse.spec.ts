@@ -40,6 +40,17 @@ test.describe("SCREEN-028 /cafes browse", () => {
     assertConsoleHygiene(errors);
   });
 
+  test("sidebar Cafés nav links to browse catalog", async ({ page }) => {
+    const errors = attachConsoleWatcher(page);
+    await gotoBrowseRoute(page, "/");
+    const cafesLink = page.getByTestId("nav-cafes-link");
+    await expect(cafesLink).not.toHaveAttribute("aria-disabled", "true");
+    await cafesLink.click();
+    await expect(page).toHaveURL(/\/cafes/, { timeout: 15_000 });
+    await expect(page.getByTestId("cafes-browse").first()).toBeVisible();
+    assertConsoleHygiene(errors);
+  });
+
   test("duplicate feature query params do not crash", async ({ page }) => {
     const errors = attachConsoleWatcher(page);
     await gotoBrowseRoute(page, "/cafes?feature=specialty&feature=workspace");
