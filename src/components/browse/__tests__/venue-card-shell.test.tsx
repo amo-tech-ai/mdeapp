@@ -51,6 +51,40 @@ describe("VenueCardShell", () => {
     expect(html).not.toContain('data-testid="footer"');
   });
 
+  it("renders nova Card composition when requested", () => {
+    const html = renderToStaticMarkup(
+      <VenueCardShell
+        testId="restaurant-card"
+        resultKind="restaurant"
+        composition="nova"
+        media={<span />}
+        footer={<span data-testid="footer">actions</span>}
+      >
+        <h3>Test</h3>
+      </VenueCardShell>,
+    );
+
+    expect(html).toContain('data-slot="card"');
+    expect(html).toContain('data-testid="footer"');
+  });
+
+  it("renders cover media above body for nova browse layout", () => {
+    const html = renderToStaticMarkup(
+      <VenueCardShell
+        testId="restaurant-card"
+        resultKind="restaurant"
+        composition="nova"
+        mediaLayout="cover"
+        media={<div data-testid="hero">hero</div>}
+        footer={<span>actions</span>}
+      >
+        <h3>Test</h3>
+      </VenueCardShell>,
+    );
+
+    expect(html.indexOf('data-testid="hero"')).toBeLessThan(html.indexOf("<h3>"));
+  });
+
   it("supports interactive body button role", () => {
     const html = renderToStaticMarkup(
       <VenueCardShell

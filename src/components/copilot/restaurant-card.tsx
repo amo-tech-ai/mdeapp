@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { VenueCardShell } from "@/components/browse/venue-card-shell";
 import { formatGroundedRating } from "@/lib/places-display";
 import { mapsDeepLinksEnabled } from "@/lib/maps-deep-links";
+import { cn } from "@/lib/utils";
 import { ExternalLink, Info, MapPin } from "lucide-react";
 import type { CardInteractionProps, ResultKind } from "@/components/cards/card-interaction-props";
 
@@ -19,6 +20,10 @@ export type RestaurantCardProps = {
   mapsUrl?: string | null;
   aiSummary?: string | null;
   testId?: string;
+  /** D-09 nova Card shell — default for restaurant vertical. */
+  composition?: "legacy" | "nova";
+  /** Browse grid: full-width 16:10 hero. Chat: inline thumb. */
+  mediaLayout?: "inline" | "cover";
 } & CardInteractionProps & {
   resultKind?: ResultKind;
 };
@@ -37,34 +42,90 @@ function RestaurantMapLinks({ mapsUrl }: { mapsUrl?: string | null }) {
 
   if (!deepLinks) {
     return (
-      <a
-        href={mapsUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        translate="no"
-        className="inline-flex min-h-8 items-center gap-1 rounded-md px-2 text-xs font-medium text-primary underline-offset-2 hover:underline"
-        data-testid="restaurant-card-maps-link"
-        onClick={(e) => e.stopPropagation()}
+      <Button
+        variant="link"
+        size="sm"
+        className="h-8 px-2 text-xs"
+        nativeButton={false}
+        render={
+          <a
+            href={mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            translate="no"
+            data-testid="restaurant-card-maps-link"
+            onClick={(e) => e.stopPropagation()}
+          />
+        }
       >
-        <ExternalLink className="size-3.5" aria-hidden />
+        <ExternalLink data-icon="inline-start" aria-hidden />
         Google Maps
-      </a>
+      </Button>
     );
   }
 
   return (
-    <a
-      href={mapsUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      translate="no"
-      className="inline-flex min-h-8 items-center gap-1 rounded-md border border-border bg-background px-2 text-xs font-medium text-primary hover:bg-muted"
-      data-testid="restaurant-card-directions-link"
-      onClick={(e) => e.stopPropagation()}
+    <Button
+      variant="outline"
+      size="sm"
+      className="h-8 px-2 text-xs"
+      nativeButton={false}
+      render={
+        <a
+          href={mapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          translate="no"
+          data-testid="restaurant-card-directions-link"
+          onClick={(e) => e.stopPropagation()}
+        />
+      }
     >
-      <MapPin className="size-3.5" aria-hidden />
+      <MapPin data-icon="inline-start" aria-hidden />
       Directions
-    </a>
+    </Button>
+  );
+}
+
+function RestaurantCardMedia({
+  imageUrl,
+  mediaLayout,
+}: {
+  imageUrl?: string;
+  mediaLayout: "inline" | "cover";
+}) {
+  const frameClass = cn(
+    "relative overflow-hidden rounded-xl bg-muted",
+    mediaLayout === "cover"
+      ? "aspect-[16/10] w-full"
+      : "aspect-[16/10] w-24 shrink-0 self-start",
+  );
+
+  if (imageUrl) {
+    return (
+      <div className={frameClass} data-testid="restaurant-card-photo">
+        {/* eslint-disable-next-line @next/next/no-img-element -- listing hero URLs from search */}
+        <img
+          src={imageUrl}
+          alt=""
+          className="absolute inset-0 size-full object-cover"
+          loading="lazy"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={cn(
+        frameClass,
+        "flex items-center justify-center text-xs text-muted-foreground",
+      )}
+      data-testid="restaurant-card-photo-placeholder"
+      aria-hidden
+    >
+      Restaurant
+    </div>
   );
 }
 
@@ -79,6 +140,8 @@ export function RestaurantCard({
   mapsUrl,
   aiSummary,
   testId = "restaurant-card",
+  composition = "legacy",
+  mediaLayout = "inline",
   pinId,
   selected,
   onSelect,
@@ -100,31 +163,35 @@ export function RestaurantCard({
     onOpenDetails?.();
   };
 
-  const media = imageUrl ? (
-    <div className="shrink-0">
-      <div
-        className="relative h-24 w-24 overflow-hidden rounded-md bg-muted"
-        data-testid="restaurant-card-photo"
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element -- listing hero URLs from search */}
-        <img
-          src={imageUrl}
-          alt=""
-          width={96}
-          height={96}
-          className="h-full w-full object-cover"
-          loading="lazy"
-        />
+  const media = (
+    <RestaurantCardMedia imageUrl={imageUrl} mediaLayout={mediaLayout} />
+  );
+
+  const summaryText =
+    blurb && blurb !== neighborhood ? blurb : null;
+  const showFooter = Boolean(mapsUrl) || Boolean(onOpenDetails);
+
+  const footerContent = (
+    <>
+      <RestaurantMapLinks mapsUrl={mapsUrl} />
+      <div className="flex flex-wrap gap-1.5">
+        {onOpenDetails ? (
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            data-testid="restaurant-details-cta"
+            onClick={(e) => {
+              e.stopPropagation();
+              openDetails();
+            }}
+          >
+            <Info data-icon="inline-start" aria-hidden />
+            Details
+          </Button>
+        ) : null}
       </div>
-    </div>
-  ) : (
-    <div
-      className="flex h-24 w-24 shrink-0 items-center justify-center rounded-md bg-muted text-xs text-muted-foreground"
-      data-testid="restaurant-card-photo-placeholder"
-      aria-hidden
-    >
-      Restaurant
-    </div>
+    </>
   );
 
   return (
@@ -133,10 +200,13 @@ export function RestaurantCard({
       resultKind="restaurant"
       pinId={pinId}
       selected={selected}
+      composition={composition}
+      mediaLayout={mediaLayout}
       ariaLabel={`Restaurant: ${title}${neighborhood ? `, ${neighborhood}` : ""}`}
       onPreview={preview}
       bodyRole={onOpenDetails ? "button" : undefined}
       bodyTabIndex={onOpenDetails ? 0 : undefined}
+      bodyAriaLabel={onOpenDetails ? `Open details for ${title}` : undefined}
       onBodyClick={onOpenDetails ? openDetails : preview}
       onBodyKeyDown={
         onOpenDetails
@@ -150,57 +220,76 @@ export function RestaurantCard({
       }
       media={media}
       footer={
-        <div className="flex flex-wrap items-center justify-between gap-2 border-t px-3 py-2">
-          <RestaurantMapLinks mapsUrl={mapsUrl} />
-          <div className="flex flex-wrap gap-1.5">
-            {onOpenDetails ? (
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                data-testid="restaurant-details-cta"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openDetails();
-                }}
-              >
-                <Info className="size-3.5" aria-hidden />
-                Details
-              </Button>
-            ) : null}
-          </div>
-        </div>
+        showFooter
+          ? composition === "legacy"
+            ? (
+                <div className="flex flex-wrap items-center justify-between gap-2 border-t px-3 py-2">
+                  {footerContent}
+                </div>
+              )
+            : footerContent
+          : undefined
       }
     >
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          {neighborhood ? (
-            <p className="text-[11px] font-medium text-muted-foreground">
-              {neighborhood}
+      <div
+        className={
+          composition === "nova"
+            ? "flex min-h-0 flex-1 flex-col"
+            : undefined
+        }
+      >
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            {composition === "nova" ? (
+              <p className="min-h-[15px] text-[11px] font-medium text-muted-foreground">
+                {neighborhood ?? "\u00A0"}
+              </p>
+            ) : neighborhood ? (
+              <p className="text-[11px] font-medium text-muted-foreground">
+                {neighborhood}
+              </p>
+            ) : null}
+            <h3
+              className={cn(
+                "font-medium leading-snug",
+                composition === "nova" && "line-clamp-2 min-h-[2.5rem]",
+              )}
+            >
+              {title}
+            </h3>
+          </div>
+          {ratingText ? (
+            <p
+              className="shrink-0 text-xs font-medium text-foreground"
+              data-testid="restaurant-card-rating"
+            >
+              ★ {ratingText}
             </p>
+          ) : composition === "nova" ? (
+            <span className="min-w-8 shrink-0" aria-hidden />
           ) : null}
-          <h3 className="font-medium leading-snug">{title}</h3>
         </div>
-        {ratingText ? (
-          <p
-            className="shrink-0 text-xs font-medium text-foreground"
-            data-testid="restaurant-card-rating"
-          >
-            ★ {ratingText}
+
+        <div
+          className={cn(
+            "mt-1.5 flex flex-wrap gap-1.5",
+            composition === "nova" && "min-h-6",
+          )}
+        >
+          <Badge variant="secondary">{typeLabel}</Badge>
+          {priceLabel ? <Badge variant="outline">{priceLabel}</Badge> : null}
+        </div>
+
+        {composition === "nova" ? (
+          <p className="mt-2 line-clamp-2 min-h-10 flex-1 text-xs leading-5 text-muted-foreground">
+            {summaryText ?? "\u00A0"}
+          </p>
+        ) : summaryText ? (
+          <p className="mt-2 line-clamp-2 text-xs leading-5 text-muted-foreground">
+            {summaryText}
           </p>
         ) : null}
       </div>
-
-      <div className="mt-1.5 flex flex-wrap gap-1.5">
-        <Badge variant="secondary">{typeLabel}</Badge>
-        {priceLabel ? <Badge variant="outline">{priceLabel}</Badge> : null}
-      </div>
-
-      {blurb && blurb !== neighborhood ? (
-        <p className="mt-2 line-clamp-2 text-xs leading-5 text-muted-foreground">
-          {blurb}
-        </p>
-      ) : null}
     </VenueCardShell>
   );
 }

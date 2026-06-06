@@ -149,6 +149,7 @@ export function DomainResults({
                 <RestaurantCard
                   key={r.id}
                   testId={testId}
+                  composition="legacy"
                   title={title}
                   neighborhood={r.neighborhood}
                   cuisine={r.cuisine}
