@@ -76,6 +76,50 @@ export async function searchCafeVenueAnchors(params: {
   );
 }
 
+/** Browse `/cafes` — surfaces Supabase/config failures instead of empty grid. */
+export async function searchCafeVenueAnchorsForBrowse(params: {
+  neighborhood?: string;
+  limit: number;
+}): Promise<{ rows: VenueAnchorRow[]; error: string | null }> {
+  const client = getSupabaseClient();
+  if (!client) {
+    return {
+      rows: [],
+      error: "Could not load cafés. Try again in a moment.",
+    };
+  }
+
+  let query = client
+    .from("venue_anchors")
+    .select(
+      "id, kind, name, google_place_id, neighborhood, latitude, longitude, tags, metadata",
+    )
+    .eq("kind", "cafe")
+    .eq("is_active", true)
+    .limit(params.limit);
+
+  if (params.neighborhood) {
+    query = query.ilike("neighborhood", `%${params.neighborhood}%`);
+  }
+
+  const { data, error } = await query;
+  if (error) {
+    console.warn("[search-venue-anchors] cafe browse", error.message);
+    return {
+      rows: [],
+      error: "Could not load cafés. Try again in a moment.",
+    };
+  }
+
+  const rows = (data ?? []) as VenueAnchorRow[];
+  return {
+    rows: rows.filter(
+      (row) => Boolean(row.google_place_id) && typeof row.name === "string",
+    ),
+    error: null,
+  };
+}
+
 /** Read curated nightclub rows from public.venue_anchors (DATA-035). */
 export async function searchNightclubVenueAnchors(params: {
   neighborhood?: string;
