@@ -9,6 +9,7 @@ import { HomeNeighborhoods } from "@/components/home/home-neighborhoods";
 import { HomeTrustBand } from "@/components/home/home-trust-band";
 import { HomeHostBand } from "@/components/home/home-host-band";
 import { HomeHowItWorks } from "@/components/home/home-how-it-works";
+import { HomePressLogos } from "@/components/home/home-press-logos";
 import { HomeFooter } from "@/components/home/home-footer";
 import { HomeFab } from "@/components/home/home-fab";
 
@@ -50,7 +51,10 @@ export default function HomePage() {
         {/* Band 11: How it works */}
         <HomeHowItWorks />
 
-        {/* Band 12: Footer */}
+        {/* Band 12: Press + partner logos */}
+        <HomePressLogos />
+
+        {/* Band 13: Footer */}
         <HomeFooter />
       </main>
 
