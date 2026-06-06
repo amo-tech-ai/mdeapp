@@ -148,7 +148,7 @@ export function extractClaims(reply: string): FaithfulnessClaim[] {
 }
 
 /** Build a normalized lowercase corpus + the set of digit-runs found in tool output. */
-function buildCorpus(toolOutputs: unknown[]): { text: string; numbers: Set<string> } {
+export function buildCorpus(toolOutputs: unknown[]): { text: string; numbers: Set<string> } {
   const raw = JSON.stringify(toolOutputs ?? []);
   const text = raw.toLowerCase();
   const numbers = new Set<string>();
