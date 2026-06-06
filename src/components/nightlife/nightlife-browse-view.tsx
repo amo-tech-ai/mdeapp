@@ -2,23 +2,10 @@ import Link from "next/link";
 import { MoonStar } from "lucide-react";
 import { BrowseLayout } from "@/components/browse/BrowseLayout";
 import { EmptyState } from "@/components/empty/empty-state";
+import { Button } from "@/components/ui/button";
 import { NightlifeBrowseCard } from "@/components/nightlife/nightlife-browse-card";
+import { NightlifeBrowseFilters } from "@/components/nightlife/nightlife-browse-filters";
 import type { NightlifeListing, NightlifeVibe } from "@/lib/nightlife-browse";
-
-const NEIGHBORHOODS = [
-  "Provenza",
-  "Laureles",
-  "El Poblado",
-  "Manila",
-] as const;
-
-const VIBES: { value: NightlifeVibe; label: string }[] = [
-  { value: "reggaeton", label: "Reggaeton" },
-  { value: "rooftop", label: "Rooftop" },
-  { value: "salsa", label: "Salsa" },
-  { value: "cocktails", label: "Cocktails" },
-  { value: "live-music", label: "Live DJ" },
-];
 
 function buildFilterUrl(filters: {
   neighborhood?: string | null;
@@ -29,20 +16,6 @@ function buildFilterUrl(filters: {
   if (filters.vibe) params.set("vibe", filters.vibe);
   const query = params.toString();
   return query ? `/nightlife?${query}` : "/nightlife";
-}
-
-function toggleNeighborhood(
-  current: string | null,
-  value: string,
-): string | null {
-  return current === value ? null : value;
-}
-
-function toggleVibe(
-  current: NightlifeVibe | null,
-  value: NightlifeVibe,
-): NightlifeVibe | null {
-  return current === value ? null : value;
 }
 
 type NightlifeBrowseViewProps = {
@@ -60,74 +33,6 @@ export function NightlifeBrowseView({
 }: NightlifeBrowseViewProps) {
   const retryHref = buildFilterUrl({ neighborhood, vibe });
 
-  const filterBar = (
-    <>
-      <div>
-        <p className="mb-2 text-xs font-medium text-muted-foreground">
-          Neighborhood
-        </p>
-        <div
-          className="flex flex-wrap gap-2"
-          role="group"
-          aria-label="Neighborhood filters"
-        >
-          {NEIGHBORHOODS.map((n) => {
-            const active = neighborhood === n;
-            return (
-              <Link
-                key={n}
-                href={buildFilterUrl({
-                  neighborhood: toggleNeighborhood(neighborhood, n),
-                  vibe,
-                })}
-                aria-pressed={active}
-                data-testid={`nightlife-filter-neighborhood-${n.toLowerCase().replace(/\s+/g, "-")}`}
-                className={`inline-flex min-h-9 items-center rounded-full border px-3 text-sm transition ${
-                  active
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border bg-background hover:bg-muted"
-                }`}
-              >
-                {n}
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-
-      <div>
-        <p className="mb-2 text-xs font-medium text-muted-foreground">Vibe</p>
-        <div
-          className="flex flex-wrap gap-2"
-          role="group"
-          aria-label="Vibe filters"
-        >
-          {VIBES.map(({ value, label }) => {
-            const active = vibe === value;
-            return (
-              <Link
-                key={value}
-                href={buildFilterUrl({
-                  neighborhood,
-                  vibe: toggleVibe(vibe, value),
-                })}
-                aria-pressed={active}
-                data-testid={`nightlife-filter-vibe-${value}`}
-                className={`inline-flex min-h-9 items-center rounded-full border px-3 text-sm transition ${
-                  active
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border bg-background hover:bg-muted"
-                }`}
-              >
-                {label}
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-    </>
-  );
-
   const notice = (
     <p
       className="mt-4 rounded-md border border-border/60 bg-muted/40 px-3 py-2 text-xs text-muted-foreground"
@@ -142,7 +47,9 @@ export function NightlifeBrowseView({
       testId="nightlife-page"
       title="Nightlife"
       subtitle="Clubs & bars in Medellín — browse without chat"
-      filterBar={filterBar}
+      filterBar={
+        <NightlifeBrowseFilters neighborhood={neighborhood} vibe={vibe} />
+      }
       notice={notice}
     >
       <section className="mt-6" aria-label="Nightlife listings">
@@ -152,12 +59,15 @@ export function NightlifeBrowseView({
             data-testid="nightlife-error"
           >
             <p className="text-sm text-destructive">{error}</p>
-            <Link
-              href={retryHref}
-              className="mt-4 inline-flex min-h-9 items-center rounded-md border border-border bg-background px-3 text-sm font-medium hover:bg-muted"
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-4"
+              nativeButton={false}
+              render={<Link href={retryHref} />}
             >
               Retry
-            </Link>
+            </Button>
           </div>
         ) : null}
 
@@ -172,12 +82,17 @@ export function NightlifeBrowseView({
 
         {!error && results.length > 0 ? (
           <div
-            className="grid gap-4 sm:grid-cols-2"
+            className="grid auto-rows-fr gap-4 sm:grid-cols-2"
             aria-label={`${results.length} nightlife venues`}
             data-testid="nightlife-grid"
           >
             {results.map((listing) => (
-              <NightlifeBrowseCard key={listing.id} listing={listing} />
+              <NightlifeBrowseCard
+                key={listing.id}
+                listing={listing}
+                composition="nova"
+                mediaLayout="cover"
+              />
             ))}
           </div>
         ) : null}

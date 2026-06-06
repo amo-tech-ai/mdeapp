@@ -20,6 +20,9 @@
 # production
 /build
 
+# vendored reference clones (local only)
+/github/
+
 # misc
 .DS_Store
 *.pem
