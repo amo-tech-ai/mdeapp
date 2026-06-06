@@ -13,6 +13,7 @@ describe("createMastraStorage", () => {
   });
 
   it("uses PostgresStore when DATABASE_URL is set", () => {
+    vi.stubEnv("MASTRA_DEV_LIBSQL", "");
     vi.stubEnv(
       "DATABASE_URL",
       "postgresql://postgres.test:secret@aws-1-us-east-1.pooler.supabase.com:6543/postgres",
@@ -29,6 +30,7 @@ describe("createMastraStorage", () => {
 
   it("logs postgres mode when DATABASE_URL is set", () => {
     const info = vi.spyOn(console, "info").mockImplementation(() => {});
+    vi.stubEnv("MASTRA_DEV_LIBSQL", "");
     vi.stubEnv(
       "DATABASE_URL",
       "postgresql://postgres.test:secret@aws-1-us-east-1.pooler.supabase.com:6543/postgres",

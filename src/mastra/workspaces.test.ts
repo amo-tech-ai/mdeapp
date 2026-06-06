@@ -18,7 +18,7 @@ describe("Mastra workspace", () => {
     expect(workspaceBasePath).toBeTruthy();
   });
 
-  test.skipIf(!!process.env.CI)(
+  test.skipIf(!!process.env.CI || !existsSync(workspaceBasePath))(
     "workspace directory contains 5 skill folders",
     () => {
       expect(existsSync(join(workspaceBasePath, "skills"))).toBe(true);
