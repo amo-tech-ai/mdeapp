@@ -52,7 +52,7 @@ export async function recordMastraRun(record: MastraRunRecord): Promise<void> {
     const deadline = new Promise<never>((_, reject) => {
       timeoutId = setTimeout(
         () => reject(new Error("ai_runs insert timeout")),
-        500,
+        2500,
       );
     });
     type AiRunsInsertClient = {
@@ -92,7 +92,7 @@ export async function recordMastraRun(record: MastraRunRecord): Promise<void> {
     );
   } finally {
     // Release the timeout timer the moment the insert settles. Without this the
-    // pending setTimeout keeps the Node event loop warm for up to 500ms per call
+    // pending setTimeout keeps the Node event loop warm for up to 2500ms per call
     // even after a fast insert — harmless but wasteful under chat load.
     if (timeoutId) clearTimeout(timeoutId);
   }

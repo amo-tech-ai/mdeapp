@@ -99,8 +99,8 @@ describe("recordMastraRun", () => {
       });
 
       expect(insert).toHaveBeenCalled();
-      // The 500ms deadline timer must be cleared in `finally`; otherwise it
-      // stays pending ~500ms per call and keeps the Node event loop warm
+      // The insert deadline timer must be cleared in `finally`; otherwise it
+      // stays pending and keeps the Node event loop warm
       // under chat load.
       expect(vi.getTimerCount()).toBe(0);
     } finally {
