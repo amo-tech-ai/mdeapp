@@ -38,9 +38,11 @@ function formatStartsAt(iso: string) {
 
 function EventBrowseCardMedia({
   imageUrl,
+  imageAlt,
   mediaLayout,
 }: {
   imageUrl?: string;
+  imageAlt: string;
   mediaLayout: "inline" | "cover";
 }) {
   const frameClass = cn(
@@ -55,7 +57,7 @@ function EventBrowseCardMedia({
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={imageUrl}
-        alt=""
+        alt={imageAlt}
         className={cn(frameClass, "object-cover")}
         loading="lazy"
         data-testid="event-browse-card-photo"
@@ -95,6 +97,7 @@ export function EventBrowseCard({
       media={
         <EventBrowseCardMedia
           imageUrl={event.imageUrl}
+          imageAlt={event.title}
           mediaLayout={mediaLayout}
         />
       }

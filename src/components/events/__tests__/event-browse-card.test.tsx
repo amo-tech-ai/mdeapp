@@ -51,5 +51,6 @@ describe("EventBrowseCard", () => {
     );
     expect(html).toContain('data-testid="event-browse-card-photo"');
     expect(html).toContain("https://cdn.example.com/event.jpg");
+    expect(html).toContain('alt="Salsa Night"');
   });
 });
