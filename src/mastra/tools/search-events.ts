@@ -68,6 +68,13 @@ export function mapCategory(eventType: string | null): EventCategory {
   return EVENT_TYPE_MAP[eventType] ?? 'culture';
 }
 
+/** DB `event_type` values that map to a browse category filter. */
+export function dbEventTypesForCategory(category: EventCategory): string[] {
+  return Object.entries(EVENT_TYPE_MAP)
+    .filter(([, cat]) => cat === category)
+    .map(([type]) => type);
+}
+
 // ── Neighborhood extraction from address field ────────────────────────────────
 // Addresses are stored as "Neighborhood, Street, City" so the first segment
 // before the comma is the neighborhood. Falls back to city name.
@@ -279,10 +286,7 @@ export async function searchEvents(
     .limit(limit);
 
   if (query.category) {
-    // Match DB event_type values that map to the requested category
-    const dbTypes = Object.entries(EVENT_TYPE_MAP)
-      .filter(([, cat]) => cat === query.category)
-      .map(([type]) => type);
+    const dbTypes = dbEventTypesForCategory(query.category);
     q = q.in('event_type', dbTypes);
   }
 
