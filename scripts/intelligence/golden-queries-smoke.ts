@@ -10,6 +10,7 @@ import { searchRentalsIntelligent } from "../../src/mastra/lib/intelligence-rent
 import { searchEventsIntelligent } from "../../src/mastra/lib/intelligence-event-search";
 import { embedQueryText } from "../../src/mastra/lib/query-embedding";
 import { normalizeVenueGroundingQuery } from "../../src/mastra/tools/search-grounded-places";
+import { runFaithfulnessChecks } from "./faithfulness-smoke";
 
 function loadEnv() {
   const path = resolve(process.cwd(), ".env.local");
@@ -166,11 +167,22 @@ async function main() {
     console.warn("  WARN: repeated embed not faster — cache may be cold");
   }
 
+  // AGT-00A (SAN-590) — report a faithfulness rate over the golden reply fixtures.
+  console.log("\n--- AGT-00A faithfulness scorer ---");
+  const faith = runFaithfulnessChecks(false);
+  console.log(
+    `faithfulness rate (grounded fixtures): ${(faith.faithfulnessRate * 100).toFixed(0)}% · ${faith.correct}/${faith.total} fixtures correct`,
+  );
+  if (faith.mismatches.length) {
+    console.error(`  FAIL: faithfulness fixtures mismatched: ${faith.mismatches.join(", ")}`);
+    failed += faith.mismatches.length;
+  }
+
   if (failed) {
-    console.error(`\nFAIL: ${failed}/${cases.length} golden queries`);
+    console.error(`\nFAIL: ${failed} golden checks (${cases.length} queries + faithfulness)`);
     process.exit(1);
   }
-  console.log(`\nPASS: ${cases.length}/${cases.length} golden queries`);
+  console.log(`\nPASS: ${cases.length}/${cases.length} golden queries + faithfulness`);
 }
 
 main().catch((e) => {
