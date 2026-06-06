@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Ticket } from "lucide-react";
@@ -18,6 +20,8 @@ export type EventCardProps = {
   imageUrl?: string;
   ticketUrl: string;
   sourceUrl?: string;
+  /** Browse grid — link to `/events/[slug]` without chat handler. */
+  detailsHref?: string;
   selected?: boolean;
   onSelect?: (id: string) => void;
   onOpenDetails?: () => void;
@@ -54,6 +58,7 @@ export function EventCard({
   imageUrl,
   ticketUrl,
   sourceUrl,
+  detailsHref,
   selected,
   onSelect,
   onOpenDetails,
@@ -160,7 +165,16 @@ export function EventCard({
               Source
             </a>
           ) : null}
-          {onOpenDetails ? (
+          {detailsHref ? (
+            <Link
+              href={detailsHref}
+              data-testid="event-details-cta"
+              className={cn(buttonVariants({ size: "sm", variant: "outline" }))}
+              onClick={(e) => e.stopPropagation()}
+            >
+              Details
+            </Link>
+          ) : onOpenDetails ? (
             <Button
               type="button"
               size="sm"
