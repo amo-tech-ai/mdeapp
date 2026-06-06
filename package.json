@@ -31,6 +31,7 @@
     "smoke:search-grounding": "node --env-file=.env.local scripts/smoke-search-grounding.mjs",
     "verify:mis-phase1": "node --env-file=.env.local scripts/intelligence/verify-mis-phase1.mjs",
     "smoke:golden-queries": "npx tsx --env-file=.env.local scripts/intelligence/golden-queries-smoke.ts",
+    "smoke:faithfulness": "npx tsx scripts/intelligence/faithfulness-smoke.ts",
     "verify:maps-env": "node --env-file=.env.local scripts/verify-maps-env.mjs",
     "verify:task": "node scripts/verify-task.mjs",
     "check:mastra": "node scripts/check-mastra.mjs",
