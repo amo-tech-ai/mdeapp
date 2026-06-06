@@ -67,7 +67,7 @@ function hasClearVerticalSignal(text: string): boolean {
     looksLikeCafeSearch(text) ||
     looksLikeRestaurantSearch(text) ||
     (LOCAL_RESTAURANT_RE.test(text) && hasHood) ||
-    ((slots.wantsRooftop || slots.wantsQuiet) && hasHood)
+    ((Boolean(slots.wantsRooftop) || Boolean(slots.wantsQuiet)) && hasHood)
   );
 }
 
