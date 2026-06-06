@@ -29,11 +29,15 @@ export async function logAgentRunForTurn(opts: {
   status: AiRunStatus;
   durationMs: number;
   modelName?: string;
+  input_tokens?: number;
+  output_tokens?: number;
   inputSummary?: Record<string, unknown>;
   outputSummary?: Record<string, unknown>;
   metadata?: Record<string, unknown>;
 }): Promise<void> {
   const { agentName, agentType } = resolveAgentLoggingMeta(opts.agentMapKey);
+  const inputTokens = opts.input_tokens ?? 0;
+  const outputTokens = opts.output_tokens ?? 0;
   await recordMastraRun({
     user_id: opts.userId,
     agent_name: agentName,
@@ -41,6 +45,9 @@ export async function logAgentRunForTurn(opts: {
     status: opts.status,
     duration_ms: opts.durationMs,
     model_name: opts.modelName ?? "gemini-3.5-flash",
+    input_tokens: inputTokens,
+    output_tokens: outputTokens,
+    total_tokens: inputTokens + outputTokens,
     input_data: opts.inputSummary ?? {},
     output_data: opts.outputSummary ?? {},
     metadata: opts.metadata,

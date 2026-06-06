@@ -8,6 +8,7 @@ import {
 } from "../lib/map-adk-grounding-pins";
 import { incrementAndCheckGroundingQuota } from "../lib/grounding-quota";
 import { resolveGroundingLocationBias } from "../lib/grounding-location-bias";
+import { runAuditedTool } from "../lib/run-audited-search";
 import { searchRestaurants, type Restaurant } from "./search-restaurants";
 import {
   isCoffeeVenueQuery,
@@ -332,12 +333,18 @@ export const searchGroundedPlacesTool = createTool({
     source: z.literal("grounding"),
     metadata: z.record(z.unknown()).optional(),
   }),
-  execute: async (inputData: {
-    query: string;
-    intent?: VenueGroundingIntent;
-    pageSize?: number;
-    locationBias?: { latitude: number; longitude: number };
-  }) => {
+  execute: async (
+    inputData: {
+      query: string;
+      intent?: VenueGroundingIntent;
+      pageSize?: number;
+      locationBias?: { latitude: number; longitude: number };
+    },
+    context?: unknown,
+  ) =>
+    runAuditedTool(
+      "search-grounded-places",
+      async () => {
     const { query: rawQuery, intent, pageSize, locationBias: inputBias } =
       inputData;
     const query = normalizeVenueGroundingQuery(rawQuery);
@@ -437,5 +444,7 @@ export const searchGroundedPlacesTool = createTool({
       rawQuery,
       intent,
     );
-  },
+      },
+      context,
+    ),
 });

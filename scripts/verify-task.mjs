@@ -24,6 +24,15 @@ const REGISTRY = {
     e2e: ["e2e/prod-synthetic-smoke.spec.ts"],
     smoke: true,
   },
+  "SAN-589": {
+    vitest: [
+      "src/mastra/lib/mastra-telemetry.test.ts",
+      "src/mastra/lib/mastra-telemetry-flows.test.ts",
+      "src/mastra/lib/run-audited-search.test.ts",
+      "src/mastra/lib/tool-audit-context.test.ts",
+      "src/mastra/lib/log-agent-run.test.ts",
+    ],
+  },
   "OPS-JOURNEY": {
     e2e: [
       "e2e/prod-synthetic-smoke.spec.ts",

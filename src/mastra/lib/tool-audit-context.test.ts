@@ -49,6 +49,19 @@ describe("summarizeToolSpans (AGT-00C ai_runs.metadata)", () => {
       tool_ms_total: 1120,
       slowest_tool: "search_grounded_places",
       slowest_tool_ms: 940,
+      tool_error_count: 0,
+      failed_tools: [],
+    });
+  });
+
+  it("counts failed tools separately from ok spans", () => {
+    const spans: ToolSpan[] = [
+      { tool: "search-restaurants", ms: 200, status: "ok", ts: 1 },
+      { tool: "search-grounded-places", ms: 50, status: "error", ts: 2 },
+    ];
+    expect(summarizeToolSpans(spans)).toMatchObject({
+      tool_error_count: 1,
+      failed_tools: ["search-grounded-places"],
     });
   });
 
@@ -59,6 +72,8 @@ describe("summarizeToolSpans (AGT-00C ai_runs.metadata)", () => {
       tool_ms_total: 0,
       slowest_tool: null,
       slowest_tool_ms: 0,
+      tool_error_count: 0,
+      failed_tools: [],
     });
   });
 });

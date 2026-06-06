@@ -10,6 +10,10 @@ import { Observable } from "rxjs";
 import { finalize, tap } from "rxjs/operators";
 import { logAgentRunForTurn } from "@/mastra/lib/log-agent-run";
 import {
+  buildTurnTelemetryMetadata,
+  logTurnTelemetryDebug,
+} from "@/mastra/lib/mastra-telemetry";
+import {
   getToolSpans,
   summarizeToolSpans,
 } from "@/mastra/lib/tool-audit-context";
@@ -56,22 +60,30 @@ export class LoggingMastraAgent extends MastraAgent {
         },
       }),
       finalize(() => {
-        // AGT-00C — fold per-tool timing spans (accumulated on the shared
-        // RequestContext by runAuditedSearch) into ai_runs.metadata.
+        const durationMs = Date.now() - startMs;
         const toolSummary = summarizeToolSpans(
           getToolSpans({ requestContext: this.requestContext }),
         );
+        const telemetry = buildTurnTelemetryMetadata({
+          agentMapKey: this.agentMapKey,
+          agent: this.agent,
+          status,
+          durationMs,
+          toolSummary,
+          threadId: input.threadId,
+          runId: input.runId,
+          requestContext: this.requestContext,
+        });
+        logTurnTelemetryDebug(telemetry);
         void logAgentRunForTurn({
           agentMapKey: this.agentMapKey,
           userId: this.userId,
           status,
-          durationMs: Date.now() - startMs,
-          metadata: {
-            thread_id: input.threadId,
-            run_id: input.runId,
-            integration: "copilotkit-pattern-1",
-            ...toolSummary,
-          },
+          durationMs,
+          modelName: telemetry.model_name,
+          input_tokens: telemetry.input_tokens,
+          output_tokens: telemetry.output_tokens,
+          metadata: telemetry,
         });
       }),
     );
