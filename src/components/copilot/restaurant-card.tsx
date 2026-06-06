@@ -140,7 +140,7 @@ export function RestaurantCard({
   mapsUrl,
   aiSummary,
   testId = "restaurant-card",
-  composition = "nova",
+  composition = "legacy",
   mediaLayout = "inline",
   pinId,
   selected,
@@ -206,6 +206,7 @@ export function RestaurantCard({
       onPreview={preview}
       bodyRole={onOpenDetails ? "button" : undefined}
       bodyTabIndex={onOpenDetails ? 0 : undefined}
+      bodyAriaLabel={onOpenDetails ? `Open details for ${title}` : undefined}
       onBodyClick={onOpenDetails ? openDetails : preview}
       onBodyKeyDown={
         onOpenDetails

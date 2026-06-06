@@ -31,6 +31,18 @@ describe("RestaurantCard", () => {
     expect(html).toContain('data-result-kind="restaurant"');
   });
 
+  it("sets body aria-label when details CTA is interactive", () => {
+    const html = renderToStaticMarkup(
+      <RestaurantCard
+        title="Mal De Ojo"
+        pinId="restaurant-r1"
+        testId="restaurant-card"
+        onOpenDetails={() => undefined}
+      />,
+    );
+    expect(html).toContain('aria-label="Open details for Mal De Ojo"');
+  });
+
   it("renders glyph placeholder when image missing", () => {
     const html = renderToStaticMarkup(
       <RestaurantCard
@@ -51,6 +63,7 @@ describe("RestaurantCard", () => {
         imageUrl="https://example.com/photo.jpg"
         mediaLayout="cover"
         composition="nova"
+        pinId="restaurant-cover-test"
         testId="restaurant-card"
       />,
     );
