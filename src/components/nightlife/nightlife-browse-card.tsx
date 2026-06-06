@@ -1,12 +1,16 @@
 import Link from "next/link";
 import { ExternalLink, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { VenueCardShell } from "@/components/browse/venue-card-shell";
 import { mapsDeepLinksEnabled } from "@/lib/maps-deep-links";
+import { cn } from "@/lib/utils";
 import type { NightlifeListing } from "@/lib/nightlife-browse";
 
 type NightlifeBrowseCardProps = {
   listing: NightlifeListing;
+  composition?: "legacy" | "nova";
+  mediaLayout?: "inline" | "cover";
 };
 
 function formatVibeLabel(tag: string): string {
@@ -16,64 +20,93 @@ function formatVibeLabel(tag: string): string {
     .join(" ");
 }
 
-function NightlifeDirectionsLink({ listing }: { listing: NightlifeListing }) {
-  const deepLinks = mapsDeepLinksEnabled();
-
-  if (deepLinks) {
-    return (
-      <Link
-        href={listing.mapsUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        translate="no"
-        className="inline-flex min-h-8 items-center gap-1 rounded-md border border-border bg-background px-2 text-xs font-medium text-primary hover:bg-muted"
-        data-testid="nightlife-browse-directions-link"
-      >
-        <MapPin className="size-3.5" aria-hidden />
-        Directions
-      </Link>
-    );
-  }
+function NightlifeBrowseCardMedia({
+  mediaLayout,
+}: {
+  mediaLayout: "inline" | "cover";
+}) {
+  const frameClass = cn(
+    "relative flex items-center justify-center overflow-hidden rounded-xl bg-muted text-xs text-muted-foreground",
+    mediaLayout === "cover"
+      ? "aspect-[16/10] w-full"
+      : "aspect-[16/10] w-24 shrink-0 self-start",
+  );
 
   return (
-    <Link
-      href={listing.mapsUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      translate="no"
-      className="inline-flex min-h-8 items-center gap-1 rounded-md px-2 text-xs font-medium text-primary underline-offset-2 hover:underline"
-      data-testid="nightlife-browse-maps-link"
-    >
-      <ExternalLink className="size-3.5" aria-hidden />
-      Google Maps
-    </Link>
-  );
-}
-
-export function NightlifeBrowseCard({ listing }: NightlifeBrowseCardProps) {
-  const primaryTag = listing.tags[0];
-
-  const media = (
     <div
-      className="flex h-24 w-24 shrink-0 items-center justify-center rounded-md bg-muted text-xs text-muted-foreground"
+      className={frameClass}
       data-testid="nightlife-browse-card-photo-placeholder"
       aria-hidden
     >
       Club
     </div>
   );
+}
+
+function NightlifeDirectionsLink({ listing }: { listing: NightlifeListing }) {
+  const deepLinks = mapsDeepLinksEnabled();
+
+  if (deepLinks) {
+    return (
+      <Button
+        variant="outline"
+        size="sm"
+        className="h-8 px-2 text-xs"
+        nativeButton={false}
+        render={
+          <a
+            href={listing.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            translate="no"
+            data-testid="nightlife-browse-directions-link"
+          />
+        }
+      >
+        <MapPin data-icon="inline-start" aria-hidden />
+        Directions
+      </Button>
+    );
+  }
+
+  return (
+    <Button
+      variant="link"
+      size="sm"
+      className="h-8 px-2 text-xs"
+      nativeButton={false}
+      render={
+        <Link
+          href={listing.mapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          translate="no"
+          data-testid="nightlife-browse-maps-link"
+        />
+      }
+    >
+      <ExternalLink data-icon="inline-start" aria-hidden />
+      Google Maps
+    </Button>
+  );
+}
+
+export function NightlifeBrowseCard({
+  listing,
+  composition = "nova",
+  mediaLayout = "cover",
+}: NightlifeBrowseCardProps) {
+  const primaryTag = listing.tags[0];
 
   return (
     <VenueCardShell
       testId={`nightlife-card-${listing.id}`}
       resultKind="nightlife"
+      composition={composition}
+      mediaLayout={mediaLayout}
       ariaLabel={`Nightlife venue: ${listing.name}${listing.neighborhood ? `, ${listing.neighborhood}` : ""}`}
-      media={media}
-      footer={
-        <div className="border-t px-3 py-2">
-          <NightlifeDirectionsLink listing={listing} />
-        </div>
-      }
+      media={<NightlifeBrowseCardMedia mediaLayout={mediaLayout} />}
+      footer={<NightlifeDirectionsLink listing={listing} />}
     >
       {listing.neighborhood ? (
         <p className="text-[11px] font-medium text-muted-foreground">
