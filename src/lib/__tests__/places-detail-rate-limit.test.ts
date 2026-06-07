@@ -20,9 +20,9 @@ describe("placesDetailRateLimitKey", () => {
     expect(placesDetailRateLimitKey(req)).toBe("10.0.0.3");
   });
 
-  it("returns null when no IP header is present", () => {
+  it("returns 'unknown' when no IP header is present (production Vercel always injects x-forwarded-for)", () => {
     const req = new Request("http://localhost/api/places/detail?placeId=abc");
-    expect(placesDetailRateLimitKey(req)).toBeNull();
+    expect(placesDetailRateLimitKey(req)).toBe("unknown");
   });
 });
 
@@ -62,10 +62,12 @@ describe("isPlacesDetailRateLimited", () => {
     expect(isPlacesDetailRateLimited("reset-ip")).toBe(false);
   });
 
-  it("never rate-limits when key is null (no identifiable IP)", () => {
-    // Even after 1000 calls, null key must never trigger a block
-    for (let i = 0; i < 1000; i += 1) {
-      expect(isPlacesDetailRateLimited(null)).toBe(false);
+  it("applies the rate limit to the 'unknown' key like any other IP", () => {
+    // 'unknown' is used in local dev (Vercel always provides x-forwarded-for in prod).
+    // It should still be rate-limited — fail-open would be a security regression.
+    for (let i = 0; i < 30; i += 1) {
+      expect(isPlacesDetailRateLimited("unknown")).toBe(false);
     }
+    expect(isPlacesDetailRateLimited("unknown")).toBe(true);
   });
 });

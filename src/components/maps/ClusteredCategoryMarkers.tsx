@@ -53,6 +53,9 @@ export function ClusteredCategoryMarkers({
       const existing = Object.values(markersRef.current);
       if (existing.length > 0) {
         clusterer.addMarkers(existing);
+        // Cancel any pending microtask flush — we just synced, it would
+        // duplicate the O(n) clearMarkers/addMarkers work for no gain.
+        flushPendingRef.current = false;
       }
     }
     return () => {

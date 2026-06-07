@@ -5,21 +5,20 @@ const WINDOW_MS = 60_000;
 type Bucket = { count: number; resetAt: number };
 
 export interface PlacesRateLimiter {
-  /** Returns false when key is null (unidentifiable IP — let request through). */
-  isRateLimited(key: string | null): boolean;
-  /** Returns null when no IP header is present; callers must not rate-limit in that case. */
-  rateLimitKey(req: Request): string | null;
+  isRateLimited(key: string): boolean;
+  /**
+   * Derives a per-client bucket key from the request.
+   * Returns the first hop of x-forwarded-for, x-real-ip, or "unknown".
+   * In production (Vercel) x-forwarded-for is always injected, so "unknown"
+   * is only reachable in local dev or bare Node environments.
+   */
+  rateLimitKey(req: Request): string;
   resetForTests(): void;
 }
 
 /**
  * Creates an in-process fixed-window rate limiter per IP.
  * Expired IP buckets are pruned once per window to bound memory growth.
- *
- * When rateLimitKey returns null (no identifiable client IP), isRateLimited
- * returns false so unidentifiable requests are never blocked under a shared bucket.
- * In production (Vercel) every request carries x-forwarded-for, so null is
- * only encountered in local dev or bare Node environments.
  */
 export function createPlacesRateLimiter(maxPerWindow: number): PlacesRateLimiter {
   if (maxPerWindow < 1 || !Number.isInteger(maxPerWindow)) {
@@ -36,8 +35,7 @@ export function createPlacesRateLimiter(maxPerWindow: number): PlacesRateLimiter
     nextPruneAt = now + WINDOW_MS;
   }
 
-  function isRateLimited(key: string | null): boolean {
-    if (key === null) return false;
+  function isRateLimited(key: string): boolean {
     const now = Date.now();
     prune(now);
     const bucket = buckets.get(key);
@@ -50,13 +48,13 @@ export function createPlacesRateLimiter(maxPerWindow: number): PlacesRateLimiter
     return false;
   }
 
-  function rateLimitKey(req: Request): string | null {
+  function rateLimitKey(req: Request): string {
     const forwarded = req.headers.get("x-forwarded-for");
     if (forwarded) {
       const first = forwarded.split(",")[0]?.trim();
       if (first) return first;
     }
-    return req.headers.get("x-real-ip") ?? null;
+    return req.headers.get("x-real-ip") ?? "unknown";
   }
 
   function resetForTests(): void {
