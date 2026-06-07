@@ -15,6 +15,11 @@ export type RentalCardProps = RentalResultRow & {
   id: string;
   listingId: string;
   photoUrl?: string;
+  /** Override the data-pin-id attribute used for map↔card sync (UX-024).
+   *  Defaults to `id` when omitted. */
+  pinId?: string;
+  /** data-testid for the card root element. Defaults to "rental-card". */
+  testId?: string;
   selected?: boolean;
   featured?: boolean;
   searchParams?: RentalSearchApiParams;
@@ -39,6 +44,8 @@ export function RentalCard({
   wifi,
   amenities,
   tags,
+  pinId,
+  testId = "rental-card",
   selected,
   featured,
   searchParams,
@@ -104,9 +111,9 @@ export function RentalCard({
 
   return (
     <VenueCardShell
-      testId="rental-card"
+      testId={testId}
       resultKind="rental"
-      pinId={id}
+      pinId={pinId ?? id}
       selected={selected}
       featured={featured}
       ariaLabel={cardLabel}
