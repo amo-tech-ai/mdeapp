@@ -19,6 +19,11 @@ describe("placesDetailRateLimitKey", () => {
     });
     expect(placesDetailRateLimitKey(req)).toBe("10.0.0.3");
   });
+
+  it("returns null when no IP header is present", () => {
+    const req = new Request("http://localhost/api/places/detail?placeId=abc");
+    expect(placesDetailRateLimitKey(req)).toBeNull();
+  });
 });
 
 describe("isPlacesDetailRateLimited", () => {
@@ -55,5 +60,12 @@ describe("isPlacesDetailRateLimited", () => {
     expect(isPlacesDetailRateLimited("reset-ip")).toBe(true);
     resetPlacesDetailRateLimitsForTests();
     expect(isPlacesDetailRateLimited("reset-ip")).toBe(false);
+  });
+
+  it("never rate-limits when key is null (no identifiable IP)", () => {
+    // Even after 1000 calls, null key must never trigger a block
+    for (let i = 0; i < 1000; i += 1) {
+      expect(isPlacesDetailRateLimited(null)).toBe(false);
+    }
   });
 });

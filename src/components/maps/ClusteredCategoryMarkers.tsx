@@ -45,8 +45,16 @@ export function ClusteredCategoryMarkers({
 
   // P3 + stale-closure guard: update ref before any microtask can read it;
   // clear markers on unmount or when the map (and thus clusterer) changes.
+  // Also sync already-mounted markers into the new instance so pins don't
+  // disappear after a map re-init until the next setMarkerRef call.
   useLayoutEffect(() => {
     clustererRef.current = clusterer;
+    if (clusterer) {
+      const existing = Object.values(markersRef.current);
+      if (existing.length > 0) {
+        clusterer.addMarkers(existing);
+      }
+    }
     return () => {
       clusterer?.clearMarkers();
       clustererRef.current = null;
