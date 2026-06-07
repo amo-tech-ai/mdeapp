@@ -8563,6 +8563,21 @@ export type Database = {
         | "capacity_issue"
       conversation_status: "active" | "archived" | "completed" | "abandoned"
       message_role: "user" | "assistant" | "system" | "function"
+      partner_status:
+        | "draft"
+        | "pending_review"
+        | "active"
+        | "suspended"
+        | "churned"
+      partner_type:
+        | "host"
+        | "venue"
+        | "broker"
+        | "sponsor"
+        | "agency"
+        | "vendor"
+        | "tour"
+        | "creator"
       payment_status: "pending" | "paid" | "refunded" | "failed"
       resolution_status:
         | "detected"
