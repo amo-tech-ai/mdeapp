@@ -1,0 +1,24 @@
+src/components/copilot/rental-card.tsx
+  s_109e73483abc62::t_5a619ba91c72ef 124
+  s_109e73483abc62::t_727b505da2ba53 78-80
+src/hooks/use-browse-map-sync.ts
+  s_109e73483abc62::t_71112e1f1a3c8e 15
+src/lib/browse/browse-pin-converters.ts
+  s_109e73483abc62::t_92ebd94d5ba2d1 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "1241a1f1df536911ce63803dd74bc499a385a92a",
+  "prompts": {},
+  "sessions": {
+    "s_109e73483abc62": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4cf62afe-9196-4bf1-85ae-e30c45673ebe",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
