@@ -131,12 +131,16 @@ function RentalBrowseViewInner({
                     photoUrl={r.image}
                     onSchedule={
                       r.schedule_viewing_url
-                        ? () =>
-                            window.open(
-                              r.schedule_viewing_url,
-                              "_blank",
-                              "noopener,noreferrer",
-                            )
+                        ? () => {
+                            try {
+                              const { protocol } = new URL(r.schedule_viewing_url!);
+                              if (protocol === "http:" || protocol === "https:") {
+                                window.open(r.schedule_viewing_url, "_blank", "noopener,noreferrer");
+                              }
+                            } catch {
+                              // malformed URL — silently ignore
+                            }
+                          }
                         : undefined
                     }
                   />
