@@ -341,7 +341,7 @@ describe("activatePartner", () => {
         }
         if (table === "partner_members") {
           return {
-            upsert: async (_row: MemberRow) => {
+            upsert: async () => {
               return { error: null };
             },
           };
