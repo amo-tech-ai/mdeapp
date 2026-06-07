@@ -1,0 +1,24 @@
+src/lib/places-rate-limiter.ts
+  s_109e73483abc62::t_4cd6ed1a90c4e3 8-11,16,18-22,25-27,39-40,53,55-59
+src/lib/__tests__/places-detail-rate-limit.test.ts
+  s_109e73483abc62::t_69a2c19d1880ab 22-26
+  s_109e73483abc62::t_51324d04c6bab7 64-70
+src/components/maps/ClusteredCategoryMarkers.tsx
+  s_109e73483abc62::t_e59132ea4f8192 48-49,52-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "9b111adf9a67c56083cde935c1e6089d10ce6c00",
+  "prompts": {},
+  "sessions": {
+    "s_109e73483abc62": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4cf62afe-9196-4bf1-85ae-e30c45673ebe",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
