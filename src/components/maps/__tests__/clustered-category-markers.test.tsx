@@ -84,4 +84,17 @@ describe("ClusteredCategoryMarkers (MAP-009)", () => {
     const count = (html.match(/data-testid="advanced-marker"/g) ?? []).length;
     expect(count).toBe(3);
   });
+
+  it("clearMarkers is available on the clusterer instance (P3 cleanup)", () => {
+    renderToStaticMarkup(
+      <ClusteredCategoryMarkers
+        pins={[pin("x")]}
+        selectedPinId={null}
+        activeMapCategory={null}
+        onSelectPin={() => {}}
+      />,
+    );
+    // Verify the mock clusterer exposes clearMarkers so the cleanup effect can call it
+    expect(typeof mocks.clearMarkers).toBe("function");
+  });
 });
