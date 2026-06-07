@@ -1,10 +1,20 @@
+"use client";
+
+import { useMemo } from "react";
 import Link from "next/link";
 import { UtensilsCrossed } from "lucide-react";
 import { BrowseLayout } from "@/components/browse/BrowseLayout";
+import { BrowseMapContextShell } from "@/components/browse/BrowseMapContextShell";
+import { BrowseMapPanel } from "@/components/browse/BrowseMapPanel";
+import { BrowseMapSheet } from "@/components/browse/BrowseMapSheet";
 import { RestaurantCard } from "@/components/copilot/restaurant-card";
 import { RestaurantBrowseFilters } from "@/components/restaurants/restaurant-browse-filters";
 import { EmptyState } from "@/components/empty/empty-state";
 import { Button } from "@/components/ui/button";
+import { useMapContext } from "@/platform/maps/map-context";
+import { useBrowseMapSync } from "@/hooks/use-browse-map-sync";
+import { useBrowseCardScroll } from "@/hooks/use-browse-card-scroll";
+import { restaurantToMapPin } from "@/lib/browse/browse-pin-converters";
 import type { Restaurant } from "@/mastra/tools/search-restaurants";
 
 function buildFilterUrl(filters: {
@@ -25,78 +35,112 @@ type RestaurantBrowseViewProps = {
   cuisine: string | null;
 };
 
-export function RestaurantBrowseView({
+function RestaurantBrowseViewInner({
   results,
   error,
   neighborhood,
   cuisine,
 }: RestaurantBrowseViewProps) {
+  const { selectedPinId, setSelectedPinId } = useMapContext();
   const retryHref = buildFilterUrl({ neighborhood, cuisine });
 
+  const pins = useMemo(
+    () =>
+      results.flatMap((r) => {
+        const pin = restaurantToMapPin(r);
+        return pin ? [pin] : [];
+      }),
+    [results],
+  );
+
+  useBrowseMapSync(pins, "restaurant");
+  useBrowseCardScroll();
+
   return (
-    <BrowseLayout
-      testId="restaurants-browse"
-      title="Restaurants"
-      subtitle="Food & dining in Medellín — browse without chat"
-      filterBar={
-        <RestaurantBrowseFilters neighborhood={neighborhood} cuisine={cuisine} />
-      }
-    >
-      <section className="mt-6" aria-label="Restaurant listings">
-        {error ? (
-          <div
-            className="rounded-lg border border-destructive/30 bg-destructive/5 p-6 text-center"
-            data-testid="restaurants-error"
-          >
-            <p className="text-sm text-destructive">{error}</p>
-            <Button
-              variant="outline"
-              size="sm"
-              className="mt-4"
-              nativeButton={false}
-              render={<Link href={retryHref} />}
-            >
-              Retry
-            </Button>
-          </div>
-        ) : null}
-
-        {!error && results.length === 0 ? (
-          <EmptyState
-            testId="restaurants-empty"
-            title="No restaurants matched"
-            description="Try another neighborhood or cuisine, or ask the concierge on chat."
-            icon={<UtensilsCrossed className="size-8" aria-hidden />}
+    <>
+      <BrowseLayout
+        testId="restaurants-browse"
+        title="Restaurants"
+        subtitle="Food & dining in Medellín — browse without chat"
+        filterBar={
+          <RestaurantBrowseFilters
+            neighborhood={neighborhood}
+            cuisine={cuisine}
           />
-        ) : null}
+        }
+        mapSlot={<BrowseMapPanel />}
+      >
+        <section className="mt-6" aria-label="Restaurant listings">
+          {error ? (
+            <div
+              className="rounded-lg border border-destructive/30 bg-destructive/5 p-6 text-center"
+              data-testid="restaurants-error"
+            >
+              <p className="text-sm text-destructive">{error}</p>
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-4"
+                nativeButton={false}
+                render={<Link href={retryHref} />}
+              >
+                Retry
+              </Button>
+            </div>
+          ) : null}
 
-        {!error && results.length > 0 ? (
-          <div
-            className="grid auto-rows-fr gap-4 sm:grid-cols-2"
-            aria-label={`${results.length} restaurants`}
-            data-testid="restaurants-grid"
-          >
-            {results.map((r) => (
-              <RestaurantCard
-                key={r.id}
-                title={r.name}
-                neighborhood={r.neighborhood}
-                cuisine={r.cuisine}
-                priceTier={r.priceTier}
-                avgPricePerPerson={r.avgPricePerPerson}
-                rating={r.rating}
-                imageUrl={r.imageUrl}
-                mapsUrl={r.mapsUrl}
-                aiSummary={r.aiSummary}
-                pinId={`restaurant-${r.id}`}
-                testId={`restaurant-card-${r.id}`}
-                composition="nova"
-                mediaLayout="cover"
-              />
-            ))}
-          </div>
-        ) : null}
-      </section>
-    </BrowseLayout>
+          {!error && results.length === 0 ? (
+            <EmptyState
+              testId="restaurants-empty"
+              title="No restaurants matched"
+              description="Try another neighborhood or cuisine, or ask the concierge on chat."
+              icon={<UtensilsCrossed className="size-8" aria-hidden />}
+            />
+          ) : null}
+
+          {!error && results.length > 0 ? (
+            <div
+              className="grid auto-rows-fr gap-4 sm:grid-cols-2"
+              aria-label={`${results.length} restaurants`}
+              data-testid="restaurants-grid"
+            >
+              {results.map((r) => {
+                const pinId = `restaurant-${r.id}`;
+                return (
+                  <RestaurantCard
+                    key={r.id}
+                    title={r.name}
+                    neighborhood={r.neighborhood}
+                    cuisine={r.cuisine}
+                    priceTier={r.priceTier}
+                    avgPricePerPerson={r.avgPricePerPerson}
+                    rating={r.rating}
+                    imageUrl={r.imageUrl}
+                    mapsUrl={r.mapsUrl}
+                    aiSummary={r.aiSummary}
+                    pinId={pinId}
+                    selected={selectedPinId === pinId}
+                    onSelect={() => setSelectedPinId(pinId)}
+                    testId={`restaurant-card-${r.id}`}
+                    composition="nova"
+                    mediaLayout="cover"
+                  />
+                );
+              })}
+            </div>
+          ) : null}
+        </section>
+      </BrowseLayout>
+
+      <BrowseMapSheet />
+    </>
+  );
+}
+
+export function RestaurantBrowseView(props: RestaurantBrowseViewProps) {
+  return (
+    <BrowseMapContextShell>
+      <RestaurantBrowseViewInner {...props} />
+    </BrowseMapContextShell>
   );
 }
