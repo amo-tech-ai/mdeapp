@@ -1,0 +1,294 @@
+docs/ecommerce/tasks/ECOM-C-018-core-commerce-exit-gate.md
+  s_b36771af174a1f::t_60304784906d64 7
+docs/ecommerce/tasks/ECOM-C-008-commerce-api-proxy.md
+  ai_agent 1-69
+docs/ecommerce/tasks/ECOM-M-009-event-product-links.md
+  ai_agent 1-129
+docs/ecommerce/evidence/2026-06-07/commerce-core-exit-gate.md
+  s_b36771af174a1f::t_7996be2557a841 1-21
+commerce/mercur/.claude/skills/dashboard-page-ui/SKILL.md
+  ai_agent 1-180
+docs/ecommerce/tasks/ECOM-C-017-manual-ops-refund-playbook.md
+  ai_agent 1-125
+commerce/mercur/tsconfig.json
+  ai_agent 1-3
+commerce/mercur/apps/vendor/tsconfig.app.json
+  ai_agent 1-35
+commerce/mercur/packages/api/src/modules/README.md
+  ai_agent 1-117
+commerce/mercur/apps/vendor/src/main.tsx
+  ai_agent 1-10
+commerce/mercur/packages/api/src/workflows/README.md
+  ai_agent 1-81
+docs/ecommerce/docs/commerce-marketplace-master-plan.md
+  ai_agent 1-536
+commerce/mercur/packages/api/README.md
+  ai_agent 1-62
+commerce/mercur/.claude/skills/dashboard-form-ui/SKILL.md
+  ai_agent 1-124
+docs/ecommerce/tasks/ECOM-C-005-demo-seller.md
+  ai_agent 1-113
+docs/ecommerce/tasks/ECOM-C-016-paid-order-proof.md
+  ai_agent 1-129
+docs/ecommerce/tasks/ECOM-C-012-mastra-cart-tools.md
+  ai_agent 1-128
+commerce/mercur/apps/vendor/.gitignore
+  ai_agent 1-24
+commerce/mercur/apps/vendor/index.html
+  ai_agent 1-13
+commerce/mercur/packages/api/src/api/README.md
+  ai_agent 1-135
+docs/ecommerce/docs/03-marketplace-starter-repo-review.md
+  ai_agent 1-239
+docs/ecommerce/tasks/ECOM-C-014-copilotkit-product-card.md
+  ai_agent 1-133
+docs/ecommerce/tasks/ECOM-C-020-production-readiness.md
+  ai_agent 1-133
+docs/ecommerce/tasks/ECOM-M-002-vendor-application.md
+  ai_agent 1-128
+docs/ecommerce/tasks/ECOM-C-006-product-catalog-seed.md
+  ai_agent 1-133
+commerce/mercur/packages/api/package.json
+  ai_agent 1-58
+docs/ecommerce/tasks/INDEX.md
+  s_b36771af174a1f::t_d15480127c510d 5-6
+  s_b36771af174a1f::t_a7d99fb050eb4b 48
+  s_b36771af174a1f::t_eee804431c16b7 50
+  s_b36771af174a1f::t_f914983522518e 55
+  s_b36771af174a1f::t_4ecfcde8f9737d 136-140
+commerce/mercur/packages/api/src/scripts/seed.ts
+  ai_agent 1-1061
+scripts/verify-commerce-env.mjs
+  s_b36771af174a1f::t_70fec420bcd353 1-120
+commerce/mercur/.claude/skills/medusa-ui-conformance/SKILL.md
+  ai_agent 1-99
+docs/ecommerce/tasks/ECOM-C-004-stripe-test-checkout.md
+  ai_agent 1-131
+docs/ecommerce/tasks/ECOM-C-010-mastra-product-search.md
+  ai_agent 1-131
+docs/ecommerce/tasks/ECOM-M-010-trip-product-links.md
+  ai_agent 1-126
+docs/ecommerce/tasks/ECOM-M-012-basic-commerce-analytics.md
+  ai_agent 1-123
+commerce/mercur/apps/vendor/CLAUDE.md
+  ai_agent 1-62
+docs/ecommerce/audit/1-tasks-audit.md
+  ai_agent 1-494
+commerce/mercur/apps/vendor/tsconfig.json
+  ai_agent 1-7
+commerce/mercur/packages/api/integration-tests/setup.js
+  ai_agent 1-3
+docs/ecommerce/tasks/ECOM-M-001-mercur-marketplace-foundation.md
+  ai_agent 1-70
+commerce/mercur/apps/admin/src/i18n/en.json
+  ai_agent 1-7
+commerce/mercur/packages/api/jest.config.js
+  ai_agent 1-27
+commerce/mercur/blocks.json
+  ai_agent 1-9
+commerce/mercur/apps/admin/eslint.config.js
+  ai_agent 1-26
+commerce/mercur/packages/api/integration-tests/http/health.spec.ts
+  ai_agent 1-15
+commerce/mercur/apps/admin/vite.config.ts
+  ai_agent 1-13
+docs/ecommerce/tasks/roadmap.md
+  ai_agent 1-879
+commerce/mercur/apps/vendor/vite.config.ts
+  ai_agent 1-13
+commerce/mercur/packages/api/src/scripts/seed-mdeai-catalog.ts
+  ai_agent 1-223
+commerce/mercur/apps/admin/public/logo.svg
+  ai_agent 1-38
+commerce/mercur/.yarnrc.yml
+  ai_agent 1-2
+commerce/mercur/.claude/skills/migration-guide/SKILL.md
+  ai_agent 1-160
+commerce/mercur/package.json
+  ai_agent 1-61
+commerce/mercur/packages/api/tsconfig.json
+  ai_agent 1-35
+docs/ecommerce/docs/ecommerce-implementation-task-plan.md
+  ai_agent 1-928
+commerce/mercur/packages/api/.npmrc
+  ai_agent 1-5
+docs/ecommerce/audit/2-linear-commerce-audit.md
+  ai_agent 1-143
+docs/ecommerce/tasks/ECOM-M-004-vendor-dashboard-v1.md
+  ai_agent 1-133
+docs/ecommerce/tasks/ECOM-M-005-stripe-connect-express.md
+  ai_agent 1-127
+commerce/mercur/.claude/skills/README.md
+  ai_agent 1-14
+commerce/mercur/CLAUDE.md
+  ai_agent 1-113
+commerce/mercur/apps/admin/.gitignore
+  ai_agent 1-24
+commerce/mercur/apps/admin/tsconfig.node.json
+  ai_agent 1-32
+commerce/mercur/packages/api/src/api/store/custom/route.ts
+  ai_agent 1-8
+commerce/mercur/packages/api/.mercur/index.d.ts
+  ai_agent 1-699
+commerce/mercur/apps/admin/package.json
+  ai_agent 1-19
+docs/ecommerce/tasks/ECOM-C-000-verification-floor.md
+  ai_agent 1-146
+docs/ecommerce/adr/001-standalone-mercur.md
+  s_b36771af174a1f::t_40baf268040843 1-90
+commerce/mercur/packages/api/src/scripts/seed-mdeai-checkout-prep.ts
+  ai_agent 1-144
+commerce/mercur/BOOT.md
+  s_b36771af174a1f::t_1f33dfb6cc69a3 14-32
+docs/ecommerce/tasks/ECOM-C-001-commerce-adr.md
+  s_b36771af174a1f::t_e87e680dbe835c 7
+commerce/mercur/packages/api/src/api/admin/custom/route.ts
+  ai_agent 1-8
+commerce/mercur/.claude/skills/dashboard-tab-ui/SKILL.md
+  ai_agent 1-109
+commerce/mercur/packages/api/src/scripts/seed-demo-seller.ts
+  ai_agent 1-89
+docs/ecommerce/docs/04-repos.md
+  ai_agent 1-543
+docs/ecommerce/tasks/ECOM-C-019-ai-checkout-proof.md
+  ai_agent 1-133
+commerce/mercur/AGENTS.md
+  ai_agent 1-84
+commerce/mercur/packages/api/medusa-config.ts
+  ai_agent 1-64
+commerce/mercur/apps/vendor/src/i18n/index.ts
+  ai_agent 1-9
+docs/ecommerce/tasks/ECOM-C-013-mastra-checkout-link.md
+  ai_agent 1-130
+docs/ecommerce/tasks/ECOM-M-007-vendor-payout-visibility.md
+  ai_agent 1-125
+docs/ecommerce/docs/01-ecommerce-plan.md
+  ai_agent 1-465
+docs/ecommerce/tasks/ECOM-C-015-cart-state-ui.md
+  ai_agent 1-129
+commerce/mercur/packages/api/src/subscribers/README.md
+  ai_agent 1-61
+docs/ecommerce/tasks/PHASE-1-OVERVIEW.md
+  ai_agent 1-168
+commerce/mercur/bun.lock
+  ai_agent 1-3232
+commerce/mercur/packages/api/src/api/middlewares.ts
+  ai_agent 1-5
+commerce/mercur/packages/api/src/jobs/README.md
+  ai_agent 1-38
+commerce/mercur/turbo.json
+  ai_agent 1-26
+commerce/mercur/apps/vendor/package.json
+  ai_agent 1-19
+docs/ecommerce/docs/02-audit-tasks.md
+  ai_agent 1-364
+commerce/mercur/apps/vendor/tsconfig.node.json
+  ai_agent 1-32
+commerce/mercur/README.md
+  ai_agent 1-138
+commerce/mercur/.claude/skills/mercur-blocks/SKILL.md
+  ai_agent 1-84
+commerce/mercur/packages/api/.gitignore
+  ai_agent 1-26
+commerce/mercur/packages/api/integration-tests/http/README.md
+  ai_agent 1-29
+docs/ecommerce/tasks/ECOM-M-006-multi-vendor-order-split.md
+  ai_agent 1-128
+commerce/mercur/apps/vendor/src/README.md
+  ai_agent 1-130
+commerce/mercur/packages/api/CLAUDE.md
+  ai_agent 1-83
+commerce/mercur/apps/admin/src/lib/client.ts
+  ai_agent 1-11
+package.json
+  s_109e73483abc62::t_5d8ef5e830a704 107,116
+  s_b36771af174a1f::t_c12e90c78146b4 36
+commerce/mercur/packages/api/src/links/README.md
+  ai_agent 1-26
+commerce/mercur/apps/admin/index.html
+  ai_agent 1-13
+docs/ecommerce/tasks/ECOM-C-002-mercur-backend-spike.md
+  ai_agent 1-133
+docs/ecommerce/docs/ecommerce-prd.md
+  ai_agent 1-950
+docs/ecommerce/tasks/ECOM-C-007-medusa-client-wrapper.md
+  ai_agent 1-138
+commerce/mercur/apps/admin/tsconfig.json
+  ai_agent 1-7
+commerce/mercur/apps/vendor/eslint.config.js
+  ai_agent 1-26
+commerce/mercur/apps/admin/src/main.tsx
+  ai_agent 1-10
+docs/ecommerce/tasks/ECOM-C-011-mastra-product-detail.md
+  ai_agent 1-124
+commerce/mercur/apps/vendor/public/logo.svg
+  ai_agent 1-38
+docs/ecommerce/tasks/ECOM-C-003-commerce-env-secrets.md
+  s_b36771af174a1f::t_9eddad38d4ea77 7
+commerce/mercur/apps/vendor/src/i18n/en.json
+  ai_agent 1-7
+commerce/mercur/apps/admin/tsconfig.app.json
+  ai_agent 1-35
+commerce/mercur/packages/api/instrumentation.ts
+  ai_agent 1-24
+commerce/mercur/tsconfig.base.json
+  ai_agent 1-30
+docs/ecommerce/tasks/ECOM-M-013-featured-listings-pilot.md
+  ai_agent 1-127
+docs/ecommerce/tasks/ECOM-C-009-product-embedding-sync.md
+  ai_agent 1-137
+docs/ecommerce/tasks/ECOM-M-011-venue-product-links.md
+  ai_agent 1-129
+docs/ecommerce/docs/ecom-roadmap.md
+  ai_agent 1-506
+docs/ecommerce/tasks/ECOM-M-008-whatsapp-payment-link.md
+  ai_agent 1-126
+commerce/mercur/.claude/skills/mercur-cli/SKILL.md
+  ai_agent 1-77
+commerce/mercur/apps/admin/src/i18n/index.ts
+  ai_agent 1-9
+commerce/mercur/apps/admin/CLAUDE.md
+  ai_agent 1-66
+commerce/mercur/apps/admin/src/README.md
+  ai_agent 1-130
+commerce/mercur/apps/vendor/src/lib/client.ts
+  ai_agent 1-11
+docs/ecommerce/tasks/ECOM-M-003-vendor-admin-invite.md
+  ai_agent 1-126
+docs/ecommerce/docs/env-commerce.md
+  s_b36771af174a1f::t_d926b10272c2b2 1-82
+commerce/mercur/packages/api/src/scripts/mdeai-catalog-data.ts
+  ai_agent 1-176
+commerce/mercur/apps/admin/README.md
+  ai_agent 1-73
+commerce/mercur/apps/vendor/public/onboarding/bg.svg
+  ai_agent 1-13
+commerce/mercur/.gitignore
+  ai_agent 1-44
+commerce/mercur/packages/api/src/scripts/README.md
+  ai_agent 1-63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "3d5626c4c0cd4d3340a9c3ff8ed4301b8706ae1d",
+  "prompts": {},
+  "sessions": {
+    "s_109e73483abc62": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4cf62afe-9196-4bf1-85ae-e30c45673ebe",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_b36771af174a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e275ed1c-ebc2-46f2-91f8-b18574a1b947",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
