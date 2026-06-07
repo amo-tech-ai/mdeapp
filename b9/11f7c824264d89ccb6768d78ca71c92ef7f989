@@ -1,0 +1,25 @@
+src/app/api/partners/activate/route.ts
+  s_26308efd15595e::t_43e2a8debe2345 27-28
+src/__tests__/api/partners-activate.test.ts
+  s_26308efd15595e::t_e3b7fd2bf53a47 137-159
+  s_26308efd15595e::t_baf58aa1ba844d 228
+src/lib/partners/activate-partner.ts
+  s_26308efd15595e::t_d9bee30c4556dd 213-219
+  s_26308efd15595e::t_b9f11a73b9c2fb 81-82,86,92-96,101-102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "b911f7c824264d89ccb6768d78ca71c92ef7f989",
+  "prompts": {},
+  "sessions": {
+    "s_26308efd15595e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6fba3bdb-547a-4e13-bcee-a5a0beb3f90b",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
