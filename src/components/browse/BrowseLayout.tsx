@@ -54,9 +54,14 @@ export function BrowseLayout({
 
       {notice}
 
-      {children}
-
-      {mapSlot}
+      {mapSlot ? (
+        <div className="lg:flex lg:items-start lg:gap-6">
+          <div className="min-w-0 flex-1">{children}</div>
+          <aside className="w-full lg:w-[400px] lg:shrink-0">{mapSlot}</aside>
+        </div>
+      ) : (
+        children
+      )}
     </main>
   );
 }
