@@ -6,8 +6,20 @@ import {
   PlacesConfigError,
   PlacesRequestError,
 } from "@/mastra/lib/google-places-client";
+import {
+  isPlacesDetailRateLimited,
+  placesDetailRateLimitKey,
+} from "@/lib/places-detail-rate-limit";
 
 export async function GET(req: Request) {
+  const rateKey = placesDetailRateLimitKey(req);
+  if (isPlacesDetailRateLimited(rateKey)) {
+    return NextResponse.json(
+      { error: "rate_limited" },
+      { status: 429, headers: { "Cache-Control": "no-store" } },
+    );
+  }
+
   const url = new URL(req.url);
   const rawId = url.searchParams.get("placeId")?.trim() ?? "";
   if (!rawId || rawId.length < 8) {

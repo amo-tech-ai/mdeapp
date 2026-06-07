@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MarkerClusterer, type Marker } from "@googlemaps/markerclusterer";
 import type { MapPin, MapPinCategory } from "@/platform/contracts";
@@ -16,7 +16,15 @@ export type ClusteredCategoryMarkersProps = {
 
 /**
  * MAP-009 — vis.gl AdvancedMarker pins synced to @googlemaps/markerclusterer.
- * Marker ref map updates after clusterer exists (pending queue via effect deps).
+ *
+ * P3: clusterer is cleared on unmount/map-change (useLayoutEffect cleanup).
+ * P4: marker refs stored in a ref (not state); N concurrent setMarkerRef calls
+ *     from child mounts are coalesced into one clearMarkers/addMarkers call via
+ *     queueMicrotask instead of firing N separate React renders.
+ *
+ * Stale-closure guard: clustererRef is updated via useLayoutEffect, which runs
+ * synchronously before microtasks, so the queueMicrotask callback always reads
+ * the current clusterer instance even when the map changes mid-flight.
  */
 export function ClusteredCategoryMarkers({
   pins,
@@ -25,31 +33,63 @@ export function ClusteredCategoryMarkers({
   onSelectPin,
 }: ClusteredCategoryMarkersProps) {
   const map = useMap();
-  const [markers, setMarkers] = useState<Record<string, Marker>>({});
+  const markersRef = useRef<Record<string, Marker>>({});
+  const flushPendingRef = useRef(false);
+  // Updated synchronously in useLayoutEffect — always current when microtask runs.
+  const clustererRef = useRef<MarkerClusterer | null>(null);
 
   const clusterer = useMemo(() => {
     if (!map) return null;
-    return new MarkerClusterer({
-      map,
-      renderer: createPaisaClusterRenderer(),
-    });
+    return new MarkerClusterer({ map, renderer: createPaisaClusterRenderer() });
   }, [map]);
 
-  useEffect(() => {
-    if (!clusterer) return;
-    clusterer.clearMarkers();
-    clusterer.addMarkers(Object.values(markers));
-  }, [clusterer, markers]);
+  // P3 + stale-closure guard: update ref before any microtask can read it;
+  // clear markers on unmount or when the map (and thus clusterer) changes.
+  // Also sync already-mounted markers into the new instance so pins don't
+  // disappear after a map re-init until the next setMarkerRef call.
+  useLayoutEffect(() => {
+    clustererRef.current = clusterer;
+    if (clusterer) {
+      const existing = Object.values(markersRef.current);
+      if (existing.length > 0) {
+        clusterer.addMarkers(existing);
+        // Cancel any pending microtask flush — we just synced, it would
+        // duplicate the O(n) clearMarkers/addMarkers work for no gain.
+        flushPendingRef.current = false;
+      }
+    }
+    return () => {
+      clusterer?.clearMarkers();
+      clustererRef.current = null;
+    };
+  }, [clusterer]);
 
-  const setMarkerRef = useCallback((marker: Marker | null, key: string) => {
-    setMarkers((prev) => {
-      if ((marker && prev[key]) || (!marker && !prev[key])) return prev;
-      if (marker) return { ...prev, [key]: marker };
-      const rest = { ...prev };
-      delete rest[key];
-      return rest;
-    });
-  }, []);
+  // P4: batch all setMarkerRef calls from the same render tick into one sync.
+  // Empty dep array — stability comes from clustererRef, not the clusterer closure.
+  const setMarkerRef = useCallback(
+    (marker: Marker | null, key: string) => {
+      const prev = markersRef.current;
+      if (marker) {
+        if (prev[key] === marker) return;
+        markersRef.current = { ...prev, [key]: marker };
+      } else {
+        if (!(key in prev)) return;
+        const next = { ...prev };
+        delete next[key];
+        markersRef.current = next;
+      }
+      if (flushPendingRef.current) return;
+      flushPendingRef.current = true;
+      queueMicrotask(() => {
+        flushPendingRef.current = false;
+        const c = clustererRef.current;
+        if (!c) return;
+        c.clearMarkers();
+        c.addMarkers(Object.values(markersRef.current));
+      });
+    },
+    [],
+  );
 
   return (
     <>

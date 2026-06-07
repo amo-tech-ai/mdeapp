@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  turbopack: {
+    root: __dirname,
+  },
   serverExternalPackages: ["@copilotkit/runtime"],
   typescript: {
     // @mastra/memory beta packages have unstable types that break strict checking

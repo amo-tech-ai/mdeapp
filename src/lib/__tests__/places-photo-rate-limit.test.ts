@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach } from "vitest";
+import { describe, expect, it, beforeEach, vi, afterEach } from "vitest";
 import {
   isPlacesPhotoRateLimited,
   placesPhotoRateLimitKey,
@@ -19,6 +19,10 @@ describe("isPlacesPhotoRateLimited", () => {
     resetPlacesPhotoRateLimitsForTests();
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("allows requests under the cap", () => {
     expect(isPlacesPhotoRateLimited("test-ip")).toBe(false);
     expect(isPlacesPhotoRateLimited("test-ip")).toBe(false);
@@ -29,5 +33,23 @@ describe("isPlacesPhotoRateLimited", () => {
       expect(isPlacesPhotoRateLimited("burst-ip")).toBe(false);
     }
     expect(isPlacesPhotoRateLimited("burst-ip")).toBe(true);
+  });
+
+  it("prunes expired buckets after a window elapses", () => {
+    vi.useFakeTimers();
+    const now = Date.now();
+    vi.setSystemTime(now);
+
+    // Fill a bucket to capacity so it exists in memory
+    for (let i = 0; i < 120; i += 1) {
+      isPlacesPhotoRateLimited("stale-ip");
+    }
+    expect(isPlacesPhotoRateLimited("stale-ip")).toBe(true);
+
+    // Advance past the prune window — the bucket should be evicted
+    vi.setSystemTime(now + 61_000);
+
+    // A new request resets the bucket (bucket was expired → no longer limited)
+    expect(isPlacesPhotoRateLimited("stale-ip")).toBe(false);
   });
 });
