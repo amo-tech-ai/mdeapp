@@ -1,0 +1,32 @@
+src/lib/partners/activate-partner.ts
+  s_26308efd15595e::t_bf4fb180f3b5b4 21-27,44-111,120-134,156-183,204
+src/app/api/partners/activate/route.ts
+  s_26308efd15595e::t_edf2e979cb72cb 3-6,12-32,66-74
+src/lib/partners/activate-schema.ts
+  s_26308efd15595e::t_91f787b775a8ea 9-11,18
+src/__tests__/api/partners-activate.test.ts
+  s_26308efd15595e::t_2437d70f7d9fdf 260-299,355-359,362-363,370
+  s_26308efd15595e::t_0dc23e7f192ace 300-343,345-354,360-361
+  s_26308efd15595e::t_0149cd161f8448 501-538
+  s_26308efd15595e::t_8c28490e9cadee 35
+  s_26308efd15595e::t_c14b7862c8656f 344
+  s_26308efd15595e::t_399c785ac4dff3 74-82
+  s_26308efd15595e::t_f6db6f4784cf3f 208-219
+  s_26308efd15595e::t_1540ace678aa1b 129-131
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "c2a43ae1d0c0aad02f1854c9c79a63f76fd53717",
+  "prompts": {},
+  "sessions": {
+    "s_26308efd15595e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6fba3bdb-547a-4e13-bcee-a5a0beb3f90b",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
