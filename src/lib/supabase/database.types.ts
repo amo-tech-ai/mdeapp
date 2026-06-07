@@ -433,6 +433,8 @@ export type Database = {
       }
       bookings: {
         Row: {
+          approved_at: string | null
+          approved_by: string | null
           booking_type: Database["public"]["Enums"]["booking_type"]
           cancelled_at: string | null
           confirmation_code: string | null
@@ -444,10 +446,22 @@ export type Database = {
           id: string
           metadata: Json | null
           notes: string | null
+          partner_id: string | null
+          partner_notes: string | null
+          partner_status: string
           party_size: number | null
           payment_method: string | null
           payment_reference: string | null
-          payment_status: Database["public"]["Enums"]["payment_status"] | null
+          partner_type:
+        | "host"
+        | "venue"
+        | "broker"
+        | "sponsor"
+        | "agency"
+        | "vendor"
+        | "tour"
+        | "creator"
+      payment_status: Database["public"]["Enums"]["payment_status"] | null
           quantity: number | null
           resource_id: string
           resource_title: string
@@ -462,6 +476,8 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
           booking_type: Database["public"]["Enums"]["booking_type"]
           cancelled_at?: string | null
           confirmation_code?: string | null
@@ -473,6 +489,9 @@ export type Database = {
           id?: string
           metadata?: Json | null
           notes?: string | null
+          partner_id?: string | null
+          partner_notes?: string | null
+          partner_status?: string
           party_size?: number | null
           payment_method?: string | null
           payment_reference?: string | null
@@ -491,6 +510,8 @@ export type Database = {
           user_id: string
         }
         Update: {
+          approved_at?: string | null
+          approved_by?: string | null
           booking_type?: Database["public"]["Enums"]["booking_type"]
           cancelled_at?: string | null
           confirmation_code?: string | null
@@ -502,6 +523,9 @@ export type Database = {
           id?: string
           metadata?: Json | null
           notes?: string | null
+          partner_id?: string | null
+          partner_notes?: string | null
+          partner_status?: string
           party_size?: number | null
           payment_method?: string | null
           payment_reference?: string | null
@@ -520,6 +544,20 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "bookings_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "bookings_trip_id_fkey"
             columns: ["trip_id"]
@@ -2431,26 +2469,21 @@ export type Database = {
         Row: {
           apartment_id: string | null
           assigned_agent_id: string | null
-          budget_max: number | null
-          budget_min: number | null
-          conversion_probability: number | null
           created_at: string
           email: string | null
-          hot_lead_alerted: boolean | null
           id: string
           idempotency_key: string | null
           intent: string | null
-          last_contacted_at: string | null
+          listing_id: string | null
+          listing_kind: string | null
           metadata: Json
           name: string | null
           neighborhood_id: string | null
-          next_followup_at: string | null
           notes: string | null
+          partner_id: string | null
           phone: string | null
-          pipeline_stage: string | null
           preferred_showing_at: string | null
           score: number | null
-          score_breakdown: Json | null
           source: string
           status: string
           trip_id: string | null
@@ -2460,26 +2493,21 @@ export type Database = {
         Insert: {
           apartment_id?: string | null
           assigned_agent_id?: string | null
-          budget_max?: number | null
-          budget_min?: number | null
-          conversion_probability?: number | null
           created_at?: string
           email?: string | null
-          hot_lead_alerted?: boolean | null
           id?: string
           idempotency_key?: string | null
           intent?: string | null
-          last_contacted_at?: string | null
+          listing_id?: string | null
+          listing_kind?: string | null
           metadata?: Json
           name?: string | null
           neighborhood_id?: string | null
-          next_followup_at?: string | null
           notes?: string | null
+          partner_id?: string | null
           phone?: string | null
-          pipeline_stage?: string | null
           preferred_showing_at?: string | null
           score?: number | null
-          score_breakdown?: Json | null
           source?: string
           status?: string
           trip_id?: string | null
@@ -2489,26 +2517,21 @@ export type Database = {
         Update: {
           apartment_id?: string | null
           assigned_agent_id?: string | null
-          budget_max?: number | null
-          budget_min?: number | null
-          conversion_probability?: number | null
           created_at?: string
           email?: string | null
-          hot_lead_alerted?: boolean | null
           id?: string
           idempotency_key?: string | null
           intent?: string | null
-          last_contacted_at?: string | null
+          listing_id?: string | null
+          listing_kind?: string | null
           metadata?: Json
           name?: string | null
           neighborhood_id?: string | null
-          next_followup_at?: string | null
           notes?: string | null
+          partner_id?: string | null
           phone?: string | null
-          pipeline_stage?: string | null
           preferred_showing_at?: string | null
           score?: number | null
-          score_breakdown?: Json | null
           source?: string
           status?: string
           trip_id?: string | null
@@ -2535,6 +2558,13 @@ export type Database = {
             columns: ["neighborhood_id"]
             isOneToOne: false
             referencedRelation: "neighborhoods"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
             referencedColumns: ["id"]
           },
           {
@@ -4469,6 +4499,385 @@ export type Database = {
             columns: ["approval_id"]
             isOneToOne: false
             referencedRelation: "approval_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_assets: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          metadata: Json
+          mime_type: string | null
+          partner_id: string
+          storage_path: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          metadata?: Json
+          mime_type?: string | null
+          partner_id: string
+          storage_path: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          metadata?: Json
+          mime_type?: string | null
+          partner_id?: string
+          storage_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_assets_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_drafts: {
+        Row: {
+          completion_score: number
+          created_at: string
+          id: string
+          partner_id: string | null
+          payload: Json
+          profile_id: string
+          step: number
+          submitted_at: string | null
+          thread_id: string | null
+          type: Database["public"]["Enums"]["partner_type"]
+          updated_at: string
+        }
+        Insert: {
+          completion_score?: number
+          created_at?: string
+          id?: string
+          partner_id?: string | null
+          payload?: Json
+          profile_id: string
+          step?: number
+          submitted_at?: string | null
+          thread_id?: string | null
+          type: Database["public"]["Enums"]["partner_type"]
+          updated_at?: string
+        }
+        Update: {
+          completion_score?: number
+          created_at?: string
+          id?: string
+          partner_id?: string | null
+          payload?: Json
+          profile_id?: string
+          step?: number
+          submitted_at?: string | null
+          thread_id?: string | null
+          type?: Database["public"]["Enums"]["partner_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_drafts_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_drafts_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_locations: {
+        Row: {
+          address: string | null
+          created_at: string
+          google_place_id: string | null
+          id: string
+          is_primary: boolean
+          label: string | null
+          lat: number | null
+          lng: number | null
+          metadata: Json
+          neighborhood: string | null
+          partner_id: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          google_place_id?: string | null
+          id?: string
+          is_primary?: boolean
+          label?: string | null
+          lat?: number | null
+          lng?: number | null
+          metadata?: Json
+          neighborhood?: string | null
+          partner_id: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          google_place_id?: string | null
+          id?: string
+          is_primary?: boolean
+          label?: string | null
+          lat?: number | null
+          lng?: number | null
+          metadata?: Json
+          neighborhood?: string | null
+          partner_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_locations_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_members: {
+        Row: {
+          created_at: string
+          partner_id: string
+          profile_id: string
+          role: string
+        }
+        Insert: {
+          created_at?: string
+          partner_id: string
+          profile_id: string
+          role?: string
+        }
+        Update: {
+          created_at?: string
+          partner_id?: string
+          profile_id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_members_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_members_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_organizations: {
+        Row: {
+          created_at: string
+          display_name: string
+          id: string
+          legal_name: string
+          metadata: Json
+          tax_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name: string
+          id?: string
+          legal_name: string
+          metadata?: Json
+          tax_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string
+          id?: string
+          legal_name?: string
+          metadata?: Json
+          tax_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      partner_services: {
+        Row: {
+          config: Json
+          created_at: string
+          enabled: boolean
+          id: string
+          partner_id: string
+          service_key: string
+          tier: string
+          updated_at: string
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          partner_id: string
+          service_key: string
+          tier?: string
+          updated_at?: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          partner_id?: string
+          service_key?: string
+          tier?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_services_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partners: {
+        Row: {
+          activated_at: string | null
+          completion_score: number
+          created_at: string
+          id: string
+          landlord_profile_id: string | null
+          organization_id: string | null
+          profile_id: string
+          settings: Json
+          sponsor_organization_id: string | null
+          status: Database["public"]["Enums"]["partner_status"]
+          type: Database["public"]["Enums"]["partner_type"]
+          updated_at: string
+        }
+        Insert: {
+          activated_at?: string | null
+          completion_score?: number
+          created_at?: string
+          id?: string
+          landlord_profile_id?: string | null
+          organization_id?: string | null
+          profile_id: string
+          settings?: Json
+          sponsor_organization_id?: string | null
+          status?: Database["public"]["Enums"]["partner_status"]
+          type: Database["public"]["Enums"]["partner_type"]
+          updated_at?: string
+        }
+        Update: {
+          activated_at?: string | null
+          completion_score?: number
+          created_at?: string
+          id?: string
+          landlord_profile_id?: string | null
+          organization_id?: string | null
+          profile_id?: string
+          settings?: Json
+          sponsor_organization_id?: string | null
+          status?: Database["public"]["Enums"]["partner_status"]
+          type?: Database["public"]["Enums"]["partner_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partners_landlord_profile_id_fkey"
+            columns: ["landlord_profile_id"]
+            isOneToOne: false
+            referencedRelation: "landlord_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partners_landlord_profile_id_fkey"
+            columns: ["landlord_profile_id"]
+            isOneToOne: false
+            referencedRelation: "landlord_profiles_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partners_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "partner_organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partners_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      revenue_ledger: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          currency: string
+          id: string
+          idempotency_key: string | null
+          metadata: Json
+          partner_id: string
+          platform_fee_cents: number
+          source_id: string | null
+          source_kind: string
+          stripe_reference: string | null
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          currency?: string
+          id?: string
+          idempotency_key?: string | null
+          metadata?: Json
+          partner_id: string
+          platform_fee_cents?: number
+          source_id?: string | null
+          source_kind: string
+          stripe_reference?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          idempotency_key?: string | null
+          metadata?: Json
+          partner_id?: string
+          platform_fee_cents?: number
+          source_id?: string | null
+          source_kind?: string
+          stripe_reference?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "revenue_ledger_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
             referencedColumns: ["id"]
           },
         ]
@@ -7224,6 +7633,8 @@ export type Database = {
         }
         Returns: string
       }
+      partner_ids_for_user: { Args: never; Returns: string[] }
+      partner_organization_ids_for_user: { Args: never; Returns: string[] }
       is_admin: { Args: never; Returns: boolean }
       is_moderator: { Args: never; Returns: boolean }
       is_suppressed: {
@@ -8152,6 +8563,21 @@ export type Database = {
         | "capacity_issue"
       conversation_status: "active" | "archived" | "completed" | "abandoned"
       message_role: "user" | "assistant" | "system" | "function"
+      partner_status:
+        | "draft"
+        | "pending_review"
+        | "active"
+        | "suspended"
+        | "churned"
+      partner_type:
+        | "host"
+        | "venue"
+        | "broker"
+        | "sponsor"
+        | "agency"
+        | "vendor"
+        | "tour"
+        | "creator"
       payment_status: "pending" | "paid" | "refunded" | "failed"
       resolution_status:
         | "detected"
@@ -8346,6 +8772,23 @@ export const Constants = {
       ],
       conversation_status: ["active", "archived", "completed", "abandoned"],
       message_role: ["user", "assistant", "system", "function"],
+      partner_status: [
+        "draft",
+        "pending_review",
+        "active",
+        "suspended",
+        "churned",
+      ],
+      partner_type: [
+        "host",
+        "venue",
+        "broker",
+        "sponsor",
+        "agency",
+        "vendor",
+        "tour",
+        "creator",
+      ],
       payment_status: ["pending", "paid", "refunded", "failed"],
       resolution_status: [
         "detected",

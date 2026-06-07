@@ -25,9 +25,9 @@ WHERE id = 'contracts';
 -- ============================================================
 
 -- Drop the three non-standard TO PUBLIC policies
-DROP POLICY "sponsor_assets_auth_insert"  ON storage.objects;
-DROP POLICY "sponsor_assets_owner_update" ON storage.objects;
-DROP POLICY "sponsor_assets_owner_delete" ON storage.objects;
+DROP POLICY IF EXISTS "sponsor_assets_auth_insert"  ON storage.objects;
+DROP POLICY IF EXISTS "sponsor_assets_owner_update" ON storage.objects;
+DROP POLICY IF EXISTS "sponsor_assets_owner_delete" ON storage.objects;
 
 -- INSERT: any authenticated user may upload to the sponsor-assets bucket
 -- (matches original intent; auth.role() check was redundant with TO authenticated)
