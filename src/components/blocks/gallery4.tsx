@@ -189,11 +189,12 @@ const Gallery4 = ({
             <button
               key={index}
               className={cn(
-                "h-2 w-2 rounded-full transition-colors motion-reduce:transition-none",
+                "h-2 w-2 rounded-full transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
                 currentSlide === index ? "bg-primary" : "bg-primary/20"
               )}
               onClick={() => carouselApi?.scrollTo(index)}
               aria-label={`Go to slide ${index + 1}`}
+              aria-current={currentSlide === index ? "true" : "false"}
             />
           ))}
         </div>
