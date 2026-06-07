@@ -7,7 +7,7 @@ import {
   PARTNER_ACTIVATE_REDIRECT,
   type PartnerType,
 } from "@/lib/partners/partner-types";
-import type { Database } from "@/lib/supabase/database.types";
+import type { Database, Json } from "@/lib/supabase/database.types";
 
 export type ActivatePartnerSuccess = {
   partnerId: string;
@@ -31,9 +31,7 @@ export function buildPartnerInsertRow(
     type: input.type,
     status: "draft",
     completion_score: 0,
-    settings: sanitizePartnerSettings(
-      (input.settings ?? {}) as Record<string, unknown>,
-    ),
+    settings: sanitizePartnerSettings(input.settings) as Json,
   };
 }
 

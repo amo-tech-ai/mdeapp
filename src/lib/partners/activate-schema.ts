@@ -20,13 +20,16 @@ export function sanitizePartnerSettings(
   return out;
 }
 
-export const activatePartnerInputSchema = z.object({
-  type: z.enum(PARTNER_TYPES),
-  draftId: z.string().uuid().optional(),
-  settings: z
-    .record(z.string(), z.unknown())
-    .optional()
-    .transform((value) => sanitizePartnerSettings(value)),
-});
+export const activatePartnerInputSchema = z
+  .object({
+    type: z.enum(PARTNER_TYPES),
+    draftId: z.string().uuid().optional(),
+    settings: z.record(z.string(), z.unknown()).optional(),
+  })
+  .transform((data) => ({
+    ...data,
+    settings: sanitizePartnerSettings(data.settings),
+  }));
 
-export type ActivatePartnerInput = z.infer<typeof activatePartnerInputSchema>;
+/** Pre-transform input — `settings` optional for callers and unit tests. */
+export type ActivatePartnerInput = z.input<typeof activatePartnerInputSchema>;
