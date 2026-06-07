@@ -1,0 +1,21 @@
+eslint.config.mjs
+  s_b36771af174a1f::t_44e781f79d7772 14
+commerce/mercur/packages/api/medusa-config.ts
+  s_b36771af174a1f::t_11b3c67d0d4dd1 6-13,24-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "ffd1d39bfaf1430956cfd0a9a4ae35d5b35938c6",
+  "prompts": {},
+  "sessions": {
+    "s_b36771af174a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e275ed1c-ebc2-46f2-91f8-b18574a1b947",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
