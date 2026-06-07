@@ -13,8 +13,10 @@ export function HomeFab() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const scrollToTop = () =>
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const scrollToTop = () => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reducedMotion ? "instant" : "smooth" });
+  };
 
   return (
     <div

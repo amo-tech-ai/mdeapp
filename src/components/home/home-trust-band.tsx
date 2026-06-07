@@ -1,4 +1,5 @@
 import { BadgeCheckIcon, ShieldCheckIcon, RefreshCwIcon } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 const signals = [
   { Icon: ShieldCheckIcon, label: "Grounded in Google Maps" },
@@ -17,7 +18,7 @@ export function HomeTrustBand() {
               <span className="text-sm font-medium">{label}</span>
             </div>
           ))}
-          <span className="hidden h-4 w-px bg-border md:block" aria-hidden="true" />
+          <Separator orientation="vertical" className="hidden h-4 md:block" />
           <p className="text-xs text-muted-foreground">
             3.2k&nbsp;places · 180&nbsp;verified rentals · no scams
           </p>

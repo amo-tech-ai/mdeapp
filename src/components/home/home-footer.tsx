@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
 
 const cols = [
   {
@@ -70,7 +71,8 @@ export function HomeFooter() {
           ))}
         </div>
 
-        <div className="mt-10 flex flex-col gap-1 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+        <Separator className="mt-10" />
+        <div className="flex flex-col gap-1 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} mdeai. Medellín, Colombia.</p>
           <p>AI-powered city concierge — not affiliated with Google or Airbnb.</p>
         </div>
