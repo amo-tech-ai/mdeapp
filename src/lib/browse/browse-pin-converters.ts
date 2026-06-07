@@ -12,6 +12,7 @@ export function restaurantToMapPin(r: Restaurant): MapPin | null {
     title: r.name,
     subtitle: r.neighborhood,
     placeId: r.placeId ?? undefined,
+    placeUri: r.mapsUrl ?? undefined,
     source: "sql",
   };
 }

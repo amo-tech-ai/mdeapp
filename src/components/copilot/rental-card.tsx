@@ -75,6 +75,9 @@ export function RentalCard({
     else onSelect?.(id);
   };
 
+  // Wire hover/focus → selected pin highlight (mirrors RestaurantCard pattern)
+  const preview = () => onSelect?.(id);
+
   const photoAlt =
     title && neighborhood
       ? `${title} rental photo in ${neighborhood}`
@@ -118,6 +121,7 @@ export function RentalCard({
       featured={featured}
       ariaLabel={cardLabel}
       layout="rental"
+      onPreview={onSelect ? preview : undefined}
       bodyRole={interactive ? "button" : undefined}
       bodyTabIndex={interactive ? 0 : undefined}
       onBodyClick={interactive ? openCard : undefined}

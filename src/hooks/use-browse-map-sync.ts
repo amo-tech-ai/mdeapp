@@ -12,7 +12,7 @@ export function useBrowseMapSync(
   const prevKeyRef = useRef("");
 
   useEffect(() => {
-    const key = pins.map((p) => p.id).join(",");
+    const key = pins.map((p) => `${p.id}:${p.lat}:${p.lng}`).join(",");
     if (key === prevKeyRef.current) return;
     prevKeyRef.current = key;
     mergePinsByCategory(category, pins);
