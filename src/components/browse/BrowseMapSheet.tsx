@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MapIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { MapsShell } from "@/components/maps/MapProvider";
 import { ChatMap } from "@/components/maps/ChatMap";
 
 export function BrowseMapSheet() {
@@ -27,7 +28,9 @@ export function BrowseMapSheet() {
             <SheetTitle>Map view</SheetTitle>
           </SheetHeader>
           <div className="h-full w-full">
-            <ChatMap mapDomId="browse-map-sheet" />
+            <MapsShell>
+              <ChatMap mapDomId="browse-map-sheet" />
+            </MapsShell>
           </div>
         </SheetContent>
       </Sheet>
