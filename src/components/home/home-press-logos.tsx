@@ -1,3 +1,5 @@
+import { Badge } from "@/components/ui/badge";
+
 const pressLogos = [
   { label: "TechCrunch",    abbr: "TechCrunch" },
   { label: "The New York Times", abbr: "NYTimes" },
@@ -15,12 +17,13 @@ const partnerLogos = [
 
 function LogoPill({ abbr, label }: { abbr: string; label: string }) {
   return (
-    <span
-      className="inline-flex h-9 items-center rounded-full border border-border bg-background px-5 text-sm font-semibold tracking-tight text-muted-foreground/70"
+    <Badge
+      variant="outline"
       aria-label={label}
+      className="h-9 px-5 text-sm font-semibold tracking-tight text-muted-foreground/70"
     >
       {abbr}
-    </span>
+    </Badge>
   );
 }
 

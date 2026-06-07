@@ -51,12 +51,12 @@ const trendingItems: Gallery4Item[] = [
 
 export function HomeTrending() {
   return (
-    <section aria-label="Trending in Medellín" className="bg-background overflow-hidden">
+    <div className="bg-background overflow-hidden">
       <Gallery4
         title="Trending in Medellín"
         description="What's happening right now — picked by AI, grounded in Google Maps."
         items={trendingItems}
       />
-    </section>
+    </div>
   );
 }

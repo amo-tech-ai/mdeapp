@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { MessageSquareIcon, MapPinIcon, BookmarkIcon } from "lucide-react";
 
@@ -50,11 +51,12 @@ export function HomeHowItWorks() {
             <div key={id} className="flex flex-col gap-0 overflow-hidden rounded-2xl border border-border bg-card">
               {/* Image */}
               <div className="relative h-48 overflow-hidden bg-muted">
-                <img
+                <Image
                   src={image}
                   alt={imageAlt}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, 33vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
                 <div className="absolute bottom-3 left-4 flex size-10 items-center justify-center rounded-xl bg-primary/90 text-primary-foreground shadow">

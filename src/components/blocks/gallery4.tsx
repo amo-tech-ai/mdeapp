@@ -1,7 +1,11 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
+
+import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -152,12 +156,14 @@ const Gallery4 = ({
                 key={item.id}
                 className="max-w-[320px] pl-[20px] lg:max-w-[360px]"
               >
-                <a href={item.href} className="group rounded-xl">
+                <Link href={item.href} className="group rounded-xl">
                   <div className="group relative h-full min-h-[27rem] max-w-full overflow-hidden rounded-xl md:aspect-[5/4] lg:aspect-[16/9]">
-                    <img
+                    <Image
                       src={item.image}
                       alt={item.title}
-                      className="absolute h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+                      fill
+                      className="object-cover object-center transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none"
+                      sizes="(max-width: 768px) 320px, 360px"
                     />
                     <div className="absolute inset-0 h-full bg-gradient-to-t from-primary/80 via-primary/40 to-transparent mix-blend-multiply" />
                     <div className="absolute inset-x-0 bottom-0 flex flex-col items-start p-6 text-primary-foreground md:p-8">
@@ -173,7 +179,7 @@ const Gallery4 = ({
                       </div>
                     </div>
                   </div>
-                </a>
+                </Link>
               </CarouselItem>
             ))}
           </CarouselContent>
@@ -182,9 +188,10 @@ const Gallery4 = ({
           {items.map((_, index) => (
             <button
               key={index}
-              className={`h-2 w-2 rounded-full transition-colors ${
+              className={cn(
+                "h-2 w-2 rounded-full transition-colors motion-reduce:transition-none",
                 currentSlide === index ? "bg-primary" : "bg-primary/20"
-              }`}
+              )}
               onClick={() => carouselApi?.scrollTo(index)}
               aria-label={`Go to slide ${index + 1}`}
             />

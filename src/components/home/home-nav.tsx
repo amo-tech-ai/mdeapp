@@ -46,7 +46,7 @@ export function HomeNav() {
         <div className="ml-auto hidden items-center gap-2 sm:flex">
           <Link
             href="/saved"
-            className="flex min-h-[36px] items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none"
+            className="flex min-h-[44px] items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none"
           >
             <BookmarkIcon className="size-3.5" aria-hidden="true" />
             Saved
@@ -88,7 +88,7 @@ export function HomeNav() {
               <Link
                 href="/saved"
                 onClick={() => setOpen(false)}
-                className="flex min-h-[40px] flex-1 items-center justify-center gap-1.5 rounded-full border border-border text-sm font-medium text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-full border border-border text-sm font-medium text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 <BookmarkIcon className="size-3.5" aria-hidden="true" />
                 Saved
@@ -96,7 +96,7 @@ export function HomeNav() {
               <Link
                 href="/host/event/new"
                 onClick={() => setOpen(false)}
-                className="flex min-h-[40px] flex-1 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                className="flex min-h-[44px] flex-1 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               >
                 Host an event
               </Link>

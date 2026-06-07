@@ -66,7 +66,7 @@ export function HomeHero() {
                 placeholder='Ask anything — "rooftop bars in Provenza tonight"'
                 aria-label="Ask the AI concierge"
                 autoFocus
-                className="min-w-0 flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+                className="min-w-0 flex-1 bg-transparent text-base text-foreground placeholder:text-muted-foreground focus:outline-none"
               />
               <button
                 type="submit"
@@ -123,7 +123,7 @@ export function HomeHero() {
                   <div className="h-1 w-16 rounded-full bg-foreground/20" />
                 </div>
                 {/* Map placeholder */}
-                <div className="relative bg-[oklch(0.92_0.03_175)] px-4 py-3" style={{ height: 280 }}>
+                <div className="relative h-[280px] bg-[oklch(0.92_0.03_175)] px-4 py-3">
                   <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1599687267812-35c05ff70ee9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=560')] bg-cover bg-center opacity-80" />
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/60" />
                   <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-background/95 p-3 shadow-lg backdrop-blur-sm">
