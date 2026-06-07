@@ -1,6 +1,3 @@
-/** Generated — do not edit by hand. Regenerate:
- *  supabase gen types typescript --project-id zkwcbyxiwklihegjhuql > src/lib/supabase/database.types.ts
- */
 export type Json =
   | string
   | number
@@ -10,10 +7,30 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "14.1"
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
   public: {
     Tables: {
@@ -36,7 +53,7 @@ export type Database = {
           status: Database["public"]["Enums"]["ai_run_status"] | null
           temperature: number | null
           total_tokens: number | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           agent_name: string
@@ -56,7 +73,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["ai_run_status"] | null
           temperature?: number | null
           total_tokens?: number | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           agent_name?: string
@@ -76,7 +93,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["ai_run_status"] | null
           temperature?: number | null
           total_tokens?: number | null
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: [
           {
@@ -160,7 +177,6 @@ export type Database = {
           featured: boolean | null
           floor_number: number | null
           freshness_status: string | null
-          fts_content: unknown
           furnished: boolean | null
           host_id: string | null
           host_name: string | null
@@ -184,12 +200,10 @@ export type Database = {
           price_weekly: number | null
           rating: number | null
           raw_amenities: Json | null
-          rejection_reason: string | null
           review_count: number | null
           size_sqm: number | null
           slug: string | null
           smoking_allowed: boolean | null
-          source: string | null
           source_listing_id: string | null
           source_url: string | null
           status: string | null
@@ -219,7 +233,6 @@ export type Database = {
           featured?: boolean | null
           floor_number?: number | null
           freshness_status?: string | null
-          fts_content?: unknown
           furnished?: boolean | null
           host_id?: string | null
           host_name?: string | null
@@ -243,12 +256,10 @@ export type Database = {
           price_weekly?: number | null
           rating?: number | null
           raw_amenities?: Json | null
-          rejection_reason?: string | null
           review_count?: number | null
           size_sqm?: number | null
           slug?: string | null
           smoking_allowed?: boolean | null
-          source?: string | null
           source_listing_id?: string | null
           source_url?: string | null
           status?: string | null
@@ -278,7 +289,6 @@ export type Database = {
           featured?: boolean | null
           floor_number?: number | null
           freshness_status?: string | null
-          fts_content?: unknown
           furnished?: boolean | null
           host_id?: string | null
           host_name?: string | null
@@ -302,12 +312,10 @@ export type Database = {
           price_weekly?: number | null
           rating?: number | null
           raw_amenities?: Json | null
-          rejection_reason?: string | null
           review_count?: number | null
           size_sqm?: number | null
           slug?: string | null
           smoking_allowed?: boolean | null
-          source?: string | null
           source_listing_id?: string | null
           source_url?: string | null
           status?: string | null
@@ -421,18 +429,12 @@ export type Database = {
           status?: string
           subject?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "approval_requests_outbox_id_fkey"
-            columns: ["outbox_id"]
-            isOneToOne: false
-            referencedRelation: "outbox"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       bookings: {
         Row: {
+          approved_at: string | null
+          approved_by: string | null
           booking_type: Database["public"]["Enums"]["booking_type"]
           cancelled_at: string | null
           confirmation_code: string | null
@@ -444,6 +446,9 @@ export type Database = {
           id: string
           metadata: Json | null
           notes: string | null
+          partner_id: string | null
+          partner_notes: string | null
+          partner_status: string
           party_size: number | null
           payment_method: string | null
           payment_reference: string | null
@@ -462,6 +467,8 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
           booking_type: Database["public"]["Enums"]["booking_type"]
           cancelled_at?: string | null
           confirmation_code?: string | null
@@ -473,6 +480,9 @@ export type Database = {
           id?: string
           metadata?: Json | null
           notes?: string | null
+          partner_id?: string | null
+          partner_notes?: string | null
+          partner_status?: string
           party_size?: number | null
           payment_method?: string | null
           payment_reference?: string | null
@@ -491,6 +501,8 @@ export type Database = {
           user_id: string
         }
         Update: {
+          approved_at?: string | null
+          approved_by?: string | null
           booking_type?: Database["public"]["Enums"]["booking_type"]
           cancelled_at?: string | null
           confirmation_code?: string | null
@@ -502,6 +514,9 @@ export type Database = {
           id?: string
           metadata?: Json | null
           notes?: string | null
+          partner_id?: string | null
+          partner_notes?: string | null
+          partner_status?: string
           party_size?: number | null
           payment_method?: string | null
           payment_reference?: string | null
@@ -520,6 +535,20 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "bookings_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "bookings_trip_id_fkey"
             columns: ["trip_id"]
@@ -723,39 +752,6 @@ export type Database = {
           },
         ]
       }
-      delivery_receipts: {
-        Row: {
-          external_id: string
-          id: string
-          outbox_id: string
-          outbox_table: string
-          provider: string
-          raw: Json | null
-          received_at: string
-          status: string
-        }
-        Insert: {
-          external_id: string
-          id?: string
-          outbox_id: string
-          outbox_table: string
-          provider: string
-          raw?: Json | null
-          received_at?: string
-          status: string
-        }
-        Update: {
-          external_id?: string
-          id?: string
-          outbox_id?: string
-          outbox_table?: string
-          provider?: string
-          raw?: Json | null
-          received_at?: string
-          status?: string
-        }
-        Relationships: []
-      }
       email_outbox: {
         Row: {
           agent_run_id: string | null
@@ -857,62 +853,6 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
-      }
-      event_attendee_profiles: {
-        Row: {
-          accessibility_detail: string | null
-          accessibility_needs: string[] | null
-          attendee_id: string
-          company: string | null
-          custom_fields: Json | null
-          dietary_detail: string | null
-          dietary_preference: string | null
-          emergency_contact_name: string | null
-          emergency_contact_phone: string | null
-          job_title: string | null
-          marketing_consent: boolean
-          shirt_size: string | null
-          updated_at: string
-        }
-        Insert: {
-          accessibility_detail?: string | null
-          accessibility_needs?: string[] | null
-          attendee_id: string
-          company?: string | null
-          custom_fields?: Json | null
-          dietary_detail?: string | null
-          dietary_preference?: string | null
-          emergency_contact_name?: string | null
-          emergency_contact_phone?: string | null
-          job_title?: string | null
-          marketing_consent?: boolean
-          shirt_size?: string | null
-          updated_at?: string
-        }
-        Update: {
-          accessibility_detail?: string | null
-          accessibility_needs?: string[] | null
-          attendee_id?: string
-          company?: string | null
-          custom_fields?: Json | null
-          dietary_detail?: string | null
-          dietary_preference?: string | null
-          emergency_contact_name?: string | null
-          emergency_contact_phone?: string | null
-          job_title?: string | null
-          marketing_consent?: boolean
-          shirt_size?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "event_attendee_profiles_attendee_id_fkey"
-            columns: ["attendee_id"]
-            isOneToOne: true
-            referencedRelation: "event_attendees"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       event_attendees: {
         Row: {
@@ -1037,34 +977,31 @@ export type Database = {
       }
       event_embeddings: {
         Row: {
-          content_hash: string | null
+          content_hash: string
           embedding: string
           event_id: string
-          id: string
           model: string
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
-          content_hash?: string | null
+          content_hash: string
           embedding: string
           event_id: string
-          id?: string
           model?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
-          content_hash?: string | null
+          content_hash?: string
           embedding?: string
           event_id?: string
-          id?: string
           model?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: [
           {
             foreignKeyName: "event_embeddings_event_id_fkey"
             columns: ["event_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "events"
             referencedColumns: ["id"]
           },
@@ -1182,78 +1119,19 @@ export type Database = {
           },
         ]
       }
-      event_order_refunds: {
-        Row: {
-          amount_cents: number
-          attendee_ids: string[] | null
-          completed_at: string | null
-          created_at: string
-          currency: string
-          id: string
-          initiated_by: string | null
-          initiated_via: string
-          order_id: string
-          reason: string | null
-          reason_detail: string | null
-          status: string
-          stripe_refund_id: string | null
-        }
-        Insert: {
-          amount_cents: number
-          attendee_ids?: string[] | null
-          completed_at?: string | null
-          created_at?: string
-          currency?: string
-          id?: string
-          initiated_by?: string | null
-          initiated_via: string
-          order_id: string
-          reason?: string | null
-          reason_detail?: string | null
-          status?: string
-          stripe_refund_id?: string | null
-        }
-        Update: {
-          amount_cents?: number
-          attendee_ids?: string[] | null
-          completed_at?: string | null
-          created_at?: string
-          currency?: string
-          id?: string
-          initiated_by?: string | null
-          initiated_via?: string
-          order_id?: string
-          reason?: string | null
-          reason_detail?: string | null
-          status?: string
-          stripe_refund_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "event_order_refunds_order_id_fkey"
-            columns: ["order_id"]
-            isOneToOne: false
-            referencedRelation: "event_orders"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       event_orders: {
         Row: {
           access_token: string
-          buyer_anon_id: string | null
           buyer_email: string
           buyer_name: string
           buyer_phone_e164: string | null
           buyer_user_id: string | null
           created_at: string
           currency: string
-          discount_cents: number
           event_id: string
           fee_cents: number
           id: string
           payment_id: string | null
-          promo_code_id: string | null
           quantity: number
           short_id: string
           status: string
@@ -1268,19 +1146,16 @@ export type Database = {
         }
         Insert: {
           access_token: string
-          buyer_anon_id?: string | null
           buyer_email: string
           buyer_name: string
           buyer_phone_e164?: string | null
           buyer_user_id?: string | null
           created_at?: string
           currency?: string
-          discount_cents?: number
           event_id: string
           fee_cents?: number
           id?: string
           payment_id?: string | null
-          promo_code_id?: string | null
           quantity: number
           short_id: string
           status?: string
@@ -1295,19 +1170,16 @@ export type Database = {
         }
         Update: {
           access_token?: string
-          buyer_anon_id?: string | null
           buyer_email?: string
           buyer_name?: string
           buyer_phone_e164?: string | null
           buyer_user_id?: string | null
           created_at?: string
           currency?: string
-          discount_cents?: number
           event_id?: string
           fee_cents?: number
           id?: string
           payment_id?: string | null
-          promo_code_id?: string | null
           quantity?: number
           short_id?: string
           status?: string
@@ -1336,13 +1208,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "event_orders_promo_code_id_fkey"
-            columns: ["promo_code_id"]
-            isOneToOne: false
-            referencedRelation: "event_promo_codes"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "event_orders_ticket_id_fkey"
             columns: ["ticket_id"]
             isOneToOne: false
@@ -1354,65 +1219,6 @@ export type Database = {
             columns: ["trip_id"]
             isOneToOne: false
             referencedRelation: "trips"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      event_promo_codes: {
-        Row: {
-          applicable_ticket_ids: string[] | null
-          code: string
-          created_at: string
-          created_by: string | null
-          discount_type: string
-          discount_value: number
-          event_id: string
-          expires_at: string | null
-          id: string
-          max_usages: number | null
-          starts_at: string | null
-          unlocks_hidden_tickets: boolean
-          updated_at: string
-          usage_count: number
-        }
-        Insert: {
-          applicable_ticket_ids?: string[] | null
-          code: string
-          created_at?: string
-          created_by?: string | null
-          discount_type: string
-          discount_value: number
-          event_id: string
-          expires_at?: string | null
-          id?: string
-          max_usages?: number | null
-          starts_at?: string | null
-          unlocks_hidden_tickets?: boolean
-          updated_at?: string
-          usage_count?: number
-        }
-        Update: {
-          applicable_ticket_ids?: string[] | null
-          code?: string
-          created_at?: string
-          created_by?: string | null
-          discount_type?: string
-          discount_value?: number
-          event_id?: string
-          expires_at?: string | null
-          id?: string
-          max_usages?: number | null
-          starts_at?: string | null
-          unlocks_hidden_tickets?: boolean
-          updated_at?: string
-          usage_count?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "event_promo_codes_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
             referencedColumns: ["id"]
           },
         ]
@@ -1592,68 +1398,6 @@ export type Database = {
           },
         ]
       }
-      event_stakeholders: {
-        Row: {
-          accepted_at: string | null
-          created_at: string
-          email: string
-          event_id: string
-          full_name: string
-          id: string
-          invited_at: string
-          invited_by: string | null
-          is_primary: boolean
-          notes: string | null
-          organization: string | null
-          phone_e164: string | null
-          role: string
-          updated_at: string
-          user_id: string | null
-        }
-        Insert: {
-          accepted_at?: string | null
-          created_at?: string
-          email: string
-          event_id: string
-          full_name: string
-          id?: string
-          invited_at?: string
-          invited_by?: string | null
-          is_primary?: boolean
-          notes?: string | null
-          organization?: string | null
-          phone_e164?: string | null
-          role: string
-          updated_at?: string
-          user_id?: string | null
-        }
-        Update: {
-          accepted_at?: string | null
-          created_at?: string
-          email?: string
-          event_id?: string
-          full_name?: string
-          id?: string
-          invited_at?: string
-          invited_by?: string | null
-          is_primary?: boolean
-          notes?: string | null
-          organization?: string | null
-          phone_e164?: string | null
-          role?: string
-          updated_at?: string
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "event_stakeholders_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       event_taxes_and_fees: {
         Row: {
           calculation_type: string
@@ -1745,7 +1489,6 @@ export type Database = {
           event_id: string
           id: string
           is_active: boolean
-          is_hidden: boolean
           max_per_order: number
           min_per_order: number
           name: string
@@ -1765,7 +1508,6 @@ export type Database = {
           event_id: string
           id?: string
           is_active?: boolean
-          is_hidden?: boolean
           max_per_order?: number
           min_per_order?: number
           name: string
@@ -1785,7 +1527,6 @@ export type Database = {
           event_id?: string
           id?: string
           is_active?: boolean
-          is_hidden?: boolean
           max_per_order?: number
           min_per_order?: number
           name?: string
@@ -1801,77 +1542,6 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "event_tickets_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      event_vendors: {
-        Row: {
-          amount_paid_cents: number
-          booked_at: string | null
-          company_name: string
-          contact_email: string | null
-          contact_name: string | null
-          contact_phone_e164: string | null
-          contract_amount_cents: number | null
-          contract_url: string | null
-          created_at: string
-          currency: string
-          event_id: string
-          id: string
-          invoice_url: string | null
-          notes: string | null
-          payment_status: string
-          service_date: string | null
-          service_type: string
-          updated_at: string
-        }
-        Insert: {
-          amount_paid_cents?: number
-          booked_at?: string | null
-          company_name: string
-          contact_email?: string | null
-          contact_name?: string | null
-          contact_phone_e164?: string | null
-          contract_amount_cents?: number | null
-          contract_url?: string | null
-          created_at?: string
-          currency?: string
-          event_id: string
-          id?: string
-          invoice_url?: string | null
-          notes?: string | null
-          payment_status?: string
-          service_date?: string | null
-          service_type: string
-          updated_at?: string
-        }
-        Update: {
-          amount_paid_cents?: number
-          booked_at?: string | null
-          company_name?: string
-          contact_email?: string | null
-          contact_name?: string | null
-          contact_phone_e164?: string | null
-          contract_amount_cents?: number | null
-          contract_url?: string | null
-          created_at?: string
-          currency?: string
-          event_id?: string
-          id?: string
-          invoice_url?: string | null
-          notes?: string | null
-          payment_status?: string
-          service_date?: string | null
-          service_type?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "event_vendors_event_id_fkey"
             columns: ["event_id"]
             isOneToOne: false
             referencedRelation: "events"
@@ -2013,7 +1683,6 @@ export type Database = {
           event_start_time: string
           event_type: string | null
           external_id: string | null
-          fts_content: unknown
           google_place_id: string | null
           id: string
           images: Json | null
@@ -2063,7 +1732,6 @@ export type Database = {
           event_start_time: string
           event_type?: string | null
           external_id?: string | null
-          fts_content?: unknown
           google_place_id?: string | null
           id?: string
           images?: Json | null
@@ -2113,7 +1781,6 @@ export type Database = {
           event_start_time?: string
           event_type?: string | null
           external_id?: string | null
-          fts_content?: unknown
           google_place_id?: string | null
           id?: string
           images?: Json | null
@@ -2431,26 +2098,21 @@ export type Database = {
         Row: {
           apartment_id: string | null
           assigned_agent_id: string | null
-          budget_max: number | null
-          budget_min: number | null
-          conversion_probability: number | null
           created_at: string
           email: string | null
-          hot_lead_alerted: boolean | null
           id: string
           idempotency_key: string | null
           intent: string | null
-          last_contacted_at: string | null
+          listing_id: string | null
+          listing_kind: string | null
           metadata: Json
           name: string | null
           neighborhood_id: string | null
-          next_followup_at: string | null
           notes: string | null
+          partner_id: string | null
           phone: string | null
-          pipeline_stage: string | null
           preferred_showing_at: string | null
           score: number | null
-          score_breakdown: Json | null
           source: string
           status: string
           trip_id: string | null
@@ -2460,26 +2122,21 @@ export type Database = {
         Insert: {
           apartment_id?: string | null
           assigned_agent_id?: string | null
-          budget_max?: number | null
-          budget_min?: number | null
-          conversion_probability?: number | null
           created_at?: string
           email?: string | null
-          hot_lead_alerted?: boolean | null
           id?: string
           idempotency_key?: string | null
           intent?: string | null
-          last_contacted_at?: string | null
+          listing_id?: string | null
+          listing_kind?: string | null
           metadata?: Json
           name?: string | null
           neighborhood_id?: string | null
-          next_followup_at?: string | null
           notes?: string | null
+          partner_id?: string | null
           phone?: string | null
-          pipeline_stage?: string | null
           preferred_showing_at?: string | null
           score?: number | null
-          score_breakdown?: Json | null
           source?: string
           status?: string
           trip_id?: string | null
@@ -2489,26 +2146,21 @@ export type Database = {
         Update: {
           apartment_id?: string | null
           assigned_agent_id?: string | null
-          budget_max?: number | null
-          budget_min?: number | null
-          conversion_probability?: number | null
           created_at?: string
           email?: string | null
-          hot_lead_alerted?: boolean | null
           id?: string
           idempotency_key?: string | null
           intent?: string | null
-          last_contacted_at?: string | null
+          listing_id?: string | null
+          listing_kind?: string | null
           metadata?: Json
           name?: string | null
           neighborhood_id?: string | null
-          next_followup_at?: string | null
           notes?: string | null
+          partner_id?: string | null
           phone?: string | null
-          pipeline_stage?: string | null
           preferred_showing_at?: string | null
           score?: number | null
-          score_breakdown?: Json | null
           source?: string
           status?: string
           trip_id?: string | null
@@ -2538,6 +2190,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "leads_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "leads_trip_id_fkey"
             columns: ["trip_id"]
             isOneToOne: false
@@ -2555,1724 +2214,35 @@ export type Database = {
       }
       listing_embeddings: {
         Row: {
-          content_hash: string | null
+          content_hash: string
           embedding: string
-          id: string
           listing_id: string
           model: string
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
-          content_hash?: string | null
+          content_hash: string
           embedding: string
-          id?: string
           listing_id: string
           model?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
-          content_hash?: string | null
+          content_hash?: string
           embedding?: string
-          id?: string
           listing_id?: string
           model?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: [
           {
             foreignKeyName: "listing_embeddings_listing_id_fkey"
             columns: ["listing_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "apartments"
             referencedColumns: ["id"]
           },
         ]
-      }
-      mastra_agent_versions: {
-        Row: {
-          agentId: string
-          agents: Json | null
-          changedFields: Json | null
-          changeMessage: string | null
-          createdAt: string
-          createdAtZ: string | null
-          defaultOptions: Json | null
-          description: string | null
-          id: string
-          inputProcessors: Json | null
-          instructions: string
-          integrationTools: Json | null
-          mcpClients: Json | null
-          memory: Json | null
-          model: Json
-          name: string
-          outputProcessors: Json | null
-          requestContextSchema: Json | null
-          scorers: Json | null
-          skills: Json | null
-          skillsFormat: string | null
-          tools: Json | null
-          versionNumber: number
-          workflows: Json | null
-          workspace: Json | null
-        }
-        Insert: {
-          agentId: string
-          agents?: Json | null
-          changedFields?: Json | null
-          changeMessage?: string | null
-          createdAt: string
-          createdAtZ?: string | null
-          defaultOptions?: Json | null
-          description?: string | null
-          id: string
-          inputProcessors?: Json | null
-          instructions: string
-          integrationTools?: Json | null
-          mcpClients?: Json | null
-          memory?: Json | null
-          model: Json
-          name: string
-          outputProcessors?: Json | null
-          requestContextSchema?: Json | null
-          scorers?: Json | null
-          skills?: Json | null
-          skillsFormat?: string | null
-          tools?: Json | null
-          versionNumber: number
-          workflows?: Json | null
-          workspace?: Json | null
-        }
-        Update: {
-          agentId?: string
-          agents?: Json | null
-          changedFields?: Json | null
-          changeMessage?: string | null
-          createdAt?: string
-          createdAtZ?: string | null
-          defaultOptions?: Json | null
-          description?: string | null
-          id?: string
-          inputProcessors?: Json | null
-          instructions?: string
-          integrationTools?: Json | null
-          mcpClients?: Json | null
-          memory?: Json | null
-          model?: Json
-          name?: string
-          outputProcessors?: Json | null
-          requestContextSchema?: Json | null
-          scorers?: Json | null
-          skills?: Json | null
-          skillsFormat?: string | null
-          tools?: Json | null
-          versionNumber?: number
-          workflows?: Json | null
-          workspace?: Json | null
-        }
-        Relationships: []
-      }
-      mastra_agents: {
-        Row: {
-          activeVersionId: string | null
-          authorId: string | null
-          createdAt: string
-          createdAtZ: string | null
-          id: string
-          metadata: Json | null
-          status: string
-          updatedAt: string
-          updatedAtZ: string | null
-        }
-        Insert: {
-          activeVersionId?: string | null
-          authorId?: string | null
-          createdAt: string
-          createdAtZ?: string | null
-          id: string
-          metadata?: Json | null
-          status: string
-          updatedAt: string
-          updatedAtZ?: string | null
-        }
-        Update: {
-          activeVersionId?: string | null
-          authorId?: string | null
-          createdAt?: string
-          createdAtZ?: string | null
-          id?: string
-          metadata?: Json | null
-          status?: string
-          updatedAt?: string
-          updatedAtZ?: string | null
-        }
-        Relationships: []
-      }
-      mastra_ai_spans: {
-        Row: {
-          attributes: Json | null
-          createdAt: string
-          createdAtZ: string | null
-          endedAt: string | null
-          endedAtZ: string | null
-          entityId: string | null
-          entityName: string | null
-          entityType: string | null
-          entityVersionId: string | null
-          environment: string | null
-          error: Json | null
-          experimentId: string | null
-          input: Json | null
-          isEvent: boolean
-          links: Json | null
-          metadata: Json | null
-          name: string
-          organizationId: string | null
-          output: Json | null
-          parentEntityId: string | null
-          parentEntityName: string | null
-          parentEntityType: string | null
-          parentEntityVersionId: string | null
-          parentSpanId: string | null
-          requestContext: Json | null
-          requestId: string | null
-          resourceId: string | null
-          rootEntityId: string | null
-          rootEntityName: string | null
-          rootEntityType: string | null
-          rootEntityVersionId: string | null
-          runId: string | null
-          scope: Json | null
-          serviceName: string | null
-          sessionId: string | null
-          source: string | null
-          spanId: string
-          spanType: string
-          startedAt: string
-          startedAtZ: string | null
-          tags: Json | null
-          threadId: string | null
-          traceId: string
-          updatedAt: string | null
-          updatedAtZ: string | null
-          userId: string | null
-        }
-        Insert: {
-          attributes?: Json | null
-          createdAt: string
-          createdAtZ?: string | null
-          endedAt?: string | null
-          endedAtZ?: string | null
-          entityId?: string | null
-          entityName?: string | null
-          entityType?: string | null
-          entityVersionId?: string | null
-          environment?: string | null
-          error?: Json | null
-          experimentId?: string | null
-          input?: Json | null
-          isEvent: boolean
-          links?: Json | null
-          metadata?: Json | null
-          name: string
-          organizationId?: string | null
-          output?: Json | null
-          parentEntityId?: string | null
-          parentEntityName?: string | null
-          parentEntityType?: string | null
-          parentEntityVersionId?: string | null
-          parentSpanId?: string | null
-          requestContext?: Json | null
-          requestId?: string | null
-          resourceId?: string | null
-          rootEntityId?: string | null
-          rootEntityName?: string | null
-          rootEntityType?: string | null
-          rootEntityVersionId?: string | null
-          runId?: string | null
-          scope?: Json | null
-          serviceName?: string | null
-          sessionId?: string | null
-          source?: string | null
-          spanId: string
-          spanType: string
-          startedAt: string
-          startedAtZ?: string | null
-          tags?: Json | null
-          threadId?: string | null
-          traceId: string
-          updatedAt?: string | null
-          updatedAtZ?: string | null
-          userId?: string | null
-        }
-        Update: {
-          attributes?: Json | null
-          createdAt?: string
-          createdAtZ?: string | null
-          endedAt?: string | null
-          endedAtZ?: string | null
-          entityId?: string | null
-          entityName?: string | null
-          entityType?: string | null
-          entityVersionId?: string | null
-          environment?: string | null
-          error?: Json | null
-          experimentId?: string | null
-          input?: Json | null
-          isEvent?: boolean
-          links?: Json | null
-          metadata?: Json | null
-          name?: string
-          organizationId?: string | null
-          output?: Json | null
-          parentEntityId?: string | null
-          parentEntityName?: string | null
-          parentEntityType?: string | null
-          parentEntityVersionId?: string | null
-          parentSpanId?: string | null
-          requestContext?: Json | null
-          requestId?: string | null
-          resourceId?: string | null
-          rootEntityId?: string | null
-          rootEntityName?: string | null
-          rootEntityType?: string | null
-          rootEntityVersionId?: string | null
-          runId?: string | null
-          scope?: Json | null
-          serviceName?: string | null
-          sessionId?: string | null
-          source?: string | null
-          spanId?: string
-          spanType?: string
-          startedAt?: string
-          startedAtZ?: string | null
-          tags?: Json | null
-          threadId?: string | null
-          traceId?: string
-          updatedAt?: string | null
-          updatedAtZ?: string | null
-          userId?: string | null
-        }
-        Relationships: []
-      }
-      mastra_background_tasks: {
-        Row: {
-          agent_id: string
-          args: Json
-          completedAt: string | null
-          completedAtZ: string | null
-          createdAt: string
-          createdAtZ: string | null
-          error: Json | null
-          id: string
-          max_retries: number
-          resource_id: string | null
-          result: Json | null
-          retry_count: number
-          run_id: string
-          startedAt: string | null
-          startedAtZ: string | null
-          status: string
-          thread_id: string | null
-          timeout_ms: number
-          tool_call_id: string
-          tool_name: string
-        }
-        Insert: {
-          agent_id: string
-          args: Json
-          completedAt?: string | null
-          completedAtZ?: string | null
-          createdAt: string
-          createdAtZ?: string | null
-          error?: Json | null
-          id: string
-          max_retries: number
-          resource_id?: string | null
-          result?: Json | null
-          retry_count: number
-          run_id: string
-          startedAt?: string | null
-          startedAtZ?: string | null
-          status: string
-          thread_id?: string | null
-          timeout_ms: number
-          tool_call_id: string
-          tool_name: string
-        }
-        Update: {
-          agent_id?: string
-          args?: Json
-          completedAt?: string | null
-          completedAtZ?: string | null
-          createdAt?: string
-          createdAtZ?: string | null
-          error?: Json | null
-          id?: string
-          max_retries?: number
-          resource_id?: string | null
-          result?: Json | null
-          retry_count?: number
-          run_id?: string
-          startedAt?: string | null
-          startedAtZ?: string | null
-          status?: string
-          thread_id?: string | null
-          timeout_ms?: number
-          tool_call_id?: string
-          tool_name?: string
-        }
-        Relationships: []
-      }
-      mastra_channel_config: {
-        Row: {
-          data: Json
-          platform: string
-          updatedAt: string
-          updatedAtZ: string | null
-        }
-        Insert: {
-          data: Json
-          platform: string
-          updatedAt: string
-          updatedAtZ?: string | null
-        }
-        Update: {
-          data?: Json
-          platform?: string
-          updatedAt?: string
-          updatedAtZ?: string | null
-        }
-        Relationships: []
-      }
-      mastra_channel_installations: {
-        Row: {
-          agentId: string
-          configHash: string | null
-          createdAt: string
-          createdAtZ: string | null
-          data: Json
-          error: string | null
-          id: string
-          platform: string
-          status: string
-          updatedAt: string
-          updatedAtZ: string | null
-          webhookId: string | null
-        }
-        Insert: {
-          agentId: string
-          configHash?: string | null
-          createdAt: string
-          createdAtZ?: string | null
-          data: Json
-          error?: string | null
-          id: string
-          platform: string
-          status: string
-          updatedAt: string
-          updatedAtZ?: string | null
-          webhookId?: string | null
-        }
-        Update: {
-          agentId?: string
-          configHash?: string | null
-          createdAt?: string
-          createdAtZ?: string | null
-          data?: Json
-          error?: string | null
-          id?: string
-          platform?: string
-          status?: string
-          updatedAt?: string
-          updatedAtZ?: string | null
-          webhookId?: string | null
-        }
-        Relationships: []
-      }
-      mastra_dataset_items: {
-        Row: {
-          createdAt: string
-          createdAtZ: string | null
-          datasetId: string
-          datasetVersion: number
-          expectedTrajectory: Json | null
-          groundTruth: Json | null
-          id: string
-          input: Json
-          isDeleted: boolean
-          metadata: Json | null
-          requestContext: Json | null
-          source: Json | null
-          updatedAt: string
-          updatedAtZ: string | null
-          validTo: number | null
-        }
-        Insert: {
-          createdAt: string
-          createdAtZ?: string | null
-          datasetId: string
-          datasetVersion: number
-          expectedTrajectory?: Json | null
-          groundTruth?: Json | null
-          id: string
-          input: Json
-          isDeleted: boolean
-          metadata?: Json | null
-          requestContext?: Json | null
-          source?: Json | null
-          updatedAt: string
-          updatedAtZ?: string | null
-          validTo?: number | null
-        }
-        Update: {
-          createdAt?: string
-          createdAtZ?: string | null
-          datasetId?: string
-          datasetVersion?: number
-          expectedTrajectory?: Json | null
-          groundTruth?: Json | null
-          id?: string
-          input?: Json
-          isDeleted?: boolean
-          metadata?: Json | null
-          requestContext?: Json | null
-          source?: Json | null
-          updatedAt?: string
-          updatedAtZ?: string | null
-          validTo?: number | null
-        }
-        Relationships: []
-      }
-      mastra_dataset_versions: {
-        Row: {
-          createdAt: string
-          createdAtZ: string | null
-          datasetId: string
-          id: string
-          version: number
-        }
-        Insert: {
-          createdAt: string
-          createdAtZ?: string | null
-          datasetId: string
-          id: string
-          version: number
-        }
-        Update: {
-          createdAt?: string
-          createdAtZ?: string | null
-          datasetId?: string
-          id?: string
-          version?: number
-        }
-        Relationships: []
-      }
-      mastra_datasets: {
-        Row: {
-          createdAt: string
-          createdAtZ: string | null
-          description: string | null
-          groundTruthSchema: Json | null
-          id: string
-          inputSchema: Json | null
-          metadata: Json | null
-          name: string
-          requestContextSchema: Json | null
-          scorerIds: Json | null
-          tags: Json | null
-          targetIds: Json | null
-          targetType: string | null
-          updatedAt: string
-          updatedAtZ: string | null
-          version: number
-        }
-        Insert: {
-          createdAt: string
-          createdAtZ?: string | null
-          description?: string | null
-          groundTruthSchema?: Json | null
-          id: string
-          inputSchema?: Json | null
-          metadata?: Json | null
-          name: string
-          requestContextSchema?: Json | null
-          scorerIds?: Json | null
-          tags?: Json | null
-          targetIds?: Json | null
-          targetType?: string | null
-          updatedAt: string
-          updatedAtZ?: string | null
-          version: number
-        }
-        Update: {
-          createdAt?: string
-          createdAtZ?: string | null
-          description?: string | null
-          groundTruthSchema?: Json | null
-          id?: string
-          inputSchema?: Json | null
-          metadata?: Json | null
-          name?: string
-          requestContextSchema?: Json | null
-          scorerIds?: Json | null
-          tags?: Json | null
-          targetIds?: Json | null
-          targetType?: string | null
-          updatedAt?: string
-          updatedAtZ?: string | null
-          version?: number
-        }
-        Relationships: []
-      }
-      mastra_experiment_results: {
-        Row: {
-          completedAt: string
-          completedAtZ: string | null
-          createdAt: string
-          createdAtZ: string | null
-          error: Json | null
-          experimentId: string
-          groundTruth: Json | null
-          id: string
-          input: Json
-          itemDatasetVersion: number | null
-          itemId: string
-          output: Json | null
-          retryCount: number
-          startedAt: string
-          startedAtZ: string | null
-          status: string | null
-          tags: Json | null
-          traceId: string | null
-        }
-        Insert: {
-          completedAt: string
-          completedAtZ?: string | null
-          createdAt: string
-          createdAtZ?: string | null
-          error?: Json | null
-          experimentId: string
-          groundTruth?: Json | null
-          id: string
-          input: Json
-          itemDatasetVersion?: number | null
-          itemId: string
-          output?: Json | null
-          retryCount: number
-          startedAt: string
-          startedAtZ?: string | null
-          status?: string | null
-          tags?: Json | null
-          traceId?: string | null
-        }
-        Update: {
-          completedAt?: string
-          completedAtZ?: string | null
-          createdAt?: string
-          createdAtZ?: string | null
-          error?: Json | null
-          experimentId?: string
-          groundTruth?: Json | null
-          id?: string
-          input?: Json
-          itemDatasetVersion?: number | null
-          itemId?: string
-          output?: Json | null
-          retryCount?: number
-          startedAt?: string
-          startedAtZ?: string | null
-          status?: string | null
-          tags?: Json | null
-          traceId?: string | null
-        }
-        Relationships: []
-      }
-      mastra_experiments: {
-        Row: {
-          agentVersion: string | null
-          completedAt: string | null
-          completedAtZ: string | null
-          createdAt: string
-          createdAtZ: string | null
-          datasetId: string | null
-          datasetVersion: number | null
-          description: string | null
-          failedCount: number
-          id: string
-          metadata: Json | null
-          name: string | null
-          skippedCount: number
-          startedAt: string | null
-          startedAtZ: string | null
-          status: string
-          succeededCount: number
-          targetId: string
-          targetType: string
-          totalItems: number
-          updatedAt: string
-          updatedAtZ: string | null
-        }
-        Insert: {
-          agentVersion?: string | null
-          completedAt?: string | null
-          completedAtZ?: string | null
-          createdAt: string
-          createdAtZ?: string | null
-          datasetId?: string | null
-          datasetVersion?: number | null
-          description?: string | null
-          failedCount: number
-          id: string
-          metadata?: Json | null
-          name?: string | null
-          skippedCount: number
-          startedAt?: string | null
-          startedAtZ?: string | null
-          status: string
-          succeededCount: number
-          targetId: string
-          targetType: string
-          totalItems: number
-          updatedAt: string
-          updatedAtZ?: string | null
-        }
-        Update: {
-          agentVersion?: string | null
-          completedAt?: string | null
-          completedAtZ?: string | null
-          createdAt?: string
-          createdAtZ?: string | null
-          datasetId?: string | null
-          datasetVersion?: number | null
-          description?: string | null
-          failedCount?: number
-          id?: string
-          metadata?: Json | null
-          name?: string | null
-          skippedCount?: number
-          startedAt?: string | null
-          startedAtZ?: string | null
-          status?: string
-          succeededCount?: number
-          targetId?: string
-          targetType?: string
-          totalItems?: number
-          updatedAt?: string
-          updatedAtZ?: string | null
-        }
-        Relationships: []
-      }
-      mastra_mcp_client_versions: {
-        Row: {
-          changedFields: Json | null
-          changeMessage: string | null
-          createdAt: string
-          createdAtZ: string | null
-          description: string | null
-          id: string
-          mcpClientId: string
-          name: string
-          servers: Json
-          versionNumber: number
-        }
-        Insert: {
-          changedFields?: Json | null
-          changeMessage?: string | null
-          createdAt: string
-          createdAtZ?: string | null
-          description?: string | null
-          id: string
-          mcpClientId: string
-          name: string
-          servers: Json
-          versionNumber: number
-        }
-        Update: {
-          changedFields?: Json | null
-          changeMessage?: string | null
-          createdAt?: string
-          createdAtZ?: string | null
-          description?: string | null
-          id?: string
-          mcpClientId?: string
-          name?: string
-          servers?: Json
-          versionNumber?: number
-        }
-        Relationships: []
-      }
-      mastra_mcp_clients: {
-        Row: {
-          activeVersionId: string | null
-          authorId: string | null
-          createdAt: string
-          createdAtZ: string | null
-          id: string
-          metadata: Json | null
-          status: string
-          updatedAt: string
-          updatedAtZ: string | null
-        }
-        Insert: {
-          activeVersionId?: string | null
-          authorId?: string | null
-          createdAt: string
-          createdAtZ?: string | null
-          id: string
-          metadata?: Json | null
-          status: string
-          updatedAt: string
-          updatedAtZ?: string | null
-        }
-        Update: {
-          activeVersionId?: string | null
-          authorId?: string | null
-          createdAt?: string
-          createdAtZ?: string | null
-          id?: string
-          metadata?: Json | null
-          status?: string
-          updatedAt?: string
-          updatedAtZ?: string | null
-        }
-        Relationships: []
-      }
-      mastra_mcp_server_versions: {
-        Row: {
-          agents: Json | null
-          changedFields: Json | null
-          changeMessage: string | null
-          createdAt: string
-          createdAtZ: string | null
-          description: string | null
-          id: string
-          instructions: string | null
-          isLatest: boolean | null
-          mcpServerId: string
-          name: string
-          packageCanonical: string | null
-          releaseDate: string | null
-          repository: Json | null
-          tools: Json | null
-          version: string
-          versionNumber: number
-          workflows: Json | null
-        }
-        Insert: {
-          agents?: Json | null
-          changedFields?: Json | null
-          changeMessage?: string | null
-          createdAt: string
-          createdAtZ?: string | null
-          description?: string | null
-          id: string
-          instructions?: string | null
-          isLatest?: boolean | null
-          mcpServerId: string
-          name: string
-          packageCanonical?: string | null
-          releaseDate?: string | null
-          repository?: Json | null
-          tools?: Json | null
-          version: string
-          versionNumber: number
-          workflows?: Json | null
-        }
-        Update: {
-          agents?: Json | null
-          changedFields?: Json | null
-          changeMessage?: string | null
-          createdAt?: string
-          createdAtZ?: string | null
-          description?: string | null
-          id?: string
-          instructions?: string | null
-          isLatest?: boolean | null
-          mcpServerId?: string
-          name?: string
-          packageCanonical?: string | null
-          releaseDate?: string | null
-          repository?: Json | null
-          tools?: Json | null
-          version?: string
-          versionNumber?: number
-          workflows?: Json | null
-        }
-        Relationships: []
-      }
-      mastra_mcp_servers: {
-        Row: {
-          activeVersionId: string | null
-          authorId: string | null
-          createdAt: string
-          createdAtZ: string | null
-          id: string
-          metadata: Json | null
-          status: string
-          updatedAt: string
-          updatedAtZ: string | null
-        }
-        Insert: {
-          activeVersionId?: string | null
-          authorId?: string | null
-          createdAt: string
-          createdAtZ?: string | null
-          id: string
-          metadata?: Json | null
-          status: string
-          updatedAt: string
-          updatedAtZ?: string | null
-        }
-        Update: {
-          activeVersionId?: string | null
-          authorId?: string | null
-          createdAt?: string
-          createdAtZ?: string | null
-          id?: string
-          metadata?: Json | null
-          status?: string
-          updatedAt?: string
-          updatedAtZ?: string | null
-        }
-        Relationships: []
-      }
-      mastra_messages: {
-        Row: {
-          content: string
-          createdAt: string
-          createdAtZ: string | null
-          id: string
-          resourceId: string | null
-          role: string
-          thread_id: string
-          type: string
-        }
-        Insert: {
-          content: string
-          createdAt: string
-          createdAtZ?: string | null
-          id: string
-          resourceId?: string | null
-          role: string
-          thread_id: string
-          type: string
-        }
-        Update: {
-          content?: string
-          createdAt?: string
-          createdAtZ?: string | null
-          id?: string
-          resourceId?: string | null
-          role?: string
-          thread_id?: string
-          type?: string
-        }
-        Relationships: []
-      }
-      mastra_observational_memory: {
-        Row: {
-          activeObservations: string
-          activeObservationsPendingUpdate: string | null
-          bufferedMessageIds: Json | null
-          bufferedObservationChunks: Json | null
-          bufferedObservations: string | null
-          bufferedObservationTokens: number | null
-          bufferedReflection: string | null
-          bufferedReflectionInputTokens: number | null
-          bufferedReflectionTokens: number | null
-          config: string
-          createdAt: string
-          createdAtZ: string | null
-          generationCount: number
-          id: string
-          isBufferingObservation: boolean
-          isBufferingReflection: boolean
-          isObserving: boolean
-          isReflecting: boolean
-          lastBufferedAtTime: string | null
-          lastBufferedAtTimeZ: string | null
-          lastBufferedAtTokens: number
-          lastObservedAt: string | null
-          lastObservedAtZ: string | null
-          lastReflectionAt: string | null
-          lastReflectionAtZ: string | null
-          lookupKey: string
-          metadata: Json | null
-          observationTokenCount: number
-          observedMessageIds: Json | null
-          observedTimezone: string | null
-          originType: string
-          pendingMessageTokens: number
-          reflectedObservationLineCount: number | null
-          resourceId: string | null
-          scope: string
-          threadId: string | null
-          totalTokensObserved: number
-          updatedAt: string
-          updatedAtZ: string | null
-        }
-        Insert: {
-          activeObservations: string
-          activeObservationsPendingUpdate?: string | null
-          bufferedMessageIds?: Json | null
-          bufferedObservationChunks?: Json | null
-          bufferedObservations?: string | null
-          bufferedObservationTokens?: number | null
-          bufferedReflection?: string | null
-          bufferedReflectionInputTokens?: number | null
-          bufferedReflectionTokens?: number | null
-          config: string
-          createdAt: string
-          createdAtZ?: string | null
-          generationCount: number
-          id: string
-          isBufferingObservation: boolean
-          isBufferingReflection: boolean
-          isObserving: boolean
-          isReflecting: boolean
-          lastBufferedAtTime?: string | null
-          lastBufferedAtTimeZ?: string | null
-          lastBufferedAtTokens: number
-          lastObservedAt?: string | null
-          lastObservedAtZ?: string | null
-          lastReflectionAt?: string | null
-          lastReflectionAtZ?: string | null
-          lookupKey: string
-          metadata?: Json | null
-          observationTokenCount: number
-          observedMessageIds?: Json | null
-          observedTimezone?: string | null
-          originType: string
-          pendingMessageTokens: number
-          reflectedObservationLineCount?: number | null
-          resourceId?: string | null
-          scope: string
-          threadId?: string | null
-          totalTokensObserved: number
-          updatedAt: string
-          updatedAtZ?: string | null
-        }
-        Update: {
-          activeObservations?: string
-          activeObservationsPendingUpdate?: string | null
-          bufferedMessageIds?: Json | null
-          bufferedObservationChunks?: Json | null
-          bufferedObservations?: string | null
-          bufferedObservationTokens?: number | null
-          bufferedReflection?: string | null
-          bufferedReflectionInputTokens?: number | null
-          bufferedReflectionTokens?: number | null
-          config?: string
-          createdAt?: string
-          createdAtZ?: string | null
-          generationCount?: number
-          id?: string
-          isBufferingObservation?: boolean
-          isBufferingReflection?: boolean
-          isObserving?: boolean
-          isReflecting?: boolean
-          lastBufferedAtTime?: string | null
-          lastBufferedAtTimeZ?: string | null
-          lastBufferedAtTokens?: number
-          lastObservedAt?: string | null
-          lastObservedAtZ?: string | null
-          lastReflectionAt?: string | null
-          lastReflectionAtZ?: string | null
-          lookupKey?: string
-          metadata?: Json | null
-          observationTokenCount?: number
-          observedMessageIds?: Json | null
-          observedTimezone?: string | null
-          originType?: string
-          pendingMessageTokens?: number
-          reflectedObservationLineCount?: number | null
-          resourceId?: string | null
-          scope?: string
-          threadId?: string | null
-          totalTokensObserved?: number
-          updatedAt?: string
-          updatedAtZ?: string | null
-        }
-        Relationships: []
-      }
-      mastra_prompt_block_versions: {
-        Row: {
-          blockId: string
-          changedFields: Json | null
-          changeMessage: string | null
-          content: string
-          createdAt: string
-          createdAtZ: string | null
-          description: string | null
-          id: string
-          name: string
-          requestContextSchema: Json | null
-          rules: Json | null
-          versionNumber: number
-        }
-        Insert: {
-          blockId: string
-          changedFields?: Json | null
-          changeMessage?: string | null
-          content: string
-          createdAt: string
-          createdAtZ?: string | null
-          description?: string | null
-          id: string
-          name: string
-          requestContextSchema?: Json | null
-          rules?: Json | null
-          versionNumber: number
-        }
-        Update: {
-          blockId?: string
-          changedFields?: Json | null
-          changeMessage?: string | null
-          content?: string
-          createdAt?: string
-          createdAtZ?: string | null
-          description?: string | null
-          id?: string
-          name?: string
-          requestContextSchema?: Json | null
-          rules?: Json | null
-          versionNumber?: number
-        }
-        Relationships: []
-      }
-      mastra_prompt_blocks: {
-        Row: {
-          activeVersionId: string | null
-          authorId: string | null
-          createdAt: string
-          createdAtZ: string | null
-          id: string
-          metadata: Json | null
-          status: string
-          updatedAt: string
-          updatedAtZ: string | null
-        }
-        Insert: {
-          activeVersionId?: string | null
-          authorId?: string | null
-          createdAt: string
-          createdAtZ?: string | null
-          id: string
-          metadata?: Json | null
-          status: string
-          updatedAt: string
-          updatedAtZ?: string | null
-        }
-        Update: {
-          activeVersionId?: string | null
-          authorId?: string | null
-          createdAt?: string
-          createdAtZ?: string | null
-          id?: string
-          metadata?: Json | null
-          status?: string
-          updatedAt?: string
-          updatedAtZ?: string | null
-        }
-        Relationships: []
-      }
-      mastra_resources: {
-        Row: {
-          createdAt: string
-          createdAtZ: string | null
-          id: string
-          metadata: Json | null
-          updatedAt: string
-          updatedAtZ: string | null
-          workingMemory: string | null
-        }
-        Insert: {
-          createdAt: string
-          createdAtZ?: string | null
-          id: string
-          metadata?: Json | null
-          updatedAt: string
-          updatedAtZ?: string | null
-          workingMemory?: string | null
-        }
-        Update: {
-          createdAt?: string
-          createdAtZ?: string | null
-          id?: string
-          metadata?: Json | null
-          updatedAt?: string
-          updatedAtZ?: string | null
-          workingMemory?: string | null
-        }
-        Relationships: []
-      }
-      mastra_schedule_triggers: {
-        Row: {
-          actual_fire_at: number
-          error: string | null
-          id: string
-          metadata: Json | null
-          outcome: string
-          parent_trigger_id: string | null
-          run_id: string | null
-          schedule_id: string
-          scheduled_fire_at: number
-          trigger_kind: string
-        }
-        Insert: {
-          actual_fire_at: number
-          error?: string | null
-          id: string
-          metadata?: Json | null
-          outcome: string
-          parent_trigger_id?: string | null
-          run_id?: string | null
-          schedule_id: string
-          scheduled_fire_at: number
-          trigger_kind: string
-        }
-        Update: {
-          actual_fire_at?: number
-          error?: string | null
-          id?: string
-          metadata?: Json | null
-          outcome?: string
-          parent_trigger_id?: string | null
-          run_id?: string | null
-          schedule_id?: string
-          scheduled_fire_at?: number
-          trigger_kind?: string
-        }
-        Relationships: []
-      }
-      mastra_schedules: {
-        Row: {
-          created_at: number
-          cron: string
-          id: string
-          last_fire_at: number | null
-          last_run_id: string | null
-          metadata: Json | null
-          next_fire_at: number
-          owner_id: string | null
-          owner_type: string | null
-          status: string
-          target: Json
-          timezone: string | null
-          updated_at: number
-        }
-        Insert: {
-          created_at: number
-          cron: string
-          id: string
-          last_fire_at?: number | null
-          last_run_id?: string | null
-          metadata?: Json | null
-          next_fire_at: number
-          owner_id?: string | null
-          owner_type?: string | null
-          status: string
-          target: Json
-          timezone?: string | null
-          updated_at: number
-        }
-        Update: {
-          created_at?: number
-          cron?: string
-          id?: string
-          last_fire_at?: number | null
-          last_run_id?: string | null
-          metadata?: Json | null
-          next_fire_at?: number
-          owner_id?: string | null
-          owner_type?: string | null
-          status?: string
-          target?: Json
-          timezone?: string | null
-          updated_at?: number
-        }
-        Relationships: []
-      }
-      mastra_scorer_definition_versions: {
-        Row: {
-          changedFields: Json | null
-          changeMessage: string | null
-          createdAt: string
-          createdAtZ: string | null
-          defaultSampling: Json | null
-          description: string | null
-          id: string
-          instructions: string | null
-          model: Json | null
-          name: string
-          presetConfig: Json | null
-          scoreRange: Json | null
-          scorerDefinitionId: string
-          type: string
-          versionNumber: number
-        }
-        Insert: {
-          changedFields?: Json | null
-          changeMessage?: string | null
-          createdAt: string
-          createdAtZ?: string | null
-          defaultSampling?: Json | null
-          description?: string | null
-          id: string
-          instructions?: string | null
-          model?: Json | null
-          name: string
-          presetConfig?: Json | null
-          scoreRange?: Json | null
-          scorerDefinitionId: string
-          type: string
-          versionNumber: number
-        }
-        Update: {
-          changedFields?: Json | null
-          changeMessage?: string | null
-          createdAt?: string
-          createdAtZ?: string | null
-          defaultSampling?: Json | null
-          description?: string | null
-          id?: string
-          instructions?: string | null
-          model?: Json | null
-          name?: string
-          presetConfig?: Json | null
-          scoreRange?: Json | null
-          scorerDefinitionId?: string
-          type?: string
-          versionNumber?: number
-        }
-        Relationships: []
-      }
-      mastra_scorer_definitions: {
-        Row: {
-          activeVersionId: string | null
-          authorId: string | null
-          createdAt: string
-          createdAtZ: string | null
-          id: string
-          metadata: Json | null
-          status: string
-          updatedAt: string
-          updatedAtZ: string | null
-        }
-        Insert: {
-          activeVersionId?: string | null
-          authorId?: string | null
-          createdAt: string
-          createdAtZ?: string | null
-          id: string
-          metadata?: Json | null
-          status: string
-          updatedAt: string
-          updatedAtZ?: string | null
-        }
-        Update: {
-          activeVersionId?: string | null
-          authorId?: string | null
-          createdAt?: string
-          createdAtZ?: string | null
-          id?: string
-          metadata?: Json | null
-          status?: string
-          updatedAt?: string
-          updatedAtZ?: string | null
-        }
-        Relationships: []
-      }
-      mastra_scorers: {
-        Row: {
-          additionalContext: Json | null
-          analyzePrompt: string | null
-          analyzeStepResult: Json | null
-          createdAt: string
-          createdAtZ: string | null
-          entity: Json | null
-          entityId: string | null
-          entityType: string | null
-          extractPrompt: string | null
-          extractStepResult: Json | null
-          generateReasonPrompt: string | null
-          generateScorePrompt: string | null
-          id: string
-          input: Json
-          metadata: Json | null
-          output: Json
-          preprocessPrompt: string | null
-          preprocessStepResult: Json | null
-          reason: string | null
-          reasonPrompt: string | null
-          requestContext: Json | null
-          resourceId: string | null
-          runId: string
-          score: number
-          scorer: Json
-          scorerId: string
-          source: string
-          spanId: string | null
-          threadId: string | null
-          traceId: string | null
-          updatedAt: string
-          updatedAtZ: string | null
-        }
-        Insert: {
-          additionalContext?: Json | null
-          analyzePrompt?: string | null
-          analyzeStepResult?: Json | null
-          createdAt: string
-          createdAtZ?: string | null
-          entity?: Json | null
-          entityId?: string | null
-          entityType?: string | null
-          extractPrompt?: string | null
-          extractStepResult?: Json | null
-          generateReasonPrompt?: string | null
-          generateScorePrompt?: string | null
-          id: string
-          input: Json
-          metadata?: Json | null
-          output: Json
-          preprocessPrompt?: string | null
-          preprocessStepResult?: Json | null
-          reason?: string | null
-          reasonPrompt?: string | null
-          requestContext?: Json | null
-          resourceId?: string | null
-          runId: string
-          score: number
-          scorer: Json
-          scorerId: string
-          source: string
-          spanId?: string | null
-          threadId?: string | null
-          traceId?: string | null
-          updatedAt: string
-          updatedAtZ?: string | null
-        }
-        Update: {
-          additionalContext?: Json | null
-          analyzePrompt?: string | null
-          analyzeStepResult?: Json | null
-          createdAt?: string
-          createdAtZ?: string | null
-          entity?: Json | null
-          entityId?: string | null
-          entityType?: string | null
-          extractPrompt?: string | null
-          extractStepResult?: Json | null
-          generateReasonPrompt?: string | null
-          generateScorePrompt?: string | null
-          id?: string
-          input?: Json
-          metadata?: Json | null
-          output?: Json
-          preprocessPrompt?: string | null
-          preprocessStepResult?: Json | null
-          reason?: string | null
-          reasonPrompt?: string | null
-          requestContext?: Json | null
-          resourceId?: string | null
-          runId?: string
-          score?: number
-          scorer?: Json
-          scorerId?: string
-          source?: string
-          spanId?: string | null
-          threadId?: string | null
-          traceId?: string | null
-          updatedAt?: string
-          updatedAtZ?: string | null
-        }
-        Relationships: []
-      }
-      mastra_skill_blobs: {
-        Row: {
-          content: string
-          createdAt: string
-          createdAtZ: string | null
-          hash: string
-          mimeType: string | null
-          size: number
-        }
-        Insert: {
-          content: string
-          createdAt: string
-          createdAtZ?: string | null
-          hash: string
-          mimeType?: string | null
-          size: number
-        }
-        Update: {
-          content?: string
-          createdAt?: string
-          createdAtZ?: string | null
-          hash?: string
-          mimeType?: string | null
-          size?: number
-        }
-        Relationships: []
-      }
-      mastra_skill_versions: {
-        Row: {
-          assets: Json | null
-          changedFields: Json | null
-          changeMessage: string | null
-          compatibility: Json | null
-          createdAt: string
-          createdAtZ: string | null
-          description: string
-          id: string
-          instructions: string
-          license: string | null
-          metadata: Json | null
-          name: string
-          references: Json | null
-          scripts: Json | null
-          skillId: string
-          source: Json | null
-          tree: Json | null
-          versionNumber: number
-        }
-        Insert: {
-          assets?: Json | null
-          changedFields?: Json | null
-          changeMessage?: string | null
-          compatibility?: Json | null
-          createdAt: string
-          createdAtZ?: string | null
-          description: string
-          id: string
-          instructions: string
-          license?: string | null
-          metadata?: Json | null
-          name: string
-          references?: Json | null
-          scripts?: Json | null
-          skillId: string
-          source?: Json | null
-          tree?: Json | null
-          versionNumber: number
-        }
-        Update: {
-          assets?: Json | null
-          changedFields?: Json | null
-          changeMessage?: string | null
-          compatibility?: Json | null
-          createdAt?: string
-          createdAtZ?: string | null
-          description?: string
-          id?: string
-          instructions?: string
-          license?: string | null
-          metadata?: Json | null
-          name?: string
-          references?: Json | null
-          scripts?: Json | null
-          skillId?: string
-          source?: Json | null
-          tree?: Json | null
-          versionNumber?: number
-        }
-        Relationships: []
-      }
-      mastra_skills: {
-        Row: {
-          activeVersionId: string | null
-          authorId: string | null
-          createdAt: string
-          createdAtZ: string | null
-          id: string
-          status: string
-          updatedAt: string
-          updatedAtZ: string | null
-        }
-        Insert: {
-          activeVersionId?: string | null
-          authorId?: string | null
-          createdAt: string
-          createdAtZ?: string | null
-          id: string
-          status: string
-          updatedAt: string
-          updatedAtZ?: string | null
-        }
-        Update: {
-          activeVersionId?: string | null
-          authorId?: string | null
-          createdAt?: string
-          createdAtZ?: string | null
-          id?: string
-          status?: string
-          updatedAt?: string
-          updatedAtZ?: string | null
-        }
-        Relationships: []
-      }
-      mastra_threads: {
-        Row: {
-          createdAt: string
-          createdAtZ: string | null
-          id: string
-          metadata: Json | null
-          resourceId: string
-          title: string
-          updatedAt: string
-          updatedAtZ: string | null
-        }
-        Insert: {
-          createdAt: string
-          createdAtZ?: string | null
-          id: string
-          metadata?: Json | null
-          resourceId: string
-          title: string
-          updatedAt: string
-          updatedAtZ?: string | null
-        }
-        Update: {
-          createdAt?: string
-          createdAtZ?: string | null
-          id?: string
-          metadata?: Json | null
-          resourceId?: string
-          title?: string
-          updatedAt?: string
-          updatedAtZ?: string | null
-        }
-        Relationships: []
-      }
-      mastra_workflow_snapshot: {
-        Row: {
-          createdAt: string
-          createdAtZ: string | null
-          resourceId: string | null
-          run_id: string
-          snapshot: Json
-          updatedAt: string
-          updatedAtZ: string | null
-          workflow_name: string
-        }
-        Insert: {
-          createdAt: string
-          createdAtZ?: string | null
-          resourceId?: string | null
-          run_id: string
-          snapshot: Json
-          updatedAt: string
-          updatedAtZ?: string | null
-          workflow_name: string
-        }
-        Update: {
-          createdAt?: string
-          createdAtZ?: string | null
-          resourceId?: string | null
-          run_id?: string
-          snapshot?: Json
-          updatedAt?: string
-          updatedAtZ?: string | null
-          workflow_name?: string
-        }
-        Relationships: []
-      }
-      mastra_workspace_versions: {
-        Row: {
-          autoSync: boolean | null
-          changedFields: Json | null
-          changeMessage: string | null
-          createdAt: string
-          createdAtZ: string | null
-          description: string | null
-          filesystem: Json | null
-          id: string
-          mounts: Json | null
-          name: string
-          operationTimeout: number | null
-          sandbox: Json | null
-          search: Json | null
-          skills: Json | null
-          tools: Json | null
-          versionNumber: number
-          workspaceId: string
-        }
-        Insert: {
-          autoSync?: boolean | null
-          changedFields?: Json | null
-          changeMessage?: string | null
-          createdAt: string
-          createdAtZ?: string | null
-          description?: string | null
-          filesystem?: Json | null
-          id: string
-          mounts?: Json | null
-          name: string
-          operationTimeout?: number | null
-          sandbox?: Json | null
-          search?: Json | null
-          skills?: Json | null
-          tools?: Json | null
-          versionNumber: number
-          workspaceId: string
-        }
-        Update: {
-          autoSync?: boolean | null
-          changedFields?: Json | null
-          changeMessage?: string | null
-          createdAt?: string
-          createdAtZ?: string | null
-          description?: string | null
-          filesystem?: Json | null
-          id?: string
-          mounts?: Json | null
-          name?: string
-          operationTimeout?: number | null
-          sandbox?: Json | null
-          search?: Json | null
-          skills?: Json | null
-          tools?: Json | null
-          versionNumber?: number
-          workspaceId?: string
-        }
-        Relationships: []
-      }
-      mastra_workspaces: {
-        Row: {
-          activeVersionId: string | null
-          authorId: string | null
-          createdAt: string
-          createdAtZ: string | null
-          id: string
-          metadata: Json | null
-          status: string
-          updatedAt: string
-          updatedAtZ: string | null
-        }
-        Insert: {
-          activeVersionId?: string | null
-          authorId?: string | null
-          createdAt: string
-          createdAtZ?: string | null
-          id: string
-          metadata?: Json | null
-          status: string
-          updatedAt: string
-          updatedAtZ?: string | null
-        }
-        Update: {
-          activeVersionId?: string | null
-          authorId?: string | null
-          createdAt?: string
-          createdAtZ?: string | null
-          id?: string
-          metadata?: Json | null
-          status?: string
-          updatedAt?: string
-          updatedAtZ?: string | null
-        }
-        Relationships: []
       }
       neighborhood_profiles: {
         Row: {
@@ -4411,64 +2381,331 @@ export type Database = {
         }
         Relationships: []
       }
-      outbox: {
+      partner_assets: {
         Row: {
-          action: string
-          approval_id: string | null
-          attempts: number
-          channel: string
           created_at: string
-          delivered_at: string | null
           id: string
-          idempotency_key: string
-          last_error: string | null
-          next_retry_at: string | null
+          kind: string
+          metadata: Json
+          mime_type: string | null
+          partner_id: string
+          storage_path: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          metadata?: Json
+          mime_type?: string | null
+          partner_id: string
+          storage_path: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          metadata?: Json
+          mime_type?: string | null
+          partner_id?: string
+          storage_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_assets_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_drafts: {
+        Row: {
+          completion_score: number
+          created_at: string
+          id: string
+          partner_id: string | null
           payload: Json
-          provider_id: string | null
-          sent_at: string | null
-          status: string
+          profile_id: string
+          step: number
+          submitted_at: string | null
+          thread_id: string | null
+          type: Database["public"]["Enums"]["partner_type"]
           updated_at: string
         }
         Insert: {
-          action: string
-          approval_id?: string | null
-          attempts?: number
-          channel: string
+          completion_score?: number
           created_at?: string
-          delivered_at?: string | null
           id?: string
-          idempotency_key: string
-          last_error?: string | null
-          next_retry_at?: string | null
-          payload: Json
-          provider_id?: string | null
-          sent_at?: string | null
-          status?: string
+          partner_id?: string | null
+          payload?: Json
+          profile_id: string
+          step?: number
+          submitted_at?: string | null
+          thread_id?: string | null
+          type: Database["public"]["Enums"]["partner_type"]
           updated_at?: string
         }
         Update: {
-          action?: string
-          approval_id?: string | null
-          attempts?: number
-          channel?: string
+          completion_score?: number
           created_at?: string
-          delivered_at?: string | null
           id?: string
-          idempotency_key?: string
-          last_error?: string | null
-          next_retry_at?: string | null
+          partner_id?: string | null
           payload?: Json
-          provider_id?: string | null
-          sent_at?: string | null
-          status?: string
+          profile_id?: string
+          step?: number
+          submitted_at?: string | null
+          thread_id?: string | null
+          type?: Database["public"]["Enums"]["partner_type"]
           updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "outbox_approval_fk"
-            columns: ["approval_id"]
+            foreignKeyName: "partner_drafts_partner_id_fkey"
+            columns: ["partner_id"]
             isOneToOne: false
-            referencedRelation: "approval_requests"
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_drafts_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_locations: {
+        Row: {
+          address: string | null
+          created_at: string
+          google_place_id: string | null
+          id: string
+          is_primary: boolean
+          label: string | null
+          lat: number | null
+          lng: number | null
+          metadata: Json
+          neighborhood: string | null
+          partner_id: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          google_place_id?: string | null
+          id?: string
+          is_primary?: boolean
+          label?: string | null
+          lat?: number | null
+          lng?: number | null
+          metadata?: Json
+          neighborhood?: string | null
+          partner_id: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          google_place_id?: string | null
+          id?: string
+          is_primary?: boolean
+          label?: string | null
+          lat?: number | null
+          lng?: number | null
+          metadata?: Json
+          neighborhood?: string | null
+          partner_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_locations_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_members: {
+        Row: {
+          created_at: string
+          partner_id: string
+          profile_id: string
+          role: string
+        }
+        Insert: {
+          created_at?: string
+          partner_id: string
+          profile_id: string
+          role?: string
+        }
+        Update: {
+          created_at?: string
+          partner_id?: string
+          profile_id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_members_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_members_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_organizations: {
+        Row: {
+          created_at: string
+          display_name: string
+          id: string
+          legal_name: string
+          metadata: Json
+          tax_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name: string
+          id?: string
+          legal_name: string
+          metadata?: Json
+          tax_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string
+          id?: string
+          legal_name?: string
+          metadata?: Json
+          tax_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      partner_services: {
+        Row: {
+          config: Json
+          created_at: string
+          enabled: boolean
+          id: string
+          partner_id: string
+          service_key: string
+          tier: string
+          updated_at: string
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          partner_id: string
+          service_key: string
+          tier?: string
+          updated_at?: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          partner_id?: string
+          service_key?: string
+          tier?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_services_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partners: {
+        Row: {
+          activated_at: string | null
+          completion_score: number
+          created_at: string
+          id: string
+          landlord_profile_id: string | null
+          organization_id: string | null
+          profile_id: string
+          settings: Json
+          sponsor_organization_id: string | null
+          status: Database["public"]["Enums"]["partner_status"]
+          type: Database["public"]["Enums"]["partner_type"]
+          updated_at: string
+        }
+        Insert: {
+          activated_at?: string | null
+          completion_score?: number
+          created_at?: string
+          id?: string
+          landlord_profile_id?: string | null
+          organization_id?: string | null
+          profile_id: string
+          settings?: Json
+          sponsor_organization_id?: string | null
+          status?: Database["public"]["Enums"]["partner_status"]
+          type: Database["public"]["Enums"]["partner_type"]
+          updated_at?: string
+        }
+        Update: {
+          activated_at?: string | null
+          completion_score?: number
+          created_at?: string
+          id?: string
+          landlord_profile_id?: string | null
+          organization_id?: string | null
+          profile_id?: string
+          settings?: Json
+          sponsor_organization_id?: string | null
+          status?: Database["public"]["Enums"]["partner_status"]
+          type?: Database["public"]["Enums"]["partner_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partners_landlord_profile_id_fkey"
+            columns: ["landlord_profile_id"]
+            isOneToOne: false
+            referencedRelation: "landlord_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partners_landlord_profile_id_fkey"
+            columns: ["landlord_profile_id"]
+            isOneToOne: false
+            referencedRelation: "landlord_profiles_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partners_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "partner_organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partners_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -5133,34 +3370,31 @@ export type Database = {
       }
       restaurant_embeddings: {
         Row: {
-          content_hash: string | null
+          content_hash: string
           embedding: string
-          id: string
           model: string
           restaurant_id: string
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
-          content_hash?: string | null
+          content_hash: string
           embedding: string
-          id?: string
           model?: string
           restaurant_id: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
-          content_hash?: string | null
+          content_hash?: string
           embedding?: string
-          id?: string
           model?: string
           restaurant_id?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: [
           {
             foreignKeyName: "restaurant_embeddings_restaurant_id_fkey"
             columns: ["restaurant_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "restaurants"
             referencedColumns: ["id"]
           },
@@ -5183,7 +3417,6 @@ export type Database = {
           dietary_options: string[] | null
           email: string | null
           external_id: string | null
-          fts_content: unknown
           google_place_id: string | null
           hours_of_operation: Json | null
           id: string
@@ -5226,7 +3459,6 @@ export type Database = {
           dietary_options?: string[] | null
           email?: string | null
           external_id?: string | null
-          fts_content?: unknown
           google_place_id?: string | null
           hours_of_operation?: Json | null
           id?: string
@@ -5269,7 +3501,6 @@ export type Database = {
           dietary_options?: string[] | null
           email?: string | null
           external_id?: string | null
-          fts_content?: unknown
           google_place_id?: string | null
           hours_of_operation?: Json | null
           id?: string
@@ -5297,6 +3528,56 @@ export type Database = {
           yelp_id?: string | null
         }
         Relationships: []
+      }
+      revenue_ledger: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          currency: string
+          id: string
+          idempotency_key: string | null
+          metadata: Json
+          partner_id: string
+          platform_fee_cents: number
+          source_id: string | null
+          source_kind: string
+          stripe_reference: string | null
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          currency?: string
+          id?: string
+          idempotency_key?: string | null
+          metadata?: Json
+          partner_id: string
+          platform_fee_cents?: number
+          source_id?: string | null
+          source_kind: string
+          stripe_reference?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          idempotency_key?: string | null
+          metadata?: Json
+          partner_id?: string
+          platform_fee_cents?: number
+          source_id?: string | null
+          source_kind?: string
+          stripe_reference?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "revenue_ledger_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       saved_places: {
         Row: {
@@ -5561,39 +3842,6 @@ export type Database = {
           proj4text?: string | null
           srid?: number
           srtext?: string | null
-        }
-        Relationships: []
-      }
-      suppression_list: {
-        Row: {
-          channel: string
-          created_at: string
-          expires_at: string | null
-          id: string
-          identifier: string
-          reason: string
-          source: string
-          source_event: Json | null
-        }
-        Insert: {
-          channel: string
-          created_at?: string
-          expires_at?: string | null
-          id?: string
-          identifier: string
-          reason: string
-          source?: string
-          source_event?: Json | null
-        }
-        Update: {
-          channel?: string
-          created_at?: string
-          expires_at?: string | null
-          id?: string
-          identifier?: string
-          reason?: string
-          source?: string
-          source_event?: Json | null
         }
         Relationships: []
       }
@@ -6011,22 +4259,14 @@ export type Database = {
           event_price_range: string | null
           favorite_cuisines: string[] | null
           id: string
-          language: string | null
           notification_preferences: Json | null
-          persona: string | null
           preferred_event_times: string[] | null
-          preferred_neighborhoods: string[] | null
           price_range_preference: string | null
-          rental_bedrooms: number | null
-          rental_budget_max: number | null
-          rental_budget_min: number | null
           rental_features: string[] | null
           travel_style: string[] | null
           updated_at: string
           user_id: string
           vehicle_types: string[] | null
-          whatsapp_opted_in: boolean | null
-          whatsapp_phone: string | null
         }
         Insert: {
           adventure_level?: string | null
@@ -6041,22 +4281,14 @@ export type Database = {
           event_price_range?: string | null
           favorite_cuisines?: string[] | null
           id?: string
-          language?: string | null
           notification_preferences?: Json | null
-          persona?: string | null
           preferred_event_times?: string[] | null
-          preferred_neighborhoods?: string[] | null
           price_range_preference?: string | null
-          rental_bedrooms?: number | null
-          rental_budget_max?: number | null
-          rental_budget_min?: number | null
           rental_features?: string[] | null
           travel_style?: string[] | null
           updated_at?: string
           user_id: string
           vehicle_types?: string[] | null
-          whatsapp_opted_in?: boolean | null
-          whatsapp_phone?: string | null
         }
         Update: {
           adventure_level?: string | null
@@ -6071,22 +4303,14 @@ export type Database = {
           event_price_range?: string | null
           favorite_cuisines?: string[] | null
           id?: string
-          language?: string | null
           notification_preferences?: Json | null
-          persona?: string | null
           preferred_event_times?: string[] | null
-          preferred_neighborhoods?: string[] | null
           price_range_preference?: string | null
-          rental_bedrooms?: number | null
-          rental_budget_max?: number | null
-          rental_budget_min?: number | null
           rental_features?: string[] | null
           travel_style?: string[] | null
           updated_at?: string
           user_id?: string
           vehicle_types?: string[] | null
-          whatsapp_opted_in?: boolean | null
-          whatsapp_phone?: string | null
         }
         Relationships: [
           {
@@ -6870,10 +5094,6 @@ export type Database = {
           save_count: number
         }[]
       }
-      approve_sponsor_application: {
-        Args: { p_application_id: string; p_approved_by: string }
-        Returns: undefined
-      }
       bump_staff_link_version: { Args: { p_event_id: string }; Returns: number }
       calculate_distance: {
         Args: { lat1: number; lat2: number; lng1: number; lng2: number }
@@ -6899,10 +5119,6 @@ export type Database = {
           p_ticket_id: string
         }
         Returns: Json
-      }
-      decide_approval: {
-        Args: { p_decision: string; p_reason?: string; p_request_id: string }
-        Returns: undefined
       }
       disablelongtransactions: { Args: never; Returns: string }
       dropgeometrycolumn:
@@ -6937,75 +5153,10 @@ export type Database = {
         | { Args: { table_name: string }; Returns: string }
       enablelongtransactions: { Args: never; Returns: string }
       equals: { Args: { geom1: unknown; geom2: unknown }; Returns: boolean }
-      event_attendees_paginated: {
-        Args: {
-          p_event_id: string
-          p_limit?: number
-          p_offset?: number
-          p_search?: string
-        }
-        Returns: Json
-      }
-      event_dashboard_summary: { Args: { p_event_id: string }; Returns: Json }
       fail_agent_job: {
         Args: { p_error: string; p_job_id: string }
         Returns: boolean
       }
-      fn_insert_conversation: { Args: { p_data: Json }; Returns: string }
-      fn_join_wait_list: {
-        Args: {
-          p_email: string
-          p_phone?: string
-          p_ticket_type_id: string
-          p_user_id: string
-        }
-        Returns: Json
-      }
-      fn_notify_next_in_line: {
-        Args: { p_ticket_type_id: string }
-        Returns: Json
-      }
-      fn_record_conversion: {
-        Args: {
-          p_conversion_type: string
-          p_metadata?: Json
-          p_subject_id: string
-          p_subject_table: string
-          p_user_id?: string
-          p_value_cents?: number
-        }
-        Returns: Json
-      }
-      fn_record_tool_call_end: {
-        Args: {
-          p_error?: string
-          p_output_json?: Json
-          p_status: string
-          p_tool_call_id: string
-        }
-        Returns: undefined
-      }
-      fn_record_tool_call_start: {
-        Args: {
-          p_agent_name?: string
-          p_agent_run_id: string
-          p_ai_run_id?: string
-          p_call_index: number
-          p_input_json?: Json
-          p_tool_name: string
-        }
-        Returns: string
-      }
-      fn_update_conversation_intent: {
-        Args: {
-          p_confidence: number
-          p_intent: string
-          p_message_id: string
-          p_reply: string
-        }
-        Returns: undefined
-      }
-      fn_upsert_delivery_log: { Args: { p_data: Json }; Returns: undefined }
       fts_array_to_text: { Args: { arr: string[] }; Returns: string }
       fts_spanish: { Args: { content: string }; Returns: unknown }
       geometry: { Args: { "": string }; Returns: unknown }
@@ -7110,23 +5261,6 @@ export type Database = {
         Args: { p_access_token: string; p_order_id: string }
         Returns: Json
       }
-      get_landlord_public_profile: {
-        Args: { landlord_uuid: string }
-        Returns: {
-          active_listings: number
-          avatar_url: string
-          bio: string
-          created_at: string
-          display_name: string
-          id: string
-          is_verified: boolean
-          languages: string[]
-          median_response_time_minutes: number
-          primary_neighborhood: string
-          total_leads_received: number
-          verified_at: string
-        }[]
-      }
       get_my_role: {
         Args: never
         Returns: Database["public"]["Enums"]["user_role"]
@@ -7138,80 +5272,6 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
-      }
-      hybrid_search_events: {
-        Args: {
-          fts_weight?: number
-          match_count?: number
-          query_embedding: string
-          query_text: string
-          rrf_k?: number
-          semantic_weight?: number
-        }
-        Returns: {
-          address: string
-          description: string
-          event_start_time: string
-          event_type: string
-          id: string
-          name: string
-          primary_image_url: string
-          rating: number
-          similarity: number
-          tags: string[]
-          ticket_price_min: number
-        }[]
-      }
-      hybrid_search_listings: {
-        Args: {
-          fts_weight?: number
-          match_count?: number
-          query_embedding: string
-          query_text: string
-          rrf_k?: number
-          semantic_weight?: number
-        }
-        Returns: {
-          amenities: string[]
-          bathrooms: number
-          bedrooms: number
-          city: string
-          description: string
-          furnished: boolean
-          id: string
-          images: string[]
-          neighborhood: string
-          pet_friendly: boolean
-          price_monthly: number
-          rating: number
-          similarity: number
-          status: string
-          title: string
-        }[]
-      }
-      hybrid_search_restaurants: {
-        Args: {
-          fts_weight?: number
-          match_count?: number
-          query_embedding: string
-          query_text: string
-          rrf_k?: number
-          semantic_weight?: number
-        }
-        Returns: {
-          address: string
-          ambiance: string[]
-          city: string
-          cuisine_types: string[]
-          description: string
-          dietary_options: string[]
-          id: string
-          name: string
-          price_level: number
-          primary_image_url: string
-          rating: number
-          similarity: number
-        }[]
       }
       insert_trip_item_for_user: {
         Args: {
@@ -7226,10 +5286,6 @@ export type Database = {
       }
       is_admin: { Args: never; Returns: boolean }
       is_moderator: { Args: never; Returns: boolean }
-      is_suppressed: {
-        Args: { p_channel: string; p_identifier: string }
-        Returns: boolean
-      }
       log_outbound_click: {
         Args: {
           p_affiliate_tag?: string
@@ -7240,50 +5296,6 @@ export type Database = {
         Returns: string
       }
       longtransactionsenabled: { Args: never; Returns: boolean }
-      outbox_claim: {
-        Args: { p_channel: string; p_limit?: number }
-        Returns: {
-          action: string
-          approval_id: string | null
-          attempts: number
-          channel: string
-          created_at: string
-          delivered_at: string | null
-          id: string
-          idempotency_key: string
-          last_error: string | null
-          next_retry_at: string | null
-          payload: Json
-          provider_id: string | null
-          sent_at: string | null
-          status: string
-          updated_at: string
-        }[]
-        SetofOptions: {
-          from: "*"
-          to: "outbox"
-          isOneToOne: false
-          isSetofReturn: true
-        }
-      }
-      outbox_enqueue: {
-        Args: {
-          p_action: string
-          p_approval_id?: string
-          p_channel: string
-          p_idempotency_key: string
-          p_payload: Json
-        }
-        Returns: string
-      }
-      outbox_mark_failed: {
-        Args: { p_error: string; p_id: string; p_next_retry_at?: string }
-        Returns: undefined
-      }
-      outbox_mark_sent: {
-        Args: { p_id: string; p_provider_id?: string }
-        Returns: undefined
-      }
       p1_schedule_tour_atomic: {
         Args: {
           p_apartment_id: string
@@ -7314,6 +5326,8 @@ export type Database = {
         }
         Returns: Json
       }
+      partner_ids_for_user: { Args: never; Returns: string[] }
+      partner_organization_ids_for_user: { Args: never; Returns: string[] }
       populate_geometry_columns:
         | { Args: { tbl_oid: unknown; use_typmod?: boolean }; Returns: number }
         | { Args: { use_typmod?: boolean }; Returns: string }
@@ -7367,26 +5381,9 @@ export type Database = {
         }
         Returns: string
       }
-      redeem_promo_code: {
-        Args: { p_code: string; p_event_id: string; p_ticket_id: string }
-        Returns: Json
-      }
       release_stale_agent_job_locks: {
         Args: { p_stale_threshold?: string }
         Returns: number
-      }
-      request_approval: {
-        Args: {
-          p_action_type: string
-          p_agent: string
-          p_expires_hours?: number
-          p_outbox_id?: string
-          p_payload: Json
-          p_requested_by?: string
-          p_risk_level?: string
-          p_subject: string
-        }
-        Returns: string
       }
       semantic_search_events: {
         Args: {
@@ -8076,18 +6073,6 @@ export type Database = {
         Args: { p_order_id: string }
         Returns: undefined
       }
-      ticket_payment_refund_v2: {
-        Args: {
-          p_amount_cents: number
-          p_attendee_ids: string[]
-          p_initiated_by: string
-          p_initiated_via: string
-          p_order_id: string
-          p_reason: string
-          p_stripe_refund_id: string
-        }
-        Returns: string
-      }
       ticket_validate_consume: { Args: { p_qr_token: string }; Returns: Json }
       unlockrows: { Args: { "": string }; Returns: number }
       update_agent_job_progress: {
@@ -8114,14 +6099,6 @@ export type Database = {
         | "budget_guardian"
         | "booking_assistant"
         | "general_concierge"
-        | "concierge"
-        | "mia"
-        | "luna"
-        | "carlos"
-        | "alex"
-        | "diego"
-        | "roberto"
-        | "sponsor"
       ai_run_status:
         | "pending"
         | "running"
@@ -8135,13 +6112,7 @@ export type Database = {
         | "completed"
         | "cancelled"
         | "no_show"
-      booking_type:
-        | "apartment"
-        | "car"
-        | "restaurant"
-        | "event"
-        | "tour"
-        | "showing"
+      booking_type: "apartment" | "car" | "restaurant" | "event" | "tour"
       conflict_type:
         | "time_overlap"
         | "budget_exceeded"
@@ -8152,6 +6123,21 @@ export type Database = {
         | "capacity_issue"
       conversation_status: "active" | "archived" | "completed" | "abandoned"
       message_role: "user" | "assistant" | "system" | "function"
+      partner_status:
+        | "draft"
+        | "pending_review"
+        | "active"
+        | "suspended"
+        | "churned"
+      partner_type:
+        | "host"
+        | "venue"
+        | "broker"
+        | "sponsor"
+        | "agency"
+        | "vendor"
+        | "tour"
+        | "creator"
       payment_status: "pending" | "paid" | "refunded" | "failed"
       resolution_status:
         | "detected"
@@ -8293,6 +6279,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       agent_type: [
@@ -8303,14 +6292,6 @@ export const Constants = {
         "budget_guardian",
         "booking_assistant",
         "general_concierge",
-        "concierge",
-        "mia",
-        "luna",
-        "carlos",
-        "alex",
-        "diego",
-        "roberto",
-        "sponsor",
       ],
       ai_run_status: [
         "pending",
@@ -8327,14 +6308,7 @@ export const Constants = {
         "cancelled",
         "no_show",
       ],
-      booking_type: [
-        "apartment",
-        "car",
-        "restaurant",
-        "event",
-        "tour",
-        "showing",
-      ],
+      booking_type: ["apartment", "car", "restaurant", "event", "tour"],
       conflict_type: [
         "time_overlap",
         "budget_exceeded",
@@ -8346,6 +6320,23 @@ export const Constants = {
       ],
       conversation_status: ["active", "archived", "completed", "abandoned"],
       message_role: ["user", "assistant", "system", "function"],
+      partner_status: [
+        "draft",
+        "pending_review",
+        "active",
+        "suspended",
+        "churned",
+      ],
+      partner_type: [
+        "host",
+        "venue",
+        "broker",
+        "sponsor",
+        "agency",
+        "vendor",
+        "tour",
+        "creator",
+      ],
       payment_status: ["pending", "paid", "refunded", "failed"],
       resolution_status: [
         "detected",
@@ -8358,3 +6349,4 @@ export const Constants = {
     },
   },
 } as const
+

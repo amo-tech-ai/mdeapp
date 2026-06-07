@@ -11,9 +11,9 @@ import pg from "pg";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const sqlPath = join(__dirname, "sql/partner-schema-gate.sql");
 
+// Local gate only — do not use DATABASE_URL from .env.local (points at remote pre-apply).
 const dbUrl =
   process.env.SUPABASE_DB_URL ??
-  process.env.DATABASE_URL ??
   "postgresql://postgres:postgres@127.0.0.1:54322/postgres";
 
 const EXPECT = {
@@ -40,7 +40,7 @@ async function main() {
   const statements = sql
     .split(";")
     .map((s) => s.trim())
-    .filter((s) => s.length > 0 && !s.startsWith("--"));
+    .filter((s) => s.length > 0 && /select\s+/i.test(s));
 
   const results = {};
   for (const stmt of statements) {

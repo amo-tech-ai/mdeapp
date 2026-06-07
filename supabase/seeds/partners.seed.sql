@@ -33,7 +33,7 @@ on conflict (id) do nothing;
 insert into public.partner_members (partner_id, profile_id, role)
 select p.id, p.profile_id, 'owner'
 from public.partners p
-where p.id like '00000000-0000-4000-a000-0000000000%'
+where p.id::text like '00000000-0000-4000-a000-0000000000%'
 on conflict (partner_id, profile_id) do nothing;
 
 -- ── wizard draft (in-progress, step 4) ─────────────────────────────────────
