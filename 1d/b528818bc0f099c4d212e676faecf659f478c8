@@ -1,0 +1,19 @@
+src/__tests__/api/partners-activate.test.ts
+  s_26308efd15595e::t_6a721e50da605e 344
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "1db528818bc0f099c4d212e676faecf659f478c8",
+  "prompts": {},
+  "sessions": {
+    "s_26308efd15595e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6fba3bdb-547a-4e13-bcee-a5a0beb3f90b",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
