@@ -38,7 +38,7 @@ const EXPLORE_ITEMS: NavItem[] = [
   { slug: "restaurants", label: "Restaurants", href: "/restaurants", Icon: UtensilsCrossed },
   { slug: "cafes", label: "Cafés", href: "/cafes", Icon: Coffee },
   { slug: "nightlife", label: "Nightlife", href: "/nightlife", Icon: Wine },
-  { slug: "rentals", label: "Rentals", href: null, Icon: Building2 },
+  { slug: "rentals", label: "Rentals", href: "/rentals", Icon: Building2 },
   { slug: "events", label: "Events", href: "/events", Icon: CalendarDays },
 ];
 
