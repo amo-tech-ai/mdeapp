@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import { MarkerClusterer, type Marker } from "@googlemaps/markerclusterer";
 import type { MapPin, MapPinCategory } from "@/platform/contracts";
@@ -17,10 +17,14 @@ export type ClusteredCategoryMarkersProps = {
 /**
  * MAP-009 — vis.gl AdvancedMarker pins synced to @googlemaps/markerclusterer.
  *
- * P3: clusterer is cleared on unmount/map-change so markers don't leak.
- * P4: marker refs are stored in a ref (not state); N concurrent setMarkerRef
- *     calls from child mounts are coalesced into one clearMarkers/addMarkers
- *     call via queueMicrotask instead of firing N separate React renders.
+ * P3: clusterer is cleared on unmount/map-change (useLayoutEffect cleanup).
+ * P4: marker refs stored in a ref (not state); N concurrent setMarkerRef calls
+ *     from child mounts are coalesced into one clearMarkers/addMarkers call via
+ *     queueMicrotask instead of firing N separate React renders.
+ *
+ * Stale-closure guard: clustererRef is updated via useLayoutEffect, which runs
+ * synchronously before microtasks, so the queueMicrotask callback always reads
+ * the current clusterer instance even when the map changes mid-flight.
  */
 export function ClusteredCategoryMarkers({
   pins,
@@ -31,20 +35,26 @@ export function ClusteredCategoryMarkers({
   const map = useMap();
   const markersRef = useRef<Record<string, Marker>>({});
   const flushPendingRef = useRef(false);
+  // Updated synchronously in useLayoutEffect — always current when microtask runs.
+  const clustererRef = useRef<MarkerClusterer | null>(null);
 
   const clusterer = useMemo(() => {
     if (!map) return null;
     return new MarkerClusterer({ map, renderer: createPaisaClusterRenderer() });
   }, [map]);
 
-  // P3: clear markers when the clusterer is replaced (map changed) or on unmount
-  useEffect(() => {
+  // P3 + stale-closure guard: update ref before any microtask can read it;
+  // clear markers on unmount or when the map (and thus clusterer) changes.
+  useLayoutEffect(() => {
+    clustererRef.current = clusterer;
     return () => {
       clusterer?.clearMarkers();
+      clustererRef.current = null;
     };
   }, [clusterer]);
 
-  // P4: batch all setMarkerRef calls from the same render tick into one sync
+  // P4: batch all setMarkerRef calls from the same render tick into one sync.
+  // Empty dep array — stability comes from clustererRef, not the clusterer closure.
   const setMarkerRef = useCallback(
     (marker: Marker | null, key: string) => {
       const prev = markersRef.current;
@@ -61,12 +71,13 @@ export function ClusteredCategoryMarkers({
       flushPendingRef.current = true;
       queueMicrotask(() => {
         flushPendingRef.current = false;
-        if (!clusterer) return;
-        clusterer.clearMarkers();
-        clusterer.addMarkers(Object.values(markersRef.current));
+        const c = clustererRef.current;
+        if (!c) return;
+        c.clearMarkers();
+        c.addMarkers(Object.values(markersRef.current));
       });
     },
-    [clusterer],
+    [],
   );
 
   return (

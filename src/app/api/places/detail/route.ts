@@ -14,7 +14,10 @@ import {
 export async function GET(req: Request) {
   const rateKey = placesDetailRateLimitKey(req);
   if (isPlacesDetailRateLimited(rateKey)) {
-    return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+    return NextResponse.json(
+      { error: "rate_limited" },
+      { status: 429, headers: { "Cache-Control": "no-store" } },
+    );
   }
 
   const url = new URL(req.url);

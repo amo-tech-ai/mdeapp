@@ -1,5 +1,8 @@
+// @vitest-environment jsdom
 import React from "react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
+import { createRoot } from "react-dom/client";
+import { act } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
 const mocks = vi.hoisted(() => {
@@ -29,6 +32,10 @@ vi.mock("@vis.gl/react-google-maps", () => ({
 
 vi.mock("@/components/maps/markers/CategoryMapMarker", () => ({
   CategoryMapMarker: () => <span data-testid="category-marker" />,
+}));
+
+vi.mock("@/lib/map-clustering", () => ({
+  createPaisaClusterRenderer: () => ({}),
 }));
 
 import { ClusteredCategoryMarkers } from "../ClusteredCategoryMarkers";
@@ -85,16 +92,30 @@ describe("ClusteredCategoryMarkers (MAP-009)", () => {
     expect(count).toBe(3);
   });
 
-  it("clearMarkers is available on the clusterer instance (P3 cleanup)", () => {
-    renderToStaticMarkup(
-      <ClusteredCategoryMarkers
-        pins={[pin("x")]}
-        selectedPinId={null}
-        activeMapCategory={null}
-        onSelectPin={() => {}}
-      />,
-    );
-    // Verify the mock clusterer exposes clearMarkers so the cleanup effect can call it
-    expect(typeof mocks.clearMarkers).toBe("function");
+  it("calls clearMarkers on unmount (P3 cleanup)", () => {
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+
+    let root: ReturnType<typeof createRoot>;
+    act(() => {
+      root = createRoot(container);
+      root.render(
+        <ClusteredCategoryMarkers
+          pins={[pin("x")]}
+          selectedPinId={null}
+          activeMapCategory={null}
+          onSelectPin={() => {}}
+        />,
+      );
+    });
+
+    // Unmount triggers the useEffect cleanup → clusterer.clearMarkers()
+    act(() => {
+      root!.unmount();
+    });
+
+    expect(mocks.clearMarkers).toHaveBeenCalledOnce();
+
+    document.body.removeChild(container);
   });
 });
