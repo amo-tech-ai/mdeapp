@@ -3,7 +3,7 @@ import type { Restaurant } from "@/mastra/tools/search-restaurants";
 import type { Rental } from "@/mastra/tools/search-rentals";
 
 export function restaurantToMapPin(r: Restaurant): MapPin | null {
-  if (!r.latitude || !r.longitude) return null;
+  if (r.latitude == null || r.longitude == null) return null;
   return {
     id: `restaurant-${r.id}`,
     category: "restaurant",
@@ -17,7 +17,7 @@ export function restaurantToMapPin(r: Restaurant): MapPin | null {
 }
 
 export function rentalToMapPin(r: Rental): MapPin | null {
-  if (!r.latitude || !r.longitude) return null;
+  if (r.latitude == null || r.longitude == null) return null;
   return {
     id: `rental-${r.id}`,
     category: "rental",

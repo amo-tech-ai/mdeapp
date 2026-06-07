@@ -41,7 +41,7 @@ test.describe("SAN-577 /restaurants map workspace", () => {
       name: "Neighborhood filters",
     });
     await neighborhoodGroup.getByRole("link", { name: "Laureles" }).click();
-    await expect(page).toHaveURL(/neighborhood=Laureles/, { timeout: 15_000 });
+    await page.waitForURL(/neighborhood=Laureles/, { timeout: 3000 });
     await expect(page.getByTestId("browse-map-panel")).toBeVisible();
   });
 
