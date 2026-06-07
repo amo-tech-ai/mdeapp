@@ -1,0 +1,40 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Full Stack (UI + Agent)",
+      "runtimeExecutable": "infisical",
+      "runtimeArgs": ["run", "--silent", "--env=dev", "--path=/", "--", "npm", "run", "dev"],
+      "port": 3001,
+      "autoPort": false
+    },
+    {
+      "name": "Full Stack Debug (UI + Agent + LOG_LEVEL=debug)",
+      "runtimeExecutable": "infisical",
+      "runtimeArgs": ["run", "--silent", "--env=dev", "--path=/", "--", "npm", "run", "dev:debug"],
+      "port": 3001,
+      "autoPort": false
+    },
+    {
+      "name": "Next.js UI — webpack (port 3001)",
+      "runtimeExecutable": "infisical",
+      "runtimeArgs": ["run", "--silent", "--env=dev", "--path=/", "--", "npm", "run", "dev:ui"],
+      "port": 3001,
+      "autoPort": false
+    },
+    {
+      "name": "Next.js UI — turbopack (port 3001)",
+      "runtimeExecutable": "infisical",
+      "runtimeArgs": ["run", "--silent", "--env=dev", "--path=/", "--", "npm", "run", "dev:ui:turbopack"],
+      "port": 3001,
+      "autoPort": false
+    },
+    {
+      "name": "Mastra Agent (port 4111)",
+      "runtimeExecutable": "infisical",
+      "runtimeArgs": ["run", "--silent", "--env=dev", "--path=/", "--", "npm", "run", "dev:agent"],
+      "port": 4111,
+      "autoPort": false
+    }
+  ]
+}

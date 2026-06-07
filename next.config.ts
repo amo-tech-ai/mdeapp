@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
     // @mastra/memory beta packages have unstable types that break strict checking
     ignoreBuildErrors: true,
   },
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "images.unsplash.com" },
+    ],
+  },
 };
 
 export default nextConfig;
