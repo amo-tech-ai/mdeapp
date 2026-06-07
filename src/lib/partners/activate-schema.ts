@@ -6,13 +6,16 @@ const BLOCKED_SETTING_KEYS = new Set([
   "tier",
   "completion_score",
   "activated_at",
+  "__proto__",
+  "constructor",
+  "prototype",
 ]);
 
 export function sanitizePartnerSettings(
   settings: Record<string, unknown> | undefined,
 ): Record<string, unknown> {
   if (!settings) return {};
-  const out: Record<string, unknown> = {};
+  const out = Object.create(null) as Record<string, unknown>;
   for (const [key, value] of Object.entries(settings)) {
     if (BLOCKED_SETTING_KEYS.has(key.toLowerCase())) continue;
     out[key] = value;

@@ -18,7 +18,13 @@ export type ActivatePartnerSuccess = {
 };
 
 export type ActivatePartnerError = {
-  code: "draft_not_found" | "draft_forbidden" | "insert_failed" | "member_failed" | "draft_link_failed";
+  code:
+    | "draft_not_found"
+    | "draft_forbidden"
+    | "draft_type_mismatch"
+    | "insert_failed"
+    | "member_failed"
+    | "draft_link_failed";
   message: string;
 };
 
@@ -35,6 +41,74 @@ export function buildPartnerInsertRow(
   };
 }
 
+function isUniqueViolation(error: { code?: string } | null): boolean {
+  return error?.code === "23505";
+}
+
+async function validatePartnerDraft(
+  db: SupabaseClient<Database>,
+  profileId: string,
+  partnerType: PartnerType,
+  draftId: string,
+): Promise<ActivatePartnerError | null> {
+  const { data: draft, error: draftError } = await db
+    .from("partner_drafts")
+    .select("id, profile_id, type")
+    .eq("id", draftId)
+    .maybeSingle();
+
+  if (draftError) {
+    return { code: "draft_link_failed", message: draftError.message };
+  }
+  if (!draft) {
+    return { code: "draft_not_found", message: "Draft not found" };
+  }
+  if (draft.profile_id !== profileId) {
+    return { code: "draft_forbidden", message: "Draft does not belong to user" };
+  }
+  if (draft.type !== partnerType) {
+    return {
+      code: "draft_type_mismatch",
+      message: "Draft type does not match partner type",
+    };
+  }
+
+  return null;
+}
+
+async function linkPartnerDraft(
+  db: SupabaseClient<Database>,
+  partnerId: string,
+  draftId: string,
+): Promise<ActivatePartnerError | null> {
+  const { error: updateError } = await db
+    .from("partner_drafts")
+    .update({
+      partner_id: partnerId,
+      submitted_at: new Date().toISOString(),
+    })
+    .eq("id", draftId);
+
+  if (updateError) {
+    return { code: "draft_link_failed", message: updateError.message };
+  }
+
+  return null;
+}
+
+async function findExistingPartner(
+  db: SupabaseClient<Database>,
+  profileId: string,
+  partnerType: PartnerType,
+) {
+  return db
+    .from("partners")
+    .select("id, type, status")
+    .eq("profile_id", profileId)
+    .eq("type", partnerType)
+    .maybeSingle();
+}
+
 export async function activatePartner(
   db: SupabaseClient<Database>,
   profileId: string,
@@ -43,12 +117,21 @@ export async function activatePartner(
   | { ok: true; data: ActivatePartnerSuccess }
   | { ok: false; error: ActivatePartnerError }
 > {
-  const { data: existing, error: existingError } = await db
-    .from("partners")
-    .select("id, type, status")
-    .eq("profile_id", profileId)
-    .eq("type", input.type)
-    .maybeSingle();
+  if (input.draftId) {
+    const draftError = await validatePartnerDraft(
+      db,
+      profileId,
+      input.type,
+      input.draftId,
+    );
+    if (draftError) return { ok: false, error: draftError };
+  }
+
+  const { data: existing, error: existingError } = await findExistingPartner(
+    db,
+    profileId,
+    input.type,
+  );
 
   if (existingError) {
     return {
@@ -70,17 +153,35 @@ export async function activatePartner(
       .single();
 
     if (insertError || !inserted) {
-      return {
-        ok: false,
-        error: {
-          code: "insert_failed",
-          message: insertError?.message ?? "Partner insert failed",
-        },
-      };
+      if (isUniqueViolation(insertError)) {
+        const { data: raced, error: raceError } = await findExistingPartner(
+          db,
+          profileId,
+          input.type,
+        );
+        if (raceError || !raced) {
+          return {
+            ok: false,
+            error: {
+              code: "insert_failed",
+              message: raceError?.message ?? insertError?.message ?? "Partner insert failed",
+            },
+          };
+        }
+        partnerId = raced.id;
+      } else {
+        return {
+          ok: false,
+          error: {
+            code: "insert_failed",
+            message: insertError?.message ?? "Partner insert failed",
+          },
+        };
+      }
+    } else {
+      partnerId = inserted.id;
+      created = true;
     }
-
-    partnerId = inserted.id;
-    created = true;
   }
 
   const { error: memberError } = await db.from("partner_members").upsert(
@@ -100,7 +201,7 @@ export async function activatePartner(
   }
 
   if (input.draftId) {
-    const linkError = await linkPartnerDraft(db, profileId, partnerId, input.draftId);
+    const linkError = await linkPartnerDraft(db, partnerId, input.draftId);
     if (linkError) return { ok: false, error: linkError };
   }
 
@@ -114,41 +215,4 @@ export async function activatePartner(
       created,
     },
   };
-}
-
-async function linkPartnerDraft(
-  db: SupabaseClient<Database>,
-  profileId: string,
-  partnerId: string,
-  draftId: string,
-): Promise<ActivatePartnerError | null> {
-  const { data: draft, error: draftError } = await db
-    .from("partner_drafts")
-    .select("id, profile_id")
-    .eq("id", draftId)
-    .maybeSingle();
-
-  if (draftError) {
-    return { code: "draft_link_failed", message: draftError.message };
-  }
-  if (!draft) {
-    return { code: "draft_not_found", message: "Draft not found" };
-  }
-  if (draft.profile_id !== profileId) {
-    return { code: "draft_forbidden", message: "Draft does not belong to user" };
-  }
-
-  const { error: updateError } = await db
-    .from("partner_drafts")
-    .update({
-      partner_id: partnerId,
-      submitted_at: new Date().toISOString(),
-    })
-    .eq("id", draftId);
-
-  if (updateError) {
-    return { code: "draft_link_failed", message: updateError.message };
-  }
-
-  return null;
 }
