@@ -78,19 +78,28 @@ async function validatePartnerDraft(
 
 async function linkPartnerDraft(
   db: SupabaseClient<Database>,
+  profileId: string,
+  partnerType: PartnerType,
   partnerId: string,
   draftId: string,
 ): Promise<ActivatePartnerError | null> {
-  const { error: updateError } = await db
+  const { data, error: updateError } = await db
     .from("partner_drafts")
     .update({
       partner_id: partnerId,
       submitted_at: new Date().toISOString(),
     })
-    .eq("id", draftId);
+    .eq("id", draftId)
+    .eq("profile_id", profileId)
+    .eq("type", partnerType)
+    .select("id")
+    .maybeSingle();
 
   if (updateError) {
     return { code: "draft_link_failed", message: updateError.message };
+  }
+  if (!data) {
+    return { code: "draft_not_found", message: "Draft not found" };
   }
 
   return null;
@@ -201,7 +210,13 @@ export async function activatePartner(
   }
 
   if (input.draftId) {
-    const linkError = await linkPartnerDraft(db, partnerId, input.draftId);
+    const linkError = await linkPartnerDraft(
+      db,
+      profileId,
+      input.type,
+      partnerId,
+      input.draftId,
+    );
     if (linkError) return { ok: false, error: linkError };
   }
 

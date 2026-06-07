@@ -134,13 +134,29 @@ function makeMockDb(state: {
               },
             }),
           }),
-          update: (patch: Partial<DraftRow>) => ({
-            eq: async (col: string, val: string) => {
-              const row = drafts.find((d) => d[col as keyof DraftRow] === val);
-              if (row) Object.assign(row, patch);
-              return { error: null };
-            },
-          }),
+          update: (patch: Partial<DraftRow>) => {
+            const filters: Record<string, string> = {};
+            const chain = {
+              eq: (col: string, val: string) => {
+                filters[col] = val;
+                return chain;
+              },
+              select: () => chain,
+              maybeSingle: async () => {
+                const row = drafts.find((d) =>
+                  Object.entries(filters).every(
+                    ([key, value]) => d[key as keyof DraftRow] === value,
+                  ),
+                );
+                if (row) Object.assign(row, patch);
+                return {
+                  data: row ? { id: row.id } : null,
+                  error: null,
+                };
+              },
+            };
+            return chain;
+          },
         };
       }
 
@@ -209,7 +225,7 @@ describe("sanitizePartnerSettings", () => {
   it("blocks prototype pollution keys", () => {
     expect(
       sanitizePartnerSettings({
-        __proto__: { polluted: true },
+        ["__proto__"]: { polluted: true },
         constructor: { polluted: true },
         prototype: { polluted: true },
         name: "OK",

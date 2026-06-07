@@ -23,8 +23,9 @@ function errorStatus(code: ActivatePartnerError["code"]): number {
     case "draft_not_found":
       return 404;
     case "draft_forbidden":
-    case "draft_type_mismatch":
       return 403;
+    case "draft_type_mismatch":
+      return 400;
     default:
       return 500;
   }
