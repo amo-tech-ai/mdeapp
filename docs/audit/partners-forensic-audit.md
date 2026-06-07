@@ -309,6 +309,7 @@ flowchart LR
 ## 14. Red flags & blockers (top items)
 
 **Top red flags**
+
 | Finding | Severity | Impact | Root cause | Fix |
 |---|---|---|---|---|
 | No landing for nightlife/restaurant/café | 🔴 | can't acquire shipped verticals | pages not specced | add 3 MKT tasks |
@@ -372,6 +373,7 @@ flowchart LR
 **Immediate — this week (top-10 ROI)** — see §18.
 
 **Next 30 days (MVP + revenue)**
+
 | Task | Why | Dependency | Rev impact | Priority |
 |---|---|---|---|---|
 | Merge #106 ptr014 | close privilege gaps | #105 | trust | P0 |
@@ -382,6 +384,7 @@ flowchart LR
 | `/partners` hub + host/nightlife/restaurant landings | acquire shipped verticals | — | high | P1 |
 
 **Next 90 days (growth/marketplace/intelligence)**
+
 | Task | Why | Dependency | Priority |
 |---|---|---|---|
 | Booking 686 (+availability) | venue/tour monetization | 551 | P2 |
@@ -391,6 +394,7 @@ flowchart LR
 | Marketplace/creator 672/696/700 | expansion | proven core | P3 |
 
 **Later (advanced automation)**
+
 | Task | Why | Priority |
 |---|---|---|
 | Chatwoot/Postiz/OpenClaw (reuse 553/555/213/OCL, partner-config) | scaled comms | P3 |

@@ -187,7 +187,7 @@ flowchart LR
 7. **SAN-458 PR-16** — flip branch-protection switch.
 8. **SAN-115 EVT-001** — sign the launch-proof ledger (last).
 
-**Wrong-priority / move to post-MVP:** all Partners issues (660–714), create_checkout/REV-C\*, Trips (275/276), Chatwoot/Postiz/OpenClaw, Medusa marketplace. **Pause anything not in the list above.**
+**Wrong-priority / move to post-MVP:** all Partners issues (660–714), create_checkout / the REV-C-series revenue catalog (SAN-550/551/552), Trips (275/276), Chatwoot/Postiz/OpenClaw, Medusa marketplace. **Pause anything not in the list above.**
 
 ---
 
