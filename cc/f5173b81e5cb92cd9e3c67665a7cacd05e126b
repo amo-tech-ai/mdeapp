@@ -1,0 +1,19 @@
+src/components/rentals/rental-browse-view.tsx
+  s_109e73483abc62::t_c840f2d5c150a6 134-143
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "ccf5173b81e5cb92cd9e3c67665a7cacd05e126b",
+  "prompts": {},
+  "sessions": {
+    "s_109e73483abc62": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4cf62afe-9196-4bf1-85ae-e30c45673ebe",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
