@@ -13,16 +13,21 @@ import { HomePressLogos } from "@/components/home/home-press-logos";
 import { HomeFooter } from "@/components/home/home-footer";
 import { HomeFab } from "@/components/home/home-fab";
 
-/** D-13: Marketing home page. Chat lives at /chat. */
-export default function HomePage() {
+interface Props {
+  searchParams: Promise<{ q?: string }>;
+}
+
+/** D-13: Marketing home page. Chat lives at /chat (alias → /?q= if query present). */
+export default async function HomePage({ searchParams }: Props) {
+  const { q } = await searchParams;
   return (
     <>
       {/* Band 01: Sticky top nav */}
       <HomeNav />
 
       <main id="main-content" className="bg-background text-foreground">
-        {/* Band 02: Hero + concierge search */}
-        <HomeHero />
+        {/* Band 02: Hero + concierge search — key forces remount when q changes */}
+        <HomeHero key={q ?? "default"} initialQuery={q} />
 
         {/* Band 03: Live map teaser */}
         <HomeMapTeaser />

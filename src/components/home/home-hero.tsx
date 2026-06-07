@@ -12,9 +12,14 @@ const chips = [
   "Rooftop bars in Poblado",
 ] as const;
 
-export function HomeHero() {
+interface HomeHeroProps {
+  /** Pre-filled query forwarded from /chat?q= → /?q= redirect */
+  initialQuery?: string;
+}
+
+export function HomeHero({ initialQuery = "" }: HomeHeroProps) {
   const router = useRouter();
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
 
   const submit = (q: string) => {
     const trimmed = q.trim();
