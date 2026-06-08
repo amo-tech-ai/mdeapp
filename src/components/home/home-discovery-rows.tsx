@@ -371,7 +371,6 @@ export function HomeDiscoveryRowsSkeleton() {
     >
       <div className="mx-auto flex max-w-7xl flex-col gap-10 px-4 sm:px-6 lg:px-8">
         {Array.from({ length: 4 }).map((_, rowIdx) => (
-          // eslint-disable-next-line react/no-array-index-key
           <div key={rowIdx} className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <div className="h-5 w-36 bg-muted rounded animate-pulse" />
@@ -379,7 +378,6 @@ export function HomeDiscoveryRowsSkeleton() {
             </div>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {Array.from({ length: 4 }).map((_, cardIdx) => (
-                // eslint-disable-next-line react/no-array-index-key
                 <PlaceCardSkeleton key={cardIdx} />
               ))}
             </div>

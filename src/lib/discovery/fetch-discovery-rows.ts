@@ -22,7 +22,11 @@ function capitalize(s: string): string {
 function formatEventDate(isoDate: string): string {
   const d = new Date(isoDate);
   const now = new Date();
-  const diffDays = Math.ceil((d.getTime() - now.getTime()) / 86_400_000);
+  // Compare calendar days (midnight–midnight) so same-day events are never
+  // mislabelled "Tomorrow" by Math.ceil rounding a partial day up to 1.
+  const todayMs = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const eventMs = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  const diffDays = Math.round((eventMs - todayMs) / 86_400_000);
   if (diffDays <= 0) return "Tonight";
   if (diffDays === 1) return "Tomorrow";
   if (diffDays <= 7) return "This week";
@@ -173,7 +177,7 @@ const EVENT_CATEGORY_LABEL: Record<string, string> = {
   music: "Music",
   food: "Food & drink",
   culture: "Culture",
-  sports: "Sports",
+  sport: "Sports",
   nightlife: "Nightlife",
   festival: "Festival",
   business: "Business",
@@ -193,8 +197,9 @@ export async function fetchLiveEvents(
 
   return results.map((row) => {
     const dateStr = formatEventDate(row.startsAt);
+    const currencySymbol = row.currency === "COP" ? "COP $" : "$";
     const priceStr =
-      row.pricePerTicket === 0 ? "Free" : `$${row.pricePerTicket} entry`;
+      row.pricePerTicket === 0 ? "Free" : `${currencySymbol}${row.pricePerTicket} entry`;
 
     // Build a non-redundant why line — skip generic/TBD values
     const venuePart =
