@@ -46,6 +46,8 @@ const publicEvent: PublicEventDetail = {
   currency: "USD",
   latitude: null,
   longitude: null,
+  host: null,
+  venue: null,
   tickets: [
     {
       id: "t1",

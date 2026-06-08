@@ -8,7 +8,9 @@ import {
   BookingCheckoutModal,
   type BookingCheckoutTarget,
 } from "@/components/modals/booking-checkout-modal";
+import { EventHostBlock } from "@/components/events/event-host-block";
 import { EventTicketTiers } from "@/components/events/event-ticket-tiers";
+import { EventVenueSection } from "@/components/events/event-venue-section";
 import {
   formatEventSchedule,
   formatTicketPrice,
@@ -26,6 +28,28 @@ function lowestAvailablePrice(tickets: PublicEventTicket[]): PublicEventTicket |
 type EventDetailViewProps = {
   event: PublicEventDetail;
 };
+
+function EventSummary({
+  name,
+  scheduleLabel,
+  venueLine,
+  className,
+}: {
+  name: string;
+  scheduleLabel: string;
+  venueLine: string;
+  className?: string;
+}) {
+  return (
+    <section className={className}>
+      <h1 className="text-2xl font-semibold tracking-tight">{name}</h1>
+      <p className="mt-2 text-sm text-muted-foreground">{scheduleLabel}</p>
+      {venueLine ? (
+        <p className="mt-1 text-sm text-muted-foreground">{venueLine}</p>
+      ) : null}
+    </section>
+  );
+}
 
 export function EventDetailView({ event }: EventDetailViewProps) {
   const [checkout, setCheckout] = useState<BookingCheckoutTarget | null>(null);
@@ -67,8 +91,8 @@ export function EventDetailView({ event }: EventDetailViewProps) {
           </div>
         </header>
 
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-6 md:grid-cols-[1fr_minmax(320px,400px)] md:py-8">
-          <div className="space-y-6">
+        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6 md:grid md:grid-cols-[1fr_minmax(320px,400px)] md:items-start md:gap-8 md:py-8">
+          <div className="order-1 md:col-start-1">
             {event.imageUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -84,33 +108,35 @@ export function EventDetailView({ event }: EventDetailViewProps) {
                 Event photo
               </div>
             )}
-
-            <section className="md:hidden">
-              <h1 className="text-2xl font-semibold tracking-tight">{event.name}</h1>
-              <p className="mt-2 text-sm text-muted-foreground">{scheduleLabel}</p>
-              {venueLine ? (
-                <p className="mt-1 text-sm text-muted-foreground">{venueLine}</p>
-              ) : null}
-            </section>
-
-            {event.description ? (
-              <section>
-                <h2 className="text-lg font-semibold">About</h2>
-                <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
-                  {event.description}
-                </p>
-              </section>
-            ) : null}
           </div>
 
-          <aside className="space-y-6">
-            <div className="hidden md:block">
-              <h1 className="text-2xl font-semibold tracking-tight">{event.name}</h1>
-              <p className="mt-2 text-sm text-muted-foreground">{scheduleLabel}</p>
-              {venueLine ? (
-                <p className="mt-1 text-sm text-muted-foreground">{venueLine}</p>
-              ) : null}
-            </div>
+          <EventSummary
+            name={event.name}
+            scheduleLabel={scheduleLabel}
+            venueLine={venueLine}
+            className="order-2 md:hidden"
+          />
+
+          {event.host ? (
+            <EventHostBlock host={event.host} className="order-3 md:col-start-1" />
+          ) : null}
+
+          {event.description ? (
+            <section className="order-4 space-y-2 md:col-start-1">
+              <h2 className="text-lg font-semibold">About</h2>
+              <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">
+                {event.description}
+              </p>
+            </section>
+          ) : null}
+
+          <aside className="order-5 space-y-6 md:order-2 md:col-start-2 md:row-start-1 md:row-span-6 md:sticky md:top-8">
+            <EventSummary
+              name={event.name}
+              scheduleLabel={scheduleLabel}
+              venueLine={venueLine}
+              className="hidden md:block"
+            />
 
             {fromTier ? (
               <p className="text-sm font-medium">
@@ -125,6 +151,13 @@ export function EventDetailView({ event }: EventDetailViewProps) {
               onCheckout={(target) => setCheckout(target)}
             />
           </aside>
+
+          {event.venue ? (
+            <EventVenueSection
+              venue={event.venue}
+              className="order-6 md:col-start-1"
+            />
+          ) : null}
         </div>
 
         {primaryTier && ticketsRemaining(primaryTier.qtyTotal, primaryTier.qtySold) > 0 ? (

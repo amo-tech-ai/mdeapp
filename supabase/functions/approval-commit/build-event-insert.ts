@@ -1,6 +1,11 @@
 // Pure builder for the public.events insert on a host-wizard publish.
 // Kept dependency-free so it runs under both Deno (edge fn) and Vitest (node).
 
+export type EventHostDisplaySnapshot = {
+  name: string;
+  avatarUrl?: string | null;
+};
+
 export type EventInsertDraft = {
   title?: string;
   neighborhood?: string;
@@ -11,6 +16,18 @@ export type EventInsertDraft = {
   description?: string;
   ticketTiers?: Array<{ name: string; priceCop: number; quantity: number }>;
 };
+
+function hostDisplayDetails(snapshot?: EventHostDisplaySnapshot) {
+  if (!snapshot?.name?.trim()) {
+    return {};
+  }
+  return {
+    host_display: {
+      name: snapshot.name.trim(),
+      avatar_url: snapshot.avatarUrl ?? null,
+    },
+  };
+}
 
 /**
  * Build the `public.events` insert payload for a host-wizard publish.
@@ -24,6 +41,7 @@ export function buildEventInsert(
   draft: EventInsertDraft,
   userId: string,
   slug: string,
+  hostDisplay?: EventHostDisplaySnapshot,
 ) {
   return {
     source: "host_wizard",
@@ -43,6 +61,7 @@ export function buildEventInsert(
       neighborhood: draft.neighborhood ?? null,
       capacity: draft.capacity ?? null,
       ticket_tiers: draft.ticketTiers ?? [],
+      ...hostDisplayDetails(hostDisplay),
     },
   };
 }

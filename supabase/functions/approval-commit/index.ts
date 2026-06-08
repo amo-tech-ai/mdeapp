@@ -120,9 +120,25 @@ Deno.serve(async (req: Request) => {
   }
 
   const slug = slugifyEventTitle(draft.title);
+
+  const { data: profile, error: profileErr } = await service
+    .from("profiles")
+    .select("full_name, avatar_url")
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (profileErr) {
+    return jr(errorBody("PROFILE_LOOKUP_FAILED", "Could not load host profile"), 500, req);
+  }
+
+  const hostDisplay =
+    profile?.full_name && profile.full_name.trim()
+      ? { name: profile.full_name.trim(), avatarUrl: profile.avatar_url }
+      : undefined;
+
   const { data: eventRow, error: eventErr } = await service
     .from("events")
-    .insert(buildEventInsert(draft, userId, slug))
+    .insert(buildEventInsert(draft, userId, slug, hostDisplay))
     .select("id, slug")
     .single();
 

@@ -8,6 +8,18 @@ export type PublicEventTicket = {
   position: number;
 };
 
+/** Denormalized host snapshot from events.details.host_display (SAN-135 Option C). */
+export type PublicEventHost = {
+  name: string;
+  avatarUrl: string | null;
+};
+
+export type PublicEventVenue = {
+  name: string;
+  address: string | null;
+  city: string | null;
+};
+
 export type PublicEventDetail = {
   id: string;
   slug: string | null;
@@ -21,5 +33,7 @@ export type PublicEventDetail = {
   currency: string | null;
   latitude: number | null;
   longitude: number | null;
+  host: PublicEventHost | null;
+  venue: PublicEventVenue | null;
   tickets: PublicEventTicket[];
 };
