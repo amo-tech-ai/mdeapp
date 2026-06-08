@@ -1,0 +1,28 @@
+src/lib/events/get-public-event.ts
+  s_88d284f4974037::t_b11ba604c779ec 115
+supabase/functions/approval-commit/index.ts
+  s_88d284f4974037::t_62c760f420dc38 124,130-132
+src/components/events/event-host-block.tsx
+  s_88d284f4974037::t_99c75545525090 1-3,15,22,31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "85224e8d5670b589ba561dfa23a62e3ed5add6dc",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_88d284f4974037": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12172277-a42f-4ea5-89db-4f5de4653e40",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
