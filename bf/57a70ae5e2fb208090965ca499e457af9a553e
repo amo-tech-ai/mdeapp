@@ -1,0 +1,21 @@
+e2e/san-717-loading-states.spec.ts
+  s_32f0283a47e318::t_4ed23759471777 1-95
+src/app/rentals/loading.tsx
+  s_32f0283a47e318::t_4f43f3857c1b19 1-81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "bf57a70ae5e2fb208090965ca499e457af9a553e",
+  "prompts": {},
+  "sessions": {
+    "s_32f0283a47e318": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2b95a3c1-cc31-4423-b142-f579acbe9752",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
