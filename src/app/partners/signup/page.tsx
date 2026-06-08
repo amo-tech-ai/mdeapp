@@ -1,34 +1,24 @@
 import Link from "next/link";
 import { PartnerSignupWizard } from "@/components/partners/partner-signup-wizard";
+import { PartnerSignupNav } from "@/components/partners/partner-signup-nav";
+import { PartnerSignupTypePicker } from "@/components/partners/partner-signup-type-picker";
 import { getServerUser } from "@/lib/auth/session";
 import {
+  buildPartnerSignupPickerPath,
+  buildPartnerSignupTypedPath,
   parsePartnerSignupSearchParams,
   PARTNER_TYPE_LABELS,
 } from "@/lib/partners/parse-partner-signup-params";
-import { PARTNER_TYPES } from "@/lib/partners/partner-types";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 export const metadata = {
   title: "Partner signup · mdeai",
+  description:
+    "Join mdeai as an event host, venue, rental broker, or partner. Typed onboarding for Medellín businesses.",
 };
 
 type PartnerSignupPageProps = {
   searchParams: Promise<{ type?: string | string[]; draft?: string | string[] }>;
 };
-
-function buildSignupPath(type: string, draft?: string) {
-  const params = new URLSearchParams({ type });
-  if (draft) params.set("draft", draft);
-  return `/partners/signup?${params.toString()}`;
-}
 
 export default async function PartnerSignupPage({
   searchParams,
@@ -38,43 +28,44 @@ export default async function PartnerSignupPage({
 
   if (!type) {
     return (
-      <main className="min-h-screen flex items-center justify-center p-8 bg-background">
-        <Card className="w-full max-w-lg" data-testid="partner-signup-type-picker">
-          <CardHeader>
-            <CardTitle>Choose partner type</CardTitle>
-            <CardDescription>
-              {typeParam
-                ? `"${typeParam}" is not a valid partner type. Pick one below.`
-                : "Select the partner program that matches your business."}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-2">
-            {PARTNER_TYPES.map((partnerType) => (
-              <Link
-                key={partnerType}
-                href={buildSignupPath(partnerType, draftId)}
-                className={cn(buttonVariants({ variant: "outline" }), "w-full")}
-              >
-                {PARTNER_TYPE_LABELS[partnerType]}
-              </Link>
-            ))}
-          </CardContent>
-        </Card>
-      </main>
+      <PartnerSignupTypePicker
+        draftId={draftId}
+        invalidTypeParam={typeParam}
+      />
     );
   }
 
   const { user } = await getServerUser();
-  const loginNextPath = buildSignupPath(type, draftId);
+  const typedSignupPath = buildPartnerSignupTypedPath(type, draftId);
+  const pickerPath = buildPartnerSignupPickerPath(draftId);
+  const loginHref = `/login?next=${encodeURIComponent(typedSignupPath)}`;
+  const typeLabel = PARTNER_TYPE_LABELS[type];
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-8 bg-background">
-      <PartnerSignupWizard
-        partnerType={type}
-        draftId={draftId}
-        isAuthenticated={Boolean(user)}
-        loginNextPath={loginNextPath}
+    <div className="flex min-h-screen flex-col bg-background">
+      <PartnerSignupNav
+        contextLabel={`${typeLabel} signup`}
+        showBackToPicker
+        pickerHref={pickerPath}
+        signInHref={loginHref}
       />
-    </main>
+      <main className="flex flex-1 items-center justify-center p-4 sm:p-8">
+        <PartnerSignupWizard
+          partnerType={type}
+          draftId={draftId}
+          isAuthenticated={Boolean(user)}
+          loginNextPath={typedSignupPath}
+        />
+      </main>
+      <footer className="border-t border-border px-4 py-4 text-center text-xs text-muted-foreground">
+        Need a different program?{" "}
+        <Link
+          href={pickerPath}
+          className="font-medium text-foreground underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          Choose another partner type
+        </Link>
+      </footer>
+    </div>
   );
 }

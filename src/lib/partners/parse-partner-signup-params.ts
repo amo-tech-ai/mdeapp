@@ -22,6 +22,19 @@ export function parsePartnerSignupSearchParams(params: {
   return { type, typeParam, draftId };
 }
 
+/** Picker route — preserves optional draft when returning from wizard. */
+export function buildPartnerSignupPickerPath(draftId?: string): string {
+  if (!draftId) return "/partners/signup";
+  const params = new URLSearchParams({ draft: draftId });
+  return `/partners/signup?${params.toString()}`;
+}
+
+export function buildPartnerSignupTypedPath(type: string, draftId?: string): string {
+  const params = new URLSearchParams({ type });
+  if (draftId) params.set("draft", draftId);
+  return `/partners/signup?${params.toString()}`;
+}
+
 export const PARTNER_TYPE_LABELS: Record<PartnerType, string> = {
   host: "Event host",
   venue: "Venue",

@@ -116,6 +116,18 @@ describe("PartnerSignupWizard (static markup)", () => {
     expect(html).toContain('value="33333333-3333-4333-a333-333333333333"');
     expect(html).toContain('data-testid="partner-signup-submit"');
   });
+
+  it("does not show internal roadmap copy in the form footer", () => {
+    const html = renderToStaticMarkup(
+      <PartnerSignupWizard
+        partnerType="host"
+        isAuthenticated
+        loginNextPath="/partners/signup?type=host"
+      />,
+    );
+    expect(html).not.toContain("Phase 2");
+    expect(html).not.toContain("co-pilot panel");
+  });
 });
 
 describe("PartnerSignupWizard (submit flow)", () => {
