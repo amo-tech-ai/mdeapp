@@ -46,7 +46,8 @@ vi.mock("@medusajs/js-sdk", () => {
 });
 
 import {
-  COMMERCE_PRODUCT_FIELDS,
+  COMMERCE_PRODUCT_DETAIL_FIELDS,
+  COMMERCE_PRODUCT_LIST_FIELDS,
   CommerceClientError,
   createCommerceClient,
   getCommerceClient,
