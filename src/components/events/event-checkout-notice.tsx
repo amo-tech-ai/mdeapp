@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { CheckCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CheckoutWalletLink } from "@/components/tickets/checkout-wallet-link";
 import { cn } from "@/lib/utils";
@@ -23,35 +25,76 @@ export function EventCheckoutNotice() {
     <div
       className={cn(
         "mx-auto mb-4 max-w-6xl px-4",
-        isSuccess
-          ? "rounded-lg border border-primary/30 bg-primary/5 px-4 py-3 text-sm"
-          : "rounded-lg border border-border bg-muted px-4 py-3 text-sm",
       )}
-      data-testid={isSuccess ? "checkout-success-notice" : "checkout-cancel-notice"}
-      role="status"
     >
-      <p className="font-medium">
-        {isSuccess ? "Payment received — check your email for tickets." : "Checkout cancelled"}
-      </p>
-      {isSuccess ? (
-        <>
-          <p className="mt-1 text-muted-foreground">
-            Your order is processing. Open My Tickets for your QR code at the door.
-          </p>
-          <CheckoutWalletLink />
-        </>
-      ) : (
-        <p className="mt-1 text-muted-foreground">No charge was made. You can try again anytime.</p>
-      )}
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        className="mt-2 h-auto p-0 text-primary"
-        onClick={() => setDismissed(true)}
+      <div
+        className={cn(
+          "flex gap-3 rounded-lg border px-4 py-3 text-sm",
+          isSuccess
+            ? "border-primary/30 bg-primary/5"
+            : "border-border bg-muted",
+        )}
+        data-testid={isSuccess ? "checkout-success-notice" : "checkout-cancel-notice"}
+        role="status"
       >
-        Dismiss
-      </Button>
+        {isSuccess ? (
+          <CheckCircle
+            className="mt-0.5 size-4 shrink-0 text-primary"
+            aria-hidden
+          />
+        ) : (
+          <X className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden />
+        )}
+
+        <div className="min-w-0 flex-1">
+          <p className="font-medium">
+            {isSuccess
+              ? "Payment received — check your email for tickets."
+              : "Checkout not completed"}
+          </p>
+          {isSuccess ? (
+            <>
+              <p className="mt-1 text-muted-foreground">
+                Your order is processing. Your QR code will be ready shortly.
+              </p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <CheckoutWalletLink />
+                <Link
+                  href="/me/tickets"
+                  className="inline-flex items-center text-xs text-primary underline-offset-2 hover:underline"
+                  data-testid="checkout-my-tickets-link"
+                >
+                  My tickets →
+                </Link>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="mt-1 text-muted-foreground">
+                No charge was made. Scroll up to select tickets and try again.
+              </p>
+              <a
+                href="#event-tiers-heading"
+                className="mt-2 inline-flex text-xs text-primary underline-offset-2 hover:underline"
+                data-testid="checkout-retry-anchor"
+              >
+                Back to tickets ↑
+              </a>
+            </>
+          )}
+        </div>
+
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="size-6 shrink-0 text-muted-foreground hover:text-foreground"
+          aria-label="Dismiss"
+          onClick={() => setDismissed(true)}
+        >
+          <X className="size-3.5" aria-hidden />
+        </Button>
+      </div>
     </div>
   );
 }
