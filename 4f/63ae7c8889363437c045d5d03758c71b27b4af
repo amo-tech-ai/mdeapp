@@ -1,0 +1,26 @@
+e2e/san-518-events-visual-evidence.spec.ts
+  s_32f0283a47e318::t_9d3e3f10763352 22
+src/components/events/event-browse-view.tsx
+  s_32f0283a47e318::t_9c896f1ee35d30 92
+  s_32f0283a47e318::t_b0fc54e8ee37f1 74
+e2e/san-717-loading-states.spec.ts
+  s_32f0283a47e318::t_c824549430c287 5-14,50,69-72,76,90-91,93-96,99
+e2e/screens/SCREEN-027-events-browse.spec.ts
+  s_32f0283a47e318::t_36103526c42c0d 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "4f63ae7c8889363437c045d5d03758c71b27b4af",
+  "prompts": {},
+  "sessions": {
+    "s_32f0283a47e318": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2b95a3c1-cc31-4423-b142-f579acbe9752",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
