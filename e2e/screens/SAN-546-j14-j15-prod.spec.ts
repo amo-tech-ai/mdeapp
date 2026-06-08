@@ -42,11 +42,20 @@ test.describe("SAN-546 · OPS-JOURNEY — J14/J15 prod", () => {
     test.setTimeout(300_000);
     fs.mkdirSync(outDir, { recursive: true });
 
+    const collectPinIds = () =>
+      page
+        .locator('[data-testid="map-pin"]')
+        .evaluateAll((els) =>
+          els
+            .map((el) => el.getAttribute("data-pin-id"))
+            .filter((id): id is string => Boolean(id)),
+        );
+
     await gotoHome(page);
     await sendConciergeMessage(page, RENTAL_QUERY);
     await waitForRentalCards(page);
     await waitForCopilotIdle(page, 120_000);
-    const pinsAfterRentals = await page.locator('[data-testid="map-pin"]').count();
+    const rentalPinIds = await collectPinIds();
 
     await sendConciergeMessage(page, GROUNDING_QUERY);
     await waitForCopilotIdle(page, 120_000);
@@ -55,9 +64,17 @@ test.describe("SAN-546 · OPS-JOURNEY — J14/J15 prod", () => {
     const cafeCards = await page.locator(
       '[data-testid="grounded-card"][data-result-kind="cafe"]',
     ).count();
-    const pinsAfterCafe = await page.locator('[data-testid="map-pin"]').count();
+    const cafePinIds = await collectPinIds();
 
     expect(cafeCards).toBeGreaterThan(0);
-    expect(pinsAfterCafe).toBeLessThanOrEqual(Math.max(pinsAfterRentals, 12));
+    expect(cafePinIds.length).toBeGreaterThan(0);
+    // Stale rental pins must actually be cleared — none of the rental pin ids
+    // may persist after the café search (identity check, not just a count cap).
+    const persistedRentalPins = cafePinIds.filter((id) =>
+      rentalPinIds.includes(id),
+    );
+    expect(persistedRentalPins).toEqual([]);
+    // Defensive upper bound retained to catch unbounded pin accumulation.
+    expect(cafePinIds.length).toBeLessThanOrEqual(Math.max(rentalPinIds.length, 12));
   });
 });
