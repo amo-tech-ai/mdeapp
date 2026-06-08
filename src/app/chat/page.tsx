@@ -1,11 +1,24 @@
-import { redirect } from "next/navigation";
+"use client";
 
-interface Props {
-  searchParams: Promise<{ q?: string }>;
-}
+import { CopilotKitCSSProperties } from "@copilotkit/react-ui";
+import { GeoChatShell } from "@/components/chat/geo-chat-shell";
+import { MapContextProvider } from "@/platform/maps/map-context";
 
-/** Canonical chat is `/` — keep `/chat` as alias for bookmarks and F19 docs. */
-export default async function ChatPage({ searchParams }: Props) {
-  const { q } = await searchParams;
-  redirect(q ? `/?q=${encodeURIComponent(q)}` : "/");
+/** Concierge surface — original GeoChatShell (SCREEN-001 / MAP-007B). */
+export default function ChatPage() {
+  return (
+    <main
+      id="main-content"
+      style={
+        {
+          "--copilot-kit-primary-color": "var(--primary)",
+        } as CopilotKitCSSProperties
+      }
+      className="min-h-screen bg-background text-foreground"
+    >
+      <MapContextProvider>
+        <GeoChatShell />
+      </MapContextProvider>
+    </main>
+  );
 }

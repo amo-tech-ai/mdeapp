@@ -10,16 +10,22 @@ const NIGHTLIFE_GROUNDING_QUERY =
 
 const EVENT_QUERY = "salsa events this weekend in Medellín";
 
-export async function gotoHome(page: Page) {
-  const res = await page.goto("/", { waitUntil: "domcontentloaded" });
+/** Canonical concierge surface — GeoChatShell on /chat (D-13 restore). */
+export async function gotoConcierge(page: Page) {
+  const res = await page.goto("/chat", { waitUntil: "domcontentloaded" });
   if (!res?.ok()) {
-    throw new Error(`GET / failed: ${res?.status()}`);
+    throw new Error(`GET /chat failed: ${res?.status()}`);
   }
   await page
     .locator('[data-testid="chat-canvas"]')
     .waitFor({ state: "visible", timeout: 20_000 });
   await hideCopilotWebInspector(page);
   await waitForCopilotRuntime(page);
+}
+
+/** @deprecated Use gotoConcierge — kept for existing e2e imports. */
+export async function gotoHome(page: Page) {
+  await gotoConcierge(page);
 }
 
 /** CopilotKit dev inspector overlay blocks sheet/modal clicks in e2e. */
