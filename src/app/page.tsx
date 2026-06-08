@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { HomeNav } from "@/components/home/home-nav";
 import { HomeHero } from "@/components/home/home-hero";
 import { HomeMapTeaser } from "@/components/home/home-map-teaser";
@@ -17,9 +18,12 @@ interface Props {
   searchParams: Promise<{ q?: string }>;
 }
 
-/** D-13: Marketing home page. Chat lives at /chat (alias → /?q= if query present). */
+/** D-13: Marketing home. Concierge at /chat; legacy /?q= forwards to /chat?q=. */
 export default async function HomePage({ searchParams }: Props) {
   const { q } = await searchParams;
+  if (q) {
+    redirect(`/chat?q=${encodeURIComponent(q)}`);
+  }
   return (
     <>
       {/* Band 01: Sticky top nav */}
@@ -27,7 +31,7 @@ export default async function HomePage({ searchParams }: Props) {
 
       <main id="main-content" className="bg-background text-foreground">
         {/* Band 02: Hero + concierge search — key forces remount when q changes */}
-        <HomeHero key={q ?? "default"} initialQuery={q} />
+        <HomeHero />
 
         {/* Band 03: Live map teaser */}
         <HomeMapTeaser />

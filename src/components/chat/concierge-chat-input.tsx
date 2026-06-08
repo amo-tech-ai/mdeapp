@@ -7,14 +7,13 @@ import { useRentalSearchFastPath } from "@/hooks/use-rental-search-fast-path";
 import { useEventSearchFastPath } from "@/hooks/use-event-search-fast-path";
 import { useRestaurantSearchFastPath } from "@/hooks/use-restaurant-search-fast-path";
 import { useGroundedSearchFastPath } from "@/hooks/use-grounded-search-fast-path";
-import { clearConciergeError, reportConciergeError } from "@/lib/concierge-error-store";
 import {
   clearConciergePendingSend,
   getConciergePendingSendVersion,
   getConciergePendingSendVersionServer,
-  setConciergePendingSend,
   subscribeConciergePendingSend,
 } from "@/lib/concierge-pending-store";
+import { sendConciergeUserMessage } from "@/lib/concierge-send-user-message";
 import { ConciergeThinkingIndicator } from "@/components/chat/concierge-thinking-indicator";
 
 /** Mirrors CopilotKit InputProps — do not import from @copilotkit/react-ui (Input is not exported in 1.55.2). */
@@ -104,27 +103,17 @@ export function ConciergeChatInput({
   const send = useCallback(async () => {
     const trimmed = text.trim();
     if (!trimmed || inProgress) return;
-    clearConciergeError();
     setText("");
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
     }
-    const handledRental = await handleRentalMessage(trimmed);
-    if (handledRental) return;
-    const handledEvent = await handleEventMessage(trimmed);
-    if (handledEvent) return;
-    const handledGrounded = await handleGroundedMessage(trimmed);
-    if (handledGrounded) return;
-    const handledRestaurant = await handleRestaurantMessage(trimmed);
-    if (!handledRestaurant) {
-      setConciergePendingSend(true);
-      try {
-        await onSend(trimmed);
-      } catch {
-        clearConciergePendingSend();
-        reportConciergeError();
-      }
-    }
+    await sendConciergeUserMessage(trimmed, {
+      handleRentalMessage,
+      handleEventMessage,
+      handleGroundedMessage,
+      handleRestaurantMessage,
+      onAgentSend: onSend,
+    });
     textareaRef.current?.focus();
   }, [
     text,
