@@ -60,6 +60,26 @@ Use this scaffold so the *purpose* is never lost:
 - Don't restate the question back. Don't repeat earlier context verbatim.
 - Cut hedging ("it seems possible that maybe") — say it or verify it.
 
+### Real-world mdeai examples to anchor explanations
+
+Use the product's actual surfaces and personas — not abstractions. mdeai is a
+chat-beside-a-map concierge for Medellín spanning rentals, cafés/restaurants,
+nightlife, events, ticketing, and host publishing.
+
+| Surface | Concrete real-world example to use |
+| --- | --- |
+| **Rentals (J14)** | *Renter types "1BR apartment in Laureles under 80 dollars per night", sees rental cards, then asks "when can I view?" — the concierge must stay on those apartments, not reset to "what can I help you with".* |
+| **Map pins (J15)** | *After browsing rentals, the user searches "Quiet cafés near Laureles" — café pins appear and the old apartment pins must disappear, so the map only shows what was just asked for.* |
+| **Mobile map (J17)** | *On a phone at `/rentals`, the user taps "Browse map" and a full-screen "Map view" sheet opens so they can judge location, not just scroll cards.* |
+| **Nightlife** | *Carlos asks "Salsa bars and rooftop cocktails locals go to in El Poblado" — grounded venue cards with attribution, not a generic list.* |
+| **Events** | *"salsa events this weekend in Medellín" returns event cards a user can act on.* |
+| **Ticketing (G1)** | *Andrés buys a ticket via Stripe and it appears at `/me/tickets` — the paid-proof journey.* |
+| **Host publish (G3)** | *Roberto runs the host wizard, a human approves (HITL), and a row lands in the `events` table.* |
+
+When you describe any of these, name the **persona**, the **exact query/action**,
+the **surface** (route or card), and **the failure it prevents** — that's what
+makes an explanation land for this team.
+
 ### Quick checklist before sending
 - [ ] Answer/verdict is in the first line.
 - [ ] Structured top-down; tables used where they help.
