@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { MarketingFooter } from "@/components/marketing/marketing-footer";
 import { MarketingPageShell } from "@/components/marketing/marketing-page-shell";
 import { PartnerHub } from "@/components/partners/partner-hub";
+import { PARTNER_HUB_CARDS } from "@/lib/partners/partner-hub-config";
 
 vi.mock("next/link", () => ({
   default: ({
@@ -62,6 +63,18 @@ describe("PartnerHub (/partners)", () => {
     for (const route of DEAD_HUB_ROUTES) {
       expect(html).not.toContain(`href="${route}"`);
     }
+  });
+
+  it("venue subtype cards carry the category param", () => {
+    const hrefOf = (key: string) =>
+      PARTNER_HUB_CARDS.find((c) => c.key === key)?.href;
+    expect(hrefOf("restaurants")).toBe(
+      "/partners/signup?type=venue&category=restaurant",
+    );
+    expect(hrefOf("cafes")).toBe("/partners/signup?type=venue&category=cafe");
+    expect(hrefOf("nightlife")).toBe(
+      "/partners/signup?type=venue&category=nightclub",
+    );
   });
 
   it("routes primary CTA to signup landing (not duplicating wizard)", () => {

@@ -7,6 +7,7 @@ import {
   buildPartnerSignupPickerPath,
   buildPartnerSignupTypedPath,
   parsePartnerSignupSearchParams,
+  PARTNER_CATEGORY_LABELS,
   PARTNER_TYPE_LABELS,
 } from "@/lib/partners/parse-partner-signup-params";
 
@@ -17,14 +18,19 @@ export const metadata = {
 };
 
 type PartnerSignupPageProps = {
-  searchParams: Promise<{ type?: string | string[]; draft?: string | string[] }>;
+  searchParams: Promise<{
+    type?: string | string[];
+    draft?: string | string[];
+    category?: string | string[];
+  }>;
 };
 
 export default async function PartnerSignupPage({
   searchParams,
 }: PartnerSignupPageProps) {
   const params = await searchParams;
-  const { type, draftId, typeParam } = parsePartnerSignupSearchParams(params);
+  const { type, draftId, typeParam, category } =
+    parsePartnerSignupSearchParams(params);
 
   if (!type) {
     return (
@@ -36,7 +42,13 @@ export default async function PartnerSignupPage({
   }
 
   const { user } = await getServerUser();
-  const typedSignupPath = buildPartnerSignupTypedPath(type, draftId);
+  // Preserve category through the login round-trip and prefill the wizard.
+  const typedSignupPath = buildPartnerSignupTypedPath(
+    type,
+    draftId,
+    category ?? undefined,
+  );
+  const initialCategory = category ? PARTNER_CATEGORY_LABELS[category] : undefined;
   const pickerPath = buildPartnerSignupPickerPath(draftId);
   const loginHref = `/login?next=${encodeURIComponent(typedSignupPath)}`;
   const typeLabel = PARTNER_TYPE_LABELS[type];
@@ -53,6 +65,7 @@ export default async function PartnerSignupPage({
         <PartnerSignupWizard
           partnerType={type}
           draftId={draftId}
+          initialCategory={initialCategory}
           isAuthenticated={Boolean(user)}
           loginNextPath={typedSignupPath}
         />
