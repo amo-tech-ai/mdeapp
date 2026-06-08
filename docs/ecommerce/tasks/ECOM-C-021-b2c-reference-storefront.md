@@ -3,7 +3,7 @@ id: ECOM-C-021
 task_id: ECOM-C-021
 title: B2C reference storefront (local UX study)
 status: Done
-priority: P2
+priority: P4
 phase: 2
 milestone: M2 - mdeapp commerce bridge
 effort: S
@@ -80,14 +80,12 @@ cd commerce/b2c-storefront && yarn install && yarn dev
 | `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` | from `commerce/.env` |
 | `NEXT_PUBLIC_STRIPE_KEY` | Stripe test publishable key |
 
-## Known patch (reference tree only)
+## Known patch (local reference clone only — not in mdeapp git)
 
-`commerce/b2c-storefront/src/lib/data/products.ts`:
+Apply on dev machine under `commerce/b2c-storefront/` (gitignored local clone). Auditable diff in evidence: [`b2c-products-field-mask.patch`](../evidence/2026-06-07/b2c-products-field-mask.patch).
 
 - Remove `*seller.reviews*` from Store API `fields` mask (500 when reviews not seeded)
 - Use `prod.seller?.reviews?.filter(...) ?? []` for optional reviews
-
-Document patch in evidence — upstream may change on `yarn upgrade`.
 
 ## Acceptance criteria
 
@@ -101,9 +99,13 @@ Document patch in evidence — upstream may change on `yarn upgrade`.
 ## Proof commands
 
 ```bash
+# B2C UI (no auth)
 curl -s -o /dev/null -w "categories %{http_code}\n" http://localhost:3000/fr/categories
+
+# Mercur Store API — key from commerce/.env (server-side)
+source commerce/.env
 curl -s -o /dev/null -w "store products %{http_code}\n" \
-  "http://localhost:9000/store/products?limit=1" \
+  "http://localhost:9000/store/products?limit=1&region_id=<REGION_ID>" \
   -H "x-publishable-api-key: $MEDUSA_PUBLISHABLE_KEY"
 ```
 

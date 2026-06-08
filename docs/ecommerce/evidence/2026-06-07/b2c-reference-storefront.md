@@ -115,7 +115,9 @@ Full upstream `fields` string:
 
 ### Safe workaround (reference tree only)
 
-**File:** `commerce/b2c-storefront/src/lib/data/products.ts` (local patch, not in mdeapp)
+> **Repo note:** `commerce/b2c-storefront/` is a **local reference clone** (not committed to mdeapp git per ADR — no second storefront in repo). The patch below was applied on disk during SAN-724 verification. Auditable diff: [`b2c-products-field-mask.patch`](./b2c-products-field-mask.patch).
+
+**Local path (dev machine):** `commerce/b2c-storefront/src/lib/data/products.ts`
 
 1. **Removed** `*seller.reviews,*seller.reviews.customer,*seller.reviews.seller` from `fields`.
 2. **Guarded** client filter: `prod.seller?.reviews?.filter(...) ?? []` (was throwing when `reviews` undefined).

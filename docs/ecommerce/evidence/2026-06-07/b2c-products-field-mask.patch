@@ -1,0 +1,26 @@
+# Local patch for mercurjs/b2c-marketplace-storefront (reference clone only)
+# Apply under: commerce/b2c-storefront/  (NOT tracked in mdeapp git — local dev clone)
+# Verified: 2026-06-07 against Mercur :9000
+
+--- a/src/lib/data/products.ts
++++ b/src/lib/data/products.ts
+@@ -81,8 +81,9 @@ export const listProducts = async ({
+         offset,
+         region_id: region?.id,
+         fields:
++          // mdeai local Mercur: *seller.reviews* triggers Store API 500 (reviews not seeded).
+           '*variants.calculated_price,+variants.inventory_quantity,*seller,*variants,*seller.products,' +
+-          '*seller.reviews,*seller.reviews.customer,*seller.reviews.seller,*seller.products.variants,*attribute_values,*attribute_values.attribute',
++          '*seller.products.variants,*attribute_values,*attribute_values.attribute',
+         ...queryParams
+       },
+       headers,
+@@ -96,7 +97,7 @@ export const listProducts = async ({
+ 
+       const response = products.filter(prod => {
+         // @ts-ignore Property 'seller' exists but TypeScript doesn't recognize it
+-        const reviews = prod.seller?.reviews.filter(item => !!item) ?? [];
++        const reviews = prod.seller?.reviews?.filter(item => !!item) ?? [];
+         return (
+           // @ts-ignore Property 'seller' exists but TypeScript doesn't recognize it
+           prod?.seller && {
