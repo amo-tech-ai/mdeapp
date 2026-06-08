@@ -1,0 +1,36 @@
+src/lib/commerce/medusa-client.ts
+  s_b36771af174a1f::t_02d04362a71eb6 39-41
+  s_b36771af174a1f::t_6d6b48638b4f9c 112-121,124-125
+scripts/smoke-commerce-client.ts
+  s_b36771af174a1f::t_31bfd7ef68f56f 17,26
+  s_b36771af174a1f::t_c44268d6dbb0c6 22,25
+src/lib/commerce/__tests__/medusa-client.test.ts
+  s_b36771af174a1f::t_affaddc23629c5 70
+  s_b36771af174a1f::t_4e62492934f764 78
+  s_b36771af174a1f::t_96b3ca9a78e165 97-98
+docs/ecommerce/evidence/2026-06-08/ecom-c-007-medusa-client-wrapper.md
+  s_b36771af174a1f::t_f379865f55b667 38-44
+  s_b36771af174a1f::t_9dedebe6ab9af8 59-60
+.npmrc
+  s_b36771af174a1f::t_6ca24d795923b4 1
+package.json
+  s_b36771af174a1f::t_a85d3f90ec7f54 83-84
+src/lib/commerce/commerce-env.ts
+  s_b36771af174a1f::t_c4b06bcbfabb72 63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "6cd3f79edf78b9359c2a134d93a1e77c36482a16",
+  "prompts": {},
+  "sessions": {
+    "s_b36771af174a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e275ed1c-ebc2-46f2-91f8-b18574a1b947",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}

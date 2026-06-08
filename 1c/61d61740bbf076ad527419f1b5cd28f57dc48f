@@ -1,0 +1,23 @@
+src/lib/commerce/__tests__/medusa-client.test.ts
+  s_b36771af174a1f::t_affaddc23629c5 72
+  s_b36771af174a1f::t_4e62492934f764 80
+  s_b36771af174a1f::t_96b3ca9a78e165 99-102,104,110-140,144,146-148
+  s_b36771af174a1f::t_d305ed143887bb 141-142
+  s_b36771af174a1f::t_aa071a4a6f4e6d 49-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "1c61d61740bbf076ad527419f1b5cd28f57dc48f",
+  "prompts": {},
+  "sessions": {
+    "s_b36771af174a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e275ed1c-ebc2-46f2-91f8-b18574a1b947",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}

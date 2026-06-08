@@ -1,0 +1,36 @@
+docs/ecommerce/evidence/2026-06-08/ecom-c-007-medusa-client-wrapper.md
+  s_b36771af174a1f::t_f379865f55b667 38-44
+  s_b36771af174a1f::t_9dedebe6ab9af8 69-70,50,52,56,58
+  s_b36771af174a1f::t_cd5ebf68ed020d 46
+  s_b36771af174a1f::t_61a901a8c1a37a 53
+  s_b36771af174a1f::t_6715e8e0da8200 55
+src/lib/commerce/medusa-client.ts
+  s_b36771af174a1f::t_02d04362a71eb6 48-50,46,51-53,55-56,58-63,72
+  s_b36771af174a1f::t_6d6b48638b4f9c 145-154,166-167,44,47,54,57,65,69,74,160-161,165,177-178,180
+  s_b36771af174a1f::t_c6a2a207aa96c9 39
+  s_b36771af174a1f::t_c49fd15726fd41 164
+scripts/smoke-commerce-client.ts
+  s_b36771af174a1f::t_31bfd7ef68f56f 28,40,22,24-27,31,35-38,42,50
+  s_b36771af174a1f::t_c44268d6dbb0c6 34,39,21,23,51
+src/lib/commerce/__tests__/medusa-client.test.ts
+  s_b36771af174a1f::t_affaddc23629c5 71
+  s_b36771af174a1f::t_4e62492934f764 79
+  s_b36771af174a1f::t_96b3ca9a78e165 98-101,103,109-139,143,145-147
+  s_b36771af174a1f::t_d305ed143887bb 140-141
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "c4f67aa28a8a9457b5194cba9592fce290483679",
+  "prompts": {},
+  "sessions": {
+    "s_b36771af174a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e275ed1c-ebc2-46f2-91f8-b18574a1b947",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
