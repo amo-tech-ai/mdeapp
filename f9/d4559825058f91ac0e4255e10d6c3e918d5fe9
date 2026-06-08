@@ -1,0 +1,28 @@
+src/lib/commerce/medusa-client.ts
+  s_b36771af174a1f::t_9d827826cf9476 212-215,219
+scripts/smoke-commerce-client.ts
+  s_b36771af174a1f::t_8352d197d118a6 4,10-11
+  s_b36771af174a1f::t_9c3e3bba5867ef 44-52,54
+src/lib/commerce/__tests__/commerce-env.test.ts
+  s_b36771af174a1f::t_8cf4e9cc898185 41-49
+scripts/verify-commerce-mdeapp-env.mjs
+  s_b36771af174a1f::t_786b880784bfca 12-22,31-32,34-38
+src/lib/commerce/commerce-env.ts
+  s_b36771af174a1f::t_500fb6cf187d35 40-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "f9d4559825058f91ac0e4255e10d6c3e918d5fe9",
+  "prompts": {},
+  "sessions": {
+    "s_b36771af174a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e275ed1c-ebc2-46f2-91f8-b18574a1b947",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
