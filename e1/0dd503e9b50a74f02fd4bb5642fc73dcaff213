@@ -1,0 +1,39 @@
+src/components/chat/concierge-initial-prompt.tsx
+  s_c3c87a5f088824::t_0f49b2eb223529 39-45,50
+  s_c3c87a5f088824::t_b5f61603eb37e3 3
+  s_c3c87a5f088824::t_edaee1f66b665d 46,56-57
+e2e/helpers/maps-layout.ts
+  s_c3c87a5f088824::t_c4a865b5d757c3 13-28,50-72,87-98
+  s_c3c87a5f088824::t_908094f9c6ab36 44
+  s_c3c87a5f088824::t_7ab3c1e5871226 73-86
+  s_c3c87a5f088824::t_6637e8f16574a3 29-43,45-49
+e2e/home-to-chat.spec.ts
+  s_c3c87a5f088824::t_91a6f1b3356c17 94-100,111-119
+  s_c3c87a5f088824::t_26f8348bfeaa57 1-10,12-22,24,27-31,34-38,41-93,101-110,120-128
+  s_c3c87a5f088824::t_2d0d22653608fb 11
+  s_c3c87a5f088824::t_709c873651e39c 23,25-26,32-33,39-40
+src/lib/concierge-send-user-message.ts
+  s_c3c87a5f088824::t_8839cddae8c631 26-31
+  s_c3c87a5f088824::t_82840f8f8cf465 33-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "e10dd503e9b50a74f02fd4bb5642fc73dcaff213",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_c3c87a5f088824": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f04f82ec-444c-431e-b830-06790ffa02d6",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
