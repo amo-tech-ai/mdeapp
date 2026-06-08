@@ -1,0 +1,19 @@
+src/components/partners/event-host-landing.tsx
+  s_88d284f4974037::t_e64f949c79a3d4 249,252,255,265
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "d714b2c0d9b225fbb4e323c742069dee028845db",
+  "prompts": {},
+  "sessions": {
+    "s_88d284f4974037": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12172277-a42f-4ea5-89db-4f5de4653e40",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
