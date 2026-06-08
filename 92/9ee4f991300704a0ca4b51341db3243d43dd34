@@ -1,0 +1,21 @@
+.nvmrc
+  s_109e73483abc62::t_f6ea2a8241e86e 1
+package.json
+  s_109e73483abc62::t_214bb3aa150bc2 125-127
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "929ee4f991300704a0ca4b51341db3243d43dd34",
+  "prompts": {},
+  "sessions": {
+    "s_109e73483abc62": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4cf62afe-9196-4bf1-85ae-e30c45673ebe",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
