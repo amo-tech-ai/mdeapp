@@ -30,6 +30,13 @@
       "autoPort": false
     },
     {
+      "name": "Next.js UI — worktree (port 3002)",
+      "runtimeExecutable": "infisical",
+      "runtimeArgs": ["run", "--silent", "--env=dev", "--path=/", "--", "npx", "next", "dev", "--webpack", "-p", "3002"],
+      "port": 3002,
+      "autoPort": false
+    },
+    {
       "name": "Mastra Agent (port 4111)",
       "runtimeExecutable": "infisical",
       "runtimeArgs": ["run", "--silent", "--env=dev", "--path=/", "--", "npm", "run", "dev:agent"],

@@ -7,7 +7,7 @@ import { BrowseLayout } from "@/components/browse/BrowseLayout";
 import { BrowseMapContextShell } from "@/components/browse/BrowseMapContextShell";
 import { BrowseMapPanel } from "@/components/browse/BrowseMapPanel";
 import { BrowseMapSheet } from "@/components/browse/BrowseMapSheet";
-import { RentalCard } from "@/components/copilot/rental-card";
+import { RentalBrowseCard } from "@/components/rentals/rental-browse-card";
 import { RentalBrowseFilters } from "@/components/rentals/rental-browse-filters";
 import { EmptyState } from "@/components/empty/empty-state";
 import { Button } from "@/components/ui/button";
@@ -30,8 +30,16 @@ function buildRetryHref(filters: {
   return q ? `/rentals?${q}` : "/rentals";
 }
 
-type RentalBrowseViewProps = {
+function formatCountSubtitle(total: number, shown: number): string {
+  if (total === 0) return "0 apartments";
+  if (total === 1) return "1 apartment";
+  if (shown < total) return `${total} apartments (showing ${shown})`;
+  return `${total} apartments`;
+}
+
+export type RentalBrowseViewProps = {
   results: Rental[];
+  total: number;
   error: string | null;
   neighborhood: string | null;
   beds: string | null;
@@ -40,6 +48,7 @@ type RentalBrowseViewProps = {
 
 function RentalBrowseViewInner({
   results,
+  total,
   error,
   neighborhood,
   beds,
@@ -60,12 +69,14 @@ function RentalBrowseViewInner({
   useBrowseMapSync(pins, "rental");
   useBrowseCardScroll();
 
+  const countLabel = formatCountSubtitle(total, results.length);
+
   return (
     <>
       <BrowseLayout
         testId="rentals-browse"
-        title="Rentals"
-        subtitle="Apartments & rentals in Medellín — browse without chat"
+        title="Rentals in Medellín"
+        subtitle={`Curated long-stay apartments — ${countLabel}`}
         filterBar={
           <RentalBrowseFilters
             neighborhood={neighborhood}
@@ -104,45 +115,18 @@ function RentalBrowseViewInner({
 
           {!error && results.length > 0 ? (
             <div
-              className="grid auto-rows-fr gap-4 sm:grid-cols-2"
+              className="grid gap-4 sm:grid-cols-2"
               aria-label={`${results.length} rentals`}
               data-testid="rentals-grid"
             >
               {results.map((r) => {
                 const pinId = `rental-${r.id}`;
                 return (
-                  <RentalCard
+                  <RentalBrowseCard
                     key={r.id}
-                    id={r.id}
-                    listingId={r.id}
-                    pinId={pinId}
-                    testId={`rental-card-${r.id}`}
+                    rental={r}
                     selected={selectedPinId === pinId}
                     onSelect={() => setSelectedPinId(pinId)}
-                    title={r.title}
-                    neighborhood={r.neighborhood}
-                    nightly_price={r.nightly_price}
-                    bedrooms={r.bedrooms}
-                    wifi={r.wifi}
-                    amenities={r.amenities}
-                    tags={r.tags}
-                    availability={r.availability}
-                    host_name={r.host_name}
-                    photoUrl={r.image}
-                    onSchedule={
-                      r.schedule_viewing_url
-                        ? () => {
-                            try {
-                              const { protocol } = new URL(r.schedule_viewing_url!);
-                              if (protocol === "http:" || protocol === "https:") {
-                                window.open(r.schedule_viewing_url, "_blank", "noopener,noreferrer");
-                              }
-                            } catch {
-                              // malformed URL — silently ignore
-                            }
-                          }
-                        : undefined
-                    }
                   />
                 );
               })}
