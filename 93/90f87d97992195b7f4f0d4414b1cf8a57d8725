@@ -1,0 +1,22 @@
+src/components/marketing/marketing-footer.tsx
+  s_a440d0b65eab4c::t_b6ec60fba9abc0 8-11,14,16,19,23,25-28,32,34-36
+src/__tests__/partners/partner-hub.test.tsx
+  s_a440d0b65eab4c::t_1112e5afdb569b 5
+  s_a440d0b65eab4c::t_5893f968334531 79-115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "9390f87d97992195b7f4f0d4414b1cf8a57d8725",
+  "prompts": {},
+  "sessions": {
+    "s_a440d0b65eab4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b6dee51c-b8c6-4d41-aaeb-6019ba697e63",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
