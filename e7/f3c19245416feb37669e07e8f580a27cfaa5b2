@@ -1,0 +1,27 @@
+src/components/partners/partner-landing-placeholder.tsx
+  s_6119d30d8e324b::t_b4d018fac139c1 1-126
+src/__tests__/partners/partner-landing-placeholders.test.tsx
+  s_6119d30d8e324b::t_83d4ee9204bbac 1-111
+src/app/partners/rentals/page.tsx
+  s_6119d30d8e324b::t_e9f96b5bb513b5 1-29
+src/app/business/ai/page.tsx
+  s_6119d30d8e324b::t_b82115c24dbb81 1-30
+src/app/sponsors/page.tsx
+  s_6119d30d8e324b::t_6c1e722e3aafe9 1-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "e7f3c19245416feb37669e07e8f580a27cfaa5b2",
+  "prompts": {},
+  "sessions": {
+    "s_6119d30d8e324b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5b253b35-e90a-4613-95ac-ff69318485b7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
