@@ -112,7 +112,7 @@ export async function getPublicEvent(
   let eventQuery = supabase
     .from("events")
     .select(
-      "id, slug, name, description, address, city, event_start_time, event_end_time, primary_image_url, currency, latitude, longitude, status, is_active, details, venue_id, event_venues ( name, address, city )",
+      "id, slug, name, description, address, city, event_start_time, event_end_time, primary_image_url, currency, latitude, longitude, status, is_active, details, event_venues ( name, address, city )",
     )
     .in("status", ["published", "live"])
     .eq("is_active", true);

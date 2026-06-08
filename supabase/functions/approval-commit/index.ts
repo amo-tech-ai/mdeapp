@@ -121,11 +121,15 @@ Deno.serve(async (req: Request) => {
 
   const slug = slugifyEventTitle(draft.title);
 
-  const { data: profile } = await service
+  const { data: profile, error: profileErr } = await service
     .from("profiles")
     .select("full_name, avatar_url")
     .eq("id", userId)
     .maybeSingle();
+
+  if (profileErr) {
+    return jr(errorBody("PROFILE_LOOKUP_FAILED", profileErr.message), 500, req);
+  }
 
   const hostDisplay =
     profile?.full_name && profile.full_name.trim()
