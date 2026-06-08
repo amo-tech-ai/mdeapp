@@ -1,0 +1,31 @@
+docs/ecommerce/tasks/INDEX.md
+  s_b36771af174a1f::t_121679d3bfc38a 65-68,70
+  s_b36771af174a1f::t_016d2a17edc260 63-64
+docs/ecommerce/docs/commerce-store-api-fields.md
+  s_b36771af174a1f::t_adc332c2804033 1-100
+docs/ecommerce/tasks/ECOM-C-022-seller-reviews-field-mask.md
+  s_b36771af174a1f::t_8def0b0e317ee2 55-60
+  s_b36771af174a1f::t_54b668d0d492d4 5
+docs/ecommerce/docs/05-medusa-recipes-map.md
+  s_b36771af174a1f::t_d829d362077b20 89-92
+  s_b36771af174a1f::t_7f14fcc61195de 106-109
+  s_b36771af174a1f::t_c15e1e3a802b95 38
+docs/ecommerce/evidence/2026-06-08/ecom-c-022-seller-reviews-field-mask.md
+  s_b36771af174a1f::t_d81db8e5d5e758 1-72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "c2e3ad28fb7a7d287c75aee7b1a0640548bc2d86",
+  "prompts": {},
+  "sessions": {
+    "s_b36771af174a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e275ed1c-ebc2-46f2-91f8-b18574a1b947",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
