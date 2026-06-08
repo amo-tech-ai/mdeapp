@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
+      // Apartment seed images (SAN-718 live data)
+      { protocol: "https", hostname: "picsum.photos" },
     ],
   },
 };
