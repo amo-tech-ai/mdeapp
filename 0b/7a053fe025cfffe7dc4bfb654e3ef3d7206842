@@ -1,0 +1,27 @@
+src/components/modals/booking-checkout-modal.tsx
+  s_32f0283a47e318::t_ac911d3ed09182 4,10-13,28-44,56,58,65,80-82,105,132-145,148,150-155,158-170
+src/components/events/event-checkout-notice.tsx
+  s_32f0283a47e318::t_ac911d3ed09182 4,6,30-38,40-97
+e2e/san-715-checkout-states.spec.ts
+  s_32f0283a47e318::t_ac911d3ed09182 1-285
+src/lib/tickets/checkout-error.ts
+  s_32f0283a47e318::t_ac911d3ed09182 1-49
+src/components/events/event-ticket-tiers.tsx
+  s_32f0283a47e318::t_ac911d3ed09182 83-91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "0b7a053fe025cfffe7dc4bfb654e3ef3d7206842",
+  "prompts": {},
+  "sessions": {
+    "s_32f0283a47e318": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2b95a3c1-cc31-4423-b142-f579acbe9752",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
