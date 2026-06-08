@@ -1,0 +1,9 @@
+src/lib/partners/activate-schema.ts
+  s_26308efd15595e::t_f2831041cbad93 17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "ffc60a4265575b55017c72fae34a88cb33b66cbd",
+  "prompts": {}
+}
