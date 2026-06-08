@@ -1,0 +1,29 @@
+e2e/screens/SCREEN-014-event-detail.spec.ts
+  s_88d284f4974037::t_7cc954a82cef04 72,79
+  s_88d284f4974037::t_ae989522eb4f32 33-37,54-55,57-63
+  s_88d284f4974037::t_816980b2aa2a12 38-53,56
+  s_88d284f4974037::t_0b02bc6798456e 73-78
+src/components/events/event-detail-view.tsx
+  s_88d284f4974037::t_f0d7a7cab8282e 76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "5cc52ce0a58b0c02367aab005b4da0468f713ff5",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_88d284f4974037": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12172277-a42f-4ea5-89db-4f5de4653e40",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
