@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { PARTNER_TYPES } from "@/lib/partners/partner-types";
 
-export const BLOCKED_PARTNER_SETTING_KEYS = new Set([
+const BLOCKED_PARTNER_SETTING_KEYS = new Set([
   "status",
   "tier",
   "completion_score",
@@ -11,7 +11,7 @@ export const BLOCKED_PARTNER_SETTING_KEYS = new Set([
   "prototype",
 ]);
 
-export const ALLOWED_PARTNER_SIGNUP_SETTING_KEYS = new Set([
+const ALLOWED_PARTNER_SIGNUP_SETTING_KEYS = new Set([
   "businessName",
   "category",
   "neighborhood",
