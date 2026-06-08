@@ -1,0 +1,19 @@
+src/components/host/host-nav-rail.tsx
+  s_88d284f4974037::t_f60d7faa881319 55,57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "ab1dcc900eb9ff9ff72aff565fe668c07033f868",
+  "prompts": {},
+  "sessions": {
+    "s_88d284f4974037": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12172277-a42f-4ea5-89db-4f5de4653e40",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
