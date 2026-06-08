@@ -78,6 +78,14 @@ export function PartnerSignupWizard({
       const result = await activatePartnerRequest(payload);
 
       if (!result.ok) {
+        if (result.status === 401) {
+          const next =
+            typeof window !== "undefined"
+              ? `${window.location.pathname}${window.location.search}`
+              : loginNextPath;
+          router.push(`/login?next=${encodeURIComponent(next)}`);
+          return;
+        }
         setView({
           kind: "error",
           message: activateErrorMessage(result.status, result.message),

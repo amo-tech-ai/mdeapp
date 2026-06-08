@@ -81,11 +81,18 @@ export async function activatePartnerRequest(
 ): Promise<ActivatePartnerResult> {
   assertSafeActivatePayload(payload);
 
-  const res = await fetchImpl("/api/partners/activate", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  let res: Response;
+  try {
+    res = await fetchImpl("/api/partners/activate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Partner activation failed";
+    return { ok: false, status: 0, message };
+  }
 
   let body: {
     error?: string;

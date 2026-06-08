@@ -137,6 +137,19 @@ describe("activatePartnerRequest", () => {
       "Sign in to activate your partner account.",
     );
   });
+
+  it("returns typed failure when fetch rejects", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockRejectedValue(new Error("network error"));
+
+    const result = await activatePartnerRequest({ type: "host" }, fetchMock);
+
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.status).toBe(0);
+    expect(result.message).toContain("network error");
+  });
 });
 
 describe("shouldDeferDashboardRedirect", () => {
