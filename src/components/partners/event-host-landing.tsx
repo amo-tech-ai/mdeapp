@@ -246,13 +246,13 @@ export function EventHostLanding() {
 
         <section
           aria-label="Host proof"
-          className="bg-foreground py-16 text-background md:py-20"
+          className="border-y border-border bg-muted/40 py-16 md:py-20"
         >
           <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-semibold text-balance md:text-3xl">
+            <h2 className="text-2xl font-semibold text-balance text-foreground md:text-3xl">
               Hosts ship faster with mdeai
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm text-background/70">
+            <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">
               More hosts → more events → more tickets for tourists and locals
               already searching Medellín.
             </p>
@@ -262,7 +262,7 @@ export function EventHostLanding() {
                   <dt className="text-3xl font-bold tabular-nums text-accent md:text-4xl">
                     {value}
                   </dt>
-                  <dd className="text-sm text-background/70">{label}</dd>
+                  <dd className="text-sm text-muted-foreground">{label}</dd>
                 </div>
               ))}
             </dl>
