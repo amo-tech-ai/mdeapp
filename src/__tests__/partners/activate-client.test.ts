@@ -57,6 +57,12 @@ describe("buildActivatePayload", () => {
         settings: { status: "active", tier: "pro", completion_score: 99 },
       }),
     ).toThrow(/Privileged setting key blocked/);
+    expect(() =>
+      assertSafeActivatePayload({
+        type: "host",
+        settings: { businessName: "Safe Co", hackerKey: "nope" },
+      }),
+    ).toThrow(/Disallowed setting key/);
   });
 });
 

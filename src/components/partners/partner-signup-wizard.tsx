@@ -72,42 +72,58 @@ export function PartnerSignupWizard({
     event.preventDefault();
     if (!isAuthenticated) return;
 
+    const businessName = form.businessName.trim();
+    if (!businessName) {
+      setView({
+        kind: "error",
+        message: "Business name is required.",
+      });
+      return;
+    }
+
     setView({ kind: "loading" });
     startTransition(async () => {
-      const payload = buildActivatePayload(partnerType, form, draftId);
-      const result = await activatePartnerRequest(payload);
+      try {
+        const payload = buildActivatePayload(partnerType, form, draftId);
+        const result = await activatePartnerRequest(payload);
 
-      if (!result.ok) {
-        if (result.status === 401) {
-          const next =
-            typeof window !== "undefined"
-              ? `${window.location.pathname}${window.location.search}`
-              : loginNextPath;
-          router.push(`/login?next=${encodeURIComponent(next)}`);
+        if (!result.ok) {
+          if (result.status === 401) {
+            const next =
+              typeof window !== "undefined"
+                ? `${window.location.pathname}${window.location.search}`
+                : loginNextPath;
+            router.push(`/login?next=${encodeURIComponent(next)}`);
+            return;
+          }
+          setView({
+            kind: "error",
+            message: activateErrorMessage(result.status, result.message),
+          });
           return;
         }
+
+        const dashboardDeferred = shouldDeferDashboardRedirect(
+          result.data.redirectTo,
+        );
+
+        if (!dashboardDeferred) {
+          router.push(result.data.redirectTo);
+          return;
+        }
+
+        setView({
+          kind: "success",
+          created: result.created,
+          data: result.data,
+          dashboardDeferred: true,
+        });
+      } catch {
         setView({
           kind: "error",
-          message: activateErrorMessage(result.status, result.message),
+          message: "Something went wrong. Please try again.",
         });
-        return;
       }
-
-      const dashboardDeferred = shouldDeferDashboardRedirect(
-        result.data.redirectTo,
-      );
-
-      if (!dashboardDeferred) {
-        router.push(result.data.redirectTo);
-        return;
-      }
-
-      setView({
-        kind: "success",
-        created: result.created,
-        data: result.data,
-        dashboardDeferred: true,
-      });
     });
   }
 

@@ -217,9 +217,9 @@ describe("sanitizePartnerSettings", () => {
         tier: "pro",
         completion_score: 99,
         activated_at: "2026-01-01",
-        name: "OK",
+        businessName: "OK",
       }),
-    ).toEqual({ name: "OK" });
+    ).toEqual({ businessName: "OK" });
   });
 
   it("blocks prototype pollution keys", () => {
@@ -228,10 +228,21 @@ describe("sanitizePartnerSettings", () => {
         ["__proto__"]: { polluted: true },
         constructor: { polluted: true },
         prototype: { polluted: true },
-        name: "OK",
+        businessName: "OK",
       }),
-    ).toEqual({ name: "OK" });
-    expect(Object.getPrototypeOf(sanitizePartnerSettings({ name: "OK" }))).toBeNull();
+    ).toEqual({ businessName: "OK" });
+    expect(
+      Object.getPrototypeOf(sanitizePartnerSettings({ businessName: "OK" })),
+    ).toBeNull();
+  });
+
+  it("strips keys outside signup whitelist", () => {
+    expect(
+      sanitizePartnerSettings({
+        businessName: "Roof",
+        hackerKey: "nope",
+      }),
+    ).toEqual({ businessName: "Roof" });
   });
 });
 

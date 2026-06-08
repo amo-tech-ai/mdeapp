@@ -21,7 +21,7 @@ export const metadata = {
 };
 
 type PartnerSignupPageProps = {
-  searchParams: Promise<{ type?: string; draft?: string }>;
+  searchParams: Promise<{ type?: string | string[]; draft?: string | string[] }>;
 };
 
 function buildSignupPath(type: string, draft?: string) {
@@ -35,9 +35,6 @@ export default async function PartnerSignupPage({
 }: PartnerSignupPageProps) {
   const params = await searchParams;
   const { type, draftId, typeParam } = parsePartnerSignupSearchParams(params);
-  const { user } = await getServerUser();
-
-  const loginNextPath = buildSignupPath(type ?? typeParam ?? "host", draftId);
 
   if (!type) {
     return (
@@ -66,6 +63,9 @@ export default async function PartnerSignupPage({
       </main>
     );
   }
+
+  const { user } = await getServerUser();
+  const loginNextPath = buildSignupPath(type, draftId);
 
   return (
     <main className="min-h-screen flex items-center justify-center p-8 bg-background">

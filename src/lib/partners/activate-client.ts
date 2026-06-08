@@ -1,4 +1,5 @@
 import type { ActivatePartnerInput } from "@/lib/partners/activate-schema";
+import { assertAllowedSignupSettings } from "@/lib/partners/activate-schema";
 import {
   PARTNER_ACTIVATE_REDIRECT,
   type PartnerType,
@@ -30,16 +31,6 @@ export type ActivatePartnerResult =
       message: string;
     };
 
-const PRIVILEGED_SETTING_KEYS = new Set([
-  "status",
-  "tier",
-  "completion_score",
-  "activated_at",
-  "__proto__",
-  "constructor",
-  "prototype",
-]);
-
 export function buildActivatePayload(
   type: PartnerType,
   form: PartnerSignupFormState,
@@ -62,13 +53,7 @@ export function buildActivatePayload(
 }
 
 export function assertSafeActivatePayload(payload: ActivatePartnerInput): void {
-  if (payload.settings) {
-    for (const key of Object.keys(payload.settings)) {
-      if (PRIVILEGED_SETTING_KEYS.has(key.toLowerCase())) {
-        throw new Error(`Privileged setting key blocked: ${key}`);
-      }
-    }
-  }
+  assertAllowedSignupSettings(payload.settings);
 }
 
 export function shouldDeferDashboardRedirect(redirectTo: string): boolean {

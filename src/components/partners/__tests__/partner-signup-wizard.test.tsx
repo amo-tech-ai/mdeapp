@@ -129,6 +129,24 @@ describe("PartnerSignupWizard (submit flow)", () => {
     vi.clearAllMocks();
   });
 
+  it("rejects whitespace-only business name", async () => {
+    const { container, unmount } = mountWizard();
+    const businessName = container.querySelector(
+      "#businessName",
+    ) as HTMLInputElement;
+    setInputValue(businessName, "   ");
+    const form = container.querySelector("form") as HTMLFormElement;
+    await act(async () => {
+      form.requestSubmit();
+    });
+
+    expect(mocks.activatePartnerRequest).not.toHaveBeenCalled();
+    expect(container.querySelector('[data-testid="partner-signup-error"]'))
+      .toBeTruthy();
+    expect(container.textContent).toContain("Business name is required.");
+    unmount();
+  });
+
   it("shows API error when activation fails", async () => {
     mocks.activatePartnerRequest.mockResolvedValue({
       ok: false,

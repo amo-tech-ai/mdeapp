@@ -8,12 +8,14 @@ export function isPartnerType(value: string | null | undefined): value is Partne
 }
 
 export function parsePartnerSignupSearchParams(params: {
-  type?: string;
-  draft?: string;
+  type?: string | string[];
+  draft?: string | string[];
 }) {
-  const typeParam = params.type?.trim() ?? null;
+  const rawType = Array.isArray(params.type) ? params.type[0] : params.type;
+  const rawDraft = Array.isArray(params.draft) ? params.draft[0] : params.draft;
+  const typeParam = rawType?.trim() ?? null;
   const type = isPartnerType(typeParam) ? typeParam : null;
-  const draftRaw = params.draft?.trim();
+  const draftRaw = rawDraft?.trim();
   const draftId =
     draftRaw && UUID_RE.test(draftRaw) ? draftRaw : undefined;
 
