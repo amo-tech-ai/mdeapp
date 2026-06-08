@@ -80,6 +80,15 @@ export function EventTicketTiers({
       <h2 id="event-tiers-heading" className="text-lg font-semibold">
         Tickets
       </h2>
+      {event.tickets.length > 0 && fromTier === null ? (
+        <div
+          className="mt-3 rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground"
+          data-testid="event-tiers-sold-out"
+        >
+          All tickets for this event are sold out. Join the waitlist or check back closer to the event date.
+        </div>
+      ) : null}
+
       <ul className="mt-3 space-y-3" data-testid="event-tier-list">
         {event.tickets.length === 0 ? (
           <li

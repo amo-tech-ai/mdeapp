@@ -1,11 +1,16 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { AlertCircle, CreditCard, Wifi } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { PublicEventDetail, PublicEventTicket } from "@/lib/events/types";
 import { formatTicketPrice } from "@/lib/events/format-event";
 import { submitTicketCheckout } from "@/lib/tickets/submit-ticket-checkout";
 import { persistWalletAccess } from "@/components/tickets/checkout-wallet-link";
+import {
+  classifyCheckoutError,
+  type ClassifiedCheckoutError,
+} from "@/lib/tickets/checkout-error";
 import { useModalA11y } from "@/lib/use-modal-a11y";
 
 export type BookingCheckoutTarget = {
@@ -20,6 +25,23 @@ type BookingCheckoutModalProps = {
   onClose: () => void;
 };
 
+function CheckoutErrorDisplay({ err }: { err: ClassifiedCheckoutError }) {
+  const Icon = err.kind === "network" ? Wifi : AlertCircle;
+  return (
+    <div
+      role="alert"
+      data-testid="booking-checkout-error"
+      className="flex gap-2 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive"
+    >
+      <Icon className="mt-0.5 size-4 shrink-0" aria-hidden />
+      <div>
+        <p className="font-medium">{err.heading}</p>
+        <p className="mt-0.5 text-xs text-destructive/80">{err.detail}</p>
+      </div>
+    </div>
+  );
+}
+
 function BookingCheckoutForm({
   target,
   returnPath,
@@ -31,15 +53,16 @@ function BookingCheckoutForm({
 }) {
   const [buyerName, setBuyerName] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [checkoutErr, setCheckoutErr] = useState<ClassifiedCheckoutError | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  // Stable across retries — guarantees idempotency (no double-charge on network retry)
   const [idempotencyKey] = useState(() => crypto.randomUUID());
 
   const lineTotal = target.tier.priceCents * target.quantity;
 
   const handlePay = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setCheckoutErr(null);
     setSubmitting(true);
     try {
       const result = await submitTicketCheckout({
@@ -54,7 +77,9 @@ function BookingCheckoutForm({
       persistWalletAccess(result.orderId, result.walletAccessToken);
       window.location.assign(result.stripeSessionUrl);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Checkout failed");
+      const isNetwork = err instanceof TypeError && err.message.includes("fetch");
+      const msg = err instanceof Error ? err.message : undefined;
+      setCheckoutErr(classifyCheckoutError(msg, undefined, isNetwork));
       setSubmitting(false);
     }
   };
@@ -77,6 +102,7 @@ function BookingCheckoutForm({
           </dd>
         </div>
       </dl>
+
       <form className="mt-4 space-y-3" onSubmit={handlePay}>
         <label className="block text-sm">
           <span className="font-medium">Full name</span>
@@ -103,25 +129,45 @@ function BookingCheckoutForm({
             disabled={submitting}
           />
         </label>
-        {error ? (
-          <p
-            role="alert"
-            className="text-sm text-destructive"
-            data-testid="booking-checkout-error"
-          >
-            {error}
+
+        {checkoutErr ? <CheckoutErrorDisplay err={checkoutErr} /> : null}
+
+        <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+          <CreditCard className="size-3.5 shrink-0" aria-hidden />
+          <span>
+            Visa, Mastercard, Apple Pay & Google Pay accepted at Stripe checkout.
+            Payment is never processed in this browser.
+          </span>
+        </div>
+
+        {checkoutErr?.canRetry ? (
+          <p className="text-xs text-muted-foreground" data-testid="booking-checkout-retry-note">
+            Retrying is safe — your payment info will not be duplicated.
           </p>
         ) : null}
-        <p className="text-xs text-muted-foreground">
-          You will redirect to Stripe Checkout. Payment is never processed in the browser.
-        </p>
+
         <div className="flex justify-end gap-2 pt-2">
-          <Button type="button" variant="outline" onClick={onClose} disabled={submitting}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            disabled={submitting}
+          >
             Cancel
           </Button>
-          <Button type="submit" data-testid="booking-checkout-submit" disabled={submitting}>
-            {submitting ? "Redirecting…" : "Pay with Stripe"}
-          </Button>
+          {checkoutErr && !checkoutErr.canRetry ? null : (
+            <Button
+              type="submit"
+              data-testid="booking-checkout-submit"
+              disabled={submitting}
+            >
+              {submitting
+                ? "Redirecting…"
+                : checkoutErr?.canRetry
+                  ? "Try again"
+                  : "Pay with Stripe"}
+            </Button>
+          )}
         </div>
       </form>
     </>
