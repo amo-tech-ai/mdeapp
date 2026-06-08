@@ -1,0 +1,25 @@
+docs/ecommerce/evidence/2026-06-07/b2c-products-field-mask.patch
+  s_b36771af174a1f::t_3da79b9a9841b8 1-26
+docs/ecommerce/evidence/2026-06-07/b2c-reference-storefront.md
+  s_b36771af174a1f::t_6e1cd1251c2686 118-120
+docs/ecommerce/tasks/ECOM-C-021-b2c-reference-storefront.md
+  s_b36771af174a1f::t_8eb3bb9a4716d5 6
+  s_b36771af174a1f::t_140bb103f1330d 83,85
+  s_b36771af174a1f::t_91c9e9939cae41 102,104-106,108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "83837e6512e1cadf4a4d6097deabbef5e8c727c2",
+  "prompts": {},
+  "sessions": {
+    "s_b36771af174a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e275ed1c-ebc2-46f2-91f8-b18574a1b947",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
