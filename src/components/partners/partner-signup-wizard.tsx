@@ -29,6 +29,8 @@ import type { PartnerType } from "@/lib/partners/partner-types";
 type PartnerSignupWizardProps = {
   partnerType: PartnerType;
   draftId?: string;
+  /** Prefills the Category field when the hub passes ?category= (venue subtypes). */
+  initialCategory?: string;
   isAuthenticated: boolean;
   loginNextPath: string;
 };
@@ -55,6 +57,7 @@ function PartnerTypeBadge({ label }: { label: string }) {
 export function PartnerSignupWizard({
   partnerType,
   draftId,
+  initialCategory,
   isAuthenticated,
   loginNextPath,
 }: PartnerSignupWizardProps) {
@@ -63,7 +66,7 @@ export function PartnerSignupWizard({
   const [view, setView] = useState<ViewState>({ kind: "form" });
   const [form, setForm] = useState<PartnerSignupFormState>({
     businessName: "",
-    category: "",
+    category: initialCategory ?? "",
     neighborhood: "",
   });
 
@@ -245,7 +248,7 @@ export function PartnerSignupWizard({
                 name="category"
                 value={form.category ?? ""}
                 onChange={(e) => updateField("category", e.target.value)}
-                placeholder="Nightlife"
+                placeholder="e.g., Restaurant, Café"
               />
             </div>
             <div className="flex flex-col gap-2">

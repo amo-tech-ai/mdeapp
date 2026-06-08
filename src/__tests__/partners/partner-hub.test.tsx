@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { MarketingFooter } from "@/components/marketing/marketing-footer";
 import { MarketingPageShell } from "@/components/marketing/marketing-page-shell";
 import { PartnerHub } from "@/components/partners/partner-hub";
+import { PARTNER_HUB_CARDS } from "@/lib/partners/partner-hub-config";
 
 vi.mock("next/link", () => ({
   default: ({
@@ -21,12 +22,15 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-const HUB_LINKS = [
-  "/partners/signup?type=host",
+// Every hub card routes to the LIVE typed signup (no dead landings) — PR #131
+// prod validation found /venues, /sponsors, /business/ai, /partners/{rentals,
+// restaurants,cafes,nightlife} all 404.
+const SIGNUP_TYPES = ["host", "venue", "broker", "sponsor", "agency"] as const;
+const DEAD_HUB_ROUTES = [
   "/venues",
-  "/partners/rentals",
   "/sponsors",
   "/business/ai",
+  "/partners/rentals",
   "/partners/restaurants",
   "/partners/cafes",
   "/partners/nightlife",
@@ -49,10 +53,28 @@ describe("PartnerHub (/partners)", () => {
     expect(html).toContain("Grow your business with mdeai");
   });
 
-  it("links all eight program cards to funnel destinations", () => {
-    for (const href of HUB_LINKS) {
-      expect(html).toContain(`href="${href}"`);
+  it("routes every program card to the live typed signup", () => {
+    for (const type of SIGNUP_TYPES) {
+      expect(html).toContain(`href="/partners/signup?type=${type}`);
     }
+  });
+
+  it("links no dead/unbuilt landing route", () => {
+    for (const route of DEAD_HUB_ROUTES) {
+      expect(html).not.toContain(`href="${route}"`);
+    }
+  });
+
+  it("venue subtype cards carry the category param", () => {
+    const hrefOf = (key: string) =>
+      PARTNER_HUB_CARDS.find((c) => c.key === key)?.href;
+    expect(hrefOf("restaurants")).toBe(
+      "/partners/signup?type=venue&category=restaurant",
+    );
+    expect(hrefOf("cafes")).toBe("/partners/signup?type=venue&category=cafe");
+    expect(hrefOf("nightlife")).toBe(
+      "/partners/signup?type=venue&category=nightclub",
+    );
   });
 
   it("routes primary CTA to signup landing (not duplicating wizard)", () => {

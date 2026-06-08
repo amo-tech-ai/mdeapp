@@ -117,6 +117,19 @@ describe("PartnerSignupWizard (static markup)", () => {
     expect(html).toContain('data-testid="partner-signup-submit"');
   });
 
+  it("initializes the category field from initialCategory", () => {
+    const html = renderToStaticMarkup(
+      <PartnerSignupWizard
+        partnerType="venue"
+        initialCategory="Restaurant"
+        isAuthenticated
+        loginNextPath="/partners/signup?type=venue&category=restaurant"
+      />,
+    );
+    expect(html).toContain('id="category"');
+    expect(html).toContain('value="Restaurant"');
+  });
+
   it("does not show internal roadmap copy in the form footer", () => {
     const html = renderToStaticMarkup(
       <PartnerSignupWizard
