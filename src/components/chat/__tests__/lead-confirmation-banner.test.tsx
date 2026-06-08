@@ -14,7 +14,7 @@ describe("LeadConfirmationBanner (SAN-716 / SCREEN-008)", () => {
     vi.mocked(useRentalUi).mockReturnValue({
       leadConfirmation: null,
       clearLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     const html = renderToStaticMarkup(React.createElement(LeadConfirmationBanner));
     expect(html).toBe("");
@@ -28,7 +28,7 @@ describe("LeadConfirmationBanner (SAN-716 / SCREEN-008)", () => {
         listingTitle: "2BR Laureles Apartment",
       },
       clearLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     const html = renderToStaticMarkup(React.createElement(LeadConfirmationBanner));
     expect(html).toContain('data-testid="lead-confirmation-card"');
@@ -42,7 +42,7 @@ describe("LeadConfirmationBanner (SAN-716 / SCREEN-008)", () => {
         listingTitle: "Poblado Studio",
       },
       clearLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     const html = renderToStaticMarkup(React.createElement(LeadConfirmationBanner));
     expect(html).toContain("Viewing scheduled");
@@ -56,7 +56,7 @@ describe("LeadConfirmationBanner (SAN-716 / SCREEN-008)", () => {
         listingTitle: "Envigado Studio",
       },
       clearLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     const html = renderToStaticMarkup(React.createElement(LeadConfirmationBanner));
     expect(html).toContain("Envigado Studio");
@@ -72,7 +72,7 @@ describe("LeadConfirmationBanner (SAN-716 / SCREEN-008)", () => {
         listingTitle: "Laureles 2BR",
       },
       clearLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     const html = renderToStaticMarkup(React.createElement(LeadConfirmationBanner));
     expect(html).toContain(message);
@@ -86,7 +86,7 @@ describe("LeadConfirmationBanner (SAN-716 / SCREEN-008)", () => {
         listingTitle: "Test Rental",
       },
       clearLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     const html = renderToStaticMarkup(React.createElement(LeadConfirmationBanner));
     expect(html).toContain("Dismiss");
@@ -101,7 +101,7 @@ describe("LeadConfirmationBanner (SAN-716 / SCREEN-008)", () => {
         listingTitle: "Test Rental",
       },
       clearLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     const html = renderToStaticMarkup(React.createElement(LeadConfirmationBanner));
     expect(html).toContain('role="status"');

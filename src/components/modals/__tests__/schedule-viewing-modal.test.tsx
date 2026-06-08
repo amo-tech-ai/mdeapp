@@ -29,7 +29,7 @@ describe("ScheduleViewingModal (SAN-716 / SCREEN-008)", () => {
       scheduleTarget: null,
       closeScheduleViewing: vi.fn(),
       setLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     const html = renderToStaticMarkup(React.createElement(ScheduleViewingModal));
     expect(html).toBe("");
@@ -40,7 +40,7 @@ describe("ScheduleViewingModal (SAN-716 / SCREEN-008)", () => {
       scheduleTarget: MOCK_TARGET,
       closeScheduleViewing: vi.fn(),
       setLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     const html = renderToStaticMarkup(React.createElement(ScheduleViewingModal));
     expect(html).toContain('data-testid="schedule-viewing-modal"');
@@ -51,7 +51,7 @@ describe("ScheduleViewingModal (SAN-716 / SCREEN-008)", () => {
       scheduleTarget: MOCK_TARGET,
       closeScheduleViewing: vi.fn(),
       setLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     const html = renderToStaticMarkup(React.createElement(ScheduleViewingModal));
     expect(html).toContain("2BR Laureles Apartment");
@@ -63,7 +63,7 @@ describe("ScheduleViewingModal (SAN-716 / SCREEN-008)", () => {
       scheduleTarget: MOCK_TARGET,
       closeScheduleViewing: vi.fn(),
       setLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     const html = renderToStaticMarkup(React.createElement(ScheduleViewingModal));
     expect(html).toContain('name="name"');
@@ -77,7 +77,7 @@ describe("ScheduleViewingModal (SAN-716 / SCREEN-008)", () => {
       scheduleTarget: MOCK_TARGET,
       closeScheduleViewing: vi.fn(),
       setLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     const html = renderToStaticMarkup(React.createElement(ScheduleViewingModal));
     // Two required fields: name + email
@@ -90,7 +90,7 @@ describe("ScheduleViewingModal (SAN-716 / SCREEN-008)", () => {
       scheduleTarget: MOCK_TARGET,
       closeScheduleViewing: vi.fn(),
       setLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     const html = renderToStaticMarkup(React.createElement(ScheduleViewingModal));
     expect(html).toContain("Phone (optional)");
@@ -101,7 +101,7 @@ describe("ScheduleViewingModal (SAN-716 / SCREEN-008)", () => {
       scheduleTarget: MOCK_TARGET,
       closeScheduleViewing: vi.fn(),
       setLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     const html = renderToStaticMarkup(React.createElement(ScheduleViewingModal));
     expect(html).toContain("Submit");
@@ -113,7 +113,7 @@ describe("ScheduleViewingModal (SAN-716 / SCREEN-008)", () => {
       scheduleTarget: MOCK_TARGET,
       closeScheduleViewing: vi.fn(),
       setLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     const html = renderToStaticMarkup(React.createElement(ScheduleViewingModal));
     expect(html).toContain('role="dialog"');
@@ -126,7 +126,7 @@ describe("ScheduleViewingModal (SAN-716 / SCREEN-008)", () => {
       scheduleTarget: MOCK_TARGET,
       closeScheduleViewing: vi.fn(),
       setLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     // Error is null on initial render — verify the testid is NOT present (null renders nothing)
     const html = renderToStaticMarkup(React.createElement(ScheduleViewingModal));
@@ -138,7 +138,7 @@ describe("ScheduleViewingModal (SAN-716 / SCREEN-008)", () => {
       scheduleTarget: MOCK_TARGET,
       closeScheduleViewing: vi.fn(),
       setLeadConfirmation: vi.fn(),
-    } as ReturnType<typeof useRentalUi>);
+    } as unknown as ReturnType<typeof useRentalUi>);
 
     const html = renderToStaticMarkup(React.createElement(ScheduleViewingModal));
     expect(html).toContain('data-testid="schedule-viewing-submit"');
