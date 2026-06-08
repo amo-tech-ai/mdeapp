@@ -62,8 +62,11 @@ Phase 5:             M-008…M-013 (after C-020)
 
 | Order | ID | Title | Linear | Depends |
 |---:|---|---|---|---|
+| 8b | [ECOM-C-021](./ECOM-C-021-b2c-reference-storefront.md) | B2C reference storefront (local UX study) | [SAN-724](https://linear.app/sanjiovani/issue/SAN-724) | C-018 |
 | 9 | [ECOM-C-007](./ECOM-C-007-medusa-client-wrapper.md) | Medusa JS SDK wrapper | [SAN-635](https://linear.app/sanjiovani/issue/SAN-635) | C-018, C-006 |
 | 10 | [ECOM-C-008](./ECOM-C-008-commerce-api-proxy.md) | Commerce API proxy | [SAN-636](https://linear.app/sanjiovani/issue/SAN-636) | C-007, C-018 |
+
+> **C-021 Done (SAN-724)** — reference only at `commerce/b2c-storefront` :3000. Evidence: [`evidence/2026-06-07/b2c-reference-storefront.md`](../evidence/2026-06-07/b2c-reference-storefront.md). Field-mask policy → SAN-725.
 
 ---
 
