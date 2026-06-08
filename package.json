@@ -71,6 +71,7 @@
     "@copilotkit/runtime": "1.55.2",
     "@googlemaps/markerclusterer": "^2.6.2",
     "@googlemaps/places": "2.4.1",
+    "@langchain/core": "1.1.48",
     "@libsql/client": "^0.15.15",
     "@mastra/client-js": "beta",
     "@mastra/core": "beta",
@@ -121,5 +122,8 @@
   "overrides": {
     "prismjs": ">=1.30.0",
     "langsmith": ">=0.5.27"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
