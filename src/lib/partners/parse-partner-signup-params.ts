@@ -39,8 +39,10 @@ export function parsePartnerSignupSearchParams(params: {
   const draftId =
     draftRaw && UUID_RE.test(draftRaw) ? draftRaw : undefined;
   const categoryParam = rawCategory?.trim() ?? null;
-  // Only the allow-listed venue subtypes are accepted; anything else is ignored.
-  const category = isPartnerCategory(categoryParam) ? categoryParam : null;
+  // Category is a venue subtype: only honored when type=venue, and only for the
+  // allow-listed values; anything else is ignored.
+  const category =
+    type === "venue" && isPartnerCategory(categoryParam) ? categoryParam : null;
 
   return { type, typeParam, draftId, category, categoryParam };
 }

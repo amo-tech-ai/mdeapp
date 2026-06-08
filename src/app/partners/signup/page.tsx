@@ -63,6 +63,9 @@ export default async function PartnerSignupPage({
       />
       <main className="flex flex-1 items-center justify-center p-4 sm:p-8">
         <PartnerSignupWizard
+          // Remount when the signup context (type/category) changes so the
+          // prefilled category never goes stale across soft navigations.
+          key={`${type}:${category ?? ""}`}
           partnerType={type}
           draftId={draftId}
           initialCategory={initialCategory}

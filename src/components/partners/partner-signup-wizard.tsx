@@ -248,7 +248,7 @@ export function PartnerSignupWizard({
                 name="category"
                 value={form.category ?? ""}
                 onChange={(e) => updateField("category", e.target.value)}
-                placeholder="Nightlife"
+                placeholder="e.g., Restaurant, Café"
               />
             </div>
             <div className="flex flex-col gap-2">

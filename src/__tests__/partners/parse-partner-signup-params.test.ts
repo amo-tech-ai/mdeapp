@@ -69,6 +69,15 @@ describe("parsePartnerSignupSearchParams", () => {
     expect(result.categoryParam).toBe("casino");
   });
 
+  it("ignores category for non-venue types", () => {
+    const result = parsePartnerSignupSearchParams({
+      type: "host",
+      category: "restaurant",
+    });
+    expect(result.category).toBeNull();
+    expect(result.categoryParam).toBe("restaurant");
+  });
+
   it("isPartnerCategory guard matches the allow-list", () => {
     expect(isPartnerCategory("restaurant")).toBe(true);
     expect(isPartnerCategory("cafe")).toBe(true);
