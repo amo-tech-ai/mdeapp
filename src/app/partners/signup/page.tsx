@@ -6,7 +6,8 @@ import {
   PARTNER_TYPE_LABELS,
 } from "@/lib/partners/parse-partner-signup-params";
 import { PARTNER_TYPES } from "@/lib/partners/partner-types";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -52,11 +53,13 @@ export default async function PartnerSignupPage({
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
             {PARTNER_TYPES.map((partnerType) => (
-              <Button key={partnerType} variant="outline" asChild>
-                <Link href={buildSignupPath(partnerType, draftId)}>
-                  {PARTNER_TYPE_LABELS[partnerType]}
-                </Link>
-              </Button>
+              <Link
+                key={partnerType}
+                href={buildSignupPath(partnerType, draftId)}
+                className={cn(buttonVariants({ variant: "outline" }), "w-full")}
+              >
+                {PARTNER_TYPE_LABELS[partnerType]}
+              </Link>
             ))}
           </CardContent>
         </Card>

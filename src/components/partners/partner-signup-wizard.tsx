@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -113,11 +114,12 @@ export function PartnerSignupWizard({
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <Button asChild>
-            <Link href={`/login?next=${encodeURIComponent(loginNextPath)}`}>
-              Sign in
-            </Link>
-          </Button>
+          <Link
+            href={`/login?next=${encodeURIComponent(loginNextPath)}`}
+            className={cn(buttonVariants(), "inline-flex")}
+          >
+            Sign in
+          </Link>
         </CardFooter>
       </Card>
     );
