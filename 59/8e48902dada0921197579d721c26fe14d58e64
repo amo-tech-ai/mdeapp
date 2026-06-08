@@ -1,0 +1,24 @@
+src/mastra/lib/search-logs.ts
+  s_2966fc0e2798ad::t_d74a310adb1ccc 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "598e48902dada0921197579d721c26fe14d58e64",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_2966fc0e2798ad": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e7c78d40-506f-4042-9220-9ea259f054e2",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
