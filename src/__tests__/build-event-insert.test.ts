@@ -39,6 +39,17 @@ describe("buildEventInsert", () => {
     });
   });
 
+  it("snapshots host_display when hostDisplay is provided", () => {
+    const row = buildEventInsert(draft, "user-123", "slug", {
+      name: "Roberto Host",
+      avatarUrl: "https://example.com/host.png",
+    });
+    expect(row.details.host_display).toEqual({
+      name: "Roberto Host",
+      avatar_url: "https://example.com/host.png",
+    });
+  });
+
   it("defaults optional fields to null / empty without throwing", () => {
     const row = buildEventInsert({ title: "T", dateIso: "2026-01-01T00:00:00Z" }, "u", "t");
     expect(row.description).toBeNull();

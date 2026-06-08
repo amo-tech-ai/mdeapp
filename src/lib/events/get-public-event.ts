@@ -1,6 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { isEventLookupUuid } from "./event-lookup";
-import type { PublicEventDetail, PublicEventTicket } from "./types";
+import { parseEventHostDisplay } from "./parse-host-display";
+import type {
+  PublicEventDetail,
+  PublicEventHost,
+  PublicEventTicket,
+  PublicEventVenue,
+} from "./types";
 
 type EventRow = {
   id: string;
@@ -17,6 +23,15 @@ type EventRow = {
   longitude: number | string | null;
   status: string;
   is_active: boolean;
+  details: unknown;
+  venue_id: string | null;
+  event_venues: VenueRow | VenueRow[] | null;
+};
+
+type VenueRow = {
+  name: string;
+  address: string;
+  city: string;
 };
 
 type TicketRow = {
@@ -47,7 +62,28 @@ function mapTicket(row: TicketRow): PublicEventTicket {
   };
 }
 
-function mapEvent(row: EventRow, tickets: PublicEventTicket[]): PublicEventDetail {
+function mapVenue(row: VenueRow | null): PublicEventVenue | null {
+  if (!row?.name?.trim()) return null;
+  return {
+    name: row.name.trim(),
+    address: row.address?.trim() || null,
+    city: row.city?.trim() || null,
+  };
+}
+
+function normalizeVenueRow(
+  venue: VenueRow | VenueRow[] | null | undefined,
+): VenueRow | null {
+  if (!venue) return null;
+  return Array.isArray(venue) ? (venue[0] ?? null) : venue;
+}
+
+function mapEvent(
+  row: EventRow,
+  tickets: PublicEventTicket[],
+  host: PublicEventHost | null,
+  venue: PublicEventVenue | null,
+): PublicEventDetail {
   return {
     id: row.id,
     slug: row.slug,
@@ -61,6 +97,8 @@ function mapEvent(row: EventRow, tickets: PublicEventTicket[]): PublicEventDetai
     currency: row.currency,
     latitude: toNumber(row.latitude),
     longitude: toNumber(row.longitude),
+    host,
+    venue,
     tickets,
   };
 }
@@ -74,7 +112,7 @@ export async function getPublicEvent(
   let eventQuery = supabase
     .from("events")
     .select(
-      "id, slug, name, description, address, city, event_start_time, event_end_time, primary_image_url, currency, latitude, longitude, status, is_active",
+      "id, slug, name, description, address, city, event_start_time, event_end_time, primary_image_url, currency, latitude, longitude, status, is_active, details, venue_id, event_venues ( name, address, city )",
     )
     .in("status", ["published", "live"])
     .eq("is_active", true);
@@ -87,14 +125,18 @@ export async function getPublicEvent(
 
   if (eventError || !eventRow) return null;
 
+  const row = eventRow as EventRow;
+  const host = parseEventHostDisplay(row.details);
+  const venue = mapVenue(normalizeVenueRow(row.event_venues));
+
   const { data: ticketRows, error: ticketError } = await supabase
     .from("event_tickets")
     .select("id, name, price_cents, currency, qty_total, qty_sold, position")
-    .eq("event_id", eventRow.id)
+    .eq("event_id", row.id)
     .eq("is_active", true)
     .order("position", { ascending: true });
 
   if (ticketError) return null;
 
-  return mapEvent(eventRow as EventRow, (ticketRows ?? []).map(mapTicket));
+  return mapEvent(row, (ticketRows ?? []).map(mapTicket), host, venue);
 }

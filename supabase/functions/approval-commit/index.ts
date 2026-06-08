@@ -120,9 +120,21 @@ Deno.serve(async (req: Request) => {
   }
 
   const slug = slugifyEventTitle(draft.title);
+
+  const { data: profile } = await service
+    .from("profiles")
+    .select("full_name, avatar_url")
+    .eq("id", userId)
+    .maybeSingle();
+
+  const hostDisplay =
+    profile?.full_name && profile.full_name.trim()
+      ? { name: profile.full_name.trim(), avatarUrl: profile.avatar_url }
+      : undefined;
+
   const { data: eventRow, error: eventErr } = await service
     .from("events")
-    .insert(buildEventInsert(draft, userId, slug))
+    .insert(buildEventInsert(draft, userId, slug, hostDisplay))
     .select("id, slug")
     .single();
 

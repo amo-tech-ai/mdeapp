@@ -61,7 +61,7 @@ test.describe(`${SCREEN_ID} event detail page`, () => {
       assertConsoleClean(errors);
     });
 
-    test("slug route shows tiers and opens checkout modal", async ({ page }) => {
+    test("slug route shows host, venue, tiers and opens checkout modal", async ({ page }) => {
       const errors = watchCriticalConsoleErrors(page);
       await page.goto(`/events/${KNOWN_SLUG}`, { waitUntil: "domcontentloaded" });
 
@@ -77,8 +77,26 @@ test.describe(`${SCREEN_ID} event detail page`, () => {
         expect(title?.trim().length).toBeGreaterThan(0);
       }
 
+      await expect(page.locator('[data-testid="event-host-block"]')).toBeVisible();
+      await expect(page.locator('[data-testid="event-host-block"]')).toContainText(
+        "Hosted by",
+      );
+      await expect(page.locator('[data-testid="event-venue-section"]')).toBeVisible();
       await expect(page.locator('[data-testid="event-tier-row"]').first()).toBeVisible();
       await expect(page.locator('[data-testid="event-tier-row"]')).toHaveCount(4);
+
+      const documentOrderOk = await page.evaluate(() => {
+        const host = document.querySelector('[data-testid="event-host-block"]');
+        const tier = document.querySelector('[data-testid="event-tier-row"]');
+        const venue = document.querySelector('[data-testid="event-venue-section"]');
+        if (!host || !tier || !venue) return false;
+        const hostBeforeTier =
+          (host.compareDocumentPosition(tier) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+        const tierBeforeVenue =
+          (tier.compareDocumentPosition(venue) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+        return hostBeforeTier && tierBeforeVenue;
+      });
+      expect(documentOrderOk).toBe(true);
 
       await page.locator('[data-testid="event-detail-buy-cta"]').first().click();
       await expect(page.locator('[data-testid="booking-checkout-modal"]')).toBeVisible();
@@ -107,6 +125,8 @@ test.describe(`${SCREEN_ID} event detail page`, () => {
       const errors = watchCriticalConsoleErrors(page);
       await page.goto(`/events/${KNOWN_SLUG}`, { waitUntil: "domcontentloaded" });
 
+      await expect(page.locator('[data-testid="event-host-block"]')).toBeVisible();
+      await expect(page.locator('[data-testid="event-venue-section"]')).toBeVisible();
       await expect(page.locator('[data-testid="event-detail-mobile-buy-bar"]')).toBeVisible();
       await page.locator('[data-testid="event-detail-mobile-buy-cta"]').click();
       await expect(page.locator('[data-testid="booking-checkout-modal"]')).toBeVisible();

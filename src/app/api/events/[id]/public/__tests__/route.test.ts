@@ -34,6 +34,8 @@ describe("GET /api/events/[id]/public", () => {
       currency: "USD",
       latitude: null,
       longitude: null,
+      host: null,
+      venue: null,
       tickets: [],
     };
     vi.mocked(getPublicEvent).mockResolvedValue(event);
