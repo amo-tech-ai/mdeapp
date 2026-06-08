@@ -1,5 +1,9 @@
 import { createHash } from "node:crypto";
 import { createServiceRoleClient } from "@/lib/supabase/service";
+import type { EmbedFailureReason } from "./query-embedding";
+
+/** Hybrid search embed step — embedStatus/embedFailureReason/embedHttpStatus in search_logs.slots; hybridUsed in hybrid_used column. */
+export type EmbedStatus = "ok" | "skipped" | "failed";
 
 /** Truncate to 256 chars so raw PII-containing queries are never stored in full. */
 function truncateQuery(s: string): string {
@@ -26,6 +30,10 @@ export type SearchLogPayload = {
   resultsCount: number;
   latencyMs: number;
   hybridUsed?: boolean;
+  embedStatus?: EmbedStatus;
+  embedFailureReason?: EmbedFailureReason;
+  /** HTTP status from Gemini embed API when embedStatus is failed (e.g. 403). */
+  embedHttpStatus?: number;
   groundingUsed?: boolean;
   rankExplanation?: RankExplanationEntry[];
   sessionId?: string;
@@ -45,7 +53,16 @@ export async function writeSearchLog(payload: SearchLogPayload): Promise<string 
     .insert({
       query_text: truncateQuery(payload.queryText),
       intent: payload.intent ?? null,
-      slots: payload.slots ?? {},
+      slots: {
+        ...(payload.slots ?? {}),
+        ...(payload.embedStatus ? { embedStatus: payload.embedStatus } : {}),
+        ...(payload.embedFailureReason
+          ? { embedFailureReason: payload.embedFailureReason }
+          : {}),
+        ...(payload.embedHttpStatus != null
+          ? { embedHttpStatus: payload.embedHttpStatus }
+          : {}),
+      },
       tool_name: payload.toolName,
       results_count: payload.resultsCount,
       latency_ms: payload.latencyMs,
