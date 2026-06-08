@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import type { KeyboardEvent } from "react";
 import { Bed, Calendar, Heart, Wifi } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -12,11 +14,14 @@ function bedroomLabel(bedrooms: number | null): string {
   return `${bedrooms} BR`;
 }
 
-function scheduleViewingPath(url: string): string {
+function openScheduleViewing(url: string) {
   try {
-    return new URL(url).pathname;
+    const { protocol } = new URL(url);
+    if (protocol === "http:" || protocol === "https:") {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
   } catch {
-    return url;
+    // malformed URL — silently ignore
   }
 }
 
@@ -58,6 +63,7 @@ function topAmenities(amenities: string[] | null, limit = 3): string[] {
 type RentalBrowseCardProps = {
   rental: Rental;
   selected?: boolean;
+  onSelect?: () => void;
 };
 
 function RentalBrowseCardMedia({
@@ -108,21 +114,36 @@ function RentalBrowseCardMedia({
   );
 }
 
-export function RentalBrowseCard({ rental, selected }: RentalBrowseCardProps) {
+export function RentalBrowseCard({ rental, selected, onSelect }: RentalBrowseCardProps) {
   const { nightlyLabel, monthlyLabel } = formatRentalPrices(rental.nightly_price);
   const chips = topAmenities(rental.amenities);
   const hasWifi = rental.wifi || rental.amenities?.some((a) => a.toLowerCase().includes("wifi"));
-  const viewingPath = scheduleViewingPath(rental.schedule_viewing_url);
+  const pinId = `rental-${rental.id}`;
+  const preview = () => onSelect?.();
+  const interactive = Boolean(onSelect);
+
+  const handleBodyKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onSelect?.();
+    }
+  };
 
   return (
     <VenueCardShell
       testId="rental-browse-card"
       resultKind="rental"
-      pinId={`rental-${rental.id}`}
+      pinId={pinId}
       composition="nova"
       mediaLayout="cover"
       selected={selected}
       ariaLabel={`Rental: ${rental.title}, ${rental.neighborhood}`}
+      onPreview={interactive ? preview : undefined}
+      bodyRole={interactive ? "button" : undefined}
+      bodyTabIndex={interactive ? 0 : undefined}
+      bodyAriaLabel={`Select ${rental.title} on map`}
+      onBodyClick={interactive ? () => onSelect?.() : undefined}
+      onBodyKeyDown={interactive ? handleBodyKeyDown : undefined}
       media={
         <RentalBrowseCardMedia
           imageUrl={rental.image || undefined}
@@ -133,14 +154,22 @@ export function RentalBrowseCard({ rental, selected }: RentalBrowseCardProps) {
       }
       footer={
         <div className="flex w-full flex-wrap items-center justify-between gap-2">
-          <Link
-            href={viewingPath}
-            data-testid="rental-schedule-cta"
-            className={cn(buttonVariants({ size: "sm", variant: "default" }))}
-          >
-            <Calendar data-icon="inline-start" aria-hidden />
-            Schedule viewing
-          </Link>
+          {rental.schedule_viewing_url ? (
+            <Button
+              type="button"
+              size="sm"
+              variant="default"
+              data-testid="rental-schedule-cta"
+              className={cn(buttonVariants({ size: "sm", variant: "default" }))}
+              onClick={(e) => {
+                e.stopPropagation();
+                openScheduleViewing(rental.schedule_viewing_url);
+              }}
+            >
+              <Calendar data-icon="inline-start" aria-hidden />
+              Schedule viewing
+            </Button>
+          ) : null}
           <Button
             size="sm"
             variant="outline"
@@ -168,13 +197,13 @@ export function RentalBrowseCard({ rental, selected }: RentalBrowseCardProps) {
             WiFi
           </Badge>
         ) : null}
-        {chips.map((chip) => (
+        {chips.map((chip) =>
           chip.toLowerCase() !== "wifi" ? (
             <Badge key={chip} variant="outline" className="font-normal">
               {chip}
             </Badge>
-          ) : null
-        ))}
+          ) : null,
+        )}
       </div>
 
       {monthlyLabel ? (

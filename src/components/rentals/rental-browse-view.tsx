@@ -30,7 +30,14 @@ function buildRetryHref(filters: {
   return q ? `/rentals?${q}` : "/rentals";
 }
 
-type RentalBrowseViewProps = {
+function formatCountSubtitle(total: number, shown: number): string {
+  if (total === 0) return "0 apartments";
+  if (total === 1) return "1 apartment";
+  if (shown < total) return `${total} apartments (showing ${shown})`;
+  return `${total} apartments`;
+}
+
+export type RentalBrowseViewProps = {
   results: Rental[];
   total: number;
   error: string | null;
@@ -62,8 +69,7 @@ function RentalBrowseViewInner({
   useBrowseMapSync(pins, "rental");
   useBrowseCardScroll();
 
-  const countLabel =
-    total === 1 ? "1 apartment" : `${total} apartments`;
+  const countLabel = formatCountSubtitle(total, results.length);
 
   return (
     <>
@@ -120,6 +126,7 @@ function RentalBrowseViewInner({
                     key={r.id}
                     rental={r}
                     selected={selectedPinId === pinId}
+                    onSelect={() => setSelectedPinId(pinId)}
                   />
                 );
               })}
@@ -140,6 +147,3 @@ export function RentalBrowseView(props: RentalBrowseViewProps) {
     </BrowseMapContextShell>
   );
 }
-
-// re-export prop type for page.tsx
-export type { RentalBrowseViewProps };

@@ -171,6 +171,7 @@ async function searchRentalsFromSupabase(
     .from('apartments')
     .select(
       'id, title, neighborhood, bedrooms, price_daily, wifi_speed, amenities, images, host_name, source_url, available_from, available_to, pet_friendly, parking_included, minimum_stay_days, slug, latitude, longitude',
+      { count: 'exact' },
     )
     .eq('status', 'active')
     .not('price_daily', 'is', null)
@@ -195,7 +196,7 @@ async function searchRentalsFromSupabase(
     q = q.or(`available_from.is.null,available_from.lte.${query.checkOut}`);
   }
 
-  const { data, error } = await q;
+  const { data, error, count } = await q;
   if (error) {
     throw new Error(error.message);
   }
@@ -204,7 +205,7 @@ async function searchRentalsFromSupabase(
   if (query.stayType === 'monthly') {
     results = sortForMonthlyStay(results);
   }
-  return { results, total: results.length, source: 'supabase' };
+  return { results, total: count ?? results.length, source: 'supabase' };
 }
 
 // Fallback mock kept for offline/test environments
