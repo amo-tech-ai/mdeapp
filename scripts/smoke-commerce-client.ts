@@ -4,6 +4,7 @@
 import { getCommerceClient } from "../src/lib/commerce/medusa-client";
 
 const apiUrl = process.env.COMMERCE_API_URL ?? "";
+const MIN_PRODUCT_COUNT = 20;
 
 async function main() {
   const health = await fetch(`${apiUrl.replace(/\/+$/, "")}/health`);
@@ -13,19 +14,42 @@ async function main() {
   }
 
   const client = getCommerceClient();
-  const { products, count } = await client.listProducts({ limit: 5 });
-
-  console.log("smoke-commerce-client");
-  console.log(`  health: ${health.status}`);
-  console.log(`  products.count: ${count}`);
-  console.log(`  products.sample: ${products?.[0]?.id ?? "(none)"}`);
-
-  if (!count || count < 1) {
-    console.error("FAIL: expected at least 1 product from Store API");
+  const { regions } = await client.listRegions({ limit: 1 });
+  const regionId = regions?.[0]?.id;
+  if (!regionId) {
+    console.error("FAIL: no Store region available for pricing context");
     process.exit(1);
   }
 
-  console.log("PASS: commerce client listProducts");
+  const { products, count } = await client.listProducts({
+    limit: 5,
+    region_id: regionId,
+  });
+
+  console.log("smoke-commerce-client");
+  console.log(`  health: ${health.status}`);
+  console.log(`  region_id: ${regionId}`);
+  console.log(`  products.count: ${count}`);
+  console.log(`  products.sample: ${products?.[0]?.id ?? "(none)"}`);
+
+  if (!count || count < MIN_PRODUCT_COUNT) {
+    console.error(
+      `FAIL: expected at least ${MIN_PRODUCT_COUNT} products from Store API`,
+    );
+    process.exit(1);
+  }
+
+  const sampleId = products?.[0]?.id;
+  if (sampleId) {
+    const { product } = await client.getProduct(sampleId, { region_id: regionId });
+    if (!product?.id) {
+      console.error("FAIL: getProduct returned empty product");
+      process.exit(1);
+    }
+    console.log(`  getProduct: ${product.id}`);
+  }
+
+  console.log("PASS: commerce client listProducts + getProduct");
 }
 
 main().catch((error) => {

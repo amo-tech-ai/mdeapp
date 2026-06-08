@@ -43,13 +43,23 @@ npm run verify:commerce-mdeapp-env
 COMMERCE_API_URL=http://localhost:9000 \
 COMMERCE_PUBLISHABLE_KEY="<from commerce/.env>" \
 npm run smoke:commerce-client
-# → health 200 · products.count 24 · PASS
+# → health 200 · region_id set · products.count 24 · getProduct OK · PASS
 ```
+
+## Safe field mask (`COMMERCE_PRODUCT_FIELDS`)
+
+Default on `listProducts` / `getProduct` — **no** `*seller.reviews*`:
+
+```text
+*variants.calculated_price,+variants.inventory_quantity,*seller,*variants,*seller.products,*seller.products.variants,*attribute_values,*attribute_values.attribute
+```
+
+Seller `reviews` normalized to `[]` when absent (`seller?.reviews ?? []`). Full policy doc: SAN-725 / B2C evidence `2026-06-07/b2c-reference-storefront.md`.
 
 ## Read-only API surface
 
-- `listProducts(params?)` → `sdk.store.product.list`
-- `getProduct(id, params?)` → `sdk.store.product.retrieve`
+- `listProducts(params?)` → `sdk.store.product.list` (safe `fields` default)
+- `getProduct(id, params?)` → `sdk.store.product.retrieve` (safe `fields` default)
 - `listRegions(params?)` → `sdk.store.region.list`
 - `getVariant(productId, variantId)` → product retrieve + variant lookup
 
@@ -62,7 +72,8 @@ No cart/checkout writes in C-007.
 | No browser secret exposure | ✅ server env only |
 | No writes | ✅ read-only methods |
 | Product list from Mercur | ✅ count 24 live |
-| Test coverage | ✅ 11 vitest |
+| Safe field mask (no seller.reviews) | ✅ `COMMERCE_PRODUCT_FIELDS` |
+| Test coverage | ✅ 14 vitest |
 | Official SDK methods | ✅ verified against SDK types |
 
 ## Blockers

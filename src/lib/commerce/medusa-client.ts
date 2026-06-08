@@ -36,8 +36,41 @@ export class CommerceClientError extends Error {
 const DEFAULT_TIMEOUT_MS = 15_000;
 const VARIANT_FIELDS = "id,*variants";
 
+/**
+ * Safe Store API field mask for Mercur product list/detail.
+ * Excludes `*seller.reviews*` — local Mercur returns 500 when reviews are not seeded (SAN-725).
+ *
+ * @see docs/ecommerce/evidence/2026-06-07/b2c-reference-storefront.md
+ */
+export const COMMERCE_PRODUCT_FIELDS =
+  "*variants.calculated_price,+variants.inventory_quantity,*seller,*variants,*seller.products,*seller.products.variants,*attribute_values,*attribute_values.attribute";
+
 export type ListProductsParams = HttpTypes.StoreProductListParams;
 export type GetProductParams = HttpTypes.StoreProductParams;
+
+type StoreProductWithSeller = HttpTypes.StoreProduct & {
+  seller?: { reviews?: unknown[] | null; [key: string]: unknown };
+};
+
+function normalizeProduct<T extends StoreProductWithSeller>(product: T): T {
+  if (!product.seller) return product;
+  return {
+    ...product,
+    seller: {
+      ...product.seller,
+      reviews: product.seller.reviews ?? [],
+    },
+  };
+}
+
+function withProductFields(
+  params?: ListProductsParams | GetProductParams,
+): ListProductsParams | GetProductParams {
+  return {
+    ...params,
+    fields: params?.fields ?? COMMERCE_PRODUCT_FIELDS,
+  };
+}
 
 export type CommerceMedusaClient = {
   listProducts: (
@@ -120,7 +153,16 @@ export function createCommerceClient(
   return {
     async listProducts(params) {
       try {
-        return await withTimeout(sdk.store.product.list(params), timeoutMs);
+        const response = await withTimeout(
+          sdk.store.product.list(withProductFields(params)),
+          timeoutMs,
+        );
+        return {
+          ...response,
+          products: response.products?.map((product) =>
+            normalizeProduct(product as StoreProductWithSeller),
+          ),
+        };
       } catch (error) {
         throw normalizeCommerceError(error);
       }
@@ -128,10 +170,14 @@ export function createCommerceClient(
 
     async getProduct(id, params) {
       try {
-        return await withTimeout(
-          sdk.store.product.retrieve(id, params),
+        const response = await withTimeout(
+          sdk.store.product.retrieve(id, withProductFields(params)),
           timeoutMs,
         );
+        return {
+          ...response,
+          product: normalizeProduct(response.product as StoreProductWithSeller),
+        };
       } catch (error) {
         throw normalizeCommerceError(error);
       }

@@ -46,6 +46,7 @@ vi.mock("@medusajs/js-sdk", () => {
 });
 
 import {
+  COMMERCE_PRODUCT_FIELDS,
   CommerceClientError,
   createCommerceClient,
   getCommerceClient,
@@ -96,8 +97,52 @@ describe("createCommerceClient (ECOM-C-007)", () => {
     });
 
     const result = await client.listProducts({ limit: 10 });
-    expect(listMock).toHaveBeenCalledWith({ limit: 10 });
+    expect(listMock).toHaveBeenCalledWith({
+      limit: 10,
+      fields: COMMERCE_PRODUCT_FIELDS,
+    });
     expect(result.count).toBe(1);
+  });
+
+  it("COMMERCE_PRODUCT_FIELDS excludes seller.reviews", () => {
+    expect(COMMERCE_PRODUCT_FIELDS).not.toMatch(/seller\.reviews/);
+  });
+
+  it("listProducts normalizes seller.reviews to empty array when absent", async () => {
+    listMock.mockResolvedValue({
+      products: [{ id: "prod_1", seller: { id: "sel_1", name: "mdeai" } }],
+      count: 1,
+      offset: 0,
+      limit: 20,
+    });
+
+    const client = createCommerceClient({
+      apiUrl: "http://localhost:9000",
+      publishableKey: "pk_test",
+    });
+
+    const result = await client.listProducts();
+    const seller = (result.products?.[0] as { seller?: { reviews?: unknown[] } })
+      ?.seller;
+    expect(seller).toEqual(expect.objectContaining({ reviews: [] }));
+  });
+
+  it("getProduct applies safe field mask and normalizes seller", async () => {
+    retrieveMock.mockResolvedValue({
+      product: { id: "prod_1", seller: { id: "sel_1" } },
+    });
+
+    const client = createCommerceClient({
+      apiUrl: "http://localhost:9000",
+      publishableKey: "pk_test",
+    });
+
+    const result = await client.getProduct("prod_1");
+    expect(retrieveMock).toHaveBeenCalledWith("prod_1", {
+      fields: COMMERCE_PRODUCT_FIELDS,
+    });
+    const seller = (result.product as { seller?: { reviews?: unknown[] } }).seller;
+    expect(seller).toEqual(expect.objectContaining({ reviews: [] }));
   });
 
   it("getVariant resolves variant from product retrieve", async () => {
