@@ -125,6 +125,7 @@ function RentalBrowseViewInner({
                   <RentalBrowseCard
                     key={r.id}
                     rental={r}
+                    testId={`rental-card-${r.id}`}
                     selected={selectedPinId === pinId}
                     onSelect={() => setSelectedPinId(pinId)}
                   />

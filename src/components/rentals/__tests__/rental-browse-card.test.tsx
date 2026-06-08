@@ -29,6 +29,13 @@ describe("RentalBrowseCard", () => {
     expect(html).not.toContain('href="/rentals/rnt_lau_001/schedule-viewing"');
   });
 
+  it("defaults testId to rental-card-{id} for browse Playwright contract", () => {
+    const html = renderToStaticMarkup(
+      <RentalBrowseCard rental={rental} onSelect={vi.fn()} />,
+    );
+    expect(html).toContain('data-testid="rental-card-rnt_lau_001"');
+  });
+
   it("forwards map sync props to VenueCardShell", () => {
     const html = renderToStaticMarkup(
       <RentalBrowseCard rental={rental} selected onSelect={vi.fn()} />,
