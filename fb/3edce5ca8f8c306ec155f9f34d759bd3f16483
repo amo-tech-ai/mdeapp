@@ -1,0 +1,28 @@
+src/components/partners/partner-signup-wizard.tsx
+  s_26308efd15595e::t_b678be67e3f972 6-7
+  s_26308efd15595e::t_1cab5f301bb8b2 117-122
+src/app/partners/signup/page.tsx
+  s_26308efd15595e::t_81886d12e3658b 56-62
+  s_26308efd15595e::t_ee53a3e519d5a4 9-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "fb3edce5ca8f8c306ec155f9f34d759bd3f16483",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_26308efd15595e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6fba3bdb-547a-4e13-bcee-a5a0beb3f90b",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
