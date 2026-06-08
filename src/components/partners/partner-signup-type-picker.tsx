@@ -23,7 +23,11 @@ import {
   PARTNER_SIGNUP_STEPS,
   PARTNER_TYPE_PICKER,
 } from "@/lib/partners/partner-type-picker-config";
-import { PARTNER_TYPE_LABELS } from "@/lib/partners/parse-partner-signup-params";
+import {
+  buildPartnerSignupPickerPath,
+  buildPartnerSignupTypedPath,
+  PARTNER_TYPE_LABELS,
+} from "@/lib/partners/parse-partner-signup-params";
 import { PARTNER_TYPES } from "@/lib/partners/partner-types";
 
 type PartnerSignupTypePickerProps = {
@@ -31,19 +35,16 @@ type PartnerSignupTypePickerProps = {
   invalidTypeParam?: string | null;
 };
 
-function buildSignupPath(type: string, draft?: string) {
-  const params = new URLSearchParams({ type });
-  if (draft) params.set("draft", draft);
-  return `/partners/signup?${params.toString()}`;
-}
-
 export function PartnerSignupTypePicker({
   draftId,
   invalidTypeParam,
 }: PartnerSignupTypePickerProps) {
+  const pickerPath = buildPartnerSignupPickerPath(draftId);
+  const signInHref = `/login?next=${encodeURIComponent(pickerPath)}`;
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <PartnerSignupNav />
+      <PartnerSignupNav pickerHref={pickerPath} signInHref={signInHref} />
 
       <main data-testid="partner-signup-type-picker">
         <section
@@ -106,7 +107,7 @@ export function PartnerSignupTypePicker({
               return (
                 <li key={partnerType}>
                   <Link
-                    href={buildSignupPath(partnerType, draftId)}
+                    href={buildPartnerSignupTypedPath(partnerType, draftId)}
                     className="group block h-full rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none"
                   >
                     <Card className="h-full motion-safe:transition-transform motion-safe:duration-150 motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:shadow-md">
@@ -164,22 +165,14 @@ export function PartnerSignupTypePicker({
         </section>
 
         <section
-          aria-labelledby="partner-signup-trust"
+          aria-labelledby="partner-signup-faq"
           className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8"
         >
-          <blockquote
-            id="partner-signup-trust"
-            className="text-center text-base italic text-muted-foreground sm:text-lg"
-          >
-            We went from WhatsApp chaos to qualified leads in the concierge —
-            same night we activated.
-          </blockquote>
-          <p className="mt-3 text-center text-xs text-muted-foreground">
-            — Venue partner, Provenza (placeholder)
-          </p>
-
-          <div className="mt-10">
-            <h3 className="mb-4 text-center text-lg font-semibold text-foreground">
+          <div>
+            <h3
+              id="partner-signup-faq"
+              className="mb-4 text-center text-lg font-semibold text-foreground"
+            >
               Frequently asked questions
             </h3>
             <Accordion className="rounded-xl border border-border bg-card px-4">

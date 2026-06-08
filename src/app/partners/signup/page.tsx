@@ -4,6 +4,8 @@ import { PartnerSignupNav } from "@/components/partners/partner-signup-nav";
 import { PartnerSignupTypePicker } from "@/components/partners/partner-signup-type-picker";
 import { getServerUser } from "@/lib/auth/session";
 import {
+  buildPartnerSignupPickerPath,
+  buildPartnerSignupTypedPath,
   parsePartnerSignupSearchParams,
   PARTNER_TYPE_LABELS,
 } from "@/lib/partners/parse-partner-signup-params";
@@ -17,12 +19,6 @@ export const metadata = {
 type PartnerSignupPageProps = {
   searchParams: Promise<{ type?: string | string[]; draft?: string | string[] }>;
 };
-
-function buildSignupPath(type: string, draft?: string) {
-  const params = new URLSearchParams({ type });
-  if (draft) params.set("draft", draft);
-  return `/partners/signup?${params.toString()}`;
-}
 
 export default async function PartnerSignupPage({
   searchParams,
@@ -40,7 +36,9 @@ export default async function PartnerSignupPage({
   }
 
   const { user } = await getServerUser();
-  const loginNextPath = buildSignupPath(type, draftId);
+  const typedSignupPath = buildPartnerSignupTypedPath(type, draftId);
+  const pickerPath = buildPartnerSignupPickerPath(draftId);
+  const loginHref = `/login?next=${encodeURIComponent(typedSignupPath)}`;
   const typeLabel = PARTNER_TYPE_LABELS[type];
 
   return (
@@ -48,19 +46,21 @@ export default async function PartnerSignupPage({
       <PartnerSignupNav
         contextLabel={`${typeLabel} signup`}
         showBackToPicker
+        pickerHref={pickerPath}
+        signInHref={loginHref}
       />
       <main className="flex flex-1 items-center justify-center p-4 sm:p-8">
         <PartnerSignupWizard
           partnerType={type}
           draftId={draftId}
           isAuthenticated={Boolean(user)}
-          loginNextPath={loginNextPath}
+          loginNextPath={typedSignupPath}
         />
       </main>
       <footer className="border-t border-border px-4 py-4 text-center text-xs text-muted-foreground">
         Need a different program?{" "}
         <Link
-          href="/partners/signup"
+          href={pickerPath}
           className="font-medium text-foreground underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           Choose another partner type

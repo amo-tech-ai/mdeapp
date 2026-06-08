@@ -55,6 +55,19 @@ describe("PartnerSignupTypePicker", () => {
     );
   });
 
+  it("does not ship placeholder testimonial copy", () => {
+    expect(html).not.toContain("(placeholder)");
+    expect(html).not.toContain("partner-signup-trust");
+  });
+
+  it("sign-in link preserves return path with draft", () => {
+    const withDraft = renderToStaticMarkup(
+      <PartnerSignupTypePicker draftId="22222222-2222-4222-a222-222222222222" />,
+    );
+    expect(withDraft).toContain("/login?next=");
+    expect(withDraft).toContain("draft%3D22222222");
+  });
+
   it("uses semantic tokens, not hardcoded gray shades", () => {
     expect(FORBIDDEN_COLORS.test(html)).toBe(false);
   });

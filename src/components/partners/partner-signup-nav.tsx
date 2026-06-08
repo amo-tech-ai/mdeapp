@@ -7,11 +7,17 @@ type PartnerSignupNavProps = {
   /** Shown on wizard routes — e.g. "Event host signup" */
   contextLabel?: string;
   showBackToPicker?: boolean;
+  /** Back link + picker default — include `draft` when resuming a draft */
+  pickerHref?: string;
+  /** Login with `next` so users return to in-progress signup */
+  signInHref?: string;
 };
 
 export function PartnerSignupNav({
   contextLabel,
   showBackToPicker = false,
+  pickerHref = "/partners/signup",
+  signInHref = "/login",
 }: PartnerSignupNavProps) {
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur-md">
@@ -28,7 +34,7 @@ export function PartnerSignupNav({
             variant="ghost"
             size="sm"
             nativeButton={false}
-            render={<Link href="/partners/signup" />}
+            render={<Link href={pickerHref} />}
           >
             <ArrowLeftIcon data-icon="inline-start" aria-hidden="true" />
             All partner types
@@ -69,7 +75,7 @@ export function PartnerSignupNav({
             variant="outline"
             size="sm"
             nativeButton={false}
-            render={<Link href="/login" />}
+            render={<Link href={signInHref} />}
           >
             Sign in
           </Button>

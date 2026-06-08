@@ -10,7 +10,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -277,9 +276,6 @@ export function PartnerSignupWizard({
           </Button>
         </form>
       </CardContent>
-      <CardFooter className="border-0 bg-transparent text-xs text-muted-foreground">
-        Phase 2 adds a multi-step stepper and AI co-pilot panel.
-      </CardFooter>
     </Card>
   );
 }
