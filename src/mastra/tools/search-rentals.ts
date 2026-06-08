@@ -167,6 +167,8 @@ async function searchRentalsFromSupabase(
   }
 
   const limit = query.limit ?? 8;
+  // MVP: count:'exact' for accurate browse subtitle (~180 active listings). Revisit
+  // estimated/cached counts post-MVP if apartments table grows materially.
   let q = client
     .from('apartments')
     .select(
