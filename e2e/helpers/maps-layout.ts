@@ -84,13 +84,12 @@ export async function waitForHomeEventHandoff(page: Page) {
   }
 }
 
-/** Map panel shows pins or leaves the empty state. */
+/** Map panel shows at least one pin. */
 export async function waitForMapPinsUpdated(page: Page, timeout = 120_000) {
   await page.waitForFunction(
     () => {
       const pins = document.querySelectorAll('[data-testid="map-pin"]');
-      const noPins = document.body.innerText.includes("No pins yet");
-      return pins.length > 0 || !noPins;
+      return pins.length > 0;
     },
     { timeout },
   );

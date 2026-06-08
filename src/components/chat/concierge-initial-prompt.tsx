@@ -54,7 +54,13 @@ export function ConciergeInitialPrompt() {
       handleRestaurantMessage,
       onAgentSend,
     }).finally(() => {
-      router.replace("/chat", { scroll: false });
+      if (typeof window === "undefined") return;
+      const onChatWithQ =
+        window.location.pathname === "/chat" &&
+        new URLSearchParams(window.location.search).has("q");
+      if (onChatWithQ) {
+        router.replace("/chat", { scroll: false });
+      }
     });
   }, [
     searchParams,
