@@ -73,7 +73,7 @@ export function EventDetailView({ event }: EventDetailViewProps) {
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={event.imageUrl}
-                alt=""
+                alt={event.name}
                 className="aspect-[16/10] w-full rounded-xl object-cover"
               />
             ) : (

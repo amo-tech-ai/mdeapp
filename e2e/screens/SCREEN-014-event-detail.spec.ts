@@ -30,6 +30,37 @@ test.describe(`${SCREEN_ID} event detail page`, () => {
   test.describe("desktop", () => {
     test.use({ viewport: DESKTOP_VIEWPORT });
 
+    test("client navigation shows loading skeleton before detail paint", async ({
+      page,
+    }) => {
+      const errors = watchCriticalConsoleErrors(page);
+      await page.goto("/events", { waitUntil: "domcontentloaded" });
+      await expect(page.getByTestId("event-details-cta").first()).toBeVisible({
+        timeout: 15000,
+      });
+
+      await page.route("**/*", async (route) => {
+        const req = route.request();
+        const url = req.url();
+        const isDetailFlight =
+          url.includes(KNOWN_SLUG) &&
+          (url.includes("_rsc") || req.resourceType() === "fetch");
+        if (isDetailFlight) {
+          await new Promise((resolve) => setTimeout(resolve, 1200));
+        }
+        await route.continue();
+      });
+
+      await page.getByTestId("event-details-cta").first().click();
+      await expect(page.locator('[data-testid="event-detail-skeleton"]')).toBeVisible({
+        timeout: 8000,
+      });
+      await expect(page.locator('[data-testid="event-detail-page"]')).toBeVisible({
+        timeout: 15000,
+      });
+      assertConsoleClean(errors);
+    });
+
     test("slug route shows tiers and opens checkout modal", async ({ page }) => {
       const errors = watchCriticalConsoleErrors(page);
       await page.goto(`/events/${KNOWN_SLUG}`, { waitUntil: "domcontentloaded" });
@@ -38,6 +69,14 @@ test.describe(`${SCREEN_ID} event detail page`, () => {
       await expect(page.getByRole("heading", { level: 1 })).toContainText(
         "Reina de Antioquia",
       );
+
+      const heroImg = page.locator('[data-testid="event-detail-page"] img');
+      if ((await heroImg.count()) > 0) {
+        const title = await page.getByRole("heading", { level: 1 }).first().textContent();
+        await expect(heroImg.first()).toHaveAttribute("alt", title?.trim() ?? "");
+        expect(title?.trim().length).toBeGreaterThan(0);
+      }
+
       await expect(page.locator('[data-testid="event-tier-row"]').first()).toBeVisible();
       await expect(page.locator('[data-testid="event-tier-row"]')).toHaveCount(4);
 
