@@ -128,7 +128,7 @@ Deno.serve(async (req: Request) => {
     .maybeSingle();
 
   if (profileErr) {
-    return jr(errorBody("PROFILE_LOOKUP_FAILED", profileErr.message), 500, req);
+    return jr(errorBody("PROFILE_LOOKUP_FAILED", "Could not load host profile"), 500, req);
   }
 
   const hostDisplay =
