@@ -1,0 +1,41 @@
+src/lib/partners/parse-partner-signup-params.ts
+  s_26308efd15595e::t_c7c8347b77f082 25-37
+src/components/partners/__tests__/partner-signup-type-picker.test.tsx
+  s_26308efd15595e::t_4e140a3ff88962 58-70
+src/components/partners/__tests__/partner-signup-nav.test.tsx
+  s_26308efd15595e::t_fd7a1dccc17424 1-43
+src/components/partners/partner-signup-type-picker.tsx
+  s_26308efd15595e::t_62c27bddcfd1dc 26-30,42-44,47
+  s_26308efd15595e::t_572a3acf0c2d0f 110
+  s_26308efd15595e::t_7715f4d8c42690 168,171-175
+src/__tests__/partners/parse-partner-signup-params.test.ts
+  s_26308efd15595e::t_48d43af2719eb9 3-4
+  s_26308efd15595e::t_2065694120bc54 34-54
+src/components/partners/partner-signup-nav.tsx
+  s_26308efd15595e::t_1de475e280cde6 78
+  s_26308efd15595e::t_38aa571ca56d1f 10-13,19-20
+  s_26308efd15595e::t_d66270bade7e2b 37
+src/components/partners/__tests__/partner-signup-wizard.test.tsx
+  s_26308efd15595e::t_8df0c5d389dcb9 119-130
+src/app/partners/signup/page.tsx
+  s_26308efd15595e::t_8429947896bb17 39-41,49-50
+  s_26308efd15595e::t_c496b5026392e9 57
+  s_26308efd15595e::t_1a6df02299d31e 7-8
+  s_26308efd15595e::t_082ad7f4fb9d31 63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "55376d855b3acd3fb1d58a52d6d33ad849705020",
+  "prompts": {},
+  "sessions": {
+    "s_26308efd15595e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6fba3bdb-547a-4e13-bcee-a5a0beb3f90b",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
