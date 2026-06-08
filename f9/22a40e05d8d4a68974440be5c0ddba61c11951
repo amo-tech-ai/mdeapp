@@ -1,0 +1,36 @@
+src/mastra/lib/intelligence-rental-search.ts
+  s_2966fc0e2798ad::t_05da5c19857183 7
+  s_2966fc0e2798ad::t_dec2c6d5ea1303 140
+  s_2966fc0e2798ad::t_4286519e0e14d7 113
+  s_2966fc0e2798ad::t_d183d261c369fd 162,167
+src/mastra/tools/search-rentals.ts
+  s_2966fc0e2798ad::t_1e68ac28d00bb4 46-47
+  s_2966fc0e2798ad::t_54109c25858773 6-7
+  s_2966fc0e2798ad::t_2df854aa89a069 384
+src/mastra/lib/search-logs.ts
+  s_2966fc0e2798ad::t_fc4d58917c1128 33-34
+  s_2966fc0e2798ad::t_53e8886fe89e6a 3-6
+  s_2966fc0e2798ad::t_ce304fc7cced38 62-64
+  s_2966fc0e2798ad::t_0c8ba5d2e6d0c3 35-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "f922a40e05d8d4a68974440be5c0ddba61c11951",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_2966fc0e2798ad": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e7c78d40-506f-4042-9220-9ea259f054e2",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
