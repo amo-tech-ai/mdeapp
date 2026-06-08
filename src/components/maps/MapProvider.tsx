@@ -38,7 +38,6 @@ export function MapsShell({ children }: { children: React.ReactNode }) {
     <APIProvider
       apiKey={apiKey}
       libraries={["marker"]}
-      authReferrerPolicy="origin"
     >
       {children}
     </APIProvider>
