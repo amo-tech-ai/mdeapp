@@ -1,0 +1,24 @@
+package-lock.json
+  s_b36771af174a1f::t_fea459f2444951 20,4045-4047,5571,8278,8288,11080,19742,19761,19774,23721
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "f949391364f2b8ebdb9c2139da7f072207394fad",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_b36771af174a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e275ed1c-ebc2-46f2-91f8-b18574a1b947",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
