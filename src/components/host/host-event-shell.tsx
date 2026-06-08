@@ -42,7 +42,7 @@ export function HostEventShell({ userEmail }: HostEventShellProps) {
             <AuthStatus />
           </header>
 
-          <div className="flex min-h-0 flex-1">
+          <div className="flex min-h-0 flex-1 flex-col md:flex-row">
             <HostNavRail />
             <section
               aria-label="Host event chat"
