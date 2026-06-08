@@ -12,7 +12,6 @@ const partnerLogos = [
   { label: "Google Maps",   abbr: "Google" },
   { label: "Stripe",        abbr: "Stripe" },
   { label: "Supabase",      abbr: "Supabase" },
-  { label: "Tripadvisor",   abbr: "Tripadvisor" },
 ] as const;
 
 function LogoPill({ abbr, label }: { abbr: string; label: string }) {
