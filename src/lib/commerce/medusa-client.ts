@@ -37,13 +37,23 @@ const DEFAULT_TIMEOUT_MS = 15_000;
 const VARIANT_FIELDS = "id,*variants";
 
 /**
- * Safe Store API field mask for Mercur product list/detail.
- * Excludes `*seller.reviews*` — local Mercur returns 500 when reviews are not seeded (SAN-725).
+ * Slim list mask — ProductCards need price/seller/variants, not seller cross-sell graph.
+ * Excludes `*seller.reviews*` and `*seller.products*` (SAN-725 / SAN-724).
+ */
+export const COMMERCE_PRODUCT_LIST_FIELDS =
+  "*variants.calculated_price,+variants.inventory_quantity,*seller,*variants,*attribute_values,*attribute_values.attribute";
+
+/**
+ * Detail mask — includes seller cross-sells (matches B2C reference PDP).
+ * Excludes `*seller.reviews*` — local Mercur returns 500 when reviews are not seeded.
  *
  * @see docs/ecommerce/evidence/2026-06-07/b2c-reference-storefront.md
  */
-export const COMMERCE_PRODUCT_FIELDS =
+export const COMMERCE_PRODUCT_DETAIL_FIELDS =
   "*variants.calculated_price,+variants.inventory_quantity,*seller,*variants,*seller.products,*seller.products.variants,*attribute_values,*attribute_values.attribute";
+
+/** @deprecated Use LIST or DETAIL fields; kept for tests and SAN-725 policy doc. */
+export const COMMERCE_PRODUCT_FIELDS = COMMERCE_PRODUCT_DETAIL_FIELDS;
 
 export type ListProductsParams = HttpTypes.StoreProductListParams;
 export type GetProductParams = HttpTypes.StoreProductParams;
@@ -64,11 +74,12 @@ function normalizeProduct<T extends StoreProductWithSeller>(product: T): T {
 }
 
 function withProductFields(
-  params?: ListProductsParams | GetProductParams,
+  params: ListProductsParams | GetProductParams | undefined,
+  defaultFields: string,
 ): ListProductsParams | GetProductParams {
   return {
     ...params,
-    fields: params?.fields ?? COMMERCE_PRODUCT_FIELDS,
+    fields: params?.fields ?? defaultFields,
   };
 }
 
@@ -154,7 +165,9 @@ export function createCommerceClient(
     async listProducts(params) {
       try {
         const response = await withTimeout(
-          sdk.store.product.list(withProductFields(params)),
+          sdk.store.product.list(
+            withProductFields(params, COMMERCE_PRODUCT_LIST_FIELDS),
+          ),
           timeoutMs,
         );
         return {
@@ -171,7 +184,10 @@ export function createCommerceClient(
     async getProduct(id, params) {
       try {
         const response = await withTimeout(
-          sdk.store.product.retrieve(id, withProductFields(params)),
+          sdk.store.product.retrieve(
+            id,
+            withProductFields(params, COMMERCE_PRODUCT_DETAIL_FIELDS),
+          ),
           timeoutMs,
         );
         return {

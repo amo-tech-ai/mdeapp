@@ -100,13 +100,15 @@ describe("createCommerceClient (ECOM-C-007)", () => {
     const result = await client.listProducts({ limit: 10 });
     expect(listMock).toHaveBeenCalledWith({
       limit: 10,
-      fields: COMMERCE_PRODUCT_FIELDS,
+      fields: COMMERCE_PRODUCT_LIST_FIELDS,
     });
     expect(result.count).toBe(1);
   });
 
-  it("COMMERCE_PRODUCT_FIELDS excludes seller.reviews", () => {
-    expect(COMMERCE_PRODUCT_FIELDS).not.toMatch(/seller\.reviews/);
+  it("field masks exclude seller.reviews", () => {
+    expect(COMMERCE_PRODUCT_LIST_FIELDS).not.toMatch(/seller\.reviews/);
+    expect(COMMERCE_PRODUCT_DETAIL_FIELDS).not.toMatch(/seller\.reviews/);
+    expect(COMMERCE_PRODUCT_LIST_FIELDS).not.toMatch(/seller\.products/);
   });
 
   it("listProducts normalizes seller.reviews to empty array when absent", async () => {
@@ -140,7 +142,7 @@ describe("createCommerceClient (ECOM-C-007)", () => {
 
     const result = await client.getProduct("prod_1");
     expect(retrieveMock).toHaveBeenCalledWith("prod_1", {
-      fields: COMMERCE_PRODUCT_FIELDS,
+      fields: COMMERCE_PRODUCT_DETAIL_FIELDS,
     });
     const seller = (result.product as { seller?: { reviews?: unknown[] } }).seller;
     expect(seller).toEqual(expect.objectContaining({ reviews: [] }));
