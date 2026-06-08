@@ -1,13 +1,14 @@
 /**
  * ECOM-C-007 — Live smoke: list products via server commerce client (read-only).
  */
+import { readCommerceEnv } from "../src/lib/commerce/commerce-env";
 import { getCommerceClient } from "../src/lib/commerce/medusa-client";
 
-const apiUrl = process.env.COMMERCE_API_URL ?? "";
 const MIN_PRODUCT_COUNT = 20;
 
 async function main() {
-  const health = await fetch(`${apiUrl.replace(/\/+$/, "")}/health`);
+  const { apiUrl } = readCommerceEnv();
+  const health = await fetch(`${apiUrl}/health`);
   if (!health.ok) {
     console.error(`FAIL: Mercur health ${health.status}`);
     process.exit(1);
@@ -40,14 +41,17 @@ async function main() {
   }
 
   const sampleId = products?.[0]?.id;
-  if (sampleId) {
-    const { product } = await client.getProduct(sampleId, { region_id: regionId });
-    if (!product?.id) {
-      console.error("FAIL: getProduct returned empty product");
-      process.exit(1);
-    }
-    console.log(`  getProduct: ${product.id}`);
+  if (!sampleId) {
+    console.error("FAIL: expected at least one product from Store API");
+    process.exit(1);
   }
+
+  const { product } = await client.getProduct(sampleId, { region_id: regionId });
+  if (!product?.id) {
+    console.error("FAIL: getProduct returned empty product");
+    process.exit(1);
+  }
+  console.log(`  getProduct: ${product.id}`);
 
   console.log("PASS: commerce client listProducts + getProduct");
 }

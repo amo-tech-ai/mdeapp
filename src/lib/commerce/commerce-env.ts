@@ -37,6 +37,11 @@ function assertPublishableKey(key: string): void {
       "COMMERCE_PUBLISHABLE_KEY must not be a Stripe secret key (sk_*)",
     );
   }
+  if (!key.startsWith("pk_")) {
+    throw new CommerceEnvError(
+      "COMMERCE_PUBLISHABLE_KEY must be a publishable key (pk_*)",
+    );
+  }
 }
 
 function assertApiUrl(url: string): void {

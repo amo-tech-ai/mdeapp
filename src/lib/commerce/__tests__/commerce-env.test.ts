@@ -38,6 +38,15 @@ describe("readCommerceEnv (ECOM-C-007)", () => {
     ).toThrow(/publishable key/i);
   });
 
+  it("rejects non-pk publishable keys", () => {
+    expect(() =>
+      readCommerceEnv({
+        COMMERCE_API_URL: "http://localhost:9000",
+        COMMERCE_PUBLISHABLE_KEY: "not_a_real_key",
+      }),
+    ).toThrow(/pk_\*/i);
+  });
+
   it("allows mdeapp ticket Stripe vars alongside commerce publishable key", () => {
     const env = readCommerceEnv({
       COMMERCE_API_URL: "http://localhost:9000",

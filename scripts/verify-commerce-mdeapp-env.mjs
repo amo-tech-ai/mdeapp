@@ -9,6 +9,17 @@ const apiUrl = (process.env.COMMERCE_API_URL ?? "").trim();
 const publishableKey = (process.env.COMMERCE_PUBLISHABLE_KEY ?? "").trim();
 
 if (!apiUrl) errors.push("missing COMMERCE_API_URL");
+else {
+  try {
+    const parsed = new URL(apiUrl);
+    if (!["http:", "https:"].includes(parsed.protocol)) {
+      errors.push(`COMMERCE_API_URL must use http or https (got ${parsed.protocol})`);
+    }
+  } catch {
+    errors.push("COMMERCE_API_URL is not a valid URL");
+  }
+}
+
 if (!publishableKey) errors.push("missing COMMERCE_PUBLISHABLE_KEY");
 
 if (publishableKey.startsWith("sk_")) {
@@ -17,12 +28,14 @@ if (publishableKey.startsWith("sk_")) {
 if (publishableKey.startsWith("whsec_")) {
   errors.push("COMMERCE_PUBLISHABLE_KEY must not be whsec_*");
 }
-
-if (process.env.NEXT_PUBLIC_STRIPE_API_KEY?.trim()) {
-  errors.push("NEXT_PUBLIC_STRIPE_API_KEY must not exist");
+if (publishableKey && !publishableKey.startsWith("pk_")) {
+  errors.push("COMMERCE_PUBLISHABLE_KEY must be pk_*");
 }
-if (process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY?.trim()) {
-  errors.push("NEXT_PUBLIC_STRIPE_SECRET_KEY must not exist");
+
+for (const key of Object.keys(process.env)) {
+  if (/^NEXT_PUBLIC_(STRIPE|MEDUSA|COMMERCE)_/i.test(key)) {
+    errors.push(`${key} must not exist`);
+  }
 }
 
 console.log("verify-commerce-mdeapp-env");

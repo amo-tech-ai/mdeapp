@@ -209,10 +209,14 @@ export function createCommerceClient(
 
     async getVariant(productId, variantId, params) {
       try {
+        const fields =
+          params?.fields && !params.fields.includes("variants")
+            ? `${params.fields},${VARIANT_FIELDS}`
+            : (params?.fields ?? VARIANT_FIELDS);
         const { product } = await withTimeout(
           sdk.store.product.retrieve(productId, {
             ...params,
-            fields: params?.fields ?? VARIANT_FIELDS,
+            fields,
           }),
           timeoutMs,
         );
