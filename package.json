@@ -122,5 +122,8 @@
   "overrides": {
     "prismjs": ">=1.30.0",
     "langsmith": ">=0.5.27"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
