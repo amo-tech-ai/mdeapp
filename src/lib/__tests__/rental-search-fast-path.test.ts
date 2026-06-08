@@ -35,6 +35,30 @@ describe("rental-search-fast-path", () => {
     expect(canFastPathRentalSearch("salsa events this weekend", {})).toBe(false);
   });
 
+  it("SAN-823: fast path for neighborhood + rental noun without clarify", () => {
+    expect(shouldInstantRentalClarify("apartments in laureles", {})).toBe(false);
+    expect(canFastPathRentalSearch("apartments in laureles", {})).toBe(true);
+    const params = buildRentalSearchParams("apartments in laureles", {});
+    expect(params?.neighborhood).toBe("Laureles");
+    expect(params?.queryText).toBe("apartments in laureles");
+  });
+
+  it("SAN-823: fast path for furnished studio + neighborhood", () => {
+    expect(canFastPathRentalSearch("furnished studio estadio", {})).toBe(true);
+    const params = buildRentalSearchParams("furnished studio estadio", {});
+    expect(params?.neighborhood).toBe("Estadio");
+    expect(params?.minBedrooms).toBe(0);
+  });
+
+  it("SAN-823: fast path for bedrooms + neighborhood + budget", () => {
+    expect(canFastPathRentalSearch("2BR poblado under $900", {})).toBe(true);
+  });
+
+  it("SAN-823: does not fast path vague housing intent", () => {
+    expect(canFastPathRentalSearch("help me find a place", {})).toBe(false);
+    expect(canFastPathRentalSearch("I am moving soon", {})).toBe(false);
+  });
+
   it("does not fast path unrelated text while clarify is pending", () => {
     const memory: ConciergeWorkingMemory = {
       lastRentalQuery: { genericAskPending: true },

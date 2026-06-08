@@ -26,6 +26,8 @@ export type SearchLogPayload = {
   resultsCount: number;
   latencyMs: number;
   hybridUsed?: boolean;
+  embedStatus?: string;
+  embedFailureReason?: string;
   groundingUsed?: boolean;
   rankExplanation?: RankExplanationEntry[];
   sessionId?: string;
@@ -45,7 +47,13 @@ export async function writeSearchLog(payload: SearchLogPayload): Promise<string 
     .insert({
       query_text: truncateQuery(payload.queryText),
       intent: payload.intent ?? null,
-      slots: payload.slots ?? {},
+      slots: {
+        ...(payload.slots ?? {}),
+        ...(payload.embedStatus ? { embedStatus: payload.embedStatus } : {}),
+        ...(payload.embedFailureReason
+          ? { embedFailureReason: payload.embedFailureReason }
+          : {}),
+      },
       tool_name: payload.toolName,
       results_count: payload.resultsCount,
       latency_ms: payload.latencyMs,

@@ -236,7 +236,8 @@ export function scoreRentalQuery(text: string): RentalQuerySignals {
   else if (hasBudget && hasDateRange && cityWide) confidence = 0.78;
   else if (hasBudget && hasDateRange) confidence = 0.72;
   else if (hasBudget) confidence = 0.5;
-  else if (hasNeighborhood && RENTAL_INTENT_RE.test(normalized)) confidence = 0.35;
+  // SAN-823: neighborhood + rental noun → fast-path (was 0.35 → clarify loop)
+  else if (hasNeighborhood && RENTAL_INTENT_RE.test(normalized)) confidence = 0.62;
   else if (hasNeighborhood) confidence = 0.35;
 
   return {

@@ -35,7 +35,16 @@ export async function POST(req: Request) {
 
   const { neighborhood, minBedrooms, maxPricePerNight, limit, queryText, checkIn, checkOut, stayType } = parsed.data;
   try {
-    const { results, total, source, hybridUsed, rankExplanation } = await searchRentals({
+    const {
+      results,
+      total,
+      source,
+      hybridUsed,
+      embedStatus,
+      embedFailureReason,
+      embedHttpStatus,
+      rankExplanation,
+    } = await searchRentals({
       neighborhood,
       minBedrooms,
       maxPricePerNight,
@@ -45,7 +54,16 @@ export async function POST(req: Request) {
       checkOut,
       stayType,
     });
-    return NextResponse.json({ results, total, source, hybridUsed, rankExplanation });
+    return NextResponse.json({
+      results,
+      total,
+      source,
+      hybridUsed,
+      embedStatus,
+      embedFailureReason,
+      embedHttpStatus,
+      rankExplanation,
+    });
   } catch (error) {
     console.error("[api/rentals/search]", error);
     return NextResponse.json(

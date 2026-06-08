@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { embedQueryText, vectorLiteral } from "../query-embedding";
+import { embedQueryText, embedQueryTextDetailed, vectorLiteral } from "../query-embedding";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -28,6 +28,16 @@ describe("embedQueryText", () => {
     );
     const result = await embedQueryText("hello");
     expect(result).toBeNull();
+  });
+
+  it("embedQueryTextDetailed reports HTTP 403 as http_error", async () => {
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY = "test-key";
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: false, status: 403 }),
+    );
+    const result = await embedQueryTextDetailed("2BR near Estadio");
+    expect(result).toEqual({ ok: false, reason: "http_error", status: 403 });
   });
 
   it("returns null when fetch throws (network failure)", async () => {

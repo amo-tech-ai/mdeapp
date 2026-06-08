@@ -74,6 +74,12 @@ describe("rental-query-parser — INT-002 multi-vertical hero queries", () => {
     expect(s.confidence).toBeGreaterThanOrEqual(0.76);
   });
 
+  it("SAN-823: apartments in laureles — neighborhood + rental intent band", () => {
+    const s = scoreRentalQuery("apartments in laureles");
+    expect(s.neighborhood).toBe("Laureles");
+    expect(s.confidence).toBeGreaterThanOrEqual(0.6);
+  });
+
   it("quiet rental near cafes and gyms — vibe + proximity", () => {
     const s = scoreRentalQuery("quiet rental in Laureles near cafes and gyms");
     expect(s.neighborhood).toBe("Laureles");

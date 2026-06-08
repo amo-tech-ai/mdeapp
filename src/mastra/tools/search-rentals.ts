@@ -42,6 +42,9 @@ export type RentalSearchResult = {
   total: number;
   source: 'supabase' | 'mock';
   hybridUsed?: boolean;
+  embedStatus?: 'ok' | 'skipped' | 'failed';
+  embedFailureReason?: string;
+  embedHttpStatus?: number;
   rankExplanation?: import('../lib/search-logs').RankExplanationEntry[];
 };
 
@@ -375,6 +378,8 @@ export async function searchRentals(
         resultsCount: intel.results.length,
         latencyMs,
         hybridUsed: intel.hybridUsed,
+        embedStatus: intel.embedStatus,
+        embedFailureReason: intel.embedFailureReason,
         groundingUsed: false,
         rankExplanation: intel.rankExplanation,
       });
@@ -383,6 +388,9 @@ export async function searchRentals(
         total: intel.total,
         source: intel.source,
         hybridUsed: intel.hybridUsed,
+        embedStatus: intel.embedStatus,
+        embedFailureReason: intel.embedFailureReason,
+        embedHttpStatus: intel.embedHttpStatus,
         rankExplanation: intel.rankExplanation,
       };
     } catch (err) {

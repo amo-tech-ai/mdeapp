@@ -1,5 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
-import { embedQueryText, vectorLiteral } from "./query-embedding";
+import {
+  embedQueryTextDetailed,
+  vectorLiteral,
+  type EmbedFailureReason,
+} from "./query-embedding";
 import type { RankExplanationEntry } from "./search-logs";
 import {
   type Rental,
@@ -106,6 +110,9 @@ export async function searchRentalsIntelligent(
   total: number;
   source: "supabase" | "mock";
   hybridUsed: boolean;
+  embedStatus: "ok" | "skipped" | "failed";
+  embedFailureReason?: EmbedFailureReason;
+  embedHttpStatus?: number;
   rankExplanation: RankExplanationEntry[];
   slots: RentalIntelligenceSlots;
 }> {
@@ -117,18 +124,30 @@ export async function searchRentalsIntelligent(
   const client = getAnonClient();
 
   if (!client) {
-    return { results: [], total: 0, source: "mock", hybridUsed: false, rankExplanation, slots };
+    return {
+      results: [],
+      total: 0,
+      source: "mock",
+      hybridUsed: false,
+      embedStatus: "skipped",
+      rankExplanation,
+      slots,
+    };
   }
 
   let hybridRows: HybridListingRow[] = [];
   let hybridUsed = false;
+  let embedStatus: "ok" | "skipped" | "failed" = queryText ? "failed" : "skipped";
+  let embedFailureReason: EmbedFailureReason | undefined;
+  let embedHttpStatus: number | undefined;
 
   if (queryText) {
-    const embedding = await embedQueryText(queryText);
-    if (embedding) {
+    const embedResult = await embedQueryTextDetailed(queryText);
+    if (embedResult.ok) {
+      embedStatus = "ok";
       const { data, error } = await client.rpc("hybrid_search_listings", {
         query_text: queryText,
-        query_embedding: vectorLiteral(embedding),
+        query_embedding: vectorLiteral(embedResult.values),
         match_count: Math.max(limit * 4, 20),
       });
       if (!error && data?.length) {
@@ -140,8 +159,29 @@ export async function searchRentalsIntelligent(
           note: "hybrid_search_listings RPC",
         });
       } else if (error) {
+        embedStatus = "failed";
+        embedFailureReason = "http_error";
         console.warn("[intelligence-rental-search] hybrid RPC:", error.message);
+        rankExplanation.push({
+          factor: "hybrid_rpc_error",
+          score: 0,
+          note: error.message,
+        });
       }
+    } else {
+      embedStatus = "failed";
+      embedFailureReason = embedResult.reason;
+      embedHttpStatus = embedResult.status;
+      rankExplanation.push({
+        factor: "embed_failed",
+        score: 0,
+        note: embedResult.status
+          ? `${embedResult.reason}:${embedResult.status}`
+          : embedResult.reason,
+      });
+      console.warn(
+        `[intelligence-rental-search] semantic embed failed (${embedResult.reason}${embedResult.status ? ` HTTP ${embedResult.status}` : ""}) — keyword fallback`,
+      );
     }
   }
 
@@ -329,6 +369,9 @@ export async function searchRentalsIntelligent(
     total: scored.length,
     source: "supabase",
     hybridUsed,
+    embedStatus,
+    embedFailureReason,
+    embedHttpStatus,
     rankExplanation,
     slots,
   };
