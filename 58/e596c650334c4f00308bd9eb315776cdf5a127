@@ -1,0 +1,26 @@
+src/components/rentals/__tests__/rental-browse-card.test.tsx
+  s_b36771af174a1f::t_3e2c6f5cf9a056 1-40
+src/components/rentals/rental-browse-card.tsx
+  s_b36771af174a1f::t_655c681f8b2f8f 1-3,17,19-22,24,66,117,121-130,136,141-146,157-172,200,205-206
+src/components/rentals/rental-browse-view.tsx
+  s_b36771af174a1f::t_0c41763f537862 33-40,72,129
+src/mastra/tools/search-rentals.ts
+  s_b36771af174a1f::t_b7f86921e22221 174
+  s_b36771af174a1f::t_80dd7c6a5e4bf0 199,208
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "58e596c650334c4f00308bd9eb315776cdf5a127",
+  "prompts": {},
+  "sessions": {
+    "s_b36771af174a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e275ed1c-ebc2-46f2-91f8-b18574a1b947",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
