@@ -2,6 +2,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
+import { MarketingFooter } from "@/components/marketing/marketing-footer";
 import { MarketingPageShell } from "@/components/marketing/marketing-page-shell";
 import { PartnerHub } from "@/components/partners/partner-hub";
 
@@ -73,5 +74,42 @@ describe("PartnerHub (/partners)", () => {
 
   it("uses semantic tokens, not hardcoded gray shades", () => {
     expect(FORBIDDEN_COLORS.test(html)).toBe(false);
+  });
+});
+
+// PR #131 review (Cubic): the shared footer must link only to routes that
+// exist on disk. Replaces the dead /about, /contact, /legal/privacy links.
+const footerHtml = renderToStaticMarkup(<MarketingFooter />);
+
+// Routes with a real src/app/**/page.tsx (verified 2026-06-08).
+const LIVE_FOOTER_ROUTES = [
+  "/",
+  "/events",
+  "/restaurants",
+  "/cafes",
+  "/nightlife",
+  "/rentals",
+  "/saved",
+  "/me/tickets",
+  "/partners",
+  "/partners/signup",
+  "/host/event/new",
+];
+
+const DEAD_ROUTES = ["/about", "/contact", "/legal/privacy"];
+
+describe("MarketingFooter — live routes only", () => {
+  it("links none of the removed dead routes", () => {
+    for (const route of DEAD_ROUTES) {
+      expect(footerHtml).not.toContain(`href="${route}"`);
+    }
+  });
+
+  it("every footer href resolves to a known live route", () => {
+    const hrefs = [...footerHtml.matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
+    expect(hrefs.length).toBeGreaterThan(0);
+    for (const href of hrefs) {
+      expect(LIVE_FOOTER_ROUTES).toContain(href);
+    }
   });
 });

@@ -5,14 +5,27 @@ type FooterColumn = {
   links: { href: string; label: string }[];
 };
 
+// Live routes only — every href must resolve to an existing page.tsx.
+// Dead links (/about, /contact, /legal/privacy) removed per PR #131 review;
+// those routes are not built yet (own follow-up tasks). Do not add a link here
+// until its route ships.
 const COLUMNS: FooterColumn[] = [
   {
-    heading: "Product",
+    heading: "Explore",
     links: [
-      { href: "/", label: "Explore" },
+      { href: "/", label: "Concierge" },
       { href: "/events", label: "Events" },
-      { href: "/rentals", label: "Rentals" },
       { href: "/restaurants", label: "Restaurants" },
+      { href: "/cafes", label: "Cafés" },
+    ],
+  },
+  {
+    heading: "Discover",
+    links: [
+      { href: "/nightlife", label: "Nightlife" },
+      { href: "/rentals", label: "Rentals" },
+      { href: "/saved", label: "Saved" },
+      { href: "/me/tickets", label: "My tickets" },
     ],
   },
   {
@@ -21,14 +34,6 @@ const COLUMNS: FooterColumn[] = [
       { href: "/partners", label: "Partner hub" },
       { href: "/partners/signup", label: "List with us" },
       { href: "/host/event/new", label: "Host an event" },
-    ],
-  },
-  {
-    heading: "Company",
-    links: [
-      { href: "/about", label: "About" },
-      { href: "/contact", label: "Contact" },
-      { href: "/legal/privacy", label: "Privacy" },
     ],
   },
 ];
