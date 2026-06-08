@@ -8,7 +8,8 @@ export type ClassifiedCheckoutError = {
 };
 
 const SOLD_OUT_RE = /sold.?out|no.*ticket|ticket.*unavailable|qty.*exceed|capacity/i;
-const EXPIRED_RE = /expir|session.*invalid|invalid.*session/i;
+const EXPIRED_RE =
+  /expir|session.*invalid|invalid.*session|session.*not.*found|not.*found.*session/i;
 
 export function classifyCheckoutError(
   message: string | undefined,
