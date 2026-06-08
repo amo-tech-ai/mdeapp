@@ -2,10 +2,16 @@ import { test, expect } from "@playwright/test";
 
 /**
  * SAN-717 — FE error / empty / loading state pass
- * Covers: Rentals empty + events empty paths across viewports.
- * The loading skeleton (rentals-browse-loading) is exercised by Next.js
- * streaming during page navigation and is verified by testid presence in
- * the HTML before hydration (not captured here as it's transient).
+ * Covers: Rentals empty + events empty paths across viewports,
+ * and happy-path "never blank" checks for both pages.
+ *
+ * Loading skeleton (rentals-browse-loading / events-browse-loading):
+ * rendered server-side by Next.js Suspense streaming; not asserted here
+ * because the skeleton disappears before networkidle fires and Playwright
+ * cannot intercept server-side Supabase fetches via page.route().
+ * Presence is guaranteed structurally by rentals/loading.tsx and
+ * events/loading.tsx; visual regression is caught in dev with turbopack
+ * slow mode or Lighthouse trace.
  */
 
 const VIEWPORTS = [
@@ -41,7 +47,7 @@ for (const vp of VIEWPORTS) {
         waitUntil: "networkidle",
       });
       await expect(page.getByTestId("events-browse")).toBeVisible();
-      await expect(page.getByTestId("events-browse-empty")).toBeVisible();
+      await expect(page.getByTestId("events-empty")).toBeVisible();
       await expect(page.getByText("No events match")).toBeVisible();
     });
   });
@@ -60,14 +66,14 @@ test.describe("SAN-717 rentals happy path", () => {
     const empty = page.getByTestId("rentals-empty");
     const error = page.getByTestId("rentals-error");
 
-    const [gridCount, emptyCount, errorCount] = await Promise.all([
-      grid.count(),
-      empty.count(),
-      error.count(),
+    const [gridVisible, emptyVisible, errorVisible] = await Promise.all([
+      grid.isVisible(),
+      empty.isVisible(),
+      error.isVisible(),
     ]);
 
     // At least one of: results grid, empty state, or error notice must be visible
-    expect(gridCount + emptyCount + errorCount).toBeGreaterThan(0);
+    expect(gridVisible || emptyVisible || errorVisible).toBe(true);
   });
 });
 
@@ -81,15 +87,15 @@ test.describe("SAN-717 events happy path", () => {
     await expect(page.getByTestId("events-browse")).toBeVisible();
 
     const grid = page.getByTestId("events-grid");
-    const empty = page.getByTestId("events-browse-empty");
-    const error = page.getByTestId("events-browse-error");
+    const empty = page.getByTestId("events-empty");
+    const error = page.getByTestId("events-error");
 
-    const [gridCount, emptyCount, errorCount] = await Promise.all([
-      grid.count(),
-      empty.count(),
-      error.count(),
+    const [gridVisible, emptyVisible, errorVisible] = await Promise.all([
+      grid.isVisible(),
+      empty.isVisible(),
+      error.isVisible(),
     ]);
 
-    expect(gridCount + emptyCount + errorCount).toBeGreaterThan(0);
+    expect(gridVisible || emptyVisible || errorVisible).toBe(true);
   });
 });

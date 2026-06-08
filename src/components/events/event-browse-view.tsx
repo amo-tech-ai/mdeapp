@@ -71,7 +71,7 @@ export function EventBrowseView({
         {error ? (
           <div
             className="rounded-lg border border-destructive/30 bg-destructive/5 p-6 text-center"
-            data-testid="events-browse-error"
+            data-testid="events-error"
           >
             <p className="text-sm text-destructive">{error}</p>
             <Button
@@ -89,7 +89,7 @@ export function EventBrowseView({
         {!error && results.length === 0 ? (
           <div className="space-y-4">
             <EmptyState
-              testId="events-browse-empty"
+              testId="events-empty"
               title="No events match"
               description="Try another date, category, or neighborhood — or ask the concierge on chat."
               icon={<CalendarDays className="size-8" aria-hidden />}

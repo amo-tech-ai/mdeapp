@@ -19,7 +19,7 @@ for (const vp of VIEWPORTS) {
       await expect(page.getByTestId("events-browse").first()).toBeVisible();
 
       const cards = page.getByTestId("event-card");
-      const empty = page.getByTestId("events-browse-empty");
+      const empty = page.getByTestId("events-empty");
       const cardCount = await cards.count();
       if (cardCount > 0) {
         await expect(cards.first()).toBeVisible();
