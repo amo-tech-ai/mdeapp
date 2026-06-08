@@ -20,19 +20,21 @@ export default async function RentalsPage({ searchParams }: Props) {
 
   let error: string | null = null;
   let results: Rental[] = [];
+  let total = 0;
 
   try {
-    const minBedrooms   = bedsVal  != null ? parseInt(bedsVal,  10) : undefined;
+    const minBedrooms      = bedsVal  != null ? parseInt(bedsVal,  10) : undefined;
     const maxPricePerNight = priceVal != null ? parseInt(priceVal, 10) : undefined;
 
     const data = await searchRentals({
       neighborhood: nbhd ?? undefined,
       minBedrooms,
       maxPricePerNight,
-      limit: 12,
+      limit: 24,
     });
 
     results = data.results;
+    total   = data.total;
   } catch (err) {
     error = "Could not load rentals right now. Please try again.";
     console.error("[/rentals] searchRentals failed:", (err as Error).message);
@@ -41,6 +43,7 @@ export default async function RentalsPage({ searchParams }: Props) {
   return (
     <RentalBrowseView
       results={results}
+      total={total}
       error={error}
       neighborhood={nbhd}
       beds={bedsVal}
