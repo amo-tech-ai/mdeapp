@@ -1,0 +1,31 @@
+src/components/partners/partner-hub.tsx
+  s_a440d0b65eab4c::t_e69d0813565eb4 43-44
+  s_a440d0b65eab4c::t_b01d81a91028ca 153
+src/components/marketing/marketing-page-shell.tsx
+  s_a440d0b65eab4c::t_4f6771b8495822 1-72
+src/__tests__/partners/partner-hub.test.tsx
+  s_a440d0b65eab4c::t_a7d5a84f844005 5
+  s_a440d0b65eab4c::t_2b96ff95211bfc 34-40
+src/app/partners/page.tsx
+  s_a440d0b65eab4c::t_6b4e49406d19ed 1,10,13,15
+src/components/marketing/marketing-nav.tsx
+  s_a440d0b65eab4c::t_8af63fb441f3c1 1-72
+src/components/marketing/marketing-footer.tsx
+  s_a440d0b65eab4c::t_ed103bbdf67be2 1-74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "f6743e268dfd47ba9fa18397377cdedb44812be3",
+  "prompts": {},
+  "sessions": {
+    "s_a440d0b65eab4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b6dee51c-b8c6-4d41-aaeb-6019ba697e63",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
