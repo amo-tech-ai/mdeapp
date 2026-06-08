@@ -1,0 +1,42 @@
+src/components/host/host-events-shell.tsx
+  s_2966fc0e2798ad::t_50cb8257f85f57 1-12,14-18
+  s_88d284f4974037::t_b3cd77e059a313 13
+src/components/host/host-event-shell.tsx
+  s_88d284f4974037::t_46b305f317dbef 45
+src/components/host/__tests__/host-nav-rail.test.ts
+  s_88d284f4974037::t_70e8b1db6a3a85 1-20
+e2e/host/host-nav-rail.spec.ts
+  s_88d284f4974037::t_f2a8973f13a4f3 1-119
+src/components/host/host-nav-rail.tsx
+  s_2966fc0e2798ad::t_710523ce3fb8a0 4,7,11,15,26-32,34-35,46,48,50-51,53,55-61,64-71
+  s_88d284f4974037::t_7811ef7803ca05 8-9,12-14,17-25,39-40,42,45,47,49,52,54,62-63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "2a854f18cb6d106ce01a32b6e2eef3ee3a4ee992",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_2966fc0e2798ad": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e7c78d40-506f-4042-9220-9ea259f054e2",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_88d284f4974037": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12172277-a42f-4ea5-89db-4f5de4653e40",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
