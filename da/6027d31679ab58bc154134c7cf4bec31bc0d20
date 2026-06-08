@@ -1,0 +1,37 @@
+src/lib/partners/activate-client.ts
+  s_26308efd15595e::t_2640f7dfb7392b 2
+  s_26308efd15595e::t_f53c62c8942574 56
+src/app/partners/signup/page.tsx
+  s_26308efd15595e::t_5bdb3a8545586d 67-68
+  s_26308efd15595e::t_13bd2faf0e782a 24
+src/components/partners/partner-signup-wizard.tsx
+  s_26308efd15595e::t_6191b1acde9f19 75-83,86-88,90-102,105-121,124
+src/__tests__/partners/activate-client.test.ts
+  s_26308efd15595e::t_8b7040cd0a450f 60-65
+src/lib/partners/activate-schema.ts
+  s_26308efd15595e::t_18f5d573c36c0d 4,14-33,40-41
+src/components/partners/__tests__/partner-signup-wizard.test.tsx
+  s_26308efd15595e::t_6c1b3b42d78cbb 132-149
+src/lib/partners/parse-partner-signup-params.ts
+  s_26308efd15595e::t_23be86d72d67f3 11-12,14-16,18
+src/__tests__/partners/parse-partner-signup-params.test.ts
+  s_26308efd15595e::t_e1f57e527b7861 31-39
+src/__tests__/api/partners-activate.test.ts
+  s_26308efd15595e::t_fdcf19eb4a089e 220,222,231,233-245
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "da6027d31679ab58bc154134c7cf4bec31bc0d20",
+  "prompts": {},
+  "sessions": {
+    "s_26308efd15595e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6fba3bdb-547a-4e13-bcee-a5a0beb3f90b",
+        "model": "default"
+      },
+      "human_author": null
+    }
+  }
+}
