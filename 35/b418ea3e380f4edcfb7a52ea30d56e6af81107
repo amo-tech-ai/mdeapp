@@ -1,0 +1,23 @@
+src/components/partners/partner-hub.tsx
+  s_6119d30d8e324b::t_84e184a7ce7d01 1-260
+src/__tests__/partners/partner-hub.test.tsx
+  s_6119d30d8e324b::t_ab44333bf130ee 1-74
+src/app/partners/page.tsx
+  s_6119d30d8e324b::t_141a7a11e9f9a3 1-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "35b418ea3e380f4edcfb7a52ea30d56e6af81107",
+  "prompts": {},
+  "sessions": {
+    "s_6119d30d8e324b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5b253b35-e90a-4613-95ac-ff69318485b7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
