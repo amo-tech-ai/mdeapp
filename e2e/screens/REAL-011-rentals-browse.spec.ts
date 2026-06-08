@@ -6,7 +6,7 @@ test.describe("REAL-011 /rentals browse", () => {
     await expect(page.getByTestId("rentals-browse")).toBeVisible();
     await expect(page.getByRole("heading", { name: "Rentals" })).toBeVisible();
     await expect(page.getByTestId("rentals-grid")).toBeVisible();
-    await expect(page.getByTestId("rental-card").first()).toBeVisible();
+    await expect(page.locator('[data-testid^="rental-card-"]').first()).toBeVisible();
   });
 
   test("neighborhood filter chip sets URL param and shows active state", async ({

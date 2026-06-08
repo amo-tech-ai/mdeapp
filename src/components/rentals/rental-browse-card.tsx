@@ -62,6 +62,8 @@ function topAmenities(amenities: string[] | null, limit = 3): string[] {
 
 type RentalBrowseCardProps = {
   rental: Rental;
+  /** SAN-478 / REAL-011 — per-listing id for Playwright (`rental-card-${id}`). */
+  testId?: string;
   selected?: boolean;
   onSelect?: () => void;
 };
@@ -114,7 +116,12 @@ function RentalBrowseCardMedia({
   );
 }
 
-export function RentalBrowseCard({ rental, selected, onSelect }: RentalBrowseCardProps) {
+export function RentalBrowseCard({
+  rental,
+  testId,
+  selected,
+  onSelect,
+}: RentalBrowseCardProps) {
   const { nightlyLabel, monthlyLabel } = formatRentalPrices(rental.nightly_price);
   const chips = topAmenities(rental.amenities);
   const hasWifi = rental.wifi || rental.amenities?.some((a) => a.toLowerCase().includes("wifi"));
@@ -131,7 +138,7 @@ export function RentalBrowseCard({ rental, selected, onSelect }: RentalBrowseCar
 
   return (
     <VenueCardShell
-      testId="rental-browse-card"
+      testId={testId ?? `rental-card-${rental.id}`}
       resultKind="rental"
       pinId={pinId}
       composition="nova"
