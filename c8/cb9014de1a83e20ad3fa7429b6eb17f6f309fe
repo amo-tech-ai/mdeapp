@@ -1,0 +1,41 @@
+src/components/partners/__tests__/event-host-landing.test.tsx
+  s_b36771af174a1f::t_205c6689edb0c2 1-42,53-56
+  s_26308efd15595e::t_d7975084333b45 43-52
+src/components/partners/partner-marketing-nav.tsx
+  s_b36771af174a1f::t_8e65ded0bdbe79 5-83
+src/components/partners/event-host-landing.tsx
+  s_b36771af174a1f::t_f3408eeab446aa 1-12,14-17,19-24,26-93,95-101,103-114,121-123,125-126,128-134,140,142,149-150,152-153,178-182,184-186,188-190,192-195,197-198,211-219,221-229,231-251,253-261,263-273,275-277,279-295,302-303,306-316,318-322,328,330,332-339
+  s_26308efd15595e::t_b09f7fcc634eb5 13,18,25,94,102,115-120,124,127,135-139,141,143-148,151,154-177,183,187,191,196,199-210,220,230,252,262,274,278,296-301,304-305,317,323-327,329,331
+src/app/host/page.tsx
+  s_b36771af174a1f::t_4b4a1d8fa48e8e 1-16
+src/lib/supabase/__tests__/middleware-host-public.test.ts
+  s_b36771af174a1f::t_f20447efa622c8 1-32
+src/lib/supabase/middleware.ts
+  s_26308efd15595e::t_df0673c2d7d54a 5-6
+e2e/screens/SAN-660-host-landing.spec.ts
+  s_26308efd15595e::t_c896a3825b5b3e 1-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "c8cb9014de1a83e20ad3fa7429b6eb17f6f309fe",
+  "prompts": {},
+  "sessions": {
+    "s_26308efd15595e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6fba3bdb-547a-4e13-bcee-a5a0beb3f90b",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_b36771af174a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e275ed1c-ebc2-46f2-91f8-b18574a1b947",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
