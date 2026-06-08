@@ -3,7 +3,8 @@ import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { runAuditedSearch } from '../lib/run-audited-search';
 import { searchRentalsIntelligent } from '../lib/intelligence-rental-search';
-import { writeSearchLog } from '../lib/search-logs';
+import { writeSearchLog, type EmbedStatus } from '../lib/search-logs';
+import type { EmbedFailureReason } from '../lib/query-embedding';
 
 export const rentalSchema = z.object({
   id: z.string(),
@@ -42,8 +43,8 @@ export type RentalSearchResult = {
   total: number;
   source: 'supabase' | 'mock';
   hybridUsed?: boolean;
-  embedStatus?: 'ok' | 'skipped' | 'failed';
-  embedFailureReason?: string;
+  embedStatus?: EmbedStatus;
+  embedFailureReason?: EmbedFailureReason;
   embedHttpStatus?: number;
   rankExplanation?: import('../lib/search-logs').RankExplanationEntry[];
 };
@@ -380,6 +381,7 @@ export async function searchRentals(
         hybridUsed: intel.hybridUsed,
         embedStatus: intel.embedStatus,
         embedFailureReason: intel.embedFailureReason,
+        embedHttpStatus: intel.embedHttpStatus,
         groundingUsed: false,
         rankExplanation: intel.rankExplanation,
       });

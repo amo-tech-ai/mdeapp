@@ -4,7 +4,7 @@ import {
   vectorLiteral,
   type EmbedFailureReason,
 } from "./query-embedding";
-import type { RankExplanationEntry } from "./search-logs";
+import type { EmbedStatus, RankExplanationEntry } from "./search-logs";
 import {
   type Rental,
   type RentalQuery,
@@ -110,7 +110,7 @@ export async function searchRentalsIntelligent(
   total: number;
   source: "supabase" | "mock";
   hybridUsed: boolean;
-  embedStatus: "ok" | "skipped" | "failed";
+  embedStatus: EmbedStatus;
   embedFailureReason?: EmbedFailureReason;
   embedHttpStatus?: number;
   rankExplanation: RankExplanationEntry[];
@@ -137,7 +137,7 @@ export async function searchRentalsIntelligent(
 
   let hybridRows: HybridListingRow[] = [];
   let hybridUsed = false;
-  let embedStatus: "ok" | "skipped" | "failed" = queryText ? "failed" : "skipped";
+  let embedStatus: EmbedStatus = queryText ? "failed" : "skipped";
   let embedFailureReason: EmbedFailureReason | undefined;
   let embedHttpStatus: number | undefined;
 
@@ -159,13 +159,12 @@ export async function searchRentalsIntelligent(
           note: "hybrid_search_listings RPC",
         });
       } else if (error) {
-        embedStatus = "failed";
-        embedFailureReason = "http_error";
+        // Embed succeeded — failure is Supabase RPC, not embed API.
         console.warn("[intelligence-rental-search] hybrid RPC:", error.message);
         rankExplanation.push({
           factor: "hybrid_rpc_error",
           score: 0,
-          note: error.message,
+          note: "hybrid_search_listings unavailable",
         });
       }
     } else {
