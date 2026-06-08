@@ -2,6 +2,8 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
+import { MarketingFooter } from "@/components/marketing/marketing-footer";
+import { MarketingPageShell } from "@/components/marketing/marketing-page-shell";
 import { PartnerHub } from "@/components/partners/partner-hub";
 
 vi.mock("next/link", () => ({
@@ -30,7 +32,13 @@ const HUB_LINKS = [
   "/partners/nightlife",
 ] as const;
 
-const html = renderToStaticMarkup(<PartnerHub />);
+// Hub is now slotted into the reusable MarketingPageShell (SAN-692), which
+// owns the <main data-testid="partner-hub"> + nav + footer chrome.
+const html = renderToStaticMarkup(
+  <MarketingPageShell accent="gold" mainTestId="partner-hub">
+    <PartnerHub />
+  </MarketingPageShell>,
+);
 
 const FORBIDDEN_COLORS =
   /\b(?:bg|text|border|from|to|via)-(?:gray|zinc|slate|neutral|stone)-\d{2,3}\b/;
@@ -66,5 +74,42 @@ describe("PartnerHub (/partners)", () => {
 
   it("uses semantic tokens, not hardcoded gray shades", () => {
     expect(FORBIDDEN_COLORS.test(html)).toBe(false);
+  });
+});
+
+// PR #131 review (Cubic): the shared footer must link only to routes that
+// exist on disk. Replaces the dead /about, /contact, /legal/privacy links.
+const footerHtml = renderToStaticMarkup(<MarketingFooter />);
+
+// Routes with a real src/app/**/page.tsx (verified 2026-06-08).
+const LIVE_FOOTER_ROUTES = [
+  "/",
+  "/events",
+  "/restaurants",
+  "/cafes",
+  "/nightlife",
+  "/rentals",
+  "/saved",
+  "/me/tickets",
+  "/partners",
+  "/partners/signup",
+  "/host/event/new",
+];
+
+const DEAD_ROUTES = ["/about", "/contact", "/legal/privacy"];
+
+describe("MarketingFooter — live routes only", () => {
+  it("links none of the removed dead routes", () => {
+    for (const route of DEAD_ROUTES) {
+      expect(footerHtml).not.toContain(`href="${route}"`);
+    }
+  });
+
+  it("every footer href resolves to a known live route", () => {
+    const hrefs = [...footerHtml.matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
+    expect(hrefs.length).toBeGreaterThan(0);
+    for (const href of hrefs) {
+      expect(LIVE_FOOTER_ROUTES).toContain(href);
+    }
   });
 });
