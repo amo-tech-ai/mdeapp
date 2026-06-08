@@ -2,7 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseEnv } from "./env";
 
-const PROTECTED_PREFIXES = ["/host", "/trips", "/saved"];
+// /host marketing landing (SAN-660) is public; wizard + host dashboard paths stay auth-gated.
+const PROTECTED_PREFIXES = ["/host/events", "/host/event", "/trips", "/saved"];
 // Exact paths that require a session without protecting their subpaths.
 // /me/tickets (wallet list) needs auth, but /me/tickets/[id]?token= is the
 // guest ticket-view flow and must stay reachable without a session.
