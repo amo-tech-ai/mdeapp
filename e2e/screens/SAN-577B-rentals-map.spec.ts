@@ -27,7 +27,12 @@ test.describe("SAN-577B /rentals map workspace", () => {
     const fab = page.getByTestId("browse-map-fab");
     await expect(fab).toBeVisible();
     await fab.click();
-    await expect(page.getByTestId("chat-map")).toBeVisible({ timeout: 8_000 });
+    await expect(page.getByRole("dialog", { name: "Map view" })).toBeVisible({
+      timeout: 8_000,
+    });
+    await expect(
+      page.getByRole("dialog", { name: "Map view" }).getByTestId("chat-map"),
+    ).toBeVisible();
   });
 
   test("filter change updates page without losing map panel", async ({
