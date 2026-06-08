@@ -1,10 +1,35 @@
 import { NextResponse } from "next/server";
 import { activatePartnerInputSchema } from "@/lib/partners/activate-schema";
-import { activatePartner } from "@/lib/partners/activate-partner";
+import {
+  activatePartner,
+  type ActivatePartnerError,
+} from "@/lib/partners/activate-partner";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 
 export const dynamic = "force-dynamic";
+
+const CLIENT_ERROR_MESSAGES: Record<ActivatePartnerError["code"], string> = {
+  draft_not_found: "Draft not found",
+  draft_forbidden: "Draft does not belong to user",
+  draft_type_mismatch: "Draft type does not match partner type",
+  insert_failed: "Partner activation failed",
+  member_failed: "Partner activation failed",
+  draft_link_failed: "Partner activation failed",
+};
+
+function errorStatus(code: ActivatePartnerError["code"]): number {
+  switch (code) {
+    case "draft_not_found":
+      return 404;
+    case "draft_forbidden":
+      return 403;
+    case "draft_type_mismatch":
+      return 400;
+    default:
+      return 500;
+  }
+}
 
 export async function POST(req: Request) {
   const supabase = await createClient();
@@ -39,13 +64,15 @@ export async function POST(req: Request) {
 
   const result = await activatePartner(service, user.id, parsed.data);
   if (!result.ok) {
-    const status =
-      result.error.code === "draft_not_found"
-        ? 404
-        : result.error.code === "draft_forbidden"
-          ? 403
-          : 500;
-    return NextResponse.json({ error: result.error.message }, { status });
+    console.error(
+      "[/api/partners/activate]",
+      result.error.code,
+      result.error.message,
+    );
+    return NextResponse.json(
+      { error: CLIENT_ERROR_MESSAGES[result.error.code] },
+      { status: errorStatus(result.error.code) },
+    );
   }
 
   const { created, ...payload } = result.data;

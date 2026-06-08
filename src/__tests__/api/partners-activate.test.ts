@@ -32,6 +32,7 @@ type MemberRow = {
 type DraftRow = {
   id: string;
   profile_id: string;
+  type: string;
   partner_id: string | null;
   submitted_at: string | null;
 };
@@ -70,6 +71,15 @@ function makeMockDb(state: {
           insert: (row: PartnerRow) => ({
             select: () => ({
               single: async () => {
+                const duplicate = partners.find(
+                  (p) => p.profile_id === row.profile_id && p.type === row.type,
+                );
+                if (duplicate) {
+                  return {
+                    data: null,
+                    error: { code: "23505", message: "duplicate key value" },
+                  };
+                }
                 const inserted: PartnerRow = {
                   id: PARTNER_ID,
                   profile_id: row.profile_id,
@@ -116,19 +126,37 @@ function makeMockDb(state: {
                 if (col !== "id") return { data: null, error: null };
                 const row = drafts.find((d) => d.id === val);
                 return {
-                  data: row ? { id: row.id, profile_id: row.profile_id } : null,
+                  data: row
+                    ? { id: row.id, profile_id: row.profile_id, type: row.type }
+                    : null,
                   error: null,
                 };
               },
             }),
           }),
-          update: (patch: Partial<DraftRow>) => ({
-            eq: async (col: string, val: string) => {
-              const row = drafts.find((d) => d[col as keyof DraftRow] === val);
-              if (row) Object.assign(row, patch);
-              return { error: null };
-            },
-          }),
+          update: (patch: Partial<DraftRow>) => {
+            const filters: Record<string, string> = {};
+            const chain = {
+              eq: (col: string, val: string) => {
+                filters[col] = val;
+                return chain;
+              },
+              select: () => chain,
+              maybeSingle: async () => {
+                const row = drafts.find((d) =>
+                  Object.entries(filters).every(
+                    ([key, value]) => d[key as keyof DraftRow] === value,
+                  ),
+                );
+                if (row) Object.assign(row, patch);
+                return {
+                  data: row ? { id: row.id } : null,
+                  error: null,
+                };
+              },
+            };
+            return chain;
+          },
         };
       }
 
@@ -193,6 +221,18 @@ describe("sanitizePartnerSettings", () => {
       }),
     ).toEqual({ name: "OK" });
   });
+
+  it("blocks prototype pollution keys", () => {
+    expect(
+      sanitizePartnerSettings({
+        ["__proto__"]: { polluted: true },
+        constructor: { polluted: true },
+        prototype: { polluted: true },
+        name: "OK",
+      }),
+    ).toEqual({ name: "OK" });
+    expect(Object.getPrototypeOf(sanitizePartnerSettings({ name: "OK" }))).toBeNull();
+  });
 });
 
 describe("activatePartner", () => {
@@ -233,12 +273,117 @@ describe("activatePartner", () => {
     expect(db._state.partners).toHaveLength(1);
   });
 
+  it("does not create partner when draftId is missing", async () => {
+    const db = makeMockDb({});
+    const result = await activatePartner(db, PROFILE_ID, {
+      type: "host",
+      draftId: DRAFT_ID,
+    });
+
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.error.code).toBe("draft_not_found");
+    expect(db._state.partners).toHaveLength(0);
+    expect(db._state.members).toHaveLength(0);
+  });
+
+  it("rejects draft type mismatch before partner writes", async () => {
+    const db = makeMockDb({
+      drafts: [
+        {
+          id: DRAFT_ID,
+          profile_id: PROFILE_ID,
+          type: "broker",
+          partner_id: null,
+          submitted_at: null,
+        },
+      ],
+    });
+
+    const result = await activatePartner(db, PROFILE_ID, {
+      type: "host",
+      draftId: DRAFT_ID,
+    });
+
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.error.code).toBe("draft_type_mismatch");
+    expect(db._state.partners).toHaveLength(0);
+    expect(db._state.members).toHaveLength(0);
+  });
+
+  it("handles concurrent insert race idempotently", async () => {
+    const partners: PartnerRow[] = [];
+    const db = {
+      from(table: string) {
+        if (table === "partners") {
+          return {
+            select: () => ({
+              eq: (col: string, val: string) => ({
+                eq: (_col2: string, val2: string) => ({
+                  maybeSingle: async () => {
+                    const row = partners.find(
+                      (p) => p.profile_id === val && p.type === val2,
+                    );
+                    return {
+                      data: row
+                        ? { id: row.id, type: row.type, status: row.status }
+                        : null,
+                      error: null,
+                    };
+                  },
+                }),
+              }),
+            }),
+            insert: () => ({
+              select: () => ({
+                single: async () => {
+                  partners.push({
+                    id: PARTNER_ID,
+                    profile_id: PROFILE_ID,
+                    type: "host",
+                    status: "draft",
+                    completion_score: 0,
+                    settings: {},
+                  });
+                  return {
+                    data: null,
+                    error: { code: "23505", message: "duplicate key value" },
+                  };
+                },
+              }),
+            }),
+          };
+        }
+        if (table === "partner_members") {
+          return {
+            upsert: async () => {
+              return { error: null };
+            },
+          };
+        }
+        throw new Error(`Unexpected table ${table}`);
+      },
+      _state: { partners, members: [], drafts: [] },
+    } as unknown as SupabaseClient<Database> & {
+      _state: { partners: PartnerRow[]; members: MemberRow[]; drafts: DraftRow[] };
+    };
+
+    const result = await activatePartner(db, PROFILE_ID, { type: "host" });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.created).toBe(false);
+    expect(result.data.partnerId).toBe(PARTNER_ID);
+    expect(partners).toHaveLength(1);
+  });
+
   it("links draft when draftId provided", async () => {
     const db = makeMockDb({
       drafts: [
         {
           id: DRAFT_ID,
           profile_id: PROFILE_ID,
+          type: "host",
           partner_id: null,
           submitted_at: null,
         },
@@ -368,5 +513,43 @@ describe("POST /api/partners/activate", () => {
 
     const duplicate = await req();
     expect(duplicate.status).toBe(200);
+  });
+
+  it("returns generic message for server errors", async () => {
+    vi.doMock("@/lib/supabase/server", () => ({
+      createClient: vi.fn(async () => ({
+        auth: {
+          getUser: async () => ({
+            data: { user: { id: PROFILE_ID } },
+          }),
+        },
+      })),
+    }));
+    vi.doMock("@/lib/supabase/service", () => ({
+      createServiceRoleClient: vi.fn(() => ({})),
+    }));
+    vi.doMock("@/lib/partners/activate-partner", () => ({
+      activatePartner: vi.fn(async () => ({
+        ok: false,
+        error: {
+          code: "insert_failed",
+          message: 'relation "partners" does not exist',
+        },
+      })),
+    }));
+
+    const { POST } = await import("@/app/api/partners/activate/route");
+    const res = await POST(
+      new Request("http://localhost/api/partners/activate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "host" }),
+      }),
+    );
+
+    expect(res.status).toBe(500);
+    const body = await res.json();
+    expect(body.error).toBe("Partner activation failed");
+    expect(body.error).not.toContain("relation");
   });
 });
