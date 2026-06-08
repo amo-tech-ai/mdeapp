@@ -1,0 +1,31 @@
+src/components/rentals/__tests__/rental-browse-card.test.tsx
+  s_b36771af174a1f::t_2f413a721637fc 32-38
+.claude/launch.json
+  s_b36771af174a1f::t_2c5568edd7283d 35
+package.json
+  s_b36771af174a1f::t_aebff327319de8 9
+src/components/rentals/rental-browse-view.tsx
+  s_b36771af174a1f::t_25e923fc542538 128
+e2e/screens/REAL-011-rentals-browse.spec.ts
+  s_b36771af174a1f::t_840df2e595e120 9
+src/components/rentals/rental-browse-card.tsx
+  s_b36771af174a1f::t_c8e33891ea6ee9 65-66
+  s_b36771af174a1f::t_c2d54599f460ba 141
+  s_b36771af174a1f::t_d6dec011d71383 119-124
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "dbc66488446edb9bd25a1273152567f225901fce",
+  "prompts": {},
+  "sessions": {
+    "s_b36771af174a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e275ed1c-ebc2-46f2-91f8-b18574a1b947",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
