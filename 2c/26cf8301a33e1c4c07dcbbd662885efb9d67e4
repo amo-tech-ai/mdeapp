@@ -1,0 +1,22 @@
+src/lib/partners/partner-hub-config.ts
+  s_a440d0b65eab4c::t_19ffcd9292f0c5 22-27,41-42,49-50,57-58,65-66,73-74,81-82,89-90
+src/__tests__/partners/partner-hub.test.tsx
+  s_a440d0b65eab4c::t_64fdf235bc07b4 55-63
+  s_a440d0b65eab4c::t_cdbc0acc134aba 24-28,32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "2c26cf8301a33e1c4c07dcbbd662885efb9d67e4",
+  "prompts": {},
+  "sessions": {
+    "s_a440d0b65eab4c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b6dee51c-b8c6-4d41-aaeb-6019ba697e63",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
