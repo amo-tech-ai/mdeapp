@@ -1,0 +1,41 @@
+src/components/partners/partner-signup-type-picker.tsx
+  s_26308efd15595e::t_ace3c99846b2c7 1-228
+src/components/partners/partner-signup-wizard.tsx
+  s_26308efd15595e::t_616ad148375472 6-8,48-55,72,142,144,148,151-156,159-169,176,178-181,191-194,209,211,214-215,221,238,241-261,269-270,280-282
+src/lib/partners/partner-type-picker-config.ts
+  s_26308efd15595e::t_9a413abc13007c 1-108
+src/components/partners/partner-signup-nav.tsx
+  s_26308efd15595e::t_ca1e36a8695844 68-73,76
+  s_26308efd15595e::t_b19c8be9e18adb 27-32
+  s_26308efd15595e::t_6d93b44441b7da 1-26,33-67,74-75,77-83
+src/app/partners/signup/page.tsx
+  s_26308efd15595e::t_9d1eb7964adbad 3-4,13-14,35-38,44,47-50,52-69
+src/components/ui/accordion.tsx
+  s_6119d30d8e324b::t_2843c009f5c6bb 1-72
+src/components/partners/__tests__/partner-signup-type-picker.test.tsx
+  s_26308efd15595e::t_2b25965edd7da6 1-65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "34b460423c6b95cd2df7f584046329ee5a54f2a5",
+  "prompts": {},
+  "sessions": {
+    "s_26308efd15595e": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6fba3bdb-547a-4e13-bcee-a5a0beb3f90b",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_6119d30d8e324b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5b253b35-e90a-4613-95ac-ff69318485b7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
