@@ -1,0 +1,21 @@
+src/components/chat/__tests__/lead-confirmation-banner.test.tsx
+  s_32f0283a47e318::t_dbc904299137bd 17,31,45,59,75,89,104
+src/components/modals/__tests__/schedule-viewing-modal.test.tsx
+  s_32f0283a47e318::t_a51d7cbdf2f54a 32,43,54,66,80,93,104,116,129,141
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "2a037797c54945c9091337e3410d83af2e895746",
+  "prompts": {},
+  "sessions": {
+    "s_32f0283a47e318": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2b95a3c1-cc31-4423-b142-f579acbe9752",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
