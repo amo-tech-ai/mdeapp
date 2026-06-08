@@ -65,15 +65,14 @@ export function PartnerMarketingNav({
         <div className="ml-auto flex shrink-0 items-center gap-2">
           <Button
             variant="outline"
-            size="sm"
+            className="min-h-11 px-4"
             nativeButton={false}
             render={<Link href={signInHref} />}
           >
             Sign in
           </Button>
           <Button
-            size="sm"
-            className="min-h-[44px] px-3 sm:px-4"
+            className="min-h-11 px-4"
             nativeButton={false}
             render={<Link href={primaryCtaHref} />}
             data-testid="partner-marketing-primary-cta"

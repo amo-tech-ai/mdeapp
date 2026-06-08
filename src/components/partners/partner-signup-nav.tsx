@@ -73,13 +73,17 @@ export function PartnerSignupNav({
           ) : null}
           <Button
             variant="outline"
-            size="sm"
+            className="min-h-11 px-4"
             nativeButton={false}
             render={<Link href={signInHref} />}
           >
             Sign in
           </Button>
-          <Button size="sm" nativeButton={false} render={<Link href="/chat" />}>
+          <Button
+            className="min-h-11 px-4"
+            nativeButton={false}
+            render={<Link href="/chat" />}
+          >
             Explore Medellín
           </Button>
         </div>
