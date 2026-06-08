@@ -60,13 +60,14 @@ Phase 5:             M-008…M-013 (after C-020)
 
 ## Phase 2 — mdeapp bridge (post C-018)
 
-| Order | ID | Title | Linear | Depends |
-|---:|---|---|---|---|
-| 8b | [ECOM-C-021](./ECOM-C-021-b2c-reference-storefront.md) | B2C reference storefront (local UX study) | [SAN-724](https://linear.app/sanjiovani/issue/SAN-724) | C-018 |
-| 9 | [ECOM-C-007](./ECOM-C-007-medusa-client-wrapper.md) | Medusa JS SDK wrapper | [SAN-635](https://linear.app/sanjiovani/issue/SAN-635) | C-018, C-006 |
-| 10 | [ECOM-C-008](./ECOM-C-008-commerce-api-proxy.md) | Commerce API proxy | [SAN-636](https://linear.app/sanjiovani/issue/SAN-636) | C-007, C-018 |
+| Order | ID | Title | Linear | Depends | Status |
+|---:|---|---|---|---|---|
+| 8b | [ECOM-C-021](./ECOM-C-021-b2c-reference-storefront.md) | B2C reference storefront (local UX study) | [SAN-724](https://linear.app/sanjiovani/issue/SAN-724) | C-018 | **Done** |
+| 9 | [ECOM-C-007](./ECOM-C-007-medusa-client-wrapper.md) | Medusa JS SDK wrapper | [SAN-635](https://linear.app/sanjiovani/issue/SAN-635) | C-018, C-006 | **Done** |
+| 9b | [ECOM-C-022](./ECOM-C-022-seller-reviews-field-mask.md) | Seller reviews field-mask policy | [SAN-725](https://linear.app/sanjiovani/issue/SAN-725) | C-007, C-018, C-006 | **Done** |
+| 10 | [ECOM-C-008](./ECOM-C-008-commerce-api-proxy.md) | Commerce API proxy | [SAN-636](https://linear.app/sanjiovani/issue/SAN-636) | C-007, C-022, C-018 | Todo |
 
-> **C-021 Done (SAN-724)** — reference only at `commerce/b2c-storefront` :3000. Evidence: [`evidence/2026-06-07/b2c-reference-storefront.md`](../evidence/2026-06-07/b2c-reference-storefront.md). Field-mask policy → SAN-725.
+> **Standalone ecommerce gate:** Mercur `:9000` + B2C `:3000` + field-mask policy ([`commerce-store-api-fields.md`](../docs/commerce-store-api-fields.md)). **C-008 next** — still no chat ProductCards until proxy ships.
 
 ---
 
