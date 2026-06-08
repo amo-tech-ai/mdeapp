@@ -10,6 +10,92 @@ const NIGHTLIFE_GROUNDING_QUERY =
 
 const EVENT_QUERY = "salsa events this weekend in Medellín";
 
+/** Marketing homepage — hero search, FAB, no GeoChatShell yet. */
+export async function gotoMarketingHome(page: Page) {
+  const res = await page.goto("/", { waitUntil: "domcontentloaded" });
+  if (!res?.ok()) {
+    throw new Error(`GET / failed: ${res?.status()}`);
+  }
+  await page
+    .getByRole("searchbox", { name: /ask the ai concierge/i })
+    .waitFor({ state: "visible", timeout: 20_000 });
+  await hideCopilotWebInspector(page);
+}
+
+/** Hero Ask CTA — client navigates to /chat?q=… */
+export async function submitHomeHeroQuery(page: Page, text: string) {
+  const input = page.getByRole("searchbox", { name: /ask the ai concierge/i });
+  await input.click();
+  await input.evaluate((node, value) => {
+    const el = node as HTMLInputElement;
+    const setter = Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype,
+      "value",
+    )?.set;
+    setter?.call(el, value);
+    el.dispatchEvent(
+      new InputEvent("input", {
+        bubbles: true,
+        data: value,
+        inputType: "insertText",
+      }),
+    );
+  }, text);
+  const submit = page.getByRole("button", { name: /^search$/i });
+  await expect(submit).toBeEnabled({ timeout: 10_000 });
+  await Promise.all([
+    page.waitForURL(/\/chat/, { timeout: 30_000 }),
+    submit.click(),
+  ]);
+}
+
+/** After home handoff: lands on /chat, ?q stripped, user message sent once. */
+export async function waitForHomeToChatHandoff(page: Page, query: string) {
+  await page.waitForURL(/\/chat/, { timeout: 30_000 });
+  await expect(page).toHaveURL(/\/chat$/, { timeout: 60_000 });
+  await page
+    .locator('[data-testid="chat-canvas"]')
+    .waitFor({ state: "visible", timeout: 20_000 });
+  await waitForCopilotRuntime(page);
+  const region = page.locator('[data-testid="copilot-chat-region"]');
+  await expect(region.getByText(query, { exact: true })).toHaveCount(1, {
+    timeout: 90_000,
+  });
+}
+
+export async function assertConciergeShellVisible(page: Page) {
+  await expect(page.locator('[data-testid="chat-canvas"]')).toBeVisible();
+  await expect(page.locator('[data-testid="center-chat-panel"]')).toBeVisible();
+  await expect(page.locator('[data-testid="map-panel"]')).toBeVisible();
+  await expect(page.locator('[data-testid="chat-map"]')).toBeVisible();
+}
+
+/** Generic event query from home may clarify instead of rendering cards. */
+export async function waitForHomeEventHandoff(page: Page) {
+  const card = page.locator('[data-testid="event-card"]').first();
+  const clarify = page.getByText(/What kind of events are you looking for/i);
+  try {
+    await Promise.race([
+      card.waitFor({ state: "visible", timeout: 90_000 }),
+      clarify.waitFor({ state: "visible", timeout: 90_000 }),
+    ]);
+  } catch {
+    await waitForEventCards(page);
+  }
+}
+
+/** Map panel shows pins or leaves the empty state. */
+export async function waitForMapPinsUpdated(page: Page, timeout = 120_000) {
+  await page.waitForFunction(
+    () => {
+      const pins = document.querySelectorAll('[data-testid="map-pin"]');
+      const noPins = document.body.innerText.includes("No pins yet");
+      return pins.length > 0 || !noPins;
+    },
+    { timeout },
+  );
+}
+
 /** Canonical concierge surface — GeoChatShell on /chat (D-13 restore). */
 export async function gotoConcierge(page: Page) {
   const res = await page.goto("/chat", { waitUntil: "domcontentloaded" });

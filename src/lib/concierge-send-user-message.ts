@@ -22,15 +22,16 @@ export async function sendConciergeUserMessage(
 
   clearConciergeError();
 
-  if (await handlers.handleRentalMessage(trimmed)) return;
-  if (await handlers.handleEventMessage(trimmed)) return;
-  if (await handlers.handleGroundedMessage(trimmed)) return;
-  if (await handlers.handleRestaurantMessage(trimmed)) return;
-
-  setConciergePendingSend(true);
   try {
+    if (await handlers.handleRentalMessage(trimmed)) return;
+    if (await handlers.handleEventMessage(trimmed)) return;
+    if (await handlers.handleGroundedMessage(trimmed)) return;
+    if (await handlers.handleRestaurantMessage(trimmed)) return;
+
+    setConciergePendingSend(true);
     await handlers.onAgentSend(trimmed);
-  } catch {
+  } catch (err) {
+    console.error("[concierge-send]", err);
     clearConciergePendingSend();
     reportConciergeError();
   }

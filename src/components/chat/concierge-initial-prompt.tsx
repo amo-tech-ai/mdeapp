@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCopilotChat } from "@copilotkit/react-core";
 import { MessageRole, TextMessage } from "@copilotkit/runtime-client-gql";
@@ -25,21 +25,6 @@ export function ConciergeInitialPrompt() {
   const { handleUserMessage: handleGroundedMessage } =
     useGroundedSearchFastPath();
   const sentRef = useRef(false);
-  const [chatReady, setChatReady] = useState(false);
-
-  useEffect(() => {
-    if (chatReady || sentRef.current) return;
-    const id = window.setInterval(() => {
-      const ready = document.querySelector(
-        '[data-testid="copilot-chat-ready"]',
-      );
-      if (ready) {
-        setChatReady(true);
-        window.clearInterval(id);
-      }
-    }, 200);
-    return () => window.clearInterval(id);
-  }, [chatReady]);
 
   const onAgentSend = useCallback(
     async (text: string) => {
@@ -51,23 +36,29 @@ export function ConciergeInitialPrompt() {
   );
 
   useEffect(() => {
-    const q = searchParams.get("q")?.trim();
-    if (!q || sentRef.current || isLoading || !chatReady) return;
+    const rawQ = searchParams.get("q");
+    const trimmedQ = rawQ?.trim();
+    if (rawQ !== null && trimmedQ === "") {
+      sentRef.current = true;
+      router.replace("/chat", { scroll: false });
+      return;
+    }
+    if (!trimmedQ || sentRef.current || isLoading) return;
 
     sentRef.current = true;
-    router.replace("/chat", { scroll: false });
 
-    void sendConciergeUserMessage(q, {
+    void sendConciergeUserMessage(trimmedQ, {
       handleRentalMessage,
       handleEventMessage,
       handleGroundedMessage,
       handleRestaurantMessage,
       onAgentSend,
+    }).finally(() => {
+      router.replace("/chat", { scroll: false });
     });
   }, [
     searchParams,
     isLoading,
-    chatReady,
     router,
     handleRentalMessage,
     handleEventMessage,
