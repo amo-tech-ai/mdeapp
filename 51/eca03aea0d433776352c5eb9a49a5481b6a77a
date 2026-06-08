@@ -1,0 +1,21 @@
+src/components/partners/partner-marketing-nav.tsx
+  s_2966fc0e2798ad::t_db8699ef4b39a4 68,75
+src/components/partners/partner-signup-nav.tsx
+  s_2966fc0e2798ad::t_cbcdf73344e77a 76,82-86
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "51eca03aea0d433776352c5eb9a49a5481b6a77a",
+  "prompts": {},
+  "sessions": {
+    "s_2966fc0e2798ad": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e7c78d40-506f-4042-9220-9ea259f054e2",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
