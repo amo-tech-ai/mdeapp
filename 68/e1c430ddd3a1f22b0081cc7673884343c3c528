@@ -1,0 +1,29 @@
+package.json
+  s_b36771af174a1f::t_971ab996139eb7 82-83
+  s_b36771af174a1f::t_a0f8d4056ed414 37-38
+.npmrc
+  s_b36771af174a1f::t_6ca24d795923b4 1
+src/lib/commerce/__tests__/medusa-client.test.ts
+  s_b36771af174a1f::t_affaddc23629c5 72
+  s_b36771af174a1f::t_4e62492934f764 80
+src/lib/commerce/commerce-env.ts
+  s_b36771af174a1f::t_c4b06bcbfabb72 63
+docs/ecommerce/evidence/2026-06-08/ecom-c-007-medusa-client-wrapper.md
+  s_b36771af174a1f::t_f379865f55b667 38-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "68e1c430ddd3a1f22b0081cc7673884343c3c528",
+  "prompts": {},
+  "sessions": {
+    "s_b36771af174a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e275ed1c-ebc2-46f2-91f8-b18574a1b947",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
