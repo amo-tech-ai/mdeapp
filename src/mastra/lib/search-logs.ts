@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { createServiceRoleClient } from "@/lib/supabase/service";
 import type { EmbedFailureReason } from "./query-embedding";
 
-/** Hybrid search embed step — stored in search_logs.slots alongside hybridUsed. */
+/** Hybrid search embed step — embedStatus/embedFailureReason/embedHttpStatus in search_logs.slots; hybridUsed in hybrid_used column. */
 export type EmbedStatus = "ok" | "skipped" | "failed";
 
 /** Truncate to 256 chars so raw PII-containing queries are never stored in full. */
