@@ -2,6 +2,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
+import { MarketingPageShell } from "@/components/marketing/marketing-page-shell";
 import { PartnerHub } from "@/components/partners/partner-hub";
 
 vi.mock("next/link", () => ({
@@ -30,7 +31,13 @@ const HUB_LINKS = [
   "/partners/nightlife",
 ] as const;
 
-const html = renderToStaticMarkup(<PartnerHub />);
+// Hub is now slotted into the reusable MarketingPageShell (SAN-692), which
+// owns the <main data-testid="partner-hub"> + nav + footer chrome.
+const html = renderToStaticMarkup(
+  <MarketingPageShell accent="gold" mainTestId="partner-hub">
+    <PartnerHub />
+  </MarketingPageShell>,
+);
 
 const FORBIDDEN_COLORS =
   /\b(?:bg|text|border|from|to|via)-(?:gray|zinc|slate|neutral|stone)-\d{2,3}\b/;

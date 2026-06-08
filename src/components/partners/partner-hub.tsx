@@ -40,12 +40,8 @@ function SignupStepMarquee() {
 
 export function PartnerHub() {
   return (
-    <main id="main-content" data-testid="partner-hub" className="bg-background">
-      <section className="relative overflow-hidden border-b border-border bg-background px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,oklch(0.95_0.04_160/0.7),transparent)]"
-          aria-hidden="true"
-        />
+    <>
+      <section className="relative overflow-hidden border-b border-border px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
           <Badge variant="secondary">For partners · Medellín</Badge>
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
@@ -154,6 +150,6 @@ export function PartnerHub() {
           </Button>
         </div>
       </section>
-    </main>
+    </>
   );
 }
