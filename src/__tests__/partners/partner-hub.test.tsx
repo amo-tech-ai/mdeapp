@@ -21,12 +21,15 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-const HUB_LINKS = [
-  "/partners/signup?type=host",
+// Every hub card routes to the LIVE typed signup (no dead landings) — PR #131
+// prod validation found /venues, /sponsors, /business/ai, /partners/{rentals,
+// restaurants,cafes,nightlife} all 404.
+const SIGNUP_TYPES = ["host", "venue", "broker", "sponsor", "agency"] as const;
+const DEAD_HUB_ROUTES = [
   "/venues",
-  "/partners/rentals",
   "/sponsors",
   "/business/ai",
+  "/partners/rentals",
   "/partners/restaurants",
   "/partners/cafes",
   "/partners/nightlife",
@@ -49,9 +52,15 @@ describe("PartnerHub (/partners)", () => {
     expect(html).toContain("Grow your business with mdeai");
   });
 
-  it("links all eight program cards to funnel destinations", () => {
-    for (const href of HUB_LINKS) {
-      expect(html).toContain(`href="${href}"`);
+  it("routes every program card to the live typed signup", () => {
+    for (const type of SIGNUP_TYPES) {
+      expect(html).toContain(`href="/partners/signup?type=${type}`);
+    }
+  });
+
+  it("links no dead/unbuilt landing route", () => {
+    for (const route of DEAD_HUB_ROUTES) {
+      expect(html).not.toContain(`href="${route}"`);
     }
   });
 
