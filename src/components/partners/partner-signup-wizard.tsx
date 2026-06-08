@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { CheckCircle2Icon } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -44,6 +45,14 @@ type ViewState =
     }
   | { kind: "error"; message: string };
 
+function PartnerTypeBadge({ label }: { label: string }) {
+  return (
+    <Badge variant="secondary" className="mb-2 w-fit">
+      {label}
+    </Badge>
+  );
+}
+
 export function PartnerSignupWizard({
   partnerType,
   draftId,
@@ -60,6 +69,7 @@ export function PartnerSignupWizard({
   });
 
   const typeLabel = PARTNER_TYPE_LABELS[partnerType];
+  const loginHref = `/login?next=${encodeURIComponent(loginNextPath)}`;
 
   function updateField<K extends keyof PartnerSignupFormState>(
     key: K,
@@ -129,30 +139,46 @@ export function PartnerSignupWizard({
 
   if (!isAuthenticated) {
     return (
-      <Card className="w-full max-w-lg" data-testid="partner-signup-auth-gate">
+      <Card className="w-full max-w-md shadow-sm" data-testid="partner-signup-auth-gate">
         <CardHeader>
+          <PartnerTypeBadge label={typeLabel} />
           <CardTitle>Sign in to continue</CardTitle>
           <CardDescription>
             Create your {typeLabel.toLowerCase()} partner profile after you sign
-            in.
+            in. We&apos;ll bring you back here.
           </CardDescription>
         </CardHeader>
-        <CardFooter>
-          <Link
-            href={`/login?next=${encodeURIComponent(loginNextPath)}`}
-            className={cn(buttonVariants(), "inline-flex")}
+        <CardContent className="flex flex-col gap-4">
+          <Button
+            size="lg"
+            className="w-full"
+            nativeButton={false}
+            render={<Link href={loginHref} />}
           >
             Sign in
-          </Link>
-        </CardFooter>
+          </Button>
+          <p className="text-center text-xs text-muted-foreground">
+            No account?{" "}
+            <Link
+              href="/signup"
+              className="font-medium text-foreground underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              Create one
+            </Link>
+          </p>
+        </CardContent>
       </Card>
     );
   }
 
   if (view.kind === "success") {
     return (
-      <Card className="w-full max-w-lg" data-testid="partner-signup-success">
+      <Card className="w-full max-w-md shadow-sm" data-testid="partner-signup-success">
         <CardHeader>
+          <PartnerTypeBadge label={typeLabel} />
+          <div className="mb-2 flex size-12 items-center justify-center rounded-full bg-accent/15 text-accent">
+            <CheckCircle2Icon aria-hidden="true" />
+          </div>
           <CardTitle>
             {view.created ? "Partner profile created" : "Partner profile ready"}
           </CardTitle>
@@ -162,7 +188,10 @@ export function PartnerSignupWizard({
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-          <p data-testid="partner-signup-partner-id">
+          <p
+            className="rounded-lg border border-dashed border-border bg-muted/40 px-3 py-2 font-mono text-xs"
+            data-testid="partner-signup-partner-id"
+          >
             Partner ID: {view.data.partnerId}
           </p>
           {view.dashboardDeferred ? (
@@ -177,18 +206,19 @@ export function PartnerSignupWizard({
   }
 
   return (
-    <Card className="w-full max-w-lg" data-testid="partner-signup-wizard">
+    <Card className="w-full max-w-md shadow-sm" data-testid="partner-signup-wizard">
       <CardHeader>
+        <PartnerTypeBadge label={typeLabel} />
         <CardTitle>Partner signup</CardTitle>
         <CardDescription>
-          Step 1 — business profile for {typeLabel}. Submit to activate your
-          partner account.
+          Step 1 of 1 — business profile. Submit to activate your partner
+          account.
         </CardDescription>
       </CardHeader>
       <CardContent>
         {view.kind === "error" ? (
           <p
-            className="mb-4 text-sm text-destructive"
+            className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
             role="alert"
             data-testid="partner-signup-error"
           >
@@ -205,25 +235,30 @@ export function PartnerSignupWizard({
               value={form.businessName}
               onChange={(e) => updateField("businessName", e.target.value)}
               autoComplete="organization"
+              placeholder="Roof Events Medellín"
             />
           </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="category">Category</Label>
-            <Input
-              id="category"
-              name="category"
-              value={form.category ?? ""}
-              onChange={(e) => updateField("category", e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="neighborhood">Neighborhood</Label>
-            <Input
-              id="neighborhood"
-              name="neighborhood"
-              value={form.neighborhood ?? ""}
-              onChange={(e) => updateField("neighborhood", e.target.value)}
-            />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="category">Category</Label>
+              <Input
+                id="category"
+                name="category"
+                value={form.category ?? ""}
+                onChange={(e) => updateField("category", e.target.value)}
+                placeholder="Nightlife"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="neighborhood">Neighborhood</Label>
+              <Input
+                id="neighborhood"
+                name="neighborhood"
+                value={form.neighborhood ?? ""}
+                onChange={(e) => updateField("neighborhood", e.target.value)}
+                placeholder="Provenza"
+              />
+            </div>
           </div>
           <input type="hidden" name="type" value={partnerType} readOnly />
           {draftId ? (
@@ -231,6 +266,8 @@ export function PartnerSignupWizard({
           ) : null}
           <Button
             type="submit"
+            size="lg"
+            className="w-full"
             disabled={pending || view.kind === "loading"}
             data-testid="partner-signup-submit"
           >
@@ -240,6 +277,9 @@ export function PartnerSignupWizard({
           </Button>
         </form>
       </CardContent>
+      <CardFooter className="border-0 bg-transparent text-xs text-muted-foreground">
+        Phase 2 adds a multi-step stepper and AI co-pilot panel.
+      </CardFooter>
     </Card>
   );
 }
