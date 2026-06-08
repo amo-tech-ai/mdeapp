@@ -1,0 +1,31 @@
+src/app/rentals/page.tsx
+  s_32f0283a47e318::t_10fe5e0fcc442c 37
+  s_32f0283a47e318::t_c72293e1a0919e 23,26,33,46
+.claude/launch.json
+  s_32f0283a47e318::t_71f8a0225ba8da 35
+  s_32f0283a47e318::t_fafce5f5d493d8 33-34,36-38
+src/components/rentals/rental-browse-view.tsx
+  s_32f0283a47e318::t_d708c9acfedc7e 10
+  s_32f0283a47e318::t_45d3eaeac034bd 143-145
+  s_32f0283a47e318::t_0e1281fec96695 35
+  s_32f0283a47e318::t_c43e951d3a30d7 44,65-67,72-73,112,119,121
+src/components/rentals/rental-browse-card.tsx
+  s_32f0283a47e318::t_f9116e85d42101 1-24,50-54,56-189
+  s_32f0283a47e318::t_a73278cdafb61c 25-49,55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "6e42815fa580f7396214e3c5f570e79a90f0aa77",
+  "prompts": {},
+  "sessions": {
+    "s_32f0283a47e318": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2b95a3c1-cc31-4423-b142-f579acbe9752",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
