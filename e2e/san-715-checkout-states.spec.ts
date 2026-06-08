@@ -11,56 +11,6 @@ import { test, expect } from "@playwright/test";
  * (return banners, sold-out, empty tier list, network error display).
  */
 
-// ── Post-checkout return banners ─────────────────────────────────────────────
-
-test.describe("SAN-715 checkout return banners", () => {
-  test.use({ viewport: { width: 1280, height: 900 } });
-
-  test("success banner renders with QR link on ?checkout=success", async ({
-    page,
-  }) => {
-    // Use any event slug — the page renders the banner from search params
-    // regardless of event content; fall back to /events if no slug available
-    await page.goto("/events?checkout=success", { waitUntil: "networkidle" });
-
-    // The banner may appear on the events list page if an EventCheckoutNotice
-    // is present, or on a detail page. Test that the notice component responds
-    // to the search param on a known route that wraps the notice.
-    // On the events list, the notice is NOT rendered, so we test via a slug
-    // that definitely exists — but we can't hardcode a real slug. Instead,
-    // verify the component behaviour via the event detail page with a mock slug
-    // that triggers not-found (the notice renders before the detail).
-    // Safest cross-env approach: inject ?checkout=success on the home page
-    // where `EventCheckoutNotice` is NOT mounted, just assert no crash.
-    await expect(page).toHaveURL(/checkout=success/);
-  });
-
-  test("success banner: checkout-success-notice visible with correct content", async ({
-    page,
-  }) => {
-    // Intercept the getPublicEvent call to return a valid event so the detail
-    // page renders. We'll just test the notice component on any event detail
-    // page. Use a slug that returns 404 — the notice renders before notFound().
-    // Simpler: load the events list with search params and mock the component.
-    // For a reliable cross-env test, directly test the notice on the event slug
-    // page using route interception to supply a real event payload.
-    await page.route("**/rest/v1/events*", async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify([]),
-      });
-    });
-    // Navigate to an event slug with success param — notFound renders
-    // but the EventCheckoutNotice Suspense boundary fires first.
-    // We test the notice in isolation by navigating to events browse with mock.
-    await page.goto("/events", { waitUntil: "networkidle" });
-    // If the events browse page has an EventCheckoutNotice, it would show here.
-    // The primary assertion is that the page doesn't crash.
-    await expect(page.getByTestId("events-browse")).toBeVisible();
-  });
-});
-
 // ── Checkout notice component direct render ──────────────────────────────────
 
 test.describe("SAN-715 event checkout notice — success", () => {
@@ -182,7 +132,7 @@ test.describe("SAN-715 booking checkout modal states", () => {
     );
   });
 
-  test("modal shows network error on API failure with retry note", async ({
+  test("modal shows network error with retry note", async ({
     page,
   }) => {
     await page.goto("/events", { waitUntil: "networkidle" });
@@ -208,16 +158,9 @@ test.describe("SAN-715 booking checkout modal states", () => {
     await buyBtn.click();
     await expect(page.getByTestId("booking-checkout-modal")).toBeVisible();
 
-    // Intercept the checkout API to simulate a failure
+    // Abort the request so fetch() throws TypeError — exercises the isNetwork path
     await page.route("**/api/tickets/checkout", async (route) => {
-      await route.fulfill({
-        status: 502,
-        contentType: "application/json",
-        body: JSON.stringify({
-          success: false,
-          error: { message: "Checkout failed", code: "EDGE_ERROR" },
-        }),
-      });
+      await route.abort("failed");
     });
 
     // Fill in the form and submit
@@ -225,9 +168,10 @@ test.describe("SAN-715 booking checkout modal states", () => {
     await page.fill('input[name="email"]', "andres@example.com");
     await page.getByTestId("booking-checkout-submit").click();
 
-    // Error display appears
+    // Network error display appears with correct heading
     await expect(page.getByTestId("booking-checkout-error")).toBeVisible();
-    // Submit CTA changes to "Try again" since generic errors are retryable
+    await expect(page.getByText("Connection error")).toBeVisible();
+    // Submit CTA changes to "Try again" — network errors are retryable
     await expect(page.getByTestId("booking-checkout-submit")).toHaveText(
       /Try again/i,
     );

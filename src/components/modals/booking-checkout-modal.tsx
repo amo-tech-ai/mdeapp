@@ -5,7 +5,10 @@ import { AlertCircle, CreditCard, Wifi } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { PublicEventDetail, PublicEventTicket } from "@/lib/events/types";
 import { formatTicketPrice } from "@/lib/events/format-event";
-import { submitTicketCheckout } from "@/lib/tickets/submit-ticket-checkout";
+import {
+  submitTicketCheckout,
+  CheckoutApiError,
+} from "@/lib/tickets/submit-ticket-checkout";
 import { persistWalletAccess } from "@/components/tickets/checkout-wallet-link";
 import {
   classifyCheckoutError,
@@ -79,7 +82,8 @@ function BookingCheckoutForm({
     } catch (err) {
       const isNetwork = err instanceof TypeError && err.message.includes("fetch");
       const msg = err instanceof Error ? err.message : undefined;
-      setCheckoutErr(classifyCheckoutError(msg, undefined, isNetwork));
+      const code = err instanceof CheckoutApiError ? err.code : undefined;
+      setCheckoutErr(classifyCheckoutError(msg, code, isNetwork));
       setSubmitting(false);
     }
   };

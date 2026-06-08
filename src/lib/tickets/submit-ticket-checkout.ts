@@ -5,6 +5,15 @@ import {
   buildAttendeePayload,
 } from "./ticket-checkout-schema";
 
+export class CheckoutApiError extends Error {
+  readonly code: string | undefined;
+  constructor(message: string, code?: string) {
+    super(message);
+    this.name = "CheckoutApiError";
+    this.code = code;
+  }
+}
+
 export async function submitTicketCheckout(
   input: TicketCheckoutInput,
 ): Promise<TicketCheckoutResult> {
@@ -22,7 +31,7 @@ export async function submitTicketCheckout(
     orderId?: string;
     shortId?: string | null;
     walletAccessToken?: string;
-    error?: { message?: string };
+    error?: { message?: string; code?: string };
   };
 
   if (
@@ -32,7 +41,10 @@ export async function submitTicketCheckout(
     !json.orderId ||
     !json.walletAccessToken
   ) {
-    throw new Error(json.error?.message ?? "Checkout failed");
+    throw new CheckoutApiError(
+      json.error?.message ?? "Checkout failed",
+      json.error?.code,
+    );
   }
 
   return {
