@@ -52,9 +52,9 @@ export function HostNavRail() {
                   data-testid={item.testId}
                   className="block rounded-md px-2 py-1.5 text-sm text-muted-foreground/60"
                   aria-disabled="true"
-                  title="Coming soon"
+                  aria-label={`${item.label} (Coming soon)`}
                 >
-                  {item.label}
+                  {item.label} (Coming soon)
                 </span>
               ) : (
                 <Link

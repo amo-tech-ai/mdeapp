@@ -1,5 +1,3 @@
-"use client";
-
 import type { ReactNode } from "react";
 import { HostNavRail } from "@/components/host/host-nav-rail";
 
