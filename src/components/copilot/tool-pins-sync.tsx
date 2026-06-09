@@ -21,6 +21,11 @@ export function ToolPinsSync({
     const key = `${category}:${pins.map((p) => p.id).sort().join(",")}`;
     if (key === lastMergedKeyRef.current) return;
     lastMergedKeyRef.current = key;
+    // UX-033 / J15 — agent tool path: drop stale rental/event pins before grounded merge.
+    if (category === "grounded") {
+      mergePinsByCategory("rental", []);
+      mergePinsByCategory("event", []);
+    }
     mergePinsByCategory(category, pins);
   }, [category, result, mergePinsByCategory]);
 

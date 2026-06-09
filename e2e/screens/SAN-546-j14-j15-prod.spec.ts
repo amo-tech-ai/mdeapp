@@ -65,15 +65,20 @@ test.describe("SAN-546 · OPS-JOURNEY — J14/J15 prod", () => {
       '[data-testid="grounded-card"][data-result-kind="cafe"]',
     ).count();
     const cafePinIds = await collectPinIds();
+    const pinCategories = await page
+      .locator('[data-testid="map-pin"]')
+      .evaluateAll((els) =>
+        els.map((el) => el.getAttribute("data-pin-category") ?? ""),
+      );
 
     expect(cafeCards).toBeGreaterThan(0);
     expect(cafePinIds.length).toBeGreaterThan(0);
-    // Stale rental pins must actually be cleared — none of the rental pin ids
-    // may persist after the café search (identity check, not just a count cap).
     const persistedRentalPins = cafePinIds.filter((id) =>
       rentalPinIds.includes(id),
     );
     expect(persistedRentalPins).toEqual([]);
+    expect(pinCategories.filter((c) => c === "rental")).toHaveLength(0);
+    expect(pinCategories.filter((c) => c === "event")).toHaveLength(0);
     // Defensive upper bound retained to catch unbounded pin accumulation.
     expect(cafePinIds.length).toBeLessThanOrEqual(Math.max(rentalPinIds.length, 12));
   });
