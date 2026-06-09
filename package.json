@@ -61,6 +61,7 @@
     "commit:staged-guard:c013": "node scripts/commit-staged-guard.mjs c013",
     "test:e2e:new-chat": "playwright test e2e/concierge-new-chat.spec.ts --project=chromium --workers=1",
     "test:e2e:prod-synthetic": "PROD_SMOKE_BASE_URL=${PROD_SMOKE_BASE_URL:-https://www.mdeai.co} PW_SKIP_WEBSERVER=1 playwright test e2e/prod-synthetic-smoke.spec.ts --project=chromium --workers=1",
+    "test:e2e:prod-journey-j05-j20": "PROD_SMOKE_BASE_URL=${PROD_SMOKE_BASE_URL:-https://www.mdeai.co} PW_SKIP_WEBSERVER=1 playwright test e2e/prod-journey-j05-j20.spec.ts --project=chromium --workers=1",
     "verify:commerce-mdeapp-env": "node --env-file=.env.local scripts/verify-commerce-mdeapp-env.mjs",
     "smoke:commerce-client": "npx tsx --env-file=.env.local scripts/smoke-commerce-client.ts"
   },
@@ -126,7 +127,8 @@
   },
   "overrides": {
     "prismjs": ">=1.30.0",
-    "langsmith": ">=0.5.27"
+    "langsmith": ">=0.5.27",
+    "shell-quote": ">=1.8.4"
   },
   "engines": {
     "node": ">=20"
