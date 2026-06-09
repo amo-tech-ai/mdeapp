@@ -1,0 +1,35 @@
+docs/tasks/events/data/VENUE-DATA-MODEL.md
+  s_d1b7a3779fe462::t_f2775046d4e38b 483
+  s_d1b7a3779fe462::t_b0e55339e41a57 456
+docs/tasks/events/data/data-model-audit.md
+  s_d1b7a3779fe462::t_1f3c54bfb9292d 32
+docs/tasks/events/specs/venue-booking/EVT-033-schema.md
+  s_d1b7a3779fe462::t_c49b9d97038c26 39
+docs/tasks/testing/scripts/san492-rls-smoke.sql
+  s_d1b7a3779fe462::t_23033f5586fc50 1-245
+supabase/migrations/20260609120000_san492_event_venue_offerings.sql
+  s_d1b7a3779fe462::t_ddabc307974abe 205
+docs/tasks/events/specs/venue-booking/venue-booking-test-matrix.md
+  s_d1b7a3779fe462::t_fae222232d20b0 14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "6a549710607e3acf2b56e0e84b239a3a8409ea02",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_d1b7a3779fe462": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "26292875-287f-4fbd-bce0-3bd9e158b377",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
