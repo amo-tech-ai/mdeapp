@@ -1,0 +1,24 @@
+supabase/migrations/20260609120000_san492_event_venue_offerings.sql
+  s_f86ae326fa9349::t_2fd5861095c44c 1-176
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "02a7531c5eafb9383366ab63fb08334e85c51218",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_f86ae326fa9349": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fb629533-d8f9-414f-90f8-bba7dc9dab98",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
