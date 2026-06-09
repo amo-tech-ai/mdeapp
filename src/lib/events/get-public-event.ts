@@ -24,7 +24,6 @@ type EventRow = {
   status: string;
   is_active: boolean;
   details: unknown;
-  venue_id: string | null;
   event_venues: VenueRow | VenueRow[] | null;
 };
 

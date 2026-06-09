@@ -50,6 +50,17 @@ describe("buildEventInsert", () => {
     });
   });
 
+  it("normalizes whitespace-only avatar_url to null", () => {
+    const row = buildEventInsert(draft, "user-123", "slug", {
+      name: "Roberto Host",
+      avatarUrl: "  ",
+    });
+    expect(row.details.host_display).toEqual({
+      name: "Roberto Host",
+      avatar_url: null,
+    });
+  });
+
   it("defaults optional fields to null / empty without throwing", () => {
     const row = buildEventInsert({ title: "T", dateIso: "2026-01-01T00:00:00Z" }, "u", "t");
     expect(row.description).toBeNull();
