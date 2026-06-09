@@ -1,0 +1,6 @@
+flowchart LR
+  H["/host landing"] --> SU["signup?type=host"] --> DASH["dashboard"]
+  DASH --> NEW["/host/event/new<br/>AI wizard"] --> HITL{"Approve?"}
+  HITL -- yes --> PUB["Event live<br/>browse·map·concierge"]
+  HITL -- edit --> NEW
+  PUB --> SELL["Tickets sold (Stripe)"] --> MANAGE["/host/events<br/>manage · payouts"]

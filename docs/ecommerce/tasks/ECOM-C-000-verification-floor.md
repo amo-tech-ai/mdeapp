@@ -2,7 +2,7 @@
 id: ECOM-C-000
 task_id: ECOM-C-000
 title: Repair mdeapp verification floor before commerce
-status: In Progress
+status: Done
 priority: P0
 phase: 0
 optional: true
@@ -121,11 +121,13 @@ description: "Fix the mdeapp lint/typecheck verification floor so every later co
 
 ### Acceptance Criteria
 
-- [ ] `npm run lint` no longer scans generated nested worktree artifacts.
-- [ ] `npm run typecheck` completes without Node heap OOM.
-- [ ] `npm test` remains green.
-- [ ] `npm run build` remains green.
-- [ ] Any remaining `npm run audit` findings are documented with severity and owner.
+- [x] `npm run lint` no longer scans generated nested worktree artifacts.
+- [x] `npm run typecheck` completes without Node heap OOM.
+- [x] `npm test` remains green.
+- [x] `npm run build` remains green.
+- [x] Any remaining `npm run audit` findings are documented with severity and owner.
+
+Evidence: [SAN-628 — ECOM-C-000 mdeapp verification floor](../evidence/2026-06-09/ecom-c-000-verification-floor.md)
 
 ### Proof Commands
 

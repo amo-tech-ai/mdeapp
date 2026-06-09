@@ -1,0 +1,8 @@
+flowchart LR
+  SPON["Sponsor funds prize"] --> CONTEST["Contest live (/contests)"]
+  CONTEST --> ENTRY["Entry = save · attend · refer · post"]
+  ENTRY --> SHARE["Users share to enter"]
+  SHARE --> NEW["New users in"]
+  NEW --> ENTRY
+  CONTEST --> DATA["Sponsor gets reach + leads"]
+  DATA --> RENEW["Sponsor renews"] --> SPON

@@ -1,0 +1,36 @@
+{
+  "generated": "2026-05-31",
+  "deprecated": "Persona-based projects removed. Use mvp-queue.json + MVP-EXECUTION.md.",
+  "canonical": "tasks/linear/mvp-queue.json",
+  "dashboard": "tasks/MVP-EXECUTION.md",
+  "linearHierarchy": {
+    "initiative": "Phase 1 — mdeai MVP launch",
+    "project": "MDEAPP",
+    "milestones": ["🚨 Launch Critical", "🍽️ Discovery — UI", "🎟️ Events — Polish", "🗺️ Maps — Growth", "🔮 Phase 2 / deferred"],
+    "organization": "feature modules + stack tags — NOT persona projects"
+  },
+  "statusLegend": {
+    "done": "🟢 Completed",
+    "partial": "🟡 In Progress",
+    "notStarted": "⚪ Not Started",
+    "blocked": "🟥 Blocked"
+  },
+  "activeQueue": "See mvp-queue.json p0_queue — synced 2026-05-31",
+  "shippedGates": [
+    {
+      "id": "G2",
+      "module": "ux",
+      "percent": 100,
+      "dot": "🟢",
+      "note": "Lead capture proven on prod — do not re-execute"
+    },
+    {
+      "id": "UX-001",
+      "module": "ux",
+      "linear": "SAN-315",
+      "percent": 100,
+      "dot": "🟢",
+      "note": "Concierge restored — do not redo UX-004 path"
+    }
+  ]
+}

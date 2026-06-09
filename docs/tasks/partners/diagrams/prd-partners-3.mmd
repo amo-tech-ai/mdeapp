@@ -1,0 +1,9 @@
+flowchart LR
+  AV["Availability (partner sets)"] --> REQ["Booking request (consumer / concierge)"]
+  REQ --> APP{"Auto / HITL approve"}
+  APP -- approved --> PAY{"Paid?"}
+  PAY -- yes --> STRIPE["Stripe → fee split"]
+  PAY -- no --> CONF["Confirm (lead-only)"]
+  STRIPE --> NOTIF["Notify both (Chatwoot/WhatsApp/email)"]
+  CONF --> NOTIF
+  NOTIF --> FUP["Follow-up + review request"]

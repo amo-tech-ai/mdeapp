@@ -1,0 +1,9 @@
+flowchart LR
+  U["User intent"] --> AI["✦ AI Concierge"]
+  AI --> GND["Ground (Places · Supabase · signals)"]
+  GND --> MATCH["Match partner / inventory"]
+  MATCH --> ACT["Action: book · buy · lead · reserve"]
+  ACT --> PAY["Payment / lead (Stripe · /api/leads)"]
+  PAY --> FUP["Follow-up (confirm · reminder · review)"]
+  FUP --> LOY["Loyalty (save · points · re-engage)"]
+  LOY --> U

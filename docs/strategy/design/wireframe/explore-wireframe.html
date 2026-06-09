@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MDE — Explore (Discovery) Wireframe + Component Spec</title>
+<style>
+  /* ============ tokens (light, from globals.css :root) ============ */
+  :root{
+    --bg: oklch(0.985 0.002 247);
+    --surface: oklch(1 0 0);
+    --ink: oklch(0.28 0.03 257);
+    --muted: oklch(0.55 0.02 257);
+    --line: oklch(0.90 0.006 257);
+    --line-2: oklch(0.84 0.008 257);
+    --primary: oklch(0.508 0.118 175);      /* teal — interactive/nav/pins */
+    --primary-soft: oklch(0.95 0.03 178);
+    --accent: oklch(0.795 0.184 86);        /* gold — AI concierge + stars */
+    --accent-soft: oklch(0.96 0.05 90);
+    --map: oklch(0.62 0.10 235);            /* cartography blue */
+    --ph: linear-gradient(150deg, oklch(0.970 0.015 180), oklch(0.926 0.030 184)); /* pale-teal #E1F6F2 */
+    --radius: 14px;
+    --shadow: 0 1px 2px oklch(0.4 0.03 257 / 0.05), 0 8px 24px oklch(0.4 0.03 257 / 0.06);
+  }
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior: auto; } }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .serif{ font-family: "Playfair Display", Georgia, "Times New Roman", serif; }
+  a{ color:var(--primary); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+
+  /* ============ page shell ============ */
+  .wrap{ max-width: 1200px; margin:0 auto; padding: 0 20px 80px; }
+
+  /* ============ hero / legend ============ */
+  header.top{
+    position:sticky; top:0; z-index:20; background:oklch(0.985 0.002 247 / 0.86);
+    backdrop-filter: blur(10px); border-bottom:1px solid var(--line);
+  }
+  .top-inner{ max-width:1200px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .brand{ display:flex; align-items:center; gap:9px; font-weight:700; letter-spacing:-0.02em; }
+  .brand .dot{ width:22px; height:22px; border-radius:7px; background:linear-gradient(135deg, var(--accent), oklch(0.74 0.16 70)); }
+  .brand small{ font-weight:500; color:var(--muted); }
+  .top-spacer{ flex:1; }
+  .legend{ display:flex; gap:6px; flex-wrap:wrap; }
+
+  .titleblock{ padding:34px 0 14px; }
+  .titleblock h1{ margin:0 0 6px; font-size:30px; letter-spacing:-0.02em; font-weight:600; }
+  .titleblock p{ margin:0; color:var(--muted); max-width:64ch; }
+  .meta-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+
+  /* ============ chips ============ */
+  .chip{ display:inline-flex; align-items:center; gap:6px; padding:3px 9px; border-radius:999px;
+    font-size:11.5px; font-weight:600; border:1px solid var(--line-2); background:var(--surface); color:var(--muted); white-space:nowrap; }
+  .chip b{ font-weight:800; }
+  .chip.t21{ background:var(--primary-soft); border-color:transparent; color:oklch(0.40 0.10 175); }
+  .chip.shad{ background:oklch(0.95 0.005 257); border-color:transparent; color:oklch(0.40 0.02 257); }
+  .chip.ai{ background:var(--accent-soft); border-color:transparent; color:oklch(0.48 0.12 80); }
+  .chip.map{ background:oklch(0.95 0.03 235); border-color:transparent; color:oklch(0.42 0.10 235); }
+  .chip.custom{ background:repeating-linear-gradient(45deg, oklch(0.97 0.004 257), oklch(0.97 0.004 257) 5px, oklch(0.94 0.006 257) 5px, oklch(0.94 0.006 257) 10px); border:1px dashed var(--line-2); color:var(--muted); }
+
+  /* ============ info card ============ */
+  .info{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); margin:8px 0 4px; }
+  .info h4{ margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .rules li{ margin:3px 0; }
+  .rules b{ color:var(--ink); }
+
+  /* ============ overview (full-page anatomy) ============ */
+  .ovwrap{ margin:18px 0 4px; }
+  .ovwrap .ov-cap{ font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:9px; }
+  .overview{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:15px; box-shadow:var(--shadow); }
+  .ov-nav{ display:flex; align-items:center; gap:12px; padding-bottom:11px; border-bottom:1px solid var(--line); }
+  .ov-nav .lk{ font-size:11.5px; color:var(--muted); font-weight:600; }
+  .ov-nav .lk.on{ color:var(--ink); border-bottom:2px solid var(--primary); padding-bottom:2px; }
+  .ov-nav .cmd{ margin-left:auto; }
+  .ov-ava{ width:22px; height:22px; border-radius:50%; background:var(--primary-soft); }
+  .tabs{ display:flex; gap:7px; flex-wrap:wrap; padding:12px 0; }
+  .tab{ padding:6px 13px; border-radius:999px; font-size:11.5px; font-weight:600; border:1px solid var(--line); background:var(--surface); color:var(--muted); white-space:nowrap; }
+  .tab.on{ background:var(--primary); color:#fff; border-color:transparent; }
+  .aiband{ background:var(--accent-soft); border:1px solid oklch(0.86 0.08 88); border-radius:12px; padding:12px 14px; display:flex; align-items:center; gap:11px; margin-bottom:12px; }
+  .aiband .mk{ width:23px; height:23px; border-radius:7px; background:var(--accent); display:flex; align-items:center; justify-content:center; color:oklch(0.30 0.06 80); font-weight:800; font-size:13px; flex-shrink:0; }
+  .aiband .ph-txt{ flex:1; color:oklch(0.46 0.07 84); font-size:12.5px; }
+  .filterbar{ display:flex; align-items:center; gap:7px; flex-wrap:wrap; margin-bottom:12px; }
+  .split{ display:grid; grid-template-columns: minmax(0,1fr) 300px; gap:13px; align-items:start; }
+  .results{ display:flex; flex-direction:column; gap:14px; }
+  .mapcol{ position:sticky; top:74px; }
+
+  /* ---- wireframe primitives ---- */
+  .wire{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
+  .wire .lbl{ font-size:10.5px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:10px; }
+  .g{ height:9px; border-radius:5px; background:oklch(0.92 0.006 257); }
+  .g.dk{ background:oklch(0.86 0.01 257); }
+  .g.w70{ width:70%; } .g.w55{ width:55%; } .g.w40{ width:40%; } .g.w85{ width:85%; } .g.w25{ width:25%; }
+  .g.tall{ height:15px; }
+  .stack > *{ margin-bottom:7px; } .stack > *:last-child{ margin-bottom:0; }
+  .img{ background:var(--ph); border-radius:9px; position:relative; }
+  .img::after{ content:"IMG"; position:absolute; top:6px; left:7px; font-size:9px; font-weight:700; letter-spacing:0.1em; color:oklch(0.45 0.04 190 / 0.55); }
+  .bar{ display:flex; align-items:center; gap:10px; }
+  .pl{ display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:999px; background:oklch(0.95 0.005 257); font-size:11px; color:var(--muted); border:1px solid var(--line); white-space:nowrap; }
+  .pl.solid{ background:var(--primary); color:#fff; border-color:transparent; font-weight:600; }
+  .pl.gold{ background:var(--accent); color:oklch(0.30 0.06 80); border-color:transparent; font-weight:700; }
+  .pl.ghost{ background:transparent; }
+  .pl.on{ background:var(--primary-soft); color:oklch(0.40 0.10 175); border-color:transparent; font-weight:700; }
+  .searchbar{ display:flex; align-items:center; gap:10px; border:1.5px solid var(--line-2); border-radius:999px; padding:10px 12px; background:var(--surface); }
+  .searchbar .ph-txt{ flex:1; color:var(--muted); font-size:12.5px; }
+  .cards{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+  .cards.c3{ grid-template-columns:repeat(3,1fr); }
+  .mini-card{ border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--surface); }
+  .mini-card .img{ height:74px; border-radius:0; }
+  .mini-card .mc-b{ padding:8px; }
+  .mapbox{ height:100%; min-height:230px; border-radius:11px; position:relative; overflow:hidden;
+    background:
+      radial-gradient(circle at 30% 40%, oklch(0.93 0.02 160 / 0.5), transparent 36%),
+      linear-gradient(90deg, oklch(0.90 0.015 247), oklch(0.945 0.01 200)); border:1px solid var(--line); }
+  .mapbox.tall{ min-height:300px; }
+  .pin{ position:absolute; width:13px; height:13px; border-radius:50% 50% 50% 2px; background:var(--primary); transform:rotate(45deg); box-shadow:0 1px 3px oklch(0.3 0.05 175 / 0.4); }
+  .pin.g{ background:var(--map); }
+  .pin.hot{ background:var(--accent); width:16px; height:16px; box-shadow:0 0 0 4px oklch(0.795 0.184 86 / 0.25); }
+  .vtile{ border:1px solid var(--line); border-radius:11px; padding:13px 10px; text-align:center; background:var(--surface); }
+  .vtile .ic{ width:26px; height:26px; border-radius:8px; background:var(--primary-soft); margin:0 auto 8px; }
+  .band{ border:1px dashed var(--line-2); border-radius:11px; padding:12px 14px; display:flex; align-items:center; gap:12px; background:oklch(0.985 0.003 90); }
+
+  /* ---- venue card (the shared anatomy) ---- */
+  .venuecard{ border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--surface); box-shadow:var(--shadow); }
+  .venuecard .vc-img{ background:var(--ph); height:120px; position:relative; }
+  .venuecard .vc-img::after{ content:"IMG"; position:absolute; top:8px; left:9px; font-size:9px; font-weight:700; letter-spacing:0.1em; color:oklch(0.45 0.04 190 / 0.55); }
+  .venuecard .vc-heart{ position:absolute; top:8px; right:9px; width:24px; height:24px; border-radius:50%; background:oklch(1 0 0 / 0.85); display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:12px; }
+  .venuecard .vc-kind{ position:absolute; bottom:8px; left:9px; }
+  .venuecard .vc-b{ padding:11px 12px; }
+
+  /* ---- AI insight band (grounded) ---- */
+  .aiinsight{ display:flex; gap:9px; align-items:flex-start; background:oklch(0.985 0.012 90); border:1px solid oklch(0.88 0.06 88); border-radius:10px; padding:10px 12px; }
+  .aiinsight .mk{ width:20px; height:20px; border-radius:6px; background:var(--accent); color:oklch(0.30 0.06 80); font-weight:800; font-size:11px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .aiinsight .tx{ font-size:12px; color:oklch(0.42 0.05 84); line-height:1.45; }
+
+  /* ---- section header (premium formula) ---- */
+  .sechead{ display:flex; align-items:flex-end; gap:10px; margin-bottom:4px; }
+  .sechead h5{ margin:0; font-size:17px; letter-spacing:-0.01em; font-weight:600; }
+  .sechead .va{ margin-left:auto; font-size:11px; color:var(--primary); font-weight:600; white-space:nowrap; }
+  .secdesc{ color:var(--muted); font-size:12px; margin:0 0 9px; }
+
+  /* ---- command palette mock ---- */
+  .cmdk{ border:1px solid var(--line-2); border-radius:13px; overflow:hidden; box-shadow:var(--shadow); background:var(--surface); max-width:400px; }
+  .cmdk .cmd-in{ padding:12px 14px; border-bottom:1px solid var(--line); display:flex; gap:10px; align-items:center; color:var(--muted); font-size:12.5px; }
+  .cmdk .cmd-sec{ padding:7px 14px 3px; font-size:9.5px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); }
+  .cmdk .cmd-row{ padding:8px 14px; display:flex; gap:10px; align-items:center; font-size:12px; }
+  .cmdk .cmd-row.on{ background:var(--primary-soft); }
+  .cmdk .cmd-row .ci{ width:16px; height:16px; border-radius:5px; background:oklch(0.92 0.006 257); flex-shrink:0; }
+  .cmdk .cmd-row.on .ci{ background:var(--primary); }
+  .kbd{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:10px; border:1px solid var(--line-2); border-radius:5px; padding:1px 6px; color:var(--muted); background:oklch(0.97 0.004 257); margin-left:auto; }
+
+  /* ---- phone frame ---- */
+  .phone{ width:208px; border:8px solid oklch(0.24 0.02 257); border-radius:30px; overflow:hidden; background:var(--bg); box-shadow:var(--shadow); }
+  .phone .pscreen{ padding:9px; }
+  .phone .pnav{ display:flex; align-items:center; gap:7px; margin-bottom:8px; }
+  .phone .ptabs{ display:flex; gap:5px; overflow:hidden; margin-bottom:8px; }
+  .phone .ptab{ padding:4px 9px; border-radius:999px; font-size:9px; font-weight:600; border:1px solid var(--line); color:var(--muted); white-space:nowrap; }
+  .phone .ptab.on{ background:var(--primary); color:#fff; border-color:transparent; }
+  .phone .pinput{ display:flex; align-items:center; gap:6px; border:1.5px solid var(--accent); border-radius:999px; padding:7px 9px; background:var(--accent-soft); margin-bottom:8px; }
+  .phone .pfab{ position:absolute; }
+  .phone .pmaptoggle{ display:flex; align-items:center; justify-content:center; gap:6px; padding:8px; border-radius:999px; background:var(--primary); color:#fff; font-size:10px; font-weight:600; }
+
+  /* ============ spec rows ============ */
+  .row{ display:grid; grid-template-columns: 30px minmax(0,1fr) 360px; gap:18px; align-items:start;
+    padding:22px 0; border-top:1px solid var(--line); scroll-margin-top:70px; }
+  .row:first-of-type{ border-top:none; }
+  .rail .n{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:13px; font-weight:700;
+    color:var(--primary); background:var(--primary-soft); border-radius:8px; width:30px; height:30px;
+    display:flex; align-items:center; justify-content:center; position:sticky; top:64px; }
+
+  /* ---- spec card ---- */
+  .spec{ background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--primary); border-radius:12px; padding:14px 15px; box-shadow:var(--shadow); position:sticky; top:64px; }
+  .spec.ai-led{ border-left-color:var(--accent); }
+  .spec.map-led{ border-left-color:var(--map); }
+  .spec h3{ margin:0 0 9px; font-size:15px; letter-spacing:-0.01em; }
+  .spec .picks{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:9px; }
+  .spec .links{ display:flex; flex-direction:column; gap:3px; margin-bottom:10px; }
+  .spec .links a{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:11px; color:var(--primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .spec .links a::before{ content:"↗ "; opacity:0.6; }
+  .spec ul.notes{ margin:0; padding-left:16px; color:var(--muted); font-size:12.5px; }
+  .spec ul.notes li{ margin:3px 0; }
+  .spec ul.notes b{ color:var(--ink); font-weight:600; }
+
+  /* ============ responsive ============ */
+  @media (max-width: 900px){
+    .row{ grid-template-columns: 24px 1fr; }
+    .spec{ grid-column: 1 / -1; position:static; }
+    .rail .n{ position:static; }
+    .grid2{ grid-template-columns:1fr; }
+    .split{ grid-template-columns:1fr; }
+    .mapcol{ position:static; }
+    .mapbox{ min-height:180px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><span class="dot"></span>mde<span style="color:var(--muted)">·</span>ai&nbsp;<small>explore wireframe</small></div>
+    <div class="top-spacer"></div>
+    <div class="legend">
+      <span class="chip t21">21st.dev</span>
+      <span class="chip shad">shadcn/ui</span>
+      <span class="chip ai">CopilotKit · AI</span>
+      <span class="chip map">Google Maps</span>
+      <span class="chip custom">custom</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="titleblock">
+    <h1 class="serif">Explore — discovery wireframe &amp; component spec</h1>
+    <p>Build-ready blueprint for the <b>flagship discovery system</b> — the AI is the <em>center</em>, not the search bar. This is a <b>shared browse system</b> re-skinned across the existing vertical routes (<code>/restaurants</code> · <code>/cafes</code> · <code>/nightlife</code> · <code>/rentals</code>), <b>not</b> a new <code>/explore</code> page. Layout: nav → tabs → full-width AI Concierge band → Results │ sticky Map. IA companion: <a href="../docs/ia-journey.md">ia-journey.md</a> · tokens: <a href="../docs/design-system.md">design-system.md</a> · images: <a href="../docs/images.md">images.md</a>.</p>
+    <div class="meta-row">
+      <span class="chip">12 sections + anatomy</span>
+      <span class="chip">light mode · pale-teal placeholders</span>
+      <span class="chip">teal = interactive · gold = AI + stars</span>
+      <span class="chip">AI-in-center · §3.3</span>
+      <span class="chip">EN only · Phase 1</span>
+    </div>
+  </div>
+
+  <div class="info">
+    <h4>Global layout rules — Explore</h4>
+    <div class="grid2">
+      <ul class="rules" style="margin:0; padding-left:18px;">
+        <li><b>The stack:</b> nav → vertical tabs → <b>full-width AI band</b> → <code>Results │ sticky Map</code> (never bury the AI under cards)</li>
+        <li><b>Container:</b> <code>max-w-7xl mx-auto px-4 sm:px-6 lg:px-8</code>; split = <code>grid lg:grid-cols-[1fr_minmax(360px,420px)]</code></li>
+        <li><b>Map is co-primary</b> with the concierge — sticky right, <b>hover ↔ pin</b> live sync (the Mindtrip moat)</li>
+        <li><b>Re-skin, don't add a route:</b> tabs switch the vertical; one <code>&lt;VenueCard&gt;</code> + one map serve all verticals</li>
+      </ul>
+      <ul class="rules" style="margin:0; padding-left:18px;">
+        <li><b>Palette discipline:</b> teal everywhere interactive + map pins; gold only for the ✦ AI band/insights + rating stars; category = glyph + label, not color</li>
+        <li><b>Don't replace:</b> concierge = CopilotKit v1 (restyle only); map = <code>@vis.gl</code> ChatMap (<code>mapId</code> + <code>X-Goog-FieldMask</code>)</li>
+        <li><b>AI Insight = GROUNDED</b> only (saved places · time · neighborhood · vertical); never fabricated co-visitation — <b>hide</b> when no signal</li>
+        <li><b>A11y/perf:</b> <code>prefers-reduced-motion</code>; skeletons on every async row + map tiles; mobile collapses AI → sticky input + FAB, map → toggle</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ============ FULL-PAGE ANATOMY ============ -->
+  <div class="ovwrap">
+    <div class="ov-cap">▣ Full-page anatomy — how the pieces compose (desktop)</div>
+    <div class="overview">
+      <!-- nav -->
+      <div class="ov-nav">
+        <span class="brand" style="font-size:13px;"><span class="dot" style="width:16px;height:16px;"></span>mde·ai</span>
+        <span class="lk" style="margin-left:8px;">Home</span>
+        <span class="lk on">Explore</span>
+        <span class="lk">Trips</span>
+        <span class="lk">Saved</span>
+        <span class="lk">Events</span>
+        <span class="pl ghost cmd" style="font-size:10px;"><span class="kbd" style="margin:0;">⌘K</span></span>
+        <span class="ov-ava"></span>
+      </div>
+      <!-- tabs -->
+      <div class="tabs">
+        <span class="tab on">For You</span>
+        <span class="tab">Eat</span>
+        <span class="tab">Do</span>
+        <span class="tab">Nightlife</span>
+        <span class="tab">Events</span>
+        <span class="tab">Stay</span>
+      </div>
+      <!-- AI band — the center -->
+      <div class="aiband">
+        <span class="mk">✦</span>
+        <span class="ph-txt">Ask me to plan your evening in Provenza — “rooftop dinner then a cocktail bar within walking distance”</span>
+        <span class="pl solid">Ask</span>
+      </div>
+      <!-- filter bar -->
+      <div class="filterbar">
+        <span class="pl">Price</span><span class="pl">Neighborhood</span><span class="pl">Open now</span>
+        <span class="pl ghost" style="margin-left:auto; font-size:10px;">Sort: Recommended ▾</span>
+      </div>
+      <!-- split -->
+      <div class="split">
+        <div class="results">
+          <div>
+            <div class="sechead"><h5 class="serif">Restaurants in Provenza</h5><span class="va">View all →</span></div>
+            <p class="secdesc">Editorial picks near where you’ve been saving.</p>
+            <div class="cards">
+              <div class="mini-card"><div class="img"></div><div class="mc-b stack"><div class="g w85"></div><div class="bar" style="gap:5px;"><span class="pl gold" style="font-size:9px;padding:1px 5px;">★4.6</span><div class="g w40"></div></div></div></div>
+              <div class="mini-card"><div class="img"></div><div class="mc-b stack"><div class="g w85"></div><div class="bar" style="gap:5px;"><span class="pl gold" style="font-size:9px;padding:1px 5px;">★4.8</span><div class="g w40"></div></div></div></div>
+            </div>
+            <div class="aiinsight" style="margin-top:9px;"><span class="mk">✦</span><span class="tx"><b>AI Insight</b> — Because you saved 3 spots in Provenza, these are a 5-min walk from them.</span></div>
+          </div>
+          <div class="band" style="justify-content:center; color:var(--muted); font-size:11px;">↓ next band — Tonight in Medellín · Events This Weekend · Luxury Stays …</div>
+        </div>
+        <div class="mapcol">
+          <div class="mapbox tall">
+            <span class="pin" style="left:22%; top:30%;"></span>
+            <span class="pin hot" style="left:46%; top:46%;"></span>
+            <span class="pin" style="left:64%; top:34%;"></span>
+            <span class="pin g" style="left:55%; top:64%;"></span>
+            <span class="pin" style="left:34%; top:70%;"></span>
+            <span class="pl ghost" style="position:absolute; right:8px; bottom:8px; font-size:10px;">▣ Google Maps · hover ↔ pin</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 01 TOP NAV + ⌘K ============ -->
+  <section class="row" id="s1">
+    <div class="rail"><span class="n">01</span></div>
+    <div class="wire">
+      <div class="lbl">Sticky top nav · Explore active · ⌘K</div>
+      <div class="ov-nav" style="border:none; padding:0;">
+        <span class="pl ghost" style="font-weight:700;color:var(--ink)">mde·ai</span>
+        <span class="lk">Home</span><span class="lk on">Explore</span><span class="lk">Trips</span><span class="lk">Saved</span><span class="lk">Events</span>
+        <span class="kbd" style="margin-left:auto;">⌘K</span>
+        <span class="ov-ava"></span>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>01 · Top navigation + ⌘K</h3>
+      <div class="picks">
+        <span class="chip shad">navigation-menu <b>88</b></span>
+        <span class="chip shad">sheet</span>
+        <span class="chip shad">command <b>92</b></span>
+      </div>
+      <div class="links">
+        <a href="https://ui.shadcn.com/docs/components/navigation-menu">ui.shadcn.com/.../navigation-menu</a>
+        <a href="https://ui.shadcn.com/docs/components/command">ui.shadcn.com/.../command (⌘K)</a>
+      </div>
+      <ul class="notes">
+        <li><b>Primary nav (5):</b> Home · <b>Explore</b> · Trips · Saved · Events — Explore active (teal underline)</li>
+        <li>Avatar menu = Profile · <b>Tickets</b> · Settings · Sign out (not in the global bar)</li>
+        <li><b>⌘K</b> hint right of nav → opens the command palette (§09) — the OS tell</li>
+        <li>Mobile → hamburger opens <code>Sheet</code>; no language switcher (EN Phase 1)</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 02 VERTICAL TABS ============ -->
+  <section class="row" id="s2">
+    <div class="rail"><span class="n">02</span></div>
+    <div class="wire">
+      <div class="lbl">Vertical tabs — 6, consolidated from 9</div>
+      <div class="tabs" style="padding:0;">
+        <span class="tab on">For You</span><span class="tab">Eat</span><span class="tab">Do</span><span class="tab">Nightlife</span><span class="tab">Events</span><span class="tab">Stay</span>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>02 · Vertical tabs</h3>
+      <div class="picks">
+        <span class="chip shad">tabs <b>86</b></span>
+        <span class="chip shad">P0 install</span>
+      </div>
+      <div class="links">
+        <a href="https://ui.shadcn.com/docs/components/tabs">ui.shadcn.com/.../tabs</a>
+      </div>
+      <ul class="notes">
+        <li><b>6 tabs:</b> For You · <b>Eat</b> (restaurants + cafés) · <b>Do</b> (things-to-do) · Nightlife · Events · <b>Stay</b> (rentals)</li>
+        <li>Tabs switch the vertical re-skin — no new route; <code>/restaurants</code> · <code>/cafes</code> · <code>/nightlife</code> · <code>/rentals</code> behind one system</li>
+        <li><b>Locations → a map filter</b>, not a tab; <b>Guides</b> → secondary (For-You feed / footer)</li>
+        <li>Let the <b>concierge do the narrowing</b> manual filters would — fewer tabs, more AI</li>
+        <li>Mobile → horizontal scroll-snap; never wrap to two rows</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 03 AI CONCIERGE BAND ============ -->
+  <section class="row" id="s3">
+    <div class="rail"><span class="n">03</span></div>
+    <div class="wire">
+      <div class="lbl">AI Concierge band — full-width · THE CENTER</div>
+      <div class="aiband" style="margin:0;">
+        <span class="mk">✦</span>
+        <span class="ph-txt">Ask me to plan your evening in Provenza…</span>
+        <span class="pl solid">Ask</span>
+      </div>
+      <div class="bar" style="gap:7px; flex-wrap:wrap; margin-top:9px;">
+        <span class="pl">Rooftop dinner + cocktails nearby</span><span class="pl">Quiet café to work this afternoon</span><span class="pl">What’s on tonight?</span>
+      </div>
+    </div>
+    <aside class="spec ai-led">
+      <h3>03 · AI Concierge band</h3>
+      <div class="picks">
+        <span class="chip ai">CopilotKit input · reuse</span>
+        <span class="chip custom">custom band</span>
+      </div>
+      <div class="links">
+        <a href="https://docs.copilotkit.ai/">docs.copilotkit.ai (v1)</a>
+        <a href="https://21st.dev/community/components/Abuhuraira/bolt-style-chat/default">21st/bolt-style-chat (visual ref only)</a>
+      </div>
+      <ul class="notes">
+        <li><b>The protagonist</b> — full-width, <em>above</em> the split; first thing Camila sees is the AI offering to plan</li>
+        <li><b>Input = CopilotKit v1 reuse</b> (no new agent); submitting streams results into the cards + drops pins on the map</li>
+        <li>Gold ✦ signature is the one allowed accent here; body/placeholder stay neutral</li>
+        <li>Seed chips below = grounded cold-start prompts (vertical + neighborhood aware)</li>
+        <li>Mobile → collapses to a <b>sticky input + concierge FAB</b> (§11/§12)</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 04 FILTER / SORT BAR ============ -->
+  <section class="row" id="s4">
+    <div class="rail"><span class="n">04</span></div>
+    <div class="wire">
+      <div class="lbl">Filter / sort bar — secondary to the AI</div>
+      <div class="filterbar" style="margin:0;">
+        <span class="pl">Price ▾</span><span class="pl">Neighborhood ▾</span><span class="pl on">Open now</span><span class="pl">Rating ▾</span>
+        <span class="pl ghost" style="margin-left:auto; font-size:10px;">Sort: Recommended ▾</span>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>04 · Filter / sort bar</h3>
+      <div class="picks">
+        <span class="chip shad">dropdown-menu</span>
+        <span class="chip shad">select / toggle</span>
+      </div>
+      <div class="links">
+        <a href="https://ui.shadcn.com/docs/components/dropdown-menu">ui.shadcn.com/.../dropdown-menu</a>
+      </div>
+      <ul class="notes">
+        <li><b>Secondary</b> to the concierge — manual escape hatch, not the main path</li>
+        <li><b>Locations lives here</b> as the Neighborhood filter (not a tab) → also filters the map</li>
+        <li>"Open now" = live signal (teal active state); filters persist across tab switches</li>
+        <li>Active filters echo as removable chips; empty result → concierge suggests a loosen</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 05 RESULTS — PREMIUM SECTION FORMULA ============ -->
+  <section class="row" id="s5">
+    <div class="rail"><span class="n">05</span></div>
+    <div class="wire">
+      <div class="lbl">Results — the premium section formula (§3.2)</div>
+      <div class="stack">
+        <div class="sechead"><h5 class="serif">Restaurants in Provenza</h5><span class="va">View all →</span></div>
+        <p class="secdesc" style="margin:0;">One line of context — why this, why now.</p>
+        <div class="cards c3">
+          <div class="mini-card"><div class="img"></div><div class="mc-b stack"><div class="g w85"></div><div class="bar" style="gap:5px;"><span class="pl gold" style="font-size:9px;padding:1px 5px;">★4.6</span><div class="g w40"></div></div></div></div>
+          <div class="mini-card"><div class="img"></div><div class="mc-b stack"><div class="g w85"></div><div class="bar" style="gap:5px;"><span class="pl gold" style="font-size:9px;padding:1px 5px;">★4.5</span><div class="g w40"></div></div></div></div>
+          <div class="mini-card"><div class="img"></div><div class="mc-b stack"><div class="g w85"></div><div class="bar" style="gap:5px;"><span class="pl gold" style="font-size:9px;padding:1px 5px;">★4.8</span><div class="g w40"></div></div></div></div>
+        </div>
+        <div class="aiinsight"><span class="mk">✦</span><span class="tx"><b>AI Insight (grounded)</b> — “Because you saved 3 spots in Provenza, these are a 5-min walk.”</span></div>
+      </div>
+    </div>
+    <aside class="spec ai-led">
+      <h3>05 · Results — section formula</h3>
+      <div class="picks">
+        <span class="chip shad">card <b>82</b></span>
+        <span class="chip t21">gallery4 (row) <b>86</b></span>
+        <span class="chip custom">custom layout</span>
+      </div>
+      <div class="links">
+        <a href="https://21st.dev/community/components/shadcnblockscom/gallery4/default">21st/shadcnblockscom/gallery4</a>
+      </div>
+      <ul class="notes">
+        <li><b>Every band = Headline → Description → View all (teal) → Cards → ✦ AI Insight</b></li>
+        <li><b>AI Insight must be GROUNDED</b>: saved places · time · neighborhood · vertical only</li>
+        <li>🔴 <b>Never fabricated</b>: no "users who save X also visit Y" — there's no co-visitation data at MVP</li>
+        <li><b>No signal → hide the insight</b>, don't hallucinate (matches the never-invent-data rule)</li>
+        <li>Cards stream in → pins drop on the map in step (§07)</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 06 VENUECARD ANATOMY ============ -->
+  <section class="row" id="s6">
+    <div class="rail"><span class="n">06</span></div>
+    <div class="wire">
+      <div class="lbl">VenueCard — one shared anatomy, every vertical</div>
+      <div style="max-width:240px;">
+        <div class="venuecard">
+          <div class="vc-img"><span class="vc-heart">♡</span><span class="vc-kind pl" style="font-size:9px;padding:2px 7px;">Restaurant</span></div>
+          <div class="vc-b stack">
+            <div class="bar" style="gap:6px;"><div class="g w70 dk" style="height:11px;"></div><span class="pl gold" style="font-size:9px;padding:1px 5px; margin-left:auto;">★4.6</span></div>
+            <div class="g w85"></div><div class="g w55"></div>
+            <div class="bar" style="gap:6px; margin-top:2px;"><span class="pl ghost" style="font-size:9px; color:var(--primary);">✦ Why this</span></div>
+            <div class="bar" style="gap:6px;"><span class="pl solid" style="font-size:10px;">View</span><span class="pl" style="font-size:10px;">♡ Save</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>06 · VenueCard anatomy</h3>
+      <div class="picks">
+        <span class="chip shad">card <b>82</b></span>
+        <span class="chip custom">bespoke anatomy</span>
+      </div>
+      <div class="links">
+        <a href="https://ui.shadcn.com/docs/components/card">ui.shadcn.com/.../card</a>
+      </div>
+      <ul class="notes">
+        <li><b>Anatomy:</b> image · kind pill · name · ★ rating · 2-line clamp · <b>"Why" line</b> · ♡ + View</li>
+        <li><b>Keep our custom card</b> — don't install card-21/card-7; re-skinning a kit &gt; building anatomy twice</li>
+        <li>★ rating = <b>gold</b> (idiomatic); kind pill + meta = <b>neutral</b>; category by glyph + label, not color</li>
+        <li>One <code>&lt;VenueCard&gt;</code> reused across Eat/Do/Nightlife/Stay (consolidates SAN-318/439/442/324)</li>
+        <li>Skeleton while loading; <code>next/image</code> blur-up on the photo; hover → highlights its map pin</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 07 STICKY LIVING MAP ============ -->
+  <section class="row" id="s7">
+    <div class="rail"><span class="n">07</span></div>
+    <div class="wire">
+      <div class="lbl">Sticky living map — co-primary · hover ↔ pin</div>
+      <div class="mapbox" style="min-height:160px;">
+        <span class="pin" style="left:18%; top:32%;"></span>
+        <span class="pin hot" style="left:42%; top:48%;"></span>
+        <span class="pin" style="left:62%; top:30%;"></span>
+        <span class="pin" style="left:72%; top:60%;"></span>
+        <span class="pin g" style="left:48%; top:70%;"></span>
+        <span class="pl ghost" style="position:absolute; right:8px; bottom:8px; font-size:10px;">▣ @vis.gl · mapId · FieldMask</span>
+      </div>
+    </div>
+    <aside class="spec map-led">
+      <h3>07 · Living map (co-primary)</h3>
+      <div class="picks">
+        <span class="chip map">@vis.gl ChatMap · reuse</span>
+        <span class="chip custom">hover-sync layer</span>
+      </div>
+      <div class="links">
+        <a href="https://visgl.github.io/react-google-maps/">visgl.github.io/react-google-maps</a>
+      </div>
+      <ul class="notes">
+        <li><b>Reuse the existing ChatMap</b> — never a UI-kit "map container"</li>
+        <li>Hard rules: <code>mapId</code> on <code>&lt;Map&gt;</code> + <code>X-Goog-FieldMask</code> on every Places call</li>
+        <li><b>hover card ↔ highlight pin</b> (gold) both ways — the #1 Mindtrip "living sync" moat</li>
+        <li>Pins drop as results stream; sticky desktop, <b>toggle button</b> on mobile (§11)</li>
+        <li>Pins uniform <b>teal</b> (cartography blue for water/parks); <b>dark cartography mapId allowed</b> — map is an idiomatic immersive moment</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 08 SCROLL STORYTELLING ============ -->
+  <section class="row" id="s8">
+    <div class="rail"><span class="n">08</span></div>
+    <div class="wire">
+      <div class="lbl">Scroll storytelling — the named editorial rhythm</div>
+      <div class="stack">
+        <div class="band">① Curated For You</div>
+        <div class="band">② Restaurants</div>
+        <div class="band">③ Tonight in Medellín</div>
+        <div class="band">④ Events This Weekend</div>
+        <div class="band">⑤ Luxury Stays</div>
+        <div class="band">⑥ Neighborhood Intelligence</div>
+        <div class="band">⑦ Saved Collections</div>
+        <div class="band">⑧ Upcoming Plans</div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>08 · Scroll storytelling</h3>
+      <div class="picks">
+        <span class="chip custom">band sequence</span>
+        <span class="chip shad">card rows</span>
+      </div>
+      <div class="links">
+        <a href="../docs/design-process.md">design-process.md §3.2</a>
+      </div>
+      <ul class="notes">
+        <li><b>Named rhythm, not a random stack</b> — each band is the §05 premium formula</li>
+        <li>Order: Curated → Restaurants → Tonight → Events → Stays → Neighborhood → Saved → Plans</li>
+        <li>Naming the bands makes <b>build order unambiguous</b> (latent in <code>home-wireframe.html</code>)</li>
+        <li>Alternate <code>bg-background</code> / <code>bg-muted/40</code>; one editorial moment (Neighborhood) max</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 09 ⌘K COMMAND PALETTE ============ -->
+  <section class="row" id="s9">
+    <div class="rail"><span class="n">09</span></div>
+    <div class="wire">
+      <div class="lbl">⌘K command palette — the OS signature</div>
+      <div class="cmdk">
+        <div class="cmd-in">⌕ <span>Type a command or search…</span><span class="kbd">esc</span></div>
+        <div class="cmd-sec">Concierge</div>
+        <div class="cmd-row on"><span class="ci"></span>✦ Ask the concierge to plan my evening<span class="kbd">↵</span></div>
+        <div class="cmd-sec">Jump to</div>
+        <div class="cmd-row"><span class="ci"></span>Saved collections</div>
+        <div class="cmd-row"><span class="ci"></span>Trips · Upcoming plans</div>
+        <div class="cmd-row"><span class="ci"></span>Search restaurants in Laureles</div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>09 · ⌘K command palette</h3>
+      <div class="picks">
+        <span class="chip shad">command <b>92</b></span>
+        <span class="chip shad">CommandDialog</span>
+      </div>
+      <div class="links">
+        <a href="https://ui.shadcn.com/docs/components/command">ui.shadcn.com/.../command</a>
+      </div>
+      <ul class="notes">
+        <li><b>The OS tell</b> (Notion/Linear) — ⌘K launches the concierge or jumps anywhere</li>
+        <li>First section = <b>Concierge actions</b> (gold ✦); then Jump-to nav + recent searches</li>
+        <li>Keyboard-first: ↑↓ to move, ↵ to run, esc to close; teal active row</li>
+        <li>P0 install primitive; pairs with the FAB (§12) as the two always-on AI entries</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 10 EMPTY / FIRST-RUN ============ -->
+  <section class="row" id="s10">
+    <div class="rail"><span class="n">10</span></div>
+    <div class="wire">
+      <div class="lbl">Empty / first-run — the concierge fills the void</div>
+      <div class="band" style="flex-direction:column; align-items:flex-start; gap:10px; background:var(--accent-soft); border-color:transparent;">
+        <span class="pl gold" style="font-size:10px;">✦ AI concierge</span>
+        <div class="g tall w70 dk"></div>
+        <div class="g w85"></div>
+        <div class="bar" style="gap:7px; flex-wrap:wrap;">
+          <span class="pl">Plan my first day</span><span class="pl">Show me Provenza</span><span class="pl">Best rooftop tonight</span>
+        </div>
+      </div>
+    </div>
+    <aside class="spec ai-led">
+      <h3>10 · Empty / first-run state</h3>
+      <div class="picks">
+        <span class="chip custom">custom empty</span>
+        <span class="chip ai">concierge seed</span>
+      </div>
+      <div class="links">
+        <a href="../docs/concierge-os-direction.md">concierge-os-direction.md #7</a>
+      </div>
+      <ul class="notes">
+        <li><b>An OS lives on first-run</b> — new user, no saved/trips → the concierge fills the panel, never a blank</li>
+        <li>Grounded first prompts (time of day + Medellín defaults), not lorem placeholders</li>
+        <li>Map shows the city overview with category anchors until a query narrows it</li>
+        <li>Skeletons (not spinners) while the first results stream</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 11 MOBILE LAYOUT ============ -->
+  <section class="row" id="s11">
+    <div class="rail"><span class="n">11</span></div>
+    <div class="wire">
+      <div class="lbl">Mobile — AI → sticky input · map → toggle</div>
+      <div style="position:relative; display:inline-block;">
+        <div class="phone">
+          <div class="pscreen">
+            <div class="pnav"><span class="g w25 dk" style="height:8px;"></span><span class="kbd" style="margin-left:auto;">⌘K</span><span class="ov-ava" style="width:16px;height:16px;"></span></div>
+            <div class="ptabs"><span class="ptab on">For You</span><span class="ptab">Eat</span><span class="ptab">Do</span><span class="ptab">Stay</span></div>
+            <div class="pinput"><span style="color:var(--accent); font-weight:800; font-size:11px;">✦</span><span style="flex:1; color:var(--muted); font-size:9px;">Ask the concierge…</span></div>
+            <div class="cards" style="gap:7px; grid-template-columns:1fr 1fr;">
+              <div class="mini-card"><div class="img" style="height:46px;"></div><div class="mc-b stack" style="padding:6px;"><div class="g w85" style="height:6px;"></div><div class="g w40" style="height:6px;"></div></div></div>
+              <div class="mini-card"><div class="img" style="height:46px;"></div><div class="mc-b stack" style="padding:6px;"><div class="g w85" style="height:6px;"></div><div class="g w40" style="height:6px;"></div></div></div>
+            </div>
+            <div class="pmaptoggle" style="margin-top:8px;">▣ Show map</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>11 · Mobile layout</h3>
+      <div class="picks">
+        <span class="chip shad">sheet</span>
+        <span class="chip custom">sticky input + toggle</span>
+      </div>
+      <div class="links">
+        <a href="https://ui.shadcn.com/docs/components/sheet">ui.shadcn.com/.../sheet</a>
+      </div>
+      <ul class="notes">
+        <li><b>AI band → sticky bottom input</b> + concierge FAB (can't be a fixed column on mobile)</li>
+        <li><b>Map → "Show map" toggle</b> (full-screen sheet), <em>not</em> side-by-side with cards</li>
+        <li>Tabs → horizontal scroll-snap; nav → hamburger <code>Sheet</code></li>
+        <li>Everything thumb-reachable; CopilotKit mobile composer already wired (MOB-CK-001)</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 12 CONCIERGE FAB (GLOBAL) ============ -->
+  <section class="row" id="s12">
+    <div class="rail"><span class="n">12</span></div>
+    <div class="wire">
+      <div class="lbl">Persistent — Ask AI Concierge (FAB)</div>
+      <div class="bar"><div class="g w70"></div><span class="pl gold" style="margin-left:auto;">✦ Ask AI Concierge</span></div>
+    </div>
+    <aside class="spec ai-led">
+      <h3>12 · Concierge FAB (global)</h3>
+      <div class="picks">
+        <span class="chip ai">CopilotKit popup · reuse</span>
+        <span class="chip custom">custom FAB</span>
+      </div>
+      <div class="links">
+        <a href="https://docs.copilotkit.ai/">docs.copilotkit.ai</a>
+      </div>
+      <ul class="notes">
+        <li>Fixed bottom-right, gold; opens the CopilotKit popup thread anywhere on Explore</li>
+        <li>The mobile fallback for the AI band; persists across every surface (the always-on entry)</li>
+        <li><b>Avoid</b> the radial-social-menu — too playful for luxury calm; a simple FAB</li>
+        <li>Shares the thread with ⌘K (§09) — two doors, one concierge</li>
+      </ul>
+    </aside>
+  </section>
+
+</div>
+</body>
+</html>

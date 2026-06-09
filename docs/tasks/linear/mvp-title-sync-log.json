@@ -1,0 +1,97 @@
+{
+  "generated": "2026-05-30T10:31:39.557Z",
+  "dryRun": false,
+  "updated": [],
+  "skipped": [
+    {
+      "linear": "SAN-178",
+      "title": "PAY-001 — Live ticket purchase on production"
+    },
+    {
+      "linear": "SAN-116",
+      "title": "PAY-003 — Stripe webhook secret isolation"
+    },
+    {
+      "linear": "SAN-117",
+      "title": "EVT-013 — Event cards in AI chat"
+    },
+    {
+      "linear": "SAN-366",
+      "title": "EVT-002 — Host publish production proof"
+    },
+    {
+      "linear": "SAN-115",
+      "title": "EVT-001 — MVP launch proof ledger"
+    },
+    {
+      "linear": "SAN-100",
+      "title": "OPS-002 — Production smoke matrix"
+    },
+    {
+      "linear": "SAN-367",
+      "title": "AUTH-011 — Production auth checklist"
+    },
+    {
+      "linear": "SAN-368",
+      "title": "MAP-002B — ADK grounding on production"
+    },
+    {
+      "linear": "SAN-369",
+      "title": "MAP-008B — Map ID on production"
+    },
+    {
+      "linear": "SAN-315",
+      "title": "UX-001 — Restore AI concierge on production"
+    },
+    {
+      "linear": "SAN-316",
+      "title": "UX-003 — Rental price parser ($500/night)"
+    },
+    {
+      "linear": "SAN-320",
+      "title": "UX-002 — Chat error bubble on RUN_ERROR"
+    },
+    {
+      "linear": "SAN-319",
+      "title": "UX-005 — Chat thinking indicator"
+    },
+    {
+      "linear": "SAN-321",
+      "title": "UX-006 — Reset chat and map on New chat"
+    },
+    {
+      "linear": "SAN-323",
+      "title": "UX-007 — Clear ghost map pins after empty search"
+    },
+    {
+      "linear": "SAN-324",
+      "title": "UX-008 — Fix confusing Save button tooltip"
+    },
+    {
+      "linear": "SAN-322",
+      "title": "UX-009 — Production AI chat health monitor"
+    },
+    {
+      "linear": "SAN-318",
+      "title": "UX-010 — Unified result cards M0–M5"
+    },
+    {
+      "linear": "SAN-118",
+      "title": "EVT-014 — Host events list page"
+    },
+    {
+      "linear": "SAN-112",
+      "title": "UX-012 — Login and signup polish"
+    },
+    {
+      "linear": "SAN-111",
+      "title": "UX-011 — Map exploration panel"
+    },
+    {
+      "linear": "SAN-104",
+      "title": "MAP-010 — Place autocomplete for venue"
+    }
+  ],
+  "errors": [],
+  "collisions": []
+}

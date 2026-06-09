@@ -1,0 +1,10 @@
+flowchart LR
+  L["Landing<br/>/host · /venues · /sponsors"] --> S0["/partners/signup?type=…"]
+  S0 --> S1["1 · Who are you<br/>partner type"]
+  S1 --> S2["2 · Business profile<br/>name·category·neighborhood"]
+  S2 --> S3["3 · Your offering<br/>events·space·rentals·sponsorship"]
+  S3 --> S4["4 · Services<br/>AI booking·Postiz·OpenClaw·listing"]
+  S4 --> S5["5 · Connect & verify<br/>Google Business·socials·payout"]
+  S5 --> S6["6 · Review & launch"]
+  S6 --> D["Partner dashboard"]
+  AI(["✦ AI co-pilot<br/>guides · prefills · validates"]) -.assists.- S1 & S2 & S3 & S4 & S5 & S6

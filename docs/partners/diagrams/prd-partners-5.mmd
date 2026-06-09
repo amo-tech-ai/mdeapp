@@ -1,0 +1,16 @@
+erDiagram
+  ORGANIZATION ||--o{ PARTNER : has
+  PARTNER ||--o{ LOCATION : owns
+  PARTNER ||--o{ ASSET : owns
+  PARTNER ||--o{ PARTNER_SERVICE : enables
+  PARTNER ||--o{ SUBSCRIPTION : holds
+  PARTNER ||--o{ LEAD : receives
+  PARTNER ||--o{ BOOKING : receives
+  PARTNER ||--o{ CAMPAIGN : runs
+  PARTNER ||--o{ AUTOMATION : configures
+  PARTNER ||--o{ CONVERSATION : participates
+  CONVERSATION ||--o{ MESSAGE : contains
+  BOOKING ||--o{ REVENUE_LEDGER : generates
+  LEAD ||--o{ REVENUE_LEDGER : generates
+  SUBSCRIPTION ||--o{ REVENUE_LEDGER : generates
+  PARTNER ||--o{ PARTNER_DRAFT : "signup autosave"

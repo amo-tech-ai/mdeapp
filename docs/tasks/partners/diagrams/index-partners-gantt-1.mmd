@@ -1,0 +1,28 @@
+gantt
+  title Partner Platform — implementation sequence
+  dateFormat YYYY-MM-DD
+  axisFormat %b %d
+  section P1 Foundation
+  Partner DB schema + RLS (683)            :a1, 2026-06-09, 7d
+  Marketing pages host/venues (660,661)    :a5, 2026-06-09, 10d
+  Lead-gen engine (684)                    :a2, after a1, 7d
+  Signup wizard (665)                      :a3, after a1, 10d
+  Dashboard (690)                          :a4, after a1, 10d
+  Revenue config (668)                     :a6, after a4, 7d
+  Host vertical (675)                      :a7, after a3 a4 a6, 7d
+  section P2 Growth
+  Partner copilot (685)                    :b2, after a1, 10d
+  Chatwoot/WhatsApp (689)                  :b6, after a1, 7d
+  Data intelligence (688)                  :b7, after a1, 10d
+  AI services (669)                        :b1, after a7, 10d
+  Booking system (686)                     :b3, after a4, 10d
+  Assets + social (687)                    :b5, after a4, 10d
+  Automation (670)                         :b4, after b1, 7d
+  Sponsor + Agency verticals (681,682)     :b8, after b1, 10d
+  section P3 Marketplace
+  Nightclub/Restaurant/Cafe/Venue verticals:c2, after a7, 14d
+  Marketplace (672)                        :c1, after b1, 14d
+  section P4 Intelligence
+  Signals + personalization                :d1, after b7, 14d
+  section P5 Automation Platform
+  Embeds / API / multi-city                :e1, after c1, 21d

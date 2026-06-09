@@ -1,0 +1,15 @@
+flowchart TD
+  subgraph Types["Partner types (ptr:*)"]
+    H["Host"] & R["Restaurant"] & C["Café"] & N["Nightclub"] & VE["Venue"] & B["Broker"] & SP["Sponsor"] & AG["Agency"]
+  end
+  Types --> LC["7-stage lifecycle<br/>Acquire to Onboard to Activate to Monetize to Automate to Grow to Retain"]
+  LC --> P["Partners project<br/>landing · signup · dashboard"]
+  P --> EV["Events Platform"]
+  P --> VN["Venues"]
+  P --> RE["Real-estate (track:real)"]
+  P --> AI["AI & Intelligence<br/>concierge · AI services · automation"]
+  P --> CM["Commerce Platform<br/>fees · payouts · subs"]
+  AI --> DATA["Data (signals)"]
+  AI --> OCL["OpenClaw (ingestion)"]
+  EV & VN & RE & CM --> GMV["Transactions to mdeai fee"]
+  GMV --> P

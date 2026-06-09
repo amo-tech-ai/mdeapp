@@ -1,0 +1,8 @@
+flowchart TD
+  U["Partner types in plain words<br/>'I run a rooftop bar in Provenza'"] --> AI["✦ AI co-pilot (CopilotKit)"]
+  AI --> P1["Prefill form<br/>category=nightclub · barrio=Provenza"]
+  AI --> P2["Explain a service<br/>'what does Postiz do?'"]
+  AI --> P3["Suggest next step<br/>'connect Instagram to enable posts'"]
+  AI --> P4["Act on the form<br/>generative-UI tool calls"]
+  P1 & P2 & P3 & P4 --> FORM["Multi-step form state"]
+  FORM --> DASH["Same co-pilot continues in dashboard"]

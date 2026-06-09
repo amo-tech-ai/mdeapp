@@ -1,0 +1,8 @@
+flowchart LR
+  SRC["Channels<br/>SEO · Maps · social · referral · WhatsApp"] --> SURF["Surface<br/>concierge · browse · landing"]
+  SURF --> INT{"Intent"}
+  INT -- "buy / book / inquire" --> ACT["Action<br/>checkout · schedule-viewing · contact"]
+  ACT --> LEAD["Lead / order<br/>/api/leads · Stripe"]
+  LEAD --> QUAL["AI qualify + route"]
+  QUAL --> PDASH["Partner dashboard (HITL reply)"]
+  PDASH --> CONV["Conversion → fee"]

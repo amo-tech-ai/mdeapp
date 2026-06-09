@@ -1,0 +1,1777 @@
+"ID","Team","Title","Description","Status","Estimate","Priority","Project ID","Project","Creator","Assignee","Labels","Cycle Number","Cycle Name","Cycle Start","Cycle End","Created","Updated","Started","Triaged","Completed","Canceled","Archived","Due Date","Parent issue","Initiatives","Project Milestone ID","Project Milestone","SLA Status","UUID","Time in status (minutes)","Related to","Blocked by","Duplicate of"
+"SAN-178","Sanjiovani","OPS-ANDRES-G1 — Andrés G1 — manual Stripe test payment → paid row + wallet QR","**Task ID:** `OPS-ANDRES-G1`
+**Spec:** `todo.md`
+**Repo status:** Not Started
+**Priority:** P0
+**Phase:** phase-1
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Urgent","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:core",,,,,"2026-05-27T05:50:25.051Z","2026-05-27T06:08:01.067Z",,,,,,,,"","2d7e9933-4834-4c14-a74e-c6c16d8e17af","P0 — MVP gates",,"6787fc3e-2a12-4ca7-8f7a-1856f1686e65",180,"","",
+"SAN-115","Sanjiovani","EVP-001-core — Event production proof gates","**Task ID:** `EVP-001-core`
+**Spec:** `tasks/events/EVP-001-core-production-proof-gates.md`
+**Repo status:** Not Started
+**Priority:** P0
+**Depends on:** EVP-002-core, EVP-004-core, EVP-005-core, EVP-008-core, EVP-009-core, EVP-010-core, EVP-011-core, EVP-012-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Urgent","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:21.050Z","2026-05-27T06:08:57.137Z",,,,,,,,"","2d7e9933-4834-4c14-a74e-c6c16d8e17af","P0 — MVP gates",,"03791e39-044e-4990-9d1c-c825e5f71455",181,"","",
+"SAN-105","Sanjiovani","MAP-011 — Route previews + commute cards","**Task ID:** `MAP-011`
+**Spec:** `tasks/maps/MAP-011-route-previews.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** MAP-002, MAP-004
+
+## Summary
+
+## 1\. Purpose
+
+Wire Grounding Lite / Maps MCP `compute_routes` through a Mastra tool, normalize duration strings (`""180s""` → `""3 min""`), and render `RouteDisplay` / `CommuteCard` on `/` via `OPEN_ROUTE_RESULTS` action — **no** turn-by-turn navigation or polyline map layer in Phase 1.
+
+## 2\. Goals
+
+### MAP-011B — Mastra + UI (after 011A)
+
+* `computeRouteTool` in `mdeapp/src/mastra/tools/` — `adkGroundingClient.invoke({ tool: ""compute_routes"", origin, destination, travelMode })` (same HTTP client as MAP-002B `search-grounded-places`; extend sidecar contract if needed)
+* Extend `platform/contracts` with `RouteResultSchema` + `OpenRouteResultsAction`
+* `normalize-tool-output` branch: missing duration or `error` → `null` (prose fallback)
+* `RouteDisplay.tsx` in center column — duration, distanc
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:maps",,,,,"2026-05-27T05:49:14.206Z","2026-05-27T06:09:01.626Z",,,,,,,,"","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","P1 — Maps & core",,"2d96050d-321f-4b9e-b86b-5e888c81eed0",181,"","",
+"SAN-110","Sanjiovani","SCREEN-002 — Chat Nav Rail + Thread List","**Task ID:** `SCREEN-002`
+**Spec:** `tasks/screens/SCREEN-002-chat-nav-rail.md`
+**Repo status:** Not Started
+**Priority:** P0
+**Phase:** MVP Phase 1
+**Depends on:** SCREEN-001, F48
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:screens",,,,,"2026-05-27T05:49:17.784Z","2026-05-27T06:08:59.501Z",,,,,,,,"","80fe78ad-59de-48f5-9815-7c208c0f0176","P1 — Screens & café",,"473afde1-db67-4849-9240-4c85c5c07f04",181,"","",
+"SAN-117","Sanjiovani","EVP-013-core — Port EventCard + EventFilters component","**Task ID:** `EVP-013-core`
+**Spec:** `tasks/events/EVP-013-core-event-card-component.md`
+**Repo status:** Partial
+**Priority:** P1
+**Phase:** W3 — Day 2 (Roberto's events surface)
+**Depends on:** F07, F22
+
+## Summary
+
+## 1\. Purpose
+
+Roberto's W3 hero flow ships `/host/event/new` (creation) and `/host/events` (list). Both — plus Tourist's W6 concierge event suggestions — need a single shared `<EventCard>` shape. Legacy proved it across `EventCard.tsx`, `EventFilters.tsx`, `EnhancedEventFilters.tsx`. EVP-013-core ports the card + the filter primitives into Paisa-tokenised shadcn compositions, used standalone on `/host/events` AND inline in CopilotKit generative UI.
+
+## 2\. Goals
+
+* `mdeapp/src/components/events/EventCard.tsx` — `<EventCard>` from shadcn primitives
+* `mdeapp/src/components/events/EventFilters.tsx` — neighborhood + date-range + price filter (uses shadcn `<Input>`, `<DropdownMenu>`)
+* `mdeapp/src/app/events/preview/page.tsx` — test fixture route (≥ 3 sample events)
+* ≥ 3 Vitest tests (card re
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:33.911Z","2026-05-27T07:37:31.916Z",,,,,,,,"","a6aec707-6ec3-4586-8c11-e381ee65036e","P1 — Events polish",,"d0e82c9e-b497-4379-907f-88cb43f095b7",73,"","SAN-97",
+"SAN-97","Sanjiovani","F22 — Port Medellín hero photo library from legacy","**Task ID:** `F22`
+**Spec:** `tasks/core/F22-hero-photo-library.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** W2 — Day 5 (post-F07 quick win)
+**Depends on:** F07
+
+## Summary
+
+## 1\. Purpose
+
+Legacy `/home/sk/mde/` ships 15 photographs of Medellín neighborhoods, landmarks, and Colombian regions — `beach-palms`, `coffee-farm`, `colonial-street`, `guatape-colors`, `medellin-skyline`, `street-food`, `waterfall`, `caribbean-coast`, `mountain-adventures`, `nightlife`, `urban-exploration`, etc. These are real photography of the product's actual market. Without them, Camila's `/rentals` and Tourist's `/chat` and Roberto's `/host/events` all render with placeholder hero cards. F22 ships the assets so every subsequent UI task (F24-F27) has real Medellín imagery instead of stock SVGs.
+
+## 2\. Goals
+
+* Copy `legacy/src/assets/hero/` (8 files) → `mdeapp/public/hero/`
+* Copy `legacy/src/assets/inspired/` (7 files) → `mdeapp/public/inspired/`
+* Copy `legacy/public/ilovemde.png`
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:core",,,,,"2026-05-27T05:49:05.534Z","2026-05-27T06:09:05.122Z",,,,,,,,"","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","P1 — Maps & core",,"1d09e480-78ca-408f-b31b-a29f7c89b9ad",181,"","",
+"SAN-103","Sanjiovani","MAP-006 — Nearby Search + Show nearby on RentalCard","**Task ID:** `MAP-006`
+**Spec:** `tasks/maps/MAP-006-nearby-search.md`
+**Repo status:** Not Started
+**Priority:** P1
+**Phase:** Post-MVP — Camila cross-sell
+**Depends on:** MAP-005, F46
+
+## Summary
+
+## 1\. Purpose
+
+Ship a Mastra tool (or edge-backed action) wrapping `places:searchNearby` with strict `locationRestriction`, `includedTypes`, `maxResultCount`, and audited `X-Goog-FieldMask`. UI CTA on rental/event cards merges results into MAP-001 pin pipeline under a distinct category (e.g. `nearby` / `restaurant`).
+
+## 2\. Goals
+
+* Tool `searchNearbyPlaces` — input: `lat`, `lng`, `radiusMeters` (default 800, max 1500), `includedTypes[]`, `maxResultCount` (cap 5)
+* Uses MAP-005 `places-proxy` for Google call + cache
+* Each result includes `googleMapsLinks.placeUri` — **never** synthesize URLs
+* `GroundingAttribution` when list is Google-sourced (same as MAP-002 component)
+* `mergePinsByCategory` — does not clear `rental` / `event` pins
+* `useCopilotAction` mirror for generative UI on `/` a
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:maps",,,,,"2026-05-27T05:49:12.950Z","2026-05-27T06:09:02.529Z",,,,,,,,"","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","P1 — Maps & core",,"1b88f32e-34f0-4ef9-ab30-6ac6752682e7",181,"","SAN-102",
+"SAN-113","Sanjiovani","SCREEN-018 — Mobile Responsive 3-Panel Shell","**Task ID:** `SCREEN-018`
+**Spec:** `tasks/screens/SCREEN-018-mobile-responsive-shell.md`
+**Repo status:** Not Started
+**Priority:** P0
+**Phase:** MVP Phase 1
+**Depends on:** F48, MAP-007B, SCREEN-001
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:screens",,,,,"2026-05-27T05:49:19.583Z","2026-05-27T06:08:58.012Z",,,,,,,,"","80fe78ad-59de-48f5-9815-7c208c0f0176","P1 — Screens & café",,"67ea57b2-28ac-4bfa-b11b-29093a6e3d70",181,"","",
+"SAN-106","Sanjiovani","MAP-012 — Neighborhood intelligence cards","**Task ID:** `MAP-012`
+**Spec:** `tasks/maps/MAP-012-neighborhood-intelligence.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** MAP-006, MAP-012A
+
+## Summary
+
+## 1\. Purpose
+
+Neighborhood comparison UX for `/` and `/rentals`: read `neighborhood_scores` (or equivalent) populated by weekly refresh from MAP-006 nearby patterns **or** Aggregate/Insights (per Phase 0 decision) — offline `ai_summary` / curated copy where Google generative fields are unavailable.
+
+## 2\. Goals
+
+* Migration `neighborhood_scores` (`neighborhood` text PK, counts per category, `computed_at`)
+* RLS: public read; service-role write
+* Edge `places-density-refresh` — iterates 5–10 Medellín neighborhoods × categories; uses **Phase 0 winner** (Aggregate API, Insights, or MAP-005 Nearby proxy); caps \~100 Places calls/week
+* `NeighborhoodCard.tsx` — Laureles vs Poblado (or dynamic pair from user query)
+* Mastra tool or read API `getNeighborhoodScores` — no live Places on hot path
+* 
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:maps",,,,,"2026-05-27T05:49:14.827Z","2026-05-27T06:09:01.185Z",,,,,,,,"","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","P1 — Maps & core",,"b9422372-1829-48fe-94c5-5d492feb29ae",181,"","SAN-107, SAN-103",
+"SAN-95","Sanjiovani","F20 — Port evaluationAgent + scorers + Vercel deploy prep","**Task ID:** `F20`
+**Spec:** `tasks/core/F20-evaluation-and-deploy-prep.md`
+**Repo status:** Not Started
+**Priority:** P1
+**Phase:** W8-W9 — observability + deployment
+**Depends on:** F19-concierge-and-restaurants-attractions
+
+## Summary
+
+## 1\. Purpose
+
+Closes Phase 1 observability + deployment:
+
+* **evaluationAgent** — scoring/eval helper (per PRD §13 ""evaluation reused"")
+* **3 scorers** — written fresh based on legacy `weather-scorer.ts` pattern: `toolCallAppropriatenessScorer`, `completenessScorer`, `translationScorer`
+* **Vercel build script** — only needed if migrating to `mastra build` (we use `next build`; defer unless required)
+
+**API risks (probe before coding):**
+
+1. `@mastra/evals` — separate package; likely **not** in mdeapp beta lockfile. If `npm ls @mastra/evals` empty → defer all scorers; document in evidence.
+2. `mastra_ai_spans` — 932 rows from legacy Mastra Postgres store; mdeapp uses LibSQL `:memory:` today. **PostgresStore is owned by **[**MASTRA-003**](<../../mastra/MASTRA-003-postgres-storage.md>) — F
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:core",,,,,"2026-05-27T05:49:04.398Z","2026-05-27T06:09:06.033Z",,,,,,,,"","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","P1 — Maps & core",,"a5e8c41b-8ad6-431b-8bb2-0a682ee29258",182,"","",
+"SAN-112","Sanjiovani","SCREEN-017 — Login / Signup Polish","**Task ID:** `SCREEN-017`
+**Spec:** `tasks/screens/SCREEN-017-login-signup-polish.md`
+**Repo status:** Not Started
+**Priority:** P1
+**Phase:** MVP Phase 2
+**Depends on:** F08
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-2, track:screens",,,,,"2026-05-27T05:49:19.048Z","2026-05-27T06:08:58.630Z",,,,,,,,"","80fe78ad-59de-48f5-9815-7c208c0f0176","P1 — Screens & café",,"20b32b0b-0bd5-48a6-a960-8cc088b45c48",181,"","",
+"SAN-108","Sanjiovani","MAP-023 — Static Maps API — event location previews + OG images","**Task ID:** `MAP-023`
+**Spec:** `tasks/maps/MAP-023-static-maps-event-previews.md`
+**Repo status:** Not Started
+**Priority:** P3
+**Phase:** Post-MVP marketing
+**Depends on:** MAP-004
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:maps",,,,,"2026-05-27T05:49:16.358Z","2026-05-27T06:09:00.389Z",,,,,,,,"","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","P1 — Maps & core",,"47d3b65b-3c16-4699-bac8-e97868f6b1df",181,"","",
+"SAN-101","Sanjiovani","MAP-002A-ADK — ADK LlmAgent + McpToolset package (Phase 2 follow-up)","**Task ID:** `MAP-002A-ADK`
+**Spec:** `tasks/maps/MAP-002A-ADK-agent-package.md`
+**Repo status:** Not started
+**Priority:** P2
+**Phase:** Phase 2 — maps intelligence hardening
+**Depends on:** MAP-002
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-2, track:maps",,,,,"2026-05-27T05:49:09.622Z","2026-05-27T06:09:03.325Z",,,,,,,,"","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","P1 — Maps & core",,"6e67b0f6-cbd4-46b6-a9bf-e208cf849e96",181,"","",
+"SAN-96","Sanjiovani","F21A — Auto-review — manual calibration (rules + subagent only, no hooks)","**Task ID:** `F21A`
+**Spec:** `tasks/core/F21A-auto-review-calibration.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** W2 — Day 4 / Day 5 (after F09 + F10 ship)
+**Depends on:** F09
+
+## Summary
+
+## 1\. Purpose
+
+The v3 auto-review plan is solid on paper (verified against `code.claude.com/docs/en/hooks` and `anthropics/claude-code-action@v1.0.127`) but has **zero runtime evidence**. Before automating via hooks + Stop-trigger + CI, we need to know whether the rule set actually catches real drift in *this* codebase without crying wolf. F21A is that calibration step. It creates the rules file + the reviewer subagent and uses **manual invocation only** — no hook plumbing, no `decision:""block""` JSON, no GitHub Actions. We invoke the reviewer by hand on real changed files, read the findings, and tune the rule set until the signal/noise ratio justifies automation.
+
+Persona impact: **Sofía (dev)** runs the reviewer on her own branch by typing one Task tool invocation, sees what it would have
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:core",,,,,"2026-05-27T05:49:04.961Z","2026-05-27T06:09:05.597Z",,,,,,,,"","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","P1 — Maps & core",,"4c23e7b6-a630-40be-bc04-7dd96d6e7528",181,"","",
+"SAN-100","Sanjiovani","F32 — Production smoke against https://mdeapp.vercel.app","**Task ID:** `F32`
+**Spec:** `tasks/core/F32-production-smoke.md`
+**Repo status:** Not Started
+**Priority:** P1
+**Phase:** W2 — Day 5 (closes the localhost-vs-prod proof gap)
+**Depends on:** F06
+
+## Summary
+
+## 1\. Purpose
+
+Gate 9 (localhost runtime proof) was added 2026-05-20 — every task is verified booting `npm run dev` locally. **Production** is still unverified. F06 closed with ""amo100/mdeapp · prod `https://mdeapp.vercel.app`"" in the INDEX status line but no probe captured the prod URL responding. F32 closes that gap with a 30-min smoke run + a documented baseline so subsequent tasks can verify against prod instead of only localhost.
+
+This addresses the ""production claims exceed runtime proof"" critique directly.
+
+## 2\. Goals
+
+* `tasks/notes/F32-prod-smoke-2026-05-20.md` exists with:
+  * `curl -sI https://mdeapp.vercel.app/` → expected HTTP 200 + content-type text/html
+  * `curl -sX POST https://mdeapp.vercel.app/api/copilotkit -d '{}'` → expected HTTP 400 (endpoint alive, parsing requests
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:core",,,,,"2026-05-27T05:49:07.273Z","2026-05-27T06:09:03.770Z",,,,,,,,"","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","P1 — Maps & core",,"22d8314c-df53-4de4-9a2b-716d03aa83ee",181,"","",
+"SAN-104","Sanjiovani","MAP-010 — Place autocomplete — Roberto host venue","**Task ID:** `MAP-010`
+**Spec:** `tasks/maps/MAP-010-place-autocomplete-venue.md`
+**Repo status:** Not Started
+**Priority:** P1
+**Phase:** Post-MVP — events (W3–W4)
+**Depends on:** MAP-005, F34
+
+## Summary
+
+## 1\. Purpose
+
+Server-proxied **Place Autocomplete (New)** for the host event wizard: debounced input, **session token** per wizard session, Colombia region bias, field mask on suggestions — **zero** Places API key in the browser bundle.
+
+## 2\. Goals
+
+* API route or `places-proxy` sub-route `autocomplete` with session token header propagation
+* `VenueAutocomplete.tsx` on `/host/event/new` (F34 wizard shell)
+* On select: optional single **Place Details** call via proxy to fill address + `placeUri`
+* Persist to Supabase `events` (or draft table): `google_place_id`, `place_uri`, `formatted_address`
+* Session token: new token per wizard mount; complete session on selection (billing optimization per Google session pricing)
+* `includedRegionCodes: ['CO']` + Medellín location bias
+* Vitest/Playwr
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:maps",,,,,"2026-05-27T05:49:13.513Z","2026-05-27T06:09:02.071Z",,,,,,,,"","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","P1 — Maps & core",,"ff60d4ae-6fe1-4ddf-b850-310611cf792a",181,"","SAN-102",
+"SAN-98","Sanjiovani","F26 — Port RestaurantCard + RestaurantFilters component","**Task ID:** `F26`
+**Spec:** `tasks/core/F26-restaurant-card-component.md`
+**Repo status:** Not Started
+**Priority:** P1
+**Phase:** W6 — Day 1 (Tourist concierge surface)
+**Depends on:** F07, F22, F24, F25
+
+## Summary
+
+## 1\. Purpose
+
+Tourist's W6 concierge chat (Camila's `/chat` surface routed through `conciergeAgent`) suggests restaurants from `public.restaurants` (44 rows). Each suggestion needs a card. F26 ports the legacy `RestaurantCard` + `RestaurantFilters` into Paisa-tokenised shadcn components. Smaller scope than F24/F25 because restaurants display fewer fields (name, neighborhood, cuisine, price tier, photo) and have simpler filters (cuisine + neighborhood + price tier).
+
+## 2\. Goals
+
+* `mdeapp/src/components/restaurants/RestaurantCard.tsx` — `<RestaurantCard>` from shadcn primitives
+* `mdeapp/src/components/restaurants/RestaurantFilters.tsx` — cuisine + neighborhood + price-tier filters
+* `mdeapp/src/app/restaurants/preview/page.tsx` — test fixture route (≥ 3 sample restaurants)
+* ≥ 2 Vitest t
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:core",,,,,"2026-05-27T05:49:06.132Z","2026-05-27T06:09:04.684Z",,,,,,,,"","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","P1 — Maps & core",,"4dc467f1-e048-4e77-ae6b-9f4dc7d6e7b7",181,"","SAN-97",
+"SAN-102","Sanjiovani","MAP-005 — places-proxy edge + places_cache + RLS","**Task ID:** `MAP-005`
+**Spec:** `tasks/maps/MAP-005-places-proxy-cache.md`
+**Repo status:** Not Started
+**Priority:** P1
+**Phase:** Post-MVP — cost-safe Places at scale
+**Depends on:** MAP-004
+
+## Summary
+
+## 1\. Purpose
+
+Server-only **Places API (New)** access for mdeapp: edge function `places-proxy` wraps MAP-004 `google-places-client.ts`, persists responses in Supabase with TTL, and enforces RLS so browsers never hold `GOOGLE_MAPS_API_KEY`.
+
+## 2\. Goals
+
+**Prerequisite migrations (MAP-005 core — ship in this task only):**
+
+| Table | Purpose |
+| -- | -- |
+| `places_search_cache` | Text/nearby hash cache |
+| `place_details_cache` | Details by `place_id` |
+| `grounded_places_cache` | Optional write-through from MAP-002 (minimal columns) |
+
+Each: RLS enabled, ≥1 policy, TTL on `expires_at`, **edge/service-role writes only**.
+
+**Deferred to follow-on tasks (do not block MAP-005 Done):**
+
+| Table | Owner task |
+| -- | -- |
+| `rental_nearby_context` | \[**MAP-006**\](./MAP-006-ne |
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:maps",,,,,"2026-05-27T05:49:12.397Z","2026-05-27T06:09:02.987Z",,,,,,,,"","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","P1 — Maps & core",,"0f1d7c41-46b0-4ed8-9276-61040d373912",181,"","",
+"SAN-107","Sanjiovani","MAP-012A — Colombia coverage spike — Places Aggregate vs Insights","**Task ID:** `MAP-012A`
+**Spec:** `tasks/maps/MAP-012A-colombia-aggregate-insights-spike.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP gate
+**Depends on:** MAP-004
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:maps",,,,,"2026-05-27T05:49:15.483Z","2026-05-27T06:09:00.705Z",,,,,,,,"","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","P1 — Maps & core",,"9be8eeda-486e-4586-bd82-91b9850336ab",181,"","",
+"SAN-109","Sanjiovani","CAFE-001 — Cafe booking requests schema + RLS","**Task ID:** `CAFE-001`
+**Spec:** `tasks/screens/CAFE-001-booking-requests-schema.md`
+**Repo status:** Not Started
+**Priority:** P1
+**Phase:** MVP Phase 1 (SCREEN-021 Phase C)
+**Depends on:** VEC-002
+
+## Summary
+
+## Purpose
+
+Minimal Supabase table so SCREEN-021 Phase C can persist honest **request booking** rows (not instant confirmation).
+
+## Goals
+
+1. Create `cafe_booking_requests` with RLS enabled + ≥1 policy.
+2. Columns: `user_id`, `place_id`, `cafe_name`, `requested_at`, `party_size`, `intent`, `notes`, `contact`, `status` (`pending` | `confirmed` | `needs_user` | `cancelled`), `metadata` jsonb.
+3. Server-only insert via Mastra tool or edge fn — no service-role in client `mdeapp/src/**` except F13 carve-out paths.
+4. Migration + typegen + Vitest smoke for RLS (anon cannot read others' rows).
+
+## Definition of Done
+
+- [ ] Migration applied; Supabase MCP confirms RLS + policies.
+- [ ] `npm run floor` exit 0 after typegen.
+- [ ] Evidence in `tasks/notes/CAFE-001-evidence.md`.
+
+## Out of scope
+
+* 
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:screens",,,,,"2026-05-27T05:49:17.160Z","2026-05-27T06:08:59.939Z",,,,,,,,"","80fe78ad-59de-48f5-9815-7c208c0f0176","P1 — Screens & café",,"afea5713-7903-47db-aa68-537f999199ae",181,"","SAN-152",
+"SAN-99","Sanjiovani","F30 — Port OnboardingLayout — first-run shell","**Task ID:** `F30`
+**Spec:** `tasks/core/F30-onboarding-layout.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** W7 — Day 1 (first-run UX polish, post-MVP feature)
+**Depends on:** F07
+
+## Summary
+
+## 1\. Purpose
+
+A first-time visitor to mdeapp lands on `/` and currently sees the CopilotKit chat sidebar against a near-empty page. Legacy proved a guided onboarding shell that explains ""what is mdeai?"" / ""who is this for?"" with hero imagery and three persona entry points. F30 ports that shell as `<OnboardingLayout>` — a layout component used by a new `/welcome` route shown to first-time visitors (cookie-based detection, no DB write needed Phase 1).
+
+## 2\. Goals
+
+* `mdeapp/src/components/onboarding/OnboardingLayout.tsx` — shell with hero, persona-pick CTAs (Roberto / Camila / Tourist), and a ""skip to chat"" link
+* `mdeapp/src/app/welcome/page.tsx` — uses `<OnboardingLayout>`; redirects to `/` when first-visit cookie is set
+* ≥ 2 Vitest tests (shell renders · all 3 persona CTAs visible)
+* U
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:core",,,,,"2026-05-27T05:49:06.684Z","2026-05-27T06:09:04.231Z",,,,,,,,"","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","P1 — Maps & core",,"ac4796b5-a604-4734-af91-75a7d849dd23",181,"","",
+"SAN-118","Sanjiovani","EVP-014-core — /host/events list page — Roberto draft + published view (PRD §51 #15)","**Task ID:** `EVP-014-core`
+**Spec:** `tasks/events/EVP-014-core-host-events-list-page.md`
+**Repo status:** Not Started
+**Priority:** P0
+**Phase:** W3 — Day 2 (Roberto hero list view)
+**Depends on:** F07, F08, F22, EVP-013-core, EVP-009-core
+
+## Summary
+
+## 1\. Purpose
+
+After Roberto creates an event via EVP-010-core wizard + EVP-011-core HITL approval + EVP-012-core commit, he needs a place to see his drafts AND published events. EVP-014-core ships the read-only list page `/host/events` using EVP-013-core `EventCard` over real Supabase `public.events` data (filter on `host_id = current_user.id`). Empty-state shows ""Create your first event"" CTA → `/host/event/new` (EVP-010-core).
+
+## 2\. Goals
+
+* `mdeapp/src/app/host/events/page.tsx` — **Server Component** that fetches Roberto's events from Supabase server-side (no client roundtrip)
+* Auth-gated via F08 middleware
+* Renders ≤ 50 events as `<EventCard>` grid (EVP-013-core), filtered by `status: 'draft' | 'pending_approval' | 'approved' | 'published'` (EVP-008-core enum)
+* Filter bar reuses EV
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:34.446Z","2026-05-27T06:08:55.673Z",,,,,,,,"","a6aec707-6ec3-4586-8c11-e381ee65036e","P1 — Events polish",,"8170d1bf-4e5b-45dc-85f1-9e93f3e2c6ed",181,"","SAN-117, SAN-97",
+"SAN-153","Sanjiovani","VEC-003 — Model registry + embedding contract","**Task ID:** `VEC-003`
+**Spec:** `tasks/vector/VEC-003-model-registry-and-embedding-contract.md`
+**Repo status:** Not Started
+**Priority:** P0
+**Phase:** Vector V1
+**Depends on:** VEC-001
+
+## Summary
+
+## Purpose
+
+Lock the embedding provider, model, output dimensions, distance operator, and text formatting rules before new vector migrations.
+
+## User story
+
+As **Sofia**, I need one embedding contract for document vectors and query vectors, so that Camila's query embedding lives in the same vector space as the cafe, event, rental, and coffee-tour chunks.
+
+## Real-world example
+
+If mdeai embeds coffee tours with `gemini-embedding-001` at 768 dimensions but later queries with a different Gemini embedding model at 1536 or 3072 dimensions, semantic search becomes invalid. The results might still run but the distances would not mean what the ranking code thinks they mean.
+
+## Model contract
+
+Current live data uses:
+
+| Field | Current value |
+| -- | -- |
+| Provider | Google Gemini |
+| Model | \`ge |
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:vector",,,,,"2026-05-27T05:50:06.299Z","2026-05-27T06:08:29.043Z",,,,,,,,"","5108212a-3fa8-403f-8e15-86e4780acfc6","Phase 2 — Vector",,"1b5925ce-9ec1-4915-90c8-70d5db5dcd18",180,"","SAN-151",
+"SAN-131","Sanjiovani","EVP-028-mvp — Production readiness checklist","**Task ID:** `EVP-028-mvp`
+**Spec:** `tasks/events/EVP-028-mvp-production-readiness.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-027-mvp-discovery-test-plan
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:42.674Z","2026-05-27T06:08:49.536Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"7dea1b8d-9006-4f96-86f0-e1b834a2345a",181,"","SAN-130",
+"SAN-142","Sanjiovani","EVP-039-postmvp — Live event chat and networking rooms","**Task ID:** `EVP-039-postmvp`
+**Spec:** `tasks/events/EVP-039-postmvp-live-event-chat-rooms.md`
+**Repo status:** Open
+**Priority:** P3
+**Depends on:** EVP-035-mvp, EVP-038-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:53.751Z","2026-05-27T06:08:39.090Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"23ec5b27-801b-429d-a40d-dd9387346c45",181,"","SAN-141, SAN-138",
+"SAN-121","Sanjiovani","EVP-018-mvp — Event web discovery — future task pack (EVP-019…028)","**Task ID:** `EVP-018-mvp`
+**Spec:** `tasks/events/EVP-018-mvp-event-web-discovery-task-pack.md`
+**Repo status:** Not Started
+**Priority:** P3
+**Phase:** Post-MVP — Phase 2+
+**Depends on:** EVP-017-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-2, track:events",,,,,"2026-05-27T05:49:36.236Z","2026-05-27T06:08:54.275Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"7343091d-40a4-42eb-aa59-e79bfe9d6365",181,"","",
+"SAN-140","Sanjiovani","EVP-037-mvp — AI event decision concierge","**Task ID:** `EVP-037-mvp`
+**Spec:** `tasks/events/EVP-037-mvp-concierge-event-decision-chat.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** EVP-004-core, EVP-005-core, EVP-033-mvp, EVP-035-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:52.618Z","2026-05-27T06:08:40.001Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"37273b4e-1a0f-4a3e-9b23-6033209622fc",181,"","SAN-138, SAN-136",
+"SAN-170","Sanjiovani","CTI-012 — verifyCoffeeTourSources (Search Grounding)","**Task ID:** `CTI-012`
+**Spec:** `tasks/agent/tasks/CTI-012-verify-tour-sources.md`
+**Repo status:** Open
+**Priority:** P2
+**Phase:** CTI-B
+**Depends on:** CTI-001A, MAP-002D, GS-001
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:17.026Z","2026-05-27T06:08:16.999Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"0ed3a186-dba4-4bd6-8fd0-2e419d5ad759",180,"","SAN-158",
+"SAN-125","Sanjiovani","EVP-022-mvp — eventDiscoveryWorkflow (Mastra)","**Task ID:** `EVP-022-mvp`
+**Spec:** `tasks/events/EVP-022-mvp-event-discovery-workflow.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-020-mvp-discovered-events-data-model, EVP-005-core-event-tool-and-workflow
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:38.431Z","2026-05-27T06:08:52.302Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"84d31497-a566-465c-a483-1c8c640b6c6b",181,"","SAN-123",
+"SAN-119","Sanjiovani","EVP-015-mvp — Grounded event discovery","**Task ID:** `EVP-015-mvp`
+**Spec:** `tasks/events/EVP-015-mvp-grounded-event-discovery.md`
+**Repo status:** Not Started
+**Priority:** P1
+**Depends on:** EVP-001-core, EVP-005-core, EVP-013-core, GS-001, GS-003
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:35.070Z","2026-05-27T06:08:55.152Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"149db62b-7305-461a-aaa7-239007012997",181,"","SAN-117, SAN-115",
+"SAN-174","Sanjiovani","CTI-016 — Coffee tour intent chips on ChatQueryBar","**Task ID:** `CTI-016`
+**Spec:** `tasks/agent/tasks/CTI-016-query-bar-chips.md`
+**Repo status:** Open
+**Priority:** P2
+**Phase:** CTI-B
+**Depends on:** CTI-004
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:22.448Z","2026-05-27T06:08:09.447Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"3edd06a0-7c95-4ab3-9cd3-5ba56e6acd86",180,"","SAN-162",
+"SAN-137","Sanjiovani","EVP-034-mvp — Ask Host and AI Q&A assistant","**Task ID:** `EVP-034-mvp`
+**Spec:** `tasks/events/EVP-034-mvp-ask-host-ai-qa.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** EVP-032-mvp, EVP-012-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:50.511Z","2026-05-27T06:08:44.257Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"9a15dc7b-bc85-44ee-9f5f-541584424d27",181,"","SAN-135",
+"SAN-124","Sanjiovani","EVP-021-mvp — Google Search Grounding query templates","**Task ID:** `EVP-021-mvp`
+**Spec:** `tasks/events/EVP-021-mvp-google-search-grounding.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-023-mvp-adk-search-maps-agents, EVP-007-core-event-agent-prompt-and-sources, MAP-002D, GS-001
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:37.939Z","2026-05-27T06:08:52.898Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"8827a4d0-f2a6-4209-8b96-892f86a3abdb",181,"","SAN-126",
+"SAN-146","Sanjiovani","EVP-043-mvp — Neighborhood, safety, transit, and weather intelligence","**Task ID:** `EVP-043-mvp`
+**Spec:** `tasks/events/EVP-043-mvp-neighborhood-safety-transit-intelligence.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** EVP-016-mvp, EVP-024-mvp, EVP-036-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:58.906Z","2026-05-27T06:08:32.343Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"28b58021-9540-4d05-b08b-38d176ec22a5",181,"","SAN-139, SAN-127, SAN-120",
+"SAN-150","Sanjiovani","EVP-047-postmvp — AI night itinerary builder","**Task ID:** `EVP-047-postmvp`
+**Spec:** `tasks/events/EVP-047-postmvp-ai-night-itinerary-builder.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** EVP-036-mvp, EVP-037-mvp, EVP-043-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:50:04.139Z","2026-05-27T06:08:30.358Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"04ac85f4-2a07-48a6-b921-041e5aa14f8a",181,"","SAN-146, SAN-140, SAN-139",
+"SAN-151","Sanjiovani","VEC-001 — pgvector inventory + duplicate HNSW cleanup plan","**Task ID:** `VEC-001`
+**Spec:** `tasks/vector/VEC-001-pgvector-inventory-and-duplicate-index-plan.md`
+**Repo status:** Not Started
+**Priority:** P0
+**Phase:** Vector V1
+
+## Summary
+
+## Purpose
+
+Create a read-only forensic snapshot of the current pgvector setup before mdeai adds any new semantic schema.
+
+This protects Sofia from building V2 on top of hidden duplicates, stale migrations, or accidental assumptions.
+
+## User story
+
+As **Sofia**, I need exact proof of the current pgvector tables, indexes, RPCs, policies, row counts, and model dimensions, so that Camila's future semantic search is built on facts instead of planning-doc optimism.
+
+## Real-world example
+
+Before adding ""quiet coffee tour near Medellin"" semantic search, Sofia confirms whether the existing vector layer is clean. Today it is not: duplicate HNSW indexes exist on `listing_embeddings`, `event_embeddings`, and `restaurant_embeddings`.
+
+## Verified starting point
+
+| Check | Current finding |
+| -- | -- |
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:vector",,,,,"2026-05-27T05:50:04.715Z","2026-05-27T06:08:29.932Z",,,,,,,,"","5108212a-3fa8-403f-8e15-86e4780acfc6","Phase 2 — Vector",,"a58a2b42-18dc-4066-818c-b1662b9bd21f",180,"","",
+"SAN-157","Sanjiovani","VEC-007 — Coffee-tour vector compatibility","**Task ID:** `VEC-007`
+**Spec:** `tasks/vector/VEC-007-coffee-tour-vector-compatibility.md`
+**Repo status:** Not Started
+**Priority:** P1
+**Phase:** Vector V1
+**Depends on:** VEC-002, VEC-004, VEC-005, VEC-006, CTI-001A, CTI-010
+
+## Summary
+
+## Purpose
+
+Connect the existing CTI-011 coffee-tour embeddings plan to the shared semantic V1 layer, so mdeai does not create another isolated vector table unless it is only a compatibility view.
+
+## User story
+
+As a **Tourist**, I want ""authentic social-impact coffee tour near Medellin"" to find the right tours by meaning, while exact facts like price, pickup, duration, and place ID still come from SQL and Places.
+
+## Real-world example
+
+Query:
+
+```text
+beginner-friendly social impact coffee tour with local family story
+```
+
+Correct behavior:
+
+* vector search matches social-impact/authenticity chunks,
+* SQL filters out unverified or inactive tours,
+* ranking boosts verified operator/source confidence,
+* card explains why the tour fits,
+* map pin appears only when place identity is grounde
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:vector",,,,,"2026-05-27T05:50:08.859Z","2026-05-27T06:08:27.314Z",,,,,,,,"","5108212a-3fa8-403f-8e15-86e4780acfc6","Phase 2 — Vector",,"d694a518-17a4-4cd7-bdb8-740a6e9117a9",180,"","SAN-168, SAN-158, SAN-156, SAN-155, SAN-154, SAN-152",
+"SAN-126","Sanjiovani","EVP-023-mvp — ADK SearchAgent + MapsAgent sidecar","**Task ID:** `EVP-023-mvp`
+**Spec:** `tasks/events/EVP-023-mvp-adk-search-maps-agents.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-019-mvp-research-official-docs
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:38.973Z","2026-05-27T06:08:51.853Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"9c3cf8db-b40f-4683-b2fb-51e26092b70f",181,"","SAN-122",
+"SAN-136","Sanjiovani","EVP-033-mvp — Event vibe tags and AI summary","**Task ID:** `EVP-033-mvp`
+**Spec:** `tasks/events/EVP-033-mvp-event-vibe-ai-summary.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** EVP-032-mvp, EVP-007-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:49.657Z","2026-05-27T06:08:46.964Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"db459742-b2e8-43e1-a5b1-090264322d01",181,"","SAN-135",
+"SAN-143","Sanjiovani","EVP-040-postmvp — Post-event follow-up assistant","**Task ID:** `EVP-040-postmvp`
+**Spec:** `tasks/events/EVP-040-postmvp-post-event-follow-up.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** EVP-038-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:54.361Z","2026-05-27T06:08:38.358Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"cdbef7cf-2380-4b1f-962d-cc80f77a4113",181,"","SAN-141",
+"SAN-152","Sanjiovani","VEC-002 — Semantic V1 schema + RLS plan","**Task ID:** `VEC-002`
+**Spec:** `tasks/vector/VEC-002-semantic-v1-schema-and-rls-plan.md`
+**Repo status:** Not Started
+**Priority:** P0
+**Phase:** Vector V1
+**Depends on:** VEC-001, VEC-003
+
+## Summary
+
+## Purpose
+
+Design the smallest safe shared semantic schema for mdeai instead of creating a separate embedding table for every product idea.
+
+## User story
+
+As **Patricia**, I need public place embeddings and private user-memory embeddings separated by RLS, so that Camila can search public cafes while her personal preferences stay private.
+
+## Real-world example
+
+Camila searches ""quiet cafe like the ones I saved last week."" Public cafe profile embeddings may be readable by anyone, but Camila's saved-place preference embedding must be visible only to Camila and server-side tools.
+
+## Correct V1 schema
+
+Start with:
+
+| Table | Purpose |
+| -- | -- |
+| `semantic_embeddings` | Shared public/private embedding registry. |
+| `embedding_jobs` | Tracks embedding generation, refresh, failures, and model |
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:vector",,,,,"2026-05-27T05:50:05.607Z","2026-05-27T06:08:29.490Z",,,,,,,,"","5108212a-3fa8-403f-8e15-86e4780acfc6","Phase 2 — Vector",,"097e3dd4-5113-4e45-8c12-e8aac9adc1ec",180,"","SAN-153, SAN-151",
+"SAN-164","Sanjiovani","CTI-006 — rankCoffeeTours scoring function","**Task ID:** `CTI-006`
+**Spec:** `tasks/agent/tasks/CTI-006-rank-coffee-tours.md`
+**Repo status:** Open
+**Priority:** P1
+**Phase:** CTI-A
+**Depends on:** CTI-002, CTI-003, F50b
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:13.108Z","2026-05-27T06:08:21.825Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"a0efefc1-1707-4c01-bb6a-2e223f44bf22",180,"","SAN-161, SAN-160",
+"SAN-177","Sanjiovani","CTI-020 — WhatsApp handoff for coffee tours","**Task ID:** `CTI-020`
+**Spec:** `tasks/agent/tasks/CTI-020-whatsapp-handoff.md`
+**Repo status:** Open
+**Priority:** P3
+**Phase:** CTI-C
+**Depends on:** CTI-014, CTI-005, F08
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:24.329Z","2026-05-27T06:08:07.641Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"606d34cd-f7a7-48b9-81e3-75ec70f8d053",180,"","SAN-163, SAN-172",
+"SAN-123","Sanjiovani","EVP-020-mvp — Discovered events data model + RLS","**Task ID:** `EVP-020-mvp`
+**Spec:** `tasks/events/EVP-020-mvp-discovered-events-data-model.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-019-mvp-research-official-docs
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:37.341Z","2026-05-27T06:08:53.359Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"af93f2ed-0b20-45e9-90bb-f40329b37586",181,"","SAN-122",
+"SAN-163","Sanjiovani","CTI-005 — Places API enrich for coffee tour rows","**Task ID:** `CTI-005`
+**Spec:** `tasks/agent/tasks/CTI-005-mvp-places-enrich-tours.md`
+**Repo status:** Open
+**Priority:** P1
+**Phase:** CTI-A
+**Depends on:** CTI-003, MAP-018B, MAP-004
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:12.517Z","2026-05-27T06:08:22.280Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"4a5a5f55-13ad-467e-876b-85ddbffc1731",180,"","SAN-161",
+"SAN-175","Sanjiovani","CTI-017 — /tours/[slug] detail page","**Task ID:** `CTI-017`
+**Spec:** `tasks/agent/tasks/CTI-017-tour-detail-page.md`
+**Repo status:** Open
+**Priority:** P3
+**Phase:** CTI-C
+**Depends on:** CTI-001A, CTI-007
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:23.091Z","2026-05-27T06:08:09.010Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"41b6a5a8-9f40-41b8-aec7-38a207b6efaf",180,"","SAN-165, SAN-158",
+"SAN-129","Sanjiovani","EVP-026-mvp — Human approval save flow","**Task ID:** `EVP-026-mvp`
+**Spec:** `tasks/events/EVP-026-mvp-human-approval-save-flow.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-020-mvp-discovered-events-data-model, EVP-011-core-approval-panel-hitl
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:40.724Z","2026-05-27T06:08:50.481Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"494bfcda-a034-4b37-b6e2-f69a9d4c6350",181,"","SAN-123",
+"SAN-148","Sanjiovani","EVP-045-mvp — Host pricing suggestions and moderation basics","**Task ID:** `EVP-045-mvp`
+**Spec:** `tasks/events/EVP-045-mvp-host-pricing-moderation-basics.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** EVP-010-core, EVP-012-core, EVP-034-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:50:02.164Z","2026-05-27T06:08:31.302Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"69f621e3-72dc-41f9-b882-e801a9c8a202",181,"","SAN-137",
+"SAN-130","Sanjiovani","EVP-027-mvp — Discovery test plan","**Task ID:** `EVP-027-mvp`
+**Spec:** `tasks/events/EVP-027-mvp-discovery-test-plan.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-025-mvp-copilotkit-discovery-ui
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:41.561Z","2026-05-27T06:08:49.976Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"4f57cfdd-a176-4534-9670-2f969bf22756",181,"","SAN-128",
+"SAN-176","Sanjiovani","CTI-018 — Extract coffeeTourSearchWorkflow from concierge","**Task ID:** `CTI-018`
+**Spec:** `tasks/agent/tasks/CTI-018-coffee-tour-workflow.md`
+**Repo status:** Open
+**Priority:** P3
+**Phase:** CTI-C
+**Depends on:** CTI-004, CTI-010
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:23.770Z","2026-05-27T06:08:08.242Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"e51fbaef-fbca-4ce8-b671-fa3f54eb0bc7",180,"","SAN-168, SAN-162",
+"SAN-139","Sanjiovani","EVP-036-mvp — Community, map, and nearby intelligence","**Task ID:** `EVP-036-mvp`
+**Spec:** `tasks/events/EVP-036-mvp-community-map-nearby.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** EVP-016-mvp, EVP-024-mvp, EVP-032-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:51.732Z","2026-05-27T06:08:40.514Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"14468db2-145b-4663-aa18-4093ce7a60b0",181,"","SAN-135, SAN-127, SAN-120",
+"SAN-160","Sanjiovani","CTI-002 — CoffeeTour types + Zod schemas","**Task ID:** `CTI-002`
+**Spec:** `tasks/agent/tasks/CTI-002-coffee-tour-types.md`
+**Repo status:** Open
+**Priority:** P0
+**Phase:** CTI-A
+**Depends on:** CTI-001A
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:10.770Z","2026-05-27T06:08:26.045Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"90d22430-0fa4-4874-ba1c-f2bdc3a4e746",180,"","SAN-158",
+"SAN-167","Sanjiovani","CTI-009 — smoke:coffee-tours script","**Task ID:** `CTI-009`
+**Spec:** `tasks/agent/tasks/CTI-009-smoke-coffee-tours.md`
+**Repo status:** Open
+**Priority:** P1
+**Phase:** CTI-A
+**Depends on:** CTI-007, CTI-008
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:15.259Z","2026-05-27T06:08:20.576Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"a237bc31-a86a-48d0-8b8a-391a10bf5085",180,"","SAN-166, SAN-165",
+"SAN-132","Sanjiovani","EVP-029-advanced — Sponsor CRM-lite + proposal drafts","**Task ID:** `EVP-029-advanced`
+**Spec:** `tasks/events/EVP-029-advanced-sponsor-crm-lite.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Depends on:** EVP-001-core, EVP-003-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:47.023Z","2026-05-27T06:08:49.097Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"f0357d6b-dc35-4c06-b373-d9c17dc4336f",181,"","SAN-116, SAN-115",
+"SAN-144","Sanjiovani","EVP-041-advanced — Community relationship graph","**Task ID:** `EVP-041-advanced`
+**Spec:** `tasks/events/EVP-041-advanced-community-relationship-graph.md`
+**Repo status:** Open
+**Priority:** P3
+**Depends on:** EVP-038-postmvp, EVP-039-postmvp, EVP-040-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:55.707Z","2026-05-27T06:08:37.275Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"cc5774de-e45e-4026-8e0b-5d5cf3c27663",181,"","SAN-143, SAN-142, SAN-141",
+"SAN-172","Sanjiovani","CTI-014 — saveCoffeeTour + user interactions RLS","**Task ID:** `CTI-014`
+**Spec:** `tasks/agent/tasks/CTI-014-save-coffee-tour.md`
+**Repo status:** Open
+**Priority:** P2
+**Phase:** CTI-B
+**Depends on:** CTI-001A, CTI-007, F08
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:19.746Z","2026-05-27T06:08:10.340Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"39d40808-0154-496a-906e-81f80869c3b5",180,"","SAN-165, SAN-158",
+"SAN-147","Sanjiovani","EVP-044-mvp — WhatsApp and community links","**Task ID:** `EVP-044-mvp`
+**Spec:** `tasks/events/EVP-044-mvp-whatsapp-community-links.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** EVP-032-mvp, EVP-034-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:59.507Z","2026-05-27T06:08:31.867Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"533a00c7-b8f3-471d-944b-7e8d1738067a",181,"","SAN-137, SAN-135",
+"SAN-154","Sanjiovani","VEC-004 — Embedding text builders","**Task ID:** `VEC-004`
+**Spec:** `tasks/vector/VEC-004-embedding-text-builders.md`
+**Repo status:** Not Started
+**Priority:** P0
+**Phase:** Vector V1
+**Depends on:** VEC-002, VEC-003
+
+## Summary
+
+## Purpose
+
+Create deterministic builders that turn mdeai entities into clean semantic text. Do not embed raw JSON, ratings, URLs, or IDs.
+
+## User story
+
+As **Camila**, I want ""quiet cafe with fast Wi-Fi"" to match work-friendly cafes, not cafes that only have high ratings or long URLs in the record.
+
+## Real-world example
+
+Good embedding text:
+
+```text
+Quiet remote-work cafe in Laureles with ergonomic seating, cold brew, fiber internet, natural lighting, and calm weekday atmosphere.
+```
+
+Bad embedding text:
+
+```text
+4.8 stars, 123 reviews, open now, https://maps.google.com/...
+```
+
+## Flow
+
+```mermaid
+flowchart LR
+  A[""SQL entity facts""] --> B[""Domain text builder""]
+  C[""Approved profile/source text""] --> B
+  B --> D[""Clean semantic content_text""]
+  D --> E[""content_hash""]
+  E --> F[""embe
+
+---
+_Imported from mdeai tasks/ — spec file is source of truth._
+```","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:vector",,,,,"2026-05-27T05:50:06.982Z","2026-05-27T06:08:28.596Z",,,,,,,,"","5108212a-3fa8-403f-8e15-86e4780acfc6","Phase 2 — Vector",,"71102857-09ac-41d4-a8e3-e5022b28e4fb",180,"","SAN-153, SAN-152",
+"SAN-156","Sanjiovani","VEC-006 — Search logs + observability","**Task ID:** `VEC-006`
+**Spec:** `tasks/vector/VEC-006-semantic-search-logs-and-observability.md`
+**Repo status:** Not Started
+**Priority:** P1
+**Phase:** Vector V1
+**Depends on:** VEC-002, VEC-005
+
+## Summary
+
+## Purpose
+
+Store enough search telemetry to debug why semantic retrieval picked a result, without storing private text or leaking user memory.
+
+## User story
+
+As **Sofia**, I need to know why Camila saw a bad rental or cafe result, so that I can tune SQL filters, embeddings, and ranking weights with evidence.
+
+## Real-world example
+
+Camila asks ""quiet Laureles cafe with outlets."" A loud brunch spot ranks first. The log should show whether the issue came from vector similarity, missing structured tags, stale source text, or a reranker weight.
+
+## Flow
+
+```mermaid
+sequenceDiagram
+  participant U as User
+  participant M as Mastra
+  participant R as Retriever
+  participant DB as Supabase
+
+  U->>M: semantic query
+  M->>R: query + filters + viewport
+  R->>DB: SQL + FTS + vector
+  R->>DB: insert
+
+---
+_Imported from mdeai tasks/ — spec file is source of truth._
+```","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:vector",,,,,"2026-05-27T05:50:08.152Z","2026-05-27T06:08:27.754Z",,,,,,,,"","5108212a-3fa8-403f-8e15-86e4780acfc6","Phase 2 — Vector",,"765c071e-5382-4a66-a5bf-bccf6ac88480",180,"","SAN-155, SAN-152",
+"SAN-120","Sanjiovani","EVP-016-mvp — Event maps + venue integration","**Task ID:** `EVP-016-mvp`
+**Spec:** `tasks/events/EVP-016-mvp-event-maps-venue-integration.md`
+**Repo status:** Not Started
+**Priority:** P1
+**Depends on:** EVP-015-mvp, MAP-004, MAP-010
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:35.696Z","2026-05-27T06:08:54.710Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"f244a411-288c-4d1b-9fde-9fa8ea5e9508",181,"","SAN-104, SAN-119",
+"SAN-127","Sanjiovani","EVP-024-mvp — Places API enrichment for discovered events","**Task ID:** `EVP-024-mvp`
+**Spec:** `tasks/events/EVP-024-mvp-places-enrichment.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-022-mvp-event-discovery-workflow
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:39.578Z","2026-05-27T06:08:51.400Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"6dfc07d0-c9be-4359-a76e-cb04fddc2de6",181,"","SAN-125",
+"SAN-171","Sanjiovani","CTI-013 — ADK discovery merge into coffee_tours staging","**Task ID:** `CTI-013`
+**Spec:** `tasks/agent/tasks/CTI-013-adk-discovery-merge.md`
+**Repo status:** Open
+**Priority:** P2
+**Phase:** CTI-B
+**Depends on:** CTI-001A, CTI-004, MAP-002
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:17.599Z","2026-05-27T06:08:11.565Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"3877ca73-20bf-4244-8646-11862749f5d1",180,"","SAN-162, SAN-158",
+"SAN-168","Sanjiovani","CTI-010 — Phase A evidence + task-verifier closeout","**Task ID:** `CTI-010`
+**Spec:** `tasks/agent/tasks/CTI-010-phase-a-evidence.md`
+**Repo status:** Open
+**Priority:** P1
+**Phase:** CTI-A
+**Depends on:** CTI-009
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:15.846Z","2026-05-27T06:08:20.137Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"1d886a48-c905-4696-91ca-55e02cd1008e",180,"","SAN-167",
+"SAN-162","Sanjiovani","CTI-004 — Concierge tour intent + searchCoffeeTours tool","**Task ID:** `CTI-004`
+**Spec:** `tasks/agent/tasks/CTI-004-search-coffee-tours-tool.md`
+**Repo status:** Open
+**Priority:** P0
+**Phase:** CTI-A
+**Depends on:** CTI-002, CTI-003, CTI-006, MAP-002, MAP-018C
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:11.954Z","2026-05-27T06:08:24.518Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"f2e7d936-d2dd-4708-8847-ae3f71f39220",180,"","SAN-164, SAN-161, SAN-160",
+"SAN-161","Sanjiovani","CTI-003 — Seed 5 verified coffee tours","**Task ID:** `CTI-003`
+**Spec:** `tasks/agent/tasks/CTI-003-seed-coffee-tours.md`
+**Repo status:** Open
+**Priority:** P0
+**Phase:** CTI-A
+**Depends on:** CTI-001A
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:11.333Z","2026-05-27T06:08:25.691Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"ae6f3e40-578c-466d-9f30-b980da217d5a",180,"","SAN-158",
+"SAN-173","Sanjiovani","CTI-015 — CoffeeTourCompareDrawer + compareCoffeeTours","**Task ID:** `CTI-015`
+**Spec:** `tasks/agent/tasks/CTI-015-compare-drawer.md`
+**Repo status:** Open
+**Priority:** P2
+**Phase:** CTI-B
+**Depends on:** CTI-007
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:21.820Z","2026-05-27T06:08:09.885Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"2db6f00c-68a3-4016-aadf-dd2c94624281",180,"","SAN-165",
+"SAN-138","Sanjiovani","EVP-035-mvp — Attendee profiles and audience breakdown","**Task ID:** `EVP-035-mvp`
+**Spec:** `tasks/events/EVP-035-mvp-attendee-profiles-audience-breakdown.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** EVP-002-core, EVP-032-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:51.101Z","2026-05-27T06:08:41.596Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"3b71b135-f7c2-4cfa-b5cd-52ed8874faaf",181,"","SAN-135",
+"SAN-166","Sanjiovani","CTI-008 — Map pins + results column for coffee tours","**Task ID:** `CTI-008`
+**Spec:** `tasks/agent/tasks/CTI-008-map-pins-tours.md`
+**Repo status:** Open
+**Priority:** P1
+**Phase:** CTI-A
+**Depends on:** CTI-007, MAP-030, MAP-031, F50, F50b
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:14.720Z","2026-05-27T06:08:21.005Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"1d935bdb-76f7-4939-b89d-1a3310621b03",180,"","SAN-165",
+"SAN-155","Sanjiovani","VEC-005 — Golden semantic eval harness","**Task ID:** `VEC-005`
+**Spec:** `tasks/vector/VEC-005-semantic-eval-harness.md`
+**Repo status:** Not Started
+**Priority:** P0
+**Phase:** Vector V1
+**Depends on:** VEC-002, VEC-003, VEC-004
+
+## Summary
+
+## Purpose
+
+Add a small evaluation system before scaling vector search. Without this, every ""improvement"" to embeddings is guesswork.
+
+## User story
+
+As **Lucia**, I need repeatable semantic tests so I can catch when a change makes ""quiet cafe in Laureles"" return loud brunch/social cafes.
+
+## Real-world example
+
+```text
+Query: quiet cafe in Laureles with fast Wi-Fi
+Expected: work-friendly cafes
+Must include tags: quiet, laptop_friendly, wifi
+Must exclude tags: nightclub, loud, brunch_only
+```
+
+## Eval flow
+
+```mermaid
+flowchart TB
+  A[""semantic_eval_queries""] --> B[""Run search pipeline""]
+  B --> C[""Collect result ids + scores""]
+  C --> D[""Compare expected/must include/must exclude""]
+  D --> E[""Pass/fail report""]
+```
+
+## Table shape
+
+```text
+semantic_eval_queries
+- id
+- query
+- domain
+- exp
+
+---
+_Imported from mdeai tasks/ — spec file is source of truth._
+```","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:vector",,,,,"2026-05-27T05:50:07.588Z","2026-05-27T06:08:28.187Z",,,,,,,,"","5108212a-3fa8-403f-8e15-86e4780acfc6","Phase 2 — Vector",,"a5e528af-9537-4078-b899-8750c9caeac3",180,"","SAN-154, SAN-153, SAN-152",
+"SAN-149","Sanjiovani","EVP-046-mvp — Live event updates feed","**Task ID:** `EVP-046-mvp`
+**Spec:** `tasks/events/EVP-046-mvp-live-event-updates.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** EVP-032-mvp, EVP-035-mvp, EVP-044-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:50:03.547Z","2026-05-27T06:08:30.793Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"ae40916d-9260-465c-ba88-84366fa55f2c",181,"","SAN-147, SAN-138, SAN-135",
+"SAN-141","Sanjiovani","EVP-038-postmvp — AI networking matchmaking and icebreakers","**Task ID:** `EVP-038-postmvp`
+**Spec:** `tasks/events/EVP-038-postmvp-ai-networking-matchmaking.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** EVP-035-mvp, EVP-037-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:53.167Z","2026-05-27T06:08:39.558Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"feced9e6-38af-4309-bff3-056ef29af869",181,"","SAN-140, SAN-138",
+"SAN-159","Sanjiovani","CTI-001B — coffee_tour_search_logs + coffee_tour_cache","**Task ID:** `CTI-001B`
+**Spec:** `tasks/agent/tasks/CTI-001B-coffee-tour-logs-cache.md`
+**Repo status:** Open
+**Priority:** P1
+**Phase:** CTI-A
+**Depends on:** CTI-001A
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:10.156Z","2026-05-27T06:08:26.512Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"3178e198-10f9-4ddc-b0d1-43ef3402f316",180,"","SAN-158",
+"SAN-122","Sanjiovani","EVP-019-mvp — Research official docs (CopilotKit, Mastra, ADK, Grounding, Places)","**Task ID:** `EVP-019-mvp`
+**Spec:** `tasks/events/EVP-019-mvp-research-official-docs.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-017-mvp-event-grounding-architecture
+
+## Summary
+
+## Purpose
+
+Verify APIs and constraints via MCP before any EVT-D implementation.
+
+## MCP / docs to probe
+
+| Surface | MCP / URL |
+| -- | -- |
+| CopilotKit Mastra integration | copilotkit MCP + local example |
+| Mastra workflows/tools | mastra MCP |
+| Gemini Google Search Grounding | gemini-api-docs-mcp |
+| ADK grounding | adk.dev + sidecar source |
+| Maps Grounding Lite | google-maps-code-assist |
+| Places API New | google-maps-code-assist + field masks |
+| Supabase edge patterns | supabase MCP |
+
+## Deliverable
+
+`tasks/events/notes/EVP-019-mvp-research-notes.md` with:
+
+* Exact API endpoints + auth model
+* Rate limits / quotas
+* Citation format requirements
+* Beta API traps (Mastra `agents` key naming)
+* Go/no-go for Phase 2
+
+## Acceptance criteria
+
+- [ ] Every API claim cites
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:36.778Z","2026-05-27T06:08:53.833Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"4e928f92-462e-4399-b7aa-e72fec371b2d",181,"","",
+"SAN-169","Sanjiovani","CTI-011 — coffee_tour_embeddings + server embed job","**Task ID:** `CTI-011`
+**Spec:** `tasks/agent/tasks/CTI-011-postMVP-embeddings-pipeline.md`
+**Repo status:** Open
+**Priority:** P2
+**Phase:** CTI-B
+**Depends on:** CTI-001A, CTI-010
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:16.404Z","2026-05-27T06:08:19.591Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"20e59ae5-4e9b-481f-b7fb-0c417a7e1529",180,"","SAN-168, SAN-158",
+"SAN-134","Sanjiovani","EVP-031-advanced — OpenClaw automation plan (no implementation)","**Task ID:** `EVP-031-advanced`
+**Spec:** `tasks/events/EVP-031-advanced-openclaw-automation-plan.md`
+**Repo status:** Not Started
+**Priority:** P3
+**Phase:** Phase 3
+**Depends on:** EVP-025-mvp-copilotkit-discovery-ui
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:48.476Z","2026-05-27T06:08:47.904Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"bfdbb035-cbb1-44f8-8558-5fe45b24ee4e",181,"","SAN-128",
+"SAN-158","Sanjiovani","CTI-001A — Supabase coffee_tours core tables + RLS","**Task ID:** `CTI-001A`
+**Spec:** `tasks/agent/tasks/CTI-001A-coffee-tour-core-schema.md`
+**Repo status:** Open
+**Priority:** P0
+**Phase:** CTI-A
+**Depends on:** F08
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:09.651Z","2026-05-27T06:08:26.860Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"d4c485c4-135b-4ef6-a5de-4ed0850e75e6",180,"","",
+"SAN-128","Sanjiovani","EVP-025-mvp — CopilotKit discovery UI (cards, attribution, approval)","**Task ID:** `EVP-025-mvp`
+**Spec:** `tasks/events/EVP-025-mvp-copilotkit-discovery-ui.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-022-mvp-event-discovery-workflow, SCREEN-006
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:40.010Z","2026-05-27T06:08:50.925Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"ea0155c4-93e2-4365-9435-5c0d9050843c",181,"","SAN-125",
+"SAN-145","Sanjiovani","EVP-042-mvp — Smart event recommendations and compatibility score","**Task ID:** `EVP-042-mvp`
+**Spec:** `tasks/events/EVP-042-mvp-smart-recommendations-compatibility.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** EVP-033-mvp, EVP-035-mvp, EVP-037-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:58.320Z","2026-05-27T06:08:35.822Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"22f21894-7476-4a5b-83cc-08cc8dca8285",181,"","SAN-140, SAN-138, SAN-136",
+"SAN-133","Sanjiovani","EVP-030-advanced — OpenClaw/Postiz approval sandbox","**Task ID:** `EVP-030-advanced`
+**Spec:** `tasks/events/EVP-030-advanced-openclaw-postiz-approval-sandbox.md`
+**Repo status:** Not Started
+**Priority:** P3
+**Depends on:** EVP-029-advanced
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:47.929Z","2026-05-27T06:08:48.636Z",,,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"22bae6df-eb63-4c77-b4c7-d1da5dff821a",181,"","SAN-132",
+"SAN-165","Sanjiovani","CTI-007 — CoffeeTourCard + CopilotKit tool render","**Task ID:** `CTI-007`
+**Spec:** `tasks/agent/tasks/CTI-007-coffee-tour-card-ui.md`
+**Repo status:** Open
+**Priority:** P0
+**Phase:** CTI-A
+**Depends on:** CTI-004, CTI-006, CTI-003, MAP-018F, MAP-019
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:agent",,,,,"2026-05-27T05:50:13.947Z","2026-05-27T06:08:21.372Z",,,,,,,,"","debdd32c-d9d1-4104-bee1-69ee4f72f83e","Phase 2 — Coffee tours (CTI)",,"e525751e-bae6-46e7-9c87-51530bd59620",180,"","SAN-161, SAN-164, SAN-162",
+"SAN-231","Sanjiovani","GS-009 — Sponsor research (Search grounding)","**Task ID:** `GS-009`
+**Spec:** `tasks/grounding-search/tasks/GS-009-sponsor-research-search.md`
+**Repo status:** Not Started
+**Priority:** P3
+**Phase:** Phase 3
+**Depends on:** MAP-002D
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:grounding",,,,,"2026-05-27T05:58:19.936Z","2026-05-27T06:07:00.084Z",,,,,,,,"","e70894b9-0c17-482c-aa7b-b2d669cea15a","Deferred — Grounding search",,"74334966-37ea-4b55-b236-f561c72269b4",172,"","",
+"SAN-230","Sanjiovani","GS-008 — Neighborhood news search (Search fallback)","**Task ID:** `GS-008`
+**Spec:** `tasks/grounding-search/tasks/GS-008-neighborhood-news-search.md`
+**Repo status:** Not Started
+**Priority:** P3
+**Phase:** Phase 2.1
+**Depends on:** MAP-002D, MAP-012A
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-2, track:grounding",,,,,"2026-05-27T05:58:19.398Z","2026-05-27T06:07:00.811Z",,,,,,,,"","e70894b9-0c17-482c-aa7b-b2d669cea15a","Deferred — Grounding search",,"72c94957-a190-4e93-87c5-0ac41e2ea0dc",172,"","SAN-107",
+"SAN-229","Sanjiovani","GS-007 — Restaurant opening / closure verification (Search)","**Task ID:** `GS-007`
+**Spec:** `tasks/grounding-search/tasks/GS-007-restaurant-closure-verify.md`
+**Repo status:** Not Started
+**Priority:** P3
+**Phase:** Phase 2.1
+**Depends on:** MAP-002D, MAP-006
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-2, track:grounding",,,,,"2026-05-27T05:58:18.858Z","2026-05-27T06:07:04.064Z",,,,,,,,"","e70894b9-0c17-482c-aa7b-b2d669cea15a","Deferred — Grounding search",,"a98a9b1f-c94f-4ddd-8dc6-5770d307c642",172,"","SAN-103",
+"SAN-228","Sanjiovani","GS-006 — Gemini tool combination spike (Search + MCP)","**Task ID:** `GS-006`
+**Spec:** `tasks/grounding-search/tasks/GS-006-tool-combination-spike.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Phase 2.1
+**Depends on:** MAP-002D
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-2, track:grounding",,,,,"2026-05-27T05:58:18.307Z","2026-05-27T06:07:05.701Z",,,,,,,,"","e70894b9-0c17-482c-aa7b-b2d669cea15a","Deferred — Grounding search",,"f4d0d7cf-7015-4ed7-bfc8-a23e10825352",172,"","",
+"SAN-227","Sanjiovani","GS-005 — Verify ticket source + venue update tools","**Task ID:** `GS-005`
+**Spec:** `tasks/grounding-search/tasks/GS-005-verify-ticket-venue-tools.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Phase 2.1
+**Depends on:** MAP-002D, GS-002
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca","ai@socialmediaville.ca","phase-2, track:grounding",,,,,"2026-05-27T05:58:17.754Z","2026-05-27T07:53:32.956Z",,,,,,,,"","e70894b9-0c17-482c-aa7b-b2d669cea15a","Deferred — Grounding search",,"25e59384-c529-4166-b04d-1ce853a1642b",172,"","",
+"SAN-226","Sanjiovani","OCL-042-mvp — ClawEvents + OpenClaw — Medellín event ingest worker","**Task ID:** `OCL-042-mvp`
+**Spec:** `tasks/openclaw/tasks/OCL-042-mvp-clawevents-medellin-automation.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP — after EVP-020..026
+**Depends on:** EVP-020-mvp-discovered-events-data-model, EVP-022-mvp-event-discovery-workflow
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-2, track:openclaw",,,,,"2026-05-27T05:58:16.499Z","2026-05-27T06:07:18.470Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"768e6863-6965-4686-b31c-dbe448d4aa52",172,"","SAN-125, SAN-123",
+"SAN-225","Sanjiovani","OCL-041-advanced — Events — live ops ticker and role-specific event updates","**Task ID:** `OCL-041-advanced`
+**Spec:** `tasks/openclaw/tasks/OCL-041-advanced-live-ops-ticker.md`
+**Repo status:** Open
+**Priority:** P3
+**Depends on:** OCL-022-advanced, OCL-023-advanced, OCL-035-advanced, OCL-040-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:15.946Z","2026-05-27T06:07:19.569Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"95550490-c1c5-4ccf-bd7e-98ecf405c2a3",172,"","SAN-224, SAN-219, SAN-209, SAN-208",
+"SAN-224","Sanjiovani","OCL-040-postmvp — Events — event page QA crawler","**Task ID:** `OCL-040-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-040-postmvp-event-page-qa-crawler.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** OCL-012-mvp, OCL-016-postmvp, OCL-017-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:15.390Z","2026-05-27T06:07:20.010Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"fea5570a-ca04-4cca-9c4f-67ddae342271",172,"","SAN-203, SAN-202, SAN-198",
+"SAN-223","Sanjiovani","OCL-039-postmvp — Events — source health and connector drift monitor","**Task ID:** `OCL-039-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-039-postmvp-event-source-health-monitor.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** OCL-021-postmvp, OCL-038-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:14.814Z","2026-05-27T06:07:20.839Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"2c1c9b37-9386-47d6-9561-81ec661aaa13",172,"","SAN-222, SAN-207",
+"SAN-222","Sanjiovani","OCL-038-postmvp — Events — public event source connector adapters","**Task ID:** `OCL-038-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-038-postmvp-event-source-connector-adapters.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** OCL-017-postmvp, OCL-030-postmvp, OCL-036-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:14.258Z","2026-05-27T06:07:22.488Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"828e8dec-1ba7-417f-9515-fdcb7c2c0ff8",172,"","SAN-220, SAN-214, SAN-203",
+"SAN-221","Sanjiovani","OCL-037-postmvp — Events — event planner checklist adapter","**Task ID:** `OCL-037-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-037-postmvp-event-planner-checklist-adapter.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** OCL-036-postmvp, OCL-016-postmvp, OCL-033-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:13.659Z","2026-05-27T06:07:22.987Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"bc96fbff-682a-4e34-94e0-3d50f7f87bf6",172,"","SAN-217, SAN-202, SAN-220",
+"SAN-220","Sanjiovani","OCL-036-postmvp — Events — repo and OpenClaw skill intake audit gate","**Task ID:** `OCL-036-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-036-postmvp-repo-skill-intake-audit.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** OCL-004-core, OCL-030-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:13.019Z","2026-05-27T06:07:23.431Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"fdff8d1c-1deb-42bb-9835-cb0b8cba76e3",172,"","SAN-214, SAN-190",
+"SAN-219","Sanjiovani","OCL-035-advanced — Events — approved WhatsApp/Postiz/social campaign execution","**Task ID:** `OCL-035-advanced`
+**Spec:** `tasks/openclaw/tasks/OCL-035-advanced-approved-channel-campaigns.md`
+**Repo status:** Open
+**Priority:** P3
+**Depends on:** OCL-022-advanced, OCL-027-advanced, OCL-032-postmvp, OCL-034-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:12.469Z","2026-05-27T06:07:23.878Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"86978fd7-6bb8-44ff-8b39-3649505ab815",172,"","SAN-218, SAN-216, SAN-213, SAN-208",
+"SAN-218","Sanjiovani","OCL-034-postmvp — Events — Instagram/Facebook social intelligence","**Task ID:** `OCL-034-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-034-postmvp-event-social-intelligence.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** OCL-030-postmvp, EVP-015-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:11.887Z","2026-05-27T06:07:24.457Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"0aa9582a-9497-46da-8e19-dbdb329c2270",172,"","SAN-119, SAN-214",
+"SAN-217","Sanjiovani","OCL-033-postmvp — Events — vendor recruitment research","**Task ID:** `OCL-033-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-033-postmvp-event-vendor-recruitment-research.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** OCL-016-postmvp, OCL-030-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:11.320Z","2026-05-27T06:07:24.948Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"c0128104-7ad7-4dd7-bd02-fc995fc0017a",172,"","SAN-214, SAN-202",
+"SAN-216","Sanjiovani","OCL-032-postmvp — Events — sponsor proposal draft pack","**Task ID:** `OCL-032-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-032-postmvp-sponsor-proposal-draft-pack.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** EVP-029-advanced, OCL-019-postmvp, OCL-031-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:10.692Z","2026-05-27T06:07:25.501Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"1ded0a6e-befd-4087-b5be-2f3072d654b9",172,"","SAN-215, SAN-205, SAN-132",
+"SAN-215","Sanjiovani","OCL-031-postmvp — Events — sponsor decision-maker map","**Task ID:** `OCL-031-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-031-postmvp-event-sponsor-decision-maker-map.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** OCL-019-postmvp, OCL-030-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:10.129Z","2026-05-27T06:07:25.945Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"d12920d5-7610-4a8a-ae21-c23d506cf229",172,"","SAN-214, SAN-205",
+"SAN-214","Sanjiovani","OCL-030-postmvp — Apify OpenClaw plugin sandbox","**Task ID:** `OCL-030-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-030-postmvp-apify-plugin-sandbox.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** OCL-004-core, OCL-005-core, OCL-007-core, OCL-008-mvp, OCL-012-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:09.571Z","2026-05-27T06:07:26.383Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"e6d5bab7-9b10-4809-86f6-851cf63af722",172,"","SAN-198, SAN-194, SAN-193, SAN-191, SAN-190",
+"SAN-213","Sanjiovani","OCL-027-advanced — Marketing — Postiz approved post handoff","**Task ID:** `OCL-027-advanced`
+**Spec:** `tasks/openclaw/tasks/OCL-027-advanced-postiz-handoff.md`
+**Repo status:** Open
+**Priority:** P3
+**Depends on:** OCL-003-core, OCL-032-postmvp, OCL-034-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:09.003Z","2026-05-27T06:07:26.839Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"57224529-8e32-46c3-8de5-c9930505229e",172,"","SAN-218, SAN-216, SAN-189",
+"SAN-212","Sanjiovani","OCL-026-advanced — Contests — WA leaderboard / reminder drafts","**Task ID:** `OCL-026-advanced`
+**Spec:** `tasks/openclaw/tasks/OCL-026-advanced-contest-wa-ops.md`
+**Repo status:** Open
+**Priority:** P3
+**Depends on:** G1-G5, OCL-029-advanced, OCL-022-advanced
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:08.421Z","2026-05-27T06:07:27.327Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"8fb4ca12-8eec-4c48-b104-b9e11223a40c",172,"","SAN-208",
+"SAN-211","Sanjiovani","OCL-025-advanced — Events — external publish draft (outbox)","**Task ID:** `OCL-025-advanced`
+**Spec:** `tasks/openclaw/tasks/OCL-025-advanced-external-publish-draft.md`
+**Repo status:** Open
+**Priority:** P3
+**Depends on:** OCL-003-core, OCL-017-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:07.668Z","2026-05-27T06:07:41.198Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"cd8225a8-375a-4f4e-a004-04dd8f2152ad",172,"","SAN-203, SAN-189",
+"SAN-210","Sanjiovani","OCL-024-advanced — Events — sponsor ROI browser screenshots","**Task ID:** `OCL-024-advanced`
+**Spec:** `tasks/openclaw/tasks/OCL-024-advanced-sponsor-roi-screenshots.md`
+**Repo status:** Open
+**Priority:** P3
+**Depends on:** OCL-010-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:07.120Z","2026-05-27T06:07:43.576Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"a3a0d041-2b87-438b-86e5-c7be4f50ea41",172,"","SAN-196",
+"SAN-209","Sanjiovani","OCL-023-advanced — Events — T-24h reminder WA drafts","**Task ID:** `OCL-023-advanced`
+**Spec:** `tasks/openclaw/tasks/OCL-023-advanced-event-reminders.md`
+**Repo status:** Open
+**Priority:** P3
+**Depends on:** OCL-017-postmvp, OCL-022-advanced, G1-G5
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:06.543Z","2026-05-27T06:07:43.925Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"fc66d819-1e69-4a5d-85a5-c2aafb1070e4",172,"","SAN-208, SAN-203",
+"SAN-208","Sanjiovani","OCL-022-advanced — WhatsApp templates + number allowlist","**Task ID:** `OCL-022-advanced`
+**Spec:** `tasks/openclaw/tasks/OCL-022-advanced-wa-templates-allowlist.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** OCL-029-advanced
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:05.997Z","2026-05-27T06:07:44.392Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"2828c98b-05fa-4b37-95c9-c36b65055479",172,"","",
+"SAN-207","Sanjiovani","OCL-021-postmvp — Correlation IDs Mastra ↔ OpenClaw","**Task ID:** `OCL-021-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-021-postmvp-correlation-observability.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** OCL-011-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:05.444Z","2026-05-27T06:07:44.764Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"2f34f727-be19-4643-98a9-6d28f874e70d",172,"","SAN-197",
+"SAN-206","Sanjiovani","OCL-020-postmvp — Marketing — local SEO / competitor page monitor","**Task ID:** `OCL-020-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-020-postmvp-seo-competitor-monitor.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** OCL-009-mvp, OCL-010-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:04.883Z","2026-05-27T06:07:45.223Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"e7c68597-32ad-4862-bc58-ce853b0bee26",172,"","SAN-196, SAN-195",
+"SAN-205","Sanjiovani","OCL-019-postmvp — Marketing — sponsor prospect research","**Task ID:** `OCL-019-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-019-postmvp-sponsor-prospect-research.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** OCL-009-mvp, MAP-002D, OCL-030-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:04.311Z","2026-05-27T06:07:45.586Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"18910452-803c-4542-9d38-5be4300f6149",173,"","SAN-214, SAN-195",
+"SAN-204","Sanjiovani","OCL-018-postmvp — Real estate — listing enrichment crawl","**Task ID:** `OCL-018-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-018-postmvp-listing-enrichment.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** OCL-010-mvp, OCL-003-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:03.750Z","2026-05-27T06:07:46.905Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"cbd2402e-bf09-45dd-8f8a-18064eab8539",173,"","SAN-189, SAN-196",
+"SAN-203","Sanjiovani","OCL-017-postmvp — Events — directory / calendar import","**Task ID:** `OCL-017-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-017-postmvp-event-directory-import.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** OCL-010-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:03.157Z","2026-05-27T06:07:48.630Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"64f0ea7d-f870-40b3-9700-b6a855cdd91f",173,"","SAN-196",
+"SAN-202","Sanjiovani","OCL-016-postmvp — Events — venue intelligence browser enrich","**Task ID:** `OCL-016-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-016-postmvp-venue-intelligence.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** OCL-010-mvp, OCL-017-postmvp, OCL-030-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:02.651Z","2026-05-27T06:07:49.118Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"4bb4535a-bcda-4c71-9479-ada187c1cde8",173,"","SAN-214, SAN-203, SAN-196",
+"SAN-201","Sanjiovani","OCL-015-postmvp — Cafés — Instagram / creator discovery crawl","**Task ID:** `OCL-015-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-015-postmvp-instagram-cafe-discovery.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** OCL-010-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:02.049Z","2026-05-27T06:07:49.578Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"935b9fcb-d5a8-44e5-8946-e1e5e7c1fe1f",173,"","SAN-196",
+"SAN-200","Sanjiovani","OCL-014-postmvp — Restaurants — menu PDF/HTML extraction","**Task ID:** `OCL-014-postmvp`
+**Spec:** `tasks/openclaw/tasks/OCL-014-postmvp-menu-extraction.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** OCL-010-mvp, OCL-009-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:01.462Z","2026-05-27T06:07:50.022Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"e12c8aae-a325-4d7e-9715-fc26f6962dc9",173,"","SAN-195, SAN-196",
+"SAN-199","Sanjiovani","OCL-013-mvp — Coffee tours — source crawler + verify","**Task ID:** `OCL-013-mvp`
+**Spec:** `tasks/openclaw/tasks/OCL-013-mvp-coffee-tour-crawler.md`
+**Repo status:** Open
+**Priority:** P0
+**Depends on:** CTI-001A, CTI-003, OCL-009-mvp, OCL-010-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:58:00.487Z","2026-05-27T06:07:50.386Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"17be7c44-b244-4233-a493-12b0273d5c0b",173,"","SAN-196, SAN-195, SAN-161, SAN-158",
+"SAN-198","Sanjiovani","OCL-012-mvp — E2E — reject OpenClaw job without approval","**Task ID:** `OCL-012-mvp`
+**Spec:** `tasks/openclaw/tasks/OCL-012-mvp-e2e-approval-safety.md`
+**Repo status:** Open
+**Priority:** P0
+**Depends on:** OCL-003-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:57:58.376Z","2026-05-27T06:07:50.837Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"95ebd44a-5eec-45e0-b169-fdb4be88ac96",173,"","SAN-189",
+"SAN-197","Sanjiovani","OCL-011-mvp — Mastra enqueueOpenClawJob tool","**Task ID:** `OCL-011-mvp`
+**Spec:** `tasks/openclaw/tasks/OCL-011-mvp-enqueue-openclaw-job.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** OCL-003-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:57:56.952Z","2026-05-27T06:07:51.340Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"7e8d3a85-34a1-4ccf-a647-b449c0a58ec4",173,"","SAN-189",
+"SAN-196","Sanjiovani","OCL-010-mvp — mde-tour-enrich (+ mde-enrichment) SKILL.md pack","**Task ID:** `OCL-010-mvp`
+**Spec:** `tasks/openclaw/tasks/OCL-010-mvp-tour-enrich-skill.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** OCL-004-core, OCL-006-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:57:56.298Z","2026-05-27T06:07:52.076Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"a3aaf06a-acc0-4fe1-8eb3-6dbe0e698346",173,"","SAN-192, SAN-190",
+"SAN-195","Sanjiovani","OCL-009-mvp — OpenClaw web_search — Gemini grounding provider","**Task ID:** `OCL-009-mvp`
+**Spec:** `tasks/openclaw/tasks/OCL-009-mvp-gemini-web-search.md`
+**Repo status:** Open
+**Priority:** P1
+**Phase:** OCL-0
+**Depends on:** OCL-006-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:57:55.740Z","2026-05-27T06:07:52.524Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"2fcc577d-cfbe-425b-8343-5974a3555d12",173,"","SAN-192",
+"SAN-194","Sanjiovani","OCL-008-mvp — Admin approvals UI — OpenClaw job preview","**Task ID:** `OCL-008-mvp`
+**Spec:** `tasks/openclaw/tasks/OCL-008-mvp-admin-approvals-ui.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** OCL-003-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:57:55.209Z","2026-05-27T06:07:52.990Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"c96caa07-3509-47d2-a6d3-31d296437e04",173,"","SAN-189",
+"SAN-193","Sanjiovani","OCL-007-core — Rotate OpenClaw gateway token","**Task ID:** `OCL-007-core`
+**Spec:** `tasks/openclaw/tasks/OCL-007-core-gateway-token-rotate.md`
+**Repo status:** Open
+**Priority:** P0
+**Depends on:** OCL-001-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:57:54.611Z","2026-05-27T06:07:53.442Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"72f31ea8-d627-40b8-8453-775ed41197c4",173,"","SAN-187",
+"SAN-192","Sanjiovani","OCL-006-core — OpenClaw VPS — Gemini provider + model routing","**Task ID:** `OCL-006-core`
+**Spec:** `tasks/openclaw/tasks/OCL-006-core-gemini-vps-config.md`
+**Repo status:** Open
+**Priority:** P0
+**Phase:** OCL-0
+**Depends on:** OCL-001-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:57:53.992Z","2026-05-27T06:07:53.893Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"df014987-d90f-43fc-a127-3a86755eb2a5",173,"","SAN-187",
+"SAN-191","Sanjiovani","OCL-005-core — OPENCLAW_DISABLED kill switch","**Task ID:** `OCL-005-core`
+**Spec:** `tasks/openclaw/tasks/OCL-005-core-kill-switch.md`
+**Repo status:** Open
+**Priority:** P0
+**Depends on:** OCL-001-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:57:52.938Z","2026-05-27T06:07:54.472Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"9a986a84-a4d4-4ab3-9165-acff35e48207",173,"","SAN-187",
+"SAN-190","Sanjiovani","OCL-004-core — ClawHub safety policy — no unvetted skills","**Task ID:** `OCL-004-core`
+**Spec:** `tasks/openclaw/tasks/OCL-004-core-clawhub-safety.md`
+**Repo status:** Open
+**Priority:** P0
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:57:52.242Z","2026-05-27T06:07:55.069Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"46f34c3b-e256-49a5-857b-0e5a8941fdfc",173,"","",
+"SAN-189","Sanjiovani","OCL-003-core — Mastra openclaw-approval-workflow","**Task ID:** `OCL-003-core`
+**Spec:** `tasks/openclaw/tasks/OCL-003-core-approval-workflow.md`
+**Repo status:** Open
+**Priority:** P0
+**Phase:** OCL-0
+**Depends on:** OCL-002-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:57:49.957Z","2026-05-27T06:07:55.524Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"7cc949ba-af1d-4562-9d9d-a208eca5eb3e",173,"","SAN-188",
+"SAN-188","Sanjiovani","OCL-002-core — Supabase openclaw_jobs + automation_approvals","**Task ID:** `OCL-002-core`
+**Spec:** `tasks/openclaw/tasks/OCL-002-core-jobs-schema.md`
+**Repo status:** Open
+**Priority:** P0
+**Phase:** OCL-0
+**Depends on:** F08
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:57:49.179Z","2026-05-27T06:07:56.056Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"6d5319c2-8020-4668-a1d1-9595e1942b0a",173,"","",
+"SAN-187","Sanjiovani","OCL-001-core — OpenClaw gateway health stub","**Task ID:** `OCL-001-core`
+**Spec:** `tasks/openclaw/tasks/OCL-001-core-gateway-health.md`
+**Repo status:** Open
+**Priority:** P0
+**Phase:** OCL-0
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:openclaw",,,,,"2026-05-27T05:57:48.399Z","2026-05-27T06:07:56.873Z",,,,,,,,"","8985b069-0d57-4e7d-8907-2577f7eb1f6e","Deferred — OpenClaw",,"b07ef795-40f4-445b-a694-bbb235ebf359",173,"","",
+"SAN-186","Sanjiovani","CTEST-007 — Contest Playwright proof gates","**Task ID:** `CTEST-007`
+**Spec:** `tasks/contest/tasks/CTEST-007-playwright-proof-gates.md`
+**Repo status:** Draft
+**Priority:** P0
+**Phase:** Contest testing
+**Depends on:** CTEST-002, CTEST-003, CTEST-006
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:contest",,,,,"2026-05-27T05:57:47.856Z","2026-05-27T06:07:57.316Z",,,,,,,,"","49eb9a6d-f4b2-4da9-b157-eef36ee9c63c","Deferred — Contest",,"505b4204-07c6-4a73-ad11-0b276530b30c",173,"","SAN-185, SAN-182, SAN-181",
+"SAN-185","Sanjiovani","CTEST-006 — Contest screens, routes, and wireframes","**Task ID:** `CTEST-006`
+**Spec:** `tasks/contest/tasks/CTEST-006-screens-wireframes.md`
+**Repo status:** Draft
+**Priority:** P0
+**Phase:** Contest UI
+**Depends on:** CTEST-001, CTEST-004
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:contest",,,,,"2026-05-27T05:57:47.300Z","2026-05-27T06:07:57.769Z",,,,,,,,"","49eb9a6d-f4b2-4da9-b157-eef36ee9c63c","Deferred — Contest",,"7b9e014f-58bb-4705-9551-d528fbd7d5f0",173,"","SAN-183, SAN-180",
+"SAN-184","Sanjiovani","CTEST-005 — Mastra and Gemini contest workflows","**Task ID:** `CTEST-005`
+**Spec:** `tasks/contest/tasks/CTEST-005-mastra-gemini-workflows.md`
+**Repo status:** Draft
+**Priority:** P0
+**Phase:** Contest AI workflows
+**Depends on:** CTEST-002, CTEST-004
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:contest",,,,,"2026-05-27T05:57:46.731Z","2026-05-27T06:07:58.220Z",,,,,,,,"","49eb9a6d-f4b2-4da9-b157-eef36ee9c63c","Deferred — Contest",,"df4b52aa-d62c-4547-aba7-86f8b6a39c95",173,"","SAN-183, SAN-181",
+"SAN-183","Sanjiovani","CTEST-004 — CopilotKit contest workspace and approval cards","**Task ID:** `CTEST-004`
+**Spec:** `tasks/contest/tasks/CTEST-004-copilotkit-contest-workspace.md`
+**Repo status:** Draft
+**Priority:** P0
+**Phase:** Contest AI UI
+**Depends on:** CTEST-001
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:contest",,,,,"2026-05-27T05:57:46.285Z","2026-05-27T06:07:58.670Z",,,,,,,,"","49eb9a6d-f4b2-4da9-b157-eef36ee9c63c","Deferred — Contest",,"1efbfbe4-1f4e-4b52-9a12-39671b10d407",173,"","SAN-180",
+"SAN-182","Sanjiovani","CTEST-003 — Tickets and paid-vote payment-derived schema","**Task ID:** `CTEST-003`
+**Spec:** `tasks/contest/tasks/CTEST-003-ticket-paid-vote-schema.md`
+**Repo status:** Draft
+**Priority:** P0
+**Phase:** Contest payments foundation
+**Depends on:** CTEST-001, CTEST-002
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:contest",,,,,"2026-05-27T05:57:45.741Z","2026-05-27T06:07:59.223Z",,,,,,,,"","49eb9a6d-f4b2-4da9-b157-eef36ee9c63c","Deferred — Contest",,"6009386e-f959-4c75-8d0a-dce65d7dd88b",173,"","SAN-181, SAN-180",
+"SAN-181","Sanjiovani","CTEST-002 — Voting and judge scoring ledgers","**Task ID:** `CTEST-002`
+**Spec:** `tasks/contest/tasks/CTEST-002-voting-scoring-ledgers.md`
+**Repo status:** Draft
+**Priority:** P0
+**Phase:** Contest trust foundation
+**Depends on:** CTEST-001
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:contest",,,,,"2026-05-27T05:57:45.166Z","2026-05-27T06:07:59.777Z",,,,,,,,"","49eb9a6d-f4b2-4da9-b157-eef36ee9c63c","Deferred — Contest",,"e36ed6d3-4fbc-4bec-adb4-8b9f6109946a",173,"","SAN-180",
+"SAN-179","Sanjiovani","CTEST-000 — Contest diagrams, GitHub repo decisions, and scope gate","**Task ID:** `CTEST-000`
+**Spec:** `tasks/contest/tasks/CTEST-000-diagrams-repo-decisions.md`
+**Repo status:** Draft
+**Priority:** P0
+**Phase:** Contest planning
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:contest",,,,,"2026-05-27T05:57:44.101Z","2026-05-27T06:08:00.636Z",,,,,,,,"","49eb9a6d-f4b2-4da9-b157-eef36ee9c63c","Deferred — Contest",,"adee79a2-bbff-4215-8447-01ea654d268a",173,"","",
+"SAN-180","Sanjiovani","CTEST-001 — Supabase contest core schema and RLS","**Task ID:** `CTEST-001`
+**Spec:** `tasks/contest/tasks/CTEST-001-supabase-contest-core-schema.md`
+**Repo status:** Draft
+**Priority:** P0
+**Phase:** Contest data foundation
+**Depends on:** CTEST-000
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:contest",,,,,"2026-05-27T05:57:44.695Z","2026-05-27T06:08:00.287Z",,,,,,,,"","49eb9a6d-f4b2-4da9-b157-eef36ee9c63c","Deferred — Contest",,"7b43b12a-9180-4b68-9e10-3ffeb2d1df3e",173,"","SAN-179",
+"SAN-114","Sanjiovani","SCREEN-021 — Cafe Listings + Map + Booking Request","**Task ID:** `SCREEN-021`
+**Spec:** `tasks/screens/SCREEN-021-cafe-listings-map-booking.md`
+**Repo status:** Not Started
+**Priority:** P1
+**Phase:** MVP Phase 1 polish (Phase A–B) · Phase 2 booking intelligence (Phase C)
+**Depends on:** SCREEN-001, SCREEN-003, SCREEN-007, MAP-001, F49, F50
+
+## Summary
+
+## 1\. Purpose
+
+Ship a Mindtrip-style **chat-first café discovery** surface on `/`: ranked result cards, map pin sync, venue sheet for café detail, and honest booking/request CTAs — **without** duplicating the ADK Grounding Lite path that already returns pins today.
+
+## 2\. Goals
+
+**Phase A (start now — no vector dependency):**
+
+* Ranked `CafeResultCard` list in the center column from existing `search-grounded-places` output.
+* Extend `VenueDetailTarget` with `kind: ""cafe""` (reuse `VenueDetailSheet`, not a parallel drawer).
+* Pin highlight on card hover/focus via existing F50 map state.
+* Trust/source labels from grounding attribution + Places timestamps where available.
+* Booking drawer UI with **feature-flag stub** (no DB write).
+
+**Phase B (after VEC-004 + VEC-005):**
+
+* Semantic fit / wo
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","In Progress",,"Urgent","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-2, track:screens",,,,,"2026-05-27T05:49:20.146Z","2026-05-27T06:14:35.838Z","2026-05-27T06:14:35.821Z",,,,,,,"","2d7e9933-4834-4c14-a74e-c6c16d8e17af","P0 — MVP gates",,"72cc6e55-4c01-434d-a9b4-b0fa0ebc01bf",156,"","",
+"SAN-116","Sanjiovani","EVP-003-core — P0 Stripe webhook secret audit (ticket vs sponsor)","**Task ID:** `EVP-003-core`
+**Spec:** `tasks/events/EVP-003-core-stripe-webhook-secret-audit.md`
+**Repo status:** Partial
+**Priority:** P0
+**Phase:** W2 — Day 2 (revenue-critical)
+**Depends on:** F06
+
+## Summary
+
+## 1\. Purpose
+
+The workspace `/home/sk/mdeai/.env.local` has **3 Stripe webhook-related env vars**: `STRIPE_WEBHOOK_SECRET`, `STRIPE_SPONSOR_WEBHOOK_SECRET`, `STRIPE_WEBHOOK_DESTINATION_ID`. The risk: **if** `ticket-payment-webhook` **and** `sponsor-payment-webhook` **share the same secret OR are crossed**, a sponsor webhook can be replayed against the ticket endpoint (or vice versa) and bypass signature verification. EVP-003-core is a forensic audit to confirm the two paths are isolated.
+
+Per Supabase audit §9 the ticket stack is A+ engineered. But sponsor is Phase 3 (deferred). The freeze list (`tasks/notes/edge-fn-freeze-list.md`) pins sponsor versions — EVP-003-core verifies the SECRETS too, not just the code versions.
+
+## 2\. Goals
+
+* **Inventory** all Stripe webhook secrets in legacy \`/home/s
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","In Progress",,"Urgent","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:22.573Z","2026-05-27T06:08:56.681Z","2026-05-27T05:49:30.337Z",,,,,,,"","2d7e9933-4834-4c14-a74e-c6c16d8e17af","P0 — MVP gates",,"7f9d318c-a7cc-45d7-b8e0-d790388889d9",181,"","",
+"SAN-111","Sanjiovani","SCREEN-010 — Map Exploration Right Panel","**Task ID:** `SCREEN-010`
+**Spec:** `tasks/screens/SCREEN-010-map-exploration-panel.md`
+**Repo status:** Not Started
+**Priority:** P1
+**Phase:** MVP Phase 1 polish
+**Depends on:** MAP-001, MAP-008, F49, SCREEN-018
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","In Review",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:screens",,,,,"2026-05-27T05:49:18.372Z","2026-05-27T06:39:21.035Z","2026-05-27T06:39:21.017Z",,,,,,,"","80fe78ad-59de-48f5-9815-7c208c0f0176","P1 — Screens & café",,"70c7c8c9-8643-447e-8ec5-3a31777d9e2d",131,"","SAN-113",
+"SAN-135","Sanjiovani","EVP-032-mvp — Luma-style event detail layout","**Task ID:** `EVP-032-mvp`
+**Spec:** `tasks/events/EVP-032-mvp-luma-event-detail-layout.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** EVP-013-core, EVP-016-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","In Review",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","MDEAPP","ai@socialmediaville.ca",,"phase-1, track:events",,,,,"2026-05-27T05:49:49.093Z","2026-05-27T06:45:48.993Z","2026-05-27T06:45:48.975Z",,,,,,,"","cd156b8e-33ef-4eab-ba63-c78d7fc0d069","Phase 2 — Events discovery",,"9ea25190-a00b-4af6-9c70-249449c7ce72",125,"","SAN-120, SAN-117",

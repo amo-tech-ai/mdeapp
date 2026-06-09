@@ -1,0 +1,6 @@
+flowchart LR
+  DISC["Discover<br/>/ · /chat · /events"] --> DET["/events/[slug]<br/>tiers"]
+  DET --> CO["Checkout (Stripe)"] --> PAY{"Paid?"}
+  PAY -- webhook ok --> TIX["/me/tickets + QR"]
+  PAY -- fail --> RETRY["Retry / support"]
+  TIX --> DOOR["Scan at door"]

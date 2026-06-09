@@ -1,0 +1,127 @@
+{
+  "dryRun": false,
+  "updated": [
+    {
+      "type": "milestone",
+      "from": "P0 — MVP gates",
+      "to": "🚨 Launch Critical"
+    },
+    {
+      "id": "SAN-178",
+      "title": "Prove live ticket purchase on production"
+    },
+    {
+      "id": "SAN-116",
+      "title": "Isolate ticket vs sponsor Stripe webhooks"
+    },
+    {
+      "id": "SAN-117",
+      "title": "Fix event cards inside AI chat"
+    },
+    {
+      "id": "SAN-115",
+      "title": "Sign off MVP launch proof checklist"
+    },
+    {
+      "id": "SAN-100",
+      "title": "Run production smoke tests on mdeai.co"
+    },
+    {
+      "id": "SAN-114",
+      "title": "Build café discovery cards (Phase A shipped)",
+      "state": "Done"
+    },
+    {
+      "id": "SAN-316",
+      "title": "Fix rental price parsing (“$500 a night”)"
+    },
+    {
+      "id": "SAN-320",
+      "title": "Show retryable errors when AI chat fails"
+    },
+    {
+      "id": "SAN-319",
+      "title": "Add visible “thinking” state in AI chat"
+    },
+    {
+      "id": "SAN-322",
+      "title": "Add production AI chat health monitor"
+    },
+    {
+      "id": "SAN-321",
+      "title": "Reset chat and map on “New chat”"
+    },
+    {
+      "id": "SAN-323",
+      "title": "Clear ghost map pins after empty search"
+    },
+    {
+      "id": "SAN-324",
+      "title": "Fix confusing Save button tooltip"
+    },
+    {
+      "id": "SAN-315",
+      "title": "Restore AI concierge on production"
+    },
+    {
+      "id": "SAN-317",
+      "title": "Disable broken category chips if concierge fails (optional)",
+      "state": "Canceled"
+    },
+    {
+      "id": "SAN-318",
+      "title": "Unify search result cards (one card, one pin)"
+    },
+    {
+      "id": "SAN-118",
+      "title": "Build Roberto’s “My events” dashboard"
+    },
+    {
+      "id": "SAN-360",
+      "title": "Extract shared result card shell"
+    },
+    {
+      "id": "SAN-361",
+      "title": "Remove duplicate search results panel"
+    },
+    {
+      "id": "SAN-362",
+      "title": "Build rich restaurant result cards"
+    },
+    {
+      "id": "SAN-363",
+      "title": "Build rich attraction result cards"
+    },
+    {
+      "id": "SAN-364",
+      "title": "Clean up orphan cards and event citations"
+    },
+    {
+      "id": "SAN-365",
+      "title": "Add tests for unified result cards"
+    }
+  ],
+  "created": [
+    {
+      "taskId": "G3-core-host-publish-proof",
+      "identifier": "SAN-366",
+      "url": "https://linear.app/sanjiovani/issue/SAN-366/prove-roberto-can-publish-an-event-on-production"
+    },
+    {
+      "taskId": "AUTH-011",
+      "identifier": "SAN-367",
+      "url": "https://linear.app/sanjiovani/issue/SAN-367/verify-production-login-and-vercel-env"
+    },
+    {
+      "taskId": "MAP-002B",
+      "identifier": "SAN-368",
+      "url": "https://linear.app/sanjiovani/issue/SAN-368/deploy-grounded-place-search-to-production"
+    },
+    {
+      "taskId": "MAP-008B",
+      "identifier": "SAN-369",
+      "url": "https://linear.app/sanjiovani/issue/SAN-369/verify-google-maps-pins-on-production"
+    }
+  ],
+  "errors": []
+}

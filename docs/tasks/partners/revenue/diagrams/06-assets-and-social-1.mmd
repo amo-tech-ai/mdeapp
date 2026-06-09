@@ -1,0 +1,6 @@
+flowchart LR
+  UP["Upload<br/>partner / Google Business import"] --> VAL["Validate<br/>type · size · rights"]
+  VAL --> AIP["AI process<br/>tag · alt-text · crop · best-pick · brand-extract"]
+  AIP --> STORE["Store (Supabase Storage, RLS)"]
+  STORE --> USE["Usage<br/>listings · posts · landing · concierge cards"]
+  USE --> REUSE["Reused across all surfaces"]

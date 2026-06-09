@@ -1,0 +1,420 @@
+{
+  "updated": [
+    {
+      "identifier": "SAN-115",
+      "taskId": "EVT-001",
+      "sortOrder": 1000,
+      "milestone": "P0 — MVP gates",
+      "priority": 1
+    },
+    {
+      "identifier": "SAN-109",
+      "taskId": "CAF-001",
+      "sortOrder": 2000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-110",
+      "taskId": "UIX-001",
+      "sortOrder": 3000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-492",
+      "taskId": "VEB-001-core",
+      "sortOrder": 4000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-493",
+      "taskId": "VEB-002-core",
+      "sortOrder": 5000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-97",
+      "taskId": "SYS-003",
+      "sortOrder": 6000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-494",
+      "taskId": "VEB-003-mvp",
+      "sortOrder": 7000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-98",
+      "taskId": "SYS-004",
+      "sortOrder": 8000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-113",
+      "taskId": "UIX-004",
+      "sortOrder": 9000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-495",
+      "taskId": "VEB-004-mvp",
+      "sortOrder": 10000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-99",
+      "taskId": "SYS-005",
+      "sortOrder": 11000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-496",
+      "taskId": "VEB-005-mvp",
+      "sortOrder": 12000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-151",
+      "taskId": "SYS-006",
+      "sortOrder": 13000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-497",
+      "taskId": "VEB-006-mvp",
+      "sortOrder": 14000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-152",
+      "taskId": "SYS-007",
+      "sortOrder": 15000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-498",
+      "taskId": "VEB-007-mvp",
+      "sortOrder": 16000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-153",
+      "taskId": "SYS-008",
+      "sortOrder": 17000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-499",
+      "taskId": "VEB-008-mvp",
+      "sortOrder": 18000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-154",
+      "taskId": "SYS-009",
+      "sortOrder": 19000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-500",
+      "taskId": "VEB-009-mvp",
+      "sortOrder": 20000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-155",
+      "taskId": "SYS-010",
+      "sortOrder": 21000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-501",
+      "taskId": "VEB-010-mvp",
+      "sortOrder": 22000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-156",
+      "taskId": "SYS-011",
+      "sortOrder": 23000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-502",
+      "taskId": "VEB-011-mvp",
+      "sortOrder": 24000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-157",
+      "taskId": "SYS-012",
+      "sortOrder": 25000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-503",
+      "taskId": "VEB-012-mvp",
+      "sortOrder": 26000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-180",
+      "taskId": "SYS-014",
+      "sortOrder": 27000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-181",
+      "taskId": "SYS-015",
+      "sortOrder": 28000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-182",
+      "taskId": "SYS-016",
+      "sortOrder": 29000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-183",
+      "taskId": "SYS-017",
+      "sortOrder": 30000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-184",
+      "taskId": "SYS-018",
+      "sortOrder": 31000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-185",
+      "taskId": "SYS-019",
+      "sortOrder": 32000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-186",
+      "taskId": "SYS-020",
+      "sortOrder": 33000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-437",
+      "taskId": "UX-023",
+      "sortOrder": 34000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-438",
+      "taskId": "UX-024",
+      "sortOrder": 35000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-356",
+      "taskId": "DATA-028",
+      "sortOrder": 36000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-443",
+      "taskId": "UX-029",
+      "sortOrder": 37000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-323",
+      "taskId": "UX-033",
+      "sortOrder": 38000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "identifier": "SAN-270",
+      "taskId": "UIX-042",
+      "sortOrder": 39000,
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    }
+  ],
+  "dryRun": false,
+  "top20": [
+    {
+      "order": 1,
+      "identifier": "SAN-115",
+      "taskId": "EVT-001",
+      "milestone": "P0 — MVP gates",
+      "sortOrder": 1000
+    },
+    {
+      "order": 2,
+      "identifier": "SAN-109",
+      "taskId": "CAF-001",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 2000
+    },
+    {
+      "order": 3,
+      "identifier": "SAN-110",
+      "taskId": "UIX-001",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 3000
+    },
+    {
+      "order": 4,
+      "identifier": "SAN-492",
+      "taskId": "VEB-001-core",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 4000
+    },
+    {
+      "order": 5,
+      "identifier": "SAN-493",
+      "taskId": "VEB-002-core",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 5000
+    },
+    {
+      "order": 6,
+      "identifier": "SAN-97",
+      "taskId": "SYS-003",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 6000
+    },
+    {
+      "order": 7,
+      "identifier": "SAN-494",
+      "taskId": "VEB-003-mvp",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 7000
+    },
+    {
+      "order": 8,
+      "identifier": "SAN-98",
+      "taskId": "SYS-004",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 8000
+    },
+    {
+      "order": 9,
+      "identifier": "SAN-113",
+      "taskId": "UIX-004",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 9000
+    },
+    {
+      "order": 10,
+      "identifier": "SAN-495",
+      "taskId": "VEB-004-mvp",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 10000
+    },
+    {
+      "order": 11,
+      "identifier": "SAN-99",
+      "taskId": "SYS-005",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 11000
+    },
+    {
+      "order": 12,
+      "identifier": "SAN-496",
+      "taskId": "VEB-005-mvp",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 12000
+    },
+    {
+      "order": 13,
+      "identifier": "SAN-151",
+      "taskId": "SYS-006",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 13000
+    },
+    {
+      "order": 14,
+      "identifier": "SAN-497",
+      "taskId": "VEB-006-mvp",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 14000
+    },
+    {
+      "order": 15,
+      "identifier": "SAN-152",
+      "taskId": "SYS-007",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 15000
+    },
+    {
+      "order": 16,
+      "identifier": "SAN-498",
+      "taskId": "VEB-007-mvp",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 16000
+    },
+    {
+      "order": 17,
+      "identifier": "SAN-153",
+      "taskId": "SYS-008",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 17000
+    },
+    {
+      "order": 18,
+      "identifier": "SAN-499",
+      "taskId": "VEB-008-mvp",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 18000
+    },
+    {
+      "order": 19,
+      "identifier": "SAN-154",
+      "taskId": "SYS-009",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 19000
+    },
+    {
+      "order": 20,
+      "identifier": "SAN-500",
+      "taskId": "VEB-009-mvp",
+      "milestone": "P1 — Maps & core",
+      "sortOrder": 20000
+    }
+  ]
+}

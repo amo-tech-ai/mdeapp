@@ -1,0 +1,42 @@
+%% mdeapp — when to ask for sign-up (persona journeys)
+%% Render: https://mermaid.live or VS Code Mermaid preview
+%% Companion: tasks/data/21-auth-architecture-roadmap.md
+
+flowchart LR
+  subgraph anon["Anonymous OK"]
+    HOME["/ home"]
+    CHAT["/chat Copilot"]
+    RENT["/rentals browse"]
+  end
+
+  subgraph soft["Soft gate — empty state today"]
+    SAVED["/saved"]
+    TRIPS["/trips"]
+  end
+
+  subgraph hard["Hard gate — middleware"]
+    HOST["/host/* Roberto"]
+  end
+
+  subgraph write["Sign-up at write time"]
+    SAVE["Save listing"]
+    VIEW["Schedule viewing"]
+    PAY["Ticket checkout Andrés"]
+    PUB["Publish event HITL"]
+  end
+
+  HOME --> CHAT
+  CHAT --> SAVE
+  CHAT --> VIEW
+  RENT --> SAVE
+  SAVE --> LOGIN["/login?next="]
+  VIEW --> LOGIN
+  SAVED --> LOGIN
+  TRIPS --> LOGIN
+  HOST --> LOGIN
+  PAY --> LOGIN
+  PUB --> LOGIN
+  LOGIN --> AUTH["Supabase Auth\nmagic link or Google"]
+  AUTH --> CB["/auth/callback"]
+  CB --> soft
+  CB --> hard

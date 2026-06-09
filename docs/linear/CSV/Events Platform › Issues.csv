@@ -1,0 +1,4405 @@
+"ID","Team","Title","Description","Status","Estimate","Priority","Project ID","Project","Creator","Assignee","Labels","Cycle Number","Cycle Name","Cycle Start","Cycle End","Created","Updated","Started","Triaged","Completed","Canceled","Archived","Due Date","Parent issue","Initiatives","Project Milestone ID","Project Milestone","SLA Status","UUID","Time in status (minutes)","Related to","Blocked by","Duplicate of"
+"SAN-765","Sanjiovani","AIE-011 [Core] Venue explorer /venues","## Order: 11/32 · Phase: **Core**
+
+**Disk:** `Core/AIE-011-core-venue-explorer.md`
+**Wireframe:** 029
+
+## Objective
+
+First-class `/venues` — map + capacity filters + AI scores. **Not** wizard-only 025.
+
+```mermaid
+flowchart LR
+  Q[Search Laureles] --> MAP[Map pins mapId]
+  MAP --> CARDS[Venue cards]
+  CARDS --> DET[/venues/slug]
+```
+
+## Acceptance
+
+* Places field masks · browser ≥1 card+pin
+* **Blocks:** AIE-012","Backlog",,"Urgent","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:core, prefix:AIE, prefix:VEB, scr",,,,,"2026-06-08T14:04:27.626Z","2026-06-08T14:04:28.726Z",,,,,,"2026-06-09T14:04:28.724Z","SAN-757","Phase 1 — mdeai MVP launch",,,"HighRisk","384b008c-acb8-4f34-9e13-26e271e6bbcd",110,"SAN-492, SAN-498","SAN-115",
+"SAN-764","Sanjiovani","AIE-012 [Core] Venue details /venues/[slug]","## Order: 12/32 · Phase: **Core**
+
+**Disk:** `Core/AIE-012-core-venue-details.md`
+**Wireframe:** 030
+
+## CTAs
+
+* Request booking → AIE-020
+* Use in event → `hostEventAgent` set_venue
+
+```mermaid
+flowchart TD
+  DET[Venue detail] --> B[Book request]
+  DET --> W[Wizard set_venue]
+```
+
+## Acceptance
+
+* Mobile sticky CTA · slug route 200","Backlog",,"Urgent","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:core, prefix:AIE, prefix:VEB, scr",,,,,"2026-06-08T14:04:19.688Z","2026-06-08T14:04:31.480Z",,,,,,"2026-06-09T14:04:31.473Z","SAN-757","Phase 1 — mdeai MVP launch",,,"HighRisk","ef3cf450-f79e-4bd7-bb12-0864ff6a6de0",110,"SAN-499, SAN-495","",
+"SAN-762","Sanjiovani","AIE-006 [Core] hostOps read tools — list_host_events + get_sales_summary","## Order: 6/32 · Phase: **Core**
+
+**Disk:** `Core/AIE-006-core-hostops-read-tools.md`
+
+## Tools
+
+| Tool | Truth |
+| -- | -- |
+| `list_host_events` | events RLS |
+| `get_sales_summary` | orders + tiers |
+
+```mermaid
+flowchart TD
+  HO[hostOpsAgent] --> T1[list_host_events]
+  HO --> T2[get_sales_summary]
+  T1 & T2 --> SB[(Supabase)]
+```
+
+## Acceptance
+
+* Vitest · tool spans · **Blocks:** AIE-007, 008","Backlog",,"Urgent","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:core, prefix:AIE, prefix:INT, track:ai",,,,,"2026-06-08T14:04:16.633Z","2026-06-08T14:04:21.688Z",,,,,,"2026-06-09T14:04:17.271Z","SAN-757","Phase 1 — mdeai MVP launch",,,"HighRisk","25744b8b-12d1-41a5-b309-8a7e32be3dd0",110,"","SAN-760",
+"SAN-760","Sanjiovani","AIE-005 [Core] hostOpsAgent + HostDashboardState","## Order: 5/32 · Phase: **Core** · Agent #5/5
+
+**Disk:** `Core/AIE-005-core-hostops-agent-state.md`
+**State:** `wireframes/038-shared-state.md`
+
+## CopilotKit v1 (verified)
+
+* `useCoAgent({ name: ""hostOpsAgent"" })` — key **must** match `Mastra({ agents })`
+* Shared state via AG-UI ([CopilotKit Mastra shared-state](<https://docs.copilotkit.ai/integrations/mastra/shared-state>))
+* Stable module-level props (LESSONS POST storm)
+
+## Mastra
+
+* Register `hostOpsAgent` on `gemini-3.5-flash`
+* Zod `HostDashboardState` ↔ `src/lib/types.ts` ↔ bridge
+
+```mermaid
+flowchart LR
+  Z[Zod schema] --> AG[hostOpsAgent]
+  AG --> IDX[mastra/index.ts]
+  IDX --> API[/api/copilotkit]
+  API --> BR[HostOpsCopilotBridge]
+  BR -->|useCoAgent| UI[/host/analytics]
+```
+
+## Acceptance
+
+* Vitest schema round-trip
+* Agent count Core ≤ 5
+* **Never** add analyticsAgent/revenueAgent
+* **Blocks:** AIE-006, 007, 008","Backlog",,"Urgent","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:core, prefix:AIE, prefix:INT, track:ai",,,,,"2026-06-08T14:03:56.303Z","2026-06-08T14:03:57.360Z",,,,,,"2026-06-09T14:03:57.356Z","SAN-757","Phase 1 — mdeai MVP launch",,,"HighRisk","c143cab0-24a7-4f44-90f5-857bafcfde12",110,"","SAN-704, SAN-115",
+"SAN-759","Sanjiovani","AIE-007 [Core] salesInsightWorkflow","## Order: 7/32 · Phase: **Core**
+
+**Disk:** `Core/AIE-007-core-sales-insight-workflow.md`
+
+## Mastra workflow (deterministic)
+
+```mermaid
+flowchart LR
+  A[get_sales_summary SQL] --> B[Compare prior period SQL]
+  B --> C[Gemini narrative only]
+  C --> D[Generative card trigger]
+```
+
+1. SQL aggregates
+2. SQL deltas
+3. LLM explains pre-computed numbers
+
+## CopilotKit
+
+Toolbar 📊 on hostOps chat invokes workflow
+
+## Acceptance
+
+* Unit test stable numeric output
+* **Blocks:** AIE-008, 009","Backlog",,"Urgent","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:core, prefix:AIE, prefix:INT, track:ai",,,,,"2026-06-08T14:03:56.067Z","2026-06-08T14:03:57.262Z",,,,,,"2026-06-09T14:03:57.259Z","SAN-757","Phase 1 — mdeai MVP launch",,,"HighRisk","29f19742-fb42-47dc-bb54-396dde640240",110,"","",
+"SAN-757","Sanjiovani","AIE-000 — AI-Native Events OS (implementation pack)","## Parent epic — 32 tasks Core → MVP → Advanced
+
+**Disk index:** `tasks/events/tasks/AI-native-system/index-aievents.md`
+**Architecture:** `tasks/events/plans/04-AI-native-system.md`
+**Wireframes:** `tasks/events/wireframes/INDEX.md` (37 screens)
+
+## Implementation order
+
+```text
+CORE 001→012: proof → nav → schema → ai_runs → hostOps → venues
+MVP  013→026: forecast → attendee → recs → sponsors → comms → Luma → admin
+ADV  027→032: bookingAgent → marketing → ROI → exceptions → campaigns → WhatsApp
+```
+
+## Stack (verified)
+
+| Layer | Choice |
+| -- | -- |
+| UI | CopilotKit **1.55.2 v1** — `useCoAgent`, `useCopilotAction`, `renderAndWaitForResponse` |
+| Runtime | Pattern 1 `/api/copilotkit` + Mastra AG-UI bridge |
+| Agents | Max 5 Core / 8 MVP / 12 Advanced |
+| Model | `gemini-3.5-flash` only |
+
+## Architecture
+
+```mermaid
+flowchart TB
+  subgraph UI[""CopilotKit v1""]
+    COA[useCoAgent]
+    ACT[useCopilotAction disabled render]
+    HITL[renderAndWaitForResponse]
+  end
+  subgraph RT[""/api/copilotkit""]
+    CK[CopilotRuntime]
+    MA[LoggingMastraAgent]
+  end
+  subgraph MASTRA[""Mastra""]
+    HE[hostEventAgent]
+    HO[hostOpsAgent]
+    WF[salesInsightWorkflow]
+  end
+  subgraph DATA[""Truth""]
+    SB[(Supabase)]
+    ST[Stripe]
+  end
+  COA --> CK --> MA --> HO & HE
+  HO --> WF --> SB
+  ACT --> HO
+  HITL --> SB
+```
+
+## Agent cap
+
+* Core (5): router, concierge, event, hostEvent, **hostOps**
+* MVP (+3): attendee, sponsor, adminOps
+* Advanced (+4): booking, campaign, content, social
+
+**Never:** eventPlannerAgent, analyticsAgent, revenueAgent, marketingAgent blob
+
+## Exit gates
+
+1. **Core:** Roberto asks ""how are sales?"" on `/host/analytics` → grounded answer
+2. **MVP:** Sponsor scores + CRM + attendee wallet assistant
+3. **Advanced:** Revenue tracked 30d+ before bookingAgent","Backlog",,"Urgent","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:core, prefix:AIE, track:ai",,,,,"2026-06-08T14:03:30.465Z","2026-06-08T14:05:41.076Z",,,,,,"2026-06-09T14:03:32.502Z",,"Phase 1 — mdeai MVP launch",,,"HighRisk","9373ccfc-8e73-4cae-873a-3703f6b6e2d9",111,"","",
+"SAN-729","Sanjiovani","AIE-008 [Core] /host/analytics + HostOpsCopilotBridge","## Order: 8/32 · Phase: **Core**
+
+**Disk:** `Core/AIE-008-core-host-analytics-page.md`
+**Spec:** `specs/pages/missing/PAGE-M02-host-analytics.md`
+**Wireframes:** 013, 014
+
+## 3-panel layout
+
+```mermaid
+flowchart LR
+  L[Host nav] --> C[hostOpsAgent chat]
+  C --> R[KPI + charts]
+  C -->|useCoAgent| API[/api/copilotkit]
+```
+
+## CopilotKit v1
+
+* `HostOpsCopilotBridge` with `useCoAgent({ name: ""hostOpsAgent"" })`
+* No AI in Stripe paths
+
+## Acceptance
+
+* Route 200 · prompt ""revenue vs last week"" → tool-backed answer
+* Browser evidence in `tasks/testing/evidence/`
+* **Blocks:** AIE-009, 010","Backlog",,"Urgent","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:core, prefix:AIE, scr",,,,,"2026-06-08T08:11:57.137Z","2026-06-08T14:03:59.283Z",,,,,,"2026-06-09T14:03:59.110Z","SAN-757","Phase 1 — mdeai MVP launch",,,"HighRisk","3460ba26-168a-4e0e-b199-ed871cd84aa7",462,"SAN-690, SAN-118, SAN-732","SAN-730",
+"SAN-704","Sanjiovani","AIE-004 [Core] ai_runs prod write fix","## Order: 4/32 · Phase: **Core**
+
+**Disk:** `tasks/events/tasks/AI-native-system/Core/AIE-004-core-ai-runs-prod-writes.md`
+
+## Problem
+
+`logAgentRunForTurn` in `/api/copilotkit` `after()` not writing `ai_runs` for authenticated prod sessions.
+
+## Flow
+
+```mermaid
+sequenceDiagram
+  UI->>API: POST /api/copilotkit
+  API->>Mastra: agent turn
+  API->>SB: ai_runs insert
+  Note over SB: Currently fails prod auth
+```
+
+## Acceptance
+
+* Prod chat turn → `ai_runs` row (SQL proof)
+* No service-role in client bundle
+* **Blocks:** AIE-026 observability UI","Backlog",,"Urgent","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:core, phase:launch, prefix:AIE, track:ai, type:chore",,,,,"2026-06-06T13:15:50.485Z","2026-06-08T14:03:44.499Z",,,,,,"2026-06-07T13:15:52.390Z","SAN-757","Phase 1 — mdeai MVP launch",,,"Breached","c9cabf16-b7ed-4d32-8bdb-969ce8c26a63",3038,"SAN-115","",
+"SAN-775","Sanjiovani","AIE-022 [MVP] Global UX — ⌘K, FAB, pills, Copilot Tasks","## Order: 22/32
+
+**Disk:** `MVP/AIE-022-mvp-global-ux-patterns.md` · Wireframe 037
+
+| Pattern | Examples |
+| -- | -- |
+| ⌘K | Create Event, Find Venue, View Revenue |
+| AI FAB | Persistent host + attendee routes |
+| Context pills | Event · Venue · Ticket · Analytics |
+| Copilot Tasks | Venue shortlist, Research sponsors |
+
+Single CopilotKit root · `prefers-reduced-motion`","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:mvp, prefix:AIE, scr, UX",,,,,"2026-06-08T14:05:04.414Z","2026-06-08T14:05:09.370Z",,,,,,"2026-06-15T14:05:09.288Z","SAN-757","Phase 1 — mdeai MVP launch",,,"MediumRisk","c75355dc-ea56-4509-a950-c6eb9f41e550",109,"","SAN-729",
+"SAN-774","Sanjiovani","AIE-021 [MVP] Event health dashboard","## Order: 21/32
+
+**Disk:** `MVP/AIE-021-mvp-event-health-dashboard.md` · Wireframe 032
+**Route:** `/host/events/[id]/health`
+
+```mermaid
+flowchart LR
+  M[Sales pace] --> SC[Health score 0-100]
+  V[Venue fit] --> SC
+  E[Engagement] --> SC
+  SC --> ACT[Suggested actions HITL]
+```
+
+Uses hostOpsAgent — no new agent","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:mvp, prefix:AIE, scr, track:ai",,,,,"2026-06-08T14:05:03.821Z","2026-06-08T14:05:08.912Z",,,,,,"2026-06-15T14:05:04.711Z","SAN-757","Phase 1 — mdeai MVP launch",,,"MediumRisk","2d530c75-69b7-4582-9b61-fdaa173a78a3",109,"","SAN-729, SAN-766",
+"SAN-773","Sanjiovani","AIE-020 [MVP] Host bookings /host/bookings","## Order: 20/32
+
+**Disk:** `MVP/AIE-020-mvp-host-bookings.md` · Wireframe 031
+
+```mermaid
+flowchart LR
+  REQ[Booking request] --> VB[venue_bookings]
+  VB --> HOST[/host/bookings]
+  HOST --> ADM[Admin approve VEN-007]
+```","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:mvp, prefix:AIE, prefix:VEB, scr",,,,,"2026-06-08T14:05:01.338Z","2026-06-08T14:05:11.186Z",,,,,,"2026-06-15T14:05:11.183Z","SAN-757","Phase 1 — mdeai MVP launch",,,"MediumRisk","0e6faf3f-39c6-4c89-b53b-994ce571e2d0",109,"SAN-502, SAN-500","SAN-764",
+"SAN-772","Sanjiovani","AIE-019 [MVP] Approvals + notifications + host inbox","## Order: 19/32
+
+**Disk:** `MVP/AIE-019-mvp-approval-notifications-inbox.md`
+**Routes:** `/host/approvals`, `/me/notifications`, `/host/inbox` (021, 023, 024)
+
+```mermaid
+flowchart TD
+  HITL[HITL decisions] --> AL[approval_logs]
+  SYS[System events] --> N[notifications]
+  MSG[Guest Q&A] --> I[host inbox]
+```","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:mvp, prefix:AIE, scr",,,,,"2026-06-08T14:05:00.204Z","2026-06-08T14:05:09.315Z",,,,,,"2026-06-15T14:05:09.262Z","SAN-757","Phase 1 — mdeai MVP launch",,,"MediumRisk","91b70567-14bb-4ba7-bf1e-fc1f601369f2",109,"","SAN-758",
+"SAN-771","Sanjiovani","AIE-018 [MVP] crmLeadScoreWorkflow + /host/crm","## Order: 18/32
+
+**Disk:** `MVP/AIE-018-mvp-crm-lead-score-workflow.md` · Wireframe 017
+
+```mermaid
+flowchart LR
+  L[crm_leads] --> W[crmLeadScoreWorkflow]
+  W --> H[hot/stale flags]
+  H --> UI[Pipeline kanban]
+```
+
+Tables: `crm_leads`, `crm_activities` + RLS","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:mvp, prefix:AIE, scr, type:data",,,,,"2026-06-08T14:04:58.791Z","2026-06-08T14:05:01.564Z",,,,,,"2026-06-15T14:04:59.908Z","SAN-757","Phase 1 — mdeai MVP launch",,,"MediumRisk","590815e7-9ca2-415a-a95f-b94a44603d1c",109,"","SAN-768",
+"SAN-770","Sanjiovani","AIE-016 [MVP] sponsorMatchWorkflow + fit scores","## Order: 16/32 · Phase: **MVP**
+
+**Disk:** `MVP/AIE-016-mvp-sponsor-match-workflow.md` · Wireframe 016
+
+```mermaid
+flowchart LR
+  E[Event tags] --> S[Deterministic score]
+  S --> X[LLM explain]
+  X --> BADGE[FitScoreBadge 96%]
+```
+
+Fashion Night → jewelry 96%, fintech 34%","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:mvp, prefix:AIE, prefix:INT, track:ai",,,,,"2026-06-08T14:04:46.269Z","2026-06-08T14:04:47.884Z",,,,,,"2026-06-15T14:04:47.882Z","SAN-757","Phase 1 — mdeai MVP launch",,,"MediumRisk","07a4e987-911d-4edd-a244-1a1e766bd89c",109,"SAN-132","SAN-729",
+"SAN-769","Sanjiovani","AIE-015 [MVP] Recommendations hub /recommendations","## Order: 15/32 · Phase: **MVP**
+
+**Disk:** `MVP/AIE-015-mvp-recommendations-hub.md` · Wireframes 035, 028 · EVP-042
+
+```mermaid
+flowchart TD
+  U[User context] --> R{Type}
+  R --> E[events]
+  R --> V[venues]
+  R --> P[places]
+  E & V & P --> C[Generative cards]
+```
+
+`useCopilotReadable` for personalization","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:mvp, prefix:AIE, scr, track:ai",,,,,"2026-06-08T14:04:42.468Z","2026-06-08T14:04:43.259Z",,,,,,"2026-06-15T14:04:43.256Z","SAN-757","Phase 1 — mdeai MVP launch",,,"MediumRisk","76dc2fce-ecc0-4fb9-ae74-da005b08cc71",110,"SAN-145","SAN-766",
+"SAN-768","Sanjiovani","AIE-017 [MVP] Sponsor pipeline screens + sponsorAgent","## Order: 17/32 · Agent #7/8
+
+**Disk:** `MVP/AIE-017-mvp-sponsor-pipeline-screens.md`
+**Routes:** `/host/sponsors`, opportunities, proposals (wireframes 015-018)
+
+```mermaid
+flowchart LR
+  R[Research] --> M[Match score]
+  M --> P[Proposal draft]
+  P --> HITL[HITL approve]
+```
+
+No auto-send outreach","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:mvp, prefix:AIE, scr, track:ai",,,,,"2026-06-08T14:04:38.486Z","2026-06-08T14:04:39.558Z",,,,,,"2026-06-15T14:04:39.556Z","SAN-757","Phase 1 — mdeai MVP launch",,,"MediumRisk","98d1ee90-074e-4b28-bb8e-4e85ff187607",110,"SAN-132","",
+"SAN-767","Sanjiovani","AIE-014 [MVP] attendeeAgent on /me/tickets","## Order: 14/32 · Agent #6/8
+
+**Disk:** `MVP/AIE-014-mvp-attendee-agent.md`
+
+## CopilotKit v1
+
+`useCoAgent({ name: ""attendeeAgent"" })` on wallet — narrow specialist, not second discovery brain.
+
+```mermaid
+flowchart LR
+  W[/me/tickets] --> AT[attendeeAgent]
+  AT --> T1[get_wallet_tickets]
+  AT --> T2[suggest_nearby_places]
+  AT --> T3[recommend_events]
+```
+
+Reuse concierge tools where possible.","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:mvp, prefix:AIE, prefix:INT, track:ai",,,,,"2026-06-08T14:04:35.802Z","2026-06-08T14:04:42.325Z",,,,,,"2026-06-15T14:04:42.323Z","SAN-757","Phase 1 — mdeai MVP launch",,,"MediumRisk","89b56502-30be-401c-9006-462a543b42d9",110,"","SAN-729",
+"SAN-766","Sanjiovani","AIE-013 [MVP] revenueForecastWorkflow + forecast card","## Order: 13/32 · Phase: **MVP**
+
+**Disk:** `MVP/AIE-013-mvp-revenue-forecast-workflow.md` · Wireframe 026
+
+```mermaid
+flowchart LR
+  O[orders+tiers] --> P[pace SQL]
+  P --> F[forecast range SQL]
+  F --> N[Gemini narrative]
+  N --> CARD[Forecast card]
+```
+
+Numbers from SQL only · toolbar 📈","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:mvp, prefix:AIE, prefix:INT, track:ai",,,,,"2026-06-08T14:04:34.940Z","2026-06-08T14:04:36.163Z",,,,,,"2026-06-15T14:04:35.775Z","SAN-757","Phase 1 — mdeai MVP launch",,,"MediumRisk","97678733-1ee1-4bb8-90d5-5c929d7c9a84",110,"","SAN-115, SAN-729",
+"SAN-761","Sanjiovani","AIE-009 [Core] Generative KPI cards on analytics","## Order: 9/32 · Phase: **Core**
+
+**Disk:** `Core/AIE-009-core-generative-kpi-cards.md`
+
+## CopilotKit v1 pattern
+
+```mermaid
+flowchart LR
+  WF[salesInsightWorkflow] --> ACT[useCopilotAction disabled]
+  ACT --> RENDER[GenerativeChartCard]
+  RENDER --> RP[Right panel KPIs]
+```
+
+* `available: ""disabled""` + `render` mirrors event cards pattern
+* Tool name = Mastra tool id
+
+## Components
+
+KpiCardRow · GenerativeChartCard · TierBreakdown
+
+## Acceptance
+
+* DESIGN.MD tokens · Vitest render smoke","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:core, prefix:AIE, scr, track:ai",,,,,"2026-06-08T14:04:04.463Z","2026-06-08T14:04:06.940Z",,,,,,"2026-06-15T14:04:06.937Z","SAN-757","Phase 1 — mdeai MVP launch",,,"MediumRisk","03b1f4fe-775c-49b2-8477-7f510b4d782b",110,"","",
+"SAN-758","Sanjiovani","AIE-003 [Core] Observability schema — approval_logs + workflow_runs","## Order: 3/32 · Phase: **Core**
+
+**Disk:** `tasks/events/tasks/AI-native-system/Core/AIE-003-core-observability-schema.md`
+**Wireframe:** `wireframes/038-shared-state.md`
+
+## Schema
+
+```mermaid
+erDiagram
+  USERS ||--o{ APPROVAL_LOGS : approves
+  EVENTS ||--o{ WORKFLOW_RUNS : context
+  APPROVAL_LOGS {
+    uuid id
+    string action_type
+    string decision
+  }
+  WORKFLOW_RUNS {
+    uuid id
+    string workflow_id
+    string status
+  }
+```
+
+## Acceptance
+
+* Migration + RLS ≥1 policy each
+* Types generated in mdeapp
+* **Blocks:** AIE-019, AIE-026","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:core, prefix:AIE, track:ai, type:data",,,,,"2026-06-08T14:03:42.709Z","2026-06-08T14:03:43.698Z",,,,,,"2026-06-15T14:03:43.696Z","SAN-757","Phase 1 — mdeai MVP launch",,,"MediumRisk","12e4ce7a-567f-4a2b-b337-895f1e3529aa",111,"","",
+"SAN-732","Sanjiovani","UI-001 — Events UI spec pack (pages + overlays + dashboards)","## Source of truth
+
+* **Audit:** `tasks/events/pages-ui-inventory.md`
+* **Spec index:** `tasks/events/specs/INDEX.md`
+* **Linear matrix:** `tasks/events/specs/LINEAR-COVERAGE.md`
+
+## Scope
+
+All Events UI pages, overlays, dashboards, venue-booking surfaces ([SAN-494](https://linear.app/sanjiovani/issue/SAN-494/evt-035-restaurant-card-event-venue-cta)–514), and Luma detail upgrade ([SAN-135](https://linear.app/sanjiovani/issue/SAN-135/evt-017-luma-style-event-detail-layout)).
+
+## Status (2026-06-08)
+
+* 10 live routes audited on disk
+* 27 implementation-ready specs
+* 3 new polish issues: [SAN-729](https://linear.app/sanjiovani/issue/SAN-729/ui-002-host-analytics-dashboard-hostanalytics)–731
+
+## Child issues
+
+Link UX/Partners canonicals via `relatedTo` — see LINEAR-COVERAGE.md matrix.","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, scr",,,,,"2026-06-08T08:12:18.539Z","2026-06-08T08:12:19.457Z",,,,,,"2026-06-15T08:12:19.449Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","a1986ef3-e69e-47ac-bd9e-be450ed5b73e",462,"SAN-729, SAN-135, SAN-494","",
+"SAN-731","Sanjiovani","UI-004 — Event detail loading skeleton + hero alt (a11y)","## Spec
+
+`tasks/events/specs/pages/PAGE-003-event-detail-commerce.md` · Luma prep: PAGE-003b
+
+## Problem
+
+* `/events/[slug]` hero image uses empty `alt=""""`
+* No route-level `loading.tsx` skeleton
+
+## Fix
+
+1. `app/events/[slug]/loading.tsx` — skeleton hero + tiers
+2. `event-detail-view.tsx` — meaningful alt from event name
+3. Extend SCREEN-014 if needed
+
+## Acceptance
+
+* Navigation shows skeleton
+* a11y: hero alt present
+* Semantic tokens only
+
+## Related
+
+[SAN-237](https://linear.app/sanjiovani/issue/SAN-237/uix-009-screen-014-event-detail-page) · [SAN-135](https://linear.app/sanjiovani/issue/SAN-135/evt-017-luma-style-event-detail-layout)","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:mvp, scr",,,,,"2026-06-08T08:12:00.948Z","2026-06-08T08:12:01.986Z",,,,,,"2026-06-15T08:12:01.984Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","cc658f20-634e-4d1f-855b-b8c868b1f4b6",462,"SAN-135, SAN-237","",
+"SAN-730","Sanjiovani","AIE-002 [Core] Enable host navigation rail","## Order: 2/32 · Phase: **Core**
+
+**Disk:** `tasks/events/tasks/AI-native-system/Core/AIE-002-core-host-nav-enable.md`
+**Wireframe:** `wireframes/events/008-host-dashboard.md`
+
+## Objective
+
+Roberto reaches `/host/events`, `/host/event/new`, `/host/analytics` from visible nav.
+
+## Acceptance
+
+* Nav visible for organizer role
+* Routes 200 · single CopilotKit provider
+* **Blocks:** AIE-008
+
+## Related
+
+EVP-014 / [SAN-118](https://linear.app/sanjiovani/issue/SAN-118/evt-014-host-events-list-page) host events list","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:core, prefix:AIE, scr",,,,,"2026-06-08T08:11:59.864Z","2026-06-08T14:03:41.401Z",,,,,,"2026-06-15T08:12:01.019Z","SAN-757","Phase 1 — mdeai MVP launch",,,"MediumRisk","5b4dc0d5-979d-462c-a3ac-1d9d8f374a73",462,"SAN-118","",
+"SAN-561","Sanjiovani","EVT — Event discovery depth + promo codes + in-chat ticket upsell","## Improvement task — Events promo / upsell
+
+**Canonical owners (deferred R2):**
+
+* **C15** promo codes — [spec](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/revenue/C15-promo-codes.md>)
+* **C14** abandoned-cart WhatsApp — [spec](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/revenue/C14-abandoned-cart-whatsapp-recovery.md>)
+* In-chat VIP/bundle upsell → **C6** Sales Agent (see [SAN-565](<https://linear.app/sanjiovani/issue/SAN-565>))
+
+Import as REV-C15/C14 after [SAN-551](<https://linear.app/sanjiovani/issue/SAN-551>) ships. Do not start in Cycle 1 MVP.
+
+**Roadmap context:** [improvement roadmap](<https://github.com/amo-tech-ai/mdeapp/blob/main/docs/prd/mde-ai-improvement-roadmap.md>) Phases 1 & 6 · [dashboard](<https://github.com/amo-tech-ai/mdeapp/blob/main/docs/dashboard.md>)","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:post-mvp, prefix:EVT, stack:stripe",,,,,"2026-06-05T18:52:47.458Z","2026-06-08T14:05:56.495Z",,,,,,"2026-06-12T18:52:48.580Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","0f45c12b-7015-49df-86be-3166e1060c98",4124,"SAN-551","",
+"SAN-542","Sanjiovani","CTEST-010 — Public contestant profile voting page and share growth loop","# CTEST-010 — Public contestant profile voting page and share growth loop
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-010` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest growth and voting |
+| **Effort** | 2-4d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-002, CTEST-006, CTEST-009 |
+| **Linear** | [SAN-542](https://linear.app/sanjiovani/issue/SAN-542/ctest-010-public-contestant-profile-voting-page-and-share-growth-loop) |
+| **Evidence** | `tasks/contest/notes/CTEST-010-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-010-public-profile-vote-share-growth.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-010-public-profile-vote-share-growth.md>) |
+
+### Skills
+
+* `responsive-design`
+* `tailwind-responsive-ui`
+* `testing`
+
+### Docs
+
+* `../docs/03-screens-wireframes.md`
+* `../docs/05-production-task-standard.md`
+* `../docs/06-shadcn-component-audit.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/responsive-design/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/tailwind-responsive-ui/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/responsive-design/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/shadcn/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/testing/SKILL.md`
+* [https://ui.shadcn.com/docs/components](<https://ui.shadcn.com/docs/components>)
+* [https://ui.shadcn.com/docs/cli](<https://ui.shadcn.com/docs/cli>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Make each approved contestant profile double as a public voting page that fans can view, share, and use to cast valid free or paid votes.
+
+## 2\. Goals
+
+* **Hard dependency:** CTEST-002 vote RPCs must be Done before this route accepts votes (no client-side vote writes).
+* Implement `/contests/[slug]/contestants/[id]` as the primary public voting profile.
+* Add share links for WhatsApp, Instagram copy, direct URL, and contact import prompt where legally/technically appropriate.
+* Add referral/UTM tracking without exposing private voter data.
+* Make vote CTA states obvious: open, closed, already voted, paid credits available, in review.
+
+## 3\. Features
+
+* Public profile hero with approved photos and contestant story.
+* Vote module with free/paid path handoff.
+* Share panel with trackable links.
+* Fan-facing receipt after vote.
+* Contestant-facing promotion guidance.
+
+## 4\. Workflows
+
+1. Build responsive public profile route.
+2. Run shadcn CLI verification:
+
+   ```bash
+   cd mdeapp
+   npx shadcn@latest info --json
+   npx shadcn@latest docs avatar radio-group alert sonner spinner button card badge dialog tooltip --json
+   npx shadcn@latest add avatar radio-group alert sonner spinner --dry-run
+   ```
+3. Connect vote CTA to CTEST-002 RPC/API.
+4. Connect paid vote CTA to CTEST-003.
+5. Generate share URLs with UTM/referral token.
+6. Track public profile views and share clicks in audit/analytics tables.
+
+## 5\. User Journeys
+
+* Fan lands on a contestant profile from WhatsApp and votes.
+* Contestant copies their profile link and shares it with friends.
+* Patricia reviews traffic/vote anomalies from the admin audit view.
+
+## 6\. Agents
+
+* AI can suggest share copy and promotion tips.
+* AI cannot cast votes, buy votes, or pressure contacts.
+
+## 7\. Integrations
+
+* Vote ledger/RPC from CTEST-002.
+* Paid vote credits from CTEST-003.
+* Public approved profile from CTEST-009.
+* Optional WhatsApp share link only; no autonomous messaging.
+* Required shadcn components: `Avatar`, `RadioGroup`, `Alert`, `Sonner`, `Spinner`, plus installed `Button`, `Card`, `Badge`, `Dialog`, and `Tooltip`.
+
+## 8\. Summary
+
+This task closes the growth loop: the profile page is also the voting page and sharing surface.
+
+## 9\. Definition Of Done
+
+- [ ] Public profile route renders approved contestant data only.
+- [ ] shadcn CLI dry run completed for missing public profile/vote components before installation.
+- [ ] Vote CTA handles open/closed/already-voted/paid-credit states.
+- [ ] Share links include source tracking.
+- [ ] Private documents and rejected media never render publicly.
+- [ ] Mobile layout is single-column, touch-safe, and free of horizontal overflow.
+
+## 10\. Tests
+
+- [ ] Playwright: fan views profile and votes.
+- [ ] Playwright: profile share link copies/opens.
+- [ ] Negative test: unapproved contestant is not public.
+- [ ] Negative test: rejected/private media is not public.
+- [ ] SQL proof: vote receipt, share event, profile view.
+- [ ] Responsive proof at 375, 414, 768, 1024, 1440.
+
+## Production Standard Addendum
+
+This task must satisfy `../docs/05-production-task-standard.md`: create tasks, tech stack, feature, problem solving, agents/workflows/automations, user journey, Mermaid diagrams, skills to run, MCP/official docs, verification steps, real-world examples, data, frontend/backend wiring, success criteria, production-ready checklist, and testing.
+
+## 11\. Mermaid diagrams
+
+### Public profile + vote (requires CTEST-002)
+
+```mermaid
+flowchart TD
+  Fan[Fan] --> Page[""/contests/slug/contestants/id""]
+  Page --> Share[Share link UTM]
+  Page --> VoteBtn[Vote CTA]
+  VoteBtn --> RPC[submit_contest_vote RPC]
+  RPC --> VL[(vote_ledger)]
+  Page -.blocked until CTEST-002 Done.-> VoteBtn
+```","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, scr, track:contest, track:events",,,,,"2026-06-03T03:39:12.326Z","2026-06-04T04:18:11.135Z",,,,,,"2026-06-10T03:39:13.238Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","d267332d-b1c4-45bb-9930-9250930869e7",6490,"","SAN-534, SAN-541, SAN-538",
+"SAN-541","Sanjiovani","CTEST-009 — Contestant profile editor, photo uploads, and AI coach","# CTEST-009 — Contestant profile editor, photo uploads, and AI coach
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-009` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest contestant workspace |
+| **Effort** | 3-5d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-001, CTEST-004, CTEST-008 |
+| **Linear** | SAN-541 |
+| **Evidence** | `tasks/contest/notes/CTEST-009-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-009-contestant-profile-editor-coach.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-009-contestant-profile-editor-coach.md>) |
+
+### Skills
+
+* `shadcn`
+* `mde-supabase`
+* `copilotkit`
+* `testing`
+
+### Docs
+
+* `../docs/03-screens-wireframes.md`
+* `../docs/05-production-task-standard.md`
+* `../docs/06-shadcn-component-audit.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/shadcn/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/mde-supabase/SKILL.md`
+* [https://ui.shadcn.com/docs/forms/react-hook-form](<https://ui.shadcn.com/docs/forms/react-hook-form>)
+* [https://ui.shadcn.com/docs/components](<https://ui.shadcn.com/docs/components>)
+* [https://ui.shadcn.com/docs/cli](<https://ui.shadcn.com/docs/cli>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Give contestants a private workspace to edit their profile, upload approved photos, understand next steps, prepare for casting/events, and chat with a guide that helps improve the profile without publishing unapproved changes.
+
+## 2\. Goals
+
+* Add `/me/contestant-profile`, `/me/contestant-profile/photos`, and `/me/contestant-profile/coach`.
+* Add photo upload/storage rules for public profile images and private review-only documents.
+* Add a CopilotKit coach panel that suggests better bios, outfits/prep checklists, and event next steps.
+* Keep profile publication approval-gated.
+
+## 3\. Features
+
+* Profile completion checklist.
+* Photo gallery with pending/approved/rejected states.
+* Event/casting preparation checklist: venue, call time, dress code, documents, transport, rehearsal, sponsor obligations.
+* AI coach asks focused questions and drafts profile improvements.
+* Contestants can promote an approved profile after publication.
+
+## 4\. Workflows
+
+1. Create profile workspace routes.
+2. Run shadcn CLI verification:
+
+   ```bash
+   cd mdeapp
+   npx shadcn@latest info --json
+   npx shadcn@latest docs field input-group textarea select avatar alert empty spinner sonner tabs drawer --json
+   npx shadcn@latest add field input-group textarea select avatar alert empty spinner sonner tabs drawer --dry-run
+   ```
+3. Add storage buckets/policies or reuse contest media buckets from CTEST-001.
+4. Add profile completion calculation.
+5. Add coach action cards: `BioDraftCard`, `PhotoReadinessCard`, `PrepChecklistCard`, `PromotionPlanCard`.
+6. Add admin approval queue for profile/photo changes.
+
+## 5\. User Journeys
+
+* Contestant logs in, edits profile details, uploads photos, and submits changes for approval.
+* Contestant asks the coach what to prepare for casting and gets a checklist tied to contest events.
+* Patricia reviews pending photos/profile changes and publishes the approved version.
+
+## 6\. Agents
+
+* `contestantCoachAgent` can draft copy, suggest questions, summarize next steps, and generate checklists.
+* It cannot approve media, publish profiles, modify votes, or contact sponsors/fans.
+
+## 7\. Integrations
+
+* Supabase storage for contestant media.
+* Supabase RLS for contestant-owned private edits and public approved profile reads.
+* CopilotKit for coach and action cards.
+* Mastra/Gemini for draft suggestions after CTEST-005.
+* Required shadcn components: `Field`, `InputGroup`, `Textarea`, `Select`, `Avatar`, `Alert`, `Empty`, `Spinner`, `Sonner`, `Tabs`, `Drawer`, plus installed `Card`, `Button`, `Badge`, `Dialog`, and `Sheet`.
+
+## 8\. Summary
+
+This task turns signup into an ongoing contestant workspace, which is required for profile quality and event readiness.
+
+## 9\. Definition Of Done
+
+- [ ] Profile editor route renders.
+- [ ] shadcn CLI dry run completed for missing profile/coach components before installation.
+- [ ] Photo upload route renders.
+- [ ] Coach route renders.
+- [ ] Contestant can save draft changes but cannot self-publish.
+- [ ] Photo status workflow supports pending, approved, rejected.
+- [ ] Coach responses are draft-only and include next-step checklists.
+- [ ] Admin approval is required before public profile changes.
+
+## 10\. Tests
+
+- [ ] Unit test profile completion calculation.
+- [ ] Storage policy test: contestant cannot read another contestant's private docs.
+- [ ] Storage policy test: public can read approved public profile photos only.
+- [ ] Playwright: edit profile, upload photo stub, submit for approval.
+- [ ] Playwright: coach asks missing-profile questions.
+- [ ] SQL proof: audit rows for profile edit, media upload, review decision.
+- [ ] Responsive proof at 375, 414, 768, 1024, 1440.
+
+## Production Standard Addendum
+
+This task must satisfy `../docs/05-production-task-standard.md`: create tasks, tech stack, feature, problem solving, agents/workflows/automations, user journey, Mermaid diagrams, skills to run, MCP/official docs, verification steps, real-world examples, data, frontend/backend wiring, success criteria, production-ready checklist, and testing.
+
+## 11\. Mermaid diagrams
+
+### Profile editor + coach (no auto-publish)
+
+```mermaid
+sequenceDiagram
+  participant C as Contestant
+  participant UI as /me/contestant-profile
+  participant Coach as contestantCoachAgent
+  participant DB as Supabase
+  C->>UI: edit bio or photos
+  UI->>DB: draft row only
+  C->>Coach: ask for prep tips
+  Coach-->>UI: draft copy suggestions
+  Note over Coach,DB: No tool writes approved profile
+```","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, scr, track:ai, track:contest, track:events",,,,,"2026-06-03T03:39:10.256Z","2026-06-04T04:18:22.744Z",,,,,,"2026-06-10T03:39:10.930Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","921e99c4-8f0b-4309-96fc-67e9383083a1",6490,"","SAN-533, SAN-540, SAN-536",
+"SAN-540","Sanjiovani","CTEST-008 — Contestant signup, URL intake, and profile extraction","# CTEST-008 — Contestant signup, URL intake, and profile extraction
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-008` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest contestant onboarding |
+| **Effort** | 2-4d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-001, CTEST-006 |
+| **Linear** | SAN-540 |
+| **Evidence** | `tasks/contest/notes/CTEST-008-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-008-contestant-signup-url-intake.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-008-contestant-signup-url-intake.md>) |
+
+### Skills
+
+* `shadcn`
+* `mde-firecrawl`
+* `mde-supabase`
+* `testing`
+
+### Docs
+
+* `../docs/03-screens-wireframes.md`
+* `../docs/04-verification-report-2026-06-02.md`
+* `../docs/05-production-task-standard.md`
+* `../docs/06-shadcn-component-audit.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/shadcn/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/mde-firecrawl/SKILL.md`
+* [https://ui.shadcn.com/docs/forms/react-hook-form](<https://ui.shadcn.com/docs/forms/react-hook-form>)
+* [https://ui.shadcn.com/docs/components](<https://ui.shadcn.com/docs/components>)
+* [https://ui.shadcn.com/docs/cli](<https://ui.shadcn.com/docs/cli>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Create a contestant signup flow where a contestant can apply to a contest, paste an Instagram/public portfolio URL, upload initial profile data, and receive a source-attributed draft profile that Patricia or Roberto can approve.
+
+## 2\. Goals
+
+* Add `/contests/[slug]/signup` with a mobile-first shadcn form.
+* Use React Hook Form, Zod, `Field`, `FieldGroup`, `FieldError`, and `aria-invalid`.
+* Accept public URLs as optional inputs, including Instagram profile URLs, portfolio pages, agency pages, or personal sites.
+* Extract only public, allowed profile hints into a draft: display name, bio, public image URL candidates, location hints, category, and source URL.
+* Store extracted data as draft fields, never as approved profile truth.
+* Add admin review path for accepting, editing, or rejecting extracted profile suggestions.
+
+## 3\. Features
+
+* Contestants get a guided signup instead of a blank form.
+* Patricia can review profile drafts and source links before publication.
+* The system can ask follow-up questions when extracted data is incomplete.
+* Private content, login-gated pages, platform-prohibited scraping, and automatic contact are explicitly out of scope.
+
+## 4\. Workflows
+
+1. Inspect current shadcn config:
+
+   ```bash
+   cd mdeapp
+   npx shadcn@latest info --json
+   npx shadcn@latest docs field input input-group textarea select checkbox button card sheet alert spinner sonner --json
+   npx shadcn@latest add field input-group textarea select checkbox alert spinner sonner --dry-run
+   ```
+2. Add missing shadcn components only after reviewing the dry run.
+3. If absent, install form dependencies:
+
+   ```bash
+   cd mdeapp
+   npm install react-hook-form @hookform/resolvers
+   ```
+4. Create `/contests/[slug]/signup` with:
+   * Required fields: legal/display name, email, phone/WhatsApp, city, age eligibility acknowledgement, division/category.
+   * Optional fields: Instagram URL, portfolio URL, bio, talents, measurements if appropriate for the contest, availability, consent checkboxes.
+   * Upload placeholder or storage handoff for profile photos.
+5. Add server action/API route for draft submission.
+6. Use Firecrawl/OpenClaw only for public URL extraction through an allowlisted, rate-limited server-side path.
+7. Write `contestant_profile_extractions` rows with source URL, extracted JSON, confidence, and review status.
+8. Add Patricia admin review table under `/admin/contests/[id]/contestants`.
+
+## 5\. User Journeys
+
+* Contestant opens the public contest page, taps Apply, pastes an Instagram or portfolio URL, answers guided questions, and submits a draft application.
+* Patricia reviews extracted fields, edits the bio/photo choices, asks for missing information, and approves the contestant profile.
+* A failed extraction still lets the contestant complete the form manually.
+
+## 6\. Agents
+
+* `contestantOnboardingAgent` asks missing-profile questions and explains next steps.
+* URL extraction is tool-backed and draft-only.
+* No agent may approve a contestant, publish a profile, scrape private content, or contact a lead.
+
+## 7\. Integrations
+
+* Supabase tables from CTEST-001: `contestants`, `contestant_assets`, `contestant_social_links`, `contest_audit_events`.
+* New draft table: `contestant_profile_extractions`.
+* Firecrawl/OpenClaw for public URL extraction, bounded by allowlists and source logging.
+* shadcn React Hook Form for accessible validation.
+* Required shadcn components: `Field`, `FieldGroup`, `FieldLabel`, `FieldError`, `Input`, `InputGroup`, `InputGroupTextarea`, `Textarea`, `Select`, `Checkbox`, `Button`, `Card`, `Sheet`, `Alert`, `Spinner`, `Sonner`.
+
+## 8\. Summary
+
+This task fills the biggest missing contestant journey gap: signup and URL-assisted profile creation. It keeps extraction as an assistant, not a source of truth.
+
+## 9\. Definition Of Done
+
+- [ ] `/contests/[slug]/signup` renders on desktop and mobile.
+- [ ] Form uses React Hook Form + Zod + shadcn Field components.
+- [ ] shadcn CLI dry run completed for missing signup components before installation.
+- [ ] Invalid fields show accessible errors.
+- [ ] URL extraction stores source-attributed draft JSON.
+- [ ] Private/login-gated URLs fail closed with manual-entry fallback.
+- [ ] Admin can approve/edit/reject extracted suggestions.
+- [ ] Audit rows are written for submit, extraction, review, and approval.
+
+## 10\. Tests
+
+- [ ] Unit test Zod schema for required fields and URL validation.
+- [ ] Component test form error states.
+- [ ] Component test proves `Field data-invalid` and controls with `aria-invalid` render on validation errors.
+- [ ] API test: manual signup succeeds without URL.
+- [ ] API test: unsupported/private URL is rejected or skipped without blocking manual signup.
+- [ ] SQL proof: draft row, extraction row, audit row.
+- [ ] Playwright: mobile 375/414 and desktop 1440 signup flow.
+- [ ] Responsive proof: no horizontal overflow; touch targets at least 44px.
+- [ ] Rollback: disable URL extraction feature flag and keep manual signup working.
+
+## Production Standard Addendum
+
+This task must satisfy `../docs/05-production-task-standard.md`: create tasks, tech stack, feature, problem solving, agents/workflows/automations, user journey, Mermaid diagrams, skills to run, MCP/official docs, verification steps, real-world examples, data, frontend/backend wiring, success criteria, production-ready checklist, and testing.
+
+## 11\. Mermaid diagrams
+
+### Signup + URL extraction (draft only)
+
+```mermaid
+flowchart TD
+  C[Contestant] --> F[""/contests/slug/signup form""]
+  F --> U[Optional public URL]
+  U --> FC[Firecrawl scrape]
+  FC --> E[contestant_profile_extractions draft]
+  E --> R[Patricia review]
+  R -->|approved| P[contestants published fields]
+  R -->|rejected| F
+```","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, scr, track:contest, track:events",,,,,"2026-06-03T03:39:08.166Z","2026-06-04T04:18:30.249Z",,,,,,"2026-06-10T03:39:09.782Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","9229ee8e-7ac7-4b71-b1d2-de69f2a79e70",6490,"","SAN-533, SAN-538",
+"SAN-539","Sanjiovani","CTEST-007 — Contest Playwright proof gates","# CTEST-007 — Contest Playwright proof gates
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-007` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest testing |
+| **Effort** | 1-2d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-002, CTEST-003, CTEST-006 |
+| **Linear** | SAN-539 |
+| **Evidence** | `tasks/contest/notes/CTEST-007-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-007-playwright-proof-gates.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-007-playwright-proof-gates.md>) |
+
+### Skills
+
+* `testing`
+* `playwright-cli`
+* `task-verifier`
+
+### Docs
+
+* `../../../../docs/plan/contests/docs/12-task-proof-gates.md`
+* `../docs/05-production-task-standard.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/testing/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/playwright-cli/SKILL.md`
+* [https://playwright.dev/docs/locators](<https://playwright.dev/docs/locators>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Define and maintain the contest E2E suite that blocks fake Done — SQL/RPC proof first, then Playwright on real routes.
+
+## 2\. Goals
+
+* `mdeapp/e2e/contest/*.spec.ts` covers MVP-A flows + negatives.
+* Done bundle runs with `npm run floor` and contest shard.
+* Fixtures: no live Stripe, WhatsApp, OpenClaw, or Postiz.
+
+## 3\. Features
+
+| Spec | Flow | Depends |
+| -- | -- | -- |
+| `host-contest-new.spec.ts` | Roberto draft + approval card | CTEST-004 |
+| `public-contest.spec.ts` | Fan hub + profile | CTEST-006/010 |
+| `contestant-signup.spec.ts` | Signup + URL intake | CTEST-008 |
+| `contestant-profile-editor.spec.ts` | Profile edit + review | CTEST-009 |
+| `contestant-photos.spec.ts` | Upload states | CTEST-009 |
+| `contestant-coach.spec.ts` | Coach without auto-publish | CTEST-009 |
+| `vote-free.spec.ts` | Valid vote + receipt | CTEST-002 |
+| `vote-negative.spec.ts` | Duplicate/closed/invalid | CTEST-002 |
+| `profile-share.spec.ts` | Share + UTM | CTEST-010 |
+| `stripe-paid-vote.spec.ts` | Webhook credit | CTEST-003 (MVP-B) |
+| `ticket-qr-checkin.spec.ts` | QR scan rules | CTEST-003 (MVP-B) |
+| `judge-scoring.spec.ts` | Score lock | CTEST-002 |
+| `sponsor-proposal.spec.ts` | HITL before send | CTEST-005 (MVP-B) |
+| `discovery-sandbox.spec.ts` | No send path | CTEST-011 (MVP-B) |
+| `responsive.spec.ts` | 375/414/768/1024/1440 | CTEST-006 |
+
+## 4\. Workflows
+
+1. Add test data factory (one contest, three contestants, judge, fixtures).
+2. Create specs as upstream routes land — **do not** mark CTEST-007 Done until MVP-A specs green.
+3. Run bundle:
+
+   ```bash
+   cd mdeapp
+   npm run test && npm run lint && npm run typecheck && npm run build
+   npm run verify:console && npm run floor
+   npx playwright test e2e/contest --project=chromium
+   ```
+4. Save traces/screenshots on failure; record in `tasks/contest/notes/CTEST-007-evidence.md`.
+
+## 5\. User Journeys
+
+* End-to-end proof for Roberto setup, contestant onboarding, fan vote, Patricia audit — per `12-task-proof-gates.md`.
+
+## 6\. Agents
+
+* E2E asserts coach/host cards do not auto-commit publish/vote without HITL.
+
+## 7\. Integrations
+
+* Playwright + existing mdeapp `PW_SKIP_WEBSERVER=1` patterns.
+* Cross-ref: `tasks/testing/evidence/` for ship evidence format.
+
+## 8\. Summary
+
+Anti-fake-done test gate for the contest vertical.
+
+## 9\. Definition Of Done
+
+- [ ] MVP-A specs exist and pass locally.
+- [ ] Test factory documented.
+- [ ] Negative vote/payment/approval tests included.
+- [ ] Responsive spec passes five widths.
+- [ ] Evidence lists all commands with exit codes.
+
+## 10\. Tests
+
+| Gate | Command | Expected |
+| -- | -- | -- |
+| Unit | `npm run test` | exit 0 |
+| Lint | `npm run lint` | exit 0 |
+| Build | `npm run build` | exit 0 |
+| Floor | `npm run floor` | exit 0 |
+| Contest E2E | `npx playwright test e2e/contest --project=chromium` | all MVP-A green |
+
+**Do not:** mark Done on docs-only if `mdeapp/src` changed without green E2E; hit production Stripe/WhatsApp.
+
+## 11\. Mermaid diagrams
+
+### Proof gate order (no fake Done)
+
+```mermaid
+flowchart TD
+  SQL[SQL or RPC proof] --> VIT[Vitest helpers]
+  VIT --> PW[Playwright e2e/contest]
+  PW --> EV[tasks/contest/notes evidence]
+  EV --> DONE[Task Done]
+  PW -.blocked if CTEST-002 not Done.-> VoteRoute[""/contests/*/vote""]
+```
+
+**Production standard:** `../docs/05-production-task-standard.md` + `../../../../docs/plan/contests/docs/12-task-proof-gates.md`.","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:contest, track:events, type:test",,,,,"2026-06-03T03:39:06.125Z","2026-06-04T04:18:36.389Z",,,,,,"2026-06-10T03:39:06.681Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","8cc5816c-fede-46e2-915e-904adbbf9503",6489,"","SAN-538, SAN-535, SAN-534",
+"SAN-538","Sanjiovani","CTEST-006 — Contest screens, routes, and wireframes","# CTEST-006 — Contest screens, routes, and wireframes
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-006` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest UI |
+| **Effort** | 2-4d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-001, CTEST-002, CTEST-004 |
+| **Linear** | SAN-538 |
+| **Evidence** | `tasks/contest/notes/CTEST-006-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-006-screens-wireframes.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-006-screens-wireframes.md>) |
+
+### Skills
+
+* `mde-wireframe`
+* `copilotkit`
+* `shadcn`
+* `responsive-design`
+* `tailwind-responsive-ui`
+
+### Docs
+
+* `../docs/03-screens-wireframes.md`
+* `../docs/wireframes/README.md`
+* `../docs/05-production-task-standard.md`
+* `../docs/06-shadcn-component-audit.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/mde-wireframe/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/shadcn/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/responsive-design/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/responsive-design/SKILL.md`
+* [https://ui.shadcn.com/docs/forms/react-hook-form](<https://ui.shadcn.com/docs/forms/react-hook-form>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Route-by-route screen plan and wireframe handoffs before production UI. **Vote routes require CTEST-002 Done** before implementation (not just wireframes).
+
+## 2\. Goals
+
+* Every MVP-A route has wireframe + handoff under `docs/wireframes/`.
+* Responsive matrix: 375, 414, 768, 1024, 1440 — no horizontal overflow; 44px touch targets.
+* shadcn component list per screen; install gaps via CLI before build.
+
+## 3\. Features
+
+| Path | Persona | MVP track |
+| -- | -- | -- |
+| `/host/contests/new` | Roberto | A |
+| `/host/contests` | Roberto | A |
+| `/contests` | Fan | A |
+| `/contests/[slug]` | Fan | A |
+| `/contests/[slug]/signup` | Contestant | A (CTEST-008 implements) |
+| `/contests/[slug]/contestants/[id]` | Fan | A (CTEST-010) |
+| `/contests/[slug]/vote` | Fan | A — **blocked on CTEST-002** |
+| `/me/contestant-profile/*` | Contestant | A (CTEST-009) |
+| `/me/tickets` | Andrés | B (CTEST-003) |
+| `/admin/contests/*` | Patricia | A/B |
+| `/sponsors/*` | Patricia | B |
+| `/admin/discovery/contestants` | Patricia | B (CTEST-011) |
+| `/live/contests/[id]` | Producer | Post-MVP |
+
+Components: ContestWizard, ContestDraftCard, ContestSignupForm, VoteReceiptPanel, AdminContestTable, JudgeScoreGrid, DiscoverySandbox, etc. (see `03-screens-wireframes.md`).
+
+## 4\. Workflows
+
+1. Complete/patch `03-screens-wireframes.md` and each `docs/wireframes/*.md` with `repo_refs`, `code_refs`, shadcn list, states (loading/empty/error/success).
+2. shadcn audit:
+
+   ```bash
+   cd mdeapp
+   npx shadcn@latest info --json
+   npx shadcn@latest docs field table tabs select textarea --json
+   npx shadcn@latest add field table tabs select textarea --dry-run
+   ```
+3. Document mobile-first layouts; English only (Phase 1 language rule).
+4. Route smoke plan — implementation in CTEST-004/008/009/010, not required in this docs task unless promoted.
+
+## 5\. User Journeys
+
+* Roberto, contestant, fan, judge, Patricia, sponsor flows each mapped to routes and wireframes.
+
+## 6\. Agents
+
+* Document CopilotKit panel placement per screen; runtime wiring in CTEST-004/005/009.
+
+## 7\. Integrations
+
+* DESIGN.MD tokens; TanStack Table for admin; React Hook Form + Zod + shadcn Field for forms.
+
+## 8\. Summary
+
+Implementation handoff pack — prevents missing routes and responsive gaps.
+
+## 9\. Definition Of Done
+
+- [ ] Every MVP-A route has wireframe + handoff file.
+- [ ] Vote route handoff notes dependency on CTEST-002 RPCs.
+- [ ] Responsive widths documented per primary screen.
+- [ ] `06-shadcn-component-audit.md` lists install gaps.
+- [ ] Link check passes for `03-screens-wireframes.md` and `docs/wireframes/*.md`.
+
+## 10\. Tests
+
+| Check | Command | Expected |
+| -- | -- | -- |
+| Handoff files | `ls tasks/contest/docs/wireframes/*.md` | ≥ 18 files |
+| shadcn info | `npx shadcn@latest info --json` | exit 0 |
+| Section template | this file has §1–10 | pass |
+| Route impl (later) | `find mdeapp/src/app -path '*contest*'` | after CTEST-004+ |
+
+**Do not:** Spanish UI; live overlay MVP routes; implement vote UI before CTEST-002.
+
+## 11\. Mermaid diagrams
+
+### Contest screen map (MVP-A)
+
+```mermaid
+flowchart LR
+  Home[""/""] --> HostNew[""/host/contests/new""]
+  HostNew --> HostList[""/host/contests""]
+  HostList --> Public[""/contests/slug""]
+  Public --> Vote[""/contests/slug/vote""]
+  Public --> Signup[""/contests/slug/signup""]
+  Public --> Profile[""/contests/slug/contestants/id""]
+  Admin[""/admin/contests""] --> Fraud[""/admin/contests/id/votes""]
+```
+
+**Production standard:** `../docs/05-production-task-standard.md` + `../docs/06-shadcn-component-audit.md`.","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, scr, track:contest, track:events",,,,,"2026-06-03T03:38:40.829Z","2026-06-04T04:18:44.011Z",,,,,,"2026-06-10T03:38:41.322Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","7d3be8ae-a32c-42d5-a006-d2ef0b077443",6490,"","SAN-533, SAN-534, SAN-536",
+"SAN-537","Sanjiovani","CTEST-005 — Mastra and Gemini contest workflows","# CTEST-005 — Mastra and Gemini contest workflows
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-005` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest AI workflows |
+| **Effort** | 2-3d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-002, CTEST-004 |
+| **Linear** | SAN-537 |
+| **Evidence** | `tasks/contest/notes/CTEST-005-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-005-mastra-gemini-workflows.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-005-mastra-gemini-workflows.md>) |
+
+### Skills
+
+* `mastra`
+* `gemini`
+* `copilotkit-integrations`
+
+### Docs
+
+* `../docs/01-mermaid-diagrams.md`
+* `../docs/05-production-task-standard.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/mastra/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/gemini/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/gemini/references/model-registry.md`
+* [https://mastra.ai/workflows](<https://mastra.ai/workflows>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Register contest Mastra agents and Gemini structured-output tools that draft or read safely — never write vote/payment/winner truth. Every turn logs to `public.ai_runs`.
+
+## 2\. Goals
+
+* Production model: `gemini-3.5-flash` (re-verify via `gemini-api-docs-mcp` before coding).
+* Tool ids match CopilotKit action names (CTEST-004).
+* Extend `AGENT_MAP_KEY_TO_LOGGING` in `mdeapp/src/mastra/lib/log-agent-run.ts` with enum-safe `agent_type` values.
+
+## 3\. Features
+
+| Agent (map key) | Allowed | Forbidden |
+| -- | -- | -- |
+| `contestHostAgent` | Draft setup, approval queue | Publish without HITL |
+| `votingIntegrityAgent` | Read anomaly views | Mutate votes/winners |
+| `sponsorAgent` | Draft proposals | Send outreach / contracts |
+| `contestantCoachAgent` | Profile/prep/share copy drafts | Approve profile, vote, message leads |
+
+| Tool id | Boundary |
+| -- | -- |
+| `draft_contest_setup` | Draft only |
+| `queue_contest_publish_approval` | Approval row |
+| `summarize_vote_integrity` | Read-only |
+| `draft_sponsor_proposal` | Draft only |
+| `queue_sponsor_proposal_approval` | Approval row |
+| `draft_contestant_profile_questions` | Draft only |
+| `draft_contestant_prep_plan` | Draft only |
+| `draft_contestant_share_copy` | Draft only |
+
+## 4\. Workflows
+
+1. Probe installed Mastra beta APIs in `node_modules/@mastra/core` before copying patterns.
+2. Add agents in `src/mastra/agents/` + register in `src/mastra/index.ts`.
+3. Zod schemas + working memory aligned with `src/lib/types.ts` (three-place rule if stateful).
+4. Wire `logAgentRunForTurn` on CopilotKit runtime path (not Mastra dev `/chat` alone).
+5. Replay + refusal evals → evidence.
+
+### Integration surface (required)
+
+| Surface | Probe | Phase 2 default |
+| -- | -- | -- |
+| CopilotKit in-process | `grep getLocalAgents mdeapp/src/app/api/copilotkit/route.ts` | **Yes** — product path |
+| Mastra HTTP `/chat` | Mastra dev Studio | Dev/debug only |
+| Agent map key | `useCoAgent({ name: ""contestHostAgent"" })` = `Mastra({ agents: { contestHostAgent } })` | Must match |
+
+### `ai_runs` vs `mastra_ai_spans`
+
+| Table | DoD for this task |
+| -- | -- |
+| `public.ai_runs` | **Required** — one row per contest agent turn via `logAgentRunForTurn` |
+| `public.mastra_ai_spans` | Optional dev telemetry; not contest DoD |
+
+### `agent_type` enum mapping (extend `log-agent-run.ts`)
+
+| Map key | `agent_type` (existing enum) |
+| -- | -- |
+| `contestHostAgent` | `event_curator` |
+| `votingIntegrityAgent` | `general_concierge` |
+| `sponsorAgent` | `event_curator` |
+| `contestantCoachAgent` | `general_concierge` |
+
+Do not invent new enum labels without migration.
+
+## 5\. User Journeys
+
+* Roberto asks for contest draft → approval queue; Patricia gets integrity summary; contestant gets coach copy — all commit via UI/RPC after HITL.
+
+## 6\. Agents
+
+See §3. Max four agents; no swarm.
+
+## 7\. Integrations
+
+* Gemini via `google(""gemini-3.5-flash"")` + `@ai-sdk/google`.
+* CopilotKit Pattern 1; Supabase approval rows + safe views.
+* MCP: `mcp__mastra__searchMastraDocs` for workflow shape; `gemini-api-docs-mcp` for model id.
+
+## 8\. Summary
+
+Draft/read-only AI layer with hard refusal boundaries and `ai_runs` audit trail.
+
+## 9\. Definition Of Done
+
+- [ ] Agents registered with stable map keys.
+- [ ] Tool ids match CTEST-004 card/action names.
+- [ ] `logAgentRunForTurn` fires on contest agent turns.
+- [ ] Zod-valid structured outputs.
+- [ ] Refusal evals pass (winner, DM, private scrape, mass message).
+- [ ] `npm test`, `npm run build` green.
+
+## 10\. Tests
+
+| Test | Expected |
+| -- | -- |
+| Workflow replay | `draft_contest_setup` returns valid Zod object |
+| Refusal: ""make X winner"" | no ledger write tool call |
+| Refusal: ""send sponsor DM"" | queued or blocked |
+| Refusal: private IG scrape | blocked |
+| SQL | `SELECT COUNT(*) FROM ai_runs WHERE agent_name LIKE 'contest%'` ≥ 1 per path |
+| Vitest | agent tool list + instruction boundaries |
+
+**Do not:** swarm agents; write ledgers from tools; use non-Gemini production models; add `onFinish` on Agent constructor (use stream/runtime logging).
+
+## 11\. Mermaid diagrams
+
+### Agent boundaries (draft vs forbidden writes)
+
+```mermaid
+flowchart LR
+  subgraph Allowed
+    D[draft_contest_setup]
+    S[summarize_vote_integrity read-only]
+    P[draft_sponsor_proposal]
+  end
+  subgraph Forbidden
+    W[write vote_ledger]
+    X[publish without HITL]
+    Y[send outreach]
+  end
+  D --> AR[ai_runs log]
+  S --> AR
+  W -.blocked.-> AR
+```
+
+**Production standard:** `../docs/05-production-task-standard.md`.","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:ai, track:contest, track:events",,,,,"2026-06-03T03:38:38.476Z","2026-06-04T04:18:52.441Z",,,,,,"2026-06-10T03:38:38.980Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","dab3c278-daed-459b-bfc8-0ba1830301d3",6490,"","SAN-534, SAN-536",
+"SAN-536","Sanjiovani","CTEST-004 — CopilotKit contest workspace and approval cards","# CTEST-004 — CopilotKit contest workspace and approval cards
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-004` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest AI UI |
+| **Effort** | 1-2d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-001 |
+| **Linear** | SAN-536 |
+| **Evidence** | `tasks/contest/notes/CTEST-004-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-004-copilotkit-contest-workspace.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-004-copilotkit-contest-workspace.md>) |
+
+### Skills
+
+* `copilotkit`
+* `copilotkit-agui`
+* `copilotkit-develop`
+* `copilotkit-integrations`
+
+### Docs
+
+* `../docs/01-mermaid-diagrams.md`
+* `../docs/03-screens-wireframes.md`
+* `../docs/05-production-task-standard.md`
+* `../docs/06-shadcn-component-audit.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/copilotkit/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/copilotkit-agui/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/copilotkit-integrations/SKILL.md`
+* [https://docs.copilotkit.ai/mastra/](<https://docs.copilotkit.ai/mastra/>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Contest AI workspace on mdeapp **CopilotKit 1.55.2 Pattern 1** (in-process Mastra via `/api/copilotkit`) with HITL approval cards — no direct writes to votes, payments, or winners.
+
+## 2\. Goals
+
+* Routes: `/host/contests/new`, `/host/contests`, `/admin/contests`, `/sponsors` (shell + provider).
+* Card/action names **identical** to Mastra tool ids (CTEST-005).
+* `useCoAgent({ name })` keys match `Mastra({ agents: { … } })` map keys exactly.
+
+## 3\. Features
+
+| Card | Purpose |
+| -- | -- |
+| ContestDraftCard | Basics, rounds, venue, voting windows |
+| ContestantReadinessCard | Missing profile/media fields |
+| VotingIntegrityCard | Read-only anomaly summary |
+| SponsorProposalCard | Draft package copy |
+| PublishApprovalCard | HITL publish — `renderAndWaitForResponse` |
+| WinnerSnapshotCard | Locked SQL snapshot display only |
+
+**CopilotKit Phase 1 APIs only:**
+
+| Need | API |
+| -- | -- |
+| Shared state | `useCoAgent` |
+| Tool render | `useCopilotAction({ available: ""disabled"", render })` |
+| HITL | `renderAndWaitForResponse` |
+| Runtime | `/api/copilotkit` + `getLocalAgents({ mastra })` |
+
+## 4\. Workflows
+
+1. Add App Router pages + `CopilotKit` provider (relative `runtimeUrl=""/api/copilotkit""`).
+2. Register `useCopilotAction` mirrors for each contest tool id.
+3. shadcn: `Card`, `Button`, `Badge`, `Dialog`/`Sheet`, `Skeleton`, `Tooltip` per `../docs/06-shadcn-component-audit.md`.
+4. Probe runtime:
+
+   ```bash
+   curl -s -o /dev/null -w ""%{http_code}\n"" -X POST http://localhost:3001/api/copilotkit
+   ```
+
+## 5\. User Journeys
+
+* Roberto drafts contest on `/host/contests/new`; Patricia approves publish card; integrity/winner cards show deterministic data only.
+
+## 6\. Agents
+
+* UI binds to `contestHostAgent`, `votingIntegrityAgent`, `sponsorAgent` (CTEST-005) — names must match agent map keys.
+
+## 7\. Integrations
+
+| Surface | mdeapp pattern | Do not use |
+| -- | -- | -- |
+| Runtime | Pattern 1 `getLocalAgents` | Mastra separate-server `:4111/chat` only |
+| Version | CopilotKit `1.55.2` v1 hooks | v2 imports on same surface |
+| Logging | `logAgentRunForTurn` via runtime (F13) | Mastra HTTP `/chat` alone for DoD |
+
+## 8\. Summary
+
+Generative UI + HITL for contest setup; commits go through approval APIs/RPCs, not cards.
+
+## 9\. Definition Of Done
+
+- [ ] `/host/contests/new` returns 200 (auth as host).
+- [ ] `POST /api/copilotkit` returns 200 with contest agent connected.
+- [ ] Publish card requires explicit `respond()` approval.
+- [ ] No card writes vote/payment/winner/profile truth.
+- [ ] shadcn CLI proof recorded in evidence.
+
+## 10\. Tests
+
+| Test | Expected |
+| -- | -- |
+| Route smoke | GET `/host/contests/new` → 200 |
+| Runtime | POST `/api/copilotkit` → 200 |
+| Component | PublishApprovalCard blocks without `respond` |
+| Negative | Card action cannot call ledger insert RPC |
+| Browser | approval card visible in Playwright (CTEST-007) |
+
+**Do not:** self-host CopilotKit; mix v2 hooks; custom AG-UI backend unless Pattern 1 blocked.
+
+## 11\. Mermaid diagrams
+
+### CopilotKit + Mastra HITL (Pattern 1)
+
+```mermaid
+sequenceDiagram
+  participant Host as Roberto
+  participant CK as CopilotKit UI
+  participant API as /api/copilotkit
+  participant M as contestHostAgent
+  participant DB as approvals
+  Host->>CK: draft contest
+  CK->>API: AG-UI run
+  API->>M: tools draft only
+  M-->>CK: PublishApprovalCard
+  CK->>DB: commit after respond()
+```
+
+**Production standard:** `../docs/05-production-task-standard.md` + `../docs/06-shadcn-component-audit.md`.","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:ai, track:contest, track:events",,,,,"2026-06-03T03:38:36.432Z","2026-06-04T04:19:00.624Z",,,,,,"2026-06-10T03:38:36.899Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","5012c015-4b25-4685-8ecd-9a124013da00",6489,"","SAN-533",
+"SAN-535","Sanjiovani","CTEST-003 — Tickets and paid-vote payment-derived schema","# CTEST-003 — Tickets and paid-vote payment-derived schema
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-003` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest payments foundation |
+| **Effort** | 2-3d |
+| **Owner** | codex |
+| **MVP track** | MVP-B |
+| **Depends on** | CTEST-001, CTEST-002 |
+| **Linear** | SAN-535 |
+| **Evidence** | `tasks/contest/notes/CTEST-003-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-003-ticket-paid-vote-schema.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-003-ticket-paid-vote-schema.md>) |
+
+### Skills
+
+* `mde-supabase`
+* `mde-stripe`
+* `testing`
+
+### Docs
+
+* `../docs/01-mermaid-diagrams.md`
+* `../docs/05-production-task-standard.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/mde-supabase/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/mde-stripe/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/testing/SKILL.md`
+* [https://docs.stripe.com/webhooks](<https://docs.stripe.com/webhooks>)
+
+### Repo refs
+
+* `/home/sk/mdeai/github/events/Hi.Events`
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Add contest tickets, QR check-in, and paid vote credits where **Stripe owns money** and **Supabase stores webhook-derived truth only**.
+
+## 2\. Goals
+
+* No fulfillment from success URL or client-side “paid” flags.
+* Idempotent `stripe_webhook_events`; signature verification required.
+* `consume_paid_vote_credit()` feeds CTEST-002 vote RPC safely.
+
+## 3\. Features
+
+| Object | Purpose |
+| -- | -- |
+| `contest_ticket_tiers` | Tier capacity/pricing |
+| `contest_ticket_orders` | pending/paid/refunded/cancelled |
+| `contest_tickets` | QR-bearing tickets |
+| `contest_check_ins` | Append-only scans |
+| `paid_vote_products` | Vote bundles |
+| `paid_vote_orders` | Checkout session mapping |
+| `paid_vote_credits` | Webhook-issued credits |
+| `stripe_webhook_events` | Idempotency log |
+| `issue_ticket_from_paid_order()` | Post-webhook ticket issue |
+| `consume_paid_vote_credit()` | Single-use credit → vote flow |
+| `check_in_ticket()` | QR validate + log |
+
+Refs: Hi.Events patterns only (AGPL — no copy); reuse mdeapp EVP ticket checkout patterns where compatible.
+
+## 4\. Workflows
+
+1. Migration + RLS (orders/credits server-write heavy).
+2. Webhook route: verify signature → idempotent upsert → issue ticket/credit.
+3. Port patterns from existing event ticket flow in `mdeapp`.
+4. Stripe test fixtures → evidence.
+
+## 5\. User Journeys
+
+* Andrés buys VIP ticket or vote pack → webhook issues QR/credits → `/me/tickets` shows wallet → staff scans once at door.
+
+## 6\. Agents
+
+* No agent handles payments, credits, or check-in truth.
+
+## 7\. Integrations
+
+* Stripe Checkout + webhooks; Next.js `src/app/api/**` server-only secrets.
+* Depends on CTEST-002 for credit consumption into vote ledger.
+
+## 8\. Summary
+
+Payment-derived state for tickets and paid votes — MVP-B after free-vote ledger (MVP-A).
+
+## 9\. Definition Of Done
+
+- [ ] Checkout creates pending order only.
+- [ ] Verified webhook marks paid and issues exactly one ticket/credit per event.
+- [ ] Duplicate webhook harmless.
+- [ ] Invalid signature rejected.
+- [ ] QR check-in: valid once; duplicate logged/rejected.
+- [ ] Credit consumed once through RPC.
+
+## 10\. Tests
+
+| Test | Expected |
+| -- | -- |
+| Stripe fixture paid | one ticket + audit row |
+| Duplicate event | no double issue |
+| Bad signature | 400/401 |
+| Success URL alone | no fulfillment |
+| Credit consume twice | second fails |
+| Playwright (later) | `e2e/contest/stripe-paid-vote.spec.ts` |
+
+**Do not:** fulfill from success URL; put Stripe secrets in client; Stripe Connect until sponsor payouts need it.
+
+## 11\. Mermaid diagrams
+
+### Stripe webhook fulfillment (no client truth)
+
+```mermaid
+sequenceDiagram
+  participant Fan
+  participant API as Checkout API
+  participant Stripe
+  participant WH as Webhook
+  participant DB as Supabase
+  Fan->>API: create session
+  API->>DB: pending order
+  Stripe->>WH: checkout.session.completed
+  WH->>WH: verify signature + idempotency
+  WH->>DB: paid + ticket or vote credit
+  Note over Fan,DB: Success URL alone never fulfills
+```
+
+**Production standard:** `../docs/05-production-task-standard.md`.","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:commerce, track:contest, track:events, type:data",,,,,"2026-06-03T03:38:34.267Z","2026-06-04T04:19:11.887Z",,,,,,"2026-06-10T03:38:34.847Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","a053a892-3c7d-43c5-8b7e-1a3a4c230659",6489,"","SAN-533, SAN-534",
+"SAN-534","Sanjiovani","CTEST-002 — Voting and judge scoring ledgers","# CTEST-002 — Voting and judge scoring ledgers
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-002` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest trust foundation |
+| **Effort** | 2-3d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-001 |
+| **Linear** | SAN-534 |
+| **Evidence** | `tasks/contest/notes/CTEST-002-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-002-voting-scoring-ledgers.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-002-voting-scoring-ledgers.md>) |
+
+### Skills
+
+* `mde-supabase`
+* `testing`
+
+### Docs
+
+* `../docs/01-mermaid-diagrams.md`
+* `../docs/05-production-task-standard.md`
+* `../../../../docs/plan/contests/docs/13-security-checklist.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/mde-supabase/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/testing/SKILL.md`
+* [https://supabase.com/docs/guides/database/postgres/row-level-security](<https://supabase.com/docs/guides/database/postgres/row-level-security>)
+
+### Repo refs
+
+* `/home/sk/mdeai/github/contest/helios-server`
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Create append-only vote and judge-score truth in Postgres. AI may summarize anomalies; it never mutates ledgers or winners.
+
+## 2\. Goals
+
+* RPC-only writes: `submit_contest_vote()`, `submit_judge_score()`, `lock_score_snapshot()`.
+* Block direct client inserts; paid credits consumed only via CTEST-003 path.
+* Vitest/SQL tests before any public vote UI (CTEST-010).
+
+## 3\. Features
+
+| Object | Purpose |
+| -- | -- |
+| `voting_windows` | Type, start/end, round, weight, limits |
+| `vote_tokens` | Signed/hashed eligibility |
+| `vote_ledger` | Append-only canonical votes |
+| `vote_receipts` | Public-safe receipt id/hash |
+| `vote_fraud_signals` | Deterministic anomalies |
+| `vote_reviews` | Human review decisions |
+| `judge_panels` | Judge assignments |
+| `judge_scores` | Append-only scores |
+| `score_formulas` | Versioned weights |
+| `score_snapshots` | Locked results |
+
+Pattern refs: Helios (hash/freeze/tally concepts only); OpenStreamPoll post-MVP for live QR UX only.
+
+## 4\. Workflows
+
+1. Migration for tables + triggers/constraints enforcing append-only.
+2. Security-definer RPCs with validation (window open, token, duplicate rules).
+3. Safe views for public/admin read; `votingIntegrityAgent` read-only later.
+4. Evidence + `mdeapp/src/lib/contest/__tests__/vote-rpc.test.ts` (or SQL harness).
+
+## 5\. User Journeys
+
+* Fan votes → receipt; Patricia audits fraud signals; judge submits scores; Patricia locks snapshot; public UI shows locked SQL results only.
+
+## 6\. Agents
+
+* `votingIntegrityAgent`: read safe views, explain state — **no** insert/update/delete on votes/scores/snapshots.
+
+## 7\. Integrations
+
+* Supabase RPCs; blocks CTEST-010 `/contests/*/vote` until this task is Done.
+* Realtime tally broadcast may use `vote:tally:{contest_id}` when schema exists (`20260505000200_realtime_broadcast_migration.sql`).
+
+## 8\. Summary
+
+Trust layer for beauty-contest voting — must ship before vote routes or AI winner displays.
+
+## 9\. Definition Of Done
+
+- [ ] Append-only vote ledger; closed window rejects votes.
+- [ ] Duplicate token/session/user rejected.
+- [ ] Paid credits not minted here (CTEST-003 only).
+- [ ] Judge scores immutable after lock; snapshot deterministic.
+- [ ] Direct insert denied for non-service roles.
+- [ ] Audit rows on vote/score events.
+
+## 10\. Tests
+
+| Test | Expected |
+| -- | -- |
+| RPC valid free vote | one ledger row + receipt |
+| Duplicate vote | rejected |
+| Late vote | rejected |
+| Direct insert | denied |
+| Snapshot formula | matches fixture |
+| Vitest | `npm test -- vote-rpc` exit 0 |
+
+**Do not:** build public vote UI here; implement Helios crypto in MVP; let AI pick winners.
+
+## 11\. Mermaid diagrams
+
+### Vote truth flow (RPC-only writes)
+
+```mermaid
+sequenceDiagram
+  participant Fan
+  participant UI as Vote UI
+  participant RPC as submit_contest_vote
+  participant DB as vote_ledger
+  Fan->>UI: submit vote
+  UI->>RPC: token + contestant_id
+  RPC->>DB: append row if window open
+  alt duplicate
+    RPC-->>UI: rejected
+  else ok
+    RPC-->>UI: receipt hash
+  end
+```
+
+### Voting architecture (CTEST-002 scope)
+
+```mermaid
+flowchart TB
+  subgraph Ledgers
+    VW[voting_windows]
+    VT[vote_tokens]
+    VL[vote_ledger]
+    JS[judge_scores]
+    SS[score_snapshots]
+  end
+  RPC[Security definer RPCs] --> VL
+  RPC --> JS
+  VL --> SS
+  JS --> SS
+```
+
+**Production standard:** `../docs/05-production-task-standard.md`.","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:contest, track:events, type:data",,,,,"2026-06-03T03:38:31.960Z","2026-06-04T04:19:18.278Z",,,,,,"2026-06-10T03:38:32.588Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","2408bcae-90bc-4772-9220-8384616d02e8",6489,"","SAN-533",
+"SAN-533","Sanjiovani","CTEST-001 — Supabase contest core schema and RLS","# CTEST-001 — Supabase contest core schema and RLS
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-001` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest data foundation |
+| **Effort** | 1-2d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-000 |
+| **Linear** | SAN-533 |
+| **Evidence** | `tasks/contest/notes/CTEST-001-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-001-supabase-contest-core-schema.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-001-supabase-contest-core-schema.md>) |
+
+### Skills
+
+* `mde-supabase`
+* `task-verifier`
+
+### Docs
+
+* `../docs/MVP-SCOPE.md`
+* `../docs/01-mermaid-diagrams.md`
+* `../docs/02-contest-core-schema-erd.md`
+* `../docs/05-production-task-standard.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/mde-supabase/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/task-verifier/SKILL.md`
+* [https://supabase.com/docs/guides/database/postgres/row-level-security](<https://supabase.com/docs/guides/database/postgres/row-level-security>)
+* [https://supabase.com/docs/guides/storage/security/access-control](<https://supabase.com/docs/guides/storage/security/access-control>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Add the deterministic contest/contestant data model and RLS before UI, voting ledgers, or AI workflows.
+
+## 2\. Goals
+
+* Ship migration `mdeapp/supabase/migrations/<timestamp>_contest_core.sql`.
+* Enable RLS + ≥1 policy per table; public reads only for published/approved rows.
+* Prove schema locally and on remote catalog (Supabase MCP or SQL file).
+
+## 3\. Features
+
+| Table | Purpose | RLS |
+| -- | -- | -- |
+| `contest_orgs` | Organizer tenant | Org members/admins |
+| `contest_memberships` | Staff roles | Own read; admin manage |
+| `contests` | Contest shell, status | Public when published |
+| `contest_rounds` | Rounds, scoring windows | Public when published |
+| `contestants` | Profile, division | Public when approved |
+| `contestant_assets` | Media metadata | Approved public; docs private |
+| `contestant_social_links` | Share handles / UTM | Public subset |
+| `contestant_profile_extractions` | URL extraction drafts | Never public |
+| `contestant_profile_reviews` | Human review decisions | Org/admin/staff |
+| `contest_events` | Finals/rehearsal events | Public when published |
+| `contestant_discovery_runs` | Discovery job logs | Admin/org only |
+| `contestant_discovery_leads` | Invite lead drafts | Admin/org only |
+| `contestant_invite_drafts` | Approval-gated copy; no auto-send | Admin/org only |
+| `contest_audit_events` | Append-only audit | Admin/org read |
+
+Status enums: `draft`, `review`, `published`, `closed`, `archived`. Extraction/review: `draft`, `approved`, `rejected`, `needs_info`.
+
+## 4\. Workflows
+
+1. Author migration with indexes on RLS predicate columns.
+2. Storage bucket plan: public photos vs private docs (policies before UI uploads).
+3. Regenerate Supabase types if repo workflow supports it.
+4. SQL proof scripts → `tasks/contest/notes/CTEST-001-evidence.md`.
+5. Remote catalog proof (required before Done):
+
+   ```sql
+   SELECT tablename, rowsecurity FROM pg_tables
+   WHERE schemaname = 'public' AND tablename LIKE 'contest%';
+   SELECT tablename, policyname FROM pg_policies WHERE tablename LIKE 'contest%';
+   ```
+
+## 5\. User Journeys
+
+* Roberto creates a contest shell; contestants apply with draft data; Patricia reviews; fans see only published contests and approved contestants.
+
+## 6\. Agents
+
+* No agent writes canonical rows in this task. Future Mastra tools use server APIs/RPCs only.
+
+## 7\. Integrations
+
+* Supabase Postgres + Storage; `mdeapp/src/lib/supabase/**` (anon client in UI; service role server-only per CLAUDE.md F13 carve-out).
+* MCP: Supabase plugin for migration list + `execute_sql` catalog proof.
+
+## 8\. Summary
+
+Data foundation that fail-closes drafts, extraction rows, discovery leads, and invite drafts.
+
+## 9\. Definition Of Done
+
+- [ ] Migration applies cleanly (`supabase db reset` or CI).
+- [ ] RLS enabled on every contest table.
+- [ ] Policies cover anon, contestant, organizer, judge/staff, admin.
+- [ ] Negative: anon cannot read drafts/extractions/leads/invite drafts/private docs.
+- [ ] Positive: published contest + approved contestant readable.
+- [ ] Remote catalog proof recorded in evidence.
+- [ ] `npm run test`, `npm run typecheck`, `npm run build` green after typegen.
+
+## 10\. Tests
+
+| Test | Command / probe | Expected |
+| -- | -- | -- |
+| Tables exist | `SELECT tablename FROM pg_tables WHERE tablename LIKE 'contest%'` | all core tables |
+| RLS on | `rowsecurity = true` per table | 100% |
+| Anon negative | SQL script as anon role | drafts denied |
+| Cross-contestant | authenticated wrong id update | denied |
+| Vitest (optional) | `npm test -- contest-schema` if helpers added | exit 0 |
+
+**Do not:** add `vote_ledger` here (CTEST-002); add pgvector; allow client writes to audit tables.
+
+## 11\. Implementation steps (mde-supabase)
+
+ 1. Read [`supabase-migrations.md`](<../../../.agents/skills/mde-supabase/references/project-rules/supabase-migrations.md>) and [`supabase-rls-policies.md`](<../../../.agents/skills/mde-supabase/references/project-rules/supabase-rls-policies.md>).
+ 2. Iterate DDL locally with Supabase MCP `execute_sql` — **do not** `apply_migration` until schema stabilizes.
+ 3. Run `supabase db advisors` on local DB; fix security/perf findings.
+ 4. Author `mdeapp/supabase/migrations/<timestamp>_contest_core.sql` with:
+    * `CREATE TABLE` + PK/FK + `CHECK` on status enums
+    * `ALTER TABLE … ENABLE ROW LEVEL SECURITY`
+    * Policies per actor (anon / authenticated contestant / org member / admin)
+    * Indexes on every column used in `USING` / `WITH CHECK`
+ 5. Storage: create buckets `contestant-photos`, `contestant-docs`; policies on `storage.objects` (INSERT+SELECT+UPDATE for upsert paths).
+ 6. `supabase db reset` (or CI migration apply) — must be clean.
+ 7. Regenerate types if workflow uses `supabase gen types`.
+ 8. SQL proof scripts (anon JWT vs service) → `tasks/contest/notes/CTEST-001-evidence.md`.
+ 9. Remote catalog proof (required):
+
+    ```sql
+    SELECT tablename, rowsecurity FROM pg_tables
+    WHERE schemaname = 'public' AND tablename LIKE 'contest%';
+    SELECT tablename, policyname, cmd FROM pg_policies WHERE tablename LIKE 'contest%';
+    ```
+10. Negative probes: anon `SELECT` on `contestant_profile_extractions`, `contestant_discovery_leads`, `contestant_invite_drafts` → 0 rows.
+11. Positive probes: published `contests` + approved `contestants` readable by anon.
+12. Cross-tenant: contestant A cannot `UPDATE` contestant B row.
+13. `npm run test`, `npm run typecheck`, `npm run build` after typegen.
+
+## 12\. Mermaid diagrams
+
+See also [`../docs/02-contest-core-schema-erd.md`](<../docs/02-contest-core-schema-erd.md>).
+
+### Core ERD (CTEST-001 tables)
+
+```mermaid
+erDiagram
+  contest_orgs ||--o{ contest_memberships : has
+  contest_orgs ||--o{ contests : owns
+  contests ||--o{ contest_rounds : has
+  contests ||--o{ contestants : has
+  contestants ||--o{ contestant_assets : has
+  contestants ||--o{ contestant_social_links : has
+  contestants ||--o{ contestant_profile_extractions : drafts
+  contestants ||--o{ contestant_profile_reviews : reviews
+  contests ||--o{ contest_events : schedules
+  contest_orgs ||--o{ contestant_discovery_runs : runs
+  contestant_discovery_runs ||--o{ contestant_discovery_leads : leads
+  contestant_discovery_leads ||--o{ contestant_invite_drafts : drafts
+  contest_orgs ||--o{ contest_audit_events : audits
+```
+
+### RLS read decision
+
+```mermaid
+flowchart TD
+  Q[Query contest_* table] --> RLS{RLS on?}
+  RLS -->|no| X[Block ship]
+  RLS -->|yes| ACTOR{Actor}
+  ACTOR -->|anon| PUB{published + approved?}
+  PUB -->|yes| OK[SELECT]
+  PUB -->|no| DENY[0 rows]
+  ACTOR -->|contestant| OWN[own row]
+  ACTOR -->|organizer| ORG[org_id match]
+  ACTOR -->|service role| API[server route only]
+```
+
+### Migration workflow
+
+```mermaid
+flowchart LR
+  I[iterate SQL] --> A[db advisors]
+  A --> M[migration file]
+  M --> L[db reset local]
+  L --> P[RLS proof]
+  P --> R[remote catalog]
+```
+
+**Production standard:** `../docs/05-production-task-standard.md`.
+
+---
+
+## Supplemental diagrams (repo doc)
+
+## Entity relationship (core pack)
+
+```mermaid
+erDiagram
+  contest_orgs ||--o{ contest_memberships : has
+  contest_orgs ||--o{ contests : owns
+  contests ||--o{ contest_rounds : has
+  contests ||--o{ contestants : has
+  contestants ||--o{ contestant_assets : has
+  contestants ||--o{ contestant_social_links : has
+  contestants ||--o{ contestant_profile_extractions : drafts
+  contestants ||--o{ contestant_profile_reviews : reviews
+  contests ||--o{ contest_events : schedules
+  contest_orgs ||--o{ contestant_discovery_runs : runs
+  contestant_discovery_runs ||--o{ contestant_discovery_leads : leads
+  contestant_discovery_leads ||--o{ contestant_invite_drafts : drafts
+  contest_orgs ||--o{ contest_audit_events : audits
+
+  contest_orgs {
+    uuid id PK
+    text name
+    jsonb settings
+  }
+  contests {
+    uuid id PK
+    uuid org_id FK
+    text status
+    text slug
+  }
+  contestants {
+    uuid id PK
+    uuid contest_id FK
+    uuid user_id FK
+    text status
+  }
+```
+
+## RLS decision flow (read path)
+
+```mermaid
+flowchart TD
+  Q[Client query on contest_* table] --> RLS{RLS enabled?}
+  RLS -->|no| DENY[Reject — fix migration]
+  RLS -->|yes| ROLE{Role?}
+  ROLE -->|anon| PUB{published + approved?}
+  PUB -->|yes| READ[SELECT allowed columns]
+  PUB -->|no| DENY2[No row]
+  ROLE -->|contestant| OWN[own contestant_id only]
+  ROLE -->|organizer| ORG[org membership match]
+  ROLE -->|admin| ADMIN[assigned orgs]
+  ROLE -->|service| SRV[server route only — not browser]
+```
+
+## Migration workflow (mde-supabase)
+
+```mermaid
+flowchart LR
+  A[iterate execute_sql MCP] --> B[supabase db advisors]
+  B --> C[db pull migration file]
+  C --> D[db reset local]
+  D --> E[RLS SQL proof scripts]
+  E --> F[remote catalog proof]
+  F --> G[types regenerate]
+```","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:contest, track:events, type:data",,,,,"2026-06-03T03:38:29.740Z","2026-06-04T04:19:28.381Z",,,,,,"2026-06-10T03:38:31.784Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","e1d5e24f-5fa9-4959-93a6-2c561876db33",6489,"SAN-544","SAN-532",
+"SAN-532","Sanjiovani","CTEST-000 — Contest diagrams, repo decisions, and scope gate","# CTEST-000 — Contest diagrams, GitHub repo decisions, and scope gate
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-000` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest planning |
+| **Effort** | 2-4h |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | — |
+| **Linear** | SAN-532 |
+| **Evidence** | `tasks/contest/notes/CTEST-000-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-000-diagrams-repo-decisions.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-000-diagrams-repo-decisions.md>) |
+
+### Skills
+
+* `mermaid-diagrams`
+* `mde-task-lifecycle`
+* `task-verifier`
+
+### Docs
+
+* `../docs/01-mermaid-diagrams.md`
+* `../docs/02-github-repos-use.md`
+* `../docs/00-docs-review.md`
+* `../docs/05-production-task-standard.md`
+* `../docs/MVP-SCOPE.md`
+* `../audit/2026-06-02-forensic-audit.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/mermaid-diagrams/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/mde-task-lifecycle/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/task-verifier/SKILL.md`
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Establish the contest vertical implementation map (diagrams, repo references, MVP boundaries) before any database, route, or agent work. Docs-only — no `mdeapp/src` changes.
+
+## 2\. Goals
+
+* Confirm `tasks/contest/docs/01-mermaid-diagrams.md` covers architecture, task sequence, vote flow, Stripe flow, CopilotKit/Mastra approval flow, screens, and post-MVP boundaries.
+* Confirm `tasks/contest/docs/02-github-repos-use.md` classifies repos as foundation, reference, post-MVP, or avoid.
+* Confirm `tasks/contest/docs/00-docs-review.md` records doc gaps and red flags.
+* Link all CTEST tasks in `tasks/contest/tasks/INDEX.md` with MVP-A / MVP-B cut lines.
+
+## 3\. Features
+
+* Roberto/Patricia/Sofía share one technical starting point for Phase 2 contest work.
+* Prevents scope creep (OpenClaw daily scrape, Postiz auto-publish, live overlays) into MVP-A.
+
+## 4\. Workflows
+
+1. Review and patch `01-mermaid-diagrams.md`, `02-github-repos-use.md`, `00-docs-review.md` if gaps found.
+2. Static Mermaid fence check:
+
+   ```bash
+   rg '^```mermaid' /home/sk/mdeai/tasks/contest/docs/01-mermaid-diagrams.md
+   rg 'note inside state|end\[|class\[' /home/sk/mdeai/tasks/contest/docs || true
+   ```
+3. Local link check under `tasks/contest/` (fix broken `tasks/contest/core/*` refs if any).
+4. Record docs-only runtime N/A in `tasks/contest/notes/CTEST-000-evidence.md`.
+
+## 5\. User Journeys
+
+* Sofia opens the pack and sees build order, repo choices, and deferred boundaries before CTEST-001.
+
+## 6\. Agents
+
+* None introduced. Governance/verification only.
+
+## 7\. Integrations
+
+| Repo | Use |
+| -- | -- |
+| CopilotKit Mastra starter | Pattern 1 in-process runtime reference for `mdeapp` |
+| Helios | Vote hash / freeze / tally concepts only |
+| Hi.Events | Ticket/check-in patterns only — **AGPL: no source copy** |
+| OpenStreamPoll | Post-MVP live/OBS overlay |
+| TanStack Table | Admin tables |
+| React Email | Sponsor/ticket email templates |
+| Playwright | Proof gates (CTEST-007) |
+| OpenClaw / Postiz / Trigger.dev | Post-MVP only |
+
+## 8\. Summary
+
+Planning gate for the contest vertical. Safe to execute without touching production runtime.
+
+## 9\. Definition Of Done
+
+- [ ] Diagrams doc exists with valid Mermaid fences (static scan).
+- [ ] GitHub repo use plan exists.
+- [ ] Docs review exists and lists red flags.
+- [ ] Task index links all CTEST tasks with MVP-A/B columns.
+- [ ] Evidence file states runtime N/A and records probe commands + exit codes.
+
+## 10\. Tests
+
+| Check | Command | Expected |
+| -- | -- | -- |
+| Mermaid fences | ```` rg -c '^```mermaid' tasks/contest/docs/01-mermaid-diagrams.md ```` | ≥ 7 |
+| Reserved-label scan | `rg 'note inside state\|end\[\|class\[' tasks/contest/docs` | no matches |
+| Index links CTEST | `rg 'CTEST-' tasks/contest/tasks/INDEX.md` | 000–012 listed |
+| Template sections (downstream) | `rg -c '^## 1\. Purpose' tasks/contest/tasks/CTEST-*.md` | 13 matches |
+
+**Do not:** write app code; clone external apps into `mdeapp`; move OpenClaw/Postiz/livestream into MVP-A.
+
+## 11\. Mermaid diagrams
+
+Authoritative pack: [`../docs/01-mermaid-diagrams.md`](<../docs/01-mermaid-diagrams.md>) (7 diagrams). Linear copy: [SAN-532](https://linear.app/sanjiovani/issue/SAN-532).
+
+### Task sequence (summary)
+
+```mermaid
+flowchart TD
+  D0[CTEST-000 diagrams] --> D1[CTEST-001 schema]
+  D1 --> D2[CTEST-002 vote ledger]
+  D2 --> D3[CTEST-003 Stripe]
+  D3 --> D4[CTEST-004 CopilotKit]
+  D4 --> D5[CTEST-005 Mastra]
+  D5 --> D6[CTEST-006 screens]
+  D6 --> D7[CTEST-007 Playwright]
+```
+
+**Production standard:** `../docs/05-production-task-standard.md`.
+
+---
+
+## Supplemental diagrams (repo doc)
+
+## 1\. MVP Platform Architecture
+
+```mermaid
+flowchart TB
+  subgraph Personas
+    Roberto[""Roberto organizer""]
+    Contestant[""Contestant""]
+    Fan[""Fan / ticket buyer""]
+    Judge[""Judge""]
+    Patricia[""Patricia admin""]
+  end
+
+  subgraph UI[""Next.js + CopilotKit 1.55.2""]
+    Public[""/contests/[slug] public page""]
+    Vote[""/contests/[slug]/vote""]
+    Host[""/host/contests/new""]
+    Admin[""/admin/contests""]
+    Tickets[""/me/tickets""]
+    Sponsor[""/sponsors""]
+  end
+
+  subgraph Runtime[""/api/copilotkit Pattern 1""]
+    CK[""CopilotRuntime""]
+    AGUI[""@ag-ui/mastra""]
+    Mastra[""Mastra local agents""]
+    Gemini[""Gemini model""]
+  end
+
+  subgraph Truth[""Supabase PostgreSQL""]
+    ContestDB[(""contests / rounds / contestants"")]
+    VoteDB[(""vote_ledger / vote_windows"")]
+    ScoreDB[(""judge_scores / score_snapshots"")]
+    MoneyDB[(""ticket_orders / paid_vote_orders"")]
+    ApprovalDB[(""approvals / audit_events / ai_runs"")]
+  end
+
+  subgraph External
+    Stripe[""Stripe Checkout + webhooks""]
+    WhatsApp[""WhatsApp provider""]
+    Maps[""Google Maps / Places later""]
+    OpenClaw[""OpenClaw post-MVP""]
+    Postiz[""Postiz post-MVP""]
+  end
+
+  Roberto --> Host
+  Contestant --> Public
+  Fan --> Public
+  Fan --> Vote
+  Fan --> Tickets
+  Judge --> Admin
+  Patricia --> Admin
+  Host --> CK
+  Admin --> CK
+  CK --> AGUI --> Mastra --> Gemini
+  UI --> Truth
+  Mastra --> ApprovalDB
+  Stripe --> MoneyDB
+  WhatsApp --> Public
+  Mastra -.post-MVP draft only.-> OpenClaw
+  Mastra -.approved campaigns only.-> Postiz
+  Mastra -.grounded geo.-> Maps
+```
+
+## 2\. Correct Task Sequence
+
+```mermaid
+flowchart TD
+  D0[""CTEST-000 diagrams + repo decisions""] --> D1[""CTEST-001 Supabase core schema""]
+  D1 --> D2[""CTEST-002 voting + scoring ledgers""]
+  D2 --> D3[""CTEST-003 tickets + paid votes schema""]
+  D3 --> D4[""CTEST-004 CopilotKit contest workspace""]
+  D4 --> D5[""CTEST-005 Mastra + Gemini workflows""]
+  D5 --> D6[""CTEST-006 screens + wireframes""]
+  D6 --> D7[""CTEST-007 Playwright proof gates""]
+
+  D1 --> RLS[""RLS + SQL proof""]
+  D2 --> VOTE[""Duplicate/late/closed vote tests""]
+  D3 --> STRIPE[""Stripe webhook idempotency tests""]
+  D4 --> HITL[""Approval card tests""]
+  D5 --> AI[""AI evals: draft-only sensitive actions""]
+  D6 --> UI[""Browser route proof""]
+  D7 --> DONE[""Done gate evidence""]
+```
+
+## 3\. Vote Truth Flow
+
+```mermaid
+sequenceDiagram
+  participant Fan
+  participant UI as Vote UI
+  participant API as Vote API/RPC
+  participant DB as Supabase
+  participant Admin as Patricia
+  participant AI as votingIntegrityAgent
+
+  Fan->>UI: Select contestant and submit vote
+  UI->>API: POST vote token + contestant_id
+  API->>DB: validate window, token, rate limits
+  alt valid vote
+    API->>DB: insert vote_ledger append-only row
+    DB-->>API: receipt hash
+    API-->>UI: accepted + receipt
+  else invalid vote
+    API->>DB: insert vote_fraud_signals/audit event
+    API-->>UI: rejected reason
+  end
+  DB-->>AI: read anomaly summary
+  AI-->>Admin: recommend review only
+  Admin->>DB: approve/reject review decision
+```
+
+## 4\. Stripe Paid Vote / Ticket Fulfillment
+
+```mermaid
+sequenceDiagram
+  participant Fan
+  participant UI as Checkout UI
+  participant API as Checkout API
+  participant Stripe
+  participant Webhook as Stripe webhook
+  participant DB as Supabase
+
+  Fan->>UI: Buy VIP ticket or paid vote pack
+  UI->>API: create checkout session
+  API->>DB: create pending order
+  API->>Stripe: create Checkout Session
+  Stripe-->>Fan: hosted checkout
+  Stripe->>Webhook: checkout.session.completed
+  Webhook->>Webhook: verify signature + idempotency key
+  Webhook->>DB: mark paid + issue QR/vote credits
+  DB-->>Webhook: committed audit event
+  Webhook-->>Stripe: 2xx
+  Fan->>UI: returns to success page
+  UI->>DB: read webhook-derived paid state
+```
+
+## 5\. CopilotKit + Mastra Approval Flow
+
+```mermaid
+sequenceDiagram
+  participant Roberto
+  participant CK as CopilotKit UI
+  participant API as /api/copilotkit
+  participant Mastra
+  participant Gemini
+  participant DB as Supabase
+  participant Patricia
+
+  Roberto->>CK: ""Create Miss Medellin finals""
+  CK->>API: AG-UI run
+  API->>Mastra: local contestHostAgent
+  Mastra->>Gemini: draft structured contest setup
+  Gemini-->>Mastra: JSON draft
+  Mastra->>DB: insert approval request + ai_run
+  Mastra-->>CK: render approval card
+  Patricia->>CK: approve/edit/reject
+  CK->>DB: commit only through approved API/RPC
+  DB-->>CK: published draft or change request
+```
+
+## 6\. Screen Map
+
+```mermaid
+flowchart LR
+  Home[""/""] --> HostNew[""/host/contests/new""]
+  HostNew --> HostList[""/host/contests""]
+  HostList --> PublicContest[""/contests/[slug]""]
+  PublicContest --> Vote[""/contests/[slug]/vote""]
+  PublicContest --> Contestant[""/contests/[slug]/contestants/[id]""]
+  PublicContest --> Checkout[""Stripe Checkout""]
+  Checkout --> Tickets[""/me/tickets""]
+  Admin[""/admin/contests""] --> Fraud[""/admin/contests/[id]/votes""]
+  Admin --> Scores[""/admin/contests/[id]/scores""]
+  Sponsors[""/sponsors""] --> Proposal[""/sponsors/proposals/[id]""]
+```
+
+## 7\. Post-MVP Boundaries
+
+```mermaid
+flowchart TD
+  MVP[""MVP: contest + voting + tickets + judging + sponsor drafts""] --> Stable[""Proof gates green""]
+  Stable --> Live[""OpenStreamPoll-style live overlays""]
+  Stable --> Geo[""ADK/Maps sponsor geo discovery""]
+  Stable --> Social[""Postiz approved scheduling""]
+  Stable --> Scrape[""OpenClaw lead enrichment""]
+  Scrape --> Approval[""Human approval required""]
+  Social --> Approval
+  Geo --> Approval
+  Live --> Producer[""Producer approval before public overlay""]
+```","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:contest, track:events",,,,,"2026-06-03T03:38:04.051Z","2026-06-04T04:19:34.024Z",,,,,,"2026-06-10T03:38:05.700Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","f90d6a3e-01cf-4c04-9c11-67bb2b4f169c",6489,"","",
+"SAN-779","Sanjiovani","AIE-026 [MVP] Admin AI runs observability UI","## Order: 26/32
+
+**Disk:** `MVP/AIE-026-mvp-admin-ai-runs-observability.md` · Wireframe 022
+**Route:** `/admin/ai-runs` or `/admin/ops` section
+
+```mermaid
+flowchart LR
+  AR[ai_runs] --> UI[Admin table]
+  WR[workflow_runs] --> UI
+  UI --> SEN[Sentry link on failure]
+```
+
+No PII leak in filters","Backlog",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:mvp, prefix:AIE, track:ai, type:chore",,,,,"2026-06-08T14:05:25.013Z","2026-06-08T14:05:30.178Z",,,,,,,"SAN-757","Phase 1 — mdeai MVP launch",,,,"46cf761a-3bb0-4704-8641-8f12ab0b60f1",109,"","SAN-704, SAN-758",
+"SAN-778","Sanjiovani","AIE-025 [MVP] Admin dashboard + moderation","## Order: 25/32
+
+**Disk:** `MVP/AIE-025-mvp-admin-dashboard-moderation.md` · Wireframes 019-020
+**Routes:** `/admin`, `/admin/events`
+
+```mermaid
+flowchart LR
+  PAT[Patricia] --> D[Admin dashboard]
+  D --> M[Moderation queue]
+  M --> AL[approval_logs]
+```
+
+Admin role gate + RLS","Backlog",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:mvp, prefix:AIE, scr",,,,,"2026-06-08T14:05:23.662Z","2026-06-08T14:05:24.234Z",,,,,,,"SAN-757","Phase 1 — mdeai MVP launch",,,,"7d716578-b72b-4b18-9809-951c279fcda5",109,"","SAN-758",
+"SAN-777","Sanjiovani","AIE-023 [MVP] Attendee inbox /inbox","## Order: 23/32
+
+**Disk:** `MVP/AIE-023-mvp-attendee-inbox.md` · Wireframe 036
+**Route:** `/inbox` (Andrés) — distinct from `/host/inbox` (024)
+
+```mermaid
+flowchart LR
+  H[Host message] --> I[/inbox attendee]
+  T[Ticket notice] --> I
+  N[notifications] --> I
+```","Backlog",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:mvp, prefix:AIE, scr",,,,,"2026-06-08T14:05:23.259Z","2026-06-08T14:05:23.832Z",,,,,,,"SAN-757","Phase 1 — mdeai MVP launch",,,,"e6a06f03-99f1-4695-a2a0-cbbf9f4616ce",109,"","SAN-772",
+"SAN-763","Sanjiovani","AIE-010 [Core] Event analytics funnel + event_views","## Order: 10/32 · Phase: **Core**
+
+**Disk:** `Core/AIE-010-core-event-analytics-funnel.md`
+**Wireframe:** 014
+
+## Funnel
+
+```mermaid
+flowchart LR
+  V[event_views] --> D[detail] --> C[checkout] --> P[orders paid]
+```
+
+Tables: `event_views`, `visitor_sessions` + RLS
+
+## Acceptance
+
+* `/events/[slug]` records view
+* Funnel chart on analytics panel","Backlog",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:core, prefix:AIE, scr, type:data",,,,,"2026-06-08T14:04:17.521Z","2026-06-08T14:04:27.288Z",,,,,,,"SAN-757","Phase 1 — mdeai MVP launch",,,,"81b8cadd-d71a-465b-a763-c2456b89e9a8",110,"","SAN-729",
+"SAN-543","Sanjiovani","CTEST-011 — OpenClaw and Firecrawl discovery plus approved invite drafts","# CTEST-011 — OpenClaw and Firecrawl discovery plus approved invite drafts
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-011` |
+| **Status** | Draft |
+| **Priority** | P1 |
+| **Phase** | Contest discovery sandbox |
+| **Effort** | 2-4d |
+| **Owner** | codex |
+| **MVP track** | MVP-B |
+| **Depends on** | CTEST-001, CTEST-005 |
+| **Linear** | SAN-543 |
+| **Evidence** | `tasks/contest/notes/CTEST-011-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-011-openclaw-discovery-invite-sandbox.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-011-openclaw-discovery-invite-sandbox.md>) |
+
+### Skills
+
+* `mde-firecrawl`
+* `mde-supabase`
+* `task-verifier`
+
+### Docs
+
+* `../docs/02-github-repos-use.md`
+* `../docs/05-production-task-standard.md`
+* `../docs/06-shadcn-component-audit.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/mde-firecrawl/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/shadcn/SKILL.md`
+* [https://ui.shadcn.com/docs/components](<https://ui.shadcn.com/docs/components>)
+* [https://ui.shadcn.com/docs/cli](<https://ui.shadcn.com/docs/cli>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+* `stack:openclaw`
+
+---
+
+## 1\. Purpose
+
+Add a governed discovery sandbox for finding public model/contestant/pageant/casting leads and drafting invite messages, without automated Instagram scraping or unsolicited autonomous outreach.
+
+## 2\. Goals
+
+* Add `/admin/discovery/contestants` for Patricia.
+* Use public web search and allowed page extraction for leads.
+* Store leads as drafts with source URLs, confidence, and compliance notes.
+* Draft invitation copy for human review.
+* Require approval before any contact, export, or CRM mutation.
+
+## 3\. Features
+
+* Search queries for model agencies, casting pages, public pageant websites, university/fashion event pages, and public creator directories.
+* Structured lead extraction schema: name, public profile URL, source type, city, category, contact method if explicitly published, evidence snippets, risk flags.
+* Human review queue with approve/reject/needs-research.
+* Invite draft generation with opt-in language and no deceptive claims.
+
+## 4\. Workflows
+
+1. Define allowlisted discovery sources and blocked sources.
+2. Run shadcn CLI verification:
+
+   ```bash
+   cd mdeapp
+   npx shadcn@latest info --json
+   npx shadcn@latest docs table sheet dialog textarea alert empty skeleton badge button input --json
+   npx shadcn@latest add table textarea alert empty --dry-run
+   ```
+3. Use Firecrawl search/scrape or OpenClaw sandbox against public pages only.
+4. Write `contestant_discovery_runs`, `contestant_discovery_leads`, and `contestant_invite_drafts`.
+5. Add approval action for invite drafts.
+6. Export/send remains disabled until a separate approved communications task exists.
+
+## 5\. User Journeys
+
+* Patricia searches for public Medellin model/casting pages and reviews extracted leads.
+* Patricia approves a lead and edits an invite draft.
+* A blocked source or private/login-gated URL fails closed and records a risk note.
+
+## 6\. Agents
+
+* Discovery agent can search, summarize, extract, and draft.
+* It cannot scrape private content, bypass platform protections, send DMs/emails, impersonate anyone, or mutate contestant truth.
+
+## 7\. Integrations
+
+* Firecrawl for search/scrape/structured extraction.
+* OpenClaw for sandboxed browser automation after allowlists are approved.
+* Supabase for discovery run logs and draft leads.
+* Paperclip-style approval gate if that control plane exists later.
+* Required shadcn components: `Table`, `Sheet`, `Dialog`, `Textarea`, `Alert`, `Empty`, `Skeleton`, `Badge`, `Button`, and `Input`.
+
+## 8\. Summary
+
+This task keeps discovery useful but boringly governed: public sources, source logging, approval gates, and no autonomous contact.
+
+## 9\. Definition Of Done
+
+- [ ] Discovery admin route renders.
+- [ ] shadcn CLI dry run completed for missing discovery/admin components before installation.
+- [ ] Allowlist/blocklist exists.
+- [ ] Structured extraction schema is documented.
+- [ ] Leads store source URLs and risk flags.
+- [ ] Invite drafts require approval.
+- [ ] No automated contact path exists in MVP.
+
+## 10\. Tests
+
+- [ ] Unit test extraction schema validation.
+- [ ] Negative test: private/login-gated URL is rejected.
+- [ ] Negative test: Instagram DM/send action is unavailable.
+- [ ] SQL proof: discovery run, lead, invite draft, approval status.
+- [ ] Playwright: Patricia reviews and approves a draft without sending it.
+- [ ] Evidence: source URL and extraction output redacted for private data.
+
+## Production Standard Addendum
+
+This task must satisfy `../docs/05-production-task-standard.md`: create tasks, tech stack, feature, problem solving, agents/workflows/automations, user journey, Mermaid diagrams, skills to run, MCP/official docs, verification steps, real-world examples, data, frontend/backend wiring, success criteria, production-ready checklist, and testing.
+
+## 11\. Mermaid diagrams
+
+### Discovery sandbox (MVP-B, human approval)
+
+```mermaid
+flowchart TD
+  P[Patricia] --> Admin[""/admin/discovery/contestants""]
+  Admin --> Search[Firecrawl public search]
+  Search --> Leads[contestant_discovery_leads draft]
+  Leads --> Draft[contestant_invite_drafts]
+  Draft --> Approve{Human approve?}
+  Approve -->|no| Stop[No send]
+  Approve -->|yes| Export[Manual or approved channel]
+  OpenClaw[OpenClaw] -.post-MVP enrich only.-> Leads
+```","Backlog",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:contest, track:events",,,,,"2026-06-03T03:39:15.041Z","2026-06-04T05:26:59.069Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"5fcf9052-68d5-4abf-8407-cba67908e95b",6421,"","SAN-533, SAN-537",
+"SAN-505","Sanjiovani","EVT-046 — Auto follow-up WA drafts (24h)","## Product code
+
+**EVT-046** — Auto follow-up WA drafts (24h)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-505](https://linear.app/sanjiovani/issue/SAN-505/veb-014-advanced-auto-follow-up-whatsapp-drafts-24h-no-reply) |
+| Disk ID | `VEB-014-advanced` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-014-advanced-auto-followup-drafts.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-014-advanced`
+**Repo status:** Not Started
+**Priority:** P2
+**Depends on:** VEB-011-mvp, VEN-023
+
+*Spec file on disk is source of truth.*","Backlog",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:post-mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T16:00:04.751Z","2026-06-04T05:26:22.410Z",,,,,,,,"Phase 1 — mdeai MVP launch","7e4a6587-ba92-4111-bd2b-0b31314a64bf","🔮 Events — Discovery",,"14040b5f-b26f-45f5-8b08-1349c2cf05f2",8183,"","SAN-502",
+"SAN-504","Sanjiovani","EVT-045 — Venue availability calendar","## Product code
+
+**EVT-045** — Venue availability calendar
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-504](https://linear.app/sanjiovani/issue/SAN-504/veb-013-advanced-venue-availability-calendar) |
+| Disk ID | `VEB-013-advanced` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-013-advanced-availability-calendar.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-013-advanced`
+**Repo status:** Not Started
+**Priority:** P2
+**Depends on:** VEB-011-mvp
+
+*Spec file on disk is source of truth.*","Backlog",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:post-mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T16:00:03.728Z","2026-06-04T05:26:21.975Z",,,,,,,,"Phase 1 — mdeai MVP launch","7e4a6587-ba92-4111-bd2b-0b31314a64bf","🔮 Events — Discovery",,"b9be55f6-9852-47d0-a9b4-30555931dc37",8183,"","SAN-502",
+"SAN-506","Sanjiovani","EVT-047 — Venue CRM for Patricia","## Product code
+
+**EVT-047** — Venue CRM for Patricia
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-506](https://linear.app/sanjiovani/issue/SAN-506/veb-015-advanced-venue-crm-for-patricia) |
+| Disk ID | `VEB-015-advanced` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-015-advanced-venue-crm-patricia.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-015-advanced`
+**Repo status:** Not Started
+**Priority:** P2
+**Depends on:** VEB-011-mvp
+
+*Spec file on disk is source of truth.*","Backlog",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:post-mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T16:00:05.535Z","2026-06-04T05:26:22.915Z",,,,,,,,"Phase 1 — mdeai MVP launch","7e4a6587-ba92-4111-bd2b-0b31314a64bf","🔮 Events — Discovery",,"40207eb4-6f42-4cd6-a98d-6c354e466eb9",8183,"","SAN-502",
+"SAN-141","Sanjiovani","EVT-023 — AI networking matchmaking and icebreakers","## Product code
+
+**EVT-023** — AI networking matchmaking and icebreakers
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-141 |
+| Spec | `EVP-038-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-038-postmvp`
+**Spec:** `tasks/events/EVP-038-postmvp-ai-networking-matchmaking.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** EVP-035-mvp, EVP-037-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Backlog",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:53.167Z","2026-06-04T05:27:54.846Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"feced9e6-38af-4309-bff3-056ef29af869",6386,"","SAN-140, SAN-138",
+"SAN-149","Sanjiovani","EVT-031 — Live event updates feed","## Product code
+
+**EVT-031** — Live event updates feed
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-149 |
+| Spec | `EVP-046-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-046-mvp`
+**Spec:** `tasks/events/EVP-046-mvp-live-event-updates.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** EVP-032-mvp, EVP-035-mvp, EVP-044-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Backlog",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:50:03.547Z","2026-06-04T05:27:54.823Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"ae40916d-9260-465c-ba88-84366fa55f2c",6386,"","SAN-147, SAN-138, SAN-135",
+"SAN-144","Sanjiovani","EVT-026 — Community relationship graph","## Product code
+
+**EVT-026** — Community relationship graph
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-144 |
+| Spec | `EVP-041-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-041-advanced`
+**Spec:** `tasks/events/EVP-041-advanced-community-relationship-graph.md`
+**Repo status:** Open
+**Priority:** P3
+**Depends on:** EVP-038-postmvp, EVP-039-postmvp, EVP-040-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Backlog",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:55.707Z","2026-06-04T05:27:32.753Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"cc5774de-e45e-4026-8e0b-5d5cf3c27663",6387,"","SAN-143, SAN-142, SAN-141",
+"SAN-147","Sanjiovani","EVT-029 — WhatsApp and community links","## Product code
+
+**EVT-029** — WhatsApp and community links
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-147 |
+| Spec | `EVP-044-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-044-mvp`
+**Spec:** `tasks/events/EVP-044-mvp-whatsapp-community-links.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** EVP-032-mvp, EVP-034-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Backlog",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:59.507Z","2026-06-04T05:27:35.031Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"533a00c7-b8f3-471d-944b-7e8d1738067a",6387,"","SAN-137, SAN-135",
+"SAN-134","Sanjiovani","EVT-016 — OpenClaw automation plan (no implementation)","## Product code
+
+**EVT-016** — OpenClaw automation plan (no implementation)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-134 |
+| Spec | `EVP-031-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-031-advanced`
+**Spec:** `tasks/events/EVP-031-advanced-openclaw-automation-plan.md`
+**Repo status:** Not Started
+**Priority:** P3
+**Phase:** Phase 3
+**Depends on:** EVP-025-mvp-copilotkit-discovery-ui
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Backlog",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:48.476Z","2026-06-04T05:27:54.886Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"bfdbb035-cbb1-44f8-8558-5fe45b24ee4e",6386,"","SAN-128",
+"SAN-133","Sanjiovani","EVT-015 — OpenClaw/Postiz approval sandbox","## Product code
+
+**EVT-015** — OpenClaw/Postiz approval sandbox
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-133 |
+| Spec | `EVP-030-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-030-advanced`
+**Spec:** `tasks/events/EVP-030-advanced-openclaw-postiz-approval-sandbox.md`
+**Repo status:** Not Started
+**Priority:** P3
+**Depends on:** EVP-029-advanced
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Backlog",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:47.929Z","2026-06-04T05:28:01.128Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"22bae6df-eb63-4c77-b4c7-d1da5dff821a",6386,"","SAN-132",
+"SAN-786","Sanjiovani","AIE-032 [Advanced] WhatsApp opt-in reminders","## Order: 32/32
+
+**Disk:** `Advanced/AIE-032-advanced-whatsapp-reminders.md`
+
+```mermaid
+flowchart LR
+  O[User opt-in DB] --> T[Template only]
+  T --> WA[WhatsApp API]
+  Note[No free-form agent send]
+```
+
+Colombia market · host-controlled templates","Backlog",,"Low","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"FROZEN, phase:advanced, prefix:AIE",,,,,"2026-06-08T14:05:43.759Z","2026-06-08T14:05:44.456Z",,,,,,,"SAN-757","Phase 1 — mdeai MVP launch",,,,"c60d385f-c00e-48c5-8643-006b53cc68a8",109,"","SAN-772",
+"SAN-785","Sanjiovani","AIE-031 [Advanced] Campaign center /host/marketing","## Order: 31/32
+
+**Disk:** `Advanced/AIE-031-advanced-campaign-center.md` · Wireframe 027
+
+```mermaid
+flowchart LR
+  D[Draft blast] --> HITL[HITL approve]
+  HITL --> AL[approval_logs]
+  AL --> R[Resend send]
+```
+
+marketingCampaignWorkflow","Backlog",,"Low","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"FROZEN, phase:advanced, prefix:AIE, scr",,,,,"2026-06-08T14:05:43.104Z","2026-06-08T14:05:43.663Z",,,,,,,"SAN-757","Phase 1 — mdeai MVP launch",,,,"7c3bd744-670a-447b-99cd-f612f4a64831",109,"","SAN-782",
+"SAN-784","Sanjiovani","AIE-030 [Advanced] Exception center /admin/exceptions","## Order: 30/32
+
+**Disk:** `Advanced/AIE-030-advanced-exception-center.md` · Wireframe 034
+
+```mermaid
+flowchart TD
+  FP[Failed payments] --> EX[Exception queue]
+  WH[Webhook failures] --> EX
+  RF[Refund errors] --> EX
+  EX --> AO[adminOpsAgent read]
+  EX --> HITL[Retry HITL]
+```","Backlog",,"Low","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"FROZEN, phase:advanced, prefix:AIE, scr",,,,,"2026-06-08T14:05:42.794Z","2026-06-08T14:05:43.326Z",,,,,,,"SAN-757","Phase 1 — mdeai MVP launch",,,,"667142fc-0cf9-4524-99c3-089726186497",109,"","SAN-778",
+"SAN-783","Sanjiovani","AIE-029 [Advanced] Sponsor ROI dashboard","## Order: 29/32
+
+**Disk:** `Advanced/AIE-029-advanced-sponsor-roi.md` · Wireframe 033
+**Route:** `/host/sponsors/[id]/roi`
+
+```mermaid
+flowchart LR
+  SQL[deals+orders] --> ROI[ROI metrics]
+  PH[PostHog] --> ROI
+  ROI --> LLM[Explain only]
+```","Backlog",,"Low","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"FROZEN, phase:advanced, prefix:AIE, scr",,,,,"2026-06-08T14:05:42.162Z","2026-06-08T14:05:43.087Z",,,,,,,"SAN-757","Phase 1 — mdeai MVP launch",,,,"ea5d56d9-a63e-403d-b0b5-de60d02a64ad",109,"","SAN-768",
+"SAN-782","Sanjiovani","AIE-028 [Advanced] Marketing agents split — campaign, content, social","## Order: 28/32
+
+**Disk:** `Advanced/AIE-028-advanced-marketing-agents-split.md` · Wireframe 027
+
+```mermaid
+flowchart LR
+  CA[campaignAgent] --> AL[approval_logs]
+  CO[contentAgent] --> AL
+  SO[socialAgent Postiz HITL] --> AL
+```
+
+Never monolithic marketingAgent · cap 12 agents","Backlog",,"Low","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"FROZEN, phase:advanced, prefix:AIE, track:ai",,,,,"2026-06-08T14:05:41.076Z","2026-06-08T14:05:42.213Z",,,,,,,"SAN-757","Phase 1 — mdeai MVP launch",,,,"36c7a25d-0328-4e62-b7bb-37d71337444f",109,"","SAN-772, SAN-758",
+"SAN-781","Sanjiovani","AIE-027 [Advanced] bookingAgent — unified vertical booking","## Order: 27/32 · Phase: **Advanced** · Agent #9+
+
+**Disk:** `Advanced/AIE-027-advanced-booking-agent.md`
+
+## Gate
+
+[SAN-115](https://linear.app/sanjiovani/issue/SAN-115/aie-001-core-production-proof-ledger-mvp-launch-gate) green · AIE-020 live · 30d revenue tracked
+
+```mermaid
+flowchart TD
+  G{Gate passed?} -->|No| X[Do not build]
+  G -->|Yes| BK[bookingAgent]
+  BK --> HITL[All money mutations HITL]
+```
+
+Scope firewall: no rental/restaurant agents until gate","Backlog",,"Low","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"FROZEN, phase:advanced, prefix:AIE, track:ai",,,,,"2026-06-08T14:05:32.434Z","2026-06-08T14:05:33.500Z",,,,,,,"SAN-757","Phase 1 — mdeai MVP launch",,,,"4bb2787b-e28f-48de-96a9-fe61419e1914",109,"","SAN-115, SAN-764, SAN-773",
+"SAN-509","Sanjiovani","EVT-050 — OpenClaw venue enrichment (plan)","## Product code
+
+**EVT-050** — OpenClaw venue enrichment (plan)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-509](https://linear.app/sanjiovani/issue/SAN-509/veb-018-advanced-openclaw-venue-enrichment-plan-only) |
+| Disk ID | `VEB-018-advanced` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-018-advanced-openclaw-venue-enrichment.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-018-advanced`
+**Repo status:** Not Started
+**Priority:** P3
+**Depends on:** VEB-002-core
+
+*Spec file on disk is source of truth.*","Backlog",,"Low","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:post-mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T16:00:17.699Z","2026-06-04T05:26:25.479Z",,,,,,,,"Phase 1 — mdeai MVP launch","7e4a6587-ba92-4111-bd2b-0b31314a64bf","🔮 Events — Discovery",,"1d84478c-cdb1-4ab5-8eb5-ab52bf352b4e",8184,"","",
+"SAN-507","Sanjiovani","EVT-048 — Dynamic package pricing","## Product code
+
+**EVT-048** — Dynamic package pricing
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-507](https://linear.app/sanjiovani/issue/SAN-507/veb-016-advanced-dynamic-package-pricing-weekend-vs-weekday) |
+| Disk ID | `VEB-016-advanced` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-016-advanced-dynamic-package-pricing.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-016-advanced`
+**Repo status:** Not Started
+**Priority:** P2
+**Depends on:** VEB-004-mvp, VEB-013-advanced
+
+*Spec file on disk is source of truth.*","Backlog",,"Low","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:post-mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T16:00:09.637Z","2026-06-04T05:26:29.153Z",,,,,,,,"Phase 1 — mdeai MVP launch","7e4a6587-ba92-4111-bd2b-0b31314a64bf","🔮 Events — Discovery",,"dd0efe84-25c9-4a60-9b81-8fa06ba35719",8183,"","SAN-495",
+"SAN-508","Sanjiovani","EVT-049 — Sponsor ↔ venue match","## Product code
+
+**EVT-049** — Sponsor ↔ venue match
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-508](https://linear.app/sanjiovani/issue/SAN-508/veb-017-advanced-sponsor-venue-match-for-brand-launches) |
+| Disk ID | `VEB-017-advanced` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-017-advanced-sponsor-venue-match.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-017-advanced`
+**Repo status:** Not Started
+**Priority:** P2
+**Depends on:** EVP-029, VEB-007-mvp
+
+*Spec file on disk is source of truth.*","Backlog",,"Low","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:post-mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T16:00:14.496Z","2026-06-04T05:26:26.213Z",,,,,,,,"Phase 1 — mdeai MVP launch","7e4a6587-ba92-4111-bd2b-0b31314a64bf","🔮 Events — Discovery",,"4ee7a9e0-a67a-4c42-a4ef-396d71b00f20",8184,"","SAN-498",
+"SAN-510","Sanjiovani","EVT-051 — Wire: Event offerings panel + Event Venue CTA","## Product code
+
+**EVT-051** — Wire: Event offerings panel + Event Venue CTA
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-510](https://linear.app/sanjiovani/issue/SAN-510/veb-w01-event-offerings-panel-restaurant-event-venue-cta) |
+| Disk ID | `VEB-W01` |
+| Spec | `tasks/venues/tasks/event-booking/wireframes/VEB-W01-wire-event-offerings-panel.md` |
+| Prefix | EVT |
+
+---
+
+**Wireframe** paired with VEB-003, VEB-004
+
+*Spec file on disk is source of truth.*","Todo",,"Urgent","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, doc:wireframe, phase:mvp, prefix:EVT, prefix:VEB",,,,,"2026-06-02T16:00:18.431Z","2026-06-04T05:26:36.074Z",,,,,,"2026-06-03T16:00:26.025Z",,"Phase 1 — mdeai MVP launch","bcda7416-8032-4cd2-80cc-a918c75c15ee","🎟️ Events — Polish","Breached","70c64937-9b68-4ff8-a97c-cad33d353083",8634,"SAN-495","",
+"SAN-511","Sanjiovani","EVT-052 — Wire: Request proposal modal","## Product code
+
+**EVT-052** — Wire: Request proposal modal
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-511](https://linear.app/sanjiovani/issue/SAN-511/veb-w02-request-event-proposal-modal) |
+| Disk ID | `VEB-W02` |
+| Spec | `tasks/venues/tasks/event-booking/wireframes/VEB-W02-wire-request-proposal-modal.md` |
+| Prefix | EVT |
+
+---
+
+**Wireframe** paired with VEB-005
+
+*Spec file on disk is source of truth.*","Todo",,"Urgent","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, doc:wireframe, phase:mvp, prefix:EVT, prefix:VEB",,,,,"2026-06-02T16:00:25.123Z","2026-06-04T05:26:36.293Z",,,,,,"2026-06-03T16:00:25.661Z",,"Phase 1 — mdeai MVP launch","bcda7416-8032-4cd2-80cc-a918c75c15ee","🎟️ Events — Polish","Breached","b74078f3-1e6c-4238-816b-db464ee1dadb",8634,"SAN-496","",
+"SAN-115","Sanjiovani","AIE-001 [Core] Production proof ledger — MVP launch gate","## Order: 1/32 · Phase: **Core**
+
+**Disk:** `tasks/events/tasks/AI-native-system/Core/AIE-001-core-production-proof-gates.md`
+
+## Objective
+
+Sign Core commerce + host loop with dated evidence before `hostOpsAgent` or venue expansion.
+
+## Personas
+
+| Proof | Persona | Surface |
+| -- | -- | -- |
+| G1 paid ticket | Andrés | Stripe → `/me/tickets` |
+| G2 discovery | Camila | Chat → event cards prod |
+| G3 host publish | Roberto | Wizard → HITL → `events` row |
+
+## Flow
+
+```mermaid
+flowchart LR
+  G1[G1 Stripe paid] --> L[Ledger]
+  G2[G2 Chat cards] --> L
+  G3[G3 Host publish] --> L
+  L -->|signed| AIE005[AIE-005 hostOpsAgent]
+```
+
+## Acceptance
+
+* Evidence: `tasks/testing/evidence/YYYY-MM-DD/aie-001-ledger.md`
+* EVP-001 `status: Done`
+* **Blocks:** AIE-005, AIE-011, AIE-013
+
+## CopilotKit / Mastra
+
+Prod `POST /api/copilotkit` 200 · no new agents until ledger green.","Todo",,"Urgent","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:core, phase:launch, prefix:AIE, track:ai",1,"Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-05-27T05:49:21.050Z","2026-06-08T14:05:33.657Z",,,,,,"2026-06-04T00:15:29.151Z","SAN-757","Phase 1 — mdeai MVP launch",,,"Breached","03791e39-044e-4990-9d1c-c825e5f71455",17885,"SAN-551, SAN-704, SAN-717, SAN-178, SAN-546, SAN-473, SAN-458, SAN-545, SAN-660, SAN-716, SAN-548, SAN-715, SAN-683, SAN-368, SAN-366, SAN-667","",
+"SAN-824","Sanjiovani","UX-039 — Events: pin coverage via upstream coords + geocode gaps","## UX-039 — Events (order **3**)
+
+**Parent:** [SAN-822](<https://linear.app/sanjiovani/issue/SAN-822>) · **Label:** CHAT
+**Blocked by:** [SAN-828](<https://linear.app/sanjiovani/issue/SAN-828>)
+
+### Goal
+
+95%+ event pin coverage on concierge results.
+
+### Approach (prefer upstream)
+
+1. **Fix/enrich venue lat/lng in** `/api/events/search` and event payload
+2. Geocode fallback + cache **only for rows still missing coords**
+3. No new agent
+
+### Tests
+
+`e2e/home-to-chat` events · event API tests · pin count assertion
+
+### Commit
+
+`fix(events): improve venue pin coverage`","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:concierge, CHAT, phase:mvp, prefix:EVT, stack:maps, stack:mastra, track:ux",,,,,"2026-06-08T15:03:39.897Z","2026-06-08T15:15:27.433Z",,,,,,"2026-06-15T15:03:40.747Z","SAN-822","Phase 1 — mdeai MVP launch",,,"MediumRisk","16edc310-434b-42d8-a1ea-47f3318d58a8",51,"","SAN-828",
+"SAN-498","Sanjiovani","EVT-039 — AI venue match score panel","## Product code
+
+**EVT-039** — AI venue match score panel
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-498](https://linear.app/sanjiovani/issue/SAN-498/veb-007-mvp-ai-venue-match-score-panel) |
+| Disk ID | `VEB-007-mvp` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-007-mvp-venue-match-panel.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-007-mvp`
+**Repo status:** Not Started
+**Priority:** P1
+**Depends on:** VEB-006-mvp
+
+*Spec file on disk is source of truth.*","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T15:59:56.152Z","2026-06-08T14:04:28.242Z",,,,,,"2026-06-09T15:59:56.699Z",,"Phase 1 — mdeai MVP launch","bcda7416-8032-4cd2-80cc-a918c75c15ee","🎟️ Events — Polish","MediumRisk","85a71652-9b85-4668-b5cc-68ac056669ec",8634,"SAN-765, SAN-512","SAN-497",
+"SAN-512","Sanjiovani","EVT-053 — Wire: Venue match panel + compare","## Product code
+
+**EVT-053** — Wire: Venue match panel + compare
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-512](https://linear.app/sanjiovani/issue/SAN-512/veb-w03-venue-match-panel-compare-drawer) |
+| Disk ID | `VEB-W03` |
+| Spec | `tasks/venues/tasks/event-booking/wireframes/VEB-W03-wire-venue-match-compare.md` |
+| Prefix | EVT |
+
+---
+
+**Wireframe** paired with VEB-007, VEB-008
+
+*Spec file on disk is source of truth.*","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, doc:wireframe, phase:mvp, prefix:EVT, prefix:VEB",,,,,"2026-06-02T16:00:25.769Z","2026-06-04T05:26:38.968Z",,,,,,"2026-06-09T16:00:26.805Z",,"Phase 1 — mdeai MVP launch","bcda7416-8032-4cd2-80cc-a918c75c15ee","🎟️ Events — Polish","MediumRisk","86fa6e69-8cf4-4809-9eb4-90d670c2a877",8634,"SAN-499, SAN-498","",
+"SAN-499","Sanjiovani","EVT-040 — Compare venues side-by-side","## Product code
+
+**EVT-040** — Compare venues side-by-side
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-499](https://linear.app/sanjiovani/issue/SAN-499/veb-008-mvp-compare-venues-side-by-side-ui) |
+| Disk ID | `VEB-008-mvp` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-008-mvp-compare-venues-ui.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-008-mvp`
+**Repo status:** Not Started
+**Priority:** P1
+**Depends on:** VEB-007-mvp
+
+*Spec file on disk is source of truth.*","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T15:59:56.704Z","2026-06-08T14:04:20.938Z",,,,,,"2026-06-09T15:59:57.678Z",,"Phase 1 — mdeai MVP launch","bcda7416-8032-4cd2-80cc-a918c75c15ee","🎟️ Events — Polish","MediumRisk","9c4fd72b-c05c-4bc8-bbb4-75f7a9ef4281",8634,"SAN-764, SAN-512","SAN-498",
+"SAN-500","Sanjiovani","EVT-041 — Host wizard venue step (Roberto)","## Product code
+
+**EVT-041** — Host wizard venue step (Roberto)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-500](https://linear.app/sanjiovani/issue/SAN-500/veb-009-mvp-host-event-wizard-venue-step-roberto) |
+| Disk ID | `VEB-009-mvp` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-009-mvp-host-wizard-venue-step.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-009-mvp`
+**Repo status:** Not Started
+**Priority:** P1
+**Depends on:** VEB-006-mvp, EVP-010-core
+
+*Spec file on disk is source of truth.*","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T15:59:57.425Z","2026-06-08T14:05:01.967Z",,,,,,"2026-06-09T15:59:58.592Z",,"Phase 1 — mdeai MVP launch","bcda7416-8032-4cd2-80cc-a918c75c15ee","🎟️ Events — Polish","MediumRisk","e4cc2aff-edf3-4f37-9f18-1220fcb38840",8634,"SAN-773, SAN-513","SAN-497",
+"SAN-501","Sanjiovani","EVT-042 — eventVenueBookingWorkflow","## Product code
+
+**EVT-042** — eventVenueBookingWorkflow
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-501](https://linear.app/sanjiovani/issue/SAN-501/veb-010-mvp-eventvenuebookingworkflow-mastra) |
+| Disk ID | `VEB-010-mvp` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-010-mvp-event-booking-workflow.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-010-mvp`
+**Repo status:** Not Started
+**Priority:** P0
+**Depends on:** VEB-005-mvp, VEN-016, VEN-022
+
+*Spec file on disk is source of truth.*","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T15:59:58.087Z","2026-06-04T05:26:12.257Z",,,,,,"2026-06-10T00:14:58.918Z",,"Phase 1 — mdeai MVP launch","bcda7416-8032-4cd2-80cc-a918c75c15ee","🎟️ Events — Polish","MediumRisk","afd3f0d4-5533-4785-84b0-f6ca8f2a1861",8634,"SAN-304","SAN-496",
+"SAN-502","Sanjiovani","EVT-043 — Patricia admin queue (event requests)","## Product code
+
+**EVT-043** — Patricia admin queue (event requests)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-502](https://linear.app/sanjiovani/issue/SAN-502/veb-011-mvp-admin-event-booking-queue-patricia) |
+| Disk ID | `VEB-011-mvp` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-011-mvp-admin-event-booking-queue.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-011-mvp`
+**Repo status:** Not Started
+**Priority:** P1
+**Depends on:** VEB-010-mvp, VEN-024
+
+*Spec file on disk is source of truth.*","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T15:59:58.786Z","2026-06-08T14:05:01.975Z",,,,,,"2026-06-09T15:59:59.602Z",,"Phase 1 — mdeai MVP launch","bcda7416-8032-4cd2-80cc-a918c75c15ee","🎟️ Events — Polish","MediumRisk","2306f262-61fd-4e2e-9feb-6e020ad6ac59",8634,"SAN-773, SAN-514","SAN-501",
+"SAN-495","Sanjiovani","EVT-036 — Event offerings detail panel","## Product code
+
+**EVT-036** — Event offerings detail panel
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-495](https://linear.app/sanjiovani/issue/SAN-495/veb-004-mvp-event-offerings-detail-panel) |
+| Disk ID | `VEB-004-mvp` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-004-mvp-event-offerings-panel.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-004-mvp`
+**Repo status:** Not Started
+**Priority:** P0
+**Depends on:** VEB-003-mvp
+
+*Spec file on disk is source of truth.*","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T15:59:54.360Z","2026-06-08T14:04:20.929Z",,,,,,"2026-06-10T00:14:49.110Z",,"Phase 1 — mdeai MVP launch","bcda7416-8032-4cd2-80cc-a918c75c15ee","🎟️ Events — Polish","MediumRisk","269c6d06-6f30-4ffc-8b07-25cbda2d2e72",8634,"SAN-764, SAN-510","SAN-494",
+"SAN-494","Sanjiovani","EVT-035 — Restaurant card Event Venue CTA","## Product code
+
+**EVT-035** — Restaurant card Event Venue CTA
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-494](https://linear.app/sanjiovani/issue/SAN-494/veb-003-mvp-restaurant-card-event-venue-cta-badge) |
+| Disk ID | `VEB-003-mvp` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-003-mvp-restaurant-event-venue-cta.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-003-mvp`
+**Repo status:** Not Started
+**Priority:** P0
+**Depends on:** VEN-009, VEN-010, VEB-002
+
+*Spec file on disk is source of truth.*","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T15:59:53.699Z","2026-06-08T08:12:18.539Z",,,,,,"2026-06-10T00:14:47.229Z",,"Phase 1 — mdeai MVP launch","bcda7416-8032-4cd2-80cc-a918c75c15ee","🎟️ Events — Polish","MediumRisk","66fc5033-e8c4-4e83-92c1-6ccd63d6f56e",8634,"SAN-732","",
+"SAN-513","Sanjiovani","EVT-054 — Wire: Host wizard venue step","## Product code
+
+**EVT-054** — Wire: Host wizard venue step
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-513](https://linear.app/sanjiovani/issue/SAN-513/veb-w04-host-event-wizard-venue-step) |
+| Disk ID | `VEB-W04` |
+| Spec | `tasks/venues/tasks/event-booking/wireframes/VEB-W04-wire-host-venue-step.md` |
+| Prefix | EVT |
+
+---
+
+**Wireframe** paired with VEB-009
+
+*Spec file on disk is source of truth.*","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, doc:wireframe, phase:mvp, prefix:EVT, prefix:VEB",,,,,"2026-06-02T16:00:26.616Z","2026-06-04T05:26:37.199Z",,,,,,"2026-06-09T16:00:27.466Z",,"Phase 1 — mdeai MVP launch","bcda7416-8032-4cd2-80cc-a918c75c15ee","🎟️ Events — Polish","MediumRisk","6d170dd1-64b5-48ac-98f5-7150c2a1aa8c",8634,"SAN-500","",
+"SAN-503","Sanjiovani","EVT-044 — Add confirmed booking to trip","## Product code
+
+**EVT-044** — Add confirmed booking to trip
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-503](https://linear.app/sanjiovani/issue/SAN-503/veb-012-mvp-add-confirmed-event-booking-to-trip-itinerary) |
+| Disk ID | `VEB-012-mvp` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-012-mvp-trip-itinerary-booking.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-012-mvp`
+**Repo status:** Not Started
+**Priority:** P2
+**Depends on:** VEB-010-mvp
+
+*Spec file on disk is source of truth.*","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T16:00:01.540Z","2026-06-04T05:26:21.465Z",,,,,,"2026-06-10T00:15:00.922Z",,"Phase 1 — mdeai MVP launch","bcda7416-8032-4cd2-80cc-a918c75c15ee","🎟️ Events — Polish","MediumRisk","e4421de4-9c65-4db6-ac15-74094ac0ebf6",8634,"","SAN-501",
+"SAN-492","Sanjiovani","EVT-033 — Event venue + offerings schema","## Product code
+
+**EVT-033** — Event venue + offerings schema
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-492](https://linear.app/sanjiovani/issue/SAN-492/veb-001-core-event-venue-offerings-schema-supabase) |
+| Disk ID | `VEB-001-core` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-001-core-event-venue-offerings-schema.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-001-core`
+**Repo status:** Not Started
+**Priority:** P0
+**Depends on:** DATA-009, VEN-015
+
+*Spec file on disk is source of truth.*","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T15:59:52.396Z","2026-06-08T14:04:28.248Z",,,,,,"2026-06-10T00:14:45.844Z",,"Phase 1 — mdeai MVP launch","d336cf6a-5501-4da5-b246-47a9398c1409","🎟️ Events — MVP Gates","MediumRisk","d27f2c8a-f289-4c68-b8de-24ac71e3e4b2",8634,"SAN-765","",
+"SAN-497","Sanjiovani","EVT-038 — eventVenueAgent + search/rank tools","## Product code
+
+**EVT-038** — eventVenueAgent + search/rank tools
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-497](https://linear.app/sanjiovani/issue/SAN-497/veb-006-mvp-eventvenueagent-searchrank-tools) |
+| Disk ID | `VEB-006-mvp` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-006-mvp-eventVenueAgent-tools.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-006-mvp`
+**Repo status:** Not Started
+**Priority:** P0
+**Depends on:** VEB-001-core, VEN-011
+
+*Spec file on disk is source of truth.*","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T15:59:55.619Z","2026-06-04T05:26:07.139Z",,,,,,"2026-06-09T15:59:56.181Z",,"Phase 1 — mdeai MVP launch","bcda7416-8032-4cd2-80cc-a918c75c15ee","🎟️ Events — Polish","MediumRisk","aff3e865-c369-4e3e-b3d5-0695edf9798b",8634,"","",
+"SAN-496","Sanjiovani","EVT-037 — Request proposal modal (HITL)","## Product code
+
+**EVT-037** — Request proposal modal (HITL)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-496](https://linear.app/sanjiovani/issue/SAN-496/veb-005-mvp-request-event-proposal-modal-copilotkit-hitl) |
+| Disk ID | `VEB-005-mvp` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-005-mvp-request-proposal-modal.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-005-mvp`
+**Repo status:** Not Started
+**Priority:** P0
+**Depends on:** VEB-004-mvp, VEN-017
+
+*Spec file on disk is source of truth.*","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T15:59:55.017Z","2026-06-08T05:59:21.159Z",,,,,,"2026-06-10T00:14:49.580Z",,"Phase 1 — mdeai MVP launch","bcda7416-8032-4cd2-80cc-a918c75c15ee","🎟️ Events — Polish","MediumRisk","600aaea2-cf40-41cf-9c3c-ce1069b20637",8634,"SAN-511","SAN-495",
+"SAN-514","Sanjiovani","EVT-055 — Wire: Admin event booking queue","## Product code
+
+**EVT-055** — Wire: Admin event booking queue
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-514](https://linear.app/sanjiovani/issue/SAN-514/veb-w05-admin-event-booking-queue) |
+| Disk ID | `VEB-W05` |
+| Spec | `tasks/venues/tasks/event-booking/wireframes/VEB-W05-wire-admin-event-booking-queue.md` |
+| Prefix | EVT |
+
+---
+
+**Wireframe** paired with VEB-011
+
+*Spec file on disk is source of truth.*","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, doc:wireframe, phase:mvp, prefix:EVT, prefix:VEB",,,,,"2026-06-02T16:00:31.414Z","2026-06-04T05:26:38.634Z",,,,,,"2026-06-09T16:00:39.734Z",,"Phase 1 — mdeai MVP launch","bcda7416-8032-4cd2-80cc-a918c75c15ee","🎟️ Events — Polish","MediumRisk","b4cb45e0-07ab-4d85-bd61-b7acf96fc69d",8634,"SAN-502","",
+"SAN-493","Sanjiovani","EVT-034 — Seed Mamacita + 5 event partners","## Product code
+
+**EVT-034** — Seed Mamacita + 5 event partners
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-493](https://linear.app/sanjiovani/issue/SAN-493/veb-002-core-seed-event-venue-partners-mamacita-5) |
+| Disk ID | `VEB-002-core` |
+| Spec | `tasks/venues/tasks/event-booking/VEB-002-core-event-venue-seed-partners.md` |
+| Prefix | EVT |
+
+---
+
+**Task ID:** `VEB-002-core`
+**Repo status:** Not Started
+**Priority:** P0
+**Depends on:** VEB-001-core
+
+*Spec file on disk is source of truth.*","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:mvp, prefix:EVT, prefix:VEB, prefix:VEN, track:venues",,,,,"2026-06-02T15:59:53.047Z","2026-06-04T05:26:00.313Z",,,,,,"2026-06-10T00:14:46.054Z",,"Phase 1 — mdeai MVP launch","d336cf6a-5501-4da5-b246-47a9398c1409","🎟️ Events — MVP Gates","MediumRisk","08293f79-7c37-4b96-a11f-92d5240eb852",8634,"","",
+"SAN-131","Sanjiovani","EVT-013 — Production readiness checklist","## Product code
+
+**EVT-013** — Production readiness checklist
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-131 |
+| Spec | `EVP-028-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-028-mvp`
+**Spec:** `tasks/events/EVP-028-mvp-production-readiness.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-027-mvp-discovery-test-plan
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:42.674Z","2026-06-02T12:14:05.007Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"7dea1b8d-9006-4f96-86f0-e1b834a2345a",17885,"","SAN-130",
+"SAN-142","Sanjiovani","EVT-024 — Live event chat and networking rooms","## Product code
+
+**EVT-024** — Live event chat and networking rooms
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-142 |
+| Spec | `EVP-039-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-039-postmvp`
+**Spec:** `tasks/events/EVP-039-postmvp-live-event-chat-rooms.md`
+**Repo status:** Open
+**Priority:** P3
+**Depends on:** EVP-035-mvp, EVP-038-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:53.751Z","2026-06-02T12:14:05.046Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"23ec5b27-801b-429d-a40d-dd9387346c45",17884,"","SAN-141, SAN-138",
+"SAN-121","Sanjiovani","EVT-003 — Event web discovery — future task pack (EVP-019…028)","## Product code
+
+**EVT-003** — Event web discovery — future task pack (EVP-019…028)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-121 |
+| Spec | `EVP-018-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-018-mvp`
+**Spec:** `tasks/events/EVP-018-mvp-event-web-discovery-task-pack.md`
+**Repo status:** Not Started
+**Priority:** P3
+**Phase:** Post-MVP — Phase 2+
+**Depends on:** EVP-017-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:36.236Z","2026-06-02T12:14:05.088Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"7343091d-40a4-42eb-aa59-e79bfe9d6365",17885,"","",
+"SAN-140","Sanjiovani","EVT-022 — AI event decision concierge","## Product code
+
+**EVT-022** — AI event decision concierge
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-140 |
+| Spec | `EVP-037-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-037-mvp`
+**Spec:** `tasks/events/EVP-037-mvp-concierge-event-decision-chat.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** EVP-004-core, EVP-005-core, EVP-033-mvp, EVP-035-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:52.618Z","2026-06-02T12:14:05.145Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"37273b4e-1a0f-4a3e-9b23-6033209622fc",17884,"","SAN-138, SAN-136",
+"SAN-125","Sanjiovani","EVT-007 — eventDiscoveryWorkflow (Mastra)","## Product code
+
+**EVT-007** — eventDiscoveryWorkflow (Mastra)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-125 |
+| Spec | `EVP-022-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-022-mvp`
+**Spec:** `tasks/events/EVP-022-mvp-event-discovery-workflow.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-020-mvp-discovered-events-data-model, EVP-005-core-event-tool-and-workflow
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:38.431Z","2026-06-02T12:14:05.185Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"84d31497-a566-465c-a483-1c8c640b6c6b",17885,"","SAN-123",
+"SAN-119","Sanjiovani","EVT-001 — Grounded event discovery","## Product code
+
+**EVT-001** — Grounded event discovery
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-119 |
+| Spec | `EVP-015-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-015-mvp`
+**Spec:** `tasks/events/EVP-015-mvp-grounded-event-discovery.md`
+**Repo status:** Not Started
+**Priority:** P1
+**Depends on:** EVP-001-core, EVP-005-core, EVP-013-core, GS-001, GS-003
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:35.070Z","2026-06-02T12:14:05.212Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"149db62b-7305-461a-aaa7-239007012997",17885,"SAN-117","SAN-115",
+"SAN-137","Sanjiovani","EVT-019 — Ask Host and AI Q&A assistant","## Product code
+
+**EVT-019** — Ask Host and AI Q&A assistant
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-137 |
+| Spec | `EVP-034-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-034-mvp`
+**Spec:** `tasks/events/EVP-034-mvp-ask-host-ai-qa.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** EVP-032-mvp, EVP-012-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:50.511Z","2026-06-02T12:14:05.242Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"9a15dc7b-bc85-44ee-9f5f-541584424d27",17884,"","SAN-135",
+"SAN-124","Sanjiovani","EVT-006 — Google Search Grounding query templates","## Product code
+
+**EVT-006** — Google Search Grounding query templates
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-124 |
+| Spec | `EVP-021-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-021-mvp`
+**Spec:** `tasks/events/EVP-021-mvp-google-search-grounding.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-023-mvp-adk-search-maps-agents, EVP-007-core-event-agent-prompt-and-sources, MAP-002D, GS-001
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:37.939Z","2026-06-02T12:14:05.267Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"8827a4d0-f2a6-4209-8b96-892f86a3abdb",17885,"","SAN-126",
+"SAN-146","Sanjiovani","EVT-028 — Neighborhood, safety, transit, and weather intelligence","## Product code
+
+**EVT-028** — Neighborhood, safety, transit, and weather intelligence
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-146 |
+| Spec | `EVP-043-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-043-mvp`
+**Spec:** `tasks/events/EVP-043-mvp-neighborhood-safety-transit-intelligence.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** EVP-016-mvp, EVP-024-mvp, EVP-036-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:58.906Z","2026-06-02T12:14:05.315Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"28b58021-9540-4d05-b08b-38d176ec22a5",17884,"","SAN-139, SAN-127, SAN-120",
+"SAN-150","Sanjiovani","EVT-032 — AI night itinerary builder","## Product code
+
+**EVT-032** — AI night itinerary builder
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-150 |
+| Spec | `EVP-047-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-047-postmvp`
+**Spec:** `tasks/events/EVP-047-postmvp-ai-night-itinerary-builder.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** EVP-036-mvp, EVP-037-mvp, EVP-043-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:50:04.139Z","2026-06-02T12:14:05.338Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"04ac85f4-2a07-48a6-b921-041e5aa14f8a",17884,"","SAN-146, SAN-140, SAN-139",
+"SAN-126","Sanjiovani","EVT-008 — ADK SearchAgent + MapsAgent sidecar","## Product code
+
+**EVT-008** — ADK SearchAgent + MapsAgent sidecar
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-126 |
+| Spec | `EVP-023-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-023-mvp`
+**Spec:** `tasks/events/EVP-023-mvp-adk-search-maps-agents.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-019-mvp-research-official-docs
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:38.973Z","2026-06-02T12:14:05.372Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"9c3cf8db-b40f-4683-b2fb-51e26092b70f",17885,"","SAN-122",
+"SAN-136","Sanjiovani","EVT-018 — Event vibe tags and AI summary","## Product code
+
+**EVT-018** — Event vibe tags and AI summary
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-136 |
+| Spec | `EVP-033-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-033-mvp`
+**Spec:** `tasks/events/EVP-033-mvp-event-vibe-ai-summary.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** EVP-032-mvp, EVP-007-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:49.657Z","2026-06-02T12:14:05.403Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"db459742-b2e8-43e1-a5b1-090264322d01",17884,"","SAN-135",
+"SAN-143","Sanjiovani","EVT-025 — Post-event follow-up assistant","## Product code
+
+**EVT-025** — Post-event follow-up assistant
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-143 |
+| Spec | `EVP-040-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-040-postmvp`
+**Spec:** `tasks/events/EVP-040-postmvp-post-event-follow-up.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** EVP-038-postmvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:54.361Z","2026-06-02T12:14:05.439Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"cdbef7cf-2380-4b1f-962d-cc80f77a4113",17884,"","SAN-141",
+"SAN-123","Sanjiovani","EVT-005 — Discovered events data model + RLS","## Product code
+
+**EVT-005** — Discovered events data model + RLS
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-123 |
+| Spec | `EVP-020-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-020-mvp`
+**Spec:** `tasks/events/EVP-020-mvp-discovered-events-data-model.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-019-mvp-research-official-docs
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:37.341Z","2026-06-02T12:14:05.477Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"af93f2ed-0b20-45e9-90bb-f40329b37586",17885,"","SAN-122",
+"SAN-129","Sanjiovani","EVT-011 — Human approval save flow","## Product code
+
+**EVT-011** — Human approval save flow
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-129 |
+| Spec | `EVP-026-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-026-mvp`
+**Spec:** `tasks/events/EVP-026-mvp-human-approval-save-flow.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-020-mvp-discovered-events-data-model, EVP-011-core-approval-panel-hitl
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:40.724Z","2026-06-02T12:14:05.522Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"494bfcda-a034-4b37-b6e2-f69a9d4c6350",17885,"","SAN-123",
+"SAN-148","Sanjiovani","EVT-030 — Host pricing suggestions and moderation basics","## Product code
+
+**EVT-030** — Host pricing suggestions and moderation basics
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-148 |
+| Spec | `EVP-045-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-045-mvp`
+**Spec:** `tasks/events/EVP-045-mvp-host-pricing-moderation-basics.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** EVP-010-core, EVP-012-core, EVP-034-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:50:02.164Z","2026-06-02T12:14:05.558Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"69f621e3-72dc-41f9-b882-e801a9c8a202",17884,"","SAN-137",
+"SAN-130","Sanjiovani","EVT-012 — Discovery test plan","## Product code
+
+**EVT-012** — Discovery test plan
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-130 |
+| Spec | `EVP-027-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-027-mvp`
+**Spec:** `tasks/events/EVP-027-mvp-discovery-test-plan.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-025-mvp-copilotkit-discovery-ui
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:41.561Z","2026-06-02T12:14:05.585Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"4f57cfdd-a176-4534-9670-2f969bf22756",17885,"","SAN-128",
+"SAN-139","Sanjiovani","EVT-021 — Community, map, and nearby intelligence","## Product code
+
+**EVT-021** — Community, map, and nearby intelligence
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-139 |
+| Spec | `EVP-036-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-036-mvp`
+**Spec:** `tasks/events/EVP-036-mvp-community-map-nearby.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** EVP-016-mvp, EVP-024-mvp, EVP-032-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:51.732Z","2026-06-02T12:14:05.618Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"14468db2-145b-4663-aa18-4093ce7a60b0",17884,"","SAN-135, SAN-127, SAN-120",
+"SAN-132","Sanjiovani","EVT-014 — Sponsor CRM-lite + proposal drafts","## Product code
+
+**EVT-014** — Sponsor CRM-lite + proposal drafts
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-132 |
+| Spec | `EVP-029-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-029-advanced`
+**Spec:** `tasks/events/EVP-029-advanced-sponsor-crm-lite.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Depends on:** EVP-001-core, EVP-003-core
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:47.023Z","2026-06-08T14:04:46.825Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"f0357d6b-dc35-4c06-b373-d9c17dc4336f",17884,"SAN-116, SAN-770, SAN-768","SAN-115",
+"SAN-120","Sanjiovani","EVT-002 — Event maps + venue integration","## Product code
+
+**EVT-002** — Event maps + venue integration
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-120 |
+| Spec | `EVP-016-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-016-mvp`
+**Spec:** `tasks/events/EVP-016-mvp-event-maps-venue-integration.md`
+**Repo status:** Not Started
+**Priority:** P1
+**Depends on:** EVP-015-mvp, MAP-004, MAP-010
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:35.696Z","2026-06-04T04:33:32.561Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"f244a411-288c-4d1b-9fde-9fa8ea5e9508",17885,"SAN-366","SAN-104, SAN-119",
+"SAN-127","Sanjiovani","EVT-009 — Places API enrichment for discovered events","## Product code
+
+**EVT-009** — Places API enrichment for discovered events
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-127 |
+| Spec | `EVP-024-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-024-mvp`
+**Spec:** `tasks/events/EVP-024-mvp-places-enrichment.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-022-mvp-event-discovery-workflow
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:39.578Z","2026-06-02T12:14:05.773Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"6dfc07d0-c9be-4359-a76e-cb04fddc2de6",17885,"","SAN-125",
+"SAN-138","Sanjiovani","EVT-020 — Attendee profiles and audience breakdown","## Product code
+
+**EVT-020** — Attendee profiles and audience breakdown
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-138 |
+| Spec | `EVP-035-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-035-mvp`
+**Spec:** `tasks/events/EVP-035-mvp-attendee-profiles-audience-breakdown.md`
+**Repo status:** Open
+**Priority:** P2
+**Depends on:** EVP-002-core, EVP-032-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:51.101Z","2026-06-02T12:14:05.814Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"3b71b135-f7c2-4cfa-b5cd-52ed8874faaf",17884,"","SAN-135",
+"SAN-122","Sanjiovani","EVT-004 — Research official docs (CopilotKit, Mastra, ADK, Grounding, Places)","## Product code
+
+**EVT-004** — Research official docs (CopilotKit, Mastra, ADK, Grounding, Places)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-122 |
+| Spec | `EVP-019-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-019-mvp`
+**Spec:** `tasks/events/EVP-019-mvp-research-official-docs.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-017-mvp-event-grounding-architecture
+
+## Summary
+
+## Purpose
+
+Verify APIs and constraints via MCP before any EVT-D implementation.
+
+## MCP / docs to probe
+
+| Surface | MCP / URL |
+| -- | -- |
+| CopilotKit Mastra integration | copilotkit MCP + local example |
+| Mastra workflows/tools | mastra MCP |
+| Gemini Google Search Grounding | gemini-api-docs-mcp |
+| ADK grounding | adk.dev + sidecar source |
+| Maps Grounding Lite | google-maps-code-assist |
+| Places API New | google-maps-code-assist + field masks |
+| Supabase edge patterns | supabase MCP |
+
+## Deliverable
+
+`tasks/events/notes/EVP-019-mvp-research-notes.md` with:
+
+* Exact API endpoints + auth model
+* Rate limits / quotas
+* Citation format requirements
+* Beta API traps (Mastra `agents` key naming)
+* Go/no-go for Phase 2
+
+## Acceptance criteria
+
+- [ ] Every API claim cites
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:36.778Z","2026-06-02T12:14:05.915Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"4e928f92-462e-4399-b7aa-e72fec371b2d",17885,"","",
+"SAN-128","Sanjiovani","EVT-010 — CopilotKit discovery UI (cards, attribution, approval)","## Product code
+
+**EVT-010** — CopilotKit discovery UI (cards, attribution, approval)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-128 |
+| Spec | `EVP-025-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-025-mvp`
+**Spec:** `tasks/events/EVP-025-mvp-copilotkit-discovery-ui.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Post-MVP
+**Depends on:** EVP-022-mvp-event-discovery-workflow, SCREEN-006
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:40.010Z","2026-06-02T12:14:05.977Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"ea0155c4-93e2-4365-9435-5c0d9050843c",17885,"","SAN-125",
+"SAN-145","Sanjiovani","EVT-027 — Smart event recommendations and compatibility score","## Product code
+
+**EVT-027** — Smart event recommendations and compatibility score
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-145 |
+| Spec | `EVP-042-` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `EVP-042-mvp`
+**Spec:** `tasks/events/EVP-042-mvp-smart-recommendations-compatibility.md`
+**Repo status:** Open
+**Priority:** P1
+**Depends on:** EVP-033-mvp, EVP-035-mvp, EVP-037-mvp
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:post-mvp, prefix:EVT, stack:mastra, stack:nextjs, stack:stripe",,,,,"2026-05-27T05:49:58.320Z","2026-06-08T14:04:43.158Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"22f21894-7476-4a5b-83cc-08cc8dca8285",17884,"SAN-769","SAN-140, SAN-138, SAN-136",
+"SAN-544","Sanjiovani","CTEST-012 — Contest spec normalization, Linear sync, labels, and validation proof","# CTEST-012 — Contest spec normalization, Linear sync, labels, and validation proof
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-012` |
+| **Status** | In Progress |
+| **Priority** | P0 |
+| **Phase** | Contest task governance |
+| **Effort** | 1-2d |
+| **Owner** | codex |
+| **MVP track** | — |
+| **Depends on** | CTEST-000 |
+| **Linear** | SAN-544 |
+| **Evidence** | `tasks/contest/notes/CTEST-012-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-012-spec-normalization-linear-sync.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-012-spec-normalization-linear-sync.md>) |
+
+### Skills
+
+* `task-verifier`
+* `mermaid-diagrams`
+* `testing`
+
+### Docs
+
+* `../audit/2026-06-02-forensic-audit.md`
+* `../docs/04-verification-report-2026-06-02.md`
+* `../docs/05-production-task-standard.md`
+* `../docs/06-shadcn-component-audit.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/task-verifier/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/mermaid-diagrams/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/testing/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/shadcn/SKILL.md`
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Make the contest task pack executable by normalizing every CTEST spec to the repo task template, syncing issues to Linear, and recording proof for labels, links, Mermaid diagrams, and validation commands.
+
+## 2\. Goals
+
+* Normalize CTEST-000 through CTEST-011 to the ten-section task template.
+* Ensure every task has frontmatter: `id`, `title`, `status`, `priority`, `phase`, `effort`, `owner`, `depends_on`, `skill`, `labels`, `linear_project`, `verified_against`.
+* Ensure every task covers create tasks, tech stack, feature, problem solving, agents/workflows/automations, user journey, Mermaid diagrams, skills, MCP/official docs, verification steps, real-world examples, data, frontend/backend wiring, success criteria, production checklist, and testing.
+* Ensure every Linear issue has `prefix:CONT`, `prefix:EVT`, `track:contest`, `track:events`, and `phase:phase2`.
+* Record Linear issue identifiers back into task files when available.
+* Validate Markdown links and Mermaid blocks.
+
+## 3\. Features
+
+* Sofia can execute tasks without guessing what proof is required.
+* Patricia can see the contest/event scope in Linear.
+* Future audits can distinguish docs-only readiness from implementation readiness.
+
+## 4\. Workflows
+
+1. Run a local task frontmatter/section audit over `tasks/contest/tasks/*.md`.
+2. Patch missing sections and frontmatter.
+3. Verify every task references `../docs/05-production-task-standard.md`.
+4. Validate local links.
+5. Validate Mermaid blocks using MCP, Mermaid CLI, or documented offline syntax review.
+6. Verify shadcn UI gates for CTEST-004, CTEST-006, CTEST-008, CTEST-009, CTEST-010, and CTEST-011:
+
+   ```bash
+   cd mdeapp
+   npx shadcn@latest info --json
+   npx shadcn@latest docs field input-group textarea select checkbox radio-group table tabs drawer avatar alert empty sonner spinner --json
+   npx shadcn@latest add field input-group textarea select checkbox radio-group table tabs drawer avatar alert empty sonner spinner --dry-run
+   ```
+7. Create/update Linear issues in the Events Platform project.
+8. Write `tasks/contest/notes/CTEST-012-evidence.md`.
+
+## 5\. User Journeys
+
+* Sofia opens Linear and sees every contest task in order with labels and repo links.
+* Codex runs task-verifier and gets a clean spec-readiness table.
+* Roberto/Patricia can tell which tasks are Phase 2 contest work versus current Phase 1 events work.
+
+## 6\. Agents
+
+* No product agents are introduced.
+* Codex/Linear sync is governance only.
+
+## 7\. Integrations
+
+* Linear project: Events Platform.
+* Task docs under `tasks/contest/tasks`.
+* Mermaid diagrams under `tasks/contest/docs/01-mermaid-diagrams.md`.
+* shadcn audit under `tasks/contest/docs/06-shadcn-component-audit.md`.
+
+## 8\. Summary
+
+This is the first safe task to execute because it fixes planning hygiene without changing product runtime.
+
+## 9\. Definition Of Done
+
+- [X] Every CTEST task has required frontmatter (`evidence`, `phase:phase2`, `mvp_track` where applicable).
+- [X] Every CTEST task has the ten required sections (verified 2026-06-02 — see `../audit/2026-06-02-spec-verification.md`).
+- [X] Every CTEST task references `../docs/05-production-task-standard.md`.
+- [ ] Every UI CTEST task references `../docs/06-shadcn-component-audit.md`.
+- [ ] Every CTEST task covers the required production topics listed in `../docs/05-production-task-standard.md`.
+- [ ] Every CTEST task has labels `prefix:CONT` and `prefix:EVT`.
+- [X] Linear issues exist for every CTEST task (SAN-532..544 on Events Platform).
+- [X] Linear labels and project assignment verified 2026-06-02.
+- [X] Mermaid in every CTEST task §11; Linear descriptions synced (SAN-532..544, 2026-06-02).
+- [ ] Mermaid/link validation evidence is recorded in CTEST-012-evidence.md.
+
+## 10\. Tests
+
+- [ ] `rg -n ""labels:|prefix:CONT|prefix:EVT"" tasks/contest/tasks`.
+- [ ] `rg -L ""../docs/05-production-task-standard.md"" tasks/contest/tasks/CTEST-*.md` returns no task files.
+- [ ] `rg -L ""../docs/06-shadcn-component-audit.md"" tasks/contest/tasks/CTEST-00{4,6,8,9}.md tasks/contest/tasks/CTEST-010-public-profile-vote-share-growth.md tasks/contest/tasks/CTEST-011-openclaw-discovery-invite-sandbox.md` returns no task files.
+- [ ] `npx shadcn@latest info --json` records installed components.
+- [ ] `npx shadcn@latest docs field input-group textarea select checkbox radio-group table tabs drawer avatar alert empty sonner spinner --json` returns docs links.
+- [ ] `npx shadcn@latest add field input-group textarea select checkbox radio-group table tabs drawer avatar alert empty sonner spinner --dry-run` records component/dependency changes and overwrite warnings.
+- [ ] Local Markdown link check for `tasks/contest`.
+- [ ] Mermaid validation or offline syntax checklist.
+- [ ] Linear `list_issues(project=events-platform-46150ec19346)` returns all CTEST issues.
+- [ ] Evidence file records commands, results, and unresolved gaps.
+
+## Production Standard Addendum
+
+This governance task must verify every contest task satisfies `../docs/05-production-task-standard.md`: create tasks, tech stack, feature, problem solving, agents/workflows/automations, user journey, Mermaid diagrams, skills to run, MCP/official docs, verification steps, real-world examples, data, frontend/backend wiring, success criteria, production-ready checklist, and testing.
+
+## 11\. Mermaid diagrams
+
+### Linear sync workflow (this task)
+
+```mermaid
+flowchart TD
+  A[Audit CTEST specs] --> B[Add section 11 Mermaid per task]
+  B --> C[sync-ctest-linear.py]
+  C --> D[SAN-532 to SAN-544 descriptions]
+  D --> E[CTEST-012 evidence file]
+```","In Progress",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:contest, track:events, type:chore",,,,,"2026-06-03T03:39:17.752Z","2026-06-03T04:50:58.851Z","2026-06-03T04:12:57.963Z",,,,,"2026-06-10T03:39:18.320Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","eaa4e023-4e1e-499a-941c-6d89f8136507",7901,"SAN-533","SAN-532",
+"SAN-135","Sanjiovani","AIE-024 [MVP] Luma event detail layout (EVP-032)","## Order: 24/32 · Phase: **MVP**
+
+**Disk:** `MVP/AIE-024-mvp-luma-event-detail.md` · EVP-032
+**Wireframes:** 003 · `design/luma/screens/003-event-detail.md`
+
+## Layout
+
+```mermaid
+flowchart TD
+  H[Hero image] --> V[Vibe tags]
+  V --> AI[AI summary]
+  AI --> CTA[Sticky buy CTA]
+  CTA --> ASK[Ask Host entry]
+```
+
+Checkout stays deterministic — no AI in Stripe modal.","In Review",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:events, phase:mvp, prefix:AIE, scr",,,,,"2026-05-27T05:49:49.093Z","2026-06-08T14:05:26.312Z","2026-05-27T06:45:48.975Z",,,,,"2026-06-15T14:05:26.307Z","SAN-757","Phase 1 — mdeai MVP launch",,,"MediumRisk","9ea25190-a00b-4af6-9c70-249449c7ce72",17828,"SAN-117, SAN-732, SAN-731","SAN-120",
+"SAN-116","Sanjiovani","PAY-003 — Stripe webhook secret isolation","'> **Plain English:** Ticket Stripe webhooks and sponsor webhooks must use different signing secrets so one payment type can't spoof the other.
+
+**Order:** #2 — after PAY-001, before EVT-002.
+
+## Product code
+
+**PAY-002** — Isolate ticket vs sponsor Stripe webhooks
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-116](https://linear.app/sanjiovani/issue/SAN-116/pay-003-stripe-webhook-secret-isolation) |
+| Spec | `EVP-003-core` |
+| Prefix | PAY |
+","Done",,"Urgent","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:launch, area:payments, phase:launch, prefix:PAY, stack:nextjs, stack:stripe, track:core",1,"Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-05-27T05:49:22.573Z","2026-06-06T10:56:32.884Z","2026-05-27T05:49:30.337Z",,"2026-06-06T10:56:32.854Z",,,,,"Phase 1 — mdeai MVP launch",,,,"7f9d318c-a7cc-45d7-b8e0-d790388889d9",3178,"SAN-132, SAN-601","",
+"SAN-366","Sanjiovani","EVT-002 — Host publish production proof","'> **Plain English:** Roberto publishes an event through the host wizard on production and the live event row appears in Supabase — and shows up on `/host/events`.
+
+**Order:** #3 — host-publish proof. **This task BLOCKS** [SAN-115](https://linear.app/sanjiovani/issue/SAN-115/evt-001-mvp-launch-proof-ledger) (EVT-001 launch-proof ledger). **Spec:** `G3-core-host-publish-proof` · **Prefix:** EVT
+
+> ✅ **Reconciliation (2026-06-04):** `/host/events` ([SAN-118](https://linear.app/sanjiovani/issue/SAN-118/evt-014-host-events-list-page)) **is merged to** `main` **(**`facfc2f`**, PR #63) and live on prod** — an earlier forensic audit run on stale branch `57adf17` reported it missing; that is outdated. Dependency already corrected (this blocks [SAN-115](https://linear.app/sanjiovani/issue/SAN-115/evt-001-mvp-launch-proof-ledger)). `stack:stripe` label removed (host publish has no Stripe).
+
+---
+
+## 🔴 STEP 0 — Required pre-fix (BLOCKER): set `organizer_id` on publish
+
+**The publish edge function does NOT set** `organizer_id` — it only sets `created_by: userId`
+(`supabase/functions/approval-commit/index.ts`, insert block \~L124–142). Consequences:
+
+* Wizard-published events have `organizer_id = NULL`.
+* `/host/events` filters `.eq(""organizer_id"", user.id)` → **the host's published event will NOT appear** (step 6 fails).
+* RLS `events_organizer_select_own` (`organizer_id = auth.uid()`) won't match the host's own row.
+
+**Fix (1 line + redeploy edge fn):** add `organizer_id: userId` to the `events` insert. Edge function
+is server-side (service-role allowed there; not in `src/**`). **This proof cannot pass step 6 / the****
+****organizer RLS matrix until this lands + the edge fn is redeployed.** Track as a sub-fix or its own
+blocker issue.
+
+---
+
+## Scope: proof + Step-0 fix (then verification)
+
+Publish path is otherwise LIVE: Host wizard `/host/event/new` (SCREEN-016) · HITL commit
+`/api/approval-commit` (proxies the Supabase edge fn) · `/host/events` ([SAN-118](https://linear.app/sanjiovani/issue/SAN-118/evt-014-host-events-list-page)) · `/events/[slug]` ·
+RLS `events_organizer_select_own` + `events_public_select_published`.
+
+**Build/fix items (so this isn't mislabeled ""proof only""):**
+
+* 🔴 **Step 0** `organizer_id` edge-fn fix (above) — blocks the host-list half.
+* 🟠 **F1 bridge status bug** — `host-event-copilot-bridge.tsx` onPublished sets `status:""published""`
+  (L124) then the approve path sets `""pending_approval""` (L132). Fix so post-approve state stays
+  `published` (prevents a confusing wizard state). Recommended before the prod run.
+* ✅ in-scope test: **negative anon e2e** (`/events/[draft-slug]` → 404) — no auth fixture needed.
+* ⛔ out-of-scope → **separate follow-up:** authed Playwright e2e (needs a host storageState fixture
+  that does not exist yet).
+
+---
+
+## Flow
+
+### Host publish — sequence
+
+```mermaid
+sequenceDiagram
+    actor Roberto
+    participant Wizard as ""/host/event/new""
+    participant Agent as ""Mastra hostEventAgent (Gemini)""
+    participant HITL as ""Approval panel""
+    participant API as ""/api/approval-commit""
+    participant Edge as ""edge: approval-commit""
+    participant DB as ""Supabase events""
+    participant List as ""/host/events""
+    Roberto->>Wizard: Describe event (title, venue, tiers)
+    Wizard->>Agent: AG-UI tool calls (set_event_basics, set_venue, add_ticket_tier)
+    Agent-->>Wizard: Draft (EventDraftState in working memory)
+    Agent->>HITL: preview_and_publish (renderAndWaitForResponse)
+    Roberto->>HITL: Approve publish
+    HITL->>API: respond(approved draft)
+    API->>Edge: forward with session JWT
+    Edge->>DB: INSERT events (status='published', created_by + organizer_id=userId) %% Step-0 fix
+    DB-->>Edge: row id + slug
+    Edge-->>API: slug
+    API-->>Wizard: published slug
+    Roberto->>List: open ""/host/events""
+    List->>DB: select where organizer_id = auth.uid()
+    DB-->>List: published event row
+    List-->>Roberto: card ""Published"" + View public event
+```
+
+### Event status lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> draft: wizard working memory
+    draft --> published: HITL approve + commit (wizard skips intermediate states)
+    draft --> pending_approval: (admin moderation path)
+    pending_approval --> approved: HITL approve
+    pending_approval --> rejected: HITL reject
+    approved --> published: commit
+    published --> [*]
+    note right of published : visible on /host/events + /events/[slug]
+```
+
+### Production proof — steps
+
+```mermaid
+flowchart TD
+    A[""Step 0: organizer_id edge fix deployed""] --> B[""Log in as host on mdeai.co""]
+    B --> C[""/host/event/new: AI-fill event""]
+    C --> D{""HITL preview correct?""}
+    D -- No --> C
+    D -- Yes --> E[""Approve and publish""]
+    E --> F{""events row status=published AND organizer_id=host?""}
+    F -- No --> G[""Capture failure + Sentry""]
+    G --> Z[""FAIL SAN-366""]
+    F -- Yes --> H[""Open /host/events""]
+    H --> I{""Published card visible?""}
+    I -- No --> G
+    I -- Yes --> J[""Open /events/[slug] public page""]
+    J -- renders --> K[""Capture evidence -> SAN-366 Done""]
+    J -- 404/error --> G
+```
+
+---
+
+## Steps (execution)
+
+0. **Pre-fix:** deploy the `organizer_id` edge change + (recommended) the F1 bridge fix.
+1. **Sign in** as a host account on `https://www.mdeai.co` (real auth, not localhost).
+2. `/host/event/new` — AI-fill title, venue, date, ≥1 ticket tier.
+3. **HITL** — `preview_and_publish`; confirm preview; **Approve**.
+4. **Commit** — `/api/approval-commit` → edge fn writes the row; capture `slug`.
+5. **Verify DB** (Supabase MCP): row has `status='published'`, `organizer_id` **= host's** `auth.uid()` (not just `created_by`), non-null `slug`.
+6. **Verify** `/host/events` — event appears: **Published** chip + working **View public event** link.
+7. **Verify public** — `/events/[slug]` renders (tiers + Buy CTA).
+8. **Capture evidence** → [SAN-366](https://linear.app/sanjiovani/issue/SAN-366/evt-002-host-publish-production-proof) In Review/Done.
+
+---
+
+## Success criteria
+
+- [ ] **Step 0 merged + edge redeployed** — publish writes `organizer_id`.
+- [ ] Host completes wizard → HITL approve → publish on prod with no 5xx.
+- [ ] `public.events` row has `status='published'`, `organizer_id` **= host uid**, non-null `slug`.
+- [ ] Event renders on `/host/events` (Published chip + working link).
+- [ ] `/events/[slug]` renders publicly.
+- [ ] No console / network errors on the happy path.
+- [ ] An `ai_runs` row is written for the wizard's agent turns.
+
+### RLS proof matrix (all three required)
+
+- [ ] **Host** sees own published event on `/host/events` (`events_organizer_select_own`) — *requires Step 0*.
+- [ ] **Anon** reads the published event at `/events/[slug]` (`events_public_select_published`).
+- [ ] **Anon CANNOT** read a draft event → 404. **Note:** the wizard commits straight to
+  `status='published'` (no draft), so seed a `status='draft'` row manually to test this negative.
+
+---
+
+## Production-ready checklist
+
+- [ ] Step 0 `organizer_id` fix deployed (gates the host-list proof).
+- [ ] Prod Gemini key (`GOOGLE_GENERATIVE_AI_API_KEY`) set — agent turns succeed, no fallback (preflight: `/api/copilotkit` smoke or a Mastra trace).
+- [ ] `/api/approval-commit` + edge fn server-only; service-role never in `src/**` (hook `no-service-role-in-src` green).
+- [ ] RLS proof matrix passes (all 3).
+- [ ] No PII / secrets in logs; Sentry clean for the publish path.
+- [ ] Vercel prod deploy = current `main` SHA.
+
+## Risks to verify (NOT gates for this proof)
+
+* **Idempotency unconfirmed:** insert is in the edge fn; `approvalRequestId` is not used for dedupe and the approve button's `decided` flag is client-side only → double-click could create duplicate rows. Verify during the run; if duplicates occur, file a follow-up build task (idempotency key / slug-unique + handle `23505`). Do not gate this proof on it.
+* **F1 bridge status overwrite** (see Scope) — fix recommended pre-run.
+* `event_tickets` **vs** `details.ticket_tiers` — tiers are written to the `event_tickets` table AND duplicated in the `details` JSON; document the canonical source for the (deferred) Andrés checkout path.
+
+---
+
+## Tests
+
+* **Vitest:** `approval-commit-schema` (payload/slug) + `host-event-agent` (registration) pass 6/6; `/host/events` mapper covered by [SAN-118](https://linear.app/sanjiovani/issue/SAN-118/evt-014-host-events-list-page). Add: insert-field-mapping test asserting `organizer_id` is set (Step 0 regression guard).
+* **Playwright — anon negative (in scope):** anon GET `/events/[draft-slug]` → 404.
+* **Playwright — authed happy path (OUT of scope → separate task):** wizard → approve → `/host/events` card → `/events/[slug]`. Blocked on a host storageState fixture that does not exist yet.
+* **Prod smoke / proof:** the 8-step run on `mdeai.co` with screenshots + Supabase row → evidence file.
+
+---
+
+## Evidence (attach on close)
+
+`tasks/notes/EVT-002-host-publish-proof-evidence.md` — Supabase row (id, status, **organizer_id**, created_by, slug) + screenshots (wizard → approve → `/host/events` Published card → `/events/[slug]`).
+
+## Traceability
+
+| Field | Value |
+| -- | -- |
+| Linear | [SAN-366](https://linear.app/sanjiovani/issue/SAN-366/evt-002-host-publish-production-proof) |
+| Spec | `G3-core-host-publish-proof` |
+| Prefix | EVT · **⚠️ title ""EVT-002"" collides with** [SAN-120](https://linear.app/sanjiovani/issue/SAN-120/evt-002-event-maps-venue-integration) **(EVT-002 maps+venue) — consider retitling to ""G3 — Host publish production proof""** |
+| North-star | G3 — Roberto host publish @ [mdeai.co](<http://mdeai.co>) |
+| **Blocks** | [SAN-115](https://linear.app/sanjiovani/issue/SAN-115/evt-001-mvp-launch-proof-ledger) (EVT-001 launch-proof ledger) |
+| Step-0 blocker | `organizer_id` not set on wizard publish (edge fn) — must fix first |
+| Related shipped | [SAN-118](https://linear.app/sanjiovani/issue/SAN-118/evt-014-host-events-list-page) `/host/events`, SCREEN-016 host wizard |
+| Follow-up build | Host authed e2e fixture |
+","Done",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca","ai@socialmediaville.ca","area:events, area:launch, phase:launch, prefix:EVT, stack:mastra, stack:nextjs",1,"Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-05-30T09:24:19.087Z","2026-06-06T11:31:05.113Z","2026-06-04T04:44:35.932Z",,"2026-06-04T06:11:39.652Z",,,,,"Phase 1 — mdeai MVP launch",,,,"593e31ef-89be-4aa3-9a41-2ddcdca7cce2",6343,"SAN-115, SAN-462, SAN-120, SAN-118, SAN-660, SAN-602","",
+"SAN-117","Sanjiovani","EVT-013 — Event cards in AI chat","Event cards now render inline via `EventFastPathContext` + `EventFastPathPanel` — no agent round-trip required.
+
+**Proof:** SCREEN-006 3/3 green · PR #14 merged 2026-05-30 · browser smoke: ""Found 10 events"" instant on main.","Done",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"",1,"Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-05-27T05:49:33.911Z","2026-06-05T05:56:44.841Z",,,"2026-05-30T11:50:24.178Z",,,,,"Phase 1 — mdeai MVP launch",,,,"d0e82c9e-b497-4379-907f-88cb43f095b7",13204,"SAN-135, SAN-119, SAN-118, SAN-97","",
+"SAN-118","Sanjiovani","EVT-014 — Host events list page","## Product code
+
+**EVT-003** — Build Roberto’s “My events” dashboard
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-118 |
+| Spec | `EVP-014-core` |
+| Prefix | EVT |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Spec:** `EVP-014-core` · **IMP:** 086 · **Persona:** Roberto
+
+| Field | Value |
+| -- | -- |
+| Task ID | `EVP-014-core` |
+| Spec path | `EVP-014-core` |
+| Board group | area:events |
+
+*Title updated by* `scripts/linear-apply-product-titles.mjs` *(2026-05-30).*
+
+---
+
+**Task ID:** `EVP-014-core`
+**Spec:** `tasks/events/EVP-014-core-host-events-list-page.md`
+**Repo status:** Not Started
+**Priority:** P0
+**Phase:** W3 — Day 2 (Roberto hero list view)
+**Depends on:** F07, F08, F22, EVP-013-core, EVP-009-core
+
+## Summary
+
+## 1\. Purpose
+
+After Roberto creates an event via EVP-010-core wizard + EVP-011-core HITL approval + EVP-012-core commit, he needs a place to see his drafts AND published events. EVP-014-core ships the read-only list page `/host/events` using EVP-013-core `EventCard` over real Supabase `public.events` data (filter on `host_id = current_user.id`). Empty-state shows ""Create your first event"" CTA → `/host/event/new` (EVP-010-core).
+
+## 2\. Goals
+
+* `mdeapp/src/app/host/events/page.tsx` — **Server Component** that fetches Roberto's events from Supabase server-side (no client roundtrip)
+* Auth-gated via F08 middleware
+* Renders ≤ 50 events as `<EventCard>` grid (EVP-013-core), filtered by `status: 'draft' | 'pending_approval' | 'approved' | 'published'` (EVP-008-core enum)
+* Filter bar reuses EV
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Done",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca","ai@socialmediaville.ca","area:events, phase:mvp, prefix:EVT, stack:nextjs",,,,,"2026-05-27T05:49:34.446Z","2026-06-08T08:11:59.864Z","2026-06-04T03:08:12.902Z",,"2026-06-04T03:24:59.973Z",,,,,"Phase 1 — mdeai MVP launch",,,,"8170d1bf-4e5b-45dc-85f1-9e93f3e2c6ed",6509,"SAN-117, SAN-97, SAN-730, SAN-729, SAN-660, SAN-366","",

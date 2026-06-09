@@ -1,0 +1,14 @@
+flowchart TD
+  subgraph Demand
+    C["Camila"] & A["Andrés"] & T["Tourist"]
+  end
+  C & A & T --> AI["AI Concierge"]
+  AI --> R["Rentals"] & E["Events"] & V["Venues"] & TR["Trips"] & MP["Marketplace"]
+  subgraph Supply
+    R --> BRK["Brokers"]
+    E --> HOST["Hosts"]
+    V --> VEN["Venues"]
+    MP --> VND["Vendors"]
+  end
+  BRK & HOST & VEN & VND --> $$["Transactions → mdeai fee"]
+  $$ --> DASH["Partner dashboards + AI assistant"]

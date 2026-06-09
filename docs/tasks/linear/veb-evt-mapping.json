@@ -1,0 +1,123 @@
+{
+  "updatedAt": "2026-06-04",
+  "note": "VEB pack dual-track: disk VEB-* filenames, Linear EVT-033..055 titles",
+  "build": [
+    {
+      "evt": "EVT-033",
+      "san": "SAN-492",
+      "title": "Event venue + offerings schema"
+    },
+    {
+      "evt": "EVT-034",
+      "san": "SAN-493",
+      "title": "Seed Mamacita + 5 event partners"
+    },
+    {
+      "evt": "EVT-035",
+      "san": "SAN-494",
+      "title": "Restaurant card Event Venue CTA"
+    },
+    {
+      "evt": "EVT-036",
+      "san": "SAN-495",
+      "title": "Event offerings detail panel"
+    },
+    {
+      "evt": "EVT-037",
+      "san": "SAN-496",
+      "title": "Request proposal modal (HITL)"
+    },
+    {
+      "evt": "EVT-038",
+      "san": "SAN-497",
+      "title": "eventVenueAgent + search/rank tools"
+    },
+    {
+      "evt": "EVT-039",
+      "san": "SAN-498",
+      "title": "AI venue match score panel"
+    },
+    {
+      "evt": "EVT-040",
+      "san": "SAN-499",
+      "title": "Compare venues side-by-side"
+    },
+    {
+      "evt": "EVT-041",
+      "san": "SAN-500",
+      "title": "Host wizard venue step (Roberto)"
+    },
+    {
+      "evt": "EVT-042",
+      "san": "SAN-501",
+      "title": "eventVenueBookingWorkflow"
+    },
+    {
+      "evt": "EVT-043",
+      "san": "SAN-502",
+      "title": "Patricia admin queue (event requests)"
+    },
+    {
+      "evt": "EVT-044",
+      "san": "SAN-503",
+      "title": "Add confirmed booking to trip"
+    },
+    {
+      "evt": "EVT-045",
+      "san": "SAN-504",
+      "title": "Venue availability calendar"
+    },
+    {
+      "evt": "EVT-046",
+      "san": "SAN-505",
+      "title": "Auto follow-up WA drafts (24h)"
+    },
+    {
+      "evt": "EVT-047",
+      "san": "SAN-506",
+      "title": "Venue CRM for Patricia"
+    },
+    {
+      "evt": "EVT-048",
+      "san": "SAN-507",
+      "title": "Dynamic package pricing"
+    },
+    {
+      "evt": "EVT-049",
+      "san": "SAN-508",
+      "title": "Sponsor \u2194 venue match"
+    },
+    {
+      "evt": "EVT-050",
+      "san": "SAN-509",
+      "title": "OpenClaw venue enrichment (plan)"
+    }
+  ],
+  "wireframes": [
+    {
+      "evt": "EVT-051",
+      "san": "SAN-510",
+      "title": "Wire \u2014 Event offerings panel + Event Venue CTA"
+    },
+    {
+      "evt": "EVT-052",
+      "san": "SAN-511",
+      "title": "Wire \u2014 Request proposal modal"
+    },
+    {
+      "evt": "EVT-053",
+      "san": "SAN-512",
+      "title": "Wire \u2014 Venue match panel + compare"
+    },
+    {
+      "evt": "EVT-054",
+      "san": "SAN-513",
+      "title": "Wire \u2014 Host wizard venue step"
+    },
+    {
+      "evt": "EVT-055",
+      "san": "SAN-514",
+      "title": "Wire \u2014 Admin event booking queue"
+    }
+  ]
+}

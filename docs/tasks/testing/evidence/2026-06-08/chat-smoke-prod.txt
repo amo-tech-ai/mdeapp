@@ -1,0 +1,16 @@
+PASS  GET / — 200 3075ms
+WARN  GET / — 3075ms (>2500ms)
+FAIL  POST /api/copilotkit (empty) — 401 4684ms
+PASS  POST /api/rentals/search — 5 results 927ms source=supabase
+PASS  Rental card shape — Cozy Studio Apartment in Laureles
+PASS  Rental geo (lat/lng or explicit absence) — 6.245678,-75.589012
+PASS  Rental unique IDs — 5 rows
+PASS  POST /api/events/search any×10 — 10 results 318ms
+PASS  POST /api/events/search this_week (info) — 1 results 239ms — sparse OK
+PASS  Event card shape — Manda MoorFLOW – Live
+PASS  Event geo/source backing — https://mdeai.co/events/85a8e956-43ac-461b-8da7-1a773b61e5d0
+PASS  Event unique IDs — 10 rows
+PASS  GET /api/places/detail invalid placeId — 400
+PASS  GET /api/places/detail missing placeId — 400
+
+1 check(s) failed, 1 slow warning(s)

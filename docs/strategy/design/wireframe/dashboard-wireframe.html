@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MDE — Dashboard Wireframe + Component Spec (D-06)</title>
+<style>
+  :root{
+    --bg: oklch(0.985 0.002 247); --surface: oklch(1 0 0); --ink: oklch(0.28 0.03 257);
+    --muted: oklch(0.55 0.02 257); --line: oklch(0.90 0.006 257); --line-2: oklch(0.84 0.008 257);
+    --primary: oklch(0.508 0.118 175); --primary-soft: oklch(0.95 0.03 178);
+    --accent: oklch(0.795 0.184 86); --accent-soft: oklch(0.96 0.05 90);
+    --ph: linear-gradient(150deg, oklch(0.970 0.015 180), oklch(0.926 0.030 184));
+    --radius: 14px;
+    --shadow: 0 1px 2px oklch(0.4 0.03 257 / 0.05), 0 8px 24px oklch(0.4 0.03 257 / 0.06);
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:ui-sans-serif,system-ui,sans-serif; font-size:14px; line-height:1.5; }
+  .serif{ font-family:"Playfair Display",Georgia,serif; }
+  a{ color:var(--primary); text-decoration:none; }
+  .wrap{ max-width:1200px; margin:0 auto; padding:0 20px 80px; }
+  header.top{ position:sticky; top:0; z-index:20; background:oklch(0.985 0.002 247/0.86); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+  .top-inner{ max-width:1200px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .brand{ display:flex; align-items:center; gap:9px; font-weight:700; }
+  .brand .dot{ width:22px; height:22px; border-radius:7px; background:linear-gradient(135deg,var(--accent),oklch(0.74 0.16 70)); }
+  .brand small{ font-weight:500; color:var(--muted); }
+  .top-spacer{ flex:1; }
+  .chip{ display:inline-flex; align-items:center; gap:6px; padding:3px 9px; border-radius:999px; font-size:11.5px; font-weight:600; border:1px solid var(--line-2); background:var(--surface); color:var(--muted); }
+  .chip.shad{ background:oklch(0.95 0.005 257); border-color:transparent; }
+  .chip.ai{ background:var(--accent-soft); border-color:transparent; color:oklch(0.48 0.12 80); }
+  .chip.custom{ border:1px dashed var(--line-2); }
+  .titleblock{ padding:34px 0 14px; }
+  .titleblock h1{ margin:0 0 6px; font-size:30px; font-weight:600; }
+  .titleblock p{ margin:0; color:var(--muted); max-width:65ch; }
+  .meta-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .info{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); margin:8px 0 4px; }
+  .info h4{ margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .rules{ margin:0; padding-left:18px; }
+  .rules li{ margin:3px 0; }
+  .row{ display:grid; grid-template-columns:30px minmax(0,1fr) 360px; gap:18px; align-items:start; padding:22px 0; border-top:1px solid var(--line); scroll-margin-top:70px; }
+  .rail .n{ font-family:ui-monospace,monospace; font-size:13px; font-weight:700; color:var(--primary); background:var(--primary-soft); border-radius:8px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; position:sticky; top:64px; }
+  .wire{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
+  .wire .lbl{ font-size:10.5px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:10px; }
+  .g{ height:9px; border-radius:5px; background:oklch(0.92 0.006 257); margin-bottom:7px; }
+  .g.w70{ width:70%; } .g.w50{ width:50%; }
+  .cardrow{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:10px; }
+  .dcard{ border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  .dcard .img{ background:var(--ph); height:72px; }
+  .dcard .b{ padding:8px 10px; }
+  .zone-tabs{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+  .ztab{ padding:6px 12px; border-radius:999px; font-size:11px; font-weight:600; border:1px solid var(--line); color:var(--muted); }
+  .ztab.on{ background:var(--primary); color:#fff; border-color:transparent; }
+  .empty{ border:2px dashed var(--line-2); border-radius:12px; padding:24px; text-align:center; color:var(--muted); font-size:12px; }
+  .spec{ background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--primary); border-radius:12px; padding:14px 15px; box-shadow:var(--shadow); position:sticky; top:64px; }
+  .spec h3{ margin:0 0 9px; font-size:15px; }
+  .spec .picks{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:9px; }
+  .spec ul.notes{ margin:0; padding-left:16px; color:var(--muted); font-size:12.5px; }
+  .spec ul.notes li{ margin:3px 0; }
+  @media (max-width:900px){ .row{ grid-template-columns:24px 1fr; } .spec{ grid-column:1/-1; position:static; } .grid2{ grid-template-columns:1fr; } .cardrow{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><span class="dot"></span>mde<span style="color:var(--muted)">·</span>ai&nbsp;<small>dashboard wireframe</small></div>
+    <div class="top-spacer"></div>
+    <span class="chip shad">shadcn</span>
+    <span class="chip ai">Concierge empty-fill</span>
+    <span class="chip custom">OS not analytics</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="titleblock">
+    <h1 class="serif">Dashboard — wireframe &amp; component spec</h1>
+    <p>Build-ready blueprint for the <b>5-domain personal OS</b> (manage your life). Maps to <code>/saved</code> · <code>/trips</code> · <code>/me/tickets</code>. Visual target: <a href="../mockups/dashboard.html">mockups/dashboard.html</a>. IA: <a href="../docs/ia-journey.md">ia-journey.md</a> · inventory: <a href="../docs/component-inventory.md">component-inventory.md</a>. <b>Post-MVP — must not block launch.</b></p>
+    <div class="meta-row">
+      <span class="chip">5 zones (9→5 consolidation)</span>
+      <span class="chip">no charts · no SaaS metrics</span>
+      <span class="chip">first-run = concierge fills void</span>
+    </div>
+  </div>
+
+  <div class="info">
+    <h4>Global rules — Dashboard OS</h4>
+    <div class="grid2">
+      <ul class="rules">
+        <li><b>OS, not analytics:</b> Upcoming plans · trips · saved — never KPI charts</li>
+        <li><b>5 zones:</b> Upcoming · Trips · Saved · For You · Activity</li>
+        <li><b>Routes:</b> reuse LIVE/SHELL pages — re-skin only (D-10)</li>
+      </ul>
+      <ul class="rules">
+        <li><b>Empty state:</b> new user → concierge prompts, not blank panels</li>
+        <li><b>Sidebar + ⌘K</b> after D-07 install</li>
+        <li><b>Light canvas</b> — same tokens as Explore</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 01 Shell -->
+  <div class="row" id="z01">
+    <div class="rail"><div class="n">01</div></div>
+    <div class="wire">
+      <div class="lbl">App shell — sidebar + main</div>
+      <div class="g w50"></div>
+      <div class="zone-tabs">
+        <span class="ztab on">Upcoming</span><span class="ztab">Trips</span><span class="ztab">Saved</span><span class="ztab">For You</span><span class="ztab">Activity</span>
+      </div>
+      <div class="g w70"></div>
+    </div>
+    <div class="spec">
+      <h3>Shell + zone nav</h3>
+      <div class="picks"><span class="chip shad">sidebar</span><span class="chip shad">tabs</span></div>
+      <ul class="notes">
+        <li>D-07: install <code>sidebar</code></li>
+        <li>Zone switch = tabs or sidebar sections — not 9 top-level items</li>
+        <li>Mobile: bottom nav + sheet drawer</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 02 Upcoming -->
+  <div class="row" id="z02">
+    <div class="rail"><div class="n">02</div></div>
+    <div class="wire">
+      <div class="lbl">Upcoming — tickets · reservations · events this week</div>
+      <div class="cardrow">
+        <div class="dcard"><div class="img"></div><div class="b"><div class="g w70"></div><div class="g w50"></div></div></div>
+        <div class="dcard"><div class="img"></div><div class="b"><div class="g w70"></div><div class="g w50"></div></div></div>
+        <div class="dcard"><div class="img"></div><div class="b"><div class="g w70"></div><div class="g w50"></div></div></div>
+      </div>
+    </div>
+    <div class="spec">
+      <h3>Upcoming zone</h3>
+      <div class="picks"><span class="chip shad">card</span><span class="chip custom">ticket QR</span></div>
+      <ul class="notes">
+        <li>Route: <code>/me/tickets</code> · SAN-259</li>
+        <li>Folds: Plans + Reservations + Bookings + Tickets</li>
+        <li>QR pass for Andrés persona</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 03 Trips -->
+  <div class="row" id="z03">
+    <div class="rail"><div class="n">03</div></div>
+    <div class="wire">
+      <div class="lbl">Trips — itinerary workspace</div>
+      <div class="g w70"></div>
+      <div class="g"></div><div class="g"></div>
+    </div>
+    <div class="spec">
+      <h3>Trips zone</h3>
+      <div class="picks"><span class="chip custom">trips workspace</span></div>
+      <ul class="notes">
+        <li>Route: <code>/trips</code> (SHELL) · SAN-255</li>
+        <li>Custom — multi-day plan, not a table</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 04 Saved -->
+  <div class="row" id="z04">
+    <div class="rail"><div class="n">04</div></div>
+    <div class="wire">
+      <div class="lbl">Saved collections</div>
+      <div class="cardrow">
+        <div class="dcard"><div class="img"></div><div class="b"><div class="g w70"></div></div></div>
+        <div class="dcard"><div class="img"></div><div class="b"><div class="g w70"></div></div></div>
+      </div>
+    </div>
+    <div class="spec">
+      <h3>Saved zone</h3>
+      <div class="picks"><span class="chip custom">collections</span></div>
+      <ul class="notes">
+        <li>Route: <code>/saved</code> (LIVE) · SAN-253</li>
+        <li>Mindtrip-style boards</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 05 For You + Activity -->
+  <div class="row" id="z05">
+    <div class="rail"><div class="n">05</div></div>
+    <div class="wire">
+      <div class="lbl">For You (recs) + Activity (history)</div>
+      <div class="g w50"></div>
+      <div class="empty">Empty? → Concierge band: "Plan your first weekend in Medellín"</div>
+    </div>
+    <div class="spec">
+      <h3>For You · Activity</h3>
+      <div class="picks"><span class="chip ai">grounded recs</span><span class="chip shad">list</span></div>
+      <ul class="notes">
+        <li>For You = concierge-driven, grounded signals only</li>
+        <li>Activity = chronological — no analytics dashboard</li>
+        <li><b>First-run:</b> concierge fills void (improvement #7)</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

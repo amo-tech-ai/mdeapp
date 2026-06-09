@@ -1,0 +1,40 @@
+{
+  "at": "2026-05-30T12:31:22.276Z",
+  "dryRun": false,
+  "auditOnly": true,
+  "registryCount": 57,
+  "misCount": 35,
+  "intCount": 22,
+  "phase1Active": [
+    "VEC-001",
+    "DATA-039",
+    "DATA-040",
+    "DATA-041",
+    "DATA-042",
+    "DATA-043",
+    "DATA-044",
+    "DATA-045",
+    "DATA-047",
+    "SEARCH-003",
+    "MASTRA-MIS-001"
+  ],
+  "missingInRegistry": {
+    "AI-005": "No spec in intelligence-plan §5.5 — gap in AI-001…020 range",
+    "AI-006": "No spec in intelligence-plan §5.5",
+    "AI-007": "No spec in intelligence-plan §5.5",
+    "AI-008": "No spec in intelligence-plan §5.5",
+    "AI-009": "No spec in intelligence-plan §5.5",
+    "AI-016": "No spec in intelligence-plan §5.5",
+    "AI-017": "No spec in intelligence-plan §5.5",
+    "AI-018": "No spec in intelligence-plan §5.5",
+    "AI-019": "No spec in intelligence-plan §5.5"
+  },
+  "created": [],
+  "updated": [],
+  "skipped": [],
+  "errors": [],
+  "collisions": [],
+  "dependencyGaps": [],
+  "labelCheck": [],
+  "views": []
+}

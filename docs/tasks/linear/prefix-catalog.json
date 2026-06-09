@@ -1,0 +1,2669 @@
+{
+  "generated": "2026-06-04T05:30:00.000Z",
+  "scheme": "PREFIX-### in title; SAN-### immutable in Linear",
+  "counters": {
+    "SYS": 55,
+    "MAP": 13,
+    "CAF": 1,
+    "UIX": 43,
+    "EVT": 55,
+    "VEN": 35,
+    "TRP": 27,
+    "AUT": 40
+  },
+  "entries": [
+    {
+      "linearId": "a5e8c41b-8ad6-431b-8bb2-0a682ee29258",
+      "identifier": "SAN-95",
+      "code": "SYS-001",
+      "title": "SYS-001 \u2014 Port evaluationAgent + scorers + Vercel deploy prep",
+      "spec": "F20",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "4c23e7b6-a630-40be-bc04-7dd96d6e7528",
+      "identifier": "SAN-96",
+      "code": "SYS-002",
+      "title": "SYS-002 \u2014 Auto-review \u2014 manual calibration (rules + subagent only, no hooks)",
+      "spec": "F21A",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "1d09e480-78ca-408f-b31b-a29f7c89b9ad",
+      "identifier": "SAN-97",
+      "code": "SYS-003",
+      "title": "SYS-003 \u2014 Port Medell\u00edn hero photo library from legacy",
+      "spec": "F22",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "4dc467f1-e048-4e77-ae6b-9f4dc7d6e7b7",
+      "identifier": "SAN-98",
+      "code": "SYS-004",
+      "title": "SYS-004 \u2014 Port RestaurantCard + RestaurantFilters component",
+      "spec": "F26",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "ac4796b5-a604-4734-af91-75a7d849dd23",
+      "identifier": "SAN-99",
+      "code": "SYS-005",
+      "title": "SYS-005 \u2014 Port OnboardingLayout \u2014 first-run shell",
+      "spec": "F30",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "22d8314c-df53-4de4-9a2b-716d03aa83ee",
+      "identifier": "SAN-100",
+      "code": "OPS-002",
+      "title": "OPS-002 \u2014 Run production smoke tests on mdeai.co",
+      "spec": "F32",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "OPS"
+    },
+    {
+      "linearId": "6e67b0f6-cbd4-46b6-a9bf-e208cf849e96",
+      "identifier": "SAN-101",
+      "code": "MAP-001",
+      "title": "MAP-001 \u2014 ADK LlmAgent + McpToolset package (Phase 2 follow-up)",
+      "spec": "MAP-002A-ADK",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "MAP"
+    },
+    {
+      "linearId": "0f1d7c41-46b0-4ed8-9276-61040d373912",
+      "identifier": "SAN-102",
+      "code": "MAP-002",
+      "title": "MAP-002 \u2014 places-proxy edge + places_cache + RLS",
+      "spec": "MAP-005",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "MAP"
+    },
+    {
+      "linearId": "1b88f32e-34f0-4ef9-ab30-6ac6752682e7",
+      "identifier": "SAN-103",
+      "code": "MAP-003",
+      "title": "MAP-003 \u2014 Nearby Search + Show nearby on RentalCard",
+      "spec": "MAP-006",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "MAP"
+    },
+    {
+      "linearId": "ff60d4ae-6fe1-4ddf-b850-310611cf792a",
+      "identifier": "SAN-104",
+      "code": "MAP-004",
+      "title": "MAP-004 \u2014 Place autocomplete \u2014 Roberto host venue",
+      "spec": "MAP-010",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "MAP"
+    },
+    {
+      "linearId": "2d96050d-321f-4b9e-b86b-5e888c81eed0",
+      "identifier": "SAN-105",
+      "code": "MAP-005",
+      "title": "MAP-005 \u2014 Route previews + commute cards",
+      "spec": "MAP-011",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "MAP"
+    },
+    {
+      "linearId": "b9422372-1829-48fe-94c5-5d492feb29ae",
+      "identifier": "SAN-106",
+      "code": "MAP-006",
+      "title": "MAP-006 \u2014 Neighborhood intelligence cards",
+      "spec": "MAP-012",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "MAP"
+    },
+    {
+      "linearId": "9be8eeda-486e-4586-bd82-91b9850336ab",
+      "identifier": "SAN-107",
+      "code": "MAP-007",
+      "title": "MAP-007 \u2014 Colombia coverage spike \u2014 Places Aggregate vs Insights",
+      "spec": "MAP-012A",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "MAP"
+    },
+    {
+      "linearId": "47d3b65b-3c16-4699-bac8-e97868f6b1df",
+      "identifier": "SAN-108",
+      "code": "MAP-008",
+      "title": "MAP-008 \u2014 Static Maps API \u2014 event location previews + OG images",
+      "spec": "MAP-023",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "MAP"
+    },
+    {
+      "linearId": "afea5713-7903-47db-aa68-537f999199ae",
+      "identifier": "SAN-109",
+      "code": "CAF-001",
+      "title": "CAF-001 \u2014 Cafe booking requests schema + RLS",
+      "spec": "CAFE-001",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "CAF"
+    },
+    {
+      "linearId": "473afde1-db67-4849-9240-4c85c5c07f04",
+      "identifier": "SAN-110",
+      "code": "UIX-001",
+      "title": "UIX-001 \u2014 Chat Nav Rail + Thread List",
+      "spec": "SCREEN-002",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "70c7c8c9-8643-447e-8ec5-3a31777d9e2d",
+      "identifier": "SAN-111",
+      "code": "UIX-002",
+      "title": "UIX-002 \u2014 Map Exploration Right Panel",
+      "spec": "SCREEN-010",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "20b32b0b-0bd5-48a6-a960-8cc088b45c48",
+      "identifier": "SAN-112",
+      "code": "UIX-003",
+      "title": "UIX-003 \u2014 Login / Signup Polish",
+      "spec": "SCREEN-017",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "67ea57b2-28ac-4bfa-b11b-29093a6e3d70",
+      "identifier": "SAN-113",
+      "code": "UIX-004",
+      "title": "UIX-004 \u2014 Mobile Responsive 3-Panel Shell",
+      "spec": "SCREEN-018",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "72cc6e55-4c01-434d-a9b4-b0fa0ebc01bf",
+      "identifier": "SAN-114",
+      "code": "CAF-001",
+      "title": "CAF-001 \u2014 Build caf\u00e9 discovery cards in chat",
+      "spec": "SCREEN-021",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "state": "Done",
+      "prefix": "CAF"
+    },
+    {
+      "linearId": "03791e39-044e-4990-9d1c-c825e5f71455",
+      "identifier": "SAN-115",
+      "code": "OPS-001",
+      "title": "OPS-001 \u2014 Sign off MVP launch proof checklist",
+      "spec": "EVP-001-core",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "OPS"
+    },
+    {
+      "linearId": "7f9d318c-a7cc-45d7-b8e0-d790388889d9",
+      "identifier": "SAN-116",
+      "code": "PAY-002",
+      "title": "PAY-002 \u2014 Isolate ticket vs sponsor Stripe webhooks",
+      "spec": "EVP-003-core",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "PAY"
+    },
+    {
+      "linearId": "d0e82c9e-b497-4379-907f-88cb43f095b7",
+      "identifier": "SAN-117",
+      "code": "EVT-001",
+      "title": "EVT-001 \u2014 Fix event cards inside AI chat",
+      "spec": "EVP-013-core",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "8170d1bf-4e5b-45dc-85f1-9e93f3e2c6ed",
+      "identifier": "SAN-118",
+      "code": "EVT-003",
+      "title": "EVT-003 \u2014 Build Roberto\u2019s \u201cMy events\u201d dashboard",
+      "spec": "EVP-014-core",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "149db62b-7305-461a-aaa7-239007012997",
+      "identifier": "SAN-119",
+      "code": "EVT-001",
+      "title": "EVT-001 \u2014 Grounded event discovery",
+      "spec": "EVP-015-",
+      "ms": "\ud83d\udd2e Events \u2014 Discovery",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "f244a411-288c-4d1b-9fde-9fa8ea5e9508",
+      "identifier": "SAN-120",
+      "code": "EVT-002",
+      "title": "EVT-002 \u2014 Event maps + venue integration",
+      "spec": "EVP-016-",
+      "ms": "\ud83d\udd2e Events \u2014 Discovery",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "7343091d-40a4-42eb-aa59-e79bfe9d6365",
+      "identifier": "SAN-121",
+      "code": "EVT-003",
+      "title": "EVT-003 \u2014 Event web discovery \u2014 future task pack (EVP-019\u2026028)",
+      "spec": "EVP-018-",
+      "ms": "\ud83d\udd2e Events \u2014 Discovery",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "4e928f92-462e-4399-b7aa-e72fec371b2d",
+      "identifier": "SAN-122",
+      "code": "EVT-004",
+      "title": "EVT-004 \u2014 Research official docs (CopilotKit, Mastra, ADK, Grounding, Places)",
+      "spec": "EVP-019-",
+      "ms": "\ud83d\udd2e Events \u2014 Discovery",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "af93f2ed-0b20-45e9-90bb-f40329b37586",
+      "identifier": "SAN-123",
+      "code": "EVT-005",
+      "title": "EVT-005 \u2014 Discovered events data model + RLS",
+      "spec": "EVP-020-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "8827a4d0-f2a6-4209-8b96-892f86a3abdb",
+      "identifier": "SAN-124",
+      "code": "EVT-006",
+      "title": "EVT-006 \u2014 Google Search Grounding query templates",
+      "spec": "EVP-021-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "84d31497-a566-465c-a483-1c8c640b6c6b",
+      "identifier": "SAN-125",
+      "code": "EVT-007",
+      "title": "EVT-007 \u2014 eventDiscoveryWorkflow (Mastra)",
+      "spec": "EVP-022-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "9c3cf8db-b40f-4683-b2fb-51e26092b70f",
+      "identifier": "SAN-126",
+      "code": "EVT-008",
+      "title": "EVT-008 \u2014 ADK SearchAgent + MapsAgent sidecar",
+      "spec": "EVP-023-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "6dfc07d0-c9be-4359-a76e-cb04fddc2de6",
+      "identifier": "SAN-127",
+      "code": "EVT-009",
+      "title": "EVT-009 \u2014 Places API enrichment for discovered events",
+      "spec": "EVP-024-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "ea0155c4-93e2-4365-9435-5c0d9050843c",
+      "identifier": "SAN-128",
+      "code": "EVT-010",
+      "title": "EVT-010 \u2014 CopilotKit discovery UI (cards, attribution, approval)",
+      "spec": "EVP-025-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "494bfcda-a034-4b37-b6e2-f69a9d4c6350",
+      "identifier": "SAN-129",
+      "code": "EVT-011",
+      "title": "EVT-011 \u2014 Human approval save flow",
+      "spec": "EVP-026-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "4f57cfdd-a176-4534-9670-2f969bf22756",
+      "identifier": "SAN-130",
+      "code": "EVT-012",
+      "title": "EVT-012 \u2014 Discovery test plan",
+      "spec": "EVP-027-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "7dea1b8d-9006-4f96-86f0-e1b834a2345a",
+      "identifier": "SAN-131",
+      "code": "EVT-013",
+      "title": "EVT-013 \u2014 Production readiness checklist",
+      "spec": "EVP-028-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "f0357d6b-dc35-4c06-b373-d9c17dc4336f",
+      "identifier": "SAN-132",
+      "code": "EVT-014",
+      "title": "EVT-014 \u2014 Sponsor CRM-lite + proposal drafts",
+      "spec": "EVP-029-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "22bae6df-eb63-4c77-b4c7-d1da5dff821a",
+      "identifier": "SAN-133",
+      "code": "EVT-015",
+      "title": "EVT-015 \u2014 OpenClaw/Postiz approval sandbox",
+      "spec": "EVP-030-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "bfdbb035-cbb1-44f8-8558-5fe45b24ee4e",
+      "identifier": "SAN-134",
+      "code": "EVT-016",
+      "title": "EVT-016 \u2014 OpenClaw automation plan (no implementation)",
+      "spec": "EVP-031-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "9ea25190-a00b-4af6-9c70-249449c7ce72",
+      "identifier": "SAN-135",
+      "code": "EVT-017",
+      "title": "EVT-017 \u2014 Luma-style event detail layout",
+      "spec": "EVP-032-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "db459742-b2e8-43e1-a5b1-090264322d01",
+      "identifier": "SAN-136",
+      "code": "EVT-018",
+      "title": "EVT-018 \u2014 Event vibe tags and AI summary",
+      "spec": "EVP-033-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "9a15dc7b-bc85-44ee-9f5f-541584424d27",
+      "identifier": "SAN-137",
+      "code": "EVT-019",
+      "title": "EVT-019 \u2014 Ask Host and AI Q&A assistant",
+      "spec": "EVP-034-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "3b71b135-f7c2-4cfa-b5cd-52ed8874faaf",
+      "identifier": "SAN-138",
+      "code": "EVT-020",
+      "title": "EVT-020 \u2014 Attendee profiles and audience breakdown",
+      "spec": "EVP-035-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "14468db2-145b-4663-aa18-4093ce7a60b0",
+      "identifier": "SAN-139",
+      "code": "EVT-021",
+      "title": "EVT-021 \u2014 Community, map, and nearby intelligence",
+      "spec": "EVP-036-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "37273b4e-1a0f-4a3e-9b23-6033209622fc",
+      "identifier": "SAN-140",
+      "code": "EVT-022",
+      "title": "EVT-022 \u2014 AI event decision concierge",
+      "spec": "EVP-037-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "feced9e6-38af-4309-bff3-056ef29af869",
+      "identifier": "SAN-141",
+      "code": "EVT-023",
+      "title": "EVT-023 \u2014 AI networking matchmaking and icebreakers",
+      "spec": "EVP-038-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "23ec5b27-801b-429d-a40d-dd9387346c45",
+      "identifier": "SAN-142",
+      "code": "EVT-024",
+      "title": "EVT-024 \u2014 Live event chat and networking rooms",
+      "spec": "EVP-039-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "cdbef7cf-2380-4b1f-962d-cc80f77a4113",
+      "identifier": "SAN-143",
+      "code": "EVT-025",
+      "title": "EVT-025 \u2014 Post-event follow-up assistant",
+      "spec": "EVP-040-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "cc5774de-e45e-4026-8e0b-5d5cf3c27663",
+      "identifier": "SAN-144",
+      "code": "EVT-026",
+      "title": "EVT-026 \u2014 Community relationship graph",
+      "spec": "EVP-041-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "22f21894-7476-4a5b-83cc-08cc8dca8285",
+      "identifier": "SAN-145",
+      "code": "EVT-027",
+      "title": "EVT-027 \u2014 Smart event recommendations and compatibility score",
+      "spec": "EVP-042-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "28b58021-9540-4d05-b08b-38d176ec22a5",
+      "identifier": "SAN-146",
+      "code": "EVT-028",
+      "title": "EVT-028 \u2014 Neighborhood, safety, transit, and weather intelligence",
+      "spec": "EVP-043-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "533a00c7-b8f3-471d-944b-7e8d1738067a",
+      "identifier": "SAN-147",
+      "code": "EVT-029",
+      "title": "EVT-029 \u2014 WhatsApp and community links",
+      "spec": "EVP-044-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "69f621e3-72dc-41f9-b882-e801a9c8a202",
+      "identifier": "SAN-148",
+      "code": "EVT-030",
+      "title": "EVT-030 \u2014 Host pricing suggestions and moderation basics",
+      "spec": "EVP-045-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "ae40916d-9260-465c-ba88-84366fa55f2c",
+      "identifier": "SAN-149",
+      "code": "EVT-031",
+      "title": "EVT-031 \u2014 Live event updates feed",
+      "spec": "EVP-046-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "04ac85f4-2a07-48a6-b921-041e5aa14f8a",
+      "identifier": "SAN-150",
+      "code": "EVT-032",
+      "title": "EVT-032 \u2014 AI night itinerary builder",
+      "spec": "EVP-047-",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-492",
+      "code": "EVT-033",
+      "title": "EVT-033 \u2014 Event venue + offerings schema",
+      "spec": "VEB-VEB-001-core",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 MVP Gates",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-493",
+      "code": "EVT-034",
+      "title": "EVT-034 \u2014 Seed Mamacita + 5 event partners",
+      "spec": "VEB-VEB-002-core",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 MVP Gates",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-494",
+      "code": "EVT-035",
+      "title": "EVT-035 \u2014 Restaurant card Event Venue CTA",
+      "spec": "VEB-VEB-003-mvp",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-495",
+      "code": "EVT-036",
+      "title": "EVT-036 \u2014 Event offerings detail panel",
+      "spec": "VEB-VEB-004-mvp",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-496",
+      "code": "EVT-037",
+      "title": "EVT-037 \u2014 Request proposal modal (HITL)",
+      "spec": "VEB-VEB-005-mvp",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-497",
+      "code": "EVT-038",
+      "title": "EVT-038 \u2014 eventVenueAgent + search/rank tools",
+      "spec": "VEB-VEB-006-mvp",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-498",
+      "code": "EVT-039",
+      "title": "EVT-039 \u2014 AI venue match score panel",
+      "spec": "VEB-VEB-007-mvp",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-499",
+      "code": "EVT-040",
+      "title": "EVT-040 \u2014 Compare venues side-by-side",
+      "spec": "VEB-VEB-008-mvp",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-500",
+      "code": "EVT-041",
+      "title": "EVT-041 \u2014 Host wizard venue step (Roberto)",
+      "spec": "VEB-VEB-009-mvp",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-501",
+      "code": "EVT-042",
+      "title": "EVT-042 \u2014 eventVenueBookingWorkflow",
+      "spec": "VEB-VEB-010-mvp",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-502",
+      "code": "EVT-043",
+      "title": "EVT-043 \u2014 Patricia admin queue (event requests)",
+      "spec": "VEB-VEB-011-mvp",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-503",
+      "code": "EVT-044",
+      "title": "EVT-044 \u2014 Add confirmed booking to trip",
+      "spec": "VEB-VEB-012-mvp",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-504",
+      "code": "EVT-045",
+      "title": "EVT-045 \u2014 Venue availability calendar",
+      "spec": "VEB-VEB-013-advanced",
+      "ms": "\ud83d\udd2e Events \u2014 Discovery",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-505",
+      "code": "EVT-046",
+      "title": "EVT-046 \u2014 Auto follow-up WA drafts (24h)",
+      "spec": "VEB-VEB-014-advanced",
+      "ms": "\ud83d\udd2e Events \u2014 Discovery",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-506",
+      "code": "EVT-047",
+      "title": "EVT-047 \u2014 Venue CRM for Patricia",
+      "spec": "VEB-VEB-015-advanced",
+      "ms": "\ud83d\udd2e Events \u2014 Discovery",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-507",
+      "code": "EVT-048",
+      "title": "EVT-048 \u2014 Dynamic package pricing",
+      "spec": "VEB-VEB-016-advanced",
+      "ms": "\ud83d\udd2e Events \u2014 Discovery",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-508",
+      "code": "EVT-049",
+      "title": "EVT-049 \u2014 Sponsor \u2194 venue match",
+      "spec": "VEB-VEB-017-advanced",
+      "ms": "\ud83d\udd2e Events \u2014 Discovery",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-509",
+      "code": "EVT-050",
+      "title": "EVT-050 \u2014 OpenClaw venue enrichment (plan)",
+      "spec": "VEB-VEB-018-advanced",
+      "ms": "\ud83d\udd2e Events \u2014 Discovery",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-510",
+      "code": "EVT-051",
+      "title": "EVT-051 \u2014 Wire: Event offerings panel + Event Venue CTA",
+      "spec": "VEB-VEB-W01",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-511",
+      "code": "EVT-052",
+      "title": "EVT-052 \u2014 Wire: Request proposal modal",
+      "spec": "VEB-VEB-W02",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-512",
+      "code": "EVT-053",
+      "title": "EVT-053 \u2014 Wire: Venue match panel + compare",
+      "spec": "VEB-VEB-W03",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-513",
+      "code": "EVT-054",
+      "title": "EVT-054 \u2014 Wire: Host wizard venue step",
+      "spec": "VEB-VEB-W04",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "identifier": "SAN-514",
+      "code": "EVT-055",
+      "title": "EVT-055 \u2014 Wire: Admin event booking queue",
+      "spec": "VEB-VEB-W05",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "a58a2b42-18dc-4066-818c-b1662b9bd21f",
+      "identifier": "SAN-151",
+      "code": "SYS-006",
+      "title": "SYS-006 \u2014 pgvector inventory + duplicate HNSW cleanup plan",
+      "spec": "VEC-001",
+      "ms": "\ud83d\udd2e Platform \u2014 Vector",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "097e3dd4-5113-4e45-8c12-e8aac9adc1ec",
+      "identifier": "SAN-152",
+      "code": "SYS-007",
+      "title": "SYS-007 \u2014 Semantic V1 schema + RLS plan",
+      "spec": "VEC-002",
+      "ms": "\ud83d\udd2e Platform \u2014 Vector",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "1b5925ce-9ec1-4915-90c8-70d5db5dcd18",
+      "identifier": "SAN-153",
+      "code": "SYS-008",
+      "title": "SYS-008 \u2014 Model registry + embedding contract",
+      "spec": "VEC-003",
+      "ms": "\ud83d\udd2e Platform \u2014 Vector",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "71102857-09ac-41d4-a8e3-e5022b28e4fb",
+      "identifier": "SAN-154",
+      "code": "SYS-009",
+      "title": "SYS-009 \u2014 Embedding text builders",
+      "spec": "VEC-004",
+      "ms": "\ud83d\udd2e Platform \u2014 Vector",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "a5e528af-9537-4078-b899-8750c9caeac3",
+      "identifier": "SAN-155",
+      "code": "SYS-010",
+      "title": "SYS-010 \u2014 Golden semantic eval harness",
+      "spec": "VEC-005",
+      "ms": "\ud83d\udd2e Platform \u2014 Vector",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "765c071e-5382-4a66-a5bf-bccf6ac88480",
+      "identifier": "SAN-156",
+      "code": "SYS-011",
+      "title": "SYS-011 \u2014 Search logs + observability",
+      "spec": "VEC-006",
+      "ms": "\ud83d\udd2e Platform \u2014 Vector",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "d694a518-17a4-4cd7-bdb8-740a6e9117a9",
+      "identifier": "SAN-157",
+      "code": "SYS-012",
+      "title": "SYS-012 \u2014 Coffee-tour vector compatibility",
+      "spec": "VEC-007",
+      "ms": "\ud83d\udd2e Platform \u2014 Vector",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "d4c485c4-135b-4ef6-a5de-4ed0850e75e6",
+      "identifier": "SAN-158",
+      "code": "VEN-001",
+      "title": "VEN-001 \u2014 Supabase coffee_tours core tables + RLS",
+      "spec": "VEN-032",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "3178e198-10f9-4ddc-b0d1-43ef3402f316",
+      "identifier": "SAN-159",
+      "code": "VEN-002",
+      "title": "VEN-002 \u2014 coffee_tour_search_logs + coffee_tour_cache",
+      "spec": "VEN-041",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "90d22430-0fa4-4874-ba1c-f2bdc3a4e746",
+      "identifier": "SAN-160",
+      "code": "VEN-003",
+      "title": "VEN-003 \u2014 CoffeeTour types + Zod schemas",
+      "spec": "VEN-033",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "ae6f3e40-578c-466d-9f30-b980da217d5a",
+      "identifier": "SAN-161",
+      "code": "VEN-004",
+      "title": "VEN-004 \u2014 Seed 5 verified coffee tours",
+      "spec": "VEN-034",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "f2e7d936-d2dd-4708-8847-ae3f71f39220",
+      "identifier": "SAN-162",
+      "code": "VEN-005",
+      "title": "VEN-005 \u2014 Concierge tour intent + searchCoffeeTours tool",
+      "spec": "VEN-036",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "4a5a5f55-13ad-467e-876b-85ddbffc1731",
+      "identifier": "SAN-163",
+      "code": "VEN-006",
+      "title": "VEN-006 \u2014 Places API enrich for coffee tour rows",
+      "spec": "VEN-037",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "a0efefc1-1707-4c01-bb6a-2e223f44bf22",
+      "identifier": "SAN-164",
+      "code": "VEN-007",
+      "title": "VEN-007 \u2014 rankCoffeeTours scoring function",
+      "spec": "VEN-035",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "e525751e-bae6-46e7-9c87-51530bd59620",
+      "identifier": "SAN-165",
+      "code": "VEN-008",
+      "title": "VEN-008 \u2014 CoffeeTourCard + CopilotKit tool render",
+      "spec": "VEN-038",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "1d935bdb-76f7-4939-b89d-1a3310621b03",
+      "identifier": "SAN-166",
+      "code": "VEN-009",
+      "title": "VEN-009 \u2014 Map pins + results column for coffee tours",
+      "spec": "VEN-039",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "a237bc31-a86a-48d0-8b8a-391a10bf5085",
+      "identifier": "SAN-167",
+      "code": "VEN-010",
+      "title": "VEN-010 \u2014 smoke:coffee-tours script",
+      "spec": "VEN-040",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "1d886a48-c905-4696-91ca-55e02cd1008e",
+      "identifier": "SAN-168",
+      "code": "VEN-011",
+      "title": "VEN-011 \u2014 Phase A evidence + task-verifier closeout",
+      "spec": "VEN-042",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "20e59ae5-4e9b-481f-b7fb-0c417a7e1529",
+      "identifier": "SAN-169",
+      "code": "TRP-001",
+      "title": "TRP-001 \u2014 coffee_tour_embeddings + server embed job",
+      "spec": "CTI-011",
+      "ms": "\ud83d\udd2e Coffee tours",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "0ed3a186-dba4-4bd6-8fd0-2e419d5ad759",
+      "identifier": "SAN-170",
+      "code": "TRP-002",
+      "title": "TRP-002 \u2014 verifyCoffeeTourSources (Search Grounding)",
+      "spec": "CTI-012",
+      "ms": "\ud83d\udd2e Coffee tours",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "3877ca73-20bf-4244-8646-11862749f5d1",
+      "identifier": "SAN-171",
+      "code": "TRP-003",
+      "title": "TRP-003 \u2014 ADK discovery merge into coffee_tours staging",
+      "spec": "CTI-013",
+      "ms": "\ud83d\udd2e Coffee tours",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "39d40808-0154-496a-906e-81f80869c3b5",
+      "identifier": "SAN-172",
+      "code": "TRP-004",
+      "title": "TRP-004 \u2014 saveCoffeeTour + user interactions RLS",
+      "spec": "CTI-014",
+      "ms": "\ud83d\udd2e Coffee tours",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "2db6f00c-68a3-4016-aadf-dd2c94624281",
+      "identifier": "SAN-173",
+      "code": "TRP-005",
+      "title": "TRP-005 \u2014 CoffeeTourCompareDrawer + compareCoffeeTours",
+      "spec": "CTI-015",
+      "ms": "\ud83d\udd2e Coffee tours",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "3edd06a0-7c95-4ab3-9cd3-5ba56e6acd86",
+      "identifier": "SAN-174",
+      "code": "TRP-006",
+      "title": "TRP-006 \u2014 Coffee tour intent chips on ChatQueryBar",
+      "spec": "CTI-016",
+      "ms": "\ud83d\udd2e Coffee tours",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "41b6a5a8-9f40-41b8-aec7-38a207b6efaf",
+      "identifier": "SAN-175",
+      "code": "VEN-012",
+      "title": "VEN-012 \u2014 /tours/[slug] detail page",
+      "spec": "VEN-043",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "e51fbaef-fbca-4ce8-b671-fa3f54eb0bc7",
+      "identifier": "SAN-176",
+      "code": "TRP-007",
+      "title": "TRP-007 \u2014 Extract coffeeTourSearchWorkflow from concierge",
+      "spec": "CTI-018",
+      "ms": "\ud83d\udd2e Coffee tours",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "606d34cd-f7a7-48b9-81e3-75ec70f8d053",
+      "identifier": "SAN-177",
+      "code": "TRP-008",
+      "title": "TRP-008 \u2014 WhatsApp handoff for coffee tours",
+      "spec": "CTI-020",
+      "ms": "\ud83d\udd2e Coffee tours",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "6787fc3e-2a12-4ca7-8f7a-1856f1686e65",
+      "identifier": "SAN-178",
+      "code": "PAY-001",
+      "title": "PAY-001 \u2014 Prove live ticket purchase on production",
+      "spec": "OPS-ANDRES-G1",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "PAY"
+    },
+    {
+      "linearId": "adee79a2-bbff-4215-8447-01ea654d268a",
+      "identifier": "SAN-179",
+      "code": "SYS-013",
+      "title": "SYS-013 \u2014 Contest diagrams, GitHub repo decisions, and scope gate",
+      "spec": "CTEST-000",
+      "ms": "\ud83d\udd2e Deferred \u2014 Contest",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "7b43b12a-9180-4b68-9e10-3ffeb2d1df3e",
+      "identifier": "SAN-180",
+      "code": "SYS-014",
+      "title": "SYS-014 \u2014 Supabase contest core schema and RLS",
+      "spec": "CTEST-001",
+      "ms": "\ud83d\udd2e Deferred \u2014 Contest",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "e36ed6d3-4fbc-4bec-adb4-8b9f6109946a",
+      "identifier": "SAN-181",
+      "code": "SYS-015",
+      "title": "SYS-015 \u2014 Voting and judge scoring ledgers",
+      "spec": "CTEST-002",
+      "ms": "\ud83d\udd2e Deferred \u2014 Contest",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "6009386e-f959-4c75-8d0a-dce65d7dd88b",
+      "identifier": "SAN-182",
+      "code": "SYS-016",
+      "title": "SYS-016 \u2014 Tickets and paid-vote payment-derived schema",
+      "spec": "CTEST-003",
+      "ms": "\ud83d\udd2e Deferred \u2014 Contest",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "1efbfbe4-1f4e-4b52-9a12-39671b10d407",
+      "identifier": "SAN-183",
+      "code": "SYS-017",
+      "title": "SYS-017 \u2014 CopilotKit contest workspace and approval cards",
+      "spec": "CTEST-004",
+      "ms": "\ud83d\udd2e Deferred \u2014 Contest",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "df4b52aa-d62c-4547-aba7-86f8b6a39c95",
+      "identifier": "SAN-184",
+      "code": "SYS-018",
+      "title": "SYS-018 \u2014 Mastra and Gemini contest workflows",
+      "spec": "CTEST-005",
+      "ms": "\ud83d\udd2e Deferred \u2014 Contest",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "7b9e014f-58bb-4705-9551-d528fbd7d5f0",
+      "identifier": "SAN-185",
+      "code": "SYS-019",
+      "title": "SYS-019 \u2014 Contest screens, routes, and wireframes",
+      "spec": "CTEST-006",
+      "ms": "\ud83d\udd2e Deferred \u2014 Contest",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "505b4204-07c6-4a73-ad11-0b276530b30c",
+      "identifier": "SAN-186",
+      "code": "SYS-020",
+      "title": "SYS-020 \u2014 Contest Playwright proof gates",
+      "spec": "CTEST-007",
+      "ms": "\ud83d\udd2e Deferred \u2014 Contest",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "b07ef795-40f4-445b-a694-bbb235ebf359",
+      "identifier": "SAN-187",
+      "code": "AUT-001",
+      "title": "AUT-001 \u2014 OpenClaw gateway health stub",
+      "spec": "OCL-001-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "6d5319c2-8020-4668-a1d1-9595e1942b0a",
+      "identifier": "SAN-188",
+      "code": "AUT-002",
+      "title": "AUT-002 \u2014 Supabase openclaw_jobs + automation_approvals",
+      "spec": "OCL-002-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "7cc949ba-af1d-4562-9d9d-a208eca5eb3e",
+      "identifier": "SAN-189",
+      "code": "AUT-003",
+      "title": "AUT-003 \u2014 Mastra openclaw-approval-workflow",
+      "spec": "OCL-003-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "46f34c3b-e256-49a5-857b-0e5a8941fdfc",
+      "identifier": "SAN-190",
+      "code": "AUT-004",
+      "title": "AUT-004 \u2014 ClawHub safety policy \u2014 no unvetted skills",
+      "spec": "OCL-004-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "9a986a84-a4d4-4ab3-9165-acff35e48207",
+      "identifier": "SAN-191",
+      "code": "AUT-005",
+      "title": "AUT-005 \u2014 OPENCLAW_DISABLED kill switch",
+      "spec": "OCL-005-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "df014987-d90f-43fc-a127-3a86755eb2a5",
+      "identifier": "SAN-192",
+      "code": "AUT-006",
+      "title": "AUT-006 \u2014 OpenClaw VPS \u2014 Gemini provider + model routing",
+      "spec": "OCL-006-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "72f31ea8-d627-40b8-8453-775ed41197c4",
+      "identifier": "SAN-193",
+      "code": "AUT-007",
+      "title": "AUT-007 \u2014 Rotate OpenClaw gateway token",
+      "spec": "OCL-007-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "c96caa07-3509-47d2-a6d3-31d296437e04",
+      "identifier": "SAN-194",
+      "code": "AUT-008",
+      "title": "AUT-008 \u2014 Admin approvals UI \u2014 OpenClaw job preview",
+      "spec": "OCL-008-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "2fcc577d-cfbe-425b-8343-5974a3555d12",
+      "identifier": "SAN-195",
+      "code": "AUT-009",
+      "title": "AUT-009 \u2014 OpenClaw web_search \u2014 Gemini grounding provider",
+      "spec": "OCL-009-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "a3aaf06a-acc0-4fe1-8eb3-6dbe0e698346",
+      "identifier": "SAN-196",
+      "code": "AUT-010",
+      "title": "AUT-010 \u2014 mde-tour-enrich (+ mde-enrichment) SKILL.md pack",
+      "spec": "OCL-010-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "7e8d3a85-34a1-4ccf-a647-b449c0a58ec4",
+      "identifier": "SAN-197",
+      "code": "AUT-011",
+      "title": "AUT-011 \u2014 Mastra enqueueOpenClawJob tool",
+      "spec": "OCL-011-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "95ebd44a-5eec-45e0-b169-fdb4be88ac96",
+      "identifier": "SAN-198",
+      "code": "AUT-012",
+      "title": "AUT-012 \u2014 E2E \u2014 reject OpenClaw job without approval",
+      "spec": "OCL-012-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "17be7c44-b244-4233-a493-12b0273d5c0b",
+      "identifier": "SAN-199",
+      "code": "AUT-013",
+      "title": "AUT-013 \u2014 Coffee tours \u2014 source crawler + verify",
+      "spec": "OCL-013-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "e12c8aae-a325-4d7e-9715-fc26f6962dc9",
+      "identifier": "SAN-200",
+      "code": "AUT-014",
+      "title": "AUT-014 \u2014 Restaurants \u2014 menu PDF/HTML extraction",
+      "spec": "OCL-014-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "935b9fcb-d5a8-44e5-8946-e1e5e7c1fe1f",
+      "identifier": "SAN-201",
+      "code": "AUT-015",
+      "title": "AUT-015 \u2014 Caf\u00e9s \u2014 Instagram / creator discovery crawl",
+      "spec": "OCL-015-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "4bb4535a-bcda-4c71-9479-ada187c1cde8",
+      "identifier": "SAN-202",
+      "code": "AUT-016",
+      "title": "AUT-016 \u2014 Events \u2014 venue intelligence browser enrich",
+      "spec": "OCL-016-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "64f0ea7d-f870-40b3-9700-b6a855cdd91f",
+      "identifier": "SAN-203",
+      "code": "AUT-017",
+      "title": "AUT-017 \u2014 Events \u2014 directory / calendar import",
+      "spec": "OCL-017-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "cbd2402e-bf09-45dd-8f8a-18064eab8539",
+      "identifier": "SAN-204",
+      "code": "AUT-018",
+      "title": "AUT-018 \u2014 Real estate \u2014 listing enrichment crawl",
+      "spec": "OCL-018-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "18910452-803c-4542-9d38-5be4300f6149",
+      "identifier": "SAN-205",
+      "code": "AUT-019",
+      "title": "AUT-019 \u2014 Marketing \u2014 sponsor prospect research",
+      "spec": "OCL-019-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "e7c68597-32ad-4862-bc58-ce853b0bee26",
+      "identifier": "SAN-206",
+      "code": "AUT-020",
+      "title": "AUT-020 \u2014 Marketing \u2014 local SEO / competitor page monitor",
+      "spec": "OCL-020-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "2f34f727-be19-4643-98a9-6d28f874e70d",
+      "identifier": "SAN-207",
+      "code": "AUT-021",
+      "title": "AUT-021 \u2014 Correlation IDs Mastra \u2194 OpenClaw",
+      "spec": "OCL-021-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "2828c98b-05fa-4b37-95c9-c36b65055479",
+      "identifier": "SAN-208",
+      "code": "AUT-022",
+      "title": "AUT-022 \u2014 WhatsApp templates + number allowlist",
+      "spec": "OCL-022-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "fc66d819-1e69-4a5d-85a5-c2aafb1070e4",
+      "identifier": "SAN-209",
+      "code": "AUT-023",
+      "title": "AUT-023 \u2014 Events \u2014 T-24h reminder WA drafts",
+      "spec": "OCL-023-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "a3a0d041-2b87-438b-86e5-c7be4f50ea41",
+      "identifier": "SAN-210",
+      "code": "AUT-024",
+      "title": "AUT-024 \u2014 Events \u2014 sponsor ROI browser screenshots",
+      "spec": "OCL-024-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "cd8225a8-375a-4f4e-a004-04dd8f2152ad",
+      "identifier": "SAN-211",
+      "code": "AUT-025",
+      "title": "AUT-025 \u2014 Events \u2014 external publish draft (outbox)",
+      "spec": "OCL-025-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "8fb4ca12-8eec-4c48-b104-b9e11223a40c",
+      "identifier": "SAN-212",
+      "code": "AUT-026",
+      "title": "AUT-026 \u2014 Contests \u2014 WA leaderboard / reminder drafts",
+      "spec": "OCL-026-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "57224529-8e32-46c3-8de5-c9930505229e",
+      "identifier": "SAN-213",
+      "code": "AUT-027",
+      "title": "AUT-027 \u2014 Marketing \u2014 Postiz approved post handoff",
+      "spec": "OCL-027-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "e6d5bab7-9b10-4809-86f6-851cf63af722",
+      "identifier": "SAN-214",
+      "code": "AUT-028",
+      "title": "AUT-028 \u2014 Apify OpenClaw plugin sandbox",
+      "spec": "OCL-030-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "d12920d5-7610-4a8a-ae21-c23d506cf229",
+      "identifier": "SAN-215",
+      "code": "AUT-029",
+      "title": "AUT-029 \u2014 Events \u2014 sponsor decision-maker map",
+      "spec": "OCL-031-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "1ded0a6e-befd-4087-b5be-2f3072d654b9",
+      "identifier": "SAN-216",
+      "code": "AUT-030",
+      "title": "AUT-030 \u2014 Events \u2014 sponsor proposal draft pack",
+      "spec": "OCL-032-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "c0128104-7ad7-4dd7-bd02-fc995fc0017a",
+      "identifier": "SAN-217",
+      "code": "AUT-031",
+      "title": "AUT-031 \u2014 Events \u2014 vendor recruitment research",
+      "spec": "OCL-033-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "0aa9582a-9497-46da-8e19-dbdb329c2270",
+      "identifier": "SAN-218",
+      "code": "AUT-032",
+      "title": "AUT-032 \u2014 Events \u2014 Instagram/Facebook social intelligence",
+      "spec": "OCL-034-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "86978fd7-6bb8-44ff-8b39-3649505ab815",
+      "identifier": "SAN-219",
+      "code": "AUT-033",
+      "title": "AUT-033 \u2014 Events \u2014 approved WhatsApp/Postiz/social campaign execution",
+      "spec": "OCL-035-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "fdff8d1c-1deb-42bb-9835-cb0b8cba76e3",
+      "identifier": "SAN-220",
+      "code": "AUT-034",
+      "title": "AUT-034 \u2014 Events \u2014 repo and OpenClaw skill intake audit gate",
+      "spec": "OCL-036-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "bc96fbff-682a-4e34-94e0-3d50f7f87bf6",
+      "identifier": "SAN-221",
+      "code": "AUT-035",
+      "title": "AUT-035 \u2014 Events \u2014 event planner checklist adapter",
+      "spec": "OCL-037-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "828e8dec-1ba7-417f-9515-fdcb7c2c0ff8",
+      "identifier": "SAN-222",
+      "code": "AUT-036",
+      "title": "AUT-036 \u2014 Events \u2014 public event source connector adapters",
+      "spec": "OCL-038-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "2c1c9b37-9386-47d6-9561-81ec661aaa13",
+      "identifier": "SAN-223",
+      "code": "AUT-037",
+      "title": "AUT-037 \u2014 Events \u2014 source health and connector drift monitor",
+      "spec": "OCL-039-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "fea5570a-ca04-4cca-9c4f-67ddae342271",
+      "identifier": "SAN-224",
+      "code": "AUT-038",
+      "title": "AUT-038 \u2014 Events \u2014 event page QA crawler",
+      "spec": "OCL-040-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "95550490-c1c5-4ccf-bd7e-98ecf405c2a3",
+      "identifier": "SAN-225",
+      "code": "AUT-039",
+      "title": "AUT-039 \u2014 Events \u2014 live ops ticker and role-specific event updates",
+      "spec": "OCL-041-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "768e6863-6965-4686-b31c-dbe448d4aa52",
+      "identifier": "SAN-226",
+      "code": "AUT-040",
+      "title": "AUT-040 \u2014 ClawEvents + OpenClaw \u2014 Medell\u00edn event ingest worker",
+      "spec": "OCL-042-",
+      "ms": "\ud83d\udd2e Automation \u2014 OpenClaw",
+      "prefix": "AUT"
+    },
+    {
+      "linearId": "25e59384-c529-4166-b04d-1ce853a1642b",
+      "identifier": "SAN-227",
+      "code": "MAP-009",
+      "title": "MAP-009 \u2014 Verify ticket source + venue update tools",
+      "spec": "GS-005",
+      "ms": "\ud83d\udd2e Search \u2014 Grounding",
+      "prefix": "MAP"
+    },
+    {
+      "linearId": "f4d0d7cf-7015-4ed7-bfc8-a23e10825352",
+      "identifier": "SAN-228",
+      "code": "MAP-010",
+      "title": "MAP-010 \u2014 Gemini tool combination spike (Search + MCP)",
+      "spec": "GS-006",
+      "ms": "\ud83d\udd2e Search \u2014 Grounding",
+      "prefix": "MAP"
+    },
+    {
+      "linearId": "a98a9b1f-c94f-4ddd-8dc6-5770d307c642",
+      "identifier": "SAN-229",
+      "code": "MAP-011",
+      "title": "MAP-011 \u2014 Restaurant opening / closure verification (Search)",
+      "spec": "GS-007",
+      "ms": "\ud83d\udd2e Search \u2014 Grounding",
+      "prefix": "MAP"
+    },
+    {
+      "linearId": "72c94957-a190-4e93-87c5-0ac41e2ea0dc",
+      "identifier": "SAN-230",
+      "code": "MAP-012",
+      "title": "MAP-012 \u2014 Neighborhood news search (Search fallback)",
+      "spec": "GS-008",
+      "ms": "\ud83d\udd2e Search \u2014 Grounding",
+      "prefix": "MAP"
+    },
+    {
+      "linearId": "74334966-37ea-4b55-b236-f561c72269b4",
+      "identifier": "SAN-231",
+      "code": "MAP-013",
+      "title": "MAP-013 \u2014 Sponsor research (Search grounding)",
+      "spec": "GS-009",
+      "ms": "\ud83d\udd2e Search \u2014 Grounding",
+      "prefix": "MAP"
+    },
+    {
+      "linearId": "29248133-4e4f-48bf-af9b-3145710568f3",
+      "identifier": "SAN-232",
+      "code": "UIX-005",
+      "title": "UIX-005 \u2014 SCREEN-001 \u2014 Home Chat Chrome (integration)",
+      "spec": "SCREEN-001",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "ce14bc5c-c77c-4bf0-9f79-0038137b939f",
+      "identifier": "SAN-233",
+      "code": "UIX-006",
+      "title": "UIX-006 \u2014 WIRE-001 \u2014 Home / Concierge Chat",
+      "spec": "WIRE-001",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "1118174f-7aa3-43e4-8244-2ac59718e52d",
+      "identifier": "SAN-234",
+      "code": "UIX-007",
+      "title": "UIX-007 \u2014 SCREEN-003 \u2014 Chat Query Bar + Filter Chips",
+      "spec": "SCREEN-003",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "609c2f8c-1b57-47d8-83f5-779d536d2f7c",
+      "identifier": "SAN-235",
+      "code": "UIX-099",
+      "title": "UIX-099 \u2014 Wireframe: chat chrome (planning)",
+      "spec": "WIRE-014",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "state": "Backlog",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "2ee184b2-88ef-4294-a84d-32ce6284f66c",
+      "identifier": "SAN-236",
+      "code": "UIX-008",
+      "title": "UIX-008 \u2014 SCREEN-006 \u2014 Event Card In-Thread Polish",
+      "spec": "SCREEN-006",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "a462b9d4-d1da-4daa-b53d-f37733356abe",
+      "identifier": "SAN-237",
+      "code": "UIX-009",
+      "title": "UIX-009 \u2014 SCREEN-014 \u2014 Event Detail Page",
+      "spec": "SCREEN-014",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "69aad3fb-f7b6-4b03-971e-75dd1b860c4e",
+      "identifier": "SAN-238",
+      "code": "UIX-010",
+      "title": "UIX-010 \u2014 WIRE-019 \u2014 Event Detail Page",
+      "spec": "WIRE-019",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "2296dc2e-6fad-4c31-b8cf-01d9ca5123d9",
+      "identifier": "SAN-239",
+      "code": "UIX-011",
+      "title": "UIX-011 \u2014 WIRE-003 \u2014 Event Discovery (in-thread)",
+      "spec": "WIRE-003",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "48243487-ff36-4a74-bb9e-aa5133cdb24a",
+      "identifier": "SAN-240",
+      "code": "UIX-012",
+      "title": "UIX-012 \u2014 SCREEN-016 \u2014 Host Event Wizard UI",
+      "spec": "SCREEN-016",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "46d54fb7-7f6e-4184-8d82-57e47ad2c27e",
+      "identifier": "SAN-241",
+      "code": "UIX-013",
+      "title": "UIX-013 \u2014 WIRE-022 \u2014 Host Event Wizard",
+      "spec": "WIRE-022",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "4f8ed6b4-2ec4-4502-818e-c5a390ab10b7",
+      "identifier": "SAN-242",
+      "code": "UIX-014",
+      "title": "UIX-014 \u2014 SCREEN-005 \u2014 Rental Card Polish + CTAs",
+      "spec": "SCREEN-005",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "5505b8de-ad08-498d-b245-c6ddfc70b45d",
+      "identifier": "SAN-243",
+      "code": "UIX-015",
+      "title": "UIX-015 \u2014 WIRE-002 \u2014 Rental Search (in-thread)",
+      "spec": "WIRE-002",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "edc7b531-670f-4f4e-98ab-440d2fd23aa6",
+      "identifier": "SAN-244",
+      "code": "UIX-016",
+      "title": "UIX-016 \u2014 WIRE-015 \u2014 Rentals Browse (catalog)",
+      "spec": "WIRE-015",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "6f4417b0-06af-48b3-a3e9-fe47baf17905",
+      "identifier": "SAN-245",
+      "code": "UIX-017",
+      "title": "UIX-017 \u2014 SCREEN-007 \u2014 Venue / Listing Detail Sheet",
+      "spec": "SCREEN-007",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "aa686a98-4c69-45ed-a883-bfc7732dd22f",
+      "identifier": "SAN-246",
+      "code": "UIX-018",
+      "title": "UIX-018 \u2014 WIRE-004 \u2014 Venue / Listing Detail (sheet)",
+      "spec": "WIRE-004",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "6915eea5-2206-49bd-804c-b12de417c011",
+      "identifier": "SAN-247",
+      "code": "UIX-019",
+      "title": "UIX-019 \u2014 WIRE-008 \u2014 Map Exploration Panel",
+      "spec": "WIRE-008",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "b7346315-35d1-41f7-9215-c5522bd22e1c",
+      "identifier": "SAN-248",
+      "code": "UIX-020",
+      "title": "UIX-020 \u2014 SCREEN-009 \u2014 Booking Checkout Modal + Stripe",
+      "spec": "SCREEN-009",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "b77499cf-7036-47a2-a7b0-700ae4b18b54",
+      "identifier": "SAN-249",
+      "code": "UIX-021",
+      "title": "UIX-021 \u2014 WIRE-006 \u2014 Booking Checkout (modal)",
+      "spec": "WIRE-006",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "bcab43cd-da58-451c-9b11-8c9493df6430",
+      "identifier": "SAN-250",
+      "code": "UIX-022",
+      "title": "UIX-022 \u2014 WIRE-021 \u2014 Bookings Inbox",
+      "spec": "WIRE-021",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "fb0a0e30-5912-46f7-9795-9d06c6d8d7c1",
+      "identifier": "SAN-251",
+      "code": "UIX-023",
+      "title": "UIX-023 \u2014 SCREEN-013 \u2014 Itinerary Panel",
+      "spec": "SCREEN-013",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "ef765fe5-209a-4861-b0b7-270dbce2e203",
+      "identifier": "SAN-252",
+      "code": "UIX-024",
+      "title": "UIX-024 \u2014 WIRE-005 \u2014 Itinerary Tab",
+      "spec": "WIRE-005",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "efe369f7-1233-4594-b541-7e88e5d555a7",
+      "identifier": "SAN-253",
+      "code": "UIX-025",
+      "title": "UIX-025 \u2014 SCREEN-011 \u2014 Saved Collections Page",
+      "spec": "SCREEN-011",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "ef364280-dc4e-47fd-83d3-9cd953d9dbbe",
+      "identifier": "SAN-254",
+      "code": "UIX-026",
+      "title": "UIX-026 \u2014 WIRE-007 \u2014 Saved Collections",
+      "spec": "WIRE-007",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "283fdbe6-a76c-434e-bb41-84f6a1a139d2",
+      "identifier": "SAN-255",
+      "code": "UIX-027",
+      "title": "UIX-027 \u2014 SCREEN-012 \u2014 Trips Dashboard",
+      "spec": "SCREEN-012",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "c5482a68-f7e1-403b-a34b-70a30ac4cc30",
+      "identifier": "SAN-256",
+      "code": "UIX-028",
+      "title": "UIX-028 \u2014 WIRE-018 \u2014 Trip Workspace (full tabs)",
+      "spec": "WIRE-018",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "a54e53f4-bf75-45d7-8f6e-bad43be2bf89",
+      "identifier": "SAN-257",
+      "code": "UIX-029",
+      "title": "UIX-029 \u2014 WIRE-017 \u2014 Trips Dashboard",
+      "spec": "WIRE-017",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "a85970b5-90c3-42ff-9b2d-37b80251d994",
+      "identifier": "SAN-258",
+      "code": "UIX-030",
+      "title": "UIX-030 \u2014 WIRE-013 \u2014 Mindtrip Observed Patterns",
+      "spec": "WIRE-013",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "46a91c0f-fca3-4b8a-8bbe-213c59c17357",
+      "identifier": "SAN-259",
+      "code": "UIX-031",
+      "title": "UIX-031 \u2014 SCREEN-015 \u2014 My Tickets + QR",
+      "spec": "SCREEN-015",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "8ad5ee94-4bc6-4083-8f62-849a9ea23955",
+      "identifier": "SAN-260",
+      "code": "UIX-032",
+      "title": "UIX-032 \u2014 WIRE-020 \u2014 My Tickets + QR",
+      "spec": "WIRE-020",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "d35d39c9-f760-44f0-a5d8-238a77a0b551",
+      "identifier": "SAN-261",
+      "code": "UIX-033",
+      "title": "UIX-033 \u2014 WIRE-016 \u2014 Explore Unified",
+      "spec": "WIRE-016",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "789cda03-08a3-4913-b6d2-99c8efcda704",
+      "identifier": "SAN-262",
+      "code": "UIX-034",
+      "title": "UIX-034 \u2014 SCREEN-008 \u2014 Schedule Viewing Modal (HITL Lead)",
+      "spec": "SCREEN-008",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "59316226-69d9-4899-bc58-4478b71ee616",
+      "identifier": "SAN-263",
+      "code": "UIX-035",
+      "title": "UIX-035 \u2014 SCREEN-004 \u2014 Workflow Progress Strip",
+      "spec": "SCREEN-004",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "049b0a7d-29d0-4ccb-bb47-d63563f85e1d",
+      "identifier": "SAN-264",
+      "code": "UIX-036",
+      "title": "UIX-036 \u2014 WIRE-009 \u2014 Contest Discovery",
+      "spec": "WIRE-009",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "fb573201-a5b3-41a5-8e6d-61b4ccbe2e10",
+      "identifier": "SAN-265",
+      "code": "UIX-037",
+      "title": "UIX-037 \u2014 SCREEN-019 \u2014 Loading / Error / Empty States",
+      "spec": "SCREEN-019",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "46a32013-eb1d-4557-b32a-f37269b9b907",
+      "identifier": "SAN-266",
+      "code": "UIX-038",
+      "title": "UIX-038 \u2014 WIRE-011 \u2014 Creator Dashboard",
+      "spec": "WIRE-011",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "e4bb2cc4-bff0-4396-8655-4f12056c49b9",
+      "identifier": "SAN-267",
+      "code": "UIX-039",
+      "title": "UIX-039 \u2014 WIRE-010 \u2014 Nightlife Explorer",
+      "spec": "WIRE-010",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "00fc9ac3-8fe1-4d4e-bd90-4ac5867cc552",
+      "identifier": "SAN-268",
+      "code": "UIX-040",
+      "title": "UIX-040 \u2014 SCREEN-020 \u2014 Accessibility Pass (MVP surfaces)",
+      "spec": "SCREEN-020",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "f76cdf0d-b4c6-4bec-bfd3-e1e32bf9cf0e",
+      "identifier": "SAN-269",
+      "code": "UIX-041",
+      "title": "UIX-041 \u2014 WIRE-023 \u2014 Onboarding Wizard",
+      "spec": "WIRE-023",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "c2cd37ae-311f-47cc-8d4c-7cdba7e7a438",
+      "identifier": "SAN-270",
+      "code": "UIX-042",
+      "title": "UIX-042 \u2014 WIRE-024 \u2014 Login / Signup",
+      "spec": "WIRE-024",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "21c0a6f4-16e4-4dc1-9230-5b872f01c731",
+      "identifier": "SAN-271",
+      "code": "UIX-043",
+      "title": "UIX-043 \u2014 WIRE-025 \u2014 Notifications",
+      "spec": "WIRE-025",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "6732188e-f949-44ff-8bba-4322a65fb36f",
+      "identifier": "SAN-273",
+      "code": "TRP-009",
+      "title": "TRP-009 \u2014 Trips Supabase audit + evidence",
+      "spec": "TRIP-001",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "3f601448-5979-4685-95c4-c54143fe72d5",
+      "identifier": "SAN-274",
+      "code": "TRP-010",
+      "title": "TRP-010 \u2014 Trips dashboard polish (SCREEN-012)",
+      "spec": "TRIP-002",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "cb567d07-d2df-497b-82a1-43a093baf80f",
+      "identifier": "SAN-275",
+      "code": "TRP-011",
+      "title": "TRP-011 \u2014 Create trip modal + server action",
+      "spec": "TRIP-003",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "eee402fd-0610-440a-a615-6e56463dbd40",
+      "identifier": "SAN-276",
+      "code": "TRP-012",
+      "title": "TRP-012 \u2014 Trip workspace shell (SCREEN-013)",
+      "spec": "TRIP-004",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "3721e816-1630-41a0-935d-257390004063",
+      "identifier": "SAN-277",
+      "code": "TRP-013",
+      "title": "TRP-013 \u2014 Itinerary tab hardening",
+      "spec": "TRIP-005",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "1668f552-0bb2-4154-bdb5-4b50cbece2d1",
+      "identifier": "SAN-278",
+      "code": "TRP-014",
+      "title": "TRP-014 \u2014 Saved collections page (SCREEN-011)",
+      "spec": "TRIP-006",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "0c41ba0a-829d-4aa2-a751-54807f316af3",
+      "identifier": "SAN-279",
+      "code": "TRP-015",
+      "title": "TRP-015 \u2014 Add-to-trip from rental/event cards",
+      "spec": "TRIP-007",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "3da1765b-75d2-4ce7-aacc-628286b937e2",
+      "identifier": "SAN-280",
+      "code": "TRP-016",
+      "title": "TRP-016 \u2014 Trip map Google pins tab",
+      "spec": "TRIP-008",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "4ccf57f9-c7e3-4847-a0e7-6759e5e920bf",
+      "identifier": "SAN-281",
+      "code": "TRP-017",
+      "title": "TRP-017 \u2014 Conflict detection persist + CopilotKit HITL",
+      "spec": "TRIP-009",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "f3a1ff69-935f-4b16-a4a4-68e425be3dfd",
+      "identifier": "SAN-282",
+      "code": "TRP-018",
+      "title": "TRP-018 \u2014 Booking confirm \u2192 trip_items sync",
+      "spec": "TRIP-010",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "a7002be3-7cb7-4069-8af2-1c83a6651e6c",
+      "identifier": "SAN-283",
+      "code": "TRP-019",
+      "title": "TRP-019 \u2014 Booking reconciliation repair worker",
+      "spec": "TRIP-013",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "96c70529-2d95-4a5f-bd9e-1f76188e77b7",
+      "identifier": "SAN-284",
+      "code": "TRP-020",
+      "title": "TRP-020 \u2014 Trips RLS penetration verification",
+      "spec": "TRIP-014",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "0e2647e6-d9b1-4305-a352-7dcde656e05e",
+      "identifier": "SAN-285",
+      "code": "TRP-021",
+      "title": "TRP-021 \u2014 Places cache + itinerary hydration",
+      "spec": "TRIP-015",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "b70795fb-63b7-4457-a1e9-9d66b03c08e9",
+      "identifier": "SAN-286",
+      "code": "TRP-022",
+      "title": "TRP-022 \u2014 Mobile workspace UX hardening",
+      "spec": "TRIP-016",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "e673b3e7-8931-4076-9dc4-86702475d381",
+      "identifier": "SAN-287",
+      "code": "TRP-023",
+      "title": "TRP-023 \u2014 Trips observability + sync logs",
+      "spec": "TRIP-017",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "70987641-ea50-4de0-a228-8f5507a437b1",
+      "identifier": "SAN-288",
+      "code": "TRP-024",
+      "title": "TRP-024 \u2014 Trip lifecycle states + archival rules",
+      "spec": "TRIP-018",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "8c724605-c310-4703-8a7a-78598d6030d0",
+      "identifier": "SAN-289",
+      "code": "TRP-025",
+      "title": "TRP-025 \u2014 Retry + optimistic UI recovery",
+      "spec": "TRIP-019",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "17c423de-fb7d-4072-a440-f9b486f3ff5c",
+      "identifier": "SAN-290",
+      "code": "TRP-026",
+      "title": "TRP-026 \u2014 Playwright suite (SCREEN-011/012/013)",
+      "spec": "TRIP-011",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "a82b44ce-05fd-451d-b786-09c60aaf96d0",
+      "identifier": "SAN-291",
+      "code": "TRP-027",
+      "title": "TRP-027 \u2014 Production smoke + floor gate",
+      "spec": "TRIP-012",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "TRP"
+    },
+    {
+      "linearId": "033bf725-f4cc-41ab-899f-38d98e6547c1",
+      "identifier": "SAN-292",
+      "code": "VEN-013",
+      "title": "VEN-013 \u2014 RestaurantResultCard + search-tool-renders",
+      "spec": "VEN-009",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "79037759-2f57-4164-9875-11d147e2b793",
+      "identifier": "SAN-293",
+      "code": "VEN-014",
+      "title": "VEN-014 \u2014 RestaurantDetailPanel + rental-ui-context",
+      "spec": "VEN-010",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "977ac2f5-80ce-4043-9453-9c72a46233a4",
+      "identifier": "SAN-294",
+      "code": "VEN-015",
+      "title": "VEN-015 \u2014 Nightlife intent in search-grounded-places",
+      "spec": "VEN-011",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "b4dec420-7766-493e-b4fb-d7d0e9682e57",
+      "identifier": "SAN-295",
+      "code": "VEN-016",
+      "title": "VEN-016 \u2014 Grounded render caf\u00e9 vs nightlife kind split",
+      "spec": "VEN-012",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "8fe44ca7-e5a4-48ee-8c05-cd6432334956",
+      "identifier": "SAN-296",
+      "code": "VEN-017",
+      "title": "VEN-017 \u2014 NightlifeDetailPanel + mobile sheet",
+      "spec": "VEN-013",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "12ed38bb-81fb-4d6d-a5dc-f81052204e9e",
+      "identifier": "SAN-297",
+      "code": "VEN-018",
+      "title": "VEN-018 \u2014 Places cache and field-mask enforcement",
+      "spec": "VEN-014",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "c4ca4a06-4d85-4997-87f5-f3205d01de46",
+      "identifier": "SAN-298",
+      "code": "VEN-019",
+      "title": "VEN-019 \u2014 venue_booking_requests migration + RLS",
+      "spec": "VEN-015",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "d5ba9388-7777-45b1-92d0-1897499d1a93",
+      "identifier": "SAN-299",
+      "code": "VEN-020",
+      "title": "VEN-020 \u2014 requestVenueBooking Mastra tool",
+      "spec": "VEN-016",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "fb860d30-e241-4b24-ada2-eb51611fe7e2",
+      "identifier": "SAN-300",
+      "code": "VEN-021",
+      "title": "VEN-021 \u2014 VenueBookingSheet component",
+      "spec": "VEN-017",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "9a16a520-0f88-4012-b749-741d09eecd2e",
+      "identifier": "SAN-301",
+      "code": "VEN-022",
+      "title": "VEN-022 \u2014 mastra-tool-action-names booking keys",
+      "spec": "VEN-018",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "88567619-14af-43a3-9683-333d09db925d",
+      "identifier": "SAN-302",
+      "code": "VEN-023",
+      "title": "VEN-023 \u2014 requestVenueBooking CopilotKit action",
+      "spec": "VEN-019",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "12f8da0b-32ca-4833-aa9a-e9cc310c3290",
+      "identifier": "SAN-303",
+      "code": "VEN-024",
+      "title": "VEN-024 \u2014 Tool and CopilotKit action registry CI test",
+      "spec": "VEN-029",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "fe9e8496-c515-46b4-897d-ef6ecf40592f",
+      "identifier": "SAN-304",
+      "code": "VEN-025",
+      "title": "VEN-025 \u2014 VenueBookingSheet + DB persist",
+      "spec": "VEN-021",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "fd40355b-51f3-4b59-8ace-b04bd8b9855a",
+      "identifier": "SAN-305",
+      "code": "VEN-026",
+      "title": "VEN-026 \u2014 Venue booking idempotency and duplicate prevention",
+      "spec": "VEN-026",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "12a59686-29b7-4b20-861f-45dd6a505605",
+      "identifier": "SAN-306",
+      "code": "VEN-027",
+      "title": "VEN-027 \u2014 Booking retry and optimistic UI recovery",
+      "spec": "VEN-028",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "23716276-40f5-49a3-bf2d-a22e91d44219",
+      "identifier": "SAN-307",
+      "code": "VEN-028",
+      "title": "VEN-028 \u2014 Booking status chips on detail panels",
+      "spec": "VEN-020",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "76b4075d-f5e4-4135-8a6d-79b12d987f3e",
+      "identifier": "SAN-308",
+      "code": "VEN-029",
+      "title": "VEN-029 \u2014 draftVenueWhatsApp Mastra tool",
+      "spec": "VEN-022",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "481bb616-eebd-46f5-bc49-64bacc69ec75",
+      "identifier": "SAN-309",
+      "code": "VEN-030",
+      "title": "VEN-030 \u2014 WhatsApp consent and suppression list",
+      "spec": "VEN-027",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "bb923cce-cb21-4a4a-8504-db1e01ec1323",
+      "identifier": "SAN-310",
+      "code": "VEN-031",
+      "title": "VEN-031 \u2014 WhatsApp approval + wa_outbox",
+      "spec": "VEN-023",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "dde36000-e737-4b4a-8d73-187ea4aa0ebe",
+      "identifier": "SAN-311",
+      "code": "VEN-032",
+      "title": "VEN-032 \u2014 Admin booking queue (/admin/bookings)",
+      "spec": "VEN-024",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "8d17b794-25d6-40c9-8b57-007931cfa181",
+      "identifier": "SAN-312",
+      "code": "VEN-033",
+      "title": "VEN-033 \u2014 Admin audit log for approval and send actions",
+      "spec": "VEN-030",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "a856250c-5bbe-4c69-b205-bb2ce414b310",
+      "identifier": "SAN-313",
+      "code": "VEN-034",
+      "title": "VEN-034 \u2014 Venue booking RLS penetration tests",
+      "spec": "VEN-025",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "cb657750-df4a-436f-b013-25d576fae352",
+      "identifier": "SAN-314",
+      "code": "VEN-035",
+      "title": "VEN-035 \u2014 Playwright SCREEN-021/022/023",
+      "spec": "VEN-031",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "4e7e3561-6908-4ec6-b8e7-7247ce5684ca",
+      "identifier": "SAN-315",
+      "code": "AIA-001",
+      "title": "AIA-001 \u2014 Restore AI concierge on production",
+      "spec": "UX-001",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "AIA"
+    },
+    {
+      "linearId": "152539cd-fb17-4331-a805-2a2ffc5ea24d",
+      "identifier": "SAN-316",
+      "code": "RNT-001",
+      "title": "RNT-001 \u2014 Fix rental price parsing (\u201c$500 a night\u201d)",
+      "spec": "UX-003",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "RNT"
+    },
+    {
+      "linearId": "ab3a727b-5407-405b-b9af-ef6831918c4c",
+      "identifier": "SAN-317",
+      "code": "AIA-099",
+      "title": "AIA-099 \u2014 Disable category chips when concierge is down (optional)",
+      "spec": "UX-004",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "state": "Canceled",
+      "prefix": "AIA"
+    },
+    {
+      "linearId": "f5a026da-c9a0-4f86-9b3f-d14b46dd4a3c",
+      "identifier": "SAN-318",
+      "code": "AIA-010",
+      "title": "AIA-010 \u2014 Unify search result cards (one card, one pin)",
+      "spec": "UX-010",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "AIA"
+    },
+    {
+      "linearId": "088201dc-7238-41c5-9a15-49dba9484ad4",
+      "identifier": "SAN-319",
+      "code": "AIA-003",
+      "title": "AIA-003 \u2014 Add AI chat thinking indicator",
+      "spec": "UX-005",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "AIA"
+    },
+    {
+      "linearId": "1eaec6f2-9517-4095-8750-582e3aa334c6",
+      "identifier": "SAN-320",
+      "code": "AIA-002",
+      "title": "AIA-002 \u2014 Show retryable errors when AI chat fails",
+      "spec": "UX-002",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "AIA"
+    },
+    {
+      "linearId": "28655ccb-c0b6-4fa0-81b5-34dd173baee2",
+      "identifier": "SAN-321",
+      "code": "AIA-004",
+      "title": "AIA-004 \u2014 Reset chat and map on \u201cNew chat\u201d",
+      "spec": "UX-006",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "AIA"
+    },
+    {
+      "linearId": "e70142b4-2fb4-4507-9f59-c7c854140c70",
+      "identifier": "SAN-322",
+      "code": "OPS-003",
+      "title": "OPS-003 \u2014 Add production AI chat health monitor",
+      "spec": "UX-009",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "OPS"
+    },
+    {
+      "linearId": "c944bf9f-0c60-4e59-9f72-436aadd27c56",
+      "identifier": "SAN-323",
+      "code": "MAP-003",
+      "title": "MAP-003 \u2014 Clear ghost map pins after empty search",
+      "spec": "UX-007",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "MAP"
+    },
+    {
+      "linearId": "f5eafe57-cd6d-468e-8fb5-3b900b863835",
+      "identifier": "SAN-324",
+      "code": "UIX-001",
+      "title": "UIX-001 \u2014 Fix confusing Save button tooltip",
+      "spec": "UX-008",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "UIX"
+    },
+    {
+      "linearId": "544a1914-56a4-46e9-aa40-2fb22135caeb",
+      "identifier": "SAN-325",
+      "code": "SYS-021",
+      "title": "SYS-021 \u2014 Venues data inventory \u2014 caf\u00e9s, restaurants, nightclubs",
+      "spec": "DATA-001",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "030e9ca7-9765-44e7-a970-6cf42d2546e3",
+      "identifier": "SAN-326",
+      "code": "SYS-022",
+      "title": "SYS-022 \u2014 Events data inventory \u2014 live schema vs EVP roadmap",
+      "spec": "DATA-012",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "a6aa2898-f4ad-4cdd-8fd0-43550092a728",
+      "identifier": "SAN-327",
+      "code": "SYS-023",
+      "title": "SYS-023 \u2014 Rentals data inventory \u2014 live schema vs real-estate PRD",
+      "spec": "DATA-019",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "48052316-ed65-4fb2-9277-6c5367e34dc5",
+      "identifier": "SAN-328",
+      "code": "SYS-024",
+      "title": "SYS-024 \u2014 Trips data inventory \u2014 live schema vs trips-plan",
+      "spec": "DATA-026",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "a2640d03-792b-446c-b59f-62abb5cbd603",
+      "identifier": "SAN-329",
+      "code": "SYS-025",
+      "title": "SYS-025 \u2014 Maps geo inventory \u2014 inventory lat/lng + place_id coverage",
+      "spec": "DATA-034",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "539a6d93-94ec-4bee-a5f6-6c200f0dc760",
+      "identifier": "SAN-330",
+      "code": "SYS-026",
+      "title": "SYS-026 \u2014 Three-kind catalog contract \u2014 caf\u00e9, restaurant, nightclub",
+      "spec": "DATA-002",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "8f25374d-a623-4f4b-8ad8-bad01eb645a7",
+      "identifier": "SAN-331",
+      "code": "SYS-027",
+      "title": "SYS-027 \u2014 Supabase schema migrations \u2014 venue booking, anchors, rental indexes",
+      "spec": "DATA-009",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "c04d91bf-b45c-48c1-b008-60803d0e4559",
+      "identifier": "SAN-332",
+      "code": "SYS-028",
+      "title": "SYS-028 \u2014 Caf\u00e9 listings \u2192 venue_anchors seed (metadata + Places verify)",
+      "spec": "DATA-035",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "376b9e5a-a986-4d36-b6ee-36f4cdf3af14",
+      "identifier": "SAN-333",
+      "code": "SYS-029",
+      "title": "SYS-029 \u2014 Restaurant catalog verify + gap-fill (not full re-seed)",
+      "spec": "DATA-004",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "4c9bc1e8-5728-43cd-bb9e-0b6e586ff12a",
+      "identifier": "SAN-334",
+      "code": "SYS-030",
+      "title": "SYS-030 \u2014 Caf\u00e9 seed sign-off + golden-query map",
+      "spec": "DATA-003",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "f2fea239-f145-4174-8f6e-0520c1f0facd",
+      "identifier": "SAN-335",
+      "code": "SYS-031",
+      "title": "SYS-031 \u2014 Nightclub / bar anchor seed + Places verify",
+      "spec": "DATA-005",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "fb08a1ea-02cf-47a9-8c9a-bbe3a0d82689",
+      "identifier": "SAN-336",
+      "code": "SYS-032",
+      "title": "SYS-032 \u2014 Golden eval queries \u2014 caf\u00e9, restaurant, nightclub",
+      "spec": "DATA-006",
+      "ms": "\ud83c\udf7d\ufe0f Venues \u2014 Phase 2",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "341e4b65-66a0-4ed6-8d4e-e2059c87f530",
+      "identifier": "SAN-337",
+      "code": "SYS-033",
+      "title": "SYS-033 \u2014 place_details_cache coverage \u2014 all venue kinds",
+      "spec": "DATA-007",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "ce5abc03-5242-45b6-b452-c81888396001",
+      "identifier": "SAN-338",
+      "code": "SYS-034",
+      "title": "SYS-034 \u2014 Places backfill cron / edge job",
+      "spec": "DATA-008",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "5480f19f-19aa-455a-988c-c8b77bcf1694",
+      "identifier": "SAN-339",
+      "code": "SYS-035",
+      "title": "SYS-035 \u2014 Postgres function search_path hardening batch",
+      "spec": "DATA-010",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "8b119f01-86e9-40a7-af6d-45a5aff9577f",
+      "identifier": "SAN-340",
+      "code": "SYS-036",
+      "title": "SYS-036 \u2014 Edge function MVP freeze matrix + guest-lead abuse audit",
+      "spec": "DATA-011",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "9bf5e516-ebdf-4b8d-9caa-24f0599ad664",
+      "identifier": "SAN-341",
+      "code": "SYS-037",
+      "title": "SYS-037 \u2014 event_qa schema \u2014 Ask Host Q&A + moderation",
+      "spec": "DATA-013",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "4bb6a800-6436-41bb-853b-32f111880355",
+      "identifier": "SAN-342",
+      "code": "SYS-038",
+      "title": "SYS-038 \u2014 events AI content approval columns \u2014 vibe tags + summary",
+      "spec": "DATA-016",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "f99489fb-3bf1-47bc-bc5c-f1b8eef10765",
+      "identifier": "SAN-343",
+      "code": "SYS-039",
+      "title": "SYS-039 \u2014 Event admin ops SQL \u2014 exception queue views",
+      "spec": "DATA-018",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "46cef36d-831e-41c5-acf9-b175aec32724",
+      "identifier": "SAN-344",
+      "code": "SYS-040",
+      "title": "SYS-040 \u2014 event_live_updates schema \u2014 host day-of feed",
+      "spec": "DATA-014",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "53ea9abe-1691-466e-a5bb-6e1b32596d9a",
+      "identifier": "SAN-345",
+      "code": "SYS-041",
+      "title": "SYS-041 \u2014 Attendee social visibility schema \u2014 audience breakdown",
+      "spec": "DATA-015",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "3ac7e990-d24f-405b-b006-781b64a97d42",
+      "identifier": "SAN-346",
+      "code": "SYS-042",
+      "title": "SYS-042 \u2014 Discovered events pipeline schema \u2014 web ingest + approval queue",
+      "spec": "DATA-017",
+      "ms": "\ud83c\udf9f\ufe0f Events \u2014 Polish",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "20b51663-c890-45e1-a657-6066bda2fc63",
+      "identifier": "SAN-347",
+      "code": "SYS-043",
+      "title": "SYS-043 \u2014 leads rental FK \u2014 apartment_id + preferred_showing_at",
+      "spec": "DATA-020",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "93d06e37-a0e8-46a0-8960-a412b1f33464",
+      "identifier": "SAN-348",
+      "code": "SYS-044",
+      "title": "SYS-044 \u2014 Rental golden queries \u2014 Camila eval SQL pack",
+      "spec": "DATA-023",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "c52bdaf5-cf0d-4fe4-9f36-75b076694ff3",
+      "identifier": "SAN-349",
+      "code": "SYS-045",
+      "title": "SYS-045 \u2014 showings lifecycle \u2014 lead \u2192 showing row bridge",
+      "spec": "DATA-021",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "1a96fac3-27cd-4220-975e-31e8fd8a6b99",
+      "identifier": "SAN-350",
+      "code": "SYS-046",
+      "title": "SYS-046 \u2014 apartments.neighborhood_id FK \u2014 join neighborhoods table",
+      "spec": "DATA-022",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "3937bf7c-719c-43cd-ad58-0bd580aa58fa",
+      "identifier": "SAN-351",
+      "code": "SYS-047",
+      "title": "SYS-047 \u2014 Rental booking commerce prep \u2014 bookings \u2194 payments Stripe",
+      "spec": "DATA-024",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "5bbc5400-5972-4f15-a658-60b30ea2fd97",
+      "identifier": "SAN-352",
+      "code": "SYS-048",
+      "title": "SYS-048 \u2014 Hermes rental analytics \u2014 scoring_logs + market_snapshots",
+      "spec": "DATA-025",
+      "ms": "Phase 2 \u2014 Vector",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "8d494881-e773-492a-8b98-74273e25db27",
+      "identifier": "SAN-353",
+      "code": "SYS-049",
+      "title": "SYS-049 \u2014 trip_items type CHECK extension + insert RPC",
+      "spec": "DATA-027",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "52923fb4-42ee-4e87-9b14-c058037b9b6d",
+      "identifier": "SAN-354",
+      "code": "SYS-050",
+      "title": "SYS-050 \u2014 Commerce trip_id linkage \u2014 event_orders, leads, showings",
+      "spec": "DATA-029",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "932f7465-12c9-4032-9b47-30307a31bdea",
+      "identifier": "SAN-355",
+      "code": "SYS-051",
+      "title": "SYS-051 \u2014 Trips golden queries pack",
+      "spec": "DATA-030",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "fde88e7f-d663-4cac-a790-66a6e9f207e2",
+      "identifier": "SAN-356",
+      "code": "SYS-052",
+      "title": "SYS-052 \u2014 event_orders / showings \u2192 trip_items idempotent sync",
+      "spec": "DATA-028",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "8960c7b9-60c3-4ab1-a9ac-48c54964e01b",
+      "identifier": "SAN-357",
+      "code": "SYS-053",
+      "title": "SYS-053 \u2014 trip_items itinerary covering index",
+      "spec": "DATA-031",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "a3e07396-1998-4889-bba6-4377d8bed7e8",
+      "identifier": "SAN-358",
+      "code": "SYS-054",
+      "title": "SYS-054 \u2014 mastra_threads trip_id metadata index",
+      "spec": "DATA-032",
+      "ms": "\ud83c\udfe0 Trips \u2014 Phase 2",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "9ebe2c52-a060-49d8-81de-a7deea411c9d",
+      "identifier": "SAN-359",
+      "code": "SYS-055",
+      "title": "SYS-055 \u2014 route_cache schema + RLS + TTL",
+      "spec": "DATA-033",
+      "ms": "\ud83d\uddfa\ufe0f Maps \u2014 Growth",
+      "prefix": "SYS"
+    },
+    {
+      "linearId": "02115b2c-0763-4190-aee8-803c6d41d7aa",
+      "identifier": "SAN-360",
+      "code": "AIA-011",
+      "title": "AIA-011 \u2014 Extract shared result card shell",
+      "spec": "UX-010-M0",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "AIA"
+    },
+    {
+      "linearId": "9cbefec6-3715-4686-88d9-f2e54f614148",
+      "identifier": "SAN-361",
+      "code": "AIA-012",
+      "title": "AIA-012 \u2014 Remove duplicate search results panel",
+      "spec": "UX-010-M1",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "AIA"
+    },
+    {
+      "linearId": "5f4d0d3b-e973-45d6-9898-ffee3a5e92fd",
+      "identifier": "SAN-362",
+      "code": "VEN-001",
+      "title": "VEN-001 \u2014 Build rich restaurant result cards",
+      "spec": "UX-010-M2",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "ad2f986c-fdb7-4427-a354-9d9522440835",
+      "identifier": "SAN-363",
+      "code": "VEN-002",
+      "title": "VEN-002 \u2014 Build rich attraction result cards",
+      "spec": "UX-010-M3",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "VEN"
+    },
+    {
+      "linearId": "46cb38a8-1d9a-4438-a914-3abc515af4ff",
+      "identifier": "SAN-364",
+      "code": "AIA-013",
+      "title": "AIA-013 \u2014 Clean up orphan cards and event citations",
+      "spec": "UX-010-M4",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "AIA"
+    },
+    {
+      "linearId": "4761efc5-42f6-4d5b-904a-0dd68b0d0e31",
+      "identifier": "SAN-365",
+      "code": "AIA-014",
+      "title": "AIA-014 \u2014 Add tests for unified result cards",
+      "spec": "UX-010-M5",
+      "ms": "\ud83c\udf7d\ufe0f Discovery \u2014 UI",
+      "prefix": "AIA"
+    },
+    {
+      "linearId": "593e31ef-89be-4aa3-9a41-2ddcdca7cce2",
+      "identifier": "SAN-366",
+      "code": "EVT-002",
+      "title": "EVT-002 \u2014 Prove Roberto can publish an event on production",
+      "spec": "G3-core-host-publish-proof",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "EVT"
+    },
+    {
+      "linearId": "4f409711-68ab-4b7d-af2c-8ddd5c10eb42",
+      "identifier": "SAN-367",
+      "code": "ATH-001",
+      "title": "ATH-001 \u2014 Verify production login and Vercel env",
+      "spec": "AUTH-011",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "ATH"
+    },
+    {
+      "linearId": "2c826f87-ac46-4001-a40d-a8b51596c9f1",
+      "identifier": "SAN-368",
+      "code": "MAP-001",
+      "title": "MAP-001 \u2014 Deploy grounded place search to production",
+      "spec": "MAP-002B",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "MAP"
+    },
+    {
+      "linearId": "6a379e94-cbe8-472f-b2da-c6ee310972b2",
+      "identifier": "SAN-369",
+      "code": "MAP-002",
+      "title": "MAP-002 \u2014 Verify Google Maps pins on production",
+      "spec": "MAP-008B",
+      "ms": "\ud83d\udea8 Launch Critical",
+      "prefix": "MAP"
+    }
+  ]
+}
