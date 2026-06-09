@@ -13,6 +13,7 @@ import {
   RESTAURANT_FAST_PATH_QUERY,
   NIGHTLIFE_GROUNDING_QUERY,
 } from "./helpers/maps-layout";
+import { expectProtectedRouteLoginRedirect } from "./helpers/screen-evidence";
 
 const isProd = Boolean(process.env.PROD_SMOKE_BASE_URL?.trim());
 const outDir =
@@ -96,15 +97,10 @@ test.describe("SAN-546 · OPS-JOURNEY — prod matrix J05–J20", () => {
     await page.screenshot({ path: path.join(outDir, "j09-event-cta.png") });
   });
 
-  test("J10 — host event wizard shell", async ({ page }) => {
+  test("J10 — host event wizard shell (auth-gated)", async ({ page }) => {
     test.setTimeout(120_000);
-    const res = await page.goto("/host/event/new", {
-      waitUntil: "domcontentloaded",
-    });
-    expect(res?.ok()).toBe(true);
-    await expect(page.getByRole("heading", { name: /new event|create event/i })).toBeVisible({
-      timeout: 20_000,
-    });
+    // Prod matrix: Roberto wizard — unauthenticated users redirect to login (SCREEN-016).
+    await expectProtectedRouteLoginRedirect(page, "/host/event/new");
     await page.screenshot({ path: path.join(outDir, "j10-host-wizard.png") });
   });
 
@@ -198,13 +194,26 @@ test.describe("SAN-546 · OPS-JOURNEY — prod matrix J05–J20", () => {
   test("J17 — mobile café drawer + FAB", async ({ page }) => {
     test.setTimeout(240_000);
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/rentals", { waitUntil: "domcontentloaded" });
-    const fab = page.getByTestId("browse-map-fab");
+    await gotoHome(page);
+    await sendConciergeMessage(page, GROUNDING_QUERY);
+    await waitForCafeGroundedCards(page);
+    await waitForCopilotIdle(page, 120_000);
+
+    const fab = page.getByTestId("map-sheet-trigger");
     await expect(fab).toBeVisible();
     await fab.click();
-    await expect(page.getByRole("dialog", { name: "Map view" })).toBeVisible({
+    await expect(page.getByTestId("map-sheet-content")).toBeVisible({
       timeout: 8_000,
     });
+    await page.keyboard.press("Escape");
+    await expect(page.getByTestId("map-sheet-content")).toBeHidden();
+
+    const send = page
+      .locator(
+        '[data-testid="copilot-chat-ready"], [data-testid="copilot-chat-request-in-progress"]',
+      )
+      .first();
+    await expect(send).toBeVisible();
     await page.screenshot({ path: path.join(outDir, "j17-mobile-map.png") });
   });
 
