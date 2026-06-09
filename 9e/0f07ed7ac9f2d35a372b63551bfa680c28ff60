@@ -1,0 +1,19 @@
+docs/notes/session-2026-06-09-docs-rebase-audit.md
+  s_92e848a0a9a678::t_614759b33a7291 1-54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "9e0f07ed7ac9f2d35a372b63551bfa680c28ff60",
+  "prompts": {},
+  "sessions": {
+    "s_92e848a0a9a678": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ae73c116-1255-4df6-8a66-da3a39888ad7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
