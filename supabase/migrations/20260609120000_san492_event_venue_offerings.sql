@@ -33,6 +33,9 @@ as $$
   );
 $$;
 
+revoke all on function public.partner_is_active(uuid) from public;
+grant execute on function public.partner_is_active(uuid) to anon, authenticated;
+
 -- ── A.1  partner_locations: extend (event-capable venue identity) ────────────
 alter table public.partner_locations
   add column accepts_event_bookings boolean not null default false,

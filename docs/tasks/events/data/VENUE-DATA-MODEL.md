@@ -1,11 +1,11 @@
 ---
 id: VENUE-DATA-MODEL
 title: Venue booking data model — source of truth
-status: Revised + audit-hardened · readiness 85 · GO for migration branch (human ERD sign-off pending)
+status: E0 fixed · readiness 90 · GO for PR review · NO-GO prod apply until human ERD sign-off
 linear: SAN-492
 updated: 2026-06-09
-readiness: 85
-grade: B
+readiness: 90
+grade: A-
 model: partner_locations (identity) + venue_event_offerings/packages (new) + bookings (proposals)
 supersedes_partially:
   - tasks/venues/tasks/event-booking/VEB-001-core-event-venue-offerings-schema.md
@@ -16,7 +16,7 @@ audited_by: task-verifier · mde-supabase · Supabase MCP · data/data-model-aud
 # VENUE-DATA-MODEL — Source of truth (SAN-492 gate)
 
 > **Decision:** reuse the **shipped partner stack**. `partner_locations` is the event-capable venue master; offerings/packages are new child tables; **`bookings`** (not a new table) carries the proposal + approval flow. `event_venues` and `venue_booking_requests` are **untouched**. No `partner_venues`, no `event_venue_bookings`, no `venues`.
-> **Readiness 85/100 → GO for the SAN-492 migration *branch*** (author SQL + `partner_is_active` fix). **No prod apply** until human ERD sign-off. **No code in SAN-493–496** until this is signed off.
+> **Readiness 90/100 → GO for PR #146 review** (`partner_is_active()` + RLS smoke ALL PASS). **NO-GO for prod apply** until human ERD sign-off. **No code in SAN-493–496** until migration applied on staging.
 
 ## Why this revision
 
@@ -261,7 +261,9 @@ Opt 1 leaves `venue_booking_requests` untouched, so **none of these run**. Recor
 | Human ERD sign-off | ⬜ | 🟡 **pending** |
 | Capacity in real cols vs metadata | — | 🟡 chose real cols (decide at sign-off) |
 
-**Readiness: 85/100 → GO** for SAN-492 migration-branch authoring (≥80 target met). **NO-GO for prod apply** until human sign-off. **No SQL touches SAN-493–496 code.**
+**Readiness: 90/100 → GO** for PR review (E0 RLS fix verified). **NO-GO for prod apply** until human ERD sign-off + staging apply. **No SQL touches SAN-493–496 code.**
+
+No 🔴 remain on authored SQL. The three original blockers (B1/B2/B3) are resolved; E0 anon-RLS trap fixed in migration.
 
 ---
 
@@ -272,9 +274,10 @@ Opt 1 leaves `venue_booking_requests` untouched, so **none of these run**. Recor
 | 1 | Human sign-off on Opt 1 (partner_locations + bookings) | 🟡 gate before apply |
 | 2 | Confirm Mamacita modeled as `partners(type='venue')` + a `partner_locations` row (seed convention, SAN-493) | 🟡 |
 | 3 | Capacity/verified as **real columns** (chosen) vs `metadata` jsonb — confirm at sign-off | 🟡 |
-| 4 | `bookings` admin read for Patricia: partner-membership vs service-role edge fn — pick one for SAN-502 | 🟡 |
+| 4 | `metadata` jsonb on public SELECT — **no PII** (contact email/phone) in partner_locations.metadata; use edge fn or authenticated paths for ops data | ⚪ |
 
-No 🔴 remain. The three original blockers (B1/B2/B3) are resolved.
+| 5 | `bookings` admin read for Patricia: `is_admin()` policies in A.3 (decided) vs partner-membership-only — confirm at sign-off | 🟡 |
+| 6 | `google_place_id` dedupe: per-partner UNIQUE (A.1) vs global — decide at sign-off (E4) | 🟡 |
 
 ---
 
@@ -313,7 +316,11 @@ RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS
     WHERE p.id = _partner_id AND p.status = 'active'::partner_status
   );
 $$;
+REVOKE ALL ON FUNCTION public.partner_is_active(uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.partner_is_active(uuid) TO anon, authenticated;
 ```
+
+**Security:** function is SECURITY DEFINER with explicit EXECUTE grant — do not rely on default PUBLIC execute.
 
 ### A.1 — `partner_locations`: extend + public SELECT (parent-active gated)
 
