@@ -1,0 +1,41 @@
+DO
+psql:docs/tasks/testing/scripts/san492-rls-smoke.sql:42: NOTICE:  table "_san492_smoke_results" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+DO
+DO
+DO
+DO
+DO
+INSERT 0 0
+DO
+DO
+DO
+DO
+DO
+DO
+
+=== SAN-492 RLS SMOKE RESULTS ===
+               test_name                | result |                                                                               detail                                                                                
+----------------------------------------+--------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ admin_select_event_bookings            | PASS   | rows=1
+ admin_update_event_bookings            | PASS   | partner_status=approved
+ anon_cannot_delete_offering            | PASS   | rows_affected=0
+ anon_cannot_insert_offering            | PASS   | new row violates row-level security policy for table "venue_event_offerings"
+ anon_cannot_update_offering            | PASS   | rows_affected=0
+ anon_select_verified_active_only       | PASS   | visible rows=1 (expect 1: loc 030 only)
+ inactive_partner_fails                 | PASS   | bookings.resource_id 00000000-0000-4000-a000-000000000032 must be a verified event-capable partner_location for active partner 00000000-0000-4000-a000-000000000014
+ invalid_resource_id_fails              | PASS   | bookings.resource_id 00000000-0000-4000-a000-000000000099 must be a verified event-capable partner_location for active partner 00000000-0000-4000-a000-000000000011
+ partner_id_mismatch_fails              | PASS   | bookings.resource_id 00000000-0000-4000-a000-000000000030 must be a verified event-capable partner_location for active partner 00000000-0000-4000-a000-000000000010
+ partner_id_update_mismatch_fails       | PASS   | bookings.resource_id 00000000-0000-4000-a000-000000000030 must be a verified event-capable partner_location for active partner 00000000-0000-4000-a000-000000000010
+ partner_member_crud_offerings_packages | PASS   | insert/update ok
+ unverified_location_fails              | PASS   | bookings.resource_id 00000000-0000-4000-a000-000000000031 must be a verified event-capable partner_location for active partner 00000000-0000-4000-a000-000000000011
+(12 rows)
+
+
+ overall  
+----------
+ ALL PASS
+(1 row)
+
+DROP TABLE
