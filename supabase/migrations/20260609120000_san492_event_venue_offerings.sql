@@ -1,6 +1,6 @@
 -- ============================================================================
 -- SAN-492 · EVT-033 — Event Venue + Offerings Schema
--- Model: partner_locations reuse. SoT: tasks/events/data/VENUE-DATA-MODEL.md (Appendix A)
+-- Model: partner_locations reuse. SoT: mdeapp/docs/tasks/events/data/VENUE-DATA-MODEL.md (Appendix A)
 --
 -- ⚠️  STATUS: AUTHORED — NOT YET APPLIED to any environment.
 --     Gate before apply: human ERD sign-off + `get_advisors(security)` clean + RLS smoke.
@@ -13,11 +13,25 @@
 --   UNTOUCHED: event_venues (ticketed-event rooms), venue_booking_requests (café/table only)
 --   DO NOT CREATE: partner_venues / venues / event_venue_bookings
 --
--- Helpers used (verified live 2026-06-09): update_updated_at(), partner_ids_for_user(), is_admin().
+-- Helpers used (verified live 2026-06-09): update_updated_at(), partner_ids_for_user(), is_admin(), partner_is_active().
 -- Rollback: VENUE-DATA-MODEL.md §A.6.
 -- ============================================================================
 
 begin;
+
+-- RLS-safe active check: anon cannot SELECT partners; public policies must not subquery it.
+create or replace function public.partner_is_active(_partner_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.partners p
+    where p.id = _partner_id and p.status = 'active'::partner_status
+  );
+$$;
 
 -- ── A.1  partner_locations: extend (event-capable venue identity) ────────────
 alter table public.partner_locations
@@ -46,10 +60,7 @@ create policy partner_locations_public_event_select on public.partner_locations
   using (
     accepts_event_bookings
     and is_verified
-    and exists (
-      select 1 from public.partners p
-      where p.id = partner_locations.partner_id and p.status = 'active'
-    )
+    and (select public.partner_is_active(partner_id))
   );
 
 -- ── A.2  venue_event_offerings (CREATE) ──────────────────────────────────────
@@ -77,9 +88,10 @@ create policy veo_public_select on public.venue_event_offerings
   for select to anon, authenticated
   using (exists (
     select 1 from public.partner_locations pl
-    join public.partners p on p.id = pl.partner_id
     where pl.id = partner_location_id
-      and pl.accepts_event_bookings and pl.is_verified and p.status = 'active'
+      and pl.accepts_event_bookings
+      and pl.is_verified
+      and (select public.partner_is_active(pl.partner_id))
   ));
 create policy veo_service_write on public.venue_event_offerings
   for all to service_role using (true) with check (true);
@@ -121,9 +133,10 @@ create policy vep_public_select on public.venue_event_packages
   for select to anon, authenticated
   using (exists (
     select 1 from public.partner_locations pl
-    join public.partners p on p.id = pl.partner_id
     where pl.id = partner_location_id
-      and pl.accepts_event_bookings and pl.is_verified and p.status = 'active'
+      and pl.accepts_event_bookings
+      and pl.is_verified
+      and (select public.partner_is_active(pl.partner_id))
   ));
 create policy vep_service_write on public.venue_event_packages
   for all to service_role using (true) with check (true);
