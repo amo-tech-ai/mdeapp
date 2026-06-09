@@ -150,6 +150,8 @@ create policy bookings_admin_update on public.bookings
   using ((select is_admin())) with check ((select is_admin()));
 
 -- ── A.5  bookings.resource_id integrity guard (no FK possible — polymorphic) ──
+-- bookings.resource_id is polymorphic by booking_type; only booking_type='event' must
+-- reference a verified, event-capable partner_locations row whose parent partner is active.
 create or replace function public.bookings_validate_event_resource()
 returns trigger
 language plpgsql
@@ -158,11 +160,25 @@ set search_path = public
 as $$
 begin
   if new.booking_type = 'event' then
+    if new.resource_id is null then
+      raise exception 'event booking requires resource_id';
+    end if;
+    if new.partner_id is null then
+      raise exception 'event booking requires partner_id';
+    end if;
     if not exists (
-      select 1 from public.partner_locations pl
-      where pl.id = new.resource_id and pl.accepts_event_bookings
+      select 1
+      from public.partner_locations pl
+      join public.partners p on p.id = pl.partner_id
+      where pl.id = new.resource_id
+        and pl.accepts_event_bookings
+        and pl.is_verified
+        and p.status = 'active'
+        and p.id = new.partner_id
     ) then
-      raise exception 'bookings.resource_id % is not an event-capable partner_location', new.resource_id;
+      raise exception
+        'bookings.resource_id % must be a verified event-capable partner_location for active partner %',
+        new.resource_id, new.partner_id;
     end if;
   end if;
   return new;
