@@ -36,6 +36,6 @@ Related: [`EVT-034-seed.md`](./EVT-034-seed.md) · VEN-001–007 · [`../pages/m
 
 ```bash
 PGPASSWORD=postgres psql -h 127.0.0.1 -p 54322 -U postgres -d postgres \
-  -f tasks/testing/scripts/san492-rls-smoke.sql   # expect ALL PASS
+  -f docs/tasks/testing/scripts/san492-rls-smoke.sql   # expect ALL PASS (12 checks)
 cd mdeapp && npm run test -- supabase
 ```

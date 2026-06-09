@@ -29,7 +29,7 @@ reverified: 2026-06-09 post-E0 (partner_is_active + REVOKE/GRANT + RLS smoke ALL
 | Published events / orphans | **49 / 31** | ✅ unchanged |
 | `get_advisors(security)` prod | **100** (1 ERROR `spatial_ref_sys`, 99 WARN pre-existing) | ✅ E8 |
 | PR #146 / disk migration SQL | **`partner_is_active()`** + 3 public policies use helper | ✅ E0 **fixed on disk** (pending commit to PR branch) |
-| Local smoke (`san492-rls-smoke.sql`) | **ALL PASS** (11 checks) on disposable `:54322` | ✅ |
+| Local smoke (`san492-rls-smoke.sql`) | **ALL PASS** (12 checks) on disposable `:54322` | ✅ |
 | EVT-034 seed spec | [`EVT-034-seed.md`](../specs/venue-booking/EVT-034-seed.md) documents `status='active'` | ✅ E1 spec written — implementation still blocked until 492 apply |
 
 **Re-check verdict:** audit analysis **94/100 (A)** · authored SQL **90/100 (A-)** — **GO PR review** · **NO-GO prod apply** until human ERD sign-off + staging apply.

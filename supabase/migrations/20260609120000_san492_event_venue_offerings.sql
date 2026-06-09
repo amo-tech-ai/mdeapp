@@ -202,7 +202,7 @@ end;
 $$;
 
 create trigger bookings_event_resource_guard
-  before insert or update of resource_id, booking_type on public.bookings
+  before insert or update of resource_id, booking_type, partner_id on public.bookings
   for each row execute function public.bookings_validate_event_resource();
 
 commit;

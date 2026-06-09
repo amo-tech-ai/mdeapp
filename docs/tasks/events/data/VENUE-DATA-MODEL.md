@@ -453,7 +453,7 @@ BEGIN
   RETURN NEW;
 END $$;
 CREATE TRIGGER bookings_event_resource_guard
-  BEFORE INSERT OR UPDATE OF resource_id, booking_type ON public.bookings
+  BEFORE INSERT OR UPDATE OF resource_id, booking_type, partner_id ON public.bookings
   FOR EACH ROW EXECUTE FUNCTION public.bookings_validate_event_resource();
 ```
 
@@ -480,6 +480,6 @@ ALTER TABLE public.partner_locations
 `venue_booking_requests` and `event_venues` are never touched → café/table + ticketed-event paths cannot regress.
 
 ### A.7 — Pre-apply gate
-RLS smoke `tasks/testing/scripts/san492-rls-smoke.sql` → **ALL PASS** · `get_advisors(security)` **post-apply** with **no NEW findings vs 2026-06-09 baseline** · human ERD sign-off · **then** apply. Seed (SAN-493) only after apply.
+RLS smoke `docs/tasks/testing/scripts/san492-rls-smoke.sql` → **ALL PASS** (12 checks) · `get_advisors(security)` **post-apply** with **no NEW findings vs 2026-06-09 baseline** · human ERD sign-off · **then** apply. Seed (SAN-493) only after apply.
 
 > **Verified:** the existing `partner_locations_updated_at` trigger calls **`public.update_updated_at()`** (probed 2026-06-09) — the new-table triggers above reuse it.

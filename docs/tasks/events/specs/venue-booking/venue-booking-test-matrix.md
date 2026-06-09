@@ -11,7 +11,7 @@ seed_spec: ./EVT-034-seed.md
 | Check | Type | Command / assert |
 |-------|------|------------------|
 | Migration applies clean | Vitest / SQL | `npm run test -- supabase` |
-| RLS smoke (11 checks) | SQL | `psql … -f tasks/testing/scripts/san492-rls-smoke.sql` → **ALL PASS** |
+| RLS smoke (12 checks) | SQL | `psql … -f docs/tasks/testing/scripts/san492-rls-smoke.sql` → **ALL PASS** |
 | `partner_is_active()` in migration | Code review | SECURITY DEFINER; used in 3 public SELECT policies |
 | RLS on all new tables | Hook / MCP | `source-command-supabase-rls-audit` |
 | No service-role in `mdeapp/src` | Hook | `no-service-role-in-src.mjs` |
