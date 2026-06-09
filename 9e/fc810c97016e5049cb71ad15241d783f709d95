@@ -1,0 +1,38 @@
+e2e/helpers/maps-layout.ts
+  s_b36771af174a1f::t_057e485054a00a 231-233,237-246,248
+src/components/copilot/tool-pins-sync.tsx
+  s_b36771af174a1f::t_77b724eddbc940 24-28
+e2e/screens/SAN-860-j15-pin-clear-local.spec.ts
+  s_b36771af174a1f::t_d61cbb0b355ea0 1-46
+e2e/prod-journey-j05-j20.spec.ts
+  s_b36771af174a1f::t_d18ea199886cc0 79-80
+  s_b36771af174a1f::t_5ded6f86574c86 122
+  s_b36771af174a1f::t_2c2bbba61c3ef8 1-78,81-121,123-231
+package.json
+  s_b36771af174a1f::t_b654cc16a0dc9e 64
+src/hooks/use-grounded-search-fast-path.ts
+  s_b36771af174a1f::t_77b724eddbc940 46-48
+e2e/screens/SAN-546-j14-j15-prod.spec.ts
+  s_b36771af174a1f::t_3029b5475535f4 68-72,80-81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "9efc810c97016e5049cb71ad15241d783f709d95",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_b36771af174a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e275ed1c-ebc2-46f2-91f8-b18574a1b947",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
