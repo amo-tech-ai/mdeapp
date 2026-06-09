@@ -1,0 +1,26 @@
+e2e/prod-journey-j05-j20.spec.ts
+  s_b36771af174a1f::t_8b721cc8323778 16
+  s_b36771af174a1f::t_23cd2e66ac6720 100,102-103
+  s_b36771af174a1f::t_8f9186df2eaca7 197-202,205,208-216
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "63ea83cefdc678338ae223332ee112c00c75ede9",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_b36771af174a1f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e275ed1c-ebc2-46f2-91f8-b18574a1b947",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
