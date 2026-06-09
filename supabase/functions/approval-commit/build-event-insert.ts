@@ -24,7 +24,7 @@ function hostDisplayDetails(snapshot?: EventHostDisplaySnapshot) {
   return {
     host_display: {
       name: snapshot.name.trim(),
-      avatar_url: snapshot.avatarUrl ?? null,
+      avatar_url: snapshot.avatarUrl?.trim() || null,
     },
   };
 }
