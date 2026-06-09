@@ -1,0 +1,26 @@
+src/__tests__/build-event-insert.test.ts
+  s_88d284f4974037::t_161ec34a503e59 53-63
+supabase/functions/approval-commit/build-event-insert.ts
+  s_88d284f4974037::t_936e9f65fb826b 27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "3eddb47af76041701b26c7d34bb79188f1cf9483",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_88d284f4974037": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "12172277-a42f-4ea5-89db-4f5de4653e40",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
