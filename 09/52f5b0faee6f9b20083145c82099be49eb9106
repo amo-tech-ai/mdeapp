@@ -1,0 +1,21 @@
+docs/tasks/testing/evidence/2026-06-09/SAN-492-staging-RESULTS.md
+  s_d1b7a3779fe462::t_93e4c03b272db7 1-119
+docs/tasks/testing/evidence/2026-06-09/SAN-492-staging-smoke.log
+  s_d1b7a3779fe462::t_e5ff5b74236828 1-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "0952f5b0faee6f9b20083145c82099be49eb9106",
+  "prompts": {},
+  "sessions": {
+    "s_d1b7a3779fe462": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "26292875-287f-4fbd-bce0-3bd9e158b377",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
