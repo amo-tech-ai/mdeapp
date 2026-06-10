@@ -1,0 +1,24 @@
+docs/partners/docs/mindtrip-teardown.md
+  s_64c3b1958bd65c::t_08791468c7fa67 1-81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "2e3543d5b319b27172da55528d2b67c2be3a1f3f",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_64c3b1958bd65c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e5e476f8-ba89-48b1-8472-b94aa879cd8c",
+        "model": "claude-fable-5"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
