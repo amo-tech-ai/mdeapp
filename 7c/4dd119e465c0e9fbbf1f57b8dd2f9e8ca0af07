@@ -1,0 +1,69 @@
+docs/wireframes/README.md
+  s_0baec5608e2475::t_09584dff2e83df 6-7
+docs/tasks/README.md
+  s_0baec5608e2475::t_efd662b6d70f78 3-12
+docs/design-wireframes
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+docs/checklist.md
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+index.md
+  s_0baec5608e2475::t_bac8bfce4ddabf 110
+  s_0baec5608e2475::t_a3e32a6d02d988 98
+  s_0baec5608e2475::t_826f97e264841c 129
+  s_0baec5608e2475::t_14f24f2369ddc2 101-104
+docs/design/wireframes/04-detail-booking.md
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+docs/events
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+docs/index-skills.md
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+docs/lean.md
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+docs/prd.md
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+docs/roadmap.md
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+docs/tasks/MVP-EXECUTION.md
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+docs/tasks/wireframes/04-detail-booking.md
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+docs/wireframes-design
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+tasks
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+docs/advanced.md
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+docs/plan.md
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+docs/DESIGN.MD
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+docs/sitemap.md
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+docs/LESSONS.md
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+docs/design/wireframes/README.md
+  s_0baec5608e2475::t_e173a831e8df0f 15-17
+docs/tasks/events/README.md
+  s_0baec5608e2475::t_38d8873e2bd5c2 5
+docs/index-docs.md
+  s_0baec5608e2475::t_a848a6a811f40c 28-29
+  s_0baec5608e2475::t_6e8af3302fe3f6 56-58
+docs/CLAUDE.md
+  s_0baec5608e2475::t_da234c7fbf29b5 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "7c4dd119e465c0e9fbbf1f57b8dd2f9e8ca0af07",
+  "prompts": {},
+  "sessions": {
+    "s_0baec5608e2475": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3bd5f9d7-109c-4dce-8633-a9bc1d0da6e5",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
