@@ -113,32 +113,36 @@ export function VenueBookingHitlPanel({
           </div>
         ) : null}
       </CardContent>
-      {status === "executing" && !decided && user ? (
+      {status === "executing" && !decided ? (
         <CardFooter className="flex flex-wrap gap-2">
+          {user ? (
+            <>
+              <Button
+                type="button"
+                data-testid="venue-booking-hitl-approve"
+                onClick={() => {
+                  setDecided(true);
+                  respond("approved");
+                }}
+              >
+                Send request
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                data-testid="venue-booking-hitl-edit"
+                onClick={() => {
+                  setDecided(true);
+                  respond("edit");
+                }}
+              >
+                Edit details
+              </Button>
+            </>
+          ) : null}
           <Button
             type="button"
-            data-testid="venue-booking-hitl-approve"
-            onClick={() => {
-              setDecided(true);
-              respond("approved");
-            }}
-          >
-            Send request
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            data-testid="venue-booking-hitl-edit"
-            onClick={() => {
-              setDecided(true);
-              respond("edit");
-            }}
-          >
-            Edit details
-          </Button>
-          <Button
-            type="button"
-            variant="destructive"
+            variant={user ? "destructive" : "outline"}
             data-testid="venue-booking-hitl-reject"
             onClick={() => {
               setDecided(true);

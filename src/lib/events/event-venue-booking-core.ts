@@ -20,6 +20,7 @@ export function buildEventProposalIdempotencyKey(input: {
 /**
  * SAN-865 scaffold — insert event proposal into bookings (booking_type='event').
  * Full wiring lands in SAN-496 · createEventProposal tool.
+ * TODO SAN-496: add bookings.idempotency_key column + unique index before relying on 23505.
  */
 export async function insertEventProposal(
   supabase: SupabaseClient<Database>,

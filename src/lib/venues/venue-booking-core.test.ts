@@ -13,20 +13,30 @@ function mockSupabase(
   const select = vi.fn(() => ({ single }));
   const insert = vi.fn(() => ({ select }));
   const from = vi.fn(() => ({ insert }));
-  return { from } as unknown as SupabaseClient<Database>;
+  return { from, insert } as unknown as SupabaseClient<Database> & {
+    insert: typeof insert;
+  };
 }
 
 describe("buildVenueBookingIdempotencyKey", () => {
+  const base = {
+    venueKind: "cafe",
+    placeId: "ChIJtest12345678",
+    requestedAt: "2026-06-15T18:00:00.000Z",
+    partySize: 2,
+  };
+
   it("is stable for the same inputs", () => {
-    const input = {
-      venueKind: "cafe",
-      placeId: "ChIJtest12345678",
-      requestedAt: "2026-06-15T18:00:00.000Z",
-    };
-    expect(buildVenueBookingIdempotencyKey(input)).toBe(
-      buildVenueBookingIdempotencyKey(input),
+    expect(buildVenueBookingIdempotencyKey(base)).toBe(
+      buildVenueBookingIdempotencyKey(base),
     );
-    expect(buildVenueBookingIdempotencyKey(input)).toMatch(/^vb-[a-f0-9]{32}$/);
+    expect(buildVenueBookingIdempotencyKey(base)).toMatch(/^vb-[a-f0-9]{32}$/);
+  });
+
+  it("changes when party size changes", () => {
+    expect(
+      buildVenueBookingIdempotencyKey({ ...base, partySize: 4 }),
+    ).not.toBe(buildVenueBookingIdempotencyKey(base));
   });
 });
 
@@ -65,6 +75,13 @@ describe("insertVenueBookingRequest", () => {
       expect(result.data.message).toContain("not a confirmed");
     }
     expect(supabase.from).toHaveBeenCalledWith("venue_booking_requests");
+    expect(supabase.insert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        status: "pending",
+        user_id: "user-abc",
+        party_size: body.partySize,
+      }),
+    );
   });
 
   it("returns 409 on idempotency conflict", async () => {

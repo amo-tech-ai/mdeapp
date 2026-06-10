@@ -108,6 +108,7 @@ export function VenueBookingForm({
           venueKind,
           placeId,
           requestedAt: requestedAtIso,
+          partySize: parsedParty,
         }),
       });
       onSuccess(result);

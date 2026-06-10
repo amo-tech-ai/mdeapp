@@ -70,10 +70,10 @@ describe("requestVenueBookingTool", () => {
       },
     );
 
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.requestId).toBe(bookingRequestId);
-    }
+    expect(result).toMatchObject({
+      success: true,
+      requestId: bookingRequestId,
+    });
     expect(insertVenueBookingRequest).toHaveBeenCalledWith(
       expect.anything(),
       "user-abc",
