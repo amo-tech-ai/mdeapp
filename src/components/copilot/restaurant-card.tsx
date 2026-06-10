@@ -223,6 +223,7 @@ export function RestaurantCard({
           <Button
             type="button"
             size="sm"
+            className="h-11 min-w-11 px-3"
             data-testid={bookingTestId}
             onClick={(e) => {
               e.stopPropagation();
