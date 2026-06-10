@@ -8,15 +8,24 @@
 
 ---
 
-## Final verdict
+## Final verdict (updated 2026-06-10 post-fix)
 
 | Gate | Result |
 |------|--------|
-| **Grade** | **B** |
-| **Percent complete (spec)** | **95%** |
-| **Ready for merge?** | **Yes** — read-only UI, Vitest green, no scope creep |
-| **Ready for Done?** | **No** — Playwright U proof failed this session (harness/env, not code) |
+| **Grade** | **B+** |
+| **Percent complete (spec)** | **98%** |
+| **Ready for merge?** | **Yes** — floor ✅ on PR #164 @ `15ca283` |
+| **Ready for Done?** | **After** manual browser screenshot (`SAN-495-browser.png`) |
 | **Production risk** | **Low** — SELECT-only fetch, disabled submit, no writes |
+
+### PR #164 CI (2026-06-10 @ `15ca283`)
+
+| Check | Result |
+|-------|--------|
+| floor | ✅ pass ([run 27276258784](https://github.com/amo-tech-ai/mdeapp/actions/runs/27276258784)) |
+| Vercel preview | ✅ pass |
+| CodeRabbit | ⏳ in progress |
+| Build fix | ✅ `venue-booking-direct-hitl-context.tsx` committed (`15ca283`) — reviewer module-not-found **resolved** |
 
 ---
 
