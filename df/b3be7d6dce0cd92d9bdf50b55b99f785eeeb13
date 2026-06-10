@@ -1,0 +1,24 @@
+.claude/settings.json
+  s_e5791ab83b9bb7::t_ffa5c56761eb60 65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "dfb3be7d6dce0cd92d9bdf50b55b99f785eeeb13",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_e5791ab83b9bb7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b3e8d093-b1e2-4331-ac75-ef7af26a36e0",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
