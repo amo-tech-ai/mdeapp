@@ -1,0 +1,24 @@
+docs/partners/tasks/design/D-PTR-07-contact.md
+  s_64c3b1958bd65c::t_f830b12350faa8 18-21
+docs/partners/tasks/design/INDEX.md
+  s_64c3b1958bd65c::t_f05ec75d60819c 51-63
+docs/partners/tasks/design/D-PTR-06-pricing.md
+  s_64c3b1958bd65c::t_d9bb2707ecafe7 18,20-24
+  s_64c3b1958bd65c::t_e2fcf1a247c4b9 43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "32d9f5e4e282f13fcf2a0f46b4c93d305570723c",
+  "prompts": {},
+  "sessions": {
+    "s_64c3b1958bd65c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e5e476f8-ba89-48b1-8472-b94aa879cd8c",
+        "model": "claude-fable-5"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
