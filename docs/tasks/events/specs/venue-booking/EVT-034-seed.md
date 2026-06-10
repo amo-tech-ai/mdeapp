@@ -1,7 +1,7 @@
 ---
 id: EVT-034
 linear: SAN-493
-status: Spec-only · blocked by SAN-492 apply
+status: Ready for review · verified local :54322 2026-06-09
 persona: Patricia (seed), Camila (anon browse), Roberto (proposal target)
 updated: 2026-06-09
 depends_on: SAN-492 · EVT-033 (migration applied on target env)
@@ -129,7 +129,7 @@ Suggested namespace: `00000000-0000-4001-8xxx-xxxxxxxxxxxx` (dev-only; never col
 
 | Check | Command / assert |
 |-------|------------------|
-| Anon sees Mamacita | `SET ROLE anon; SELECT count(*) FROM partner_locations WHERE accepts_event_bookings AND is_verified;` → ≥6 |
+| Anon sees Mamacita | `SET ROLE anon; SELECT count(*) FROM partner_locations WHERE accepts_event_bookings AND is_verified AND id::text LIKE '00000000-0000-4001-820%';` → ≥6 |
 | Draft partner invisible | Seed one `status='draft'` location → anon count unchanged |
 | Offerings public | `SELECT count(*) FROM venue_event_offerings;` as anon → ≥3 |
 | Mamacita packages | `SELECT count(*) FROM venue_event_packages pl JOIN partner_locations l ON l.id = pl.partner_location_id WHERE l.label ILIKE '%Mamacita%';` → ≥1 |
