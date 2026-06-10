@@ -4612,11 +4612,15 @@ export type Database = {
       }
       partner_locations: {
         Row: {
+          accepts_event_bookings: boolean
           address: string | null
+          capacity_seated: number | null
+          capacity_standing: number | null
           created_at: string
           google_place_id: string | null
           id: string
           is_primary: boolean
+          is_verified: boolean
           label: string | null
           lat: number | null
           lng: number | null
@@ -4626,11 +4630,15 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          accepts_event_bookings?: boolean
           address?: string | null
+          capacity_seated?: number | null
+          capacity_standing?: number | null
           created_at?: string
           google_place_id?: string | null
           id?: string
           is_primary?: boolean
+          is_verified?: boolean
           label?: string | null
           lat?: number | null
           lng?: number | null
@@ -4640,11 +4648,15 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          accepts_event_bookings?: boolean
           address?: string | null
+          capacity_seated?: number | null
+          capacity_standing?: number | null
           created_at?: string
           google_place_id?: string | null
           id?: string
           is_primary?: boolean
+          is_verified?: boolean
           label?: string | null
           lat?: number | null
           lng?: number | null
@@ -6681,6 +6693,94 @@ export type Database = {
           },
         ]
       }
+      venue_event_offerings: {
+        Row: {
+          amenities: string[]
+          created_at: string
+          event_types: string[]
+          id: string
+          minimum_spend: number | null
+          offering_key: string
+          partner_location_id: string
+          price_per_person_from: number | null
+          updated_at: string
+        }
+        Insert: {
+          amenities?: string[]
+          created_at?: string
+          event_types?: string[]
+          id?: string
+          minimum_spend?: number | null
+          offering_key: string
+          partner_location_id: string
+          price_per_person_from?: number | null
+          updated_at?: string
+        }
+        Update: {
+          amenities?: string[]
+          created_at?: string
+          event_types?: string[]
+          id?: string
+          minimum_spend?: number | null
+          offering_key?: string
+          partner_location_id?: string
+          price_per_person_from?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "venue_event_offerings_partner_location_id_fkey"
+            columns: ["partner_location_id"]
+            isOneToOne: false
+            referencedRelation: "partner_locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      venue_event_packages: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          max_guests: number
+          min_guests: number
+          name: string
+          partner_location_id: string
+          price_from: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          max_guests: number
+          min_guests: number
+          name: string
+          partner_location_id: string
+          price_from: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          max_guests?: number
+          min_guests?: number
+          name?: string
+          partner_location_id?: string
+          price_from?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "venue_event_packages_partner_location_id_fkey"
+            columns: ["partner_location_id"]
+            isOneToOne: false
+            referencedRelation: "partner_locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       venue_signals: {
         Row: {
           brunch_score: number | null
@@ -7736,6 +7836,7 @@ export type Database = {
         Returns: Json
       }
       partner_ids_for_user: { Args: never; Returns: string[] }
+      partner_is_active: { Args: { _partner_id: string }; Returns: boolean }
       partner_organization_ids_for_user: { Args: never; Returns: string[] }
       populate_geometry_columns:
         | { Args: { tbl_oid: unknown; use_typmod?: boolean }; Returns: number }
