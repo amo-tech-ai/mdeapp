@@ -62,8 +62,7 @@
       "Bash(supabase db reset --linked)",
       "Bash(vercel --prod*)",
       "Edit(/home/sk/mde/**)",
-      "Write(/home/sk/mde/**)",
-      "MultiEdit(/home/sk/mde/**)"
+      "Write(/home/sk/mde/**)"
     ],
     "ask": [
       "Bash(npm install*)",
