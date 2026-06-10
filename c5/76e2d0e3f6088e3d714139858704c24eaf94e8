@@ -1,0 +1,73 @@
+.claude/skills/copilotkit-debug
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/mermaid-diagrams
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/auto-review
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/gemini
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/copilotkit-agui
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/infisical
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/copilotkit
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/qodo-get-rules
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/lean-dev-flow/SKILL.md
+  s_0baec5608e2475::t_65216b8504568f 114,118-120,124-127,130-135,138,177,179-180
+.claude/skills/copilotkit-integrations
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/coderabbit
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/responsive-design
+  s_0baec5608e2475::t_cd7b33a925112b 1
+changelog.md
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/qodo-pr-resolver
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/mastra-smoke-test
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/skill-creator
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/shadcn
+  s_0baec5608e2475::t_cd7b33a925112b 1
+dashboard.md
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/karpathy-guidelines
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/tailwind-best-practices
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/copilotkitV1
+  s_0baec5608e2475::t_cd7b33a925112b 1
+todo.md
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/code-review
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/supabase-edge-functions
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/copilotkit-setup
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/mde-events
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/mde-stripe
+  s_0baec5608e2475::t_cd7b33a925112b 1
+.claude/skills/mde-real-estate/gemini
+  s_0baec5608e2475::t_cd7b33a925112b 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "c576e2d0e3f6088e3d714139858704c24eaf94e8",
+  "prompts": {},
+  "sessions": {
+    "s_0baec5608e2475": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3bd5f9d7-109c-4dce-8633-a9bc1d0da6e5",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
