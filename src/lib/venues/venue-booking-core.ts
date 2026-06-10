@@ -11,8 +11,9 @@ export function buildVenueBookingIdempotencyKey(input: {
   venueKind: string;
   placeId: string;
   requestedAt: string;
+  partySize: number;
 }): string {
-  const raw = `${input.venueKind}|${input.placeId}|${input.requestedAt}`;
+  const raw = `${input.venueKind}|${input.placeId}|${input.requestedAt}|${input.partySize}`;
   const digest = createHash("sha256").update(raw).digest("hex").slice(0, 32);
   return `vb-${digest}`;
 }
@@ -41,6 +42,7 @@ export async function insertVenueBookingRequest(
       venueKind: input.venueKind,
       placeId: input.placeId,
       requestedAt: input.requestedAt,
+      partySize: input.partySize,
     });
 
   const metadata: Json = input.venueTitle

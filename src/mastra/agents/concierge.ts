@@ -8,6 +8,7 @@ import { searchAttractionsTool } from '../tools/search-attractions';
 import { searchGroundedPlacesTool } from '../tools/search-grounded-places';
 import { searchWebGroundedEventsTool } from '../tools/search-web-grounded-events';
 import { extractIntentSlotsTool } from '../tools/extract-intent-slots';
+import { requestVenueBookingTool } from '../tools/request-venue-booking';
 import { FLASH_MODEL } from "../lib/models";
 import { getDefaultInputProcessors } from "../lib/agent-input-processors";
 import { MapUiStateSchema } from "@/platform/contracts/map-ui-state";
@@ -275,6 +276,12 @@ Never reply with an empty list and no recovery.
 - "more like that" / "similar" → re-run search-rentals with same filters, slightly higher limit (capped at 5 cards shown).
 - "compare X and Y" → side-by-side: price, bedrooms, amenities, availability, host. End with one short recommendation sentence.
 
+# Venue booking (table / café / nightlife — venue_booking_requests only)
+When the user wants to book a table, café visit, or nightlife reservation:
+1. Collect venue (placeId from last restaurant/café/nightlife card), requestedAt (ISO datetime), partySize, contactName, contactEmail, optional contactPhone and notes.
+2. Call requestVenueBooking only after slot-fill is complete — the UI shows a HITL confirm card; never claim the reservation is confirmed.
+3. Status stays pending until Patricia confirms by WhatsApp. Event venue proposals use a different flow (createEventProposal → bookings) — not this tool.
+
 # Hard rules
 - When the user asks to show a listing on the map ("focus the second one", "pan to that apartment"), call the frontend tool focusMapPin with the pin/listing id from lastRentalResults or mapUi.selectedPinId.
 - When the user asks for rental listings (neighborhood, price, bedrooms), ALWAYS call search-rentals first — never describe specific listings from memory without a tool result in the same turn.
@@ -294,6 +301,7 @@ ${formatEventSourcePromptHint()}`,
     searchAttractionsTool,
     searchGroundedPlacesTool,
     searchWebGroundedEventsTool,
+    requestVenueBooking: requestVenueBookingTool,
   },
   inputProcessors: getDefaultInputProcessors(),
   // @ts-expect-error beta drift: Memory.recall() shape vs MastraMemory (same as pingAgent)

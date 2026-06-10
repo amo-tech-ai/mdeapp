@@ -9,6 +9,7 @@ export const MASTRA_COPILOT_TOOL_ACTIONS = {
   attractions: "searchAttractionsTool",
   grounded: "searchGroundedPlacesTool",
   webEvents: "searchWebGroundedEventsTool",
+  venueBooking: "requestVenueBooking",
 } as const;
 
 /** Legacy createTool ids — register duplicate renders if AG-UI streams these names. */
@@ -19,4 +20,5 @@ export const MASTRA_TOOL_IDS = {
   attractions: "search-attractions",
   grounded: "search-grounded-places",
   webEvents: "search-web-grounded-events",
+  venueBooking: "request-venue-booking",
 } as const;

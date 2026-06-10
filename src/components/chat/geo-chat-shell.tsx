@@ -16,6 +16,7 @@ import { ConciergeSessionProvider } from "@/components/chat/concierge-session-co
 import { FocusMapPinAction } from "@/components/copilot/focus-map-pin-action";
 import { MapUiSync } from "@/components/copilot/map-ui-sync";
 import { SearchToolRenders } from "@/components/copilot/search-tool-renders";
+import { ConciergeVenueBookingBridge } from "@/components/copilot/concierge-venue-booking-bridge";
 import { EventWebCitationFetch } from "@/components/copilot/event-web-citation-fetch";
 import { EventWebCitationSync } from "@/components/copilot/event-web-citation-sync";
 import { LeadConfirmationBanner } from "@/components/chat/lead-confirmation-banner";
@@ -121,6 +122,7 @@ export function GeoChatShell() {
                         </header>
                         <MapsShell>
                           <SearchToolRenders />
+                          <ConciergeVenueBookingBridge />
                           <EventWebCitationSync />
                           <EventWebCitationFetch />
                           <MapUiSync />
