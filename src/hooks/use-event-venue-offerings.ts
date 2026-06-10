@@ -27,7 +27,10 @@ export function useEventVenueOfferings(placeId?: string | null) {
         return;
       }
 
-      if (!cancelled) setFetchState("loading");
+      if (!cancelled) {
+        setPayload(null);
+        setFetchState("loading");
+      }
 
       const supabase = createClient();
       const result = await fetchEventVenueOfferingsByPlaceId(
