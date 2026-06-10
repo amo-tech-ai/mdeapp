@@ -153,7 +153,7 @@ export function ConciergeChatMessages(props: MessagesProps) {
                   <div key={local.id} data-testid={testId}>
                     {assistant}
                     {clarifyKind === "restaurant" ? (
-                      <RestaurantFilterChips seedQuery={local.content} />
+                      <RestaurantFilterChips />
                     ) : null}
                   </div>
                 );

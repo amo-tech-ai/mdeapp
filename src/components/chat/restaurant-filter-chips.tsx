@@ -10,13 +10,8 @@ import {
 } from "@/lib/restaurant-filter-chips";
 import { cn } from "@/lib/utils";
 
-type RestaurantFilterChipsProps = {
-  /** Original user message that triggered clarify (for context display only). */
-  seedQuery?: string;
-};
-
 /** Quick-reply filter chips below restaurant clarify assistant message. */
-export function RestaurantFilterChips({ seedQuery: _seedQuery }: RestaurantFilterChipsProps) {
+export function RestaurantFilterChips() {
   const { clarifyKind } = useEventLocalChat();
   const { handleRestaurantChip } = useRestaurantSearchFastPath();
   const [busyId, setBusyId] = useState<string | null>(null);
