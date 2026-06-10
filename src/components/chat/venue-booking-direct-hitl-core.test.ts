@@ -57,14 +57,19 @@ describe("submitDirectVenueBooking", () => {
     });
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    // Must resolve, never reject — the caller relies on this to reset the panel.
-    const result = await submitDirectVenueBooking(baseArgs, submit);
+    try {
+      // Must resolve, never reject — the caller relies on this to reset the panel.
+      const result = await submitDirectVenueBooking(baseArgs, submit);
 
-    expect(result).toEqual({ ok: false, error: boom });
-    expect(errorSpy).toHaveBeenCalledWith(
-      "[VenueBookingDirectHitl] submitVenueBooking failed",
-      boom,
-    );
-    errorSpy.mockRestore();
+      expect(result).toEqual({ ok: false, error: boom });
+      expect(errorSpy).toHaveBeenCalledWith(
+        "[VenueBookingDirectHitl] submitVenueBooking failed",
+        boom,
+      );
+    } finally {
+      // Restore in finally so a failed assertion doesn't leave console.error
+      // silenced for the rest of the suite.
+      errorSpy.mockRestore();
+    }
   });
 });

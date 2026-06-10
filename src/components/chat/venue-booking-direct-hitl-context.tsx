@@ -72,6 +72,12 @@ export function VenueBookingDirectHitlProvider({ children }: { children: ReactNo
   const respond = useCallback(
     (decision: "approved" | "rejected" | "edit") => {
       if (!args) return;
+      // Guard against double-submit: a booking is already in flight. Without
+      // this, a rapid second "approved" (or a programmatic caller once
+      // openDirectHitl is wired) fires submitDirectVenueBooking twice and races
+      // to confirm a duplicate booking. The panel's disabled button is only a
+      // UI-level defence; this makes it explicit.
+      if (status === "executing") return;
       if (decision === "rejected" || decision === "edit") {
         clearDirectHitl();
         return;
@@ -93,7 +99,7 @@ export function VenueBookingDirectHitlProvider({ children }: { children: ReactNo
         clearDirectHitl();
       });
     },
-    [args, clearDirectHitl, setVenueBookingConfirmation],
+    [args, status, clearDirectHitl, setVenueBookingConfirmation],
   );
 
   const value = useMemo(
