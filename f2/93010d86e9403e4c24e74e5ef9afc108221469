@@ -1,0 +1,27 @@
+src/components/chat/concierge-chat-messages.tsx
+  s_d1b7a3779fe462::t_6ece910a013913 156
+e2e/restaurant-card-fast-path.spec.ts
+  s_d1b7a3779fe462::t_5f7fc79f8e753b 24-26
+docs/tasks/testing/evidence/2026-06-09/PR-153-restaurant-filter-RESULTS.md
+  s_d1b7a3779fe462::t_ad5f5f111ef05d 1-31
+e2e/restaurant-filter-chips.spec.ts
+  s_d1b7a3779fe462::t_a6a9286369abcc 1-52
+src/components/chat/restaurant-filter-chips.tsx
+  s_d1b7a3779fe462::t_eeff074fa856b1 14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "f293010d86e9403e4c24e74e5ef9afc108221469",
+  "prompts": {},
+  "sessions": {
+    "s_d1b7a3779fe462": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "26292875-287f-4fbd-bce0-3bd9e158b377",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
