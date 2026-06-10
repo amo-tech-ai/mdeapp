@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { PlaceResultCard } from "@/components/copilot/place-result-card";
 import { AttractionCard } from "@/components/copilot/attraction-card";
-import { RestaurantCard } from "@/components/copilot/restaurant-card";
+import { RestaurantCardWithEventVenue } from "@/components/copilot/restaurant-card-with-event-venue";
 import { ToolPinsSync } from "@/components/copilot/tool-pins-sync";
 import { EmptyState } from "@/components/empty/empty-state";
 import { RichCardResultsRegistrar } from "@/components/chat/rich-card-results-context";
@@ -146,7 +146,7 @@ export function DomainResults({
                 });
               };
               return (
-                <RestaurantCard
+                <RestaurantCardWithEventVenue
                   key={r.id}
                   testId={testId}
                   composition="legacy"
@@ -159,6 +159,7 @@ export function DomainResults({
                   imageUrl={r.imageUrl}
                   mapsUrl={r.mapsUrl}
                   aiSummary={r.aiSummary}
+                  placeId={r.placeId}
                   pinId={pinId}
                   selected={selectedPinId === pinId}
                   onSelect={() => panToPin(pinId)}

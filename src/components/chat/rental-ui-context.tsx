@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import type { GroundedPhotoAttribution } from "@/lib/parse-grounded-tool-result";
+import type { EventVenueOfferingsPayload } from "@/lib/venues/event-venue-offerings-types";
 
 export type ScheduleViewingTarget = {
   listingId: string;
@@ -85,6 +86,13 @@ export type CafeVenueDetail = {
 };
 
 /** Grounded nightlife card + detail panel (SCREEN-022). */
+export type EventVenueOfferingsTarget = {
+  placeId: string;
+  title: string;
+  pinId?: string;
+  payload: EventVenueOfferingsPayload;
+};
+
 export type NightlifeVenueDetail = {
   kind: "nightlife";
   pinId: string;
@@ -117,6 +125,8 @@ type RentalUiContextValue = {
   nightlifeSiblings: NightlifeVenueDetail[];
   nightlifeBookingTarget: NightlifeVenueDetail | null;
   nightlifeBookingOpen: boolean;
+  eventVenueOfferingsTarget: EventVenueOfferingsTarget | null;
+  eventVenueOfferingsOpen: boolean;
   leadConfirmation: LeadConfirmation | null;
   venueBookingConfirmation: VenueBookingConfirmation | null;
   openScheduleViewing: (target: ScheduleViewingTarget) => void;
@@ -135,6 +145,8 @@ type RentalUiContextValue = {
   closeNightlifeDetail: () => void;
   openNightlifeBooking: (target: NightlifeVenueDetail) => void;
   closeNightlifeBooking: () => void;
+  openEventVenueOfferings: (target: EventVenueOfferingsTarget) => void;
+  closeEventVenueOfferings: () => void;
   setLeadConfirmation: (value: LeadConfirmation | null) => void;
   clearLeadConfirmation: () => void;
   setVenueBookingConfirmation: (value: VenueBookingConfirmation | null) => void;
@@ -166,6 +178,9 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
   const [nightlifeBookingTarget, setNightlifeBookingTarget] =
     useState<NightlifeVenueDetail | null>(null);
   const [nightlifeBookingOpen, setNightlifeBookingOpen] = useState(false);
+  const [eventVenueOfferingsTarget, setEventVenueOfferingsTarget] =
+    useState<EventVenueOfferingsTarget | null>(null);
+  const [eventVenueOfferingsOpen, setEventVenueOfferingsOpen] = useState(false);
 
   const openScheduleViewing = useCallback((target: ScheduleViewingTarget) => {
     setScheduleTarget(target);
@@ -246,6 +261,19 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
     setNightlifeBookingTarget(null);
   }, []);
 
+  const openEventVenueOfferings = useCallback(
+    (target: EventVenueOfferingsTarget) => {
+      setEventVenueOfferingsTarget(target);
+      setEventVenueOfferingsOpen(true);
+    },
+    [],
+  );
+
+  const closeEventVenueOfferings = useCallback(() => {
+    setEventVenueOfferingsOpen(false);
+    setEventVenueOfferingsTarget(null);
+  }, []);
+
   const clearLeadConfirmation = useCallback(() => {
     setLeadConfirmation(null);
   }, []);
@@ -266,6 +294,8 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       nightlifeSiblings,
       nightlifeBookingTarget,
       nightlifeBookingOpen,
+      eventVenueOfferingsTarget,
+      eventVenueOfferingsOpen,
       leadConfirmation,
       venueBookingConfirmation,
       openScheduleViewing,
@@ -281,6 +311,8 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       closeNightlifeDetail,
       openNightlifeBooking,
       closeNightlifeBooking,
+      openEventVenueOfferings,
+      closeEventVenueOfferings,
       setLeadConfirmation,
       clearLeadConfirmation,
       setVenueBookingConfirmation,
@@ -297,6 +329,8 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       nightlifeSiblings,
       nightlifeBookingTarget,
       nightlifeBookingOpen,
+      eventVenueOfferingsTarget,
+      eventVenueOfferingsOpen,
       leadConfirmation,
       venueBookingConfirmation,
       openScheduleViewing,
@@ -312,6 +346,8 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       closeNightlifeDetail,
       openNightlifeBooking,
       closeNightlifeBooking,
+      openEventVenueOfferings,
+      closeEventVenueOfferings,
       clearLeadConfirmation,
       setVenueBookingConfirmation,
       clearVenueBookingConfirmation,
