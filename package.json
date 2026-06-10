@@ -63,7 +63,13 @@
     "test:e2e:prod-synthetic": "PROD_SMOKE_BASE_URL=${PROD_SMOKE_BASE_URL:-https://www.mdeai.co} PW_SKIP_WEBSERVER=1 playwright test e2e/prod-synthetic-smoke.spec.ts --project=chromium --workers=1",
     "test:e2e:prod-journey-j05-j20": "PROD_SMOKE_BASE_URL=${PROD_SMOKE_BASE_URL:-https://www.mdeai.co} PW_SKIP_WEBSERVER=1 playwright test e2e/prod-journey-j05-j20.spec.ts --project=chromium --workers=1",
     "verify:commerce-mdeapp-env": "node --env-file=.env.local scripts/verify-commerce-mdeapp-env.mjs",
-    "smoke:commerce-client": "npx tsx --env-file=.env.local scripts/smoke-commerce-client.ts"
+    "smoke:commerce-client": "npx tsx --env-file=.env.local scripts/smoke-commerce-client.ts",
+    "check": "npm run typecheck && npm test -- --run",
+    "floor:fast": "concurrently --kill-others-on-fail \"npm:lint\" \"npm:typecheck\" \"npm:test\" && npm run build && npm run audit",
+    "test:mastra": "vitest run src/mastra/",
+    "test:lib": "vitest run src/lib/",
+    "test:hooks": "vitest run src/hooks/",
+    "test:api": "vitest run src/app/api/"
   },
   "dependencies": {
     "@ag-ui/client": "0.0.52",
