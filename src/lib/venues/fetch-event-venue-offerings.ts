@@ -13,6 +13,15 @@ function asLooseClient(supabase: SupabaseClient<Database>): LooseClient {
   return supabase as unknown as LooseClient;
 }
 
+// venue_event_offerings / venue_event_packages are not in database.types.ts
+// until the SAN-492 migration is applied, so rows are typed at the boundary.
+type PartnerLocationRow = {
+  id: string;
+  label: string | null;
+  neighborhood: string | null;
+  google_place_id: string;
+};
+
 function mapOffering(row: Record<string, unknown>): EventVenueOfferingSummary {
   return {
     id: String(row.id),
@@ -57,11 +66,12 @@ export async function fetchEventVenueOfferingsByPlaceId(
 
   const client = asLooseClient(supabase);
 
-  const { data: location, error: locError } = await client
+  const { data: locationData, error: locError } = await client
     .from("partner_locations")
     .select("id, label, neighborhood, google_place_id")
     .eq("google_place_id", trimmed)
     .maybeSingle();
+  const location = locationData as PartnerLocationRow | null;
 
   if (locError) {
     if (isSchemaUnavailableError(locError)) {
@@ -88,8 +98,8 @@ export async function fetchEventVenueOfferingsByPlaceId(
     return { ok: false, message: offError.message };
   }
 
-  const offerings = (offeringRows ?? []).map((row) =>
-    mapOffering(row as Record<string, unknown>),
+  const offerings = ((offeringRows ?? []) as Record<string, unknown>[]).map(
+    mapOffering,
   );
   if (offerings.length === 0) {
     return { ok: true, data: null };
@@ -104,8 +114,8 @@ export async function fetchEventVenueOfferingsByPlaceId(
     return { ok: false, message: pkgError.message };
   }
 
-  const packages = (packageRows ?? []).map((row) =>
-    mapPackage(row as Record<string, unknown>),
+  const packages = ((packageRows ?? []) as Record<string, unknown>[]).map(
+    mapPackage,
   );
 
   return {
