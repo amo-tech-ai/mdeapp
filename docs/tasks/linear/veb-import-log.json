@@ -1,0 +1,259 @@
+{
+  "created": [
+    {
+      "id": "VEB-001-core",
+      "identifier": "SAN-492",
+      "url": "https://linear.app/sanjiovani/issue/SAN-492/evt-033-event-venue-offerings-schema",
+      "kind": "build",
+      "evt": "EVT-033",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-002-core",
+      "identifier": "SAN-493",
+      "url": "https://linear.app/sanjiovani/issue/SAN-493/evt-034-seed-mamacita-5-event-partners",
+      "kind": "build",
+      "evt": "EVT-034",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-003-mvp",
+      "identifier": "SAN-494",
+      "url": "https://linear.app/sanjiovani/issue/SAN-494/evt-035-restaurant-card-event-venue-cta",
+      "kind": "build",
+      "evt": "EVT-035",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-004-mvp",
+      "identifier": "SAN-495",
+      "url": "https://linear.app/sanjiovani/issue/SAN-495/evt-036-event-offerings-detail-panel",
+      "kind": "build",
+      "evt": "EVT-036",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-005-mvp",
+      "identifier": "SAN-496",
+      "url": "https://linear.app/sanjiovani/issue/SAN-496/evt-037-request-proposal-modal-hitl",
+      "kind": "build",
+      "evt": "EVT-037",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-006-mvp",
+      "identifier": "SAN-497",
+      "url": "https://linear.app/sanjiovani/issue/SAN-497/evt-038-eventvenueagent-searchrank-tools",
+      "kind": "build",
+      "evt": "EVT-038",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-007-mvp",
+      "identifier": "SAN-498",
+      "url": "https://linear.app/sanjiovani/issue/SAN-498/evt-039-ai-venue-match-score-panel",
+      "kind": "build",
+      "evt": "EVT-039",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-008-mvp",
+      "identifier": "SAN-499",
+      "url": "https://linear.app/sanjiovani/issue/SAN-499/evt-040-compare-venues-side-by-side",
+      "kind": "build",
+      "evt": "EVT-040",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-009-mvp",
+      "identifier": "SAN-500",
+      "url": "https://linear.app/sanjiovani/issue/SAN-500/evt-041-host-wizard-venue-step-roberto",
+      "kind": "build",
+      "evt": "EVT-041",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-010-mvp",
+      "identifier": "SAN-501",
+      "url": "https://linear.app/sanjiovani/issue/SAN-501/evt-042-eventvenuebookingworkflow",
+      "kind": "build",
+      "evt": "EVT-042",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-011-mvp",
+      "identifier": "SAN-502",
+      "url": "https://linear.app/sanjiovani/issue/SAN-502/evt-043-patricia-admin-queue-event-requests",
+      "kind": "build",
+      "evt": "EVT-043",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-012-mvp",
+      "identifier": "SAN-503",
+      "url": "https://linear.app/sanjiovani/issue/SAN-503/evt-044-add-confirmed-booking-to-trip",
+      "kind": "build",
+      "evt": "EVT-044",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-013-advanced",
+      "identifier": "SAN-504",
+      "url": "https://linear.app/sanjiovani/issue/SAN-504/evt-045-venue-availability-calendar",
+      "kind": "build",
+      "evt": "EVT-045",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-014-advanced",
+      "identifier": "SAN-505",
+      "url": "https://linear.app/sanjiovani/issue/SAN-505/evt-046-auto-follow-up-wa-drafts-24h",
+      "kind": "build",
+      "evt": "EVT-046",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-015-advanced",
+      "identifier": "SAN-506",
+      "url": "https://linear.app/sanjiovani/issue/SAN-506/evt-047-venue-crm-for-patricia",
+      "kind": "build",
+      "evt": "EVT-047",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-016-advanced",
+      "identifier": "SAN-507",
+      "url": "https://linear.app/sanjiovani/issue/SAN-507/evt-048-dynamic-package-pricing",
+      "kind": "build",
+      "evt": "EVT-048",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-017-advanced",
+      "identifier": "SAN-508",
+      "url": "https://linear.app/sanjiovani/issue/SAN-508/evt-049-sponsor-venue-match",
+      "kind": "build",
+      "evt": "EVT-049",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-018-advanced",
+      "identifier": "SAN-509",
+      "url": "https://linear.app/sanjiovani/issue/SAN-509/evt-050-openclaw-venue-enrichment-plan",
+      "kind": "build",
+      "evt": "EVT-050",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-W01",
+      "identifier": "SAN-510",
+      "url": "https://linear.app/sanjiovani/issue/SAN-510/evt-051-wire-event-offerings-panel-event-venue-cta",
+      "kind": "wire",
+      "evt": "EVT-051",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-W02",
+      "identifier": "SAN-511",
+      "url": "https://linear.app/sanjiovani/issue/SAN-511/evt-052-wire-request-proposal-modal",
+      "kind": "wire",
+      "evt": "EVT-052",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-W03",
+      "identifier": "SAN-512",
+      "url": "https://linear.app/sanjiovani/issue/SAN-512/evt-053-wire-venue-match-panel-compare",
+      "kind": "wire",
+      "evt": "EVT-053",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-W04",
+      "identifier": "SAN-513",
+      "url": "https://linear.app/sanjiovani/issue/SAN-513/evt-054-wire-host-wizard-venue-step",
+      "kind": "wire",
+      "evt": "EVT-054",
+      "project": "Events Platform"
+    },
+    {
+      "id": "VEB-W05",
+      "identifier": "SAN-514",
+      "url": "https://linear.app/sanjiovani/issue/SAN-514/evt-055-wire-admin-event-booking-queue",
+      "kind": "wire",
+      "evt": "EVT-055",
+      "project": "Events Platform"
+    }
+  ],
+  "skipped": [],
+  "errors": [],
+  "relations": [
+    {
+      "task": "VEB-004-mvp",
+      "blockedBy": "VEB-003-mvp",
+      "blocker": "SAN-494"
+    },
+    {
+      "task": "VEB-005-mvp",
+      "blockedBy": "VEB-004-mvp",
+      "blocker": "SAN-495"
+    },
+    {
+      "task": "VEB-007-mvp",
+      "blockedBy": "VEB-006-mvp",
+      "blocker": "SAN-497"
+    },
+    {
+      "task": "VEB-008-mvp",
+      "blockedBy": "VEB-007-mvp",
+      "blocker": "SAN-498"
+    },
+    {
+      "task": "VEB-009-mvp",
+      "blockedBy": "VEB-006-mvp",
+      "blocker": "SAN-497"
+    },
+    {
+      "task": "VEB-010-mvp",
+      "blockedBy": "VEB-005-mvp",
+      "blocker": "SAN-496"
+    },
+    {
+      "task": "VEB-011-mvp",
+      "blockedBy": "VEB-010-mvp",
+      "blocker": "SAN-501"
+    },
+    {
+      "task": "VEB-012-mvp",
+      "blockedBy": "VEB-010-mvp",
+      "blocker": "SAN-501"
+    },
+    {
+      "task": "VEB-013-advanced",
+      "blockedBy": "VEB-011-mvp",
+      "blocker": "SAN-502"
+    },
+    {
+      "task": "VEB-014-advanced",
+      "blockedBy": "VEB-011-mvp",
+      "blocker": "SAN-502"
+    },
+    {
+      "task": "VEB-015-advanced",
+      "blockedBy": "VEB-011-mvp",
+      "blocker": "SAN-502"
+    },
+    {
+      "task": "VEB-016-advanced",
+      "blockedBy": "VEB-004-mvp",
+      "blocker": "SAN-495"
+    },
+    {
+      "task": "VEB-017-advanced",
+      "blockedBy": "VEB-007-mvp",
+      "blocker": "SAN-498"
+    }
+  ],
+  "importedAt": "2026-06-02T16:01:21.264Z",
+  "evtSyncedAt": "2026-06-04"
+}

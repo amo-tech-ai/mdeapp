@@ -1,0 +1,15 @@
+linear-sync-mvp
+Error: ENOENT: no such file or directory, open '/home/sk/mdeai/tasks/screens/CAFE-001-booking-requests-schema.md'
+    at readFileSync (node:fs:436:20)
+    at loadDiskSpecs (file:///home/sk/mdeai/scripts/linear-sync-mvp.mjs:231:19)
+    at main (file:///home/sk/mdeai/scripts/linear-sync-mvp.mjs:502:21)
+    at file:///home/sk/mdeai/scripts/linear-sync-mvp.mjs:619:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:437:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:639:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/sk/mdeai/tasks/screens/CAFE-001-booking-requests-schema.md'
+}
+EXIT: 1

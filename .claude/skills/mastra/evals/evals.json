@@ -1,0 +1,56 @@
+{
+  "skill_name": "mastra",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We're on Node 22 in `my-mastra-app/`. I upgraded `@mastra/core` and now TypeScript says `Property 'memory' does not exist on type 'AgentConfig'`. I don't want guesses — what’s the current API and where do I verify it in our install?",
+      "expected_output": "Agent directs to embedded docs under `node_modules/@mastra/*/dist/docs/`, SOURCE_MAP or grep; mentions `references/common-errors.md` and version mismatch; does not invent a new AgentConfig shape from memory.",
+      "files": [],
+      "expectations": [
+        "Response tells the user to verify against installed package docs or types, not training data alone",
+        "Mentions embedded docs path pattern (`node_modules/@mastra/.../dist/docs`) or `references/embedded-docs.md`",
+        "References `references/common-errors.md` or equivalent troubleshooting path"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need the official Mastra doc URL for human-in-the-loop workflows and the local skill file that maps 'intent → links.md section' so I can bookmark both.",
+      "expected_output": "Correct `links.md` anchor or URL from the Workflows / HITL area; points to `references/topic-routing.md` (or `links.md` directly) for intent routing.",
+      "files": [],
+      "expectations": [
+        "Includes a mastra.ai docs URL for human-in-the-loop or workflows (or defers to `links.md` as canonical index)",
+        "Names `references/topic-routing.md` or `links.md` as the local routing artifact"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Add a new agent in our Mastra app using `google/gemini-3-pro-preview`. Boss insists the string is valid today. What do I run before hardcoding the model id?",
+      "expected_output": "Run `node scripts/provider-registry.mjs` (with provider flag as needed); avoid asserting model availability from memory.",
+      "files": [],
+      "expectations": [
+        "Instructs to run bundled `scripts/provider-registry.mjs` or equivalent registry lookup",
+        "Uses `provider/model` Mastra convention in explanation"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Codex agent has no `node_modules` in this sandbox — how should I pull current Mastra docs text for context, and what’s the llms-friendly URL pattern?",
+      "expected_output": "Remote path: `references/remote-docs.md`, `https://mastra.ai/llms.txt`, append `.md` to doc URLs when fetching.",
+      "files": [],
+      "expectations": [
+        "Mentions `mastra.ai/llms.txt` and/or `references/remote-docs.md`",
+        "Mentions appending `.md` to doc URLs for markdown fetch"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Wire `MCPClient` so my Mastra agent can call the Mastra docs MCP server. I’m lost between `@mastra/mcp` and the npx server package — what does the skill say?",
+      "expected_output": "Points to SKILL.md MCP section + official MCP overview URL; shows or cites MCPClient + `npx -y @mastra/mcp-docs-server@latest` pattern.",
+      "files": [],
+      "expectations": [
+        "References `@mastra/mcp` / `MCPClient` and the docs server package name",
+        "Links or names `https://mastra.ai/docs/mcp/overview` (or `links.md` MCP section)"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "updated": "2026-06-01",
+  "canonical_plan": "tasks/intelligence/intelligence-plan.md",
+  "rule": "Phase 1 FROZEN — no Phase 2+ work until MIS-M1 gate (all Phase 1 rows Done + one hybrid tool live + search_logs)",
+  "phase_1_only": [
+    "VEC-001",
+    "DATA-039",
+    "DATA-040",
+    "DATA-041",
+    "DATA-042",
+    "DATA-043",
+    "DATA-044",
+    "DATA-045",
+    "DATA-047",
+    "SEARCH-003"
+  ],
+  "deferred_until_phase_1_gate": [
+    "INT-001",
+    "SEARCH-004",
+    "AI-001",
+    "AI-002",
+    "DATA-050",
+    "DATA-051",
+    "MAP-035",
+    "MAP-036"
+  ],
+  "phase_1b_after_mis_m1": [
+    "VEC-003",
+    "VEC-004",
+    "SEARCH-001",
+    "SEARCH-002",
+    "AI-004",
+    "AI-003",
+    "DATA-046",
+    "VEC-005"
+  ],
+  "execution_order": [
+    { "order": 1, "id": "VEC-001", "phase": "intel-0", "stack": ["pgvector", "supabase"], "blockedBy": [], "note": "Drop duplicate HNSW before any new DDL" },
+    { "order": 2, "id": "DATA-039", "phase": "intel-0", "stack": ["supabase"], "blockedBy": [], "note": "restaurants.neighborhood + nullable price/hours" },
+    { "order": 3, "id": "DATA-040", "phase": "intel-1", "stack": ["supabase"], "blockedBy": ["VEC-001"], "note": "1 migration = embedding_jobs only" },
+    { "order": 4, "id": "DATA-041", "phase": "intel-1", "stack": ["supabase", "gemini"], "blockedBy": ["DATA-039", "DATA-040"], "note": "1 migration = venue_signals only; human QA top 30" },
+    { "order": 5, "id": "DATA-042", "phase": "intel-1", "stack": ["supabase", "gemini"], "blockedBy": ["DATA-040"], "note": "1 migration = event_signals only" },
+    { "order": 6, "id": "DATA-043", "phase": "intel-1", "stack": ["supabase", "gemini"], "blockedBy": ["DATA-040"], "note": "1 migration = rental_signals only" },
+    { "order": 7, "id": "DATA-044", "phase": "intel-1", "stack": ["supabase"], "blockedBy": [], "note": "1 migration = neighborhood_profiles only" },
+    { "order": 8, "id": "DATA-045", "phase": "intel-1", "stack": ["supabase"], "blockedBy": ["DATA-041", "DATA-042", "DATA-043"], "note": "1 migration = evidence tables only" },
+    { "order": 9, "id": "DATA-047", "phase": "intel-1", "stack": ["supabase"], "blockedBy": [], "note": "1 migration = search_logs only; before tuning hybrid" },
+    { "order": 10, "id": "SEARCH-003", "phase": "intel-1", "stack": ["mastra", "supabase", "pgvector"], "blockedBy": ["DATA-041", "DATA-047", "VEC-001"], "note": "First hybrid proof: restaurants + venue_signals — NOT SEARCH-001 after DATA-041" },
+    { "order": 11, "id": "VEC-003", "phase": "intel-1b", "stack": ["pgvector"], "blockedBy": ["VEC-001"], "note": "Model registry + embedding contract — BEFORE VEC-004 worker" },
+    { "order": 12, "id": "VEC-004", "phase": "intel-1b", "stack": ["pgvector", "mastra"], "blockedBy": ["VEC-003", "DATA-040"], "note": "Embedding text builders + worker" },
+    { "order": 13, "id": "SEARCH-001", "phase": "intel-1b", "stack": ["mastra", "supabase"], "blockedBy": ["DATA-043", "DATA-047", "VEC-004"], "note": "Rentals hybrid + rental_signals" },
+    { "order": 14, "id": "SEARCH-002", "phase": "intel-1b", "stack": ["mastra", "supabase"], "blockedBy": ["DATA-042", "DATA-047", "VEC-004"], "note": "Events hybrid + event_signals" },
+    { "order": 15, "id": "AI-004", "phase": "intel-1b", "stack": ["mastra", "supabase"], "blockedBy": ["DATA-045"], "note": "Grounding verification pipeline" },
+    { "order": 16, "id": "AI-003", "phase": "intel-1b", "stack": ["mastra", "supabase"], "blockedBy": ["DATA-041", "VEC-004"], "note": "Signal enrichment batch job" },
+    { "order": 17, "id": "DATA-046", "phase": "intel-1b", "stack": ["supabase"], "blockedBy": ["DATA-041", "DATA-045", "SEARCH-003"], "note": "Golden queries v2 signal-backed" },
+    { "order": 18, "id": "VEC-005", "phase": "intel-1b", "stack": ["pgvector"], "blockedBy": ["VEC-004", "DATA-046"], "note": "Golden semantic eval harness" }
+  ],
+  "sequence_correction": {
+    "wrong": "DATA-040 → DATA-041 → SEARCH-001",
+    "why_wrong": "SEARCH-001 targets rentals (hybrid_search_listings); DATA-041 is venue_signals",
+    "correct_first_hybrid": "DATA-041 → DATA-047 → SEARCH-003 (restaurants + venue_signals)",
+    "correct_rentals_hybrid": "DATA-043 → DATA-047 → SEARCH-001"
+  },
+  "migration_rule": "1 migration = 1 concern. Never combine signals + embeddings + cache in one file.",
+  "milestone_gate": {
+    "id": "MIS-M1",
+    "requires": [
+      "DATA-040 through DATA-045 migrated",
+      "DATA-047 search_logs writing",
+      "SEARCH-003 live in search-restaurants tool",
+      "Golden query GQ-S01 passes with evidence",
+      "Human QA sign-off on top 30 venue_signals rows"
+    ]
+  }
+}

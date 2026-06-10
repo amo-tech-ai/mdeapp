@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MDE — /partners/rentals (Rentals AI) Wireframe</title>
+<style>
+  :root{
+    --bg: oklch(0.985 0.002 247); --surface: oklch(1 0 0); --ink: oklch(0.28 0.03 257);
+    --muted: oklch(0.55 0.02 257); --line: oklch(0.90 0.006 257); --line-2: oklch(0.84 0.008 257);
+    --primary: oklch(0.508 0.118 175); --primary-soft: oklch(0.95 0.03 178);
+    --accent: oklch(0.795 0.184 86); --accent-soft: oklch(0.96 0.05 90); --map: oklch(0.62 0.10 235);
+    --ph: linear-gradient(150deg, oklch(0.970 0.015 180), oklch(0.926 0.030 184));
+    --teal-band: linear-gradient(135deg, oklch(0.90 0.06 200), oklch(0.82 0.09 210));
+    --ink-band: oklch(0.22 0.02 257);
+    --radius:14px; --shadow:0 1px 2px oklch(0.4 0.03 257 / 0.05), 0 8px 24px oklch(0.4 0.03 257 / 0.06);
+  }
+  *{box-sizing:border-box;} html{scroll-behavior:smooth;} @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .serif{font-family:"Playfair Display",Georgia,serif;} a{color:var(--primary);text-decoration:none;} code{font-family:ui-monospace,Menlo,monospace;font-size:0.92em;}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 20px 80px;}
+  header.top{position:sticky;top:0;z-index:20;background:oklch(0.985 0.002 247 / 0.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .top-inner{max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;letter-spacing:-0.02em;} .brand .dot{width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,var(--accent),oklch(0.74 0.16 70));}
+  .brand small{font-weight:500;color:var(--muted);} .top-spacer{flex:1;} .legend{display:flex;gap:6px;flex-wrap:wrap;}
+  .titleblock{padding:34px 0 14px;} .titleblock h1{margin:0 0 6px;font-size:30px;letter-spacing:-0.02em;font-weight:600;} .titleblock p{margin:0;color:var(--muted);max-width:64ch;}
+  .meta-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:600;border:1px solid var(--line-2);background:var(--surface);color:var(--muted);white-space:nowrap;}
+  .chip.t21{background:var(--primary-soft);border-color:transparent;color:oklch(0.40 0.10 175);} .chip.shad{background:oklch(0.95 0.005 257);border-color:transparent;color:oklch(0.40 0.02 257);}
+  .chip.ai{background:var(--accent-soft);border-color:transparent;color:oklch(0.48 0.12 80);} .chip.map{background:oklch(0.95 0.03 235);border-color:transparent;color:oklch(0.42 0.10 235);}
+  .chip.custom{background:repeating-linear-gradient(45deg,oklch(0.97 0.004 257),oklch(0.97 0.004 257) 5px,oklch(0.94 0.006 257) 5px,oklch(0.94 0.006 257) 10px);border:1px dashed var(--line-2);color:var(--muted);}
+  .chip.mt{background:oklch(0.95 0.04 60);border-color:transparent;color:oklch(0.45 0.12 60);}
+  .info{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);margin:8px 0 4px;} .info h4{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;} .rules li{margin:3px 0;} .rules b{color:var(--ink);}
+  .row{display:grid;grid-template-columns:30px minmax(0,1fr) 360px;gap:18px;align-items:start;padding:22px 0;border-top:1px solid var(--line);scroll-margin-top:70px;} .row:first-of-type{border-top:none;}
+  .rail .n{font-family:ui-monospace,Menlo,monospace;font-size:13px;font-weight:700;color:var(--primary);background:var(--primary-soft);border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;position:sticky;top:64px;}
+  .wire{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);} .wire .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:10px;}
+  .g{height:9px;border-radius:5px;background:oklch(0.92 0.006 257);} .g.dk{background:oklch(0.86 0.01 257);} .g.lt{background:oklch(1 0 0 / 0.5);}
+  .g.w70{width:70%;} .g.w55{width:55%;} .g.w40{width:40%;} .g.w85{width:85%;} .g.tall{height:15px;}
+  .stack>*{margin-bottom:7px;} .stack>*:last-child{margin-bottom:0;}
+  .img{background:var(--ph);border-radius:9px;position:relative;} .img::after{content:"IMG";position:absolute;top:6px;left:7px;font-size:9px;font-weight:700;letter-spacing:0.1em;color:oklch(0.45 0.04 190 / 0.55);}
+  .bar{display:flex;align-items:center;gap:10px;}
+  .pl{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:oklch(0.95 0.005 257);font-size:11px;color:var(--muted);border:1px solid var(--line);}
+  .pl.solid{background:var(--primary);color:#fff;border-color:transparent;font-weight:600;} .pl.gold{background:var(--accent);color:oklch(0.30 0.06 80);border-color:transparent;font-weight:700;}
+  .pl.ghost{background:transparent;} .pl.out{background:transparent;border:1.5px solid var(--primary);color:var(--primary);font-weight:600;}
+  .hero{background:var(--teal-band);border-radius:18px;padding:32px 26px;position:relative;overflow:hidden;text-align:center;}
+  .hero .eyebrow{display:inline-block;background:oklch(1 0 0 / 0.55);border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:700;color:oklch(0.32 0.06 215);margin-bottom:10px;}
+  .hero h2{font-size:30px;line-height:1.05;margin:0 auto 12px;color:oklch(0.24 0.04 230);letter-spacing:-0.02em;max-width:20ch;} .hero .ctas{display:flex;gap:8px;justify-content:center;margin-top:8px;}
+  .featgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;} .feat{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface);}
+  .feat .ic{width:26px;height:26px;border-radius:8px;background:var(--primary-soft);margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:13px;} .feat .ic.gold{background:var(--accent-soft);}
+  .feat h5{margin:0 0 5px;font-size:12.5px;} .feat p{margin:0;font-size:11px;color:var(--muted);}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;} .step{border:1px solid var(--line);border-radius:12px;padding:11px;background:var(--surface);text-align:center;}
+  .step .num{width:22px;height:22px;border-radius:50%;background:var(--primary);color:#fff;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;}
+  .darkband{background:var(--ink-band);border-radius:16px;padding:22px;color:#fff;} .darkband h3{margin:0 0 14px;font-size:18px;color:#fff;text-align:center;}
+  .logos{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;} .logo{width:84px;height:22px;border-radius:6px;background:oklch(0.4 0.02 257);}
+  .quote{background:oklch(0.92 0.03 235);border-radius:12px;padding:14px;margin-top:14px;}
+  .form{display:grid;grid-template-columns:1fr 1fr;gap:8px;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--surface);}
+  .fld{height:30px;border:1px solid var(--line-2);border-radius:8px;background:oklch(0.985 0.003 257);} .fld.full{grid-column:1/-1;} .fld.area{grid-column:1/-1;height:56px;}
+  .price3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;} .ptier{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface);} .ptier.hot{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary-soft);}
+  .mapbox{height:130px;border-radius:11px;position:relative;overflow:hidden;background:radial-gradient(circle at 30% 40%,oklch(0.93 0.02 160 / 0.5),transparent 36%),linear-gradient(90deg,oklch(0.90 0.015 247),oklch(0.945 0.01 200));border:1px solid var(--line);}
+  .pin{position:absolute;width:13px;height:13px;border-radius:50% 50% 50% 2px;background:var(--primary);transform:rotate(45deg);}
+  .spec{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--primary);border-radius:12px;padding:14px 15px;box-shadow:var(--shadow);position:sticky;top:64px;}
+  .spec.ai-led{border-left-color:var(--accent);} .spec.map-led{border-left-color:var(--map);}
+  .spec h3{margin:0 0 9px;font-size:15px;} .spec .picks{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px;}
+  .spec ul.notes{margin:0;padding-left:16px;color:var(--muted);font-size:12.5px;} .spec ul.notes li{margin:3px 0;} .spec ul.notes b{color:var(--ink);font-weight:600;}
+  .spec .mt{font-size:11px;color:oklch(0.45 0.12 60);background:oklch(0.96 0.04 60);border-radius:7px;padding:5px 7px;margin-bottom:8px;}
+  .handoff{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);margin-top:24px;} .handoff h4{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);} .handoff ul{margin:0;padding-left:18px;} .handoff li{margin:4px 0;}
+  @media (max-width:900px){.row{grid-template-columns:24px 1fr;}.spec{grid-column:1/-1;position:static;}.rail .n{position:static;}.grid2,.featgrid,.steps,.price3,.form{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner"><div class="brand"><span class="dot"></span>mde<span style="color:var(--muted)">·</span>ai&nbsp;<small>/partners/rentals — Rentals AI wireframe</small></div><div class="top-spacer"></div><div class="legend"><span class="chip mt">▣ venues B2B shell</span><span class="chip shad">shadcn/ui</span><span class="chip map">Google Maps</span><span class="chip custom">custom</span></div></div></header>
+<div class="wrap">
+  <div class="titleblock"><h1 class="serif">/partners/rentals — Rentals AI (brokers) wireframe</h1><p>B2B landing for real-estate hosts / brokers (route <code>/partners/rentals</code>, SAN-691). Goal: list units + receive qualified leads from Camila's rental demand. Reuses the <code>venues-wireframe.html</code> B2B shell, teal/blue hero.</p>
+  <div class="meta-row"><span class="chip">audience: brokers (supply)</span><span class="chip">CTA = List your rental</span><span class="chip">reuse live /api/leads/schedule-viewing</span><span class="chip">EN · Phase 1</span></div></div>
+  <div class="info"><h4>What we sell brokers</h4><div class="grid2"><ul class="rules" style="margin:0;padding-left:18px;"><li><b>AI listing draft</b> from photos · <b>lead qualification</b> · <b>schedule-viewing HITL</b></li><li><b>Map pins</b> on <code>/rentals</code> · leads/CRM · reporting</li></ul><ul class="rules" style="margin:0;padding-left:18px;"><li><b>Reuse:</b> live <code>/api/leads/schedule-viewing</code> (Camila path)</li><li><b>Hard rules:</b> <code>mapId</code> + FieldMask · no hardcoded gray</li></ul></div></div>
+
+  <section class="row"><div class="rail"><span class="n">01</span></div><div class="wire"><div class="lbl">B2B nav</div><div class="bar"><span class="pl ghost" style="font-weight:700;color:var(--ink)">mde·ai for business</span><div class="bar" style="margin-left:auto;"><span class="pl out">Sign in</span><span class="pl solid">List your rental</span></div></div></div><aside class="spec"><h3>01 · Nav</h3><div class="picks"><span class="chip shad">navigation-menu</span></div><ul class="notes"><li>Primary CTA = List your rental → <code>?type=broker</code></li></ul></aside></section>
+
+  <section class="row"><div class="rail"><span class="n">02</span></div><div class="wire"><div class="lbl">Hero — outcome + dual CTA</div><div class="hero"><span class="eyebrow">For brokers in Medellín</span><h2 class="serif">Turn Camila's searches into booked viewings.</h2><div class="bar" style="justify-content:center;"><div class="g lt w55" style="height:8px;"></div></div><div class="ctas"><span class="pl solid">List your rental</span><span class="pl out" style="background:oklch(1 0 0 / 0.5);">Book a demo</span></div></div></div><aside class="spec"><h3>02 · Hero</h3><div class="mt">Demand already exists — Camila searches rentals daily</div><div class="picks"><span class="chip t21">animated-hero</span></div><ul class="notes"><li>Outcome headline; teal/blue band (rentals)</li><li>Trust subline: "180+ verified rentals"</li></ul></aside></section>
+
+  <section class="row"><div class="rail"><span class="n">03</span></div><div class="wire"><div class="lbl">Services grid</div><div class="featgrid"><div class="feat"><div class="ic gold">✦</div><h5>AI listing draft</h5><p>Upload photos → AI writes the listing.</p></div><div class="feat"><div class="ic gold">✦</div><h5>Lead qualification</h5><p>AI scores + routes Camila's inquiries.</p></div><div class="feat"><div class="ic">✓</div><h5>Schedule-viewing (HITL)</h5><p>You approve before anything is sent.</p></div><div class="feat"><div class="ic">◉</div><h5>Map + concierge</h5><p>Your units appear in /rentals + chat.</p></div><div class="feat"><div class="ic">✉</div><h5>Leads &amp; CRM</h5><p>One inbox; AI-drafted replies.</p></div><div class="feat"><div class="ic">📊</div><h5>Reporting</h5><p>Views · leads · closes.</p></div></div></div><aside class="spec ai-led"><h3>03 · Services</h3><div class="picks"><span class="chip shad">card</span><span class="chip ai">Gemini vision</span></div><ul class="notes"><li>6 services; gold ✦ = AI-powered</li><li>Maps to broker vertical SAN-677</li></ul></aside></section>
+
+  <section class="row"><div class="rail"><span class="n">04</span></div><div class="wire"><div class="lbl">How it works</div><div class="steps"><div class="step"><div class="num">1</div><p style="font-size:10px;color:var(--muted);margin:6px 0 0;">List your unit</p></div><div class="step"><div class="num">2</div><p style="font-size:10px;color:var(--muted);margin:6px 0 0;">AI drafts + maps it</p></div><div class="step"><div class="num">3</div><p style="font-size:10px;color:var(--muted);margin:6px 0 0;">Qualified leads arrive</p></div><div class="step"><div class="num">4</div><p style="font-size:10px;color:var(--muted);margin:6px 0 0;">You approve → viewing</p></div></div><div class="mapbox" style="margin-top:10px;"><span class="pin" style="left:30%;top:40%;"></span><span class="pin" style="left:60%;top:55%;"></span><span class="pl ghost" style="position:absolute;right:8px;bottom:8px;font-size:10px;">▣ /rentals pins</span></div></div><aside class="spec map-led"><h3>04 · How it works + map</h3><ul class="notes"><li>Reuse <code>/api/leads/schedule-viewing</code> (live)</li><li>Units pin on <code>/rentals</code> map</li></ul></aside></section>
+
+  <section class="row"><div class="rail"><span class="n">05</span></div><div class="wire"><div class="lbl">Trust band + pricing teaser</div><div class="darkband"><h3 class="serif">Trusted by Medellín brokers</h3><div class="logos"><div class="logo"></div><div class="logo"></div><div class="logo"></div><div class="logo"></div></div><div class="quote"><div class="stack"><div class="g w85"></div><div class="g w70"></div></div></div></div><div class="price3" style="margin-top:10px;"><div class="ptier"><div class="stack"><div class="g w40 dk"></div><div class="g w85"></div><span class="pl out" style="justify-content:center;">Free listing</span></div></div><div class="ptier hot"><div class="stack"><div class="g w40 dk"></div><div class="g w85"></div><span class="pl solid" style="justify-content:center;">Per qualified lead</span></div></div><div class="ptier"><div class="stack"><div class="g w40 dk"></div><div class="g w85"></div><span class="pl out" style="justify-content:center;">Subscription</span></div></div></div></div><aside class="spec"><h3>05 · Trust + pricing</h3><div class="mt">Pricing per SAN-668</div><ul class="notes"><li>Lead fee vs subscription (placeholder)</li></ul></aside></section>
+
+  <section class="row"><div class="rail"><span class="n">06</span></div><div class="wire"><div class="lbl">Demo / list form</div><div class="form"><div class="fld"></div><div class="fld"></div><div class="fld"></div><div class="fld"></div><div class="fld full"></div><div class="fld area"></div><span class="pl solid full" style="grid-column:1/-1;justify-content:center;">List my rentals</span></div></div><aside class="spec"><h3>06 · Form</h3><div class="picks"><span class="chip shad">form · input</span></div><ul class="notes"><li>name · email · agency · # units · area · message → <code>/api/leads</code></li><li>validation + success/error states</li></ul></aside></section>
+
+  <section class="row"><div class="rail"><span class="n">07</span></div><div class="wire"><div class="lbl">Footer</div><div class="bar" style="align-items:flex-start;gap:22px;"><div class="stack" style="flex:1;"><div class="g w70"></div><div class="g w55"></div></div><div class="stack" style="flex:1;"><div class="g w70"></div><div class="g w55"></div></div><div class="stack" style="flex:1;"><div class="g w70"></div><div class="g w55"></div></div></div></div><aside class="spec"><h3>07 · Footer</h3><ul class="notes"><li>Cross-link: Venues · Hosts · Pricing</li></ul></aside></section>
+
+  <div class="handoff"><h4>Handoff</h4><ul><li><b>What:</b> SAN-691 broker landing; B2B shell from venues. Feeds broker vertical SAN-677.</li><li><b>Reuse:</b> live schedule-viewing API; `/rentals` map; no new shadcn.</li><li><b>Next:</b> build `app/partners/rentals/page.tsx`; CTA → `/partners/signup?type=broker`.</li></ul></div>
+</div></body></html>

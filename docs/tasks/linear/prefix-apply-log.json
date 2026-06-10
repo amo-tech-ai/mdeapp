@@ -1,0 +1,57 @@
+{
+  "dryRun": false,
+  "updated": 274,
+  "skipped": 0,
+  "errors": [
+    {
+      "id": "SAN-272",
+      "error": "missing duplicate relation"
+    }
+  ],
+  "milestones": [
+    {
+      "from": "P1 — Events polish",
+      "to": "🎟️ Events — Polish"
+    },
+    {
+      "from": "P1 — Screens & café",
+      "to": "🍽️ Discovery — UI"
+    },
+    {
+      "from": "P1 — Maps & core",
+      "to": "🗺️ Maps — Growth"
+    },
+    {
+      "from": "P1.5 — Venues MVP",
+      "to": "🍽️ Venues — Phase 2"
+    },
+    {
+      "from": "P1.5 — Trips MVP",
+      "to": "🏠 Trips — Phase 2"
+    },
+    {
+      "from": "Phase 2 — Events discovery",
+      "to": "🔮 Events — Discovery"
+    },
+    {
+      "from": "Phase 2 — Vector",
+      "to": "🔮 Platform — Vector"
+    },
+    {
+      "from": "Phase 2 — Coffee tours (CTI)",
+      "to": "🔮 Coffee tours"
+    },
+    {
+      "from": "Deferred — OpenClaw",
+      "to": "🔮 Automation — OpenClaw"
+    },
+    {
+      "from": "Deferred — Grounding search",
+      "to": "🔮 Search — Grounding"
+    },
+    {
+      "from": "Deferred — Contest",
+      "to": "🔮 Deferred — Contest"
+    }
+  ]
+}

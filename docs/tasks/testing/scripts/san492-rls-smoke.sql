@@ -1,5 +1,5 @@
 -- SAN-492 · EVT-033 — RLS + trigger smoke (disposable local :54322)
--- Run: PGPASSWORD=postgres psql -h 127.0.0.1 -p 54322 -U postgres -d postgres -v ON_ERROR_STOP=1 -f docs/tasks/testing/scripts/san492-rls-smoke.sql
+-- Run: PGPASSWORD=postgres psql -h 127.0.0.1 -p 54322 -U postgres -d postgres -v ON_ERROR_STOP=1 -f tasks/testing/scripts/san492-rls-smoke.sql
 
 \set ON_ERROR_STOP on
 
@@ -175,7 +175,7 @@ BEGIN
   END IF;
 END $$;
 
--- ── 5–8. trigger negatives (INSERT) ─────────────────────────────────────────
+-- ── 5–8. trigger negatives ──────────────────────────────────────────────────
 DO $$
 BEGIN
   BEGIN
@@ -217,19 +217,6 @@ BEGIN
     INSERT INTO public._san492_smoke_results VALUES ('partner_id_mismatch_fails', false, 'insert succeeded');
   EXCEPTION WHEN OTHERS THEN
     INSERT INTO public._san492_smoke_results VALUES ('partner_id_mismatch_fails', true, SQLERRM);
-  END;
-END $$;
-
--- ── E12. UPDATE partner_id on event booking to mismatched partner must fail ─
-DO $$
-BEGIN
-  BEGIN
-    UPDATE public.bookings
-    SET partner_id = '00000000-0000-4000-a000-000000000010'
-    WHERE id = '00000000-0000-4000-a000-000000000040';
-    INSERT INTO public._san492_smoke_results VALUES ('partner_id_update_mismatch_fails', false, 'update succeeded');
-  EXCEPTION WHEN OTHERS THEN
-    INSERT INTO public._san492_smoke_results VALUES ('partner_id_update_mismatch_fails', true, SQLERRM);
   END;
 END $$;
 

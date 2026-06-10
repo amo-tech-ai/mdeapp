@@ -1,0 +1,998 @@
+"ID","Team","Title","Description","Status","Estimate","Priority","Project ID","Project","Creator","Assignee","Labels","Cycle Number","Cycle Name","Cycle Start","Cycle End","Created","Updated","Started","Triaged","Completed","Canceled","Archived","Due Date","Parent issue","Initiatives","Project Milestone ID","Project Milestone","SLA Status","UUID","Time in status (minutes)","Related to","Blocked by","Duplicate of"
+"SAN-531","Sanjiovani","Harden SECURITY DEFINER / mutable-search_path RPCs (Supabase advisor)","## Problem
+
+The Supabase security advisor (`function_search_path_mutable`) flagged \~113 functions on project `zkwcbyxiwklihegjhuql` (count per the 2026-06-01 advisor scan — **re-confirm live before sizing**). Functions that are `SECURITY DEFINER` **and** have a role-mutable `search_path` are a privilege-escalation surface: a caller who can influence `search_path` can shadow built-in objects and have the definer-privileged function execute attacker-controlled code.
+
+Split out of AUTH-011 ([SAN-367](https://linear.app/sanjiovani/issue/SAN-367/auth-011-production-auth-checklist)) as standalone hardening — it is **not** a launch blocker for the auth checklist, but should be burned down before/just after MVP.
+
+## Scope
+
+* Re-run the advisor to get the **current** list + count:
+  * Supabase advisor `get_advisors(type: ""security"")` → filter `function_search_path_mutable`.
+  * Cross-check which of those are `SECURITY DEFINER` (highest risk first).
+* For each flagged function, pin the search path: `ALTER FUNCTION <fn>(<args>) SET search_path = '';` (and schema-qualify all references inside the body), or `SET search_path = public, pg_temp` where empty is impractical.
+* Prefer `SECURITY INVOKER` for any function that does not genuinely need definer rights.
+
+## Acceptance criteria
+
+- [ ] Advisor re-run produces the authoritative list (replace the \~113 estimate with the real number).
+- [ ] Every `SECURITY DEFINER` function has a fixed `search_path`.
+- [ ] `function_search_path_mutable` warnings = 0 in a fresh `get_advisors(type: ""security"")`.
+- [ ] No RLS regression: spot-check that hardened RPCs still return correct rows for an authed user and 0 for an impostor (same probe used in AUTH-011 RLS verification).
+- [ ] Migration applied via `apply_migration` (versioned, in repo).
+
+## Context
+
+* Driver: AUTH-011 production auth audit ([SAN-367](https://linear.app/sanjiovani/issue/SAN-367/auth-011-production-auth-checklist)), 2026-06-02.
+* Related advisor item: leaked-password protection is a dashboard toggle, tracked separately on [SAN-367](https://linear.app/sanjiovani/issue/SAN-367/auth-011-production-auth-checklist)'s config checklist — not part of this issue.","Backlog",,"Medium","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"area:stability, stack:supabase, track:core",,,,,"2026-06-03T01:12:22.769Z","2026-06-03T01:12:22.769Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"cdbb87d0-d047-49b9-8688-5e4df2f1c204",8063,"SAN-367","",
+"SAN-546","Sanjiovani","OPS-JOURNEY — Prod live journey matrix J05–J20","'> **Plain English:** Lucía runs Carlos nightlife + Sarah brunch prompts on [**mdeai.co**](<http://mdeai.co>) and logs PASS before venues stop — not localhost-only.
+
+**Queue:** Discovery Beta row 10 · **Spec:** `tasks/testing/09-prod-live-journey-matrix.md`
+
+**Verify:** `cd mdeapp && npm run verify:task -- OPS-JOURNEY`
+
+## Scope
+
+* Manual + Playwright proof for journeys **J05–J20** on production
+* Core 4-query matrix already in `prod-synthetic-smoke.spec.ts` ([SAN-462](https://linear.app/sanjiovani/issue/SAN-462/ops-001-stable-beta-soak-gate-3-scheduled-prod-synthetic) soak)
+* Venues subset **J05–J08** in `prod-venues-journey.spec.ts`
+* Log results to `tasks/testing/evidence/YYYY-MM-DD/prod-live-RESULTS.md`
+
+## Acceptance
+
+- [ ] J05–J08 PASS on [mdeai.co](<http://mdeai.co>) (venues)
+- [ ] Remaining J09–J20 documented PASS or explicit defer with reason
+- [ ] Evidence file committed under `tasks/testing/evidence/`
+
+## Refs
+
+* `tasks.md` row 10 · Venues stop gate with VEN-031
+* **Blocked by:** [SAN-462](https://linear.app/sanjiovani/issue/SAN-462/ops-001-stable-beta-soak-gate-3-scheduled-prod-synthetic) (3× nightly synthetic PASS)","Todo",,"Urgent","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"area:launch, phase:launch, phase:mvp, prefix:OPS, stack:playwright, track:core",,,,,"2026-06-04T01:26:55.645Z","2026-06-07T14:58:39.906Z",,,,,,"2026-06-05T01:26:56.825Z",,"Phase 1 — mdeai MVP launch",,,"Breached","9113b30c-f3b4-492b-9594-74512334957d",6608,"SAN-462, SAN-115","",
+"SAN-548","Sanjiovani","F13 — Thread persistence across Vercel cold-start","'> **Plain English:** Camila's turn 11 still remembers Laureles budget from turn 1 after a Vercel cold-start — not in-memory-only chat.
+
+**Queue:** Discovery Beta row 8 · **Spec:** `tasks/archive/core/F13-ai-runs-observability.md` (observability Done) + **this row** = `mastra_threads` / CopilotKit `threadId` / working memory on cold boot
+
+**Persona:** Camila · **Surface:** `/chat` · `/api/copilotkit`
+
+## Scope (queue F13 — not reopening ai_runs port)
+
+* Persist thread history via Mastra Postgres storage + CopilotKit `threadId`
+* Prove multi-turn memory survives serverless cold start on prod
+* Wire `LoggingMastraAgent` if needed for turn audit (F13 carve-out paths only)
+
+## Acceptance
+
+- [ ] 10+ turn thread on prod retains budget/neighborhood from turn 1 after redeploy
+- [ ] `mastra_threads` row exists for session
+- [ ] Vitest subset green on touched files
+- [ ] `npm run floor` on touched area
+
+## Refs
+
+* `tasks.md` row 8
+* `mdeapp/src/app/api/copilotkit/route.ts`
+* `.claude/skills/copilotkit-integrations/references/integrations/mastra.md` Pattern 1","Todo",,"Urgent","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"area:launch, phase:launch, phase:mvp, prefix:OPS, stack:copilotkit, stack:mastra, track:core",,,,,"2026-06-04T01:27:31.781Z","2026-06-07T14:58:39.906Z",,,,,,"2026-06-05T01:27:32.428Z",,"Phase 1 — mdeai MVP launch",,,"Breached","f835b5a7-80b7-4a5f-90a1-4283e6e254c7",6607,"SAN-115","",
+"SAN-407","Sanjiovani","INT-004 — Remove canned rental clarify bypass before concierge agent","'> **Plain English:** Stop showing the hard-coded rental clarify message when Camila already typed budget, dates, or city — route those queries to the concierge agent instead.
+
+**Blocker (2026-06-03):** Still **Todo** — `RENTAL_CLARIFY_MESSAGE` / `shouldInstantRentalClarify` still active in `use-rental-search-fast-path.ts`. Ship after INT-003 browser proof.
+
+**Order:** Tier 3 intelligence — int-seq:04 after INT-003.
+
+**Track:** Intelligence · **Spec:** `tasks/intelligence/tasks/INT-004-no-canned-clarify-bypass.md`
+
+**Blocked by:** INT-003
+
+**Verify:** `cd mdeapp && npm run test -- src/lib/__tests__/rental-search-fast-path.test.ts`","Todo",,"Urgent","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"phase:intel-1, phase:mvp, track:intelligence",,,,,"2026-05-30T11:51:37.736Z","2026-06-08T15:03:39.051Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"fe4385e3-3e50-44ff-9609-fb20d5aa1b94",8121,"SAN-408, SAN-823, SAN-822","",
+"SAN-406","Sanjiovani","INT-003 — Neighborhood clarify — not generic budget/dates re-ask","'> **Plain English:** When Camila types a partial rental query, ask a smart neighborhood question — not a generic ""what's your budget and dates?"" form.
+
+**Blocker (2026-06-03):** Still **Todo** — `shouldInstantRentalClarify` fires on disk; UX-001 concierge is restored but this routing band is not browser-proven. Do **not** mark Done until hero query uses Gemini clarify path.
+
+**Order:** Tier 3 intelligence — after MVP exit gates; blocked during [SAN-462](https://linear.app/sanjiovani/issue/SAN-462/ops-001-stable-beta-soak-gate-3-scheduled-prod-synthetic) soak for risky chat merges.
+
+**Track:** Intelligence · **int-seq:03** · **Spec:** `tasks/intelligence/tasks/INT-003-gemini-smart-clarify-routing.md`
+
+**Blocked by:** INT-001 ✅, INT-002 ✅
+
+**Unblocks:** INT-004, INT-005 (regression tests shipped; clarify path still open)","Todo",,"Urgent","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"phase:intel-1, phase:mvp, track:intelligence",,,,,"2026-05-30T11:51:37.212Z","2026-06-08T15:03:39.068Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"e5ed6704-3fbf-4e68-ad28-dcab4b1f3e98",8121,"SAN-405, SAN-404, SAN-408, SAN-823, SAN-822","SAN-412, SAN-407",
+"SAN-178","Sanjiovani","PAY-001 — Live ticket purchase on production","'> **Plain English:** Andrés buys a real event ticket on [mdeai.co](<http://mdeai.co>) with Stripe; payment completes and the ticket QR appears in his wallet.
+
+**Order:** #1 in MVP exit chain (before PAY-003 → EVT-002 → EVT-001).
+
+## Product code
+
+**PAY-001** — Prove live ticket purchase on production
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-178](https://linear.app/sanjiovani/issue/SAN-178/pay-001-live-ticket-purchase-on-production) |
+| Spec | `OPS-ANDRES-G1` |
+| Prefix | PAY |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Spec:** `OPS-ANDRES-G1` · **IMP:** 079 · **Persona:** Andrés
+
+| Field | Value |
+| -- | -- |
+| Task ID | `OPS-ANDRES-G1` |
+| Spec path | `OPS-ANDRES-G1` |
+| Board group | area:launch, area:payments |
+
+*Title updated by* `scripts/linear-apply-product-titles.mjs` *(2026-05-30).*
+
+---
+
+**Task ID:** `OPS-ANDRES-G1`
+**Spec:** `todo.md`
+**Repo status:** Not Started
+**Priority:** P0
+**Phase:** phase-1
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Urgent","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"area:launch, area:payments, phase:launch, prefix:PAY, stack:nextjs, stack:stripe, track:core",1,"Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-05-27T05:50:25.051Z","2026-06-07T14:58:39.906Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"6787fc3e-2a12-4ca7-8f7a-1856f1686e65",17865,"SAN-551, SAN-115, SAN-715, SAN-595","",
+"SAN-95","Sanjiovani","SYS-001 — Port evaluationAgent + scorers + Vercel deploy prep","## Product code
+
+**SYS-001** — Port evaluationAgent + scorers + Vercel deploy prep
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-95 |
+| Spec | `F20` |
+| Prefix | SYS |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Purpose
+
+Closes Phase 1 observability + deployment: - **evaluationAgent** — scoring/eval helper (per PRD §13 ""evaluation reused"") - **3 scorers** — written fresh based on legacy `weather-scorer.ts` pattern: `toolCallAppropriatenessScorer`, `completenessScorer`, `translationScorer` - **Vercel build script** — only needed if migrating to `mastra build` (we use `next build`; defer unless required)
+
+## Goals
+
+Closes Phase 1 observability + deployment: - **evaluationAgent** — scoring/eval helper (per PRD §13 ""evaluation reused"") - **3 scorers** — written fresh based on legacy `weather-scorer.ts` pattern: `toolCallAppropriatenessScorer`, `completenessScorer`, `translationScorer` - **Vercel build script** — only needed if migrating to `mastra build` (we use `next build`; defer unless required)
+
+## Features
+
+* Implement **Port evaluationAgent + scorers + Vercel deploy prep** per spec
+
+## Real-world example
+
+Closes Phase 1 observability + deployment: - **evaluationAgent** — scoring/eval helper (per PRD §13 ""evaluation reused"") - **3 scorers** — written fresh based on legacy `weather-scorer.ts` pattern: `toolCallAppropriatenessScorer`, `completenessScorer`, `translationScorer` - **Vercel build script** — only needed if migrating to `mastra build` (we use `next build`; defer unless required)
+
+## Tracking
+
+| Field | Value |
+| -- | -- |
+| Task ID | `F20` |
+| Spec | `tasks/core/F20-evaluation-and-deploy-prep.md` |
+| Type | screen build spec |
+| Repo status | Not Started |
+| Priority | P1 |
+| Phase | W8-W9 — observability + deployment |
+| Depends on | \[F19-concierge-and-restaurants-attractions\] |
+
+---
+
+*Spec file on disk is source of truth. Repo* `status: Done` *→ Linear **In Review** until user approves Done.*","Todo",,"High","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"phase:post-mvp, prefix:SYS, stack:nextjs, stack:supabase, track:core",,,,,"2026-05-27T05:49:04.398Z","2026-06-02T23:39:02.964Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"a5e8c41b-8ad6-431b-8bb2-0a682ee29258",17866,"","",
+"SAN-96","Sanjiovani","SYS-002 — Auto-review — manual calibration (rules + subagent only, no hooks)","## Product code
+
+**SYS-002** — Auto-review — manual calibration (rules + subagent only, no hooks)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-96 |
+| Spec | `F21A` |
+| Prefix | SYS |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Purpose
+
+The v3 auto-review plan is solid on paper (verified against `code.claude.com/docs/en/hooks` and `anthropics/claude-code-action@v1.0.127`) but has **zero runtime evidence**. Before automating via hooks + Stop-trigger + CI, we need to know whether the rule set actually catches real drift in *this* codebase without crying wolf. F21A is that calibration step. It creates the rules file + the reviewer subagent and uses **manual invocation only** — no hook plumbing, no `decision:""block""` JSON, no GitHu
+
+## Goals
+
+The v3 auto-review plan is solid on paper (verified against `code.claude.com/docs/en/hooks` and `anthropics/claude-code-action@v1.0.127`) but has **zero runtime evidence**. Before automating via hooks + Stop-trigger + CI, we need to know whether the rule set actually catches real drift in *this* codebase without crying wolf. F21A is that calibration step. It creates the rules file + the reviewer subagent and uses **manual invocation only** — no hook plumbing, no `decision:""block""` JSON, no GitHu
+
+## Features
+
+* Implement **Auto-review — manual calibration (rules + subagent only, no hooks)** per spec
+
+## Real-world example
+
+The v3 auto-review plan is solid on paper (verified against `code.claude.com/docs/en/hooks` and `anthropics/claude-code-action@v1.0.127`) but has **zero runtime evidence**. Before automating via hooks + Stop-trigger + CI, we need to know whether the rule set actually catches real drift in *this* codebase without crying wolf. F21A is that calibration step. It creates the rules file + the reviewer subagent and uses **manual invocation only** — no hook plumbing, no `decision:""block""` JSON, no GitHu
+
+## Tracking
+
+| Field | Value |
+| -- | -- |
+| Task ID | `F21A` |
+| Spec | `tasks/core/F21A-auto-review-calibration.md` |
+| Type | screen build spec |
+| Repo status | Not Started |
+| Priority | P2 |
+| Phase | W2 — Day 4 / Day 5 (after F09 + F10 ship) |
+| Depends on | \[F09\] |
+
+---
+
+*Spec file on disk is source of truth. Repo* `status: Done` *→ Linear **In Review** until user approves Done.*","Todo",,"High","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"phase:post-mvp, prefix:SYS, stack:nextjs, stack:supabase, track:core",,,,,"2026-05-27T05:49:04.961Z","2026-06-02T23:39:03.701Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"4c23e7b6-a630-40be-bc04-7dd96d6e7528",17866,"","",
+"SAN-460","Sanjiovani","PR-18 — SHA-pin GitHub Actions","**Track:** PR remediation · **pr-order:20**
+
+**Spec:** `tasks/PR/tasks/PR-18-sha-pin-actions.md`
+
+**Blocked by:** [SAN-462](<https://linear.app/sanjiovani/issue/SAN-462>) soak gate — start **after** Stable Beta sign-off
+
+**Prod:** `4de18f1`
+
+---
+
+Pin all `.github/workflows/**` `uses:` to commit SHA (supply-chain).
+
+## Testing & proof
+
+```bash
+rg 'uses:.*@v[0-9]' .github/workflows/  # empty after
+npm run floor
+```
+
+- [ ] Every `uses:` is 40-char SHA + `# vX.Y.Z` comment
+- [ ] CI green post-pin","Todo",,"Medium","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"phase:mvp, prefix:OPS, track:core, track:pr",,,,,"2026-06-01T17:18:18.603Z","2026-06-04T01:44:52.120Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"51835de1-2f8e-4f95-b5b8-0ddf750bcc83",9977,"SAN-462","",
+"SAN-458","Sanjiovani","PR-16 — Floor + review branch protection","'> **Summary:** Broken tests must not reach `main`. Floor CI already runs on every PR — you still need to flip **one GitHub admin switch** so merges require **Floor / floor** + **1 approval**.
+
+**Who cares:** Sofía (CI) · Lucía (QA) · Camila (never gets a red deploy)
+
+**Spec:** `tasks/PR/tasks/PR-16-floor-merge-gate.md` · **Doc:** `tasks/PR/docs/16-branch-protection.md`
+
+---
+
+## Scorecard
+
+| Task | Feature | Use case | Real-world example | Score | Grade |
+| -- | -- | -- | -- | -- | -- |
+| PR-16 CI | `floor.yml` on every PR | Block bad code before merge | Lint fail on PR → merge button disabled | **100%** | **A** |
+| PR-16 admin | Branch protection on `main` | Enforce floor + human review | #32-style debt cannot land silently | **0%** | **F** |
+| **Overall** [SAN-458](https://linear.app/sanjiovani/issue/SAN-458/pr-16-floor-review-branch-protection) | Safe `main` → Vercel prod | Camila never hits broken chat after deploy | Green floor + approved PR only | **70%** | **C** |
+
+---
+
+## What to do (3 steps)
+
+```mermaid
+flowchart LR
+    A[Open GitHub branch rules] --> B[Require Floor / floor + 1 review]
+    B --> C[Trial PR with lint fail blocked]
+    C --> D[Record evidence → Done]
+```
+
+1. [GitHub branch settings](<https://github.com/amo-tech-ai/mdeapp/settings/branches>) → rule for `main`
+2. Require: **Pull request** · **1 approval** · status check `Floor / floor` · up-to-date branch
+3. Trial: open PR with intentional lint error → merge blocked → fix → green → merge OK
+
+---
+
+## Success criteria
+
+| \# | Pass when |
+| -- | -- |
+| S1 | `floor.yml` green on PRs (already ✅) |
+| S2 | Branch protection requires `Floor / floor` |
+| S3 | Branch protection requires **≥1 review** |
+| S4 | Trial failing PR **cannot** merge |
+| S5 | Settings recorded in `tasks/testing/evidence/PR-16-branch-protection.md` |
+
+---
+
+## Production-ready checklist
+
+- [ ] Admin applied branch rule on `amo-tech-ai/mdeapp` `main`
+- [ ] Required check name is exactly `Floor / floor`
+- [ ] Non-admins cannot bypass
+- [ ] Trial blocked-merge proof captured
+- [ ] Evidence file committed
+- [ ] Linear [SAN-458](https://linear.app/sanjiovani/issue/SAN-458/pr-16-floor-review-branch-protection) → Done
+
+---
+
+## Tests / verify
+
+```bash
+cd mdeapp && npm run floor                    # local baseline
+grep -q 'name: Floor' .github/workflows/floor.yml
+gh api repos/amo-tech-ai/mdeapp/branches/main/protection | jq '.required_status_checks,.required_pull_request_reviews'
+```
+
+**Expected after admin step:** protection JSON shows `Floor / floor` + `required_approving_review_count: 1`
+
+**Today:** protection API often returns **404** — that is the remaining work.
+
+---
+
+## Already done (do not rebuild)
+
+* `.github/workflows/floor.yml` — lint · typecheck · build · test · audit
+* [Floor workflow runs](<https://github.com/amo-tech-ai/mdeapp/actions/workflows/floor.yml>)
+
+---
+
+## Out of scope
+
+* Changing floor gates themselves
+* [SAN-462](https://linear.app/sanjiovani/issue/SAN-462/ops-001-stable-beta-soak-gate-3-scheduled-prod-synthetic) soak policy
+* PR-18 SHA-pin (after soak)","In Progress",1,"High","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"phase:launch, phase:mvp, track:pr",,,,,"2026-06-01T17:18:17.288Z","2026-06-07T14:58:39.906Z","2026-06-02T13:41:58.962Z",,,,,,,"Phase 1 — mdeai MVP launch",,,,"a49f348b-cfe3-4fdf-b904-9e0a74d36bf3",8753,"SAN-462, SAN-115, SAN-461","",
+"SAN-368","Sanjiovani","MAP-002B — ADK grounding on production","'> **Plain English:** Camila asks *""specialty coffee Laureles""* on [mdeai.co/chat](<https://www.mdeai.co/chat>) → real grounded café cards. Wire Cloud Run sidecar + Vercel env; code on `main` already.
+
+**Persona:** Tourist / Camila · **Surface:** `/chat` · **Queue:** Discovery Beta row 7 · **Spec:** `tasks/maps/MAP-002B-prod-adk-deploy.md`
+
+**Skills:** `mde-maps` · `mde-vercel` · `google-agents-cli-adk-code` · `testing`
+
+**Official docs (MCP-verified):**
+
+* [Maps Grounding Lite](<https://developers.google.com/maps/ai/grounding-lite>) (Experimental)
+* [MCP search_places](<https://developers.google.com/maps/ai/grounding-lite/reference/mcp/search_places>)
+* [API key restrictions](<https://developers.google.com/maps/api-security-best-practices#restricting-api-keys>)
+
+Sidecar uses Grounding Lite MCP at `https://mapstools.googleapis.com/mcp` with server `X-Goog-Api-Key` (IP-restricted, not browser referrer key).
+
+**Duplicate:** [SAN-463](<https://linear.app/sanjiovani/issue/SAN-463>) — use [SAN-368](https://linear.app/sanjiovani/issue/SAN-368/map-002b-adk-grounding-on-production) only.
+
+---
+
+## Execution flow
+
+```mermaid
+flowchart TD
+    accTitle: MAP-002B execution
+    START([Start SAN-368]) --> MAPID{SAN-369 Map ID done?}
+    MAPID -->|no| WAIT[Finish MAP-008B first]
+    MAPID -->|yes| CR[Cloud Run revision healthy]
+    CR --> VERCEL[Set Vercel env Preview + Production]
+    VERCEL --> REDEPLOY[Redeploy mdeapp]
+    REDEPLOY --> REMOTE[verify:cloud-run-grounding]
+    REMOTE --> UI[Prod chat cafe cards]
+    UI --> EVIDENCE[MAP-002B-evidence.md]
+    EVIDENCE --> PR[PR + Linear Done]
+    PR --> DONE([Grounded search on prod])
+```
+
+---
+
+## Runtime path (prod)
+
+```mermaid
+sequenceDiagram
+    participant U as Browser
+    participant V as Vercel mdeapp
+    participant M as conciergeAgent
+    participant R as Cloud Run sidecar
+    participant G as Grounding Lite MCP
+    U->>V: specialty coffee Laureles
+    V->>M: search_grounded_places
+    M->>R: POST /v1/grounding/invoke Bearer token
+    R->>G: search_places MCP
+    G-->>R: places + links
+    R-->>M: pins source grounding-lite
+    M-->>U: grounded cafe cards
+```
+
+---
+
+## Verification gates
+
+```mermaid
+stateDiagram-v2
+    [*] --> Disk
+    Disk --> SidecarHealth
+    SidecarHealth --> VercelEnv
+    VercelEnv --> RemoteScripts
+    RemoteScripts --> ProdUI
+    ProdUI --> Done
+```
+
+---
+
+## Steps
+
+| Step | Action |
+| -- | -- |
+| 0 | [SAN-369](<https://linear.app/sanjiovani/issue/SAN-369>) Map ID verified |
+| 1 | Cloud Run `/health` 200 |
+| 2 | [Vercel env](<https://vercel.com/amo100/mdeapp/settings/environment-variables>): `ADK_GROUNDING_URL` + `ADK_INTERNAL_TOKEN` (Production + Preview) |
+| 3 | **Never** expose token as `NEXT_PUBLIC_*` |
+| 4 | Enable [Maps Grounding Lite API](<https://console.cloud.google.com/apis/library/mapstools.googleapis.com>) + billing on GCP |
+| 5 | Redeploy → run tests below |
+| 6 | PR `ai/san-368-map-002b-adk-grounding-on-production` |
+
+---
+
+## Success criteria
+
+| \# | Pass when |
+| -- | -- |
+| S1 | Cloud Run `/health` 200 |
+| S2 | `verify:grounding` exit 0 · `metadata.source=grounding-lite` · ≥1 pin |
+| S3 | `verify:cloud-run-grounding` exit 0 · mask v3 |
+| S4 | Invoke without Bearer → 401 |
+| S5 | Vercel env on Preview + Production |
+| S6 | Prod chat: grounded café cards visible |
+| S7 | [Attribution](<https://developers.google.com/maps/ai/grounding-lite/attribution>) compliant |
+| S8 | `npm run floor` green |
+
+---
+
+## Production-ready checklist
+
+- [ ] [SAN-369](https://linear.app/sanjiovani/issue/SAN-369/map-008b-map-id-on-production) Map ID done
+- [ ] Cloud Run healthy
+- [ ] Vercel `ADK_GROUNDING_URL` + `ADK_INTERNAL_TOKEN` (not PUBLIC)
+- [ ] GCP Grounding Lite API + billing enabled
+- [ ] Redeploy after env change
+- [ ] Remote scripts green (see below)
+- [ ] Prod [mdeai.co/chat](<http://mdeai.co/chat>) café query → cards
+- [ ] `verify:task MAP-002B` + floor green
+- [ ] Evidence file committed
+
+---
+
+## Tests to run
+
+**Layer 1 — disk:** `adk-grounding-client.ts`, verify scripts, `verify-task` registry
+
+**Layer 2 — remote sidecar (required):**
+
+```bash
+cd mdeapp
+export ADK_GROUNDING_URL=https://your-sidecar.run.app
+export ADK_INTERNAL_TOKEN=...
+npm run verify:grounding
+npm run verify:cloud-run-grounding
+```
+
+**Layer 3 — task + floor:**
+
+```bash
+npm run verify:task -- MAP-002B
+npm run floor
+```
+
+Runs: vitest `adk-grounding-client.test.ts`, cloud-run + grounding scripts, e2e `maps-grounding.spec.ts`.
+
+**Layer 4 — prod UI (required for Done):**
+
+* [mdeai.co/chat](<https://www.mdeai.co/chat>) → *""specialty coffee Laureles""*
+* Assert `[data-testid=""grounded-card""][data-result-kind=""cafe""]`
+* No browser-side Places API calls
+
+---
+
+## Already shipped
+
+`adk-grounding-client.ts` · `search_grounded_places` · vitest · `verify-grounding-invoke.mjs` · `verify-cloud-run-grounding.mjs` · `e2e/maps-grounding.spec.ts`
+
+---
+
+## Out of scope
+
+MAP-002A LlmAgent · MCP in Mastra TS · compute_routes · [SAN-444](<https://linear.app/sanjiovani/issue/SAN-444>) PR-15","In Progress",3,"High","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"phase:launch, phase:mvp, prefix:MAP, track:maps",1,"Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-05-30T09:24:21.573Z","2026-06-07T14:58:39.906Z","2026-06-03T03:00:43.398Z",,,,,,,"Phase 1 — mdeai MVP launch",,,,"2c826f87-ac46-4001-a40d-a8b51596c9f1",7954,"SAN-551, SAN-444, SAN-367, SAN-369, SAN-115","",
+"SAN-462","Sanjiovani","OPS-001 — Stable Beta soak gate (3× scheduled prod synthetic)","Plain English: Wait for three nightly automated production chat health checks to pass in a row before declaring Stable Beta.
+
+SIGNED OFF — four consecutive scheduled greens (Jun 2–5). Stable Beta soak gate closed.
+
+Gate: 3 consecutive scheduled nightly prod synthetic PASS → Stable Beta sign-off
+Gate met: 2026-06-04 (3rd consecutive scheduled green)
+Extra confirmation: 2026-06-05 scheduled pass (4/4)
+
+Workflow: [https://github.com/amo-tech-ai/mdeapp/actions/workflows/prod-synthetic-smoke.yml](<https://github.com/amo-tech-ai/mdeapp/actions/workflows/prod-synthetic-smoke.yml>) · 0 9 \* \* \* UTC
+Production URL: [https://www.mdeai.co](<https://www.mdeai.co>)
+Production SHA (main): cb3deb2 — includes PR #76 (58b1cb7) + PR #78 (cb3deb2)
+Signer: Sanjiovani
+Sign-off date: 2026-06-05
+
+---
+
+## Progress — scheduled PASS: 4/4 GATE MET (required 3 consecutive)
+
+| Run | Date | Event | Result | Smoke step |
+| -- | -- | -- | -- | -- |
+| [https://github.com/amo-tech-ai/mdeapp/actions/runs/26820069434](<https://github.com/amo-tech-ai/mdeapp/actions/runs/26820069434>) | 2026-06-02 | schedule | PASS | Run prod synthetic smoke: success |
+| [https://github.com/amo-tech-ai/mdeapp/actions/runs/26887029076](<https://github.com/amo-tech-ai/mdeapp/actions/runs/26887029076>) | 2026-06-03 | schedule | PASS | Run prod synthetic smoke: success |
+| [https://github.com/amo-tech-ai/mdeapp/actions/runs/26949717537](<https://github.com/amo-tech-ai/mdeapp/actions/runs/26949717537>) | 2026-06-04 | schedule | PASS | Run prod synthetic smoke: success ← gate met (3/3) |
+| [https://github.com/amo-tech-ai/mdeapp/actions/runs/27013456467](<https://github.com/amo-tech-ai/mdeapp/actions/runs/27013456467>) | 2026-06-05 | schedule | PASS | Run prod synthetic smoke: success |
+
+Repo vars verified: PROD_SMOKE_ENABLED=true · PROD_SMOKE_BASE_URL=[https://www.mdeai.co](<https://www.mdeai.co>)
+Manual workflow_dispatch runs do not count toward soak.
+
+Latest artifact (Jun 5 run): prod-synthetic-smoke-27013456467 (run 27013456467)
+
+---
+
+## Unfreeze checklist — Stable Beta sign-off
+
+- [X] Workflow run links recorded (4 consecutive scheduled greens — table above)
+- [X] Production SHA current (`cb3deb2` on main; PR #76 + #78 merged)
+- [X] Vercel URL recorded (`https://www.mdeai.co`)
+- [X] Smoke output / artifact link recorded (run 27013456467 artifact `prod-synthetic-smoke-27013456467`)
+- [X] Sign-off date/time + signer: 2026-06-05 · Sanjiovani
+- [X] Issue → Done (unblocks [SAN-574](https://linear.app/sanjiovani/issue/SAN-574/d-08-shared-browse-system-venuecard-browselayout) D-08)
+
+---
+
+## Post-merge validation (2026-06-05 forensic re-check)
+
+* `npm run build` on main @ cb3deb2: PASS
+* Prod GET / → 200 · chat-smoke PASS
+* Localhost :3001 GET / → 200 · chat-smoke PASS
+* ThemeProvider script error: fixed in PR #78 (not on main before hotfix)
+
+Note: `npm run typecheck` / `tsc` aborts on local Node v25.9.0 (environment SIGABRT); CI build passes — not a soak blocker.
+
+---
+
+## Launch Critical queue (after soak)
+
+1. [SAN-462](https://linear.app/sanjiovani/issue/SAN-462/ops-001-stable-beta-soak-gate-3-scheduled-prod-synthetic) (OPS-001) — Done
+2. [SAN-458](https://linear.app/sanjiovani/issue/SAN-458/pr-16-floor-review-branch-protection) (PR-16 floor + branch protection) — parallel admin
+3. [SAN-574](https://linear.app/sanjiovani/issue/SAN-574/d-08-shared-browse-system-venuecard-browselayout) (D-08 Shared browse system) — assignable now
+
+Soak freeze lifted for design-track card shell work (D-08). CopilotKit/agent wiring changes still follow LESSONS.md.","Done",,"Urgent","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"area:launch, phase:launch, phase:mvp, prefix:OPS, track:core, track:pr",,,,,"2026-06-02T11:38:45.910Z","2026-06-05T22:39:24.487Z","2026-06-02T11:38:45.961Z",,"2026-06-05T22:31:32.520Z",,,,,"Phase 1 — mdeai MVP launch",,,,"f360f9c6-8426-4708-bbbd-86a97ab4e5cd",3903,"SAN-546, SAN-387, SAN-443, SAN-438, SAN-323, SAN-460, SAN-458, SAN-574, SAN-566, SAN-366, SAN-545, SAN-521","",
+"SAN-408","Sanjiovani","INT-005 — Regression suite — hero queries never hit wrong path","**Track:** Intelligence · **int-seq:05** · **CORE** · **P0**
+
+**Personas:** Lucía, Camila
+
+**Stack:** Mastra, Gemini
+
+**Layer:** routing
+
+**Spec:** `tasks/intelligence/tasks/INT-005-intelligence-regression-tests.md`
+
+**Index:** [`INDEX.md`](<../../tasks/intelligence/tasks/INDEX.md>)
+
+**Plan:** [`agent-plan.md`](<../../tasks/intelligence/agent-plan.md>)
+
+**Blocked by:** INT-002, INT-003, INT-004
+
+**Gate:** Post MIS-M1 — do not start until Phase 1b shipped + browser proof on restaurants
+
+---
+
+# INT-005 — Intelligence regression tests
+
+## Problem
+
+No single test suite guards CORE intelligence behavior across parser, routing, and prod smoke.
+
+## User story
+
+As **Lucía**, I need automated proof that CORE intelligence does not regress when we add memory later.
+
+## Example prompts (fixture table)
+
+| Prompt | Must NOT | Must |
+| -- | -- | -- |
+| `list rentals in june 1 to 30 $1000 medellin` | Generic canned clarify | Gemini or search |
+| `1BR in Laureles under $80/night` | Agent round-trip | Fast-path API 200 |
+| `salsa events this weekend near Provenza` | — | event slots (INT-007 prep) |
+
+## Implementation steps
+
+1. Vitest: parser + fast-path + intent-slots (no live Gemini)
+2. Optional: Playwright prod smoke spec `e2e/intelligence/core-rental-hero.spec.ts`
+3. Evidence doc: `tasks/testing/evidence/YYYY-MM-DD/int-005-core-regression.md`
+4. Wire into `npm run test` subset for CI
+
+## Files likely touched
+
+* `mdeapp/src/lib/__tests__/rental-query-parser.test.ts`
+* `mdeapp/src/lib/__tests__/rental-search-fast-path.test.ts`
+* `mdeapp/e2e/intelligence/core-rental-hero.spec.ts` (new)
+* `tasks/testing/prompts/real-estate/03-rental-agent.md` (reference)
+
+## Data requirements
+
+None.
+
+## RLS / security
+
+N/A.
+
+## Tests
+
+This task **is** the test task.
+
+## Acceptance criteria
+
+- [ ] CI runs new tests on PR touching `rental-query-parser` or fast-path hooks
+- [ ] Evidence file with localhost + optional prod URLs
+- [ ] `01-rentals-prompt` narrow path still passes
+
+## Failure points
+
+* Flaky prod Playwright (use `data-pin-id` pattern from PR #12)
+
+## Dependencies
+
+INT-002, INT-003, INT-004
+
+## Verify
+
+```bash
+cd mdeapp && npm run test && npm run typecheck
+```","Done",,"Urgent","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"int-seq:05, layer:routing, phase:intel-conv, track:core, track:intelligence",,,,,"2026-05-30T11:51:38.252Z","2026-06-02T23:39:02.282Z","2026-06-01T11:40:06.833Z",,"2026-06-01T18:32:16.519Z",,,,,"Phase 1 — mdeai MVP launch",,,,"41b47b45-6e9f-4b28-bce7-07bf22de8cf0",9903,"SAN-407, SAN-406, SAN-405, SAN-424, SAN-414, SAN-411, SAN-410, SAN-409","",
+"SAN-405","Sanjiovani","INT-002 — Parse Camila's monthly rental budget + June dates + Medellín city","**Track:** Intelligence · **int-seq:02** · **CORE** · **Done 2026-06-01**
+
+**Spec:** `tasks/intelligence/archive/INT-002-rental-parser-monthly-date-city.md`
+**Index:** [`tasks/intelligence/tasks/INDEX.md`](<../../tasks/intelligence/tasks/INDEX.md>)
+
+---
+
+Shipped on `main` @ `c9e54b8` (incl. UX-003 nightly parser). Archived.","Done",,"Urgent","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"int-seq:02, layer:routing, phase:intel-conv, stack:mastra, track:core, track:intelligence",,,,,"2026-05-30T11:51:36.633Z","2026-06-02T23:38:59.051Z","2026-05-30T13:26:09.330Z",,"2026-06-01T17:32:24.225Z",,,,,"Phase 1 — mdeai MVP launch",,,,"7c6ccefd-2a35-4cd9-b1db-fe67552694ca",9963,"SAN-404, SAN-425, SAN-409, SAN-408, SAN-406","",
+"SAN-404","Sanjiovani","INT-001 — Turn-1 chat routing — one intent schema for rentals, events, cafés","**Track:** Intelligence · **int-seq:01** · **CORE** · **Done 2026-06-01**
+
+**Spec:** `tasks/intelligence/archive/INT-001-shared-intent-slot-schema.md`
+**Index:** [`tasks/intelligence/tasks/INDEX.md`](<../../tasks/intelligence/tasks/INDEX.md>)
+**View:** [Intelligence](<https://linear.app/sanjiovani/view/intelligence-7bbdb829ba23>)
+
+---
+
+Shipped on `main` @ `c9e54b8` + prod synthetic smoke run `26760735915`. Archived from active folder.","Done",,"Urgent","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"int-seq:01, layer:routing, phase:intel-conv, stack:mastra, track:core, track:intelligence",,,,,"2026-05-30T11:51:35.848Z","2026-06-02T23:38:57.584Z","2026-05-30T13:26:07.114Z",,"2026-06-01T17:32:22.922Z",,,,,"Phase 1 — mdeai MVP launch",,,,"1829b3e3-3328-40c7-a6a8-660d976ce89b",9963,"SAN-424, SAN-413, SAN-411, SAN-410, SAN-406, SAN-405","",
+"SAN-339","Sanjiovani","DATA-010 — Postgres function search_path hardening batch","**Track:** Data foundation (Tier 4) · **IMP-169** · **data-order:15**
+
+**Spec:** `tasks/data/tasks-data/data-010-postgres-search-path-hardening.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-010 — search_path hardening
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | sanjiovani |
+| **Surface** | Supabase SQL migrations (`supabase/migrations/`) |
+| **Layer** | DATA / security |
+
+## What we're building
+
+Batch migration(s) pinning `search_path` on functions flagged by Supabase database advisor lint [`0011_function_search_path_mutable`](<https://supabase.com/docs/guides/database/database-advisors?lint=0011_function_search_path_mutable>).
+
+**Live baseline (MCP** `get_advisors` **security, 2026-05-30):**
+
+| Lint | Count |
+| -- | -- |
+| `function_search_path_mutable` | **10** |
+| `anon_security_definer_function_executable` | 43 (document in evidence — **out of scope** for Done) |
+| `authenticated_security_definer_function_executable` | 68 (document — **out of scope**) |
+
+**Pinning standard (mde-supabase):**
+
+* **Preferred** for `SECURITY DEFINER`: `SET search_path = ''` + fully qualified `public.*` names ([supabase-database-functions.md](<../../../.agents/skills/mde-supabase/references/project-rules/supabase-database-functions.md>)).
+* `SET search_path = public` (or `public, pg_temp`) clears the linter when already applied — acceptable for invoker-style helpers; upgrade DEFINER revenue RPCs to `''` when touching them.
+
+## Scope (priority order)
+
+### P0 — revenue / guest order path (Andrés)
+
+Still flagged 2026-05-30:
+
+* `get_anonymous_order`
+* `ticket_payment_finalize_response`
+* `ticket_payment_refund`
+
+**Already pinned (not on mutable list — verify only, no migration unless body lacks qualified names):**
+
+* `ticket_payment_finalize` — `search_path = public, pg_temp`
+* `check_rate_limit` — `search_path = public, pg_temp`
+* `insert_trip_item_for_user` — `search_path = public` (DATA-027)
+
+### P1 — lead + messaging
+
+* `compute_lead_score`
+* `record_check_in`
+* `update_conversation_on_message`
+
+### P2 — triggers + FTS
+
+* `fts_spanish`, `fts_array_to_text`
+* `trigger_set_timestamps`, `set_updated_at`
+
+**Not flagged today:** `semantic_search_*`, `hybrid_search_*` (already `search_path = ''`).
+
+## Goals
+
+1. Export full security advisor via MCP `get_advisors` type=security → evidence (counts + flagged function names).
+2. Iterate with MCP `execute_sql` — **do not** use `apply_migration` for iteration.
+3. One migration per batch ≤20 functions in `supabase/migrations/`.
+4. Re-run advisor — **P0 names absent** from `function_search_path_mutable`; total count **0** when all 10 fixed.
+5. No behavior change — note in evidence if any signature/body edit beyond `search_path`.
+
+## Acceptance criteria
+
+- [X] P0 RPCs pinned in migration; absent from mutable list after re-run
+- [X] P1 + P2 batch applied (10/10 flagged functions)
+- [X] Evidence: before/after lint counts in [`tasks/data/evidence/data-010-search-path.md`](<../evidence/data-010-search-path.md>)
+- [X] Evidence notes anon/auth `security_definer_function_executable` counts (Phase 2 backlog)
+- [X] `function_search_path_mutable`: **10 → 0** (2026-05-30)
+
+## Out of scope
+
+* Rewriting RPC logic beyond qualified names for `search_path = ''`
+* Fixing `anon_security_definer_function_executable` / `authenticated_security_definer_function_executable` (DATA-011 matrix / Phase 2)
+* New features
+
+## Real-world example
+
+**Andrés** guest checkout — `get_anonymous_order` and `ticket_payment_finalize_response` cannot resolve objects via a hijacked schema when `search_path` is pinned.","Done",,"Urgent","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"data-order:15, imp:169, track:core, track:data",,,,,"2026-05-30T00:31:47.717Z","2026-06-02T23:38:56.306Z",,,"2026-05-30T10:19:46.437Z",,,,,"Phase 1 — mdeai MVP launch",,,,"5480f19f-19aa-455a-988c-c8b77bcf1694",13275,"SAN-340","",
+"SAN-340","Sanjiovani","DATA-011 — Edge function MVP freeze matrix + guest-lead abuse audit","**Track:** Data foundation (Tier 4) · **IMP-170** · **data-order:16**
+
+**Spec:** `tasks/data/tasks-data/data-011-edge-hardening-evidence.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-011 — edge hardening evidence
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | sanjiovani |
+| **Surface** | Supabase edge functions — ops doc + optional Turnstile |
+| **Layer** | DATA / security |
+
+## What we're building
+
+Read-only audit artifact + minimal hardening backlog. **Does not** re-implement Stripe webhooks (already signed + idempotent on disk).
+
+## Goals
+
+### 1\. MVP edge function matrix
+
+Classify **all ACTIVE** edge functions from MCP `list_edge_functions` at task start (baseline **39** on 2026-05-30 — do not hard-code count).
+
+Matrix columns:
+
+| Column | Purpose |
+| -- | -- |
+| `slug` | Function name |
+| `verify_jwt` | MCP + `config.toml` |
+| `deploy_source` | `mdeai` vs legacy `/home/sk/mde/` (from MCP `entrypoint_path`) |
+| `class` | KEEP / FREEZE / DEFER |
+| `phase1_notes` | Persona surface or freeze reason |
+
+| Class | Action | Examples |
+| -- | -- | -- |
+| **KEEP** | Phase 1 load-bearing | `ticket-checkout`, `ticket-payment-webhook`, `ticket-validate`, `chat-lead-capture`, `approval-commit` |
+| **FREEZE** | No deploys Phase 1 | sponsor-*, openclaw-*, postiz-\*, `vote-cast`, `fraud-scan` |
+| **DEFER** | Document owner | contest, enrichment crons |
+
+Output: [`tasks/data/evidence/data-011-edge-matrix.md`](<../evidence/data-011-edge-matrix.md>)
+
+### 2\. Guest lead abuse audit
+
+Verify on disk + live:
+
+- [ ] `chat-lead-capture` `verify_jwt: false` (required for anon)
+- [ ] `allowRateDurable` — 20/hr/IP for anon (confirmed 2026-05-26)
+- [ ] Valid `intent` enum enforced
+- [ ] Service-role insert to `leads` only (showings bridge → **DATA-021**)
+
+Gaps to file as follow-ups (optional P2):
+
+* Turnstile on `/api/leads/schedule-viewing`
+* `suppression_list` check before insert
+* Structured abuse log table or `ai_runs` metadata
+
+### 3\. Advisor cross-link (read-only)
+
+From MCP `get_advisors` security at task start, note in evidence (no fix in this task):
+
+* `rls_disabled_in_public` — identify table name
+* `anon_security_definer_function_executable` / `authenticated_security_definer_function_executable` counts → Phase 2 / DATA-010 follow-on
+
+### 4\. EVP-003 cross-link
+
+* Stripe webhook **implementation** verified ✅
+* Remaining: secret isolation proof → EVP-003 (not duplicated here)
+
+## Acceptance criteria
+
+- [X] Edge matrix published — **39 ACTIVE** fns, KEEP/FREEZE/DEFER ([`../evidence/data-011-edge-matrix.md`](<../evidence/data-011-edge-matrix.md>))
+- [X] Guest lead audit documents rate limit + P2 items
+- [X] `rls_disabled_in_public` → `public.spatial_ref_sys` documented
+- [X] No duplicate webhook implementation
+- [X] Evidence linked from [`../plan/23-audit.md`](<../plan/23-audit.md>) (via evidence file)
+
+## Real-world example
+
+**Camila** (logged out) schedules a viewing — request hits `chat-lead-capture`, passes IP rate limit, creates `leads` row via service_role; spam farm blocked at 21st request/hour. `showings` **row** lands in DATA-021.","Done",,"Urgent","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"data-order:16, imp:170, track:core, track:data",,,,,"2026-05-30T00:31:48.297Z","2026-06-02T23:38:56.938Z",,,"2026-05-30T10:19:47.037Z",,,,,"Phase 1 — mdeai MVP launch",,,,"8b119f01-86e9-40a7-af6d-45a5aff9577f",13275,"SAN-339","",
+"SAN-369","Sanjiovani","MAP-008B — Map ID on production","'> **Plain English:** Tourist searches Provenza on [mdeai.co](<https://www.mdeai.co>) → map pins must appear. Mostly **Vercel env + proof**; code on `main` already.
+
+**Persona:** Tourist · **Surface:** `/` + `/chat` · **Queue:** Discovery Beta row 6 · **Spec:** `tasks/maps/MAP-008B-vercel-map-id-verify.md`
+
+---
+
+## Execution flow
+
+```mermaid
+flowchart TD
+    accTitle: MAP-008B execution
+    accDescr: Steps to verify Map ID on Vercel and prove pins on production.
+    START([Start SAN-369]) --> MERGE{SAN-367 merged?}
+    MERGE -->|no| BLOCK[Finish PR 56 first]
+    MERGE -->|yes| ENV[Set Map ID on Vercel Preview + Production]
+    ENV --> GCP[Confirm Maps JS key HTTP referrers]
+    GCP --> DEPLOY[Redeploy preview or promote prod]
+    DEPLOY --> AUTO[Run verify:task MAP-008B]
+    AUTO --> VISUAL[Browser proof pins on mdeai.co]
+    VISUAL --> EVIDENCE[Write MAP-008B-evidence.md]
+    EVIDENCE --> PR[Open PR + Linear Done]
+    PR --> DONE([Production-ready for map pins])
+```
+
+---
+
+## Runtime path (prod)
+
+```mermaid
+sequenceDiagram
+    accTitle: Tourist map pins on prod
+    participant T as Tourist browser
+    participant V as Vercel Next.js
+    participant M as Google Maps JS
+    participant G as GCP Map ID
+    T->>V: GET mdeai.co + place search
+    V->>V: read NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID
+    alt Map ID missing
+        V-->>T: no AdvancedMarker pins
+    else Map ID set
+        V->>M: load map with mapId
+        M->>G: validate Map ID + referrer
+        G-->>M: OK
+        M-->>T: render map-pin
+    end
+```
+
+---
+
+## Verification gates
+
+```mermaid
+stateDiagram-v2
+    accTitle: MAP-008B proof layers
+    [*] --> Disk
+    Disk --> Automated
+    Automated --> Runtime
+    Runtime --> Done
+    Automated --> FailAuto
+    Runtime --> FailRuntime
+    FailAuto --> Automated
+    FailRuntime --> ENV
+    state ENV as Vercel env set
+```
+
+---
+
+## Steps
+
+| Step | Action |
+| -- | -- |
+| 0 | Merge [SAN-367](<https://linear.app/sanjiovani/issue/SAN-367>) / PR #56 |
+| 1 | [Vercel env](<https://vercel.com/amo100/mdeapp/settings/environment-variables>): `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` on Production + Preview |
+| 2 | GCP: Maps JS key referrers — `mdeai.co`, `*.vercel.app`, localhost |
+| 3 | Redeploy after env change |
+| 4 | Run tests below |
+| 5 | PR `ai/san-369-map-008b-map-id-on-production` + evidence file |
+| 6 | Done after prod pin proof |
+
+---
+
+## Success criteria
+
+| \# | Pass when |
+| -- | -- |
+| S1 | Real Map ID on Vercel Preview + Production (≠ `DEMO_MAP_ID`) |
+| S2 | No `RefererNotAllowedMapError` in browser console |
+| S3 | ≥1 `[data-testid=""map-pin""]` after place search on prod |
+| S4 | `npm run verify:task -- MAP-008B` exit 0 |
+| S5 | `npm run floor` exit 0 before merge |
+| S6 | `tasks/notes/MAP-008B-evidence.md` with screenshot |
+| S7 | No server Places keys in `NEXT_PUBLIC_*` |
+
+---
+
+## Production-ready checklist (PR body)
+
+- [ ] [SAN-367](https://linear.app/sanjiovani/issue/SAN-367/auth-011-production-auth-checklist) merged · prod login OK
+- [ ] Vercel Map ID on Production + Preview
+- [ ] GCP HTTP referrers correct
+- [ ] Redeploy after env change
+- [ ] Console clean on `/` and `/chat`
+- [ ] Prod screenshot: pins visible
+- [ ] `verify:task MAP-008B` + `floor` green
+- [ ] Evidence file committed
+- [ ] Not mixing ADK ([SAN-368](https://linear.app/sanjiovani/issue/SAN-368/map-002b-adk-grounding-on-production)) or Places backfill (DATA-008)
+
+---
+
+## Tests to run
+
+**Layer 1 — disk:** `google-maps-map-id.ts`, vitest file, `verify-maps-env.mjs`, `verify-task` registry
+
+**Layer 2 — automated (from** `mdeapp/`**):**
+
+```bash
+npm test -- --run src/lib/__tests__/google-maps-map-id.test.ts
+npm run verify:task -- MAP-008B --skip-floor
+VERIFY_MAPS_PRODUCTION=1 node --env-file=.env.local scripts/verify-maps-env.mjs
+npm run verify:task -- MAP-008B
+npm run floor
+```
+
+*Places API 403 in verify-maps-env = DATA-008, not Map ID blocker.*
+
+**Layer 3 — localhost:** fresh `npm run dev` → curl `/` 200 → optional `e2e/maps-layout-desktop.spec.ts`
+
+**Layer 4 — prod (required for Done):**
+
+```bash
+curl -s -o /dev/null -w ""prod GET / -> %{http_code}\n"" https://www.mdeai.co/
+```
+
+Browser: open [mdeai.co](<http://mdeai.co>) → place search → assert map pins + clean console.
+
+---
+
+## Already shipped (do not rebuild)
+
+`src/lib/google-maps-map-id.ts` · `ChatMap.tsx` · `scripts/verify-maps-env.mjs` · vitest · `verify:task MAP-008B`
+
+---
+
+## Out of scope
+
+Marker UX polish · new Map ID creation · DATA-008 Places backfill · [SAN-368](<https://linear.app/sanjiovani/issue/SAN-368>) ADK","Done",2,"High","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca","ai@socialmediaville.ca","phase:launch, phase:mvp, prefix:MAP, track:maps",1,"Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-05-30T09:24:22.173Z","2026-06-04T01:52:52.317Z","2026-06-03T02:53:35.666Z",,"2026-06-03T03:00:26.485Z",,,,,"Phase 1 — mdeai MVP launch",,,,"6a379e94-cbe8-472f-b2da-c6ee310972b2",7955,"SAN-368, SAN-367","",
+"SAN-367","Sanjiovani","AUTH-011 — Production auth checklist","## AUTH-011 — Production auth wiring + OAuth smoke
+
+All automated checks complete. OAuth smoke verified on production 2026-06-06.
+
+### OAuth smoke results (2026-06-06 via Playwright MCP)
+
+| Flow | Result |
+| -- | -- |
+| Magic-link login (PKCE) | ✅ Email sent + received, link followed, session on `www.mdeai.co` |
+| Protected routes after login | ✅ `/trips`, `/saved`, `/host/event/new` accessible |
+| Logout | ✅ `POST /auth/signout` → `303 /` — session cleared |
+| Google OAuth redirect | ✅ `accounts.google.com` with correct `client_id` + `redirect_uri` |
+| Google OAuth consent | ⏳ Requires real Google account — redirect initiation confirmed |
+
+### Full evidence
+
+`tasks/evidence/AUTH-011-evidence.md` · `tasks/evidence/pre-marketing-launch-checklist-2026-06-06.md`
+
+### Related
+
+* [SAN-704](<https://linear.app/sanjiovani/issue/SAN-704>) — ai_runs write regression discovered during OAuth smoke (P0, Urgent)","Done",,"High","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca","ai@socialmediaville.ca","area:launch, phase:launch, phase:mvp, prefix:ATH, track:core",1,"Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-05-30T09:24:20.740Z","2026-06-06T13:16:04.309Z","2026-06-03T01:10:37.043Z",,"2026-06-06T11:11:39.441Z",,,,,"Phase 1 — mdeai MVP launch",,,,"4f409711-68ab-4b7d-af2c-8ddd5c10eb42",7976,"SAN-369, SAN-368, SAN-531","",
+"SAN-459","Sanjiovani","PR-17 — Migration-filename lint in CI","Migration timestamp lint shipped in #40 (check-migration-timestamps.mjs).","Done",,"Medium","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"stack:supabase, track:core, track:pr",,,,,"2026-06-01T17:18:17.883Z","2026-06-02T23:38:52.998Z",,,"2026-06-01T18:51:32.446Z",,,,,"Phase 1 — mdeai MVP launch",,,,"0bea627e-4fc1-47ec-9b25-0c954266c0a8",9883,"","",
+"SAN-100","Sanjiovani","OPS-002 — Production smoke matrix","'> **Plain English:** ~~Run a manual prod smoke matrix~~ — **superseded.** Nightly synthetic workflow shipped in UX-034 ([SAN-322](https://linear.app/sanjiovani/issue/SAN-322/ux-034-production-synthetic-monitor-for-conciergeagent)); soak progress tracked on [SAN-462](https://linear.app/sanjiovani/issue/SAN-462/ops-001-stable-beta-soak-gate-3-scheduled-prod-synthetic).
+
+**Action:** Mark Duplicate of [SAN-462](https://linear.app/sanjiovani/issue/SAN-462/ops-001-stable-beta-soak-gate-3-scheduled-prod-synthetic) or Done with link — do not execute separately.
+
+## Product code
+
+**OPS-002** — Run production smoke tests on [mdeai.co](<http://mdeai.co>)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-100](https://linear.app/sanjiovani/issue/SAN-100/ops-002-production-smoke-matrix) |
+| Spec | `F32` |
+| Prefix | OPS |
+","Duplicate",,"High","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"area:launch, area:stability, phase:launch, prefix:OPS, stack:nextjs, track:core",1,"Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-05-27T05:49:07.273Z","2026-06-03T00:12:58.933Z",,,,"2026-06-03T00:12:59.888Z",,,,"Phase 1 — mdeai MVP launch",,,,"22d8314c-df53-4de4-9a2b-716d03aa83ee",8122,"","","SAN-462"

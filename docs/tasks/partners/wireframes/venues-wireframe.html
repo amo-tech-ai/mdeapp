@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MDE — For Venues (Mindtrip-style B2B) Wireframe + Component Spec</title>
+<style>
+  :root{
+    --bg: oklch(0.985 0.002 247); --surface: oklch(1 0 0); --ink: oklch(0.28 0.03 257);
+    --muted: oklch(0.55 0.02 257); --line: oklch(0.90 0.006 257); --line-2: oklch(0.84 0.008 257);
+    --primary: oklch(0.508 0.118 175); --primary-soft: oklch(0.95 0.03 178);
+    --accent: oklch(0.795 0.184 86); --accent-soft: oklch(0.96 0.05 90); --map: oklch(0.62 0.10 235);
+    --ph: linear-gradient(150deg, oklch(0.970 0.015 180), oklch(0.926 0.030 184));
+    --gold-band: linear-gradient(135deg, oklch(0.90 0.10 92), oklch(0.83 0.16 80));
+    --teal-band: linear-gradient(135deg, oklch(0.90 0.06 180), oklch(0.82 0.09 185));
+    --ink-band: oklch(0.22 0.02 257);
+    --radius: 14px; --shadow: 0 1px 2px oklch(0.4 0.03 257 / 0.05), 0 8px 24px oklch(0.4 0.03 257 / 0.06);
+  }
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; } @media (prefers-reduced-motion: reduce){ html{ scroll-behavior: auto; } }
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+  .serif{ font-family: "Playfair Display", Georgia, "Times New Roman", serif; }
+  a{ color:var(--primary); text-decoration:none; } a:hover{ text-decoration:underline; }
+  code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:0.92em; }
+  .wrap{ max-width: 1200px; margin:0 auto; padding: 0 20px 80px; }
+  header.top{ position:sticky; top:0; z-index:20; background:oklch(0.985 0.002 247 / 0.86); backdrop-filter: blur(10px); border-bottom:1px solid var(--line); }
+  .top-inner{ max-width:1200px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .brand{ display:flex; align-items:center; gap:9px; font-weight:700; letter-spacing:-0.02em; }
+  .brand .dot{ width:22px; height:22px; border-radius:7px; background:linear-gradient(135deg, var(--accent), oklch(0.74 0.16 70)); }
+  .brand small{ font-weight:500; color:var(--muted); } .top-spacer{ flex:1; } .legend{ display:flex; gap:6px; flex-wrap:wrap; }
+  .titleblock{ padding:34px 0 14px; }
+  .titleblock h1{ margin:0 0 6px; font-size:30px; letter-spacing:-0.02em; font-weight:600; }
+  .titleblock p{ margin:0; color:var(--muted); max-width:66ch; }
+  .meta-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .chip{ display:inline-flex; align-items:center; gap:6px; padding:3px 9px; border-radius:999px; font-size:11.5px; font-weight:600; border:1px solid var(--line-2); background:var(--surface); color:var(--muted); white-space:nowrap; }
+  .chip b{ font-weight:800; }
+  .chip.t21{ background:var(--primary-soft); border-color:transparent; color:oklch(0.40 0.10 175); }
+  .chip.shad{ background:oklch(0.95 0.005 257); border-color:transparent; color:oklch(0.40 0.02 257); }
+  .chip.ai{ background:var(--accent-soft); border-color:transparent; color:oklch(0.48 0.12 80); }
+  .chip.map{ background:oklch(0.95 0.03 235); border-color:transparent; color:oklch(0.42 0.10 235); }
+  .chip.custom{ background:repeating-linear-gradient(45deg, oklch(0.97 0.004 257), oklch(0.97 0.004 257) 5px, oklch(0.94 0.006 257) 5px, oklch(0.94 0.006 257) 10px); border:1px dashed var(--line-2); color:var(--muted); }
+  .chip.mt{ background:oklch(0.95 0.04 60); border-color:transparent; color:oklch(0.45 0.12 60); }
+  .info{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); margin:8px 0 4px; }
+  .info h4{ margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:18px; } .rules li{ margin:3px 0; } .rules b{ color:var(--ink); }
+  .row{ display:grid; grid-template-columns: 30px minmax(0,1fr) 360px; gap:18px; align-items:start; padding:22px 0; border-top:1px solid var(--line); scroll-margin-top:70px; }
+  .row:first-of-type{ border-top:none; }
+  .rail .n{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:13px; font-weight:700; color:var(--primary); background:var(--primary-soft); border-radius:8px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; position:sticky; top:64px; }
+  .wire{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
+  .wire .lbl{ font-size:10.5px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:10px; }
+  .g{ height:9px; border-radius:5px; background:oklch(0.92 0.006 257); }
+  .g.dk{ background:oklch(0.86 0.01 257); }
+  .g.w70{ width:70%; } .g.w55{ width:55%; } .g.w40{ width:40%; } .g.w85{ width:85%; } .g.w25{ width:25%; } .g.w30{ width:30%; }
+  .g.tall{ height:15px; } .g.lt{ background:oklch(1 0 0 / 0.5); }
+  .stack > *{ margin-bottom:7px; } .stack > *:last-child{ margin-bottom:0; }
+  .img{ background:var(--ph); border-radius:9px; position:relative; }
+  .img::after{ content:"IMG"; position:absolute; top:6px; left:7px; font-size:9px; font-weight:700; letter-spacing:0.1em; color:oklch(0.45 0.04 190 / 0.55); }
+  .bar{ display:flex; align-items:center; gap:10px; }
+  .pl{ display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:999px; background:oklch(0.95 0.005 257); font-size:11px; color:var(--muted); border:1px solid var(--line); }
+  .pl.solid{ background:var(--primary); color:#fff; border-color:transparent; font-weight:600; }
+  .pl.gold{ background:var(--accent); color:oklch(0.30 0.06 80); border-color:transparent; font-weight:700; }
+  .pl.ghost{ background:transparent; } .pl.out{ background:transparent; border:1.5px solid var(--primary); color:var(--primary); font-weight:600; }
+  .pl.dark{ background:oklch(0.30 0.02 257); color:#fff; border-color:transparent; font-weight:600; }
+  .searchbar{ display:flex; align-items:center; gap:10px; border:1.5px solid var(--line-2); border-radius:999px; padding:11px 13px; background:var(--surface); }
+  .navrow{ display:flex; align-items:center; gap:14px; } .navrow .g{ width:54px; }
+  /* hero */
+  .hero{ background:var(--teal-band); border-radius:18px; padding:32px 26px; position:relative; overflow:hidden; text-align:center; }
+  .hero .eyebrow{ display:inline-block; background:oklch(1 0 0 / 0.55); border-radius:999px; padding:3px 10px; font-size:10.5px; font-weight:700; color:oklch(0.32 0.06 185); margin-bottom:10px; }
+  .hero h2{ font-size:30px; line-height:1.05; margin:0 auto 12px; color:oklch(0.24 0.04 200); letter-spacing:-0.02em; max-width:18ch; }
+  .hero .ctas{ display:flex; gap:8px; justify-content:center; margin-top:8px; }
+  /* feature grid */
+  .featgrid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .feat{ border:1px solid var(--line); border-radius:12px; padding:12px; background:var(--surface); }
+  .feat .ic{ width:26px; height:26px; border-radius:8px; background:var(--primary-soft); margin-bottom:8px; display:flex; align-items:center; justify-content:center; font-size:13px; }
+  .feat .ic.gold{ background:var(--accent-soft); }
+  .feat h5{ margin:0 0 5px; font-size:12.5px; }
+  .feat p{ margin:0; font-size:11px; color:var(--muted); }
+  /* steps */
+  .steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .step{ border:1px solid var(--line); border-radius:12px; padding:11px; background:var(--surface); text-align:center; }
+  .step .num{ width:22px; height:22px; border-radius:50%; background:var(--primary); color:#fff; font-weight:800; font-size:11px; display:flex; align-items:center; justify-content:center; margin:0 auto 8px; }
+  /* dark trust band */
+  .darkband{ background:var(--ink-band); border-radius:16px; padding:22px; color:#fff; }
+  .darkband h3{ margin:0 0 14px; font-size:18px; color:#fff; text-align:center; }
+  .logos{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .logo{ width:84px; height:22px; border-radius:6px; background:oklch(0.4 0.02 257); }
+  .quote{ background:oklch(0.92 0.03 235); border-radius:12px; padding:14px; margin-top:14px; }
+  /* demo form */
+  .form{ display:grid; grid-template-columns:1fr 1fr; gap:8px; border:1px solid var(--line); border-radius:12px; padding:14px; background:var(--surface); }
+  .fld{ height:30px; border:1px solid var(--line-2); border-radius:8px; background:oklch(0.985 0.003 257); }
+  .fld.full{ grid-column:1 / -1; } .fld.area{ grid-column:1 / -1; height:56px; }
+  /* pricing teaser */
+  .price3{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .ptier{ border:1px solid var(--line); border-radius:12px; padding:12px; background:var(--surface); }
+  .ptier.hot{ border-color:var(--primary); box-shadow:0 0 0 2px var(--primary-soft); }
+  .spec{ background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--primary); border-radius:12px; padding:14px 15px; box-shadow:var(--shadow); position:sticky; top:64px; }
+  .spec.ai-led{ border-left-color:var(--accent); } .spec.map-led{ border-left-color:var(--map); }
+  .spec h3{ margin:0 0 9px; font-size:15px; letter-spacing:-0.01em; }
+  .spec .picks{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:9px; }
+  .spec ul.notes{ margin:0; padding-left:16px; color:var(--muted); font-size:12.5px; } .spec ul.notes li{ margin:3px 0; } .spec ul.notes b{ color:var(--ink); font-weight:600; }
+  .spec .mt{ font-size:11px; color:oklch(0.45 0.12 60); background:oklch(0.96 0.04 60); border-radius:7px; padding:5px 7px; margin-bottom:8px; }
+  .handoff{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); margin-top:24px; }
+  .handoff h4{ margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+  .handoff ul{ margin:0; padding-left:18px; } .handoff li{ margin:4px 0; }
+  @media (max-width: 900px){
+    .row{ grid-template-columns: 24px 1fr; } .spec{ grid-column: 1 / -1; position:static; } .rail .n{ position:static; }
+    .grid2, .featgrid, .steps, .price3, .form{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><span class="dot"></span>mde<span style="color:var(--muted)">·</span>ai&nbsp;<small>For Venues — B2B wireframe</small></div>
+    <div class="top-spacer"></div>
+    <div class="legend">
+      <span class="chip mt">▣ Mindtrip /business/hotels style</span>
+      <span class="chip t21">21st.dev</span><span class="chip shad">shadcn/ui</span><span class="chip ai">AI services</span><span class="chip custom">custom</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="titleblock">
+    <h1 class="serif">For Venues — wireframe &amp; component spec</h1>
+    <p>B2B landing for restaurants, bars, cafés &amp; event spaces (route <code>/venues</code>). Modeled on Mindtrip's <code>/business/hotels</code> ("Be the Hero of Every Stay"). Goal: get a venue to <b>book a demo / list</b>. Sells the services we offer venues: <b>AI event booking · AI marketing (Postiz) · automated event ingestion (OpenClaw) · listing &amp; visibility · leads · reporting</b>.</p>
+    <div class="meta-row">
+      <span class="chip">audience: venue owners (supply)</span>
+      <span class="chip">CTA = Book a demo / List your venue</span>
+      <span class="chip">revenue: featured placement + AI services</span>
+      <span class="chip">EN only · Phase 1/2</span>
+    </div>
+  </div>
+
+  <div class="info">
+    <h4>What we offer venues (the services this page sells)</h4>
+    <div class="grid2">
+      <ul class="rules" style="margin:0; padding-left:18px;">
+        <li><b>AI event booking</b> — guests request/book events; AI drafts replies + schedules (HITL approve)</li>
+        <li><b>AI marketing — Postiz</b> — auto-write &amp; schedule social posts for your events across channels</li>
+        <li><b>Automated event ingestion — OpenClaw</b> — your events pulled into mdeai listings, no manual entry</li>
+      </ul>
+      <ul class="rules" style="margin:0; padding-left:18px;">
+        <li><b>Listing &amp; visibility</b> — appear in concierge answers + browse + map (grounded, verified)</li>
+        <li><b>Leads &amp; CRM</b> — capture inquiries; HITL approve/send AI replies</li>
+        <li><b>Reporting</b> — views, leads, bookings analytics</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 01 NAV -->
+  <section class="row" id="s1">
+    <div class="rail"><span class="n">01</span></div>
+    <div class="wire">
+      <div class="lbl">B2B nav — Solutions · Pricing · Sign in · Book a demo</div>
+      <div class="navrow">
+        <span class="pl ghost" style="font-weight:700;color:var(--ink)">mde·ai <span style="color:var(--muted);font-weight:500;">for business</span></span>
+        <div class="navrow" style="margin-left:auto;"><div class="g"></div><div class="g"></div><span class="pl out">Sign in</span><span class="pl solid">Book a demo</span></div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>01 · B2B nav</h3>
+      <div class="mt">Mindtrip: "mindtrip for business" + Book a demo (top-right)</div>
+      <div class="picks"><span class="chip shad">navigation-menu · button</span></div>
+      <ul class="notes"><li>Distinct "for business" wordmark; primary CTA = Book a demo</li><li>Links: Solutions (venues/hosts/rentals) · Pricing · Resources</li></ul>
+    </aside>
+  </section>
+
+  <!-- 02 HERO -->
+  <section class="row" id="s2">
+    <div class="rail"><span class="n">02</span></div>
+    <div class="wire">
+      <div class="lbl">Hero — outcome headline + dual CTA + video</div>
+      <div class="hero">
+        <span class="eyebrow">For venues in Medellín</span>
+        <h2 class="serif">Fill your venue. Let the AI handle the booking.</h2>
+        <div class="bar" style="justify-content:center;"><div class="g lt w55" style="height:8px;"></div></div>
+        <div class="ctas"><span class="pl solid">Book a demo</span><span class="pl out" style="background:oklch(1 0 0 / 0.5);">▶ Watch 60s</span></div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>02 · Hero</h3>
+      <div class="mt">Mindtrip: "Be the Hero of Every Stay" + Book a demo / Play video</div>
+      <div class="picks"><span class="chip t21">animated-hero <b>88</b></span><span class="chip custom">teal band</span></div>
+      <ul class="notes">
+        <li><b>Outcome headline</b>, not features; teal band (gold reserved for concierge surfaces)</li>
+        <li>Dual CTA: <b>Book a demo</b> (primary) + Watch video (secondary)</li>
+        <li>Centered, B2B tone; trust subline ("180+ venues listed")</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- 03 WHY VENUES -->
+  <section class="row" id="s3">
+    <div class="rail"><span class="n">03</span></div>
+    <div class="wire">
+      <div class="lbl">Why venues choose mdeai — proof band</div>
+      <div class="hero" style="background:var(--gold-band); text-align:left; padding:22px;">
+        <div class="stack" style="max-width:60%;"><div class="g tall w70 dk"></div><div class="g lt w85"></div><div class="g lt w70"></div><div class="ctas" style="justify-content:flex-start;"><span class="pl solid">Book a demo</span><span class="pl ghost">See it work</span></div></div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>03 · Why venues</h3>
+      <div class="mt">Mindtrip: "Why Hoteliers Choose Mindtrip" + "Keep guests engaged" block</div>
+      <div class="picks"><span class="chip custom">value block</span></div>
+      <ul class="notes"><li>One big promise: "Be the venue the concierge recommends"</li><li>Tie to real demand — guests already ask the concierge for places</li></ul>
+    </aside>
+  </section>
+
+  <!-- 04 SERVICES GRID (CORE) -->
+  <section class="row" id="s4">
+    <div class="rail"><span class="n">04</span></div>
+    <div class="wire">
+      <div class="lbl">Services we offer — feature grid (the core)</div>
+      <div class="featgrid">
+        <div class="feat"><div class="ic gold">✦</div><h5>AI event booking</h5><p>Requests in, AI drafts replies + schedules, you approve.</p></div>
+        <div class="feat"><div class="ic gold">✦</div><h5>AI marketing — Postiz</h5><p>Auto-write &amp; schedule social posts for your events.</p></div>
+        <div class="feat"><div class="ic">⛏</div><h5>Auto event ingestion — OpenClaw</h5><p>Your events pulled into mdeai. No manual entry.</p></div>
+        <div class="feat"><div class="ic">◉</div><h5>Listing &amp; visibility</h5><p>Show up in concierge answers, browse &amp; map.</p></div>
+        <div class="feat"><div class="ic">✉</div><h5>Leads &amp; CRM</h5><p>Capture inquiries; HITL approve/send replies.</p></div>
+        <div class="feat"><div class="ic">📊</div><h5>Reporting</h5><p>Views, leads, bookings — what's working.</p></div>
+      </div>
+    </div>
+    <aside class="spec ai-led">
+      <h3>04 · Services grid</h3>
+      <div class="mt">Mindtrip: "Features You'll ❤" 3×2 grid</div>
+      <div class="picks"><span class="chip shad">card</span><span class="chip ai">Postiz · OpenClaw</span></div>
+      <ul class="notes">
+        <li><b>6 services</b> = our venue offer. Gold ✦ = AI-powered ones</li>
+        <li><b>Postiz</b> = social scheduling; <b>OpenClaw</b> = automated event ingestion (our tools, named so venues recognise the value)</li>
+        <li>Each tile links to a deeper section / <code>/venues/features</code></li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- 05 HOW IT WORKS -->
+  <section class="row" id="s5">
+    <div class="rail"><span class="n">05</span></div>
+    <div class="wire">
+      <div class="lbl">How it works — 4 steps</div>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><div class="g w70" style="margin:0 auto;"></div><p style="font-size:10px;color:var(--muted);margin:6px 0 0;">List your venue</p></div>
+        <div class="step"><div class="num">2</div><div class="g w70" style="margin:0 auto;"></div><p style="font-size:10px;color:var(--muted);margin:6px 0 0;">AI markets your events</p></div>
+        <div class="step"><div class="num">3</div><div class="g w70" style="margin:0 auto;"></div><p style="font-size:10px;color:var(--muted);margin:6px 0 0;">Guests discover &amp; book</p></div>
+        <div class="step"><div class="num">4</div><div class="g w70" style="margin:0 auto;"></div><p style="font-size:10px;color:var(--muted);margin:6px 0 0;">You approve &amp; host</p></div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>05 · How it works</h3>
+      <div class="mt">Mindtrip /business/how-it-works pattern</div>
+      <div class="picks"><span class="chip custom">step row</span></div>
+      <ul class="notes"><li>4 plain steps; reassure it's low-effort (AI does the work)</li><li>HITL approval kept human ("you approve")</li></ul>
+    </aside>
+  </section>
+
+  <!-- 06 TRUST BAND -->
+  <section class="row" id="s6">
+    <div class="rail"><span class="n">06</span></div>
+    <div class="wire">
+      <div class="lbl">Trusted by — dark band + logos + quote</div>
+      <div class="darkband">
+        <h3 class="serif">Trusted by Medellín's best venues</h3>
+        <div class="logos"><div class="logo"></div><div class="logo"></div><div class="logo"></div><div class="logo"></div><div class="logo"></div></div>
+        <div class="quote"><div class="stack"><div class="g w85"></div><div class="g w70"></div><div class="g w40"></div></div></div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>06 · Trust band</h3>
+      <div class="mt">Mindtrip: dark "Trusted by the Hotels…" + "In Their Own Words"</div>
+      <div class="picks"><span class="chip custom">dark band</span><span class="chip shad">avatar</span></div>
+      <ul class="notes"><li>Dark section for contrast; venue logos (greyscale) + 1 testimonial</li><li>Hide logos until we have real ones</li></ul>
+    </aside>
+  </section>
+
+  <!-- 07 PRICING TEASER -->
+  <section class="row" id="s7">
+    <div class="rail"><span class="n">07</span></div>
+    <div class="wire">
+      <div class="lbl">Pricing teaser — 3 tiers</div>
+      <div class="price3">
+        <div class="ptier"><div class="stack"><div class="g w40 dk"></div><div class="g tall w55"></div><div class="g w85"></div><span class="pl out" style="justify-content:center;">Start free</span></div></div>
+        <div class="ptier hot"><div class="stack"><div class="g w40 dk"></div><div class="g tall w55"></div><div class="g w85"></div><span class="pl solid" style="justify-content:center;">Book a demo</span></div></div>
+        <div class="ptier"><div class="stack"><div class="g w40 dk"></div><div class="g tall w55"></div><div class="g w85"></div><span class="pl out" style="justify-content:center;">Contact sales</span></div></div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>07 · Pricing teaser</h3>
+      <div class="mt">Mindtrip /business/packages</div>
+      <div class="picks"><span class="chip shad">card · tabs</span></div>
+      <ul class="notes"><li>Free listing → Growth (AI services) → Enterprise</li><li>Postiz/OpenClaw in paid tiers; full table on <code>/pricing</code></li></ul>
+    </aside>
+  </section>
+
+  <!-- 08 DEMO FORM -->
+  <section class="row" id="s8">
+    <div class="rail"><span class="n">08</span></div>
+    <div class="wire">
+      <div class="lbl">See it in action — demo request form</div>
+      <div class="form">
+        <div class="fld"></div><div class="fld"></div>
+        <div class="fld"></div><div class="fld"></div>
+        <div class="fld full"></div>
+        <div class="fld area"></div>
+        <span class="pl solid full" style="grid-column:1/-1;justify-content:center;">Request demo</span>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>08 · Demo form</h3>
+      <div class="mt">Mindtrip: "See Mindtrip for Business in action." + form</div>
+      <div class="picks"><span class="chip shad">form · input · textarea</span></div>
+      <ul class="notes">
+        <li>Fields: name · email · venue · phone · type · message → <code>/api/leads</code> (B2B lead)</li>
+        <li><b>This is a form submit</b> — needs validation + success/error states</li>
+        <li>Could pre-qualify via the concierge ("tell us about your venue")</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- 09 FOOTER -->
+  <section class="row" id="s9">
+    <div class="rail"><span class="n">09</span></div>
+    <div class="wire">
+      <div class="lbl">Footer — business links</div>
+      <div class="bar" style="align-items:flex-start; gap:22px;">
+        <div class="stack" style="flex:1;"><div class="g w70"></div><div class="g w55"></div><div class="g w55"></div></div>
+        <div class="stack" style="flex:1;"><div class="g w70"></div><div class="g w55"></div><div class="g w55"></div></div>
+        <div class="stack" style="flex:1;"><div class="g w70"></div><div class="g w55"></div></div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>09 · Footer</h3>
+      <div class="picks"><span class="chip t21">large-name-footer</span></div>
+      <ul class="notes"><li>Cols: Solutions (Venues · Hosts · Rentals) · Company · Resources · Legal</li></ul>
+    </aside>
+  </section>
+
+  <div class="handoff">
+    <h4>Handoff</h4>
+    <ul>
+      <li><b>What this is:</b> the <code>/venues</code> B2B landing (supply acquisition), Mindtrip <code>/business/hotels</code> style. Sibling: <code>host-wireframe.html</code> (For Event Hosts).</li>
+      <li><b>Services named:</b> AI event booking · <b>Postiz</b> (social) · <b>OpenClaw</b> (event ingestion) · listing/visibility · leads/CRM · reporting. The logged-in counterpart = <code>/broker/*</code> operator dashboard.</li>
+      <li><b>Components:</b> all installed (card, button, form, input, textarea, avatar, tabs) + custom hero/dark-band/form CSS on tokens. No new shadcn installs.</li>
+      <li><b>Open questions:</b> (1) is Postiz/OpenClaw first-party or resold? changes the copy. (2) self-serve listing vs demo-gated? (3) pricing public or "contact sales"?</li>
+      <li><b>Next:</b> Linear issue <code>/venues</code> (labels UX + MKT); deeper <code>/venues/features</code> later.</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,2643 @@
+"ID","Team","Title","Description","Status","Estimate","Priority","Project ID","Project","Creator","Assignee","Labels","Cycle Number","Cycle Name","Cycle Start","Cycle End","Created","Updated","Started","Triaged","Completed","Canceled","Archived","Due Date","Parent issue","Initiatives","Project Milestone ID","Project Milestone","SLA Status","UUID","Time in status (minutes)","Related to","Blocked by","Duplicate of"
+"SAN-384","Sanjiovani","DATA-046 — Golden queries v2 (signal-backed)","**Track:** Intelligence (MIS) · **intel-order:17** · **intel-1b**
+
+**Stack:** supabase
+
+**Layer:** observability
+
+**Spec:** `tasks/data/tasks-data/DATA-046-golden-queries-v2.md`
+
+**Plan:** [`intelligence-plan.md`](<../../tasks/intelligence/intelligence-plan.md>)
+
+**Queue:** [`intelligence-queue.json`](<../../tasks/linear/intelligence-queue.json>)
+
+**Note:** Phase 1b after MIS-M1 gate
+
+---
+
+# DATA-046 — Golden queries v2
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Lucía · Sofia |
+| **Why now** | Phase 1b regression gate after hybrid tools ship |
+| **Rule** | SQL expected rows + app smoke must agree |
+
+## Query table (MVP)
+
+| ID | Prompt | Tool | Expected top entities | Signals |
+| -- | -- | -- | -- | -- |
+| GQ-S01 | quiet rooftop Provenza | search-restaurants | Relato, Sambombi | rooftop ≥0.7 |
+| GQ-S02 | romantic cocktails Provenza | search-restaurants | signal-ranked | cocktail_score |
+| GQ-S03 | local Colombian not touristy | search-restaurants | hidden_gem boost |  |
+| GQ-R01 | digital nomad Laureles quiet | search-rentals | hybrid | digital_nomad |
+| GQ-E01 | salsa this weekend Provenza | search-events | hybrid | nightlife |
+| GQ-C01 | café strong wifi Laureles | search-grounded-places | Places pins | ADK fallback |
+| GQ-N01 | compare Poblado vs Laureles | neighborhood_profiles | prose + profiles |  |
+
+## Deliverables
+
+1. `mdeapp/scripts/intelligence/golden-queries-smoke.ts` — extend beyond GQ-S01
+2. `tasks/data/evidence/DATA-046-golden-v2.md` — pass/fail matrix
+3. Optional Playwright spec `e2e/intelligence/golden-queries.spec.ts`
+
+## Done gate
+
+| Check | Evidence |
+| -- | -- |
+| ≥10 queries documented | this file + evidence |
+| CI script | exit 0 on main |
+| SQL + app agree | no Relato-in-SQL / Places-in-UI mismatch |
+
+## Out of scope
+
+* Gorse / external ranker eval
+* Multilingual queries (Phase 2)
+
+## Verify
+
+```bash
+cd mdeapp && npx tsx scripts/intelligence/golden-queries-smoke.ts  # expanded
+```","Backlog",,"High","6dd4b5e2-3b63-4b55-a866-4239bbbec444","AI & Intelligence","ai@socialmediaville.ca",,"intel-order:17, layer:observability, phase:intel-1b, stack:supabase, track:data, track:intelligence",,,,,"2026-05-30T11:22:39.154Z","2026-06-02T12:44:57.794Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"8b4f7ef6-28ce-465b-81dc-4078733c8153",13232,"SAN-388, SAN-379","SAN-374",
+"SAN-343","Sanjiovani","DATA-018 — Event admin ops SQL — exception queue views","**Track:** Data foundation (Tier 4) · **IMP-173** · **data-order:19**
+
+**Spec:** `tasks/data/tasks-data/data-018-event-admin-ops-views.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-018 — event admin ops views
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Patricia |
+| **Surface** | `/admin/events` (app task separate) |
+| **Layer** | DATA |
+
+## What we're building
+
+Events PRD P1: **admin exception queue**. Prefer **views + SECURITY DEFINER RPC** over new tables.
+
+## Candidate views
+
+| View / RPC | Source tables | Shows |
+| -- | -- | -- |
+| `v_event_orders_exceptions` | `event_orders`, `events` | `status IN ('failed','expired','pending')` > N minutes |
+| `v_event_publish_pending` | `events`, `approval_requests` | draft/unpublished awaiting approval |
+| `v_event_checkin_gaps` | `event_orders`, `event_attendees` | paid orders missing attendees |
+| `v_event_webhook_idempotency_failures` | `idempotency_keys` | ticket webhook errors (if logged) |
+
+## Goals
+
+1. Document SQL in `tasks/data/evidence/data-018-admin-ops-views.sql`
+2. Optional migration creating views with `security_invoker = true` or admin-only RPC
+3. RLS: admin role only (`user_roles` or `profiles.role`)
+4. Link to future `/admin/events` UI task (events track, not data)
+
+## Acceptance criteria
+
+- [ ] Patricia persona query returns failed/pending rows from live DB
+- [ ] No new mutable tables required (views only unless evidence proves need)
+- [ ] Pin `search_path` on any SECURITY DEFINER RPC (coordinate data-010)
+
+## Real-world example
+
+Roberto's event shows 3 paid orders but webhook retry stuck — Patricia's queue surfaces the row without SQL console access.","Backlog",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:19, imp:173, track:data",,,,,"2026-05-30T00:31:50.532Z","2026-05-30T10:19:48.557Z",,,,,,,,"Phase 1 — mdeai MVP launch","a6aec707-6ec3-4586-8c11-e381ee65036e","🎟️ Events — Polish",,"f99489fb-3bf1-47bc-bc5c-f1b8eef10765",13883,"SAN-326","",
+"SAN-342","Sanjiovani","DATA-016 — events AI content approval columns — vibe tags + summary","**Track:** Data foundation (Tier 4) · **IMP-172** · **data-order:18**
+
+**Spec:** `tasks/data/tasks-data/data-016-events-ai-content-approval-columns.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-016 — events AI content approval columns
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Roberto · Tourist (reads approved only) |
+| **Surface** | `/events/[slug]` · event cards |
+| **Layer** | DATA |
+
+## Gap (live schema)
+
+`events` already has `tags text[]` and `ai_summary text` — **missing approval gate columns**.
+
+Public SELECT policies on published events would leak unapproved AI text without status fields.
+
+## Proposed migration
+
+```sql
+ALTER TABLE public.events
+  ADD COLUMN IF NOT EXISTS ai_summary_status text NOT NULL DEFAULT 'none'
+    CHECK (ai_summary_status IN ('none','draft','approved')),
+  ADD COLUMN IF NOT EXISTS tags_status text NOT NULL DEFAULT 'none'
+    CHECK (tags_status IN ('none','draft','approved')),
+  ADD COLUMN IF NOT EXISTS ai_content_approved_at timestamptz,
+  ADD COLUMN IF NOT EXISTS ai_content_approved_by uuid REFERENCES auth.users(id) ON DELETE SET NULL;
+```
+
+Update **public SELECT** policy or view so anon/authenticated readers only see `ai_summary` when `ai_summary_status = 'approved'` (and same for tags), OR enforce in app + document RLS exception for organizer draft reads.
+
+## Acceptance criteria
+
+- [ ] Migration applied; backfill existing rows: if `ai_summary` IS NOT NULL → `draft` or `approved` per product rule
+- [ ] RLS or documented app rule: unapproved AI content not public
+- [ ] EVP-033 acceptance criteria trace to this schema
+- [ ] Evidence: SELECT as anon on draft event hides AI fields
+
+## Real-world example
+
+Roberto's wizard generates vibe tags — stored as `tags` + `tags_status='draft'` until he clicks approve → `approved` and cards render tags.","Backlog",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:18, imp:172, track:data",,,,,"2026-05-30T00:31:49.796Z","2026-05-30T10:19:48.029Z",,,,,,,,"Phase 1 — mdeai MVP launch","a6aec707-6ec3-4586-8c11-e381ee65036e","🎟️ Events — Polish",,"4bb6a800-6436-41bb-853b-32f111880355",13883,"SAN-326","",
+"SAN-341","Sanjiovani","DATA-013 — event_qa schema — Ask Host Q&A + moderation","**Track:** Data foundation (Tier 4) · **IMP-171** · **data-order:17**
+
+**Spec:** `tasks/data/tasks-data/data-013-event-qa-schema.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-013 — event_qa schema
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Andrés (asks) · Roberto (approves) |
+| **Surface** | `/events/[slug]` · `/host/events` |
+| **Layer** | DATA |
+
+## What we're building
+
+Persist guest questions and host-approved answers for **EVP-034** and spam moderation in **EVP-045**.
+
+## Proposed schema (minimal)
+
+```sql
+CREATE TABLE public.event_qa (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id uuid NOT NULL REFERENCES public.events(id) ON DELETE CASCADE,
+  asker_user_id uuid REFERENCES auth.users(id) ON DELETE SET NULL,
+  question_text text NOT NULL,
+  ai_draft_answer text,
+  host_answer text,
+  status text NOT NULL DEFAULT 'pending'
+    CHECK (status IN ('pending','ai_draft','approved','rejected','hidden')),
+  moderation_flags jsonb NOT NULL DEFAULT '{}',
+  is_public boolean NOT NULL DEFAULT false,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  approved_at timestamptz,
+  approved_by uuid REFERENCES auth.users(id) ON DELETE SET NULL
+);
+
+CREATE INDEX idx_event_qa_event_status ON public.event_qa (event_id, status);
+CREATE INDEX idx_event_qa_event_public ON public.event_qa (event_id) WHERE is_public = true;
+```
+
+## RLS (sketch)
+
+* **SELECT public:** `is_public = true AND status = 'approved'`
+* **SELECT organizer:** event `organizer_id = (SELECT auth.uid())`
+* **INSERT authenticated:** own question on published events
+* **UPDATE organizer/admin:** approve/reject only
+* **service_role:** edge commit path if used
+
+## Acceptance criteria
+
+- [ ] Migration in `supabase/migrations/`
+- [ ] RLS enabled + ≥4 policies; MCP advisor clean for this table
+- [ ] `is_public = false` until `status = 'approved'`
+- [ ] Evidence SQL proves anon cannot read pending rows
+- [ ] EVP-034/045 reference this task as schema dependency
+
+## Out of scope
+
+* CopilotKit UI, Mastra prompts (EVP-034 app task)","Backlog",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:17, imp:171, track:data",,,,,"2026-05-30T00:31:48.927Z","2026-05-30T10:19:47.550Z",,,,,,,,"Phase 1 — mdeai MVP launch","a6aec707-6ec3-4586-8c11-e381ee65036e","🎟️ Events — Polish",,"9bf5e516-ebdf-4b8d-9caa-24f0599ad664",13883,"SAN-326","",
+"SAN-359","Sanjiovani","DATA-033 — route_cache schema + RLS + TTL","**Track:** Data foundation (Tier 4) · **IMP-189** · **data-order:35**
+
+**Spec:** `tasks/data/tasks-data/data-033-route-cache-schema.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-033 — route_cache schema
+
+## Forensic gap (audit 2026-05-27)
+
+| Item | Today | Blocker |
+| -- | -- | -- |
+| `route_cache` table | ❌ missing | MAP-011 repeat route queries bill MCP every time |
+| `grounding_quota_log` | ✅ | Quota only — no response cache |
+
+## Migration (sketch)
+
+```sql
+CREATE TABLE IF NOT EXISTS public.route_cache (
+  id              uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
+  route_hash      text        NOT NULL,
+  origin_key      text        NOT NULL,
+  destination_key text        NOT NULL,
+  travel_mode     text        NOT NULL DEFAULT 'DRIVE',
+  payload         jsonb       NOT NULL,
+  created_at      timestamptz NOT NULL DEFAULT now(),
+  expires_at      timestamptz NOT NULL DEFAULT (now() + interval '24 hours'),
+  CONSTRAINT route_cache_route_hash_key UNIQUE (route_hash)
+);
+
+CREATE INDEX IF NOT EXISTS idx_route_cache_route_hash
+  ON public.route_cache (route_hash);
+
+CREATE INDEX IF NOT EXISTS idx_route_cache_expires_at
+  ON public.route_cache (expires_at);
+
+ALTER TABLE public.route_cache ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY ""service_role_select_route_cache""
+  ON public.route_cache FOR SELECT TO service_role USING (true);
+CREATE POLICY ""service_role_insert_route_cache""
+  ON public.route_cache FOR INSERT TO service_role WITH CHECK (true);
+CREATE POLICY ""service_role_update_route_cache""
+  ON public.route_cache FOR UPDATE TO service_role USING (true);
+CREATE POLICY ""service_role_delete_route_cache""
+  ON public.route_cache FOR DELETE TO service_role USING (true);
+```
+
+**Cache key:** `sha256(origin_lat,lng|dest_lat,lng|travelMode|maskVersion)`
+
+**TTL:** 24h default (commute answers stale quickly; tune in MAP-011).
+
+## RLS
+
+* **service_role only** — same pattern as `places_search_cache`
+* No anon/authenticated writes
+* Read via ADK sidecar or future edge — never browser
+
+## App follow-up (MAP-011, not this task)
+
+* ADK sidecar write-through on `compute_routes` MCP miss
+* Parse duration strings `""180s""` in Mastra — not in migration
+
+## Acceptance criteria
+
+- [ ] Migration applied on remote
+- [ ] RLS enabled + 4 service_role policies
+- [ ] Documented in MAP-011 § cache
+- [ ] Evidence: `tasks/data/evidence/data-033-route-cache.md`
+- [ ] No service role in `mdeapp/src/**` except F13 carve-out paths","Backlog",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:35, imp:189, track:data",,,,,"2026-05-30T00:32:03.760Z","2026-05-30T10:19:57.302Z",,,,,,,,"Phase 1 — mdeai MVP launch","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","🗺️ Maps — Growth",,"9ebe2c52-a060-49d8-81de-a7deea411c9d",13883,"SAN-329","",
+"SAN-358","Sanjiovani","DATA-032 — mastra_threads trip_id metadata index","**Track:** Data foundation (Tier 4) · **IMP-188** · **data-order:34**
+
+**Spec:** `tasks/data/tasks-data/data-032-mastra-threads-trip-metadata-index.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-032 — mastra_threads trip metadata index
+
+## MVP pattern
+
+Trip-scoped chat uses `mastra_threads.metadata->>'trip_id'` (no dedicated column).
+
+## Migration (POST-MVP / when thread volume warrants)
+
+```sql
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_mastra_threads_trip_id_metadata
+  ON public.mastra_threads ((metadata->>'trip_id'))
+  WHERE metadata->>'trip_id' IS NOT NULL;
+```
+
+## Phase 2 alternative
+
+```sql
+ALTER TABLE public.mastra_threads
+  ADD COLUMN trip_id uuid REFERENCES public.trips(id) ON DELETE SET NULL;
+```
+
+Only if expression index insufficient — **do not** add column for MVP.
+
+## Acceptance criteria
+
+- [ ] Index applied OR explicit defer note in TRIP-001 evidence
+- [ ] Query plan documented for ""threads for trip X""","Backlog",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:34, imp:188, track:data",,,,,"2026-05-30T00:32:03.208Z","2026-05-30T10:19:56.808Z",,,,,,,,"Phase 1 — mdeai MVP launch","65ac018e-b43e-4bda-85fe-70ff4978161a","🏠 Trips — Phase 2",,"a3e07396-1998-4889-bba6-4377d8bed7e8",13883,"SAN-328","",
+"SAN-357","Sanjiovani","DATA-031 — trip_items itinerary covering index","**Track:** Data foundation (Tier 4) · **IMP-187** · **data-order:33**
+
+**Spec:** `tasks/data/tasks-data/data-031-trip-items-itinerary-index.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-031 — trip_items itinerary index
+
+## Gap
+
+Live indexes: `idx_trip_items_trip`, `idx_trip_items_dates` — no composite `(trip_id, start_at)` for ordered itinerary fetch in `load-trip-workspace.ts`.
+
+## Migration
+
+```sql
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_trip_items_trip_start_at
+  ON public.trip_items (trip_id, start_at)
+  WHERE start_at IS NOT NULL;
+```
+
+## Acceptance criteria
+
+- [ ] Index exists
+- [ ] EXPLAIN on data-030 query (2) uses index when rows > 100 (note low row count today)
+- [ ] Apply only if TRIP-005 load path profiled or preemptive before scale
+
+## Note
+
+44 apartments / 4 trip_items — **optional for MVP**; ship before Camila-scale trips if dashboard feels slow.","Backlog",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:33, imp:187, track:data",,,,,"2026-05-30T00:32:02.428Z","2026-05-30T10:19:56.080Z",,,,,,,,"Phase 1 — mdeai MVP launch","65ac018e-b43e-4bda-85fe-70ff4978161a","🏠 Trips — Phase 2",,"8960c7b9-60c3-4ab1-a9ac-48c54964e01b",13883,"SAN-353","",
+"SAN-352","Sanjiovani","DATA-025 — Hermes rental analytics — scoring_logs + market_snapshots","**Track:** Data foundation (Tier 4) · **IMP-182** · **data-order:28**
+
+**Spec:** `tasks/data/tasks-data/data-025-hermes-rental-analytics-tables.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-025 — Hermes rental analytics tables
+
+## Gap (PRD §15)
+
+Listed but **not in live DB:**
+
+| Table | Purpose |
+| -- | -- |
+| `scoring_logs` | Hermes rank/lead scores (batch writes only) |
+| `market_snapshots` | Weekly neighborhood/listing market stats |
+
+## Rules
+
+* Hermes **never mutates** `apartments` or `leads` in hot path
+* OpenClaw **never** writes without approval (Part B PRD)
+* Service_role or batch role INSERT only
+
+## Proposed schema (sketch)
+
+```sql
+CREATE TABLE public.scoring_logs (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  entity_type text NOT NULL CHECK (entity_type IN ('listing','lead','neighborhood')),
+  entity_id uuid NOT NULL,
+  model_version text NOT NULL,
+  score numeric NOT NULL,
+  features jsonb NOT NULL DEFAULT '{}',
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE public.market_snapshots (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  neighborhood_id uuid REFERENCES public.neighborhoods(id),
+  snapshot_date date NOT NULL,
+  metrics jsonb NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (neighborhood_id, snapshot_date)
+);
+```
+
+## Acceptance criteria
+
+- [ ] RLS: admin read; service_role write; anon denied
+- [ ] Documented as **Phase 2 / Hermes** — not blocking Camila MVP
+- [ ] Align with **data-022** neighborhood FK
+
+## Out of scope
+
+* Hermes model training
+* OpenClaw WhatsApp","Backlog",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:28, imp:182, track:data",,,,,"2026-05-30T00:31:59.799Z","2026-05-30T10:19:53.303Z",,,,,,,,"Phase 1 — mdeai MVP launch","5108212a-3fa8-403f-8e15-86e4780acfc6","🔮 Platform — Vector",,"5bbc5400-5972-4f15-a658-60b30ea2fd97",13883,"SAN-327","",
+"SAN-351","Sanjiovani","DATA-024 — Rental booking commerce prep — bookings ↔ payments Stripe","**Track:** Data foundation (Tier 4) · **IMP-181** · **data-order:27**
+
+**Spec:** `tasks/data/tasks-data/data-024-rental-booking-commerce-prep.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-024 — rental booking commerce prep
+
+## Gap
+
+PRD MVP gate: **one paid booking + commission reconciled**. Tables exist but empty:
+
+* `bookings` — generic `resource_id`, no Stripe session id on row
+* `payments` — has `stripe_payment_intent_id`, `stripe_event_id`
+
+Events pattern (`event_orders` + webhook) is the template — **do not duplicate**; extend `bookings`/`payments` for rentals.
+
+## Proposed migration (minimal)
+
+```sql
+-- Verify booking_type includes 'rental'
+ALTER TABLE public.bookings
+  ADD COLUMN IF NOT EXISTS payment_id uuid REFERENCES public.payments(id) ON DELETE SET NULL,
+  ADD COLUMN IF NOT EXISTS apartment_id uuid REFERENCES public.apartments(id) ON DELETE SET NULL,
+  ADD COLUMN IF NOT EXISTS commission_cents integer,
+  ADD COLUMN IF NOT EXISTS commission_rate_bps integer;
+
+CREATE INDEX idx_bookings_apartment ON public.bookings (apartment_id) WHERE apartment_id IS NOT NULL;
+CREATE INDEX idx_bookings_type_status ON public.bookings (booking_type, status);
+```
+
+Add `rental-payment-webhook` edge fn spec reference (events track owns pattern — separate app task).
+
+## Acceptance criteria
+
+- [ ] Schema supports rental checkout without new ledger table
+- [ ] RLS: buyer read own bookings; landlord read bookings on own listings
+- [ ] Idempotency via existing `idempotency_keys` or payment stripe_event_id unique
+- [ ] Document defer until RE-013–022 app work starts
+
+## Out of scope
+
+* Stripe Connect landlord payouts (Advanced)
+* Implementing webhook edge fn (app/edge task)","Backlog",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:27, imp:181, track:data",,,,,"2026-05-30T00:31:58.690Z","2026-05-30T10:19:52.338Z",,,,,,,,"Phase 1 — mdeai MVP launch","80fe78ad-59de-48f5-9815-7c208c0f0176","🍽️ Discovery — UI",,"3937bf7c-719c-43cd-ad58-0bd580aa58fa",13883,"SAN-347","",
+"SAN-350","Sanjiovani","DATA-022 — apartments.neighborhood_id FK — join neighborhoods table","**Track:** Data foundation (Tier 4) · **IMP-180** · **data-order:26**
+
+**Spec:** `tasks/data/tasks-data/data-022-apartments-neighborhood-fk.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-022 — apartments neighborhood FK
+
+## Gap
+
+`apartments.neighborhood` is **text**. `neighborhoods` table has 12 curated rows with scores. PRD post-MVP **Neighborhood Intelligence** needs stable FK join.
+
+## Proposed migration
+
+```sql
+ALTER TABLE public.apartments
+  ADD COLUMN IF NOT EXISTS neighborhood_id uuid REFERENCES public.neighborhoods(id) ON DELETE SET NULL;
+
+CREATE INDEX idx_apartments_neighborhood_id ON public.apartments (neighborhood_id)
+  WHERE neighborhood_id IS NOT NULL;
+
+-- Backfill via normalized name match (evidence script, manual review for ambiguous)
+```
+
+Keep `neighborhood` text for display until app reads FK-only.
+
+## Acceptance criteria
+
+- [ ] ≥90% of active apartments mapped or documented exceptions
+- [ ] `search-rentals` can optionally filter by `neighborhood_id`
+- [ ] No breaking change to existing text filter
+
+## Real-world example
+
+Camila asks ""Laureles walkable"" — agent joins `neighborhoods.walk_score` without fuzzy text match.","Backlog",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:26, imp:180, track:data",,,,,"2026-05-30T00:31:56.593Z","2026-05-30T10:19:51.862Z",,,,,,,,"Phase 1 — mdeai MVP launch","80fe78ad-59de-48f5-9815-7c208c0f0176","🍽️ Discovery — UI",,"1a96fac3-27cd-4220-975e-31e8fd8a6b99",13883,"SAN-327","",
+"SAN-346","Sanjiovani","DATA-017 — Discovered events pipeline schema — web ingest + approval queue","**Track:** Data foundation (Tier 4) · **IMP-176** · **data-order:22**
+
+**Spec:** `tasks/data/tasks-data/data-017-discovered-events-pipeline-schema.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-017 — discovered events pipeline schema
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Patricia (approve) · Tourist (fresh discovery) |
+| **Surface** | Admin review queue · chat discovery |
+| **Layer** | DATA · Post-MVP Phase 2 |
+
+## Scope
+
+Implement **canonical names** from EVP-020 / plan §7 (not full 132-table scope):
+
+| Table | Purpose |
+| -- | -- |
+| `event_sources` | Allowlisted domains (Eventbrite, RA, …) |
+| `raw_events` | Normalized candidate + `external_id` + `source_id` |
+| `event_source_snapshots` | Raw JSON per fetch |
+| `event_scrape_jobs` | Job status per source |
+| `event_runs` | Pipeline audit (alias: `event_discovery_runs`) |
+| `event_dedupe_matches` | Duplicate clusters |
+
+**Extend** `events`**:** `discovery_status`, `source_url`, `last_scraped_at` (if not present after inventory).
+
+**Reuse:** `approval_requests` or dedicated `event_approval_queue` — pick one in data-012 evidence; do not duplicate both.
+
+## Rules (events-prd / roadmap)
+
+* DB-first for published mdeai events
+* Web candidates → review queue only
+* No anon INSERT to `events` from scrape pipeline (service_role + approval commit)
+
+## Acceptance criteria
+
+- [ ] Migrations + RLS on every new table
+- [ ] Unique `(source_id, external_id)` on `raw_events`
+- [ ] ERD mermaid in evidence
+- [ ] EVP-020 marked unblocked for app/workflow tasks
+- [ ] **Do not apply to prod** until EVP-026 HITL path exists
+
+## Out of scope
+
+* OpenClaw browser automation (EVP-030)
+* Auto-publish without human approval","Backlog",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:22, imp:176, track:data",,,,,"2026-05-30T00:31:52.396Z","2026-05-30T10:19:49.946Z",,,,,,,,"Phase 1 — mdeai MVP launch","a6aec707-6ec3-4586-8c11-e381ee65036e","🎟️ Events — Polish",,"3ac7e990-d24f-405b-b006-781b64a97d42",13883,"SAN-326","",
+"SAN-345","Sanjiovani","DATA-015 — Attendee social visibility schema — audience breakdown","**Track:** Data foundation (Tier 4) · **IMP-175** · **data-order:21**
+
+**Spec:** `tasks/data/tasks-data/data-015-event-attendee-social-schema.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-015 — attendee social visibility schema
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Andrés · Tourist (aggregate view) |
+| **Surface** | `/events/[slug]` · `/me/tickets` |
+| **Layer** | DATA |
+
+## Gap
+
+`event_attendee_profiles` **exists** but holds check-in fields (dietary, accessibility, shirt size) — not EVP-035 social proof.
+
+Prefer **new table** to avoid mixing PII check-in with public opt-in social:
+
+```sql
+CREATE TABLE public.event_attendee_social (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  attendee_id uuid NOT NULL REFERENCES public.event_attendees(id) ON DELETE CASCADE,
+  event_id uuid NOT NULL REFERENCES public.events(id) ON DELETE CASCADE,
+  user_id uuid REFERENCES auth.users(id) ON DELETE SET NULL,
+  is_visible boolean NOT NULL DEFAULT false,
+  display_name text,
+  avatar_url text,
+  role_category text CHECK (role_category IN (
+    'founder','investor','marketer','creator','engineer','student','other'
+  )),
+  interest_tags text[] NOT NULL DEFAULT '{}',
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (attendee_id)
+);
+
+CREATE INDEX idx_event_attendee_social_event_visible
+  ON public.event_attendee_social (event_id) WHERE is_visible = true;
+```
+
+Aggregate RPC/view for counts by `role_category` with **privacy threshold** (e.g. ≥5 per bucket).
+
+## RLS
+
+* **SELECT visible:** `is_visible = true` on published events
+* **SELECT own:** attendee owner
+* **SELECT organizer:** event organizer (aggregates only via RPC recommended)
+* **INSERT/UPDATE:** ticket buyer for own attendee row
+
+## Acceptance criteria
+
+- [ ] Migration + RLS; anon sees only opted-in rows
+- [ ] Aggregate function enforces min bucket size (EVP-035)
+- [ ] Does not alter check-in `event_attendee_profiles` semantics","Backlog",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:21, imp:175, track:data",,,,,"2026-05-30T00:31:51.575Z","2026-05-30T10:19:49.479Z",,,,,,,,"Phase 1 — mdeai MVP launch","a6aec707-6ec3-4586-8c11-e381ee65036e","🎟️ Events — Polish",,"53ea9abe-1691-466e-a5bb-6e1b32596d9a",13883,"SAN-326","",
+"SAN-344","Sanjiovani","DATA-014 — event_live_updates schema — host day-of feed","**Track:** Data foundation (Tier 4) · **IMP-174** · **data-order:20**
+
+**Spec:** `tasks/data/tasks-data/data-014-event-live-updates-schema.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-014 — event_live_updates schema
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Roberto · Andrés (registered) |
+| **Surface** | `/events/[slug]` · `/me/tickets` |
+| **Layer** | DATA |
+
+## Proposed schema
+
+```sql
+CREATE TABLE public.event_live_updates (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id uuid NOT NULL REFERENCES public.events(id) ON DELETE CASCADE,
+  author_user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  title text,
+  body text NOT NULL,
+  visibility text NOT NULL DEFAULT 'registered'
+    CHECK (visibility IN ('public','registered','staff')),
+  ai_draft_body text,
+  status text NOT NULL DEFAULT 'draft'
+    CHECK (status IN ('draft','published','deleted')),
+  published_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_event_live_updates_event_published
+  ON public.event_live_updates (event_id, published_at DESC)
+  WHERE status = 'published';
+```
+
+## RLS highlights
+
+* **public:** `visibility = 'public' AND status = 'published'`
+* **registered:** buyer has paid `event_orders` for `event_id` OR visibility = public
+* **staff:** organizer or staff JWT claim
+* **INSERT/UPDATE:** organizer only; AI rewrite stays in `ai_draft_body` until publish
+
+## Acceptance criteria
+
+- [ ] Migration + RLS; registered-only rows invisible to anon
+- [ ] Soft-delete via `status = 'deleted'` (no hard delete for audit)
+- [ ] EVP-046 references this task","Backlog",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:20, imp:174, track:data",,,,,"2026-05-30T00:31:51.058Z","2026-05-30T10:19:49.019Z",,,,,,,,"Phase 1 — mdeai MVP launch","a6aec707-6ec3-4586-8c11-e381ee65036e","🎟️ Events — Polish",,"46cef36d-831e-41c5-acf9-b175aec32724",13883,"SAN-326","",
+"SAN-545","Sanjiovani","DATA-EMBED — Fix rental embed API 403 (hybrid search)","'> **Plain English:** Camila asks *""2BR near Estadio""* and gets full hybrid semantic + keyword fusion — not keyword-only fallback when embed returns 403.
+
+**Queue:** Discovery Beta row 9 · **Persona:** Camila · **Surface:** rental search / `search_rentals`
+
+## Problem
+
+`mdeapp/src/mastra/lib/query-embedding.ts` logs embed API failures (`403`) → `hybridUsed=false`. Signal path OK; semantic leg degraded.
+
+## Acceptance
+
+- [ ] Embed call succeeds on prod/dev with correct Gemini key + model registry
+- [ ] Rental hybrid path sets `hybridUsed=true` for GQ-R01-style queries
+- [ ] Vitest for `query-embedding` green
+- [ ] Evidence in `tasks/testing/evidence/` or data evidence doc
+
+## Refs
+
+* `tasks.md` row 9
+* `mdeapp/src/mastra/lib/query-embedding.ts`
+* Blocked on soak: optional until [SAN-462](https://linear.app/sanjiovani/issue/SAN-462/ops-001-stable-beta-soak-gate-3-scheduled-prod-synthetic) 3/3 for UX rows 11–16","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"area:launch, phase:launch, phase:mvp, stack:gemini, stack:mastra, track:data, track:intelligence",,,,,"2026-06-04T01:26:53.507Z","2026-06-07T14:58:39.906Z",,,,,,"2026-06-11T01:26:54.247Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","6a8db01a-387b-41c5-88b3-b983af6b1295",6628,"SAN-462, SAN-115","",
+"SAN-356","Sanjiovani","DATA-028 — event_orders / showings → trip_items idempotent sync","**Track:** Data foundation (Tier 4) · **IMP-186** · **data-order:32**
+
+**Spec:** `tasks/data/tasks-data/data-028-booking-trip-item-sync.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+**Note:** Blocked — app/webhook sync not wired; next after DATA-021
+
+---
+
+# DATA-028 — booking → trip_items sync
+
+## Gap (verified 2026-05-29)
+
+`ticket-payment-webhook` finalizes `event_orders` but does **not** write `trip_items`. **DATA-029 columns exist** — remaining work is webhook/app sync only.
+
+## Design
+
+Prefer `insert_trip_item_for_user` (DATA-027) or equivalent upsert on `unique_trip_item`:
+
+```text
+Stripe webhook (idempotent event.id)
+  → event_orders paid + trip_id set at checkout
+  → upsert trip_items (event, source_id=event_id)
+```
+
+Showings path after DATA-021:
+
+```text
+showings insert (status=scheduled) or confirm (status=confirmed)
+  → IF showings.trip_id IS NOT NULL THEN insert_trip_item_for_user (showing, source_id=showing_id)
+```
+
+Initial insert uses `status = 'scheduled'` per live CHECK (DATA-021).
+
+## Idempotency
+
+* `ON CONFLICT (trip_id, item_type, source_id) DO UPDATE` for schedule/metadata refresh
+* Do not add new queue table for MVP
+
+## Acceptance criteria
+
+- [ ] Paid order with trip_id creates exactly one itinerary row
+- [ ] Webhook replay does not duplicate
+- [ ] Viewing path documented with data-021
+- [ ] Evidence SQL + edge log snippet","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:32, imp:186, track:data",,,,,"2026-05-30T00:32:01.908Z","2026-05-30T10:19:55.592Z",,,,,,,,"Phase 1 — mdeai MVP launch","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","🗺️ Maps — Growth",,"fde88e7f-d663-4cac-a790-66a6e9f207e2",13883,"SAN-354","",
+"SAN-383","Sanjiovani","DATA-045 — Evidence + grounding tables","**Track:** Intelligence (MIS) · **intel-order:08** · **intel-1**
+
+**Stack:** supabase
+
+**Layer:** grounding
+
+**Spec:** registry only (`intelligence-plan.md` §5)
+
+**Plan:** [`intelligence-plan.md`](<../../tasks/intelligence/intelligence-plan.md>)
+
+**Queue:** [`intelligence-queue.json`](<../../tasks/linear/intelligence-queue.json>)
+
+**MIS-M1:** ✅ Shipped 2026-06-01 — see `tasks/data/evidence/MIS-M1-2026-06-01.md`
+
+**Note:** 1 migration = evidence only
+
+---
+
+# DATA-045
+
+Spec pending — see `tasks/intelligence/intelligence-plan.md` §5 registry.
+
+Evidence: `tasks/data/evidence/MIS-M1-2026-06-01.md` when shipped.","In Progress",,"Urgent","6dd4b5e2-3b63-4b55-a866-4239bbbec444","AI & Intelligence","ai@socialmediaville.ca",,"intel-order:08, layer:grounding, phase:intel-1, stack:supabase, track:data, track:intelligence",,,,,"2026-05-30T11:22:38.312Z","2026-06-02T12:44:57.501Z","2026-06-01T10:59:23.936Z",,,,,,,"Phase 1 — mdeai MVP launch",,,,"a1e8b143-b865-49c7-9746-6f6773ce8631",10376,"SAN-381, SAN-380, SAN-379","SAN-396, SAN-384",
+"SAN-338","Sanjiovani","DATA-008 — Places backfill cron / edge job","**Track:** Data foundation (Tier 4) · **IMP-168** · **data-order:14**
+
+**Spec:** `tasks/data/tasks-data/data-008-places-backfill-cron.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+**Note:** Blocked — after DATA-007
+
+---
+
+# DATA-008 — places backfill cron
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | All detail-panel users |
+| **Surface** | Edge cron / backfill job |
+| **Layer** | DATA |
+
+## What we're building
+
+Scheduled Places backfill so cache (data-007) stays warm for top anchors and search hits.
+
+## Features
+
+* Cron or edge fn for stale/missing cache rows
+* X-Goog-FieldMask on every fetch
+* Metrics for cache hit rate
+
+## Agents & tools
+
+None
+
+## Workflows
+
+Optional batch job — not user-facing
+
+## User journey
+
+1. Nightly job reads gap list from data-007.
+2. Places API fills `place_details_cache`.
+3. Next day's detail opens feel instant.
+
+## Goals
+
+1. Edge fn or cron: select `restaurants` / cache rows missing `place_details_cache` coverage.
+2. Call Places with minimal field mask; upsert cache.
+3. Rate-limit + idempotent by `place_id`.
+4. Log run to ops table or structured logs.
+
+## Acceptance
+
+- [ ] ≥80% anchor rows have cache entry after one run (data-007 metric)
+- [ ] No browser-side Places calls
+- [ ] RLS unchanged on public tables","In Review",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"area:launch, data-order:14, imp:168, phase:launch, phase:mvp, track:data",,,,,"2026-05-30T00:31:47.052Z","2026-06-04T01:52:51.514Z","2026-06-02T16:52:39.987Z",,,,,,,"Phase 1 — mdeai MVP launch","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","🗺️ Maps — Growth",,"ce5abc03-5242-45b6-b452-c81888396001",8582,"SAN-337","",
+"SAN-385","Sanjiovani","DATA-047 — search_logs + rank_explanation observability","**Track:** Intelligence (MIS) · **intel-order:09** · **intel-1**
+
+**Stack:** supabase
+
+**Layer:** observability
+
+**Spec:** `tasks/data/tasks-data/DATA-047-search-logs.md`
+
+**Plan:** [`intelligence-plan.md`](<../../tasks/intelligence/intelligence-plan.md>)
+
+**Queue:** [`intelligence-queue.json`](<../../tasks/linear/intelligence-queue.json>)
+
+**MIS-M1:** ✅ Shipped 2026-06-01 — see `tasks/data/evidence/MIS-M1-2026-06-01.md`
+
+**Note:** 1 migration = search_logs only
+
+---
+
+# DATA-047 — search_logs observability
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Sofia · Patricia (ops) |
+| **Why now** | Without logs, signal tuning and latency debugging are impossible |
+| **Rule** | **1 migration = search_logs only** |
+
+## What we're building
+
+```sql
+CREATE TABLE public.search_logs (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  query_text text NOT NULL,
+  intent text,
+  slots jsonb NOT NULL DEFAULT '{}',
+  tool_name text NOT NULL,  -- search-rentals | search-restaurants | ...
+  results_count int NOT NULL DEFAULT 0,
+  zero_results boolean GENERATED ALWAYS AS (results_count = 0) STORED,
+  clicked_entity_type text,
+  clicked_entity_id uuid,
+  latency_ms int NOT NULL,
+  grounding_used boolean NOT NULL DEFAULT false,
+  hybrid_used boolean NOT NULL DEFAULT false,
+  rank_explanation jsonb NOT NULL DEFAULT '[]',  -- [{ factor, score, note }]
+  session_id text,
+  user_id uuid REFERENCES auth.users(id) ON DELETE SET NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX search_logs_created_at_idx ON public.search_logs (created_at DESC);
+CREATE INDEX search_logs_zero_results_idx ON public.search_logs (zero_results) WHERE zero_results = true;
+
+ALTER TABLE public.search_logs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY search_logs_service_insert ON public.search_logs
+  FOR INSERT TO service_role WITH CHECK (true);
+CREATE POLICY search_logs_authenticated_own_select ON public.search_logs
+  FOR SELECT TO authenticated USING (user_id = auth.uid());
+-- Patricia admin read: Phase 2 admin policy
+```
+
+### rank_explanation example
+
+```json
+[
+  { ""factor"": ""rooftop_score"", ""score"": 0.92, ""note"": ""venue_signals join"" },
+  { ""factor"": ""neighborhood"", ""score"": 1.0, ""note"": ""Provenza exact match"" },
+  { ""factor"": ""hybrid_semantic"", ""score"": 0.81, ""note"": ""hybrid_search_restaurants"" }
+]
+```
+
+## App wiring (SEARCH-003 / Mastra)
+
+1. `runAuditedSearch` or tool wrapper writes one row per search (service_role from Mastra route only).
+2. Card click → optional PATCH or second insert with `clicked_entity_*` (Phase 1b — can defer click tracking).
+3. **No client direct insert** — server only.
+
+## Done gate
+
+| Check | Evidence |
+| -- | -- |
+| Table + RLS | Supabase MCP |
+| One search writes row | local `search-restaurants` with hybrid flag |
+| rank_explanation populated when signals joined | SEARCH-003 evidence |
+| p95 latency logged | `tasks/data/evidence/data-047-search-logs.md` |
+
+## Real-world example
+
+Camila searches *""quiet rooftop Provenza""* → log shows `latency_ms: 420`, `grounding_used: false`, `rank_explanation` cites `rooftop_score 0.88` — Patricia can tune weights without guessing.
+
+## Out of scope (Phase 2 — VEC-006)
+
+* Full `semantic_search_logs` with embedding snapshots
+* Click stream analytics dashboard
+* Gorse / external ranker","Done",,"Urgent","6dd4b5e2-3b63-4b55-a866-4239bbbec444","AI & Intelligence","ai@socialmediaville.ca",,"intel-order:09, layer:observability, phase:intel-1, stack:supabase, track:data, track:intelligence",,,,,"2026-05-30T11:22:40.209Z","2026-06-02T12:44:59.120Z",,,"2026-05-30T11:22:40.277Z",,,,,"Phase 1 — mdeai MVP launch",,,,"683be512-ab93-42a5-98a4-e598e5c26231",13232,"SAN-388, SAN-387, SAN-386","",
+"SAN-379","Sanjiovani","DATA-041 — venue_signals polymorphic + seed (human QA top 30)","**Engineering Done (2026-06-03).** venue_signals table live with 30 rows (20 restaurant + 10 anchor). GQ-S01 passes: Relato + Sambombi for quiet rooftop Provenza.
+
+Evidence: `tasks/data/evidence/DATA-041-verify-2026-06-03.md`
+
+**Remaining:** Patricia editorial spot-check on bold scores — blocks MIS-M1 editorial only, not this issue.","Done",,"Urgent","6dd4b5e2-3b63-4b55-a866-4239bbbec444","AI & Intelligence","ai@socialmediaville.ca",,"intel-order:04, layer:signals, phase:intel-1, phase:launch, phase:mvp, stack:mastra, stack:supabase, track:data, track:intelligence",,,,,"2026-05-30T11:22:35.951Z","2026-06-04T01:52:51.638Z","2026-05-30T13:26:07.384Z",,"2026-06-03T01:01:39.183Z",,,,,"Phase 1 — mdeai MVP launch",,,,"58652ff7-bde9-4a8c-a01f-87bd387f6712",8217,"SAN-378, SAN-377, SAN-400, SAN-397, SAN-395, SAN-392, SAN-388, SAN-384, SAN-383","",
+"SAN-378","Sanjiovani","DATA-040 — embedding_jobs queue","**Track:** Intelligence (MIS) · **intel-order:03** · **intel-1**
+
+**Stack:** supabase
+
+**Spec:** `tasks/data/tasks-data/DATA-040-embedding-jobs.md`
+
+**Plan:** [`intelligence-plan.md`](<../../tasks/intelligence/intelligence-plan.md>)
+
+**Queue:** [`intelligence-queue.json`](<../../tasks/linear/intelligence-queue.json>)
+
+**MIS-M1:** ✅ Shipped 2026-06-01 — see `tasks/data/evidence/MIS-M1-2026-06-01.md`
+
+**Note:** 1 migration = embedding_jobs only
+
+---
+
+# DATA-040 — embedding_jobs queue
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Sofia (schema) · Mastra/edge worker (consumer) |
+| **Surface** | Supabase migration only — worker stub in Phase 1 tail |
+| **Layer** | DATA · MIS Phase 1 M1-Jobs |
+| **Plan** | [`intelligence-plan.md`](<../../intelligence/intelligence-plan.md>) · [`data-intelligence-plan.md`](<../plan/data-intelligence-plan.md>) |
+
+## What we're building
+
+Async embedding pipeline so catalog INSERT/UPDATE never blocks on Gemini embed API.
+
+### DDL (target)
+
+```sql
+CREATE TABLE public.embedding_jobs (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  entity_type text NOT NULL CHECK (entity_type IN (
+    'apartment', 'event', 'restaurant', 'venue_anchor'
+  )),
+  entity_id uuid NOT NULL,
+  content_hash text NOT NULL,
+  status text NOT NULL DEFAULT 'pending' CHECK (status IN (
+    'pending', 'processing', 'done', 'failed', 'skipped'
+  )),
+  model text NOT NULL DEFAULT 'gemini-embedding-001',
+  dimensions int NOT NULL DEFAULT 768,
+  attempts int NOT NULL DEFAULT 0,
+  last_error text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  processed_at timestamptz
+);
+
+CREATE UNIQUE INDEX embedding_jobs_dedup_uidx
+  ON public.embedding_jobs (entity_type, entity_id, content_hash)
+  WHERE status IN ('pending', 'processing');
+
+ALTER TABLE public.embedding_jobs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY embedding_jobs_service_all ON public.embedding_jobs
+  FOR ALL TO service_role USING (true) WITH CHECK (true);
+-- No anon/authenticated policies — edge/cron only
+```
+
+## Goals
+
+1. Migration `YYYYMMDD_data040_embedding_jobs.sql` under `supabase/migrations/`.
+2. Audit live DB for sync embed triggers — **verified 2026-05-31: none in migrations**; document `pg_trigger` probe in evidence. If found later, replace with enqueue-only trigger.
+3. Document worker contract for VEC-004 (input: job row → output: upsert `*_embeddings`).
+4. Seed job: enqueue all 44+43+43 existing rows with `status=skipped` OR one-time `pending` for rebuild test (operator choice in evidence).
+5. RLS: service_role only; no client exposure.
+
+## Done gate
+
+| Check | Command / evidence |
+| -- | -- |
+| Table exists | Supabase MCP `list_tables` or `\d embedding_jobs` |
+| RLS on | `source-command-supabase-rls-audit` or policy query |
+| Dedup works | Insert duplicate `(entity_type, entity_id, content_hash)` → unique violation |
+| No write stall | UPDATE restaurants row < 200ms without embed API call |
+| Evidence | `tasks/data/evidence/data-040-embedding-jobs.md` |
+
+## Out of scope
+
+* Edge worker implementation → VEC-004 tail + separate OPS cron task
+* Unified `semantic_embeddings` → DATA-051 Phase 2
+* Anchor embeddings backfill → DATA-041 follow-up
+
+## Related tasks
+
+| ID | Relationship |
+| -- | -- |
+| VEC-001 | Prerequisite — index cleanup before new DDL |
+| VEC-004 | Consumer — text builders + embed upsert |
+| DATA-041–043 | Signal seed may enqueue re-embed after summary update |
+","Done",,"Urgent","6dd4b5e2-3b63-4b55-a866-4239bbbec444","AI & Intelligence","ai@socialmediaville.ca",,"intel-order:03, phase:intel-1, stack:supabase, track:data, track:intelligence",,,,,"2026-05-30T11:22:35.331Z","2026-06-02T12:44:59.156Z",,,"2026-05-30T11:22:35.381Z",,,,,"Phase 1 — mdeai MVP launch",,,,"66a7b096-18ac-4844-8d60-07ef037adac4",13232,"SAN-370, SAN-381, SAN-380, SAN-379, SAN-373","",
+"SAN-380","Sanjiovani","DATA-042 — event_signals + seed published events","**Track:** Intelligence (MIS) · **intel-order:05** · **intel-1**
+
+**Stack:** supabase
+
+**Layer:** signals
+
+**Spec:** registry only (`intelligence-plan.md` §5)
+
+**Plan:** [`intelligence-plan.md`](<../../tasks/intelligence/intelligence-plan.md>)
+
+**Queue:** [`intelligence-queue.json`](<../../tasks/linear/intelligence-queue.json>)
+
+**MIS-M1:** ✅ Shipped 2026-06-01 — see `tasks/data/evidence/MIS-M1-2026-06-01.md`
+
+**Note:** 1 migration = event_signals only
+
+---
+
+# DATA-042
+
+Spec pending — see `tasks/intelligence/intelligence-plan.md` §5 registry.
+
+Evidence: `tasks/data/evidence/MIS-M1-2026-06-01.md` when shipped.","Done",,"Urgent","6dd4b5e2-3b63-4b55-a866-4239bbbec444","AI & Intelligence","ai@socialmediaville.ca",,"intel-order:05, layer:signals, phase:intel-1, stack:supabase, track:data, track:intelligence",,,,,"2026-05-30T11:22:36.535Z","2026-06-02T12:44:59.188Z",,,"2026-05-30T11:22:36.567Z",,,,,"Phase 1 — mdeai MVP launch",,,,"ce5e5cbd-7ccb-4817-982f-f549d2870f6b",13232,"SAN-378, SAN-392, SAN-387, SAN-383","",
+"SAN-382","Sanjiovani","DATA-044 — neighborhood_profiles + Astorga seed","**Track:** Intelligence (MIS) · **intel-order:07** · **intel-1**
+
+**Stack:** supabase
+
+**Spec:** registry only (`intelligence-plan.md` §5)
+
+**Plan:** [`intelligence-plan.md`](<../../tasks/intelligence/intelligence-plan.md>)
+
+**Queue:** [`intelligence-queue.json`](<../../tasks/linear/intelligence-queue.json>)
+
+**MIS-M1:** ✅ Shipped 2026-06-01 — see `tasks/data/evidence/MIS-M1-2026-06-01.md`
+
+**Note:** 1 migration = neighborhood_profiles only
+
+---
+
+# DATA-044
+
+Spec pending — see `tasks/intelligence/intelligence-plan.md` §5 registry.
+
+Evidence: `tasks/data/evidence/MIS-M1-2026-06-01.md` when shipped.","Done",,"Urgent","6dd4b5e2-3b63-4b55-a866-4239bbbec444","AI & Intelligence","ai@socialmediaville.ca",,"intel-order:07, phase:intel-1, stack:supabase, track:data, track:intelligence",,,,,"2026-05-30T11:22:37.834Z","2026-06-02T12:44:59.221Z",,,"2026-05-30T11:22:37.872Z",,,,,"Phase 1 — mdeai MVP launch",,,,"977f34a5-edf6-49de-8272-ff56027fdf1c",13232,"","",
+"SAN-381","Sanjiovani","DATA-043 — rental_signals + seed 44 apartments","**Track:** Intelligence (MIS) · **intel-order:06** · **intel-1**
+
+**Stack:** supabase
+
+**Layer:** signals
+
+**Spec:** registry only (`intelligence-plan.md` §5)
+
+**Plan:** [`intelligence-plan.md`](<../../tasks/intelligence/intelligence-plan.md>)
+
+**Queue:** [`intelligence-queue.json`](<../../tasks/linear/intelligence-queue.json>)
+
+**MIS-M1:** ✅ Shipped 2026-06-01 — see `tasks/data/evidence/MIS-M1-2026-06-01.md`
+
+**Note:** 1 migration = rental_signals only
+
+---
+
+# DATA-043
+
+Spec pending — see `tasks/intelligence/intelligence-plan.md` §5 registry.
+
+Evidence: `tasks/data/evidence/MIS-M1-2026-06-01.md` when shipped.","Done",,"Urgent","6dd4b5e2-3b63-4b55-a866-4239bbbec444","AI & Intelligence","ai@socialmediaville.ca",,"intel-order:06, layer:signals, phase:intel-1, stack:supabase, track:data, track:intelligence",,,,,"2026-05-30T11:22:37.382Z","2026-06-02T12:44:59.249Z",,,"2026-05-30T11:22:37.411Z",,,,,"Phase 1 — mdeai MVP launch",,,,"7a09b645-9d8d-4804-b5d5-9d2501fd6613",13232,"SAN-378, SAN-392, SAN-386, SAN-383","",
+"SAN-377","Sanjiovani","DATA-039 — Restaurants schema patch — neighborhood, nullable price/hours","**Track:** Intelligence (MIS) · **intel-order:02** · **intel-0**
+
+**Stack:** supabase
+
+**Spec:** `tasks/data/tasks-data/DATA-039-restaurants-schema-patch.md`
+
+**Plan:** [`intelligence-plan.md`](<../../tasks/intelligence/intelligence-plan.md>)
+
+**Queue:** [`intelligence-queue.json`](<../../tasks/linear/intelligence-queue.json>)
+
+**MIS-M1:** ✅ Shipped 2026-06-01 — see `tasks/data/evidence/MIS-M1-2026-06-01.md`
+
+---
+
+# DATA-039 — Restaurants schema patch
+
+## Goals
+
+1. `ALTER TABLE restaurants ADD COLUMN neighborhood text;` — backfill from address parser rules in seed script.
+2. `ALTER TABLE restaurants ALTER COLUMN price_level DROP NOT NULL;` (if currently NOT NULL).
+3. `ALTER TABLE restaurants ALTER COLUMN hours_of_operation DROP NOT NULL;` (if applicable).
+4. Update `search-restaurants.ts` to prefer `neighborhood` column over address parse.
+5. Evidence: `tasks/data/evidence/data-039-restaurants-patch.md`
+
+**Live (2026-05-31):** 44 restaurant rows; 43 embeddings — backfill orphan after patch.
+
+## Done gate
+
+Migration applied · backfill ≥40/43 rows with neighborhood · golden query R3 still passes.
+
+Full context: [`venue-dataplan.md`](<../../venues/data/venue-dataplan.md>) §1 gaps · [`24-restaurants.md`](<../../venues/restaurants/24-restaurants.md>).","Done",,"Urgent","6dd4b5e2-3b63-4b55-a866-4239bbbec444","AI & Intelligence","ai@socialmediaville.ca",,"intel-order:02, phase:intel-0, stack:supabase, track:data, track:intelligence",,,,,"2026-05-30T11:22:34.850Z","2026-06-02T12:44:59.311Z",,,"2026-05-30T11:22:34.889Z",,,,,"Phase 1 — mdeai MVP launch",,,,"6b08ee39-20d2-4bd0-8a36-6c18247a35a8",13232,"SAN-379","",
+"SAN-332","Sanjiovani","DATA-035 — Café listings → venue_anchors seed (metadata + Places verify)","**Track:** Data foundation (Tier 4) · **IMP-162** · **data-order:08**
+
+**Spec:** `tasks/data/tasks-data/data-035-cafe-listings-venue-anchor-seed.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-035 — Café listings → venue_anchors seed
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Sarah (café seeker) + Patricia (curated catalog) |
+| **Surface** | `/chat` café cards + `CafeDetailPanel` |
+| **Layer** | DATA |
+| **Content** | [`tasks/venues/tasks/listings/`](<../../venues/tasks/listings/>) |
+
+## What we're building
+
+Turn **listing research** (vibe copy, Instagram, websites, “why special”) into **durable Supabase rows** on `public.venue_anchors` (`kind=cafe`), with every `google_place_id` verified via Places API New — not LLM-invented coordinates or hours.
+
+Phase A chat stays **ADK grounding-first** (SCREEN-021 shipped). This task makes repeatability, golden evals, and richer detail panels possible without hallucinated cafés.
+
+## Source files (listings packs)
+
+| File | Use |
+| -- | -- |
+| [`03-cafe-laureles.md`](<../../venues/tasks/listings/03-cafe-laureles.md>) | Primary Laureles profiles |
+| [`04-pablado-cafes.md`](<../../venues/tasks/listings/04-pablado-cafes.md>) | Poblado profiles |
+| [`03a-laureles.md`](<../../venues/tasks/listings/03a-laureles.md>) / [`04a-poblado.md`](<../../venues/tasks/listings/04a-poblado.md>) | Supplemental |
+| [`01-cafes.md`](<../../venues/tasks/listings/01-cafes.md>) / [`02-cafes.md`](<../../venues/tasks/listings/02-cafes.md>) | Top-10 drafts (verify before prod) |
+| [`prompt-cafes.md`](<../../venues/tasks/listings/prompt-cafes.md>) | Field checklist for manual QA |
+
+**Not in scope:** `05*` / `06*` tour listings → **VEN-034** seed (coffee tours table).
+
+## Field contract (`venue_anchors` + `metadata`)
+
+**Table:** `public.venue_anchors` per [`data-009` M2](<../supabase-plan.md>) (apply before insert).
+
+| Column / key | Source | Rule |
+| -- | -- | -- |
+| `kind` | constant | `'cafe'` |
+| `name` | listings | Normalize; match Places `displayName` |
+| `google_place_id` | **Places Text Search / ID** | Required; log verify response |
+| `neighborhood` | listings | Laureles, El Poblado, Envigado, … |
+| `latitude`, `longitude` | **Places only** | Never copy lat/lng from prose |
+| `tags[]` | listings | `third-wave`, `wifi-friendly`, `coworking-friendly`, … |
+| `is_active` | editorial | `true` unless closed |
+| `source` | constant | `'curated'` |
+| `metadata` | listings + provenance | JSON below |
+| `metadata.hours`, `metadata.phone` | **omit at seed** | Filled by **DATA-008** → `place_details_cache` |
+| `metadata.photos` | **Places photo refs** | Prefer Places; curated URL only if stable + noted in `metadata.image_source` |
+
+### `metadata` JSON schema (v1)
+
+```json
+{
+  ""schema_version"": 1,
+  ""why_special"": ""string"",
+  ""ai_vibe_summary"": ""string"",
+  ""best_for"": [""remote work"", ""specialty coffee""],
+  ""coffee_profile"": {
+    ""style"": ""third-wave"",
+    ""roaster"": ""string|null"",
+    ""brewing_methods"": [""v60"", ""espresso""],
+    ""signature_drinks"": [""string""]
+  },
+  ""atmosphere"": {
+    ""laptop_friendly"": true,
+    ""wifi_note"": ""verified|unknown"",
+    ""noise_level"": ""low|medium|high|unknown"",
+    ""outdoor_seating"": true
+  },
+  ""contact"": {
+    ""website"": ""https://…"",
+    ""instagram"": ""@handle"",
+    ""instagram_url"": ""https://instagram.com/…"",
+    ""email"": ""info@…|null"",
+    ""whatsapp_e164"": ""+57…|null""
+  },
+  ""images"": {
+    ""hero_place_photo_name"": ""places/ChIJ…/photos/…"",
+    ""curated_urls"": [],
+    ""image_source"": ""places|curated|mixed""
+  },
+  ""semantic_descriptors"": [""calm minimalist specialty café""],
+  ""personas"": [""remote_worker"", ""coffee_enthusiast""],
+  ""confidence_score"": 98,
+  ""listing_sources"": [""03-cafe-laureles.md""],
+  ""verified_at"": ""2026-05-28T00:00:00Z"",
+  ""places_verify"": { ""place_id"": ""ChIJ…"", ""mask"": ""id,displayName,location"" }
+}
+```
+
+**WhatsApp:** store **venue business** number only when public on website/IG/Google listing; never invent. User booking WhatsApp flow remains **VEN-022+** (Patricia approves message to **user**).
+
+## Pipeline
+
+```text
+listings/*.md  →  parse/normalize (script)  →  cafes-medellin.seed.json
+       →  Places verify (each row, field mask)  →  SQL or supabase seed
+       →  DATA-008 backfill  →  place_details_cache (hours, phone, photos)
+```
+
+### Artifacts (commit paths)
+
+| Artifact | Path |
+| -- | -- |
+| Parsed seed (review) | [`tasks/venues/seeds/cafes-medellin.seed.json`](<../../venues/seeds/cafes-medellin.seed.json>) |
+| Apply migration / seed SQL | `mdeapp/supabase/seeds/venue_anchors_cafes.sql` (or `scripts/seed-cafe-anchors.ts`) |
+| Places verify log | `tasks/testing/evidence/DATA-035-places-verify.log` |
+| Row count evidence | `tasks/testing/evidence/DATA-035-venue-anchors-cafe.md` |
+
+## Goals
+
+1. **≥15** active café rows in `venue_anchors` from listings packs (Laureles + Poblado + Envigado).
+2. **100%** rows have verified `google_place_id` (Places API; `X-Goog-FieldMask` on every call).
+3. **100%** rows have `metadata.ai_vibe_summary`, `metadata.why_special`, `metadata.contact.website` or `instagram` when claimed in listings (or `confidence_score` < 70 + `contact` omitted).
+4. **Zero** invented hours, WiFi Mbps, or prices in seed JSON.
+5. `tags[]` + `semantic_descriptors` populated for **DATA-006** golden queries.
+6. Link each golden-query café name → `venue_anchors.id` in evidence for **data-003** / **data-006**.
+
+## Acceptance criteria
+
+- [ ] `data-009` M2 applied; `\d venue_anchors` shows expected columns
+- [ ] `SELECT count(*) FROM venue_anchors WHERE kind='cafe' AND is_active` ≥ 15
+- [ ] Seed JSON + apply script committed; no ChatGPT ephemeral image URLs in prod without `image_source: curated` flag
+- [ ] Places verify log: one line per anchor (place_id, status, neighborhood match)
+- [ ] **DATA-003** checklist signed off (eval mapping)
+- [ ] Spot-check 3 cafés on localhost: card shows name; detail panel pulls phone/hours from cache after **DATA-008** dry-run
+- [ ] `npm run floor` exit 0 on touched `mdeapp` scripts only
+
+## Out of scope (other tasks)
+
+| Work | Task |
+| -- | -- |
+| Live chat clarify | **INT-008** |
+| IG crawl at scale | **OCL-015** (post-MVP) |
+| pgvector café embeddings | **VEC-005** |
+| Coffee farm tours | **VEN-034** … **VEN-043** |
+
+## Real-world example
+
+**Sarah:** “quiet café in Laureles for remote work tomorrow” — golden query in **DATA-006** resolves to **Rituales** `venue_anchors` row; detail panel shows curated vibe line from `metadata.ai_vibe_summary` and phone/hours from Places cache, not from a one-off LLM turn.
+
+## Verify
+
+```bash
+# After seed apply (Supabase MCP or psql)
+SELECT id, name, neighborhood, google_place_id,
+       metadata->>'ai_vibe_summary' AS vibe,
+       metadata->'contact'->>'instagram' AS ig
+FROM venue_anchors
+WHERE kind = 'cafe' AND is_active
+ORDER BY neighborhood, name;
+
+# Places verify script (from mdeapp when added)
+cd mdeapp && npm run seed:verify-cafe-anchors -- --dry-run
+```","Done",,"Urgent","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:08, imp:162, track:data",,,,,"2026-05-30T00:31:39.473Z","2026-06-02T16:48:04.131Z",,,"2026-06-02T16:48:04.117Z",,,,,"Phase 1 — mdeai MVP launch","b12a8b84-beb0-4eff-855e-b03282574aca","🍽️ Venues — Phase 2",,"c04d91bf-b45c-48c1-b008-60803d0e4559",13667,"SAN-335, SAN-334, SAN-331","",
+"SAN-326","Sanjiovani","DATA-012 — Events data inventory — live schema vs EVP roadmap","**Track:** Data foundation (Tier 4) · **IMP-156** · **data-order:02**
+
+**Spec:** `tasks/data/tasks-data/data-012-events-data-inventory.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-012 — events data inventory
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | sanjiovani |
+| **Surface** | Supabase audit — no user UI |
+| **Layer** | DATA |
+
+## What we're building
+
+Events-side counterpart to **data-001**: prove which EVP features reuse existing schema vs need **data-013+** migrations.
+
+## Live baseline (MCP 2026-05-26)
+
+| Table | Rows | EVP / PRD use |
+| -- | -- | -- |
+| `events` | 49 | CORE — detail, discovery, host publish |
+| `event_venues` | 7 | EVP-016 venue binding |
+| `event_tickets` | 4 | Andrés checkout |
+| `event_orders` | 35 | Wallet, admin ops |
+| `event_attendees` | 39 | QR wallet |
+| `event_check_ins` | 3 | Staff scan audit |
+| `event_embeddings` | 43 | Semantic search |
+| `event_attendee_profiles` | 0 | Check-in fields today — **not** EVP-035 social |
+| `event_sponsors` / `event_sponsor_placements` | 0 | EVP-029 advanced |
+| `approval_requests` | 0 | HITL infra — host publish |
+
+**Missing tables (need data tasks):** `event_qa`, `event_live_updates`, discovered-events pipeline (`event_sources`, `raw_events`, …).
+
+**CORE commerce verdict:** ticketing stack **complete** — no schema for EVP-001/003/013/014/G3.
+
+## Goals
+
+1. Row counts + RLS policy count per event table (Supabase MCP).
+2. Column gap matrix: EVP-033 (`ai_summary` exists; approval status?), EVP-034/046/035/020.
+3. Index review: `events` publish queries, `event_orders` buyer/admin lists.
+4. Evidence → `tasks/data/evidence/data-012-events-inventory.md`.
+
+## Acceptance criteria
+
+- [ ] Matrix links each **open** EVP task to **reuse / extend / new table**
+- [ ] Explicit: CORE P0 needs **zero** new event tables
+- [ ] Unblocks data-013, data-016, data-017 with gap list
+- [ ] No schema mutations
+
+## Real-world example
+
+**Roberto** host publish — inventory confirms `events` + `event_tickets` + `approval_requests` exist; EVP-G3 proof is app/edge, not missing tables.","Done",,"Urgent","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:02, imp:156, track:data",,,,,"2026-05-30T00:31:33.217Z","2026-05-30T10:19:38.114Z",,,"2026-05-30T00:31:34.809Z",,,,,"Phase 1 — mdeai MVP launch","a6aec707-6ec3-4586-8c11-e381ee65036e","🎟️ Events — Polish",,"030e9ca7-9765-44e7-a970-6cf42d2546e3",13883,"SAN-346, SAN-345, SAN-344, SAN-343, SAN-342, SAN-341","",
+"SAN-328","Sanjiovani","DATA-026 — Trips data inventory — live schema vs trips-plan","**Track:** Data foundation (Tier 4) · **IMP-158** · **data-order:04**
+
+**Spec:** `tasks/data/tasks-data/data-026-trips-data-inventory.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-026 — trips data inventory
+
+## Live baseline
+
+| Table | Rows | RLS |
+| -- | -- | -- |
+| `trips` | 2 | ✅ |
+| `trip_items` | 4 | ✅ |
+| `saved_places` | 0 | ✅ |
+| `collections` | 0 | ✅ |
+| `conflict_resolutions` | 0 | ✅ |
+| `budget_tracking` | 0 | ✅ |
+
+**CORE verdict:** no new tables for MVP.
+
+## Gap matrix (drives data-027–032)
+
+| Gap | Task | Priority |
+| -- | -- | -- |
+| Gap | Task | Status |
+|
+| `item_type` CHECK extended | data-027 | **Done** 2026-05-29 |
+| Insert RPC + ownership validation | data-027 | **Done** |
+| `event_orders.trip_id` | data-029 | **Done** |
+| Webhook → `trip_items` sync | data-028 | Open (app) |
+| Golden SQL pack | data-030 | Open |
+| `(trip_id, start_at)` index | data-031 | P2 |
+| `mastra_threads` trip lookup | data-032 | P2 |
+| `trip_days`, `timeline_events` | ❌ defer | — |
+
+## Goals
+
+1. Full constraint dump (`trip_items_item_type_check`, `unique_trip_item`)
+2. Golden SQL: list trips for user, items by day, conflicts open
+3. Evidence → `tasks/data/evidence/data-026-trips-inventory.md`
+4. Pair with TRIP-001 (app evidence)
+
+## Acceptance criteria
+
+- [X] PRD table list marked exists / defer
+- [X] No migrations in this task
+- [X] Drives data-027–032 — see [`../evidence/data-026-trips-inventory.md`](<../evidence/data-026-trips-inventory.md>)","Done",,"Urgent","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:04, imp:158, track:data",,,,,"2026-05-30T00:31:36.799Z","2026-05-30T10:19:39.170Z",,,"2026-05-30T00:31:37.114Z",,,,,"Phase 1 — mdeai MVP launch","65ac018e-b43e-4bda-85fe-70ff4978161a","🏠 Trips — Phase 2",,"48052316-ed65-4fb2-9277-6c5367e34dc5",13883,"SAN-358, SAN-353","",
+"SAN-325","Sanjiovani","DATA-001 — Venues data inventory — cafés, restaurants, nightclubs","**Track:** Data foundation (Tier 4) · **IMP-155** · **data-order:01**
+
+**Spec:** `tasks/data/tasks-data/data-001-inventory.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-001 — inventory
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Sofía (dev) + Patricia (ops) |
+| **Surface** | Supabase audit — no user UI |
+| **Layer** | DATA |
+
+## What we're building
+
+Count and document every table/cache that powers café, restaurant, and nightclub discovery before we seed or migrate anything.
+
+## Features
+
+* Row counts + RLS snapshot for restaurants, caches, WA tables
+* Per-kind gap list: missing anchors, place_ids, empty caches
+* Evidence file for task-verifier
+
+## Agents & tools
+
+None — Supabase MCP / SQL only. Reference `conciergeAgent` tools that exist today.
+
+## Workflows
+
+None — one-off audit.
+
+## User journey
+
+1. Sofía runs inventory SQL across shared venue tables.
+2. Findings split into café · restaurant · nightclub sections.
+3. Gap list drives data-003/004/005 seeds and CAF-008 booking table.
+
+## Summary
+
+| Field | Value |
+| -- | -- |
+| Layer | DATA |
+| Personas | Sarah (café), Carlos (restaurant), Tourist (nightclub) |
+| Mutation | **Read-only** |
+
+## Three-kind data map (audit each)
+
+| Kind | Discovery today | Catalog / anchors | Detail | Embeddings |
+| -- | -- | -- | -- | -- |
+| **Café** | `search-grounded-places` `intent:cafe` | `venue_anchors` (kind=cafe) — **0 rows**; grounding primary | `place_details_cache` | None yet (VEC Phase B) |
+| **Restaurant** | `search-restaurants` | `public.restaurants` (44 rows, 44/44 `google_place_id`) | Places + DB merge | `restaurant_embeddings` (43) |
+| **Nightclub** | `search-grounded-places` `intent:nightlife` | `venue_anchors` (kind=nightclub) — **0 rows**; DATA-005 seed | `place_details_cache` | None yet |
+
+## Goals
+
+1. **Shared tables:** row counts + RLS for `restaurants`, `restaurant_embeddings`, `place_details_cache`, `places_search_cache`, `bookings`, `whatsapp_*`, `wa_outbox`, `approval_requests`.
+2. **Café path:** sample grounded `place_id`s from logs or cache; count cache hits for café detail API; note whether any café rows live in `restaurants` by mistake.
+3. **Restaurant path:** same as §1 for catalog + embedding coverage.
+4. **Nightclub path:** document absence/presence of nightlife rows anywhere; list Provenza/Laureles `place_id`s already in cache from café/restaurant overlap.
+5. Flag duplicate HNSW indexes on embedding tables (link **VEC-001**).
+6. Save evidence → `tasks/data/evidence/data-001-inventory.md` (canonical audit: [`../audit-supabase.md`](<../audit-supabase.md>)).
+
+## Acceptance criteria
+
+- [X] Evidence has **three sections** (café, restaurant, nightclub) with SQL/MCP proof → [`../evidence/data-001-inventory.md`](<../evidence/data-001-inventory.md>)
+- [X] Gap list per kind: missing anchors, missing `google_place_id`, empty caches
+- [X] `venue_booking_requests` gap documented — **resolved by DATA-009 M1** (2026-05-29)
+- [X] No schema mutations in this task
+
+## Real-world examples
+
+* **Sarah** — inventory shows whether Laureles café queries rely 100% on ADK or have curated anchors to add in data-003.
+* **Tourist** — inventory confirms no nightclub catalog yet → data-005 required before NGT-002 evals.","Done",,"Urgent","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:01, imp:155, track:data",,,,,"2026-05-30T00:31:30.953Z","2026-05-30T10:19:37.640Z",,,"2026-05-30T00:31:31.149Z",,,,,"Phase 1 — mdeai MVP launch","b12a8b84-beb0-4eff-855e-b03282574aca","🍽️ Venues — Phase 2",,"544a1914-56a4-46e9-aa40-2fb22135caeb",13883,"SAN-330","",
+"SAN-334","Sanjiovani","DATA-003 — Café seed sign-off + golden-query map","**Track:** Data foundation (Tier 4) · **IMP-164** · **data-order:10**
+
+**Spec:** `tasks/data/tasks-data/data-003-cafe-seed.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-003 — cafe seed
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Sarah (café seeker) |
+| **Surface** | `/chat` café discovery |
+| **Layer** | DATA |
+
+## What we're building
+
+Sign-off task after [**DATA-035**](<data-035-cafe-listings-venue-anchor-seed.md>) loads listing research into `venue_anchors`. This task owns eval mapping and regression proof — not duplicate ETL.
+
+## Features
+
+* Confirm `tasks/venues/seeds/cafes-medellin.seed.json` applied
+* Places verify log review (one line per anchor)
+* Golden-query → `venue_anchors.id` map for **data-006**
+
+## Agents & tools
+
+`conciergeAgent` → `search-grounded-places` with `intent:cafe`
+
+## Workflows
+
+None.
+
+## User journey
+
+1. Sarah asks for specialty coffee in Laureles.
+2. Grounding returns cards; anchors improve repeatability in evals.
+3. Detail panel loads from Places cache (data-007).
+
+## Summary
+
+| Field | Value |
+| -- | -- |
+| Kind | **Café** |
+| Persona | Sarah (quiet WiFi, Laureles/Poblado) |
+| Content source | [`../../venues/tasks/listings/`](<../../venues/tasks/listings/>) prompt packs |
+
+## Description
+
+**Primary seed work:** [DATA-035](<data-035-cafe-listings-venue-anchor-seed.md>) (listings → `venue_anchors` + `metadata`).
+
+Phase A discovery stays ADK-first (CAF-A5). Anchors improve eval repeatability and cache warming — not a replacement for grounding.
+
+## Goals
+
+1. DATA-035 Done: ≥15 café rows in `venue_anchors`.
+2. Document which anchors power **data-006** golden queries (`tasks/venues/seeds/golden-queries-venues.json` or inline in evidence).
+3. Confirm `search-grounded-places` intent:cafe remains primary in chat.
+
+## Acceptance criteria
+
+- [X] DATA-035 evidence merged (row count + sample metadata)
+- [X] Golden-query mapping committed — [`golden-queries-venues.json`](<../../venues/seeds/golden-queries-venues.json>)
+- [X] `search-grounded-places` intent:cafe still primary; anchors for eval/cache/catalog enrich only
+
+## Evidence
+
+[`tasks/data/evidence/data-003-cafe-signoff.md`](<../../data/evidence/data-003-cafe-signoff.md>) · Linear **SAN-334**
+
+## Real-world example
+
+**Sarah** — ""quiet café with WiFi 3 hours Laureles"" — golden query in data-006 maps to a verified anchor, not hallucinated names.","Done",,"Urgent","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:10, imp:164, track:data",,,,,"2026-05-30T00:31:40.704Z","2026-05-30T10:19:43.639Z",,,"2026-05-30T00:34:25.708Z",,,,,"Phase 1 — mdeai MVP launch","b12a8b84-beb0-4eff-855e-b03282574aca","🍽️ Venues — Phase 2",,"4c9bc1e8-5728-43cd-bb9e-0b6e586ff12a",13881,"SAN-336, SAN-331, SAN-330, SAN-332","",
+"SAN-335","Sanjiovani","DATA-005 — Nightclub / bar anchor seed + Places verify","**Track:** Data foundation (Tier 4) · **IMP-165** · **data-order:11**
+
+**Spec:** `tasks/data/tasks-data/data-005-nightclub-seed.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-005 — nightclub seed
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Tourist (nightlife) |
+| **Surface** | `/chat` nightlife (SCREEN-022) |
+| **Layer** | DATA |
+
+## What we're building
+
+Anchor seed for clubs/bars into `public.venue_anchors` (`kind = 'nightclub'`) — places, not ticketed events. Inserts via **service_role** only (RLS: no anon/authenticated write on anchors).
+
+## Features
+
+* Seed `seeds/nightclubs-medellin.csv`
+* place_ids for MSV-001 nightlife intent evals
+* Explicit exclude: `events` table rows
+
+## Agents & tools
+
+`conciergeAgent` → `search-grounded-places` `intent:nightlife` (MSV-001)
+
+## Workflows
+
+None.
+
+## User journey
+
+1. Tourist asks for reggaeton near Provenza tonight.
+2. Nightlife intent returns bar/club places.
+3. NightlifeDetailPanel (CKV-004) shows vibe + safety copy.
+
+## Summary
+
+| Field | Value |
+| -- | -- |
+| Kind | **Nightclub / bar** (grounded place, not event ticket) |
+| Persona | Tourist (reggaeton Provenza tonight) |
+| Discovery | `search-grounded-places` `intent:nightlife` (NGT-001) |
+
+## Description
+
+Nightlife Phase A is **grounding-first** like cafés. This task seeds **anchor clubs/bars** for evals, cache warming, and NGT-002 UI tests — distinct from `search-events` ticketed parties.
+
+## Goals
+
+1. Anchor list: ≥10 nightlife places (mix: reggaeton clubs, cocktail bars, live music) in Provenza, Manila, Laureles.
+2. Resolve `google_place_id` via Places Text Search + field mask.
+3. Seed file: `tasks/venues/seeds/nightclubs-medellin.csv` → INSERT into `venue_anchors` with `source = 'curated'`.
+4. Document disambiguation: anchor `place_type=nightclub|bar` vs events handoff.
+
+## Acceptance criteria
+
+- [X] No row sourced from `events` table
+- [X] Every anchor has Places-verified id (13/13)
+- [X] Feeds **data-006** — `golden-queries-venues.json` nightlife-001 ""reggaeton Provenza tonight""
+- [X] No invented dress codes, cover charges, or hours
+
+## Evidence
+
+[`tasks/data/evidence/data-005-nightclub-seed.md`](<../../data/evidence/data-005-nightclub-seed.md>) · Linear **SAN-335**
+
+## Out of scope
+
+* Ticket inventory, event dates, Stripe — **events** pillar
+* OpenClaw IG scrape — **VEN-008** / OCL-\*
+
+## Real-world example
+
+**Tourist** — map pins for Provenza clubs come from verified place_ids, not LLM venue names.","Done",,"Urgent","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:11, imp:165, track:data",,,,,"2026-05-30T00:31:41.536Z","2026-05-30T10:19:44.185Z",,,"2026-05-30T00:37:50.045Z",,,,,"Phase 1 — mdeai MVP launch","b12a8b84-beb0-4eff-855e-b03282574aca","🍽️ Venues — Phase 2",,"f2fea239-f145-4174-8f6e-0520c1f0facd",13877,"SAN-336, SAN-332, SAN-331","",
+"SAN-339","Sanjiovani","DATA-010 — Postgres function search_path hardening batch","**Track:** Data foundation (Tier 4) · **IMP-169** · **data-order:15**
+
+**Spec:** `tasks/data/tasks-data/data-010-postgres-search-path-hardening.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-010 — search_path hardening
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | sanjiovani |
+| **Surface** | Supabase SQL migrations (`supabase/migrations/`) |
+| **Layer** | DATA / security |
+
+## What we're building
+
+Batch migration(s) pinning `search_path` on functions flagged by Supabase database advisor lint [`0011_function_search_path_mutable`](<https://supabase.com/docs/guides/database/database-advisors?lint=0011_function_search_path_mutable>).
+
+**Live baseline (MCP** `get_advisors` **security, 2026-05-30):**
+
+| Lint | Count |
+| -- | -- |
+| `function_search_path_mutable` | **10** |
+| `anon_security_definer_function_executable` | 43 (document in evidence — **out of scope** for Done) |
+| `authenticated_security_definer_function_executable` | 68 (document — **out of scope**) |
+
+**Pinning standard (mde-supabase):**
+
+* **Preferred** for `SECURITY DEFINER`: `SET search_path = ''` + fully qualified `public.*` names ([supabase-database-functions.md](<../../../.agents/skills/mde-supabase/references/project-rules/supabase-database-functions.md>)).
+* `SET search_path = public` (or `public, pg_temp`) clears the linter when already applied — acceptable for invoker-style helpers; upgrade DEFINER revenue RPCs to `''` when touching them.
+
+## Scope (priority order)
+
+### P0 — revenue / guest order path (Andrés)
+
+Still flagged 2026-05-30:
+
+* `get_anonymous_order`
+* `ticket_payment_finalize_response`
+* `ticket_payment_refund`
+
+**Already pinned (not on mutable list — verify only, no migration unless body lacks qualified names):**
+
+* `ticket_payment_finalize` — `search_path = public, pg_temp`
+* `check_rate_limit` — `search_path = public, pg_temp`
+* `insert_trip_item_for_user` — `search_path = public` (DATA-027)
+
+### P1 — lead + messaging
+
+* `compute_lead_score`
+* `record_check_in`
+* `update_conversation_on_message`
+
+### P2 — triggers + FTS
+
+* `fts_spanish`, `fts_array_to_text`
+* `trigger_set_timestamps`, `set_updated_at`
+
+**Not flagged today:** `semantic_search_*`, `hybrid_search_*` (already `search_path = ''`).
+
+## Goals
+
+1. Export full security advisor via MCP `get_advisors` type=security → evidence (counts + flagged function names).
+2. Iterate with MCP `execute_sql` — **do not** use `apply_migration` for iteration.
+3. One migration per batch ≤20 functions in `supabase/migrations/`.
+4. Re-run advisor — **P0 names absent** from `function_search_path_mutable`; total count **0** when all 10 fixed.
+5. No behavior change — note in evidence if any signature/body edit beyond `search_path`.
+
+## Acceptance criteria
+
+- [X] P0 RPCs pinned in migration; absent from mutable list after re-run
+- [X] P1 + P2 batch applied (10/10 flagged functions)
+- [X] Evidence: before/after lint counts in [`tasks/data/evidence/data-010-search-path.md`](<../evidence/data-010-search-path.md>)
+- [X] Evidence notes anon/auth `security_definer_function_executable` counts (Phase 2 backlog)
+- [X] `function_search_path_mutable`: **10 → 0** (2026-05-30)
+
+## Out of scope
+
+* Rewriting RPC logic beyond qualified names for `search_path = ''`
+* Fixing `anon_security_definer_function_executable` / `authenticated_security_definer_function_executable` (DATA-011 matrix / Phase 2)
+* New features
+
+## Real-world example
+
+**Andrés** guest checkout — `get_anonymous_order` and `ticket_payment_finalize_response` cannot resolve objects via a hijacked schema when `search_path` is pinned.","Done",,"Urgent","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"data-order:15, imp:169, track:core, track:data",,,,,"2026-05-30T00:31:47.717Z","2026-06-02T23:38:56.306Z",,,"2026-05-30T10:19:46.437Z",,,,,"Phase 1 — mdeai MVP launch",,,,"5480f19f-19aa-455a-988c-c8b77bcf1694",13295,"SAN-340","",
+"SAN-330","Sanjiovani","DATA-002 — Three-kind catalog contract — café, restaurant, nightclub","**Track:** Data foundation (Tier 4) · **IMP-160** · **data-order:06**
+
+**Spec:** `tasks/data/tasks-data/data-002-catalog-contract.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-002 — catalog contract
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | All three personas — Sarah, Carlos, Tourist |
+| **Surface** | Contract doc → seeds + UI fields |
+| **Layer** | DATA |
+
+## What we're building
+
+Define which fields each venue kind must have for cards, detail panels, and booking — and where each fact comes from (Places vs DB, never LLM-only).
+
+## Features
+
+* Per-kind field contract (card, detail, booking)
+* Gap SQL exports for data-003/004/005
+* Rule: nightclubs ≠ ticketed events
+
+## Agents & tools
+
+None — design contract for `conciergeAgent` tool outputs.
+
+## Workflows
+
+None.
+
+## User journey
+
+1. Team reviews data-001 inventory.
+2. Contract maps each scr/wire field (005/007/008) to a data source.
+3. Tourist's reggaeton query is defined as Places/bar anchors, not EventCard tickets.
+
+## Summary
+
+| Kind | Source of truth (Phase 1) | Catalog task |
+| -- | -- | -- |
+| **Café** | Places / ADK grounding | **data-003** (data-003) curated anchors (optional eval rows) |
+| **Restaurant** | `public.restaurants` + Places | **data-004** (data-004) seed expansion |
+| **Nightclub** | Places / ADK `intent:nightlife` | **data-005** (data-005) anchor seed (clubs/bars, not ticketed events) |
+
+## Description
+
+From **data-001** (data-001), produce one contract doc covering all three kinds: required fields for cards/detail/booking, forbidden LLM-invented fields, and gap SQL per kind.
+
+## Goals
+
+1. Markdown contract table per kind (card, detail panel, booking form fields).
+2. **Restaurant:** `%` rows with valid `google_place_id`, lat/lng, neighborhood.
+3. **Café:** list curated anchor candidates from [`../../venues/tasks/listings/`](<../../venues/tasks/listings/>) vs already-cached `place_id`s.
+4. **Nightclub:** define anchor set (e.g. Provenza reggaeton, Laureles bars) — place_ids to resolve in **data-005** (data-005); exclude ticketed events (`search-events`).
+5. **Café** `venue_anchors.metadata` **v1** — adopt schema from [**data-035**](<data-035-cafe-listings-venue-anchor-seed.md>) (`contact`, `ai_vibe_summary`, `images`, `confidence_score`).
+6. Evidence → `evidence/data-002-three-kind-contract.md` + `sql/data-002-gaps-by-kind.sql`.
+
+## Acceptance criteria
+
+- [X] Three-kind contract reviewed against scr **005**, **007**, **008**
+- [X] Gap exports for data-003, data-004, data-005 → [`../evidence/sql/data-002-gaps-by-kind.sql`](<../evidence/sql/data-002-gaps-by-kind.sql>)
+- [X] Explicit rule: nightclubs ≠ `events` table rows
+
+## Real-world example
+
+**Tourist** asks for ""reggaeton near Provenza"" — contract ensures anchors are **places** (bars/clubs), not EventCard ticket listings.","Done",,"Urgent","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:06, imp:160, track:data",,,,,"2026-05-30T00:31:38.218Z","2026-05-30T10:19:41.489Z",,,"2026-05-30T00:31:38.274Z",,,,,"Phase 1 — mdeai MVP launch","b12a8b84-beb0-4eff-855e-b03282574aca","🍽️ Venues — Phase 2",,"539a6d93-94ec-4bee-a5f6-6c200f0dc760",13883,"SAN-334, SAN-331, SAN-325","",
+"SAN-340","Sanjiovani","DATA-011 — Edge function MVP freeze matrix + guest-lead abuse audit","**Track:** Data foundation (Tier 4) · **IMP-170** · **data-order:16**
+
+**Spec:** `tasks/data/tasks-data/data-011-edge-hardening-evidence.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-011 — edge hardening evidence
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | sanjiovani |
+| **Surface** | Supabase edge functions — ops doc + optional Turnstile |
+| **Layer** | DATA / security |
+
+## What we're building
+
+Read-only audit artifact + minimal hardening backlog. **Does not** re-implement Stripe webhooks (already signed + idempotent on disk).
+
+## Goals
+
+### 1\. MVP edge function matrix
+
+Classify **all ACTIVE** edge functions from MCP `list_edge_functions` at task start (baseline **39** on 2026-05-30 — do not hard-code count).
+
+Matrix columns:
+
+| Column | Purpose |
+| -- | -- |
+| `slug` | Function name |
+| `verify_jwt` | MCP + `config.toml` |
+| `deploy_source` | `mdeai` vs legacy `/home/sk/mde/` (from MCP `entrypoint_path`) |
+| `class` | KEEP / FREEZE / DEFER |
+| `phase1_notes` | Persona surface or freeze reason |
+
+| Class | Action | Examples |
+| -- | -- | -- |
+| **KEEP** | Phase 1 load-bearing | `ticket-checkout`, `ticket-payment-webhook`, `ticket-validate`, `chat-lead-capture`, `approval-commit` |
+| **FREEZE** | No deploys Phase 1 | sponsor-*, openclaw-*, postiz-\*, `vote-cast`, `fraud-scan` |
+| **DEFER** | Document owner | contest, enrichment crons |
+
+Output: [`tasks/data/evidence/data-011-edge-matrix.md`](<../evidence/data-011-edge-matrix.md>)
+
+### 2\. Guest lead abuse audit
+
+Verify on disk + live:
+
+- [ ] `chat-lead-capture` `verify_jwt: false` (required for anon)
+- [ ] `allowRateDurable` — 20/hr/IP for anon (confirmed 2026-05-26)
+- [ ] Valid `intent` enum enforced
+- [ ] Service-role insert to `leads` only (showings bridge → **DATA-021**)
+
+Gaps to file as follow-ups (optional P2):
+
+* Turnstile on `/api/leads/schedule-viewing`
+* `suppression_list` check before insert
+* Structured abuse log table or `ai_runs` metadata
+
+### 3\. Advisor cross-link (read-only)
+
+From MCP `get_advisors` security at task start, note in evidence (no fix in this task):
+
+* `rls_disabled_in_public` — identify table name
+* `anon_security_definer_function_executable` / `authenticated_security_definer_function_executable` counts → Phase 2 / DATA-010 follow-on
+
+### 4\. EVP-003 cross-link
+
+* Stripe webhook **implementation** verified ✅
+* Remaining: secret isolation proof → EVP-003 (not duplicated here)
+
+## Acceptance criteria
+
+- [X] Edge matrix published — **39 ACTIVE** fns, KEEP/FREEZE/DEFER ([`../evidence/data-011-edge-matrix.md`](<../evidence/data-011-edge-matrix.md>))
+- [X] Guest lead audit documents rate limit + P2 items
+- [X] `rls_disabled_in_public` → `public.spatial_ref_sys` documented
+- [X] No duplicate webhook implementation
+- [X] Evidence linked from [`../plan/23-audit.md`](<../plan/23-audit.md>) (via evidence file)
+
+## Real-world example
+
+**Camila** (logged out) schedules a viewing — request hits `chat-lead-capture`, passes IP rate limit, creates `leads` row via service_role; spam farm blocked at 21st request/hour. `showings` **row** lands in DATA-021.","Done",,"Urgent","0da60f0e-525d-4819-9f50-909eaa7ba845","Core Foundation","ai@socialmediaville.ca",,"data-order:16, imp:170, track:core, track:data",,,,,"2026-05-30T00:31:48.297Z","2026-06-02T23:38:56.938Z",,,"2026-05-30T10:19:47.037Z",,,,,"Phase 1 — mdeai MVP launch",,,,"8b119f01-86e9-40a7-af6d-45a5aff9577f",13295,"SAN-339","",
+"SAN-333","Sanjiovani","DATA-004 — Restaurant catalog verify + gap-fill (not full re-seed)","**Track:** Data foundation (Tier 4) · **IMP-163** · **data-order:09**
+
+**Spec:** `tasks/data/tasks-data/data-004-restaurant-seed.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-004 — restaurant seed
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Carlos (restaurant diner) |
+| **Surface** | `/chat` restaurant discovery (SCREEN-023) |
+| **Layer** | DATA |
+
+## What we're building
+
+**Verify** `public.restaurants` catalog (live: **44 rows, 44/44** `google_place_id`, 43 embeddings). Only run gap-fill migration if DATA-002 gap SQL finds misses — do not duplicate `20260404044721_restaurants_seed.sql`.
+
+## Features
+
+* Seed `seeds/restaurants-medellin.csv`
+* google_place_id, cuisine, neighborhood, price tier
+* Embedding-ready rows for VEC Phase B
+
+## Agents & tools
+
+`conciergeAgent` → `searchRestaurantsTool`
+
+## Workflows
+
+None.
+
+## User journey
+
+1. Carlos asks for Italian in El Poblado.
+2. Agent calls search-restaurants; DB + Places merge on cards.
+3. Carlos opens RestaurantDetailPanel (CKV-002).
+
+## Summary
+
+| Field | Value |
+| -- | -- |
+| Kind | **Restaurant** |
+| Persona | Carlos (dinner for 4) |
+| Table | `public.restaurants` |
+
+## Description
+
+Expand restaurant catalog beyond initial seed. Backfill missing `google_place_id` from Places — never LLM lat/lng or hours.
+
+## Goals
+
+1. Run [`../evidence/sql/data-002-gaps-by-kind.sql`](<../evidence/sql/data-002-gaps-by-kind.sql>) restaurant section — expect **0** place_id gaps.
+2. If gaps found: single surgical migration + Places backfill with `X-Goog-FieldMask` on every call (mde-maps rule).
+3. Confirm ≥20 quality Medellín rows (already met) and embedding coverage ≥90%.
+4. RLS preserved — no anon writes.
+
+## Acceptance criteria
+
+- [X] Gap SQL run; evidence → [`../evidence/data-004-restaurant-verify.md`](<../evidence/data-004-restaurant-verify.md>)
+- [X] Field mask N/A — no backfill needed
+- [ ] `search-restaurants` returns rows on `/chat` — app smoke (CKV-001)
+- [X] Skip full re-seed — 44/44 place_ids hold
+
+## Real-world example
+
+**Carlos** — ""Italian El Poblado"" returns catalog cards with real Places-backed addresses.","Done",,"Urgent","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:09, imp:163, track:data",,,,,"2026-05-30T00:31:40.153Z","2026-05-30T10:19:43.152Z",,,"2026-05-30T00:31:40.204Z",,,,,"Phase 1 — mdeai MVP launch","b12a8b84-beb0-4eff-855e-b03282574aca","🍽️ Venues — Phase 2",,"376b9e5a-a986-4d36-b6ee-36f4cdf3af14",13883,"SAN-331","",
+"SAN-331","Sanjiovani","DATA-009 — Supabase schema migrations — venue booking, anchors, rental indexes","**Track:** Data foundation (Tier 4) · **IMP-161** · **data-order:07**
+
+**Spec:** `tasks/data/tasks-data/data-009-schema-migrations-m1-m3.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+**Note:** M1 venue_booking_requests + M2 venue_anchors + M3 rental indexes — live 2026-05-29
+
+---
+
+# DATA-009 — schema migrations (M1–M3)
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | sanjiovani (operator) |
+| **Surface** | Supabase migrations — no mdeapp UI |
+| **Layer** | DATA |
+
+## What we're building
+
+Three surgical migrations from [`../supabase-plan.md`](<../supabase-plan.md>) Batch 1:
+
+| Migration | Table / index | Unblocks |
+| -- | -- | -- |
+| **M1** | `venue_booking_requests` + RLS | Tourist venue booking (CAF-008) |
+| **M2** | `venue_anchors` (café, nightclub) + RLS | **data-035**, data-003, data-005 seeds |
+| **M3** | `idx_apartments_price_daily_*` | Camila `search-rentals.ts` — see also **data-019** |
+
+## Goals
+
+1. Add SQL files under `supabase/migrations/` (mdeai repo) — one file or three, dated `YYYYMMDD_*`.
+2. M1: guest INSERT via edge only (no anon RLS on table); authenticated own-row SELECT/INSERT.
+3. M2: public SELECT active anchors; service_role write for seeds.
+4. M3: use non-`CONCURRENTLY` index in MCP apply (44-row table) or `CREATE INDEX CONCURRENTLY` in maintenance-window migration per [mde-supabase](<../../../.agents/skills/mde-supabase/references/project-rules/supabase-migrations.md>).
+5. Wire M1 optional FK to M2 `venue_anchor_id` after M2 lands.
+6. Run RLS gap query — only `spatial_ref_sys` off.
+
+## Acceptance criteria
+
+- [X] Migrations apply clean on project `zkwcbyxiwklihegjhuql`
+- [X] `\d venue_booking_requests` + `\d venue_anchors` show expected columns
+- [X] `EXPLAIN` on rental filter uses `price_daily` index
+- [X] RLS policies use `(SELECT auth.uid())` on `venue_booking_requests` (mde-supabase rule)
+- [X] Evidence in [`../evidence/data-009-migrations.md`](<../evidence/data-009-migrations.md>)
+- [X] task-verifier gate 9 N/A (migration-only) — recorded in evidence
+
+## Verification SQL
+
+```sql
+SELECT table_name FROM information_schema.tables
+WHERE table_schema = 'public' AND table_name IN ('venue_booking_requests', 'venue_anchors');
+
+SELECT indexname FROM pg_indexes
+WHERE tablename = 'apartments' AND indexname LIKE '%price_daily%';
+```
+
+## Real-world example
+
+**Tourist** submits a Provenza nightclub table request → row lands in `venue_booking_requests` with `venue_kind=nightclub` and `place_id` from `venue_anchors`.","Done",,"Urgent","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:07, imp:161, track:data",,,,,"2026-05-30T00:31:38.881Z","2026-05-30T10:19:41.961Z",,,"2026-05-30T00:31:38.941Z",,,,,"Phase 1 — mdeai MVP launch","b12a8b84-beb0-4eff-855e-b03282574aca","🍽️ Venues — Phase 2",,"8f25374d-a623-4f4b-8ad8-bad01eb645a7",13883,"SAN-347, SAN-335, SAN-334, SAN-333, SAN-332, SAN-330","",
+"SAN-327","Sanjiovani","DATA-019 — Rentals data inventory — live schema vs real-estate PRD","**Track:** Data foundation (Tier 4) · **IMP-157** · **data-order:03**
+
+**Spec:** `tasks/data/tasks-data/data-019-rentals-data-inventory.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-019 — rentals data inventory
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | sanjiovani |
+| **Surface** | Supabase audit |
+| **Layer** | DATA |
+
+## Live baseline (MCP 2026-05-26)
+
+| Table | Rows | RLS policies | PRD use |
+| -- | -- | -- | -- |
+| `apartments` | 44 active | 3 | Camila search (`search-rentals.ts`) |
+| `listing_embeddings` | 44 | 6 | Semantic / hybrid RPC |
+| `neighborhoods` | 12 | 5 | Hood facts (text join today) |
+| `leads` | 11 | 5 | Schedule viewing / CRM |
+| `showings` | 0 | 5 | Viewing scheduler (unused) |
+| `landlord_inbox` | 0 | 3 | Andrés notify |
+| `rental_applications` | 0 | 5 | Post-MVP wizard |
+| `bookings` / `payments` | 0 / 3 | 4 / 3 | RE-022 commerce gate |
+| `rental_listing_images` | 0 | 3 | Optional normalize |
+| `property_verifications` | — | 5 | Scam/freshness |
+
+**PRD tables that do NOT exist (defer or replace):**
+
+| PRD name | Live substitute |
+| -- | -- |
+| `places_cache` | `places_search_cache` + `place_details_cache` |
+| `contacts` / `conversations` | `mastra_threads` + `leads` |
+| `outreach_messages` | `wa_outbox` + `suppression_list` (Phase 2) |
+| `scoring_logs` / `market_snapshots` | **data-025** (Hermes P2) |
+
+## CORE verdict
+
+**Rental search + lead capture need no new tables** for MVP — F17/F46/F47 + `chat-lead-capture` already wired. Gaps are **columns + indexes** (data-020, data-009 M3) and **showings workflow** (data-021).
+
+## Goals
+
+1. Full column + index dump for rental cluster tables.
+2. Map each open real-estate screen task to reuse / extend / migrate.
+3. RLS negative-test checklist for landlord vs renter vs anon.
+4. Evidence → `tasks/data/evidence/data-019-rentals-inventory.md`.
+
+## Acceptance criteria
+
+- [X] PRD §15 table list marked exists / missing / renamed
+- [X] Explicit CORE = zero new tables for MVP search+lead
+- [X] Gap list drives data-020–025 — see evidence
+- [X] No schema mutations in inventory task
+
+## Real-world example
+
+**Camila** schedule-viewing — `leads.apartment_id` and `trip_id` columns live (DATA-020/029); edge fn still writes `metadata.listing_id` only → update `chat-lead-capture`.","Done",,"Urgent","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:03, imp:157, track:data",,,,,"2026-05-30T00:31:36.213Z","2026-05-30T10:19:38.621Z",,,"2026-05-30T00:31:36.283Z",,,,,"Phase 1 — mdeai MVP launch","80fe78ad-59de-48f5-9815-7c208c0f0176","🍽️ Discovery — UI",,"a6aa2898-f4ad-4cdd-8fd0-43550092a728",13883,"SAN-352, SAN-350, SAN-347","",
+"SAN-586","Sanjiovani","DATA-036 — Public published-events list API for /events browse","## DATA-036 — Public published-events list API for `/events` browse
+
+**Gap from Explore sidebar audit (2026-06-05):** Chat has `/api/events/search` (Mastra tool) and `/api/events/[id]/public` (single event). **No public catalog list** for SSR browse at `/events`.
+
+**Blocks:** [SAN-518](https://linear.app/sanjiovani/issue/SAN-518/screen-027-events-browse-listing-events) (SCREEN-027)
+**Persona:** Andrés · Tourist
+
+### Scope
+
+- [ ] Server route or server-only query: list **published** events (RLS-safe, anon-readable)
+- [ ] Filters: category, date window, neighborhood (match [SAN-518](https://linear.app/sanjiovani/issue/SAN-518/screen-027-events-browse-listing-events) AC)
+- [ ] Pagination (≤50/page) or cursor
+- [ ] Reuse `EventCard` shape from `search-events.ts` / `draft-to-event-card.ts`
+- [ ] Field mask / select only columns needed for grid (no service role in client)
+
+### Acceptance criteria
+
+- [ ] `GET` or `POST` `/api/events` (or documented SSR Supabase query in scr) returns ≥1 published row in dev
+- [ ] Unpublished/draft events excluded
+- [ ] Vitest route test + no service role in client bundle
+- [ ] Documented in SCREEN-027 scr as data source
+
+### Out of scope
+
+* Hybrid search / web grounding (SEARCH-002 / [SAN-387](https://linear.app/sanjiovani/issue/SAN-387/search-002-wire-hybrid-search-events-event-signals) — chat only)
+* Admin moderation ([SAN-515](https://linear.app/sanjiovani/issue/SAN-515/screen-024-admin-events-dashboard-adminevents))
+
+### Audit reference
+
+`tasks/design/notes/notes-3.md`","Done",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca","ai@socialmediaville.ca","phase:mvp, stack:nextjs, stack:supabase, track:data",,,,,"2026-06-05T22:44:27.507Z","2026-06-06T01:03:20.465Z","2026-06-06T00:54:57.326Z",,"2026-06-06T01:03:20.010Z",,,"2026-06-12T22:44:28.557Z",,"Phase 1 — mdeai MVP launch",,,"Completed","594e2884-1aec-44a3-92ea-b7537c0706a0",3772,"SAN-518, SAN-515, SAN-387, SAN-575, SAN-585","",
+"SAN-452","Sanjiovani","PR-05 — C2 edge functions from #23","Merged #42 — C2 edge functions on main @ fa263e7.","Done",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"stack:supabase, track:data, track:pr",,,,,"2026-06-01T17:18:00.167Z","2026-06-01T18:51:31.209Z",,,"2026-06-01T18:51:31.178Z",,,,,"Phase 1 — mdeai MVP launch",,,,"620ade08-1837-4f04-9419-7f72badf1e91",9903,"SAN-446","",
+"SAN-446","Sanjiovani","DATA-048 — Migration prefix realign + history reconciliation","Shipped via #40 — C1 migrations + DATA-050 B1–B4. Prod repair B1–B3 applied 2026-06-01.","Done",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"stack:supabase, track:data, track:pr",,,,,"2026-06-01T11:03:13.076Z","2026-06-01T18:51:29.462Z","2026-06-01T11:03:13.133Z",,"2026-06-01T18:51:29.425Z",,,,,"Phase 1 — mdeai MVP launch",,,,"76553f02-35ac-434d-8ed3-c1de0600a5b6",9903,"SAN-455, SAN-454, SAN-453, SAN-452, SAN-445","",
+"SAN-353","Sanjiovani","DATA-027 — trip_items type CHECK extension + insert RPC","**Track:** Data foundation (Tier 4) · **IMP-183** · **data-order:29**
+
+**Spec:** `tasks/data/tasks-data/data-027-trip-items-insert-rpc.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-027 — trip_items insert hardening
+
+## Live state (2026-05-29)
+
+CHECK extended: `rental`, `event`, `restaurant`, `poi`, `showing`, `booking`, `custom_note`, `other`.
+
+RPC `insert_trip_item_for_user` live with `SET search_path = public` (mde-supabase SECURITY DEFINER pattern).
+
+## Migration (sketch)
+
+```sql
+ALTER TABLE public.trip_items DROP CONSTRAINT trip_items_item_type_check;
+ALTER TABLE public.trip_items ADD CONSTRAINT trip_items_item_type_check
+  CHECK (item_type IN (
+    'rental','event','restaurant','poi','showing','booking','custom_note','other'
+  ));
+```
+
+## RPC `insert_trip_item_for_user`
+
+* Verify `auth.uid()` owns `trips.id`
+* Validate source row exists for type (dynamic lookup)
+* Upsert on conflict `unique_trip_item`
+* Copy title, lat, lng, address from source
+
+## Acceptance criteria
+
+- [X] Migration applied via Supabase MCP
+- [X] RLS unchanged on `trip_items`
+- [ ] RPC callable from Mastra with user JWT — **app track** (TRIP-007)
+- [ ] Negative test: wrong user → error — document in TRIP-007 evidence
+
+## POST-MVP
+
+* `trip_items.deleted_at` soft delete","Done",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:29, imp:183, track:data",,,,,"2026-05-30T00:32:00.315Z","2026-05-30T10:19:53.805Z",,,"2026-05-30T00:32:00.358Z",,,,,"Phase 1 — mdeai MVP launch","65ac018e-b43e-4bda-85fe-70ff4978161a","🏠 Trips — Phase 2",,"8d494881-e773-492a-8b98-74273e25db27",13883,"SAN-357, SAN-354, SAN-328","",
+"SAN-355","Sanjiovani","DATA-030 — Trips golden queries pack","**Track:** Data foundation (Tier 4) · **IMP-185** · **data-order:31**
+
+**Spec:** `tasks/data/tasks-data/data-030-trips-golden-queries.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-030 — trips golden queries
+
+## Purpose
+
+Sofía and Lucía run the same probes for TRIP Done gates — mirror **data-023** pattern for rentals.
+
+## Queries to document
+
+```sql
+-- 1. User trips (dashboard)
+SELECT id, title, status, start_date, end_date
+FROM trips
+WHERE user_id = :uid AND deleted_at IS NULL
+ORDER BY start_date;
+
+-- 2. Itinerary items for trip (workspace)
+SELECT id, item_type, title, start_at, end_at, latitude, longitude
+FROM trip_items
+WHERE trip_id = :trip_id
+ORDER BY start_at NULLS LAST;
+
+-- 3. Open conflicts
+SELECT id, title, severity, status, affected_items
+FROM conflict_resolutions
+WHERE trip_id = :trip_id AND status IN ('detected', 'pending_review');
+
+-- 4. Item count per trip (dashboard card)
+SELECT trip_id, count(*) AS item_count
+FROM trip_items
+WHERE trip_id = ANY(:trip_ids)
+GROUP BY trip_id;
+
+-- 5. RLS negative (manual): User B must not SELECT User A trips
+```
+
+## Deliverable
+
+* `tasks/data/evidence/data-030-trips-golden-queries.md` with EXPLAIN on (2) if index added in data-031
+
+## Acceptance criteria
+
+- [X] ≥5 queries with expected row shapes
+- [ ] Linked from TRIP-001 / TRIP-015
+- [X] No migrations","Done",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:31, imp:185, track:data",,,,,"2026-05-30T00:32:01.411Z","2026-05-30T10:19:54.964Z",,,"2026-05-30T00:32:01.449Z",,,,,"Phase 1 — mdeai MVP launch","65ac018e-b43e-4bda-85fe-70ff4978161a","🏠 Trips — Phase 2",,"932f7465-12c9-4032-9b47-30307a31bdea",13883,"SAN-354","",
+"SAN-354","Sanjiovani","DATA-029 — Commerce trip_id linkage — event_orders, leads, showings","**Track:** Data foundation (Tier 4) · **IMP-184** · **data-order:30**
+
+**Spec:** `tasks/data/tasks-data/data-029-commerce-trip-id-linkage.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-029 — commerce trip_id linkage
+
+## Live state (2026-05-29)
+
+| Table | `trip_id` | Status |
+| -- | -- | -- |
+| `event_orders` | column + index | ✅ DATA-029 |
+| `leads` | column + index | ✅ DATA-029 |
+| `showings` | column + index | ✅ DATA-029 |
+| `bookings` | column exists | ✅ pre-existing |
+| `saved_places` | column exists | ✅ pre-existing |
+
+**Ticket checkout** (`ticket-checkout-schema.ts`) still has no `tripId` field — app follow-up below.
+
+## Migration (sketch)
+
+```sql
+ALTER TABLE public.event_orders
+  ADD COLUMN IF NOT EXISTS trip_id uuid REFERENCES public.trips(id) ON DELETE SET NULL;
+
+ALTER TABLE public.leads
+  ADD COLUMN IF NOT EXISTS trip_id uuid REFERENCES public.trips(id) ON DELETE SET NULL;
+
+ALTER TABLE public.showings
+  ADD COLUMN IF NOT EXISTS trip_id uuid REFERENCES public.trips(id) ON DELETE SET NULL;
+
+CREATE INDEX IF NOT EXISTS idx_event_orders_trip_id
+  ON public.event_orders (trip_id) WHERE trip_id IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS idx_leads_trip_id
+  ON public.leads (trip_id) WHERE trip_id IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS idx_showings_trip_id
+  ON public.showings (trip_id) WHERE trip_id IS NOT NULL;
+```
+
+## RLS
+
+* No new SELECT policies required — trip_id is write metadata on owned rows
+* FK validates trip exists; app must verify `trips.user_id = auth.uid()` on insert
+
+## App follow-up (not this task)
+
+* Extend `ticketCheckoutInputSchema` with optional `tripId`
+* Pass through Stripe session metadata + persist on `event_orders` at finalize
+* Schedule viewing modal: optional active trip picker → `leads.trip_id`
+
+## Acceptance criteria
+
+- [X] Columns + indexes applied
+- [X] RLS unchanged on read paths
+- [ ] Documented in data-028 sync spec
+- [X] No service role in browser","Done",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:30, imp:184, track:data",,,,,"2026-05-30T00:32:00.903Z","2026-05-30T10:19:54.309Z",,,"2026-05-30T00:32:00.954Z",,,,,"Phase 1 — mdeai MVP launch","65ac018e-b43e-4bda-85fe-70ff4978161a","🏠 Trips — Phase 2",,"52923fb4-42ee-4e87-9b14-c058037b9b6d",13883,"SAN-356, SAN-355, SAN-353","",
+"SAN-349","Sanjiovani","DATA-021 — showings lifecycle — lead → showing row bridge","**Track:** Data foundation (Tier 4) · **IMP-179** · **data-order:25**
+
+**Spec:** `tasks/data/tasks-data/data-021-showings-lead-bridge.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-021 — showings lead bridge
+
+## Gap
+
+`showings` table **exists** (RLS ✅, indexes ✅, **0 rows**). Schedule-viewing modal (**SCREEN-008 Done**) only inserts `leads` via `chat-lead-capture` — never creates `showings`. Edge writes `metadata.listing_id` but **not** `leads.apartment_id` / `preferred_showing_at` (DATA-020 cols).
+
+PRD flow: Camila proposes slot → `showings` **row** (`scheduled`) → landlord confirms (`confirmed`) → DATA-028 may sync `trip_items` when `trip_id` present.
+
+## Schema today (live)
+
+```text
+showings: id, lead_id, apartment_id, scheduled_at, status, host_notes, renter_notes, metadata, created_at, updated_at, trip_id
+```
+
+**Status CHECK (live — do not rename without migration):**
+
+```text
+scheduled | confirmed | cancelled | completed | no_show
+```
+
+**Already applied (no DDL needed for Done):**
+
+* RLS: 5 policies + `service_role` ALL
+* Indexes: `idx_showings_lead_id`, `idx_showings_apartment_id`, `idx_showings_scheduled_at`, `idx_showings_lead_scheduled`, `idx_showings_trip_id`
+* `trip_id` FK → `trips` (DATA-029)
+
+## Goals
+
+1. Document status enum contract matching live CHECK: `scheduled` (initial insert), then `confirmed | cancelled | completed | no_show`.
+2. **Extend** `chat-lead-capture` (preferred) or add thin sibling edge fn — service client, same anon rate limit:
+   * On schedule-viewing payload with `preferred_at` + listing/apartment id:
+   * Insert `leads` with `apartment_id`, `preferred_showing_at`, intent `rental` (not only metadata)
+   * Insert `showings` with `status = 'scheduled'`, `lead_id`, `apartment_id`, `scheduled_at = preferred_at`, optional `trip_id`
+3. Use edge + service_role (not anon RPC from browser). If adding RPC, `SECURITY DEFINER` + `SET search_path = ''` per DATA-010 / mde-supabase.
+4. Pass through `trip_id` when client sends it (enables DATA-028 showings → `trip_items` path).
+
+## Acceptance criteria
+
+- [X] One schedule-viewing submit creates **both** `leads` + `showings` rows (edge v17)
+- [X] `leads.apartment_id` populated (not only `metadata.listing_id`)
+- [X] Initial showing `status = 'scheduled'` (matches CHECK)
+- [X] `trip_id` passthrough when client sends it
+- [X] Idempotent retry via `idempotency_key`
+- [X] Evidence SQL in [`tasks/data/evidence/data-021-showings-bridge.md`](<../evidence/data-021-showings-bridge.md>)
+- [ ] Landlord RLS smoke via authenticated test user — **app/QA follow-up**
+
+## Out of scope
+
+* New indexes / RLS policies (already live)
+* Status CHECK migration (`proposed` rename)
+* CopilotKit HITL UI (real-estate app task)
+* WhatsApp reminders
+* `trip_items` upsert (DATA-028)
+
+## Real-world example
+
+**Camila** picks Saturday 2pm on `/rentals` — edge creates `leads` row with `apartment_id` + `showings` row `status=scheduled`; Patricia's landlord query on `apartment_id` returns one upcoming row.","Done",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:25, imp:179, track:data",,,,,"2026-05-30T00:31:54.852Z","2026-05-30T10:19:51.368Z",,,"2026-05-30T10:19:51.336Z",,,,,"Phase 1 — mdeai MVP launch","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","🗺️ Maps — Growth",,"c52bdaf5-cf0d-4fe4-9f36-75b076694ff3",13295,"SAN-347","",
+"SAN-347","Sanjiovani","DATA-020 — leads rental FK — apartment_id + preferred_showing_at","**Track:** Data foundation (Tier 4) · **IMP-177** · **data-order:23**
+
+**Spec:** `tasks/data/tasks-data/data-020-leads-rental-fk-columns.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-020 — leads rental FK columns
+
+## Gap
+
+`chat-lead-capture` stores `listing_id` / `listing_title` in `leads.metadata` JSON only. **Andrés** landlord inbox and CRM filters need indexed `apartment_id`.
+
+`landlord_inbox` already has `apartment_id` — leads should match.
+
+## Proposed migration
+
+```sql
+ALTER TABLE public.leads
+  ADD COLUMN IF NOT EXISTS apartment_id uuid REFERENCES public.apartments(id) ON DELETE SET NULL,
+  ADD COLUMN IF NOT EXISTS preferred_showing_at timestamptz;
+
+CREATE INDEX idx_leads_apartment_id ON public.leads (apartment_id) WHERE apartment_id IS NOT NULL;
+CREATE INDEX idx_leads_intent_apartment ON public.leads (intent, apartment_id) WHERE intent = 'rental';
+
+-- Backfill
+UPDATE public.leads
+SET apartment_id = (metadata->>'listing_id')::uuid
+WHERE apartment_id IS NULL
+  AND metadata->>'listing_id' ~ '^[0-9a-f-]{36}$';
+```
+
+## Edge fn follow-up (app track)
+
+Update `supabase/functions/chat-lead-capture/index.ts` to set `apartment_id` + `preferred_showing_at` from schedule-viewing payload (not metadata-only).
+
+## Acceptance criteria
+
+- [X] Migration + RLS unchanged (5 existing policies on `leads`)
+- [X] Backfill count in evidence (1/11 from `metadata.listing_id`)
+- [ ] `017-scr-schedule-viewing-modal` G2 gate queryable by `apartment_id` — **app track**: update `chat-lead-capture`
+- [X] No anon direct INSERT — edge only (mde-supabase rule)","Done",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:23, imp:177, track:data",,,,,"2026-05-30T00:31:53.216Z","2026-05-30T10:19:50.396Z",,,"2026-05-30T00:31:53.292Z",,,,,"Phase 1 — mdeai MVP launch","80fe78ad-59de-48f5-9815-7c208c0f0176","🍽️ Discovery — UI",,"20b51663-c890-45e1-a657-6066bda2fc63",13883,"SAN-351, SAN-349, SAN-348, SAN-331, SAN-327","",
+"SAN-348","Sanjiovani","DATA-023 — Rental golden queries — Camila eval SQL pack","**Track:** Data foundation (Tier 4) · **IMP-178** · **data-order:24**
+
+**Spec:** `tasks/data/tasks-data/data-023-rental-golden-queries.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-023 — rental golden queries
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Lucía · Camila persona |
+| **Surface** | Eval / Vitest / manual SQL |
+| **Layer** | DATA |
+
+## What we're building
+
+20–30 rental queries with expected result constraints:
+
+| Query class | Example | Assert |
+| -- | -- | -- |
+| Hood + beds | ""2BR Laureles"" | ≤8 rows, all Laureles |
+| Price ceiling | ""under $50/night Poblado"" | `price_daily <= 50` |
+| WiFi tag | ""good wifi remote work"" | amenities or wifi_speed |
+| Semantic | ""quiet furnished long stay"" | hybrid_search_listings RPC |
+| Empty | ""10BR castle Medellín"" | 0 rows, no hallucination |
+
+Output: `tasks/data/evidence/data-023-rental-golden-queries.sql` + `.json`
+
+## Acceptance criteria
+
+- [X] Each query runs against live Supabase (read-only) — see `.sql` + `.json`
+- [X] Documents dependency on **data-009 M3** `price_daily` index (Q6 EXPLAIN)
+- [ ] Linked from real-estate PRD eval suite (RE-027 post-MVP)
+
+## Note
+
+**data-006** stays venue-only (café/restaurant/nightclub). Do not merge files.","Done",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:24, imp:178, track:data",,,,,"2026-05-30T00:31:53.763Z","2026-05-30T10:19:50.889Z",,,"2026-05-30T00:31:53.814Z",,,,,"Phase 1 — mdeai MVP launch","80fe78ad-59de-48f5-9815-7c208c0f0176","🍽️ Discovery — UI",,"93d06e37-a0e8-46a0-8960-a412b1f33464",13883,"SAN-347","",
+"SAN-329","Sanjiovani","DATA-034 — Maps geo inventory — inventory lat/lng + place_id coverage","**Track:** Data foundation (Tier 4) · **IMP-159** · **data-order:05**
+
+**Spec:** `tasks/data/tasks-data/data-034-maps-geo-inventory.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-034 — maps geo inventory
+
+## Purpose
+
+Sofía proves **Camila's rental pins**, **Roberto's event pins**, and **Tourist restaurant/attraction pins** have coordinates before MAP-012 neighborhood intel or new pin categories ship.
+
+Complements **data-001** (venue kinds) and **data-019** (rentals) with a **map-pin lens**.
+
+## Tables to audit
+
+| Table | Geo columns | place_id column | Pin category | Persona |
+| -- | -- | -- | -- | -- |
+| `apartments` | `latitude`, `longitude` | optional | `rental` | Camila |
+| `events` | via `event_venues` on `events.venue_id` | venue ref | `event` | Roberto / Tourist |
+| `restaurants` | lat/lng | `google_place_id` | `restaurant` | Tourist |
+| `tourist_destinations` | lat/lng | `google_place_id` | `attraction` | Tourist |
+
+## Cache coverage (read-only)
+
+Cross-check **data-007** after MAP-005 — snapshot counts for audit-2:
+
+```sql
+SELECT count(*) AS place_details_rows,
+       count(*) FILTER (WHERE expires_at > now()) AS valid_details
+FROM place_details_cache;
+
+SELECT count(*) AS search_cache_rows,
+       count(*) FILTER (WHERE expires_at > now()) AS valid_search
+FROM places_search_cache;
+```
+
+Add to deliverable table:
+
+| Cache | Valid rows | Notes |
+| -- | -- | -- |
+| `place_details_cache` |  | ADK sidecar writes today |
+| `places_search_cache` |  | Unused until MAP-005 |
+
+## Queries to run (read-only)
+
+```sql
+-- Rentals pin-ready
+SELECT count(*) AS total,
+       count(*) FILTER (WHERE latitude IS NOT NULL AND longitude IS NOT NULL) AS with_coords
+FROM apartments WHERE deleted_at IS NULL;
+
+-- Events with venue coords (live schema: event_venues, not venues)
+SELECT count(*) AS events_total,
+       count(*) FILTER (WHERE ev.latitude IS NOT NULL) AS with_venue_coords
+FROM events e
+LEFT JOIN event_venues ev ON ev.id = e.venue_id;
+
+-- Restaurants
+SELECT count(*) AS total,
+       count(*) FILTER (WHERE google_place_id IS NOT NULL) AS with_place_id,
+       count(*) FILTER (WHERE latitude IS NOT NULL AND longitude IS NOT NULL) AS with_coords
+FROM restaurants;
+
+-- Tourist destinations
+SELECT count(*) AS total,
+       count(*) FILTER (WHERE latitude IS NOT NULL AND longitude IS NOT NULL) AS with_coords
+FROM tourist_destinations;
+```
+
+## Deliverable
+
+`tasks/data/evidence/data-034-maps-geo-inventory.md` with:
+
+| Kind | Total rows | With lat/lng | With place_id | Gap action |
+| -- | -- | -- | -- | -- |
+| rental | 44 | 44/44 | n/a | DATA-009 M3 indexes applied |
+| event | 49 | 18/49 via venue | — | venue backfill optional |
+| restaurant | 44 | 44/44 coords | 44/44 | DATA-004 verify-only |
+| attraction | 23 | 23/23 | 23/23 | none |
+
+Evidence: [`../evidence/data-034-maps-geo-inventory.md`](<../evidence/data-034-maps-geo-inventory.md>)
+
+## Acceptance criteria
+
+- [X] All four inventory kinds counted via Supabase MCP
+- [X] Gap rows summarized (counts only)
+- [ ] Linked from maps-audit-plan §6
+- [X] DATA-009 M3 indexes applied (rental search)
+- [X] Cache row counts in evidence (52 place_details, 33 places_search)","Done",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:05, imp:159, track:data",,,,,"2026-05-30T00:31:37.673Z","2026-05-30T10:19:40.350Z",,,"2026-05-30T00:31:37.779Z",,,,,"Phase 1 — mdeai MVP launch","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","🗺️ Maps — Growth",,"a2640d03-792b-446c-b59f-62abb5cbd603",13883,"SAN-359","",
+"SAN-336","Sanjiovani","DATA-006 — Golden eval queries — café, restaurant, nightclub","**Track:** Data foundation (Tier 4) · **IMP-166** · **data-order:12**
+
+**Spec:** `tasks/data/tasks-data/data-006-golden-queries.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+---
+
+# DATA-006 — golden queries
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Lucía (QA) + Sofía |
+| **Surface** | Eval harness — `/chat` + read-only Supabase SQL |
+| **Layer** | DATA (artifact only — no DDL) |
+| **Layer A** | ✅ Done (2026-05-30) |
+| **Layer B** | ⚪ Open — MSV-012 app track |
+
+## What we're building
+
+Golden query JSON + SQL regression pack for all three venue kinds so MSV/CKV changes don't regress discovery quality.
+
+**Two eval layers:**
+
+| Layer | What | Done when |
+| -- | -- | -- |
+| **A — Data regression** | Read-only SQL vs live Supabase | All G\* queries return expected rows |
+| **B — Tool / chat eval** | POST `/api/copilotkit` or Vitest tool calls | MSV-012 / app track (out of scope for DATA Done gate) |
+
+## Features
+
+* [`tasks/venues/seeds/golden-queries-venues.json`](<../../venues/seeds/golden-queries-venues.json>)
+* [`tasks/data/evidence/data-006-venue-golden-queries.sql`](<../evidence/data-006-venue-golden-queries.sql>)
+* Expected tool + min result count per query
+* Hooks **MSV-012** eval agent (app layer)
+
+## Agents & tools (per DATA-002)
+
+| Kind | Tool | Source table |
+| -- | -- | -- |
+| Café | `search-grounded-places` | `venue_anchors` (kind=cafe) — eval anchors + grounding |
+| Restaurant | `search-restaurants` | `public.restaurants` (not `venue_anchors`) |
+| Nightclub | `search-grounded-places` | `venue_anchors` (kind=nightclub) |
+
+`conciergeAgent` routes café/coffee → grounded places; cuisine/dinner → `search-restaurants`.
+
+## Workflows
+
+None.
+
+## User journey
+
+1. Sofía runs Layer A SQL (MCP or `psql`) — must pass before merge.
+2. Lucía runs Layer B (optional for DATA Done): each prompt via `/api/copilotkit` or tool unit tests.
+3. Failures on Layer B block MSV-001 / CKV-003 app tasks — not DATA-006 alone.
+
+## Goals
+
+1. ≥5 queries per kind (**18 total** in JSON) with verified IDs:
+   * Café / nightclub → `venue_anchors.id` + `google_place_id`
+   * **Restaurant →** `restaurants.id` **+** `google_place_id` (DATA-004 catalog)
+2. Sources: DATA-003/005 anchor maps, DATA-004 `restaurants` rows (address + `cuisine_types` filters match `search-restaurants.ts`).
+3. Personas: Sarah (café), Carlos (restaurant), Tourist (nightclub).
+4. Artifacts: JSON + SQL under paths above.
+
+## Acceptance criteria
+
+### Layer A (DATA Done gate)
+
+- [X] Café queries (7) map to verified `venue_anchors` place_ids (DATA-003)
+- [X] Nightclub queries (6) map to verified `venue_anchors` place_ids (DATA-005)
+- [X] Restaurant queries (6) map to verified `restaurants.id` + `google_place_id` (DATA-004)
+- [X] `data-006-venue-golden-queries.sql` committed — café, restaurant, nightclub sections
+- [X] Nightclub prompts exclude ticket/event commerce wording
+- [X] Layer A SQL run logged in evidence (2026-05-30 — 26/26 pass)
+
+### Layer B (app / MSV — not required for Layer A Done)
+
+- [ ] Restaurant tool eval asserts `source: 'supabase'` (not fallback list)
+- [ ] MSV-012 harness reads `golden-queries-venues.json`
+
+## Real-world example
+
+**Carlos** — ""traditional bandeja paisa in Laureles"" — SQL assert matches `Hacienda Junín` via `address ILIKE '%Laureles%'`, same filter as `search-restaurants` tool.
+
+**Tourist** — ""reggaeton near Provenza tonight"" — anchor assert hits `Dulce Jesús Mío` / `VIVO Medellín` in `venue_anchors`, not a row in `events`.
+
+## Evidence
+
+* **Layer A run log:** [`../evidence/data-006-venue-golden-queries.md`](<../evidence/data-006-venue-golden-queries.md>) — 19/19 persona + 7 contract asserts, 2026-05-30
+* SQL pack: [`../evidence/data-006-venue-golden-queries.sql`](<../evidence/data-006-venue-golden-queries.sql>)
+* JSON: [`../../venues/seeds/golden-queries-venues.json`](<../../venues/seeds/golden-queries-venues.json>)
+* Café sign-off: [`../evidence/data-003-cafe-signoff.md`](<../evidence/data-003-cafe-signoff.md>)","Done",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:12, imp:166, track:data",,,,,"2026-05-30T00:31:42.247Z","2026-06-06T02:19:44.769Z",,,"2026-05-30T00:53:57.357Z",,,,,"Phase 1 — mdeai MVP launch","b12a8b84-beb0-4eff-855e-b03282574aca","🍽️ Venues — Phase 2",,"fb08a1ea-02cf-47a9-8c9a-bbe3a0d82689",13861,"SAN-337, SAN-335, SAN-334, SAN-611","",
+"SAN-337","Sanjiovani","DATA-007 — place_details_cache coverage — all venue kinds","**Track:** Data foundation (Tier 4) · **IMP-167** · **data-order:13**
+
+**Spec:** `tasks/data/tasks-data/data-007-cache-audit.md`
+
+**Plan:** [`plan.md`](<../../plan.md>) Tier 4 · [`INDEX-data.md`](<../../tasks/data/tasks-data/INDEX-data.md>)
+
+**Note:** Blocked — MAP-005 places proxy not verified
+
+---
+
+# DATA-007 — cache audit
+
+## At a glance
+
+|  |  |
+| -- | -- |
+| **For** | Sarah, Carlos, Tourist — detail panels |
+| **Surface** | `/api/places/detail` + right column |
+| **Layer** | DATA |
+
+## What we're building
+
+Audit `place_details_cache` coverage so detail panels don't hammer Places API on every click.
+
+> **Run after MAP-005** — meaningful hit-rate requires proxy read-through from mdeapp, not ADK-only writes.
+
+**Baseline (MCP read-only, 2026-05-30 — pre-MAP-005):**
+
+| Kind | place_ids | cached | hit rate |
+| -- | -- | -- | -- |
+| café | 20 | 14 | \~70% |
+| nightclub | 13 | 1 | \~8% |
+| restaurant | 43 | 0 | 0% |
+
+Use DATA-006 golden place_ids as the audit universe; DATA-008 should prioritize restaurant + nightclub misses.
+
+## Features
+
+* Hit-rate report by place_id kind
+* Backfill list for data-008
+* Field mask compliance check
+
+## Agents & tools
+
+None — cache layer for UI
+
+## Workflows
+
+None.
+
+## User journey
+
+1. User opens any detail panel.
+2. App reads cache first; misses trigger Places fetch.
+3. Audit tells Sofía which anchors need backfill.
+
+## Goals
+
+1. Union all `place_id`s from data-003 café anchors, data-004 restaurants, data-005 nightclub anchors.
+2. Report cache hit/miss % per kind.
+3. List misses for **data-008** (data-008) backfill cron priority queue.
+
+## Acceptance criteria
+
+- [ ] Evidence file with per-kind coverage table
+- [ ] No Places API calls required (read cache only) unless spot-check noted","Done",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"data-order:13, imp:167, track:data",,,,,"2026-05-30T00:31:43.421Z","2026-06-02T16:52:40.157Z",,,"2026-06-02T16:52:40.137Z",,,,,"Phase 1 — mdeai MVP launch","54ad87c1-651a-42b1-9b6a-4fb90ab35cab","🗺️ Maps — Growth",,"341e4b65-66a0-4ed6-8d4e-e2059c87f530",8582,"SAN-338, SAN-336","",
+"SAN-453","Sanjiovani","PR-06 — C3 seeds from #23","Merged #43 — C3 venue seeds on main @ 01616d1.","Done",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"track:data, track:pr",,,,,"2026-06-01T17:18:01.444Z","2026-06-01T18:51:29.278Z",,,"2026-06-01T18:51:29.242Z",,,,,"Phase 1 — mdeai MVP launch",,,,"03a43daa-e95e-4f29-acc1-8c18f9666a0a",9903,"SAN-446","",
+"SAN-455","Sanjiovani","PR-09 — Close #23 + supersede comment","#23 closed — superseded by #40–#44.","Done",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"track:data, track:pr",,,,,"2026-06-01T17:18:05.318Z","2026-06-01T18:51:31.015Z",,,"2026-06-01T18:51:30.990Z",,,,,"Phase 1 — mdeai MVP launch",,,,"636e2520-7a94-4e29-9d0a-ebc73e38bd91",9903,"SAN-446","",
+"SAN-445","Sanjiovani","DATA-050 — Out-of-band base-table backfill + replay-from-scratch repair","KEEP decision doc shipped; DATA-050 B1–B4 in #40.","Done",,"Medium","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"stack:supabase, track:data, track:pr",,,,,"2026-06-01T11:02:54.365Z","2026-06-01T18:51:38.788Z","2026-06-01T11:02:54.407Z",,"2026-06-01T18:51:38.760Z",,,,,"Phase 1 — mdeai MVP launch",,,,"9d0e3101-50b5-4217-bd30-c530682f39c4",9903,"SAN-446","",
+"SAN-454","Sanjiovani","PR-07 — C4 rollbacks + docs from #23","Merged #44 — C4 rollbacks + README on main @ 6424be2.","Done",,"Low","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"track:data, track:pr",,,,,"2026-06-01T17:18:01.843Z","2026-06-01T18:51:29.695Z",,,"2026-06-01T18:51:29.673Z",,,,,"Phase 1 — mdeai MVP launch",,,,"3e45ecb9-47fd-422f-9fb1-fe9571264eb5",9903,"SAN-446","",

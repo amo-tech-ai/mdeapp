@@ -1,0 +1,8 @@
+flowchart LR
+  subgraph Shell["/dashboard (role-aware)"]
+    NAV["Sidebar<br/>modules filtered by enabled services"]
+    CONTENT["Active module"]
+    COP["✦ AI assistant (persistent)"]
+  end
+  NAV --> CONTENT
+  COP -. acts on .- CONTENT

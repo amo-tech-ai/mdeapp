@@ -1,0 +1,10 @@
+flowchart LR
+  TRIG["Trigger<br/>lead · purchase · schedule · event"] --> TASK["Task created (queue)"]
+  TASK --> DRAFT["AI drafts output"]
+  DRAFT --> GATE{"Money / public?"}
+  GATE -- yes --> HITL["Partner approves (HITL)"]
+  GATE -- no --> EXEC["Execute"]
+  HITL --> EXEC
+  EXEC --> PUB["Publish / send / book"]
+  PUB --> TRACK["Track performance"]
+  TRACK --> OPP["Dashboard 'Opportunities' → next action"]

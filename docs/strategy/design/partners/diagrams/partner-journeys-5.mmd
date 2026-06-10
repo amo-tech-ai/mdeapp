@@ -1,0 +1,8 @@
+flowchart LR
+  V["/venues"] --> SU["signup?type=venue"] --> PROF["Venue profile<br/>category·hours·photos"]
+  PROF --> SVC["Pick services"]
+  SVC --> ING["OpenClaw<br/>auto-ingest events"]
+  SVC --> POS["Postiz<br/>auto social posts"]
+  SVC --> BOOK["AI event booking<br/>requests → HITL reply"]
+  ING & POS & BOOK --> LIVE["Listed: concierge · browse · map"]
+  LIVE --> LEADS["/broker dashboard<br/>leads · bookings · analytics"]

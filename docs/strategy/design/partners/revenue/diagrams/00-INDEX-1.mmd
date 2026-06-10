@@ -1,0 +1,16 @@
+flowchart TD
+  subgraph Demand
+    CON["Consumers<br/>tourist · nomad · expat · local"]
+  end
+  CON --> AICON["✦ AI Concierge (grounded)"]
+  AICON --> VERTS["Verticals<br/>events · venues · rentals · trips · marketplace"]
+  subgraph Supply["Partners (config of one platform)"]
+    SUP["hosts · venues · brokers · sponsors · agencies · vendors · tours · …"]
+  end
+  VERTS --> SUP
+  SUP --> SVC["AI services + automation<br/>content · listings · replies · matching · Postiz · OpenClaw"]
+  SUP --> TXN["Transactions"]
+  TXN --> FEE["Platform fee"]
+  SVC --> SUBS["Service revenue"]
+  FEE & SUBS --> MDE["mdeai revenue"]
+  MDE --> AICON

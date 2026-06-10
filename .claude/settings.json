@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "outputStyle": "mdeai-plain",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claude/hooks/session-start.mjs" }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claude/hooks/guard-sensitive-paths.mjs" },
+          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claude/hooks/scan-secrets.mjs" },
+          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claude/hooks/no-service-role-in-src.mjs" },
+          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claude/hooks/gemini-model-pin.mjs" },
+          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claude/hooks/copilotkit-version-pin.mjs" },
+          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claude/hooks/places-api-field-mask.mjs" },
+          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claude/hooks/advanced-marker-needs-mapid.mjs" }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claude/hooks/dist-leak-scan.mjs" }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claude/hooks/lint-edited-ts.mjs" },
+          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claude/hooks/typecheck-edited-ts.mjs" }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claude/hooks/stop-rls-gate.mjs" },
+          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claude/hooks/stop-plain-language-gate.mjs" }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "deny": [
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf ~)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -fd*)",
+      "Bash(git checkout .)",
+      "Bash(git restore .)",
+      "Bash(git branch -D*)",
+      "Bash(supabase db push*)",
+      "Bash(supabase db reset --linked)",
+      "Bash(vercel --prod*)",
+      "Edit(/home/sk/mde/**)",
+      "Write(/home/sk/mde/**)",
+      "MultiEdit(/home/sk/mde/**)"
+    ],
+    "ask": [
+      "Bash(npm install*)",
+      "Bash(npm uninstall*)",
+      "Bash(npm update*)",
+      "Bash(git commit*)",
+      "Bash(git push*)",
+      "Bash(gh pr create*)",
+      "Bash(gh repo create*)",
+      "Bash(vercel deploy*)",
+      "Bash(vercel link*)",
+      "mcp__plugin_supabase_supabase__apply_migration",
+      "mcp__plugin_supabase_supabase__deploy_edge_function",
+      "mcp__plugin_supabase_supabase__execute_sql"
+    ],
+    "allow": [
+      "Bash(npm run dev:*)",
+      "Bash(npm run build)",
+      "Bash(npm run audit)",
+      "Bash(npm run start)",
+      "Bash(npm test*)",
+      "Bash(npm run lint*)",
+      "Bash(npm run floor)",
+      "Bash(npm run typecheck)",
+      "Bash(npm run smoke:golden-queries)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git branch)",
+      "Bash(git show*)",
+      "Bash(ls*)",
+      "Bash(pwd)",
+      "Bash(cat package.json)",
+      "Bash(cat tsconfig.json)",
+      "Bash(node .claude/hooks/*)",
+      "mcp__copilotkit__search-docs",
+      "mcp__copilotkit__search-code",
+      "mcp__copilotkit__explore-docs",
+      "mcp__copilotkit__explore-code",
+      "mcp__copilotkit__search-ag-ui-docs",
+      "mcp__copilotkit__search-ag-ui-code",
+      "mcp__copilotkit__submit-feedback",
+      "mcp__mastra__searchMastraDocs",
+      "mcp__mastra__readMastraDocs",
+      "mcp__mastra__mastraDocs",
+      "mcp__mastra__getMastraHelp",
+      "mcp__mastra__listMastraPackages",
+      "mcp__mastra__getMastraExports",
+      "mcp__mastra__getMastraExportDetails",
+      "mcp__mastra__mastraMigration",
+      "mcp__playwright-test__*",
+      "mcp__chrome-devtools__*",
+      "mcp__claude-in-chrome__read_console_messages",
+      "mcp__claude_ai_Linear__list_issues",
+      "mcp__claude_ai_Linear__get_issue",
+      "mcp__claude_ai_Mermaid_Chart__validate_and_render_mermaid_diagram",
+      "mcp__plugin_linear_linear__list_issues",
+      "mcp__plugin_linear_linear__get_issue",
+      "mcp__plugin_linear_linear__list_projects",
+      "mcp__plugin_linear_linear__get_project",
+      "mcp__plugin_linear_linear__list_milestones",
+      "mcp__plugin_linear_linear__list_issue_labels",
+      "mcp__plugin_linear_linear__list_comments"
+    ]
+  },
+  "env": {
+    "LOG_LEVEL": "info"
+  }
+}

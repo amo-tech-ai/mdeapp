@@ -78,3 +78,11 @@ config/
 -
 
 .env*.local
+
+# ── docs/ knowledge base (migrated from outer tasks/ 2026-06-09) ────────
+# Track the markdown knowledge; exclude nested repo clones, editor cache,
+# and heavy binary/scraped vaults (recoverable, not source of truth).
+docs/*/design/mdeapp/
+docs/.obsidian/
+docs/screenshots/
+docs/docs-vault/

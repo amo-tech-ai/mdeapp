@@ -4,7 +4,7 @@
 > **Rules:** [`.cursor/rules/mdeai-done-gate.mdc`](../../../../.cursor/rules/mdeai-done-gate.mdc) · [`.cursor/rules/mdeai-events-task-skill-mcp-gate.mdc`](../../../../.cursor/rules/mdeai-events-task-skill-mcp-gate.mdc) · [`.cursor/rules/mdeai-events-pre-impl-verify.mdc`](../../../../.cursor/rules/mdeai-events-pre-impl-verify.mdc) · [`.cursor/rules/mdeai-real-world-proof-pr-review.mdc`](../../../../.cursor/rules/mdeai-real-world-proof-pr-review.mdc) · [`.cursor/rules/mdeai-events-gate-audit.mdc`](../../../../.cursor/rules/mdeai-events-gate-audit.mdc)  
 > **Skills index:** [`index-skills.md`](../../../../index-skills.md) § Events Platform  
 > **Naming:** `SAN-### · SPEC-ID — <full Linear title>` · **Changelog:** [`changelog.md`](./changelog.md)  
-> **Last synced:** 2026-06-09 (Audit 06 E0 fix · PR [#146](https://github.com/amo-tech-ai/mdeapp/pull/146) ready @ `d7b256b`+ · RLS smoke ALL PASS · human ERD sign-off pending)
+> **Last synced:** 2026-06-09 (EVENTS-PLATFORM-AUDIT · Linear synced · main `2835cf2` · SAN-135/510/511 Done · 512–514 In Review)
 
 ---
 
@@ -37,8 +37,7 @@
 | Area | Status |
 |------|--------|
 | **main** | `2835cf2` — SAN-546 pin-clear (#145) + SAN-135 cleanup (#142) |
-| **Active branch** | `ai/san-492-evt-033-event-venue-offerings-schema` — PR [#146](https://github.com/amo-tech-ai/mdeapp/pull/146) **ready for review** |
-| **SAN-492 state** | E0 `partner_is_active()` patched · RLS smoke **ALL PASS** (disposable) · **NOT on prod** · **NO-GO sign-off/apply** until human ERD ack |
+| **Active branch** | `ai/san-492-evt-033-event-venue-offerings-schema` — draft PR [#146](https://github.com/amo-tech-ai/mdeapp/pull/146) |
 | **Shipped (changelog)** | SAN-660 · SAN-730 · SAN-731 · **SAN-135** (#138 + #142) |
 | **Platform readiness** | 96/100 — Phase A gate closed |
 
@@ -70,16 +69,14 @@ Run: [`.cursor/rules/mdeai-events-gate-audit.mdc`](../../../../.cursor/rules/mde
 
 **Phase A gate closed.** Venue *code* blocked on SAN-492 approval; wires (510/511) may start now.
 
-**SAN-492 audit (2026-06-09):** Forensic audit **94/100 (A)** on analysis · authored SQL **90/100 (A-)** post-E0 fix. Model = `partner_locations` + `venue_event_offerings`/`packages` + `bookings`. Critical anon-RLS trap **fixed** (`partner_is_active()` + REVOKE/GRANT). Migration **NOT APPLIED on prod**. Evidence: [`SAN-492-PR146-AUDIT.md`](../../../../tasks/testing/evidence/2026-06-09/SAN-492-PR146-AUDIT.md) · SoT: [`VENUE-DATA-MODEL.md`](./data/VENUE-DATA-MODEL.md) · seed: [`EVT-034-seed.md`](./specs/venue-booking/EVT-034-seed.md)
-
-**Verdict:** 🟢 **GO PR review** · 🔴 **NO-GO human sign-off** · 🔴 **NO-GO prod apply** · 🔴 **NO-GO SAN-493 impl** until staging apply
+**SAN-492 data model revised + live-audited (2026-06-09):** `partner_locations` reuse model — readiness **85 (GO migration branch; NO-GO prod apply)**. Migration authored with **`partner_is_active()`** fix: `mdeapp/supabase/migrations/20260609120000_san492_event_venue_offerings.sql` — **NOT APPLIED on prod**. RLS smoke **ALL PASS** on disposable DB. Docs: [`VENUE-DATA-MODEL.md`](./data/VENUE-DATA-MODEL.md) · audit [`data/data-model-audit.md`](./data/data-model-audit.md) · seed spec [`EVT-034-seed.md`](./specs/venue-booking/EVT-034-seed.md)
 
 **Parent epic:** [SAN-855 · VEB-000 — Event Venue Booking Platform](https://linear.app/sanjiovani/issue/SAN-855/veb-000-event-venue-booking-platform)
 
 | # | Task | Linear | Readiness | Success rate | Verify |
 |---|------|--------|----------:|-------------:|--------|
-| B.1 | **SAN-492 · EVT-033 — Event venue + offerings schema** | In Progress | **90** | **88%** est. | 🟢 PR [#146](https://github.com/amo-tech-ai/mdeapp/pull/146) ready · E0 fixed · smoke ALL PASS · [`SAN-492-PR146-AUDIT.md`](../../../../tasks/testing/evidence/2026-06-09/SAN-492-PR146-AUDIT.md) · ⬜ human ERD sign-off · NO prod apply |
-| B.2 | **SAN-493 · EVT-034 — Seed Mamacita + 5 event partners** | [Todo](https://linear.app/sanjiovani/issue/SAN-493/evt-034-seed-mamacita-5-event-partners) | **82** | **78%** est. | 🟡 spec [`EVT-034-seed.md`](./specs/venue-booking/EVT-034-seed.md) ready (`status='active'`) · ⬜ blocked until 492 staging apply |
+| B.1 | **SAN-492 · EVT-033 — Event venue + offerings schema** | In Progress | **88** | **84%** est. | 🟢 PR [#146](https://github.com/amo-tech-ai/mdeapp/pull/146) draft — [`SAN-492-RESULTS.md`](../../../../tasks/testing/evidence/2026-06-09/SAN-492-RESULTS.md) · NO prod apply |
+| B.2 | **SAN-493 · EVT-034 — Seed Mamacita + 5 event partners** | [Todo](https://linear.app/sanjiovani/issue/SAN-493/evt-034-seed-mamacita-5-event-partners) | **80** | **75%** est. | ⬜ blockedBy 492 |
 | B.3 | **SAN-510 · EVT-051 — Wire: Event offerings panel + Event Venue CTA** | Done | **92** | **92%** est. | ✅ [`SAN-510-511-WIRE-RESULTS.md`](../../../../tasks/testing/evidence/2026-06-09/SAN-510-511-WIRE-RESULTS.md) |
 | B.4 | **SAN-511 · EVT-052 — Wire: Request proposal modal** | Done | **92** | **92%** est. | ✅ same evidence file |
 | B.5 | **SAN-494 · EVT-035 — Restaurant card Event Venue CTA** | [Todo](https://linear.app/sanjiovani/issue/SAN-494/evt-035-restaurant-card-event-venue-cta) | **78** | **74%** est. | ⬜ blockedBy 492+493 |
@@ -163,7 +160,7 @@ Load **≤5 skills** (read `SKILL.md` each). Run **MCP probes** before coding. *
 | **SAN-730 · AIE-002** | `shadcn` · `copilotkitV1` · `testing` · `task-verifier` · `mde-worktree-pr-flow` | copilotkit (single provider) | host nav spec + `host-nav-rail.tsx` | ✅ Done | ✅ B+ · 88% |
 | **SAN-731 · UI-004** | `shadcn` · `testing` · `task-verifier` · `mde-task-lifecycle` · `mde-worktree-pr-flow` | — | PAGE-003 · SCREEN-014 | ✅ Done | ✅ B+ · 90% |
 | **SAN-135 · AIE-024** | `shadcn` · `testing` · `task-verifier` · `mde-supabase` · `mde-worktree-pr-flow` | **Supabase** — backfill `details.host_display` + `event_venues` join | PAGE-003b · [`SAN-135-RESULTS.md`](../../../../tasks/testing/evidence/2026-06-08/SAN-135-RESULTS.md) | ✅ GO 94 | ✅ tests green · PR |
-| **SAN-492 · EVT-033** | `mde-events` · `mde-supabase` · `task-verifier` · `mermaid-diagrams` · `testing` | **Supabase** — baseline probe + post-apply RLS audit | **VENUE-DATA-MODEL** · EVT-033-schema | 🟢 **GO 90** (E0 fixed; sign-off pending) | ⬜ human ERD → staging apply |
+| **SAN-492 · EVT-033** | `mde-supabase` · `task-verifier` · `mermaid-diagrams` · `mde-task-lifecycle` · `testing` | **Supabase** — tables exist? RLS audit | **VENUE-DATA-MODEL** · EVT-033-schema | ⬜ approve SoT first | ⬜ |
 | **SAN-493 · EVT-034** | `mde-supabase` · `mde-maps` · `task-verifier` · `testing` · `mde-task-lifecycle` | **Supabase** + **google-maps** Places IDs | seed spec | ⬜ after 492 | ⬜ |
 | **SAN-510 · EVT-051** | `mde-wireframe` · `shadcn` · `testing` · `task-verifier` · `mde-worktree-pr-flow` | — | VEB-W01 wire | 🟢 GO 92 | ⬜ |
 | **SAN-511 · EVT-052** | `mde-wireframe` · `copilotkitV1` · `shadcn` · `testing` · `task-verifier` | copilotkit HITL patterns (reference) | VEB-W02 wire | 🟢 GO 92 | ⬜ |
@@ -199,8 +196,7 @@ Load **≤5 skills** (read `SKILL.md` each). Run **MCP probes** before coding. *
 
 | Issue | Reason |
 |-------|--------|
-| SAN-492 **prod migration apply** | 🔴 **NO-GO** — human ERD sign-off + staging apply + post-apply advisors ([`VENUE-DATA-MODEL.md`](./data/VENUE-DATA-MODEL.md) §A.7) |
-| SAN-492 **PR #146 merge** | 🟢 **GO review** — E0 fixed · smoke green · still not prod apply |
+| SAN-492 **prod migration apply** | 🟡 GO for **branch only** — human ERD sign-off before prod (`VENUE-DATA-MODEL.md`) |
 | SAN-493–502 implementation code | Blocked by 492 migration merge (+ chain deps) |
 | SAN-857 browse panel | Blocked by SAN-115 P0 ledger |
 | SAN-824, SAN-765, PR #136 | [`notes/1-notes.md`](./notes/1-notes.md) |

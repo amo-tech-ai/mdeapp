@@ -1,0 +1,2293 @@
+"ID","Team","Title","Description","Status","Estimate","Priority","Project ID","Project","Creator","Assignee","Labels","Cycle Number","Cycle Name","Cycle Start","Cycle End","Created","Updated","Started","Triaged","Completed","Canceled","Archived","Due Date","Parent issue","Initiatives","Project Milestone ID","Project Milestone","SLA Status","UUID","Time in status (minutes)","Related to","Blocked by","Duplicate of"
+"SAN-544","Sanjiovani","CTEST-012 — Contest spec normalization, Linear sync, labels, and validation proof","# CTEST-012 — Contest spec normalization, Linear sync, labels, and validation proof
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-012` |
+| **Status** | In Progress |
+| **Priority** | P0 |
+| **Phase** | Contest task governance |
+| **Effort** | 1-2d |
+| **Owner** | codex |
+| **MVP track** | — |
+| **Depends on** | CTEST-000 |
+| **Linear** | SAN-544 |
+| **Evidence** | `tasks/contest/notes/CTEST-012-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-012-spec-normalization-linear-sync.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-012-spec-normalization-linear-sync.md>) |
+
+### Skills
+
+* `task-verifier`
+* `mermaid-diagrams`
+* `testing`
+
+### Docs
+
+* `../audit/2026-06-02-forensic-audit.md`
+* `../docs/04-verification-report-2026-06-02.md`
+* `../docs/05-production-task-standard.md`
+* `../docs/06-shadcn-component-audit.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/task-verifier/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/mermaid-diagrams/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/testing/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/shadcn/SKILL.md`
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Make the contest task pack executable by normalizing every CTEST spec to the repo task template, syncing issues to Linear, and recording proof for labels, links, Mermaid diagrams, and validation commands.
+
+## 2\. Goals
+
+* Normalize CTEST-000 through CTEST-011 to the ten-section task template.
+* Ensure every task has frontmatter: `id`, `title`, `status`, `priority`, `phase`, `effort`, `owner`, `depends_on`, `skill`, `labels`, `linear_project`, `verified_against`.
+* Ensure every task covers create tasks, tech stack, feature, problem solving, agents/workflows/automations, user journey, Mermaid diagrams, skills, MCP/official docs, verification steps, real-world examples, data, frontend/backend wiring, success criteria, production checklist, and testing.
+* Ensure every Linear issue has `prefix:CONT`, `prefix:EVT`, `track:contest`, `track:events`, and `phase:phase2`.
+* Record Linear issue identifiers back into task files when available.
+* Validate Markdown links and Mermaid blocks.
+
+## 3\. Features
+
+* Sofia can execute tasks without guessing what proof is required.
+* Patricia can see the contest/event scope in Linear.
+* Future audits can distinguish docs-only readiness from implementation readiness.
+
+## 4\. Workflows
+
+1. Run a local task frontmatter/section audit over `tasks/contest/tasks/*.md`.
+2. Patch missing sections and frontmatter.
+3. Verify every task references `../docs/05-production-task-standard.md`.
+4. Validate local links.
+5. Validate Mermaid blocks using MCP, Mermaid CLI, or documented offline syntax review.
+6. Verify shadcn UI gates for CTEST-004, CTEST-006, CTEST-008, CTEST-009, CTEST-010, and CTEST-011:
+
+   ```bash
+   cd mdeapp
+   npx shadcn@latest info --json
+   npx shadcn@latest docs field input-group textarea select checkbox radio-group table tabs drawer avatar alert empty sonner spinner --json
+   npx shadcn@latest add field input-group textarea select checkbox radio-group table tabs drawer avatar alert empty sonner spinner --dry-run
+   ```
+7. Create/update Linear issues in the Events Platform project.
+8. Write `tasks/contest/notes/CTEST-012-evidence.md`.
+
+## 5\. User Journeys
+
+* Sofia opens Linear and sees every contest task in order with labels and repo links.
+* Codex runs task-verifier and gets a clean spec-readiness table.
+* Roberto/Patricia can tell which tasks are Phase 2 contest work versus current Phase 1 events work.
+
+## 6\. Agents
+
+* No product agents are introduced.
+* Codex/Linear sync is governance only.
+
+## 7\. Integrations
+
+* Linear project: Events Platform.
+* Task docs under `tasks/contest/tasks`.
+* Mermaid diagrams under `tasks/contest/docs/01-mermaid-diagrams.md`.
+* shadcn audit under `tasks/contest/docs/06-shadcn-component-audit.md`.
+
+## 8\. Summary
+
+This is the first safe task to execute because it fixes planning hygiene without changing product runtime.
+
+## 9\. Definition Of Done
+
+- [X] Every CTEST task has required frontmatter (`evidence`, `phase:phase2`, `mvp_track` where applicable).
+- [X] Every CTEST task has the ten required sections (verified 2026-06-02 — see `../audit/2026-06-02-spec-verification.md`).
+- [X] Every CTEST task references `../docs/05-production-task-standard.md`.
+- [ ] Every UI CTEST task references `../docs/06-shadcn-component-audit.md`.
+- [ ] Every CTEST task covers the required production topics listed in `../docs/05-production-task-standard.md`.
+- [ ] Every CTEST task has labels `prefix:CONT` and `prefix:EVT`.
+- [X] Linear issues exist for every CTEST task (SAN-532..544 on Events Platform).
+- [X] Linear labels and project assignment verified 2026-06-02.
+- [X] Mermaid in every CTEST task §11; Linear descriptions synced (SAN-532..544, 2026-06-02).
+- [ ] Mermaid/link validation evidence is recorded in CTEST-012-evidence.md.
+
+## 10\. Tests
+
+- [ ] `rg -n ""labels:|prefix:CONT|prefix:EVT"" tasks/contest/tasks`.
+- [ ] `rg -L ""../docs/05-production-task-standard.md"" tasks/contest/tasks/CTEST-*.md` returns no task files.
+- [ ] `rg -L ""../docs/06-shadcn-component-audit.md"" tasks/contest/tasks/CTEST-00{4,6,8,9}.md tasks/contest/tasks/CTEST-010-public-profile-vote-share-growth.md tasks/contest/tasks/CTEST-011-openclaw-discovery-invite-sandbox.md` returns no task files.
+- [ ] `npx shadcn@latest info --json` records installed components.
+- [ ] `npx shadcn@latest docs field input-group textarea select checkbox radio-group table tabs drawer avatar alert empty sonner spinner --json` returns docs links.
+- [ ] `npx shadcn@latest add field input-group textarea select checkbox radio-group table tabs drawer avatar alert empty sonner spinner --dry-run` records component/dependency changes and overwrite warnings.
+- [ ] Local Markdown link check for `tasks/contest`.
+- [ ] Mermaid validation or offline syntax checklist.
+- [ ] Linear `list_issues(project=events-platform-46150ec19346)` returns all CTEST issues.
+- [ ] Evidence file records commands, results, and unresolved gaps.
+
+## Production Standard Addendum
+
+This governance task must verify every contest task satisfies `../docs/05-production-task-standard.md`: create tasks, tech stack, feature, problem solving, agents/workflows/automations, user journey, Mermaid diagrams, skills to run, MCP/official docs, verification steps, real-world examples, data, frontend/backend wiring, success criteria, production-ready checklist, and testing.
+
+## 11\. Mermaid diagrams
+
+### Linear sync workflow (this task)
+
+```mermaid
+flowchart TD
+  A[Audit CTEST specs] --> B[Add section 11 Mermaid per task]
+  B --> C[sync-ctest-linear.py]
+  C --> D[SAN-532 to SAN-544 descriptions]
+  D --> E[CTEST-012 evidence file]
+```","In Progress",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:contest, track:events, type:chore",,,,,"2026-06-03T03:39:17.752Z","2026-06-03T04:50:58.851Z","2026-06-03T04:12:57.963Z",,,,,"2026-06-10T03:39:18.320Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","eaa4e023-4e1e-499a-941c-6d89f8136507",7902,"SAN-533","SAN-532",
+"SAN-543","Sanjiovani","CTEST-011 — OpenClaw and Firecrawl discovery plus approved invite drafts","# CTEST-011 — OpenClaw and Firecrawl discovery plus approved invite drafts
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-011` |
+| **Status** | Draft |
+| **Priority** | P1 |
+| **Phase** | Contest discovery sandbox |
+| **Effort** | 2-4d |
+| **Owner** | codex |
+| **MVP track** | MVP-B |
+| **Depends on** | CTEST-001, CTEST-005 |
+| **Linear** | SAN-543 |
+| **Evidence** | `tasks/contest/notes/CTEST-011-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-011-openclaw-discovery-invite-sandbox.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-011-openclaw-discovery-invite-sandbox.md>) |
+
+### Skills
+
+* `mde-firecrawl`
+* `mde-supabase`
+* `task-verifier`
+
+### Docs
+
+* `../docs/02-github-repos-use.md`
+* `../docs/05-production-task-standard.md`
+* `../docs/06-shadcn-component-audit.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/mde-firecrawl/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/shadcn/SKILL.md`
+* [https://ui.shadcn.com/docs/components](<https://ui.shadcn.com/docs/components>)
+* [https://ui.shadcn.com/docs/cli](<https://ui.shadcn.com/docs/cli>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+* `stack:openclaw`
+
+---
+
+## 1\. Purpose
+
+Add a governed discovery sandbox for finding public model/contestant/pageant/casting leads and drafting invite messages, without automated Instagram scraping or unsolicited autonomous outreach.
+
+## 2\. Goals
+
+* Add `/admin/discovery/contestants` for Patricia.
+* Use public web search and allowed page extraction for leads.
+* Store leads as drafts with source URLs, confidence, and compliance notes.
+* Draft invitation copy for human review.
+* Require approval before any contact, export, or CRM mutation.
+
+## 3\. Features
+
+* Search queries for model agencies, casting pages, public pageant websites, university/fashion event pages, and public creator directories.
+* Structured lead extraction schema: name, public profile URL, source type, city, category, contact method if explicitly published, evidence snippets, risk flags.
+* Human review queue with approve/reject/needs-research.
+* Invite draft generation with opt-in language and no deceptive claims.
+
+## 4\. Workflows
+
+1. Define allowlisted discovery sources and blocked sources.
+2. Run shadcn CLI verification:
+
+   ```bash
+   cd mdeapp
+   npx shadcn@latest info --json
+   npx shadcn@latest docs table sheet dialog textarea alert empty skeleton badge button input --json
+   npx shadcn@latest add table textarea alert empty --dry-run
+   ```
+3. Use Firecrawl search/scrape or OpenClaw sandbox against public pages only.
+4. Write `contestant_discovery_runs`, `contestant_discovery_leads`, and `contestant_invite_drafts`.
+5. Add approval action for invite drafts.
+6. Export/send remains disabled until a separate approved communications task exists.
+
+## 5\. User Journeys
+
+* Patricia searches for public Medellin model/casting pages and reviews extracted leads.
+* Patricia approves a lead and edits an invite draft.
+* A blocked source or private/login-gated URL fails closed and records a risk note.
+
+## 6\. Agents
+
+* Discovery agent can search, summarize, extract, and draft.
+* It cannot scrape private content, bypass platform protections, send DMs/emails, impersonate anyone, or mutate contestant truth.
+
+## 7\. Integrations
+
+* Firecrawl for search/scrape/structured extraction.
+* OpenClaw for sandboxed browser automation after allowlists are approved.
+* Supabase for discovery run logs and draft leads.
+* Paperclip-style approval gate if that control plane exists later.
+* Required shadcn components: `Table`, `Sheet`, `Dialog`, `Textarea`, `Alert`, `Empty`, `Skeleton`, `Badge`, `Button`, and `Input`.
+
+## 8\. Summary
+
+This task keeps discovery useful but boringly governed: public sources, source logging, approval gates, and no autonomous contact.
+
+## 9\. Definition Of Done
+
+- [ ] Discovery admin route renders.
+- [ ] shadcn CLI dry run completed for missing discovery/admin components before installation.
+- [ ] Allowlist/blocklist exists.
+- [ ] Structured extraction schema is documented.
+- [ ] Leads store source URLs and risk flags.
+- [ ] Invite drafts require approval.
+- [ ] No automated contact path exists in MVP.
+
+## 10\. Tests
+
+- [ ] Unit test extraction schema validation.
+- [ ] Negative test: private/login-gated URL is rejected.
+- [ ] Negative test: Instagram DM/send action is unavailable.
+- [ ] SQL proof: discovery run, lead, invite draft, approval status.
+- [ ] Playwright: Patricia reviews and approves a draft without sending it.
+- [ ] Evidence: source URL and extraction output redacted for private data.
+
+## Production Standard Addendum
+
+This task must satisfy `../docs/05-production-task-standard.md`: create tasks, tech stack, feature, problem solving, agents/workflows/automations, user journey, Mermaid diagrams, skills to run, MCP/official docs, verification steps, real-world examples, data, frontend/backend wiring, success criteria, production-ready checklist, and testing.
+
+## 11\. Mermaid diagrams
+
+### Discovery sandbox (MVP-B, human approval)
+
+```mermaid
+flowchart TD
+  P[Patricia] --> Admin[""/admin/discovery/contestants""]
+  Admin --> Search[Firecrawl public search]
+  Search --> Leads[contestant_discovery_leads draft]
+  Leads --> Draft[contestant_invite_drafts]
+  Draft --> Approve{Human approve?}
+  Approve -->|no| Stop[No send]
+  Approve -->|yes| Export[Manual or approved channel]
+  OpenClaw[OpenClaw] -.post-MVP enrich only.-> Leads
+```","Backlog",,"Medium","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:contest, track:events",,,,,"2026-06-03T03:39:15.041Z","2026-06-04T05:26:59.069Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"5fcf9052-68d5-4abf-8407-cba67908e95b",6422,"","SAN-533, SAN-537",
+"SAN-532","Sanjiovani","CTEST-000 — Contest diagrams, repo decisions, and scope gate","# CTEST-000 — Contest diagrams, GitHub repo decisions, and scope gate
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-000` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest planning |
+| **Effort** | 2-4h |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | — |
+| **Linear** | SAN-532 |
+| **Evidence** | `tasks/contest/notes/CTEST-000-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-000-diagrams-repo-decisions.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-000-diagrams-repo-decisions.md>) |
+
+### Skills
+
+* `mermaid-diagrams`
+* `mde-task-lifecycle`
+* `task-verifier`
+
+### Docs
+
+* `../docs/01-mermaid-diagrams.md`
+* `../docs/02-github-repos-use.md`
+* `../docs/00-docs-review.md`
+* `../docs/05-production-task-standard.md`
+* `../docs/MVP-SCOPE.md`
+* `../audit/2026-06-02-forensic-audit.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/mermaid-diagrams/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/mde-task-lifecycle/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/task-verifier/SKILL.md`
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Establish the contest vertical implementation map (diagrams, repo references, MVP boundaries) before any database, route, or agent work. Docs-only — no `mdeapp/src` changes.
+
+## 2\. Goals
+
+* Confirm `tasks/contest/docs/01-mermaid-diagrams.md` covers architecture, task sequence, vote flow, Stripe flow, CopilotKit/Mastra approval flow, screens, and post-MVP boundaries.
+* Confirm `tasks/contest/docs/02-github-repos-use.md` classifies repos as foundation, reference, post-MVP, or avoid.
+* Confirm `tasks/contest/docs/00-docs-review.md` records doc gaps and red flags.
+* Link all CTEST tasks in `tasks/contest/tasks/INDEX.md` with MVP-A / MVP-B cut lines.
+
+## 3\. Features
+
+* Roberto/Patricia/Sofía share one technical starting point for Phase 2 contest work.
+* Prevents scope creep (OpenClaw daily scrape, Postiz auto-publish, live overlays) into MVP-A.
+
+## 4\. Workflows
+
+1. Review and patch `01-mermaid-diagrams.md`, `02-github-repos-use.md`, `00-docs-review.md` if gaps found.
+2. Static Mermaid fence check:
+
+   ```bash
+   rg '^```mermaid' /home/sk/mdeai/tasks/contest/docs/01-mermaid-diagrams.md
+   rg 'note inside state|end\[|class\[' /home/sk/mdeai/tasks/contest/docs || true
+   ```
+3. Local link check under `tasks/contest/` (fix broken `tasks/contest/core/*` refs if any).
+4. Record docs-only runtime N/A in `tasks/contest/notes/CTEST-000-evidence.md`.
+
+## 5\. User Journeys
+
+* Sofia opens the pack and sees build order, repo choices, and deferred boundaries before CTEST-001.
+
+## 6\. Agents
+
+* None introduced. Governance/verification only.
+
+## 7\. Integrations
+
+| Repo | Use |
+| -- | -- |
+| CopilotKit Mastra starter | Pattern 1 in-process runtime reference for `mdeapp` |
+| Helios | Vote hash / freeze / tally concepts only |
+| Hi.Events | Ticket/check-in patterns only — **AGPL: no source copy** |
+| OpenStreamPoll | Post-MVP live/OBS overlay |
+| TanStack Table | Admin tables |
+| React Email | Sponsor/ticket email templates |
+| Playwright | Proof gates (CTEST-007) |
+| OpenClaw / Postiz / Trigger.dev | Post-MVP only |
+
+## 8\. Summary
+
+Planning gate for the contest vertical. Safe to execute without touching production runtime.
+
+## 9\. Definition Of Done
+
+- [ ] Diagrams doc exists with valid Mermaid fences (static scan).
+- [ ] GitHub repo use plan exists.
+- [ ] Docs review exists and lists red flags.
+- [ ] Task index links all CTEST tasks with MVP-A/B columns.
+- [ ] Evidence file states runtime N/A and records probe commands + exit codes.
+
+## 10\. Tests
+
+| Check | Command | Expected |
+| -- | -- | -- |
+| Mermaid fences | ```` rg -c '^```mermaid' tasks/contest/docs/01-mermaid-diagrams.md ```` | ≥ 7 |
+| Reserved-label scan | `rg 'note inside state\|end\[\|class\[' tasks/contest/docs` | no matches |
+| Index links CTEST | `rg 'CTEST-' tasks/contest/tasks/INDEX.md` | 000–012 listed |
+| Template sections (downstream) | `rg -c '^## 1\. Purpose' tasks/contest/tasks/CTEST-*.md` | 13 matches |
+
+**Do not:** write app code; clone external apps into `mdeapp`; move OpenClaw/Postiz/livestream into MVP-A.
+
+## 11\. Mermaid diagrams
+
+Authoritative pack: [`../docs/01-mermaid-diagrams.md`](<../docs/01-mermaid-diagrams.md>) (7 diagrams). Linear copy: [SAN-532](https://linear.app/sanjiovani/issue/SAN-532).
+
+### Task sequence (summary)
+
+```mermaid
+flowchart TD
+  D0[CTEST-000 diagrams] --> D1[CTEST-001 schema]
+  D1 --> D2[CTEST-002 vote ledger]
+  D2 --> D3[CTEST-003 Stripe]
+  D3 --> D4[CTEST-004 CopilotKit]
+  D4 --> D5[CTEST-005 Mastra]
+  D5 --> D6[CTEST-006 screens]
+  D6 --> D7[CTEST-007 Playwright]
+```
+
+**Production standard:** `../docs/05-production-task-standard.md`.
+
+---
+
+## Supplemental diagrams (repo doc)
+
+## 1\. MVP Platform Architecture
+
+```mermaid
+flowchart TB
+  subgraph Personas
+    Roberto[""Roberto organizer""]
+    Contestant[""Contestant""]
+    Fan[""Fan / ticket buyer""]
+    Judge[""Judge""]
+    Patricia[""Patricia admin""]
+  end
+
+  subgraph UI[""Next.js + CopilotKit 1.55.2""]
+    Public[""/contests/[slug] public page""]
+    Vote[""/contests/[slug]/vote""]
+    Host[""/host/contests/new""]
+    Admin[""/admin/contests""]
+    Tickets[""/me/tickets""]
+    Sponsor[""/sponsors""]
+  end
+
+  subgraph Runtime[""/api/copilotkit Pattern 1""]
+    CK[""CopilotRuntime""]
+    AGUI[""@ag-ui/mastra""]
+    Mastra[""Mastra local agents""]
+    Gemini[""Gemini model""]
+  end
+
+  subgraph Truth[""Supabase PostgreSQL""]
+    ContestDB[(""contests / rounds / contestants"")]
+    VoteDB[(""vote_ledger / vote_windows"")]
+    ScoreDB[(""judge_scores / score_snapshots"")]
+    MoneyDB[(""ticket_orders / paid_vote_orders"")]
+    ApprovalDB[(""approvals / audit_events / ai_runs"")]
+  end
+
+  subgraph External
+    Stripe[""Stripe Checkout + webhooks""]
+    WhatsApp[""WhatsApp provider""]
+    Maps[""Google Maps / Places later""]
+    OpenClaw[""OpenClaw post-MVP""]
+    Postiz[""Postiz post-MVP""]
+  end
+
+  Roberto --> Host
+  Contestant --> Public
+  Fan --> Public
+  Fan --> Vote
+  Fan --> Tickets
+  Judge --> Admin
+  Patricia --> Admin
+  Host --> CK
+  Admin --> CK
+  CK --> AGUI --> Mastra --> Gemini
+  UI --> Truth
+  Mastra --> ApprovalDB
+  Stripe --> MoneyDB
+  WhatsApp --> Public
+  Mastra -.post-MVP draft only.-> OpenClaw
+  Mastra -.approved campaigns only.-> Postiz
+  Mastra -.grounded geo.-> Maps
+```
+
+## 2\. Correct Task Sequence
+
+```mermaid
+flowchart TD
+  D0[""CTEST-000 diagrams + repo decisions""] --> D1[""CTEST-001 Supabase core schema""]
+  D1 --> D2[""CTEST-002 voting + scoring ledgers""]
+  D2 --> D3[""CTEST-003 tickets + paid votes schema""]
+  D3 --> D4[""CTEST-004 CopilotKit contest workspace""]
+  D4 --> D5[""CTEST-005 Mastra + Gemini workflows""]
+  D5 --> D6[""CTEST-006 screens + wireframes""]
+  D6 --> D7[""CTEST-007 Playwright proof gates""]
+
+  D1 --> RLS[""RLS + SQL proof""]
+  D2 --> VOTE[""Duplicate/late/closed vote tests""]
+  D3 --> STRIPE[""Stripe webhook idempotency tests""]
+  D4 --> HITL[""Approval card tests""]
+  D5 --> AI[""AI evals: draft-only sensitive actions""]
+  D6 --> UI[""Browser route proof""]
+  D7 --> DONE[""Done gate evidence""]
+```
+
+## 3\. Vote Truth Flow
+
+```mermaid
+sequenceDiagram
+  participant Fan
+  participant UI as Vote UI
+  participant API as Vote API/RPC
+  participant DB as Supabase
+  participant Admin as Patricia
+  participant AI as votingIntegrityAgent
+
+  Fan->>UI: Select contestant and submit vote
+  UI->>API: POST vote token + contestant_id
+  API->>DB: validate window, token, rate limits
+  alt valid vote
+    API->>DB: insert vote_ledger append-only row
+    DB-->>API: receipt hash
+    API-->>UI: accepted + receipt
+  else invalid vote
+    API->>DB: insert vote_fraud_signals/audit event
+    API-->>UI: rejected reason
+  end
+  DB-->>AI: read anomaly summary
+  AI-->>Admin: recommend review only
+  Admin->>DB: approve/reject review decision
+```
+
+## 4\. Stripe Paid Vote / Ticket Fulfillment
+
+```mermaid
+sequenceDiagram
+  participant Fan
+  participant UI as Checkout UI
+  participant API as Checkout API
+  participant Stripe
+  participant Webhook as Stripe webhook
+  participant DB as Supabase
+
+  Fan->>UI: Buy VIP ticket or paid vote pack
+  UI->>API: create checkout session
+  API->>DB: create pending order
+  API->>Stripe: create Checkout Session
+  Stripe-->>Fan: hosted checkout
+  Stripe->>Webhook: checkout.session.completed
+  Webhook->>Webhook: verify signature + idempotency key
+  Webhook->>DB: mark paid + issue QR/vote credits
+  DB-->>Webhook: committed audit event
+  Webhook-->>Stripe: 2xx
+  Fan->>UI: returns to success page
+  UI->>DB: read webhook-derived paid state
+```
+
+## 5\. CopilotKit + Mastra Approval Flow
+
+```mermaid
+sequenceDiagram
+  participant Roberto
+  participant CK as CopilotKit UI
+  participant API as /api/copilotkit
+  participant Mastra
+  participant Gemini
+  participant DB as Supabase
+  participant Patricia
+
+  Roberto->>CK: ""Create Miss Medellin finals""
+  CK->>API: AG-UI run
+  API->>Mastra: local contestHostAgent
+  Mastra->>Gemini: draft structured contest setup
+  Gemini-->>Mastra: JSON draft
+  Mastra->>DB: insert approval request + ai_run
+  Mastra-->>CK: render approval card
+  Patricia->>CK: approve/edit/reject
+  CK->>DB: commit only through approved API/RPC
+  DB-->>CK: published draft or change request
+```
+
+## 6\. Screen Map
+
+```mermaid
+flowchart LR
+  Home[""/""] --> HostNew[""/host/contests/new""]
+  HostNew --> HostList[""/host/contests""]
+  HostList --> PublicContest[""/contests/[slug]""]
+  PublicContest --> Vote[""/contests/[slug]/vote""]
+  PublicContest --> Contestant[""/contests/[slug]/contestants/[id]""]
+  PublicContest --> Checkout[""Stripe Checkout""]
+  Checkout --> Tickets[""/me/tickets""]
+  Admin[""/admin/contests""] --> Fraud[""/admin/contests/[id]/votes""]
+  Admin --> Scores[""/admin/contests/[id]/scores""]
+  Sponsors[""/sponsors""] --> Proposal[""/sponsors/proposals/[id]""]
+```
+
+## 7\. Post-MVP Boundaries
+
+```mermaid
+flowchart TD
+  MVP[""MVP: contest + voting + tickets + judging + sponsor drafts""] --> Stable[""Proof gates green""]
+  Stable --> Live[""OpenStreamPoll-style live overlays""]
+  Stable --> Geo[""ADK/Maps sponsor geo discovery""]
+  Stable --> Social[""Postiz approved scheduling""]
+  Stable --> Scrape[""OpenClaw lead enrichment""]
+  Scrape --> Approval[""Human approval required""]
+  Social --> Approval
+  Geo --> Approval
+  Live --> Producer[""Producer approval before public overlay""]
+```","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:contest, track:events",,,,,"2026-06-03T03:38:04.051Z","2026-06-04T04:19:34.024Z",,,,,,"2026-06-10T03:38:05.700Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","f90d6a3e-01cf-4c04-9c11-67bb2b4f169c",6490,"","",
+"SAN-533","Sanjiovani","CTEST-001 — Supabase contest core schema and RLS","# CTEST-001 — Supabase contest core schema and RLS
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-001` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest data foundation |
+| **Effort** | 1-2d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-000 |
+| **Linear** | SAN-533 |
+| **Evidence** | `tasks/contest/notes/CTEST-001-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-001-supabase-contest-core-schema.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-001-supabase-contest-core-schema.md>) |
+
+### Skills
+
+* `mde-supabase`
+* `task-verifier`
+
+### Docs
+
+* `../docs/MVP-SCOPE.md`
+* `../docs/01-mermaid-diagrams.md`
+* `../docs/02-contest-core-schema-erd.md`
+* `../docs/05-production-task-standard.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/mde-supabase/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/task-verifier/SKILL.md`
+* [https://supabase.com/docs/guides/database/postgres/row-level-security](<https://supabase.com/docs/guides/database/postgres/row-level-security>)
+* [https://supabase.com/docs/guides/storage/security/access-control](<https://supabase.com/docs/guides/storage/security/access-control>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Add the deterministic contest/contestant data model and RLS before UI, voting ledgers, or AI workflows.
+
+## 2\. Goals
+
+* Ship migration `mdeapp/supabase/migrations/<timestamp>_contest_core.sql`.
+* Enable RLS + ≥1 policy per table; public reads only for published/approved rows.
+* Prove schema locally and on remote catalog (Supabase MCP or SQL file).
+
+## 3\. Features
+
+| Table | Purpose | RLS |
+| -- | -- | -- |
+| `contest_orgs` | Organizer tenant | Org members/admins |
+| `contest_memberships` | Staff roles | Own read; admin manage |
+| `contests` | Contest shell, status | Public when published |
+| `contest_rounds` | Rounds, scoring windows | Public when published |
+| `contestants` | Profile, division | Public when approved |
+| `contestant_assets` | Media metadata | Approved public; docs private |
+| `contestant_social_links` | Share handles / UTM | Public subset |
+| `contestant_profile_extractions` | URL extraction drafts | Never public |
+| `contestant_profile_reviews` | Human review decisions | Org/admin/staff |
+| `contest_events` | Finals/rehearsal events | Public when published |
+| `contestant_discovery_runs` | Discovery job logs | Admin/org only |
+| `contestant_discovery_leads` | Invite lead drafts | Admin/org only |
+| `contestant_invite_drafts` | Approval-gated copy; no auto-send | Admin/org only |
+| `contest_audit_events` | Append-only audit | Admin/org read |
+
+Status enums: `draft`, `review`, `published`, `closed`, `archived`. Extraction/review: `draft`, `approved`, `rejected`, `needs_info`.
+
+## 4\. Workflows
+
+1. Author migration with indexes on RLS predicate columns.
+2. Storage bucket plan: public photos vs private docs (policies before UI uploads).
+3. Regenerate Supabase types if repo workflow supports it.
+4. SQL proof scripts → `tasks/contest/notes/CTEST-001-evidence.md`.
+5. Remote catalog proof (required before Done):
+
+   ```sql
+   SELECT tablename, rowsecurity FROM pg_tables
+   WHERE schemaname = 'public' AND tablename LIKE 'contest%';
+   SELECT tablename, policyname FROM pg_policies WHERE tablename LIKE 'contest%';
+   ```
+
+## 5\. User Journeys
+
+* Roberto creates a contest shell; contestants apply with draft data; Patricia reviews; fans see only published contests and approved contestants.
+
+## 6\. Agents
+
+* No agent writes canonical rows in this task. Future Mastra tools use server APIs/RPCs only.
+
+## 7\. Integrations
+
+* Supabase Postgres + Storage; `mdeapp/src/lib/supabase/**` (anon client in UI; service role server-only per CLAUDE.md F13 carve-out).
+* MCP: Supabase plugin for migration list + `execute_sql` catalog proof.
+
+## 8\. Summary
+
+Data foundation that fail-closes drafts, extraction rows, discovery leads, and invite drafts.
+
+## 9\. Definition Of Done
+
+- [ ] Migration applies cleanly (`supabase db reset` or CI).
+- [ ] RLS enabled on every contest table.
+- [ ] Policies cover anon, contestant, organizer, judge/staff, admin.
+- [ ] Negative: anon cannot read drafts/extractions/leads/invite drafts/private docs.
+- [ ] Positive: published contest + approved contestant readable.
+- [ ] Remote catalog proof recorded in evidence.
+- [ ] `npm run test`, `npm run typecheck`, `npm run build` green after typegen.
+
+## 10\. Tests
+
+| Test | Command / probe | Expected |
+| -- | -- | -- |
+| Tables exist | `SELECT tablename FROM pg_tables WHERE tablename LIKE 'contest%'` | all core tables |
+| RLS on | `rowsecurity = true` per table | 100% |
+| Anon negative | SQL script as anon role | drafts denied |
+| Cross-contestant | authenticated wrong id update | denied |
+| Vitest (optional) | `npm test -- contest-schema` if helpers added | exit 0 |
+
+**Do not:** add `vote_ledger` here (CTEST-002); add pgvector; allow client writes to audit tables.
+
+## 11\. Implementation steps (mde-supabase)
+
+ 1. Read [`supabase-migrations.md`](<../../../.agents/skills/mde-supabase/references/project-rules/supabase-migrations.md>) and [`supabase-rls-policies.md`](<../../../.agents/skills/mde-supabase/references/project-rules/supabase-rls-policies.md>).
+ 2. Iterate DDL locally with Supabase MCP `execute_sql` — **do not** `apply_migration` until schema stabilizes.
+ 3. Run `supabase db advisors` on local DB; fix security/perf findings.
+ 4. Author `mdeapp/supabase/migrations/<timestamp>_contest_core.sql` with:
+    * `CREATE TABLE` + PK/FK + `CHECK` on status enums
+    * `ALTER TABLE … ENABLE ROW LEVEL SECURITY`
+    * Policies per actor (anon / authenticated contestant / org member / admin)
+    * Indexes on every column used in `USING` / `WITH CHECK`
+ 5. Storage: create buckets `contestant-photos`, `contestant-docs`; policies on `storage.objects` (INSERT+SELECT+UPDATE for upsert paths).
+ 6. `supabase db reset` (or CI migration apply) — must be clean.
+ 7. Regenerate types if workflow uses `supabase gen types`.
+ 8. SQL proof scripts (anon JWT vs service) → `tasks/contest/notes/CTEST-001-evidence.md`.
+ 9. Remote catalog proof (required):
+
+    ```sql
+    SELECT tablename, rowsecurity FROM pg_tables
+    WHERE schemaname = 'public' AND tablename LIKE 'contest%';
+    SELECT tablename, policyname, cmd FROM pg_policies WHERE tablename LIKE 'contest%';
+    ```
+10. Negative probes: anon `SELECT` on `contestant_profile_extractions`, `contestant_discovery_leads`, `contestant_invite_drafts` → 0 rows.
+11. Positive probes: published `contests` + approved `contestants` readable by anon.
+12. Cross-tenant: contestant A cannot `UPDATE` contestant B row.
+13. `npm run test`, `npm run typecheck`, `npm run build` after typegen.
+
+## 12\. Mermaid diagrams
+
+See also [`../docs/02-contest-core-schema-erd.md`](<../docs/02-contest-core-schema-erd.md>).
+
+### Core ERD (CTEST-001 tables)
+
+```mermaid
+erDiagram
+  contest_orgs ||--o{ contest_memberships : has
+  contest_orgs ||--o{ contests : owns
+  contests ||--o{ contest_rounds : has
+  contests ||--o{ contestants : has
+  contestants ||--o{ contestant_assets : has
+  contestants ||--o{ contestant_social_links : has
+  contestants ||--o{ contestant_profile_extractions : drafts
+  contestants ||--o{ contestant_profile_reviews : reviews
+  contests ||--o{ contest_events : schedules
+  contest_orgs ||--o{ contestant_discovery_runs : runs
+  contestant_discovery_runs ||--o{ contestant_discovery_leads : leads
+  contestant_discovery_leads ||--o{ contestant_invite_drafts : drafts
+  contest_orgs ||--o{ contest_audit_events : audits
+```
+
+### RLS read decision
+
+```mermaid
+flowchart TD
+  Q[Query contest_* table] --> RLS{RLS on?}
+  RLS -->|no| X[Block ship]
+  RLS -->|yes| ACTOR{Actor}
+  ACTOR -->|anon| PUB{published + approved?}
+  PUB -->|yes| OK[SELECT]
+  PUB -->|no| DENY[0 rows]
+  ACTOR -->|contestant| OWN[own row]
+  ACTOR -->|organizer| ORG[org_id match]
+  ACTOR -->|service role| API[server route only]
+```
+
+### Migration workflow
+
+```mermaid
+flowchart LR
+  I[iterate SQL] --> A[db advisors]
+  A --> M[migration file]
+  M --> L[db reset local]
+  L --> P[RLS proof]
+  P --> R[remote catalog]
+```
+
+**Production standard:** `../docs/05-production-task-standard.md`.
+
+---
+
+## Supplemental diagrams (repo doc)
+
+## Entity relationship (core pack)
+
+```mermaid
+erDiagram
+  contest_orgs ||--o{ contest_memberships : has
+  contest_orgs ||--o{ contests : owns
+  contests ||--o{ contest_rounds : has
+  contests ||--o{ contestants : has
+  contestants ||--o{ contestant_assets : has
+  contestants ||--o{ contestant_social_links : has
+  contestants ||--o{ contestant_profile_extractions : drafts
+  contestants ||--o{ contestant_profile_reviews : reviews
+  contests ||--o{ contest_events : schedules
+  contest_orgs ||--o{ contestant_discovery_runs : runs
+  contestant_discovery_runs ||--o{ contestant_discovery_leads : leads
+  contestant_discovery_leads ||--o{ contestant_invite_drafts : drafts
+  contest_orgs ||--o{ contest_audit_events : audits
+
+  contest_orgs {
+    uuid id PK
+    text name
+    jsonb settings
+  }
+  contests {
+    uuid id PK
+    uuid org_id FK
+    text status
+    text slug
+  }
+  contestants {
+    uuid id PK
+    uuid contest_id FK
+    uuid user_id FK
+    text status
+  }
+```
+
+## RLS decision flow (read path)
+
+```mermaid
+flowchart TD
+  Q[Client query on contest_* table] --> RLS{RLS enabled?}
+  RLS -->|no| DENY[Reject — fix migration]
+  RLS -->|yes| ROLE{Role?}
+  ROLE -->|anon| PUB{published + approved?}
+  PUB -->|yes| READ[SELECT allowed columns]
+  PUB -->|no| DENY2[No row]
+  ROLE -->|contestant| OWN[own contestant_id only]
+  ROLE -->|organizer| ORG[org membership match]
+  ROLE -->|admin| ADMIN[assigned orgs]
+  ROLE -->|service| SRV[server route only — not browser]
+```
+
+## Migration workflow (mde-supabase)
+
+```mermaid
+flowchart LR
+  A[iterate execute_sql MCP] --> B[supabase db advisors]
+  B --> C[db pull migration file]
+  C --> D[db reset local]
+  D --> E[RLS SQL proof scripts]
+  E --> F[remote catalog proof]
+  F --> G[types regenerate]
+```","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:contest, track:events, type:data",,,,,"2026-06-03T03:38:29.740Z","2026-06-04T04:19:28.381Z",,,,,,"2026-06-10T03:38:31.784Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","e1d5e24f-5fa9-4959-93a6-2c561876db33",6490,"SAN-544","SAN-532",
+"SAN-534","Sanjiovani","CTEST-002 — Voting and judge scoring ledgers","# CTEST-002 — Voting and judge scoring ledgers
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-002` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest trust foundation |
+| **Effort** | 2-3d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-001 |
+| **Linear** | SAN-534 |
+| **Evidence** | `tasks/contest/notes/CTEST-002-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-002-voting-scoring-ledgers.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-002-voting-scoring-ledgers.md>) |
+
+### Skills
+
+* `mde-supabase`
+* `testing`
+
+### Docs
+
+* `../docs/01-mermaid-diagrams.md`
+* `../docs/05-production-task-standard.md`
+* `../../../../docs/plan/contests/docs/13-security-checklist.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/mde-supabase/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/testing/SKILL.md`
+* [https://supabase.com/docs/guides/database/postgres/row-level-security](<https://supabase.com/docs/guides/database/postgres/row-level-security>)
+
+### Repo refs
+
+* `/home/sk/mdeai/github/contest/helios-server`
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Create append-only vote and judge-score truth in Postgres. AI may summarize anomalies; it never mutates ledgers or winners.
+
+## 2\. Goals
+
+* RPC-only writes: `submit_contest_vote()`, `submit_judge_score()`, `lock_score_snapshot()`.
+* Block direct client inserts; paid credits consumed only via CTEST-003 path.
+* Vitest/SQL tests before any public vote UI (CTEST-010).
+
+## 3\. Features
+
+| Object | Purpose |
+| -- | -- |
+| `voting_windows` | Type, start/end, round, weight, limits |
+| `vote_tokens` | Signed/hashed eligibility |
+| `vote_ledger` | Append-only canonical votes |
+| `vote_receipts` | Public-safe receipt id/hash |
+| `vote_fraud_signals` | Deterministic anomalies |
+| `vote_reviews` | Human review decisions |
+| `judge_panels` | Judge assignments |
+| `judge_scores` | Append-only scores |
+| `score_formulas` | Versioned weights |
+| `score_snapshots` | Locked results |
+
+Pattern refs: Helios (hash/freeze/tally concepts only); OpenStreamPoll post-MVP for live QR UX only.
+
+## 4\. Workflows
+
+1. Migration for tables + triggers/constraints enforcing append-only.
+2. Security-definer RPCs with validation (window open, token, duplicate rules).
+3. Safe views for public/admin read; `votingIntegrityAgent` read-only later.
+4. Evidence + `mdeapp/src/lib/contest/__tests__/vote-rpc.test.ts` (or SQL harness).
+
+## 5\. User Journeys
+
+* Fan votes → receipt; Patricia audits fraud signals; judge submits scores; Patricia locks snapshot; public UI shows locked SQL results only.
+
+## 6\. Agents
+
+* `votingIntegrityAgent`: read safe views, explain state — **no** insert/update/delete on votes/scores/snapshots.
+
+## 7\. Integrations
+
+* Supabase RPCs; blocks CTEST-010 `/contests/*/vote` until this task is Done.
+* Realtime tally broadcast may use `vote:tally:{contest_id}` when schema exists (`20260505000200_realtime_broadcast_migration.sql`).
+
+## 8\. Summary
+
+Trust layer for beauty-contest voting — must ship before vote routes or AI winner displays.
+
+## 9\. Definition Of Done
+
+- [ ] Append-only vote ledger; closed window rejects votes.
+- [ ] Duplicate token/session/user rejected.
+- [ ] Paid credits not minted here (CTEST-003 only).
+- [ ] Judge scores immutable after lock; snapshot deterministic.
+- [ ] Direct insert denied for non-service roles.
+- [ ] Audit rows on vote/score events.
+
+## 10\. Tests
+
+| Test | Expected |
+| -- | -- |
+| RPC valid free vote | one ledger row + receipt |
+| Duplicate vote | rejected |
+| Late vote | rejected |
+| Direct insert | denied |
+| Snapshot formula | matches fixture |
+| Vitest | `npm test -- vote-rpc` exit 0 |
+
+**Do not:** build public vote UI here; implement Helios crypto in MVP; let AI pick winners.
+
+## 11\. Mermaid diagrams
+
+### Vote truth flow (RPC-only writes)
+
+```mermaid
+sequenceDiagram
+  participant Fan
+  participant UI as Vote UI
+  participant RPC as submit_contest_vote
+  participant DB as vote_ledger
+  Fan->>UI: submit vote
+  UI->>RPC: token + contestant_id
+  RPC->>DB: append row if window open
+  alt duplicate
+    RPC-->>UI: rejected
+  else ok
+    RPC-->>UI: receipt hash
+  end
+```
+
+### Voting architecture (CTEST-002 scope)
+
+```mermaid
+flowchart TB
+  subgraph Ledgers
+    VW[voting_windows]
+    VT[vote_tokens]
+    VL[vote_ledger]
+    JS[judge_scores]
+    SS[score_snapshots]
+  end
+  RPC[Security definer RPCs] --> VL
+  RPC --> JS
+  VL --> SS
+  JS --> SS
+```
+
+**Production standard:** `../docs/05-production-task-standard.md`.","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:contest, track:events, type:data",,,,,"2026-06-03T03:38:31.960Z","2026-06-04T04:19:18.278Z",,,,,,"2026-06-10T03:38:32.588Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","2408bcae-90bc-4772-9220-8384616d02e8",6490,"","SAN-533",
+"SAN-535","Sanjiovani","CTEST-003 — Tickets and paid-vote payment-derived schema","# CTEST-003 — Tickets and paid-vote payment-derived schema
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-003` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest payments foundation |
+| **Effort** | 2-3d |
+| **Owner** | codex |
+| **MVP track** | MVP-B |
+| **Depends on** | CTEST-001, CTEST-002 |
+| **Linear** | SAN-535 |
+| **Evidence** | `tasks/contest/notes/CTEST-003-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-003-ticket-paid-vote-schema.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-003-ticket-paid-vote-schema.md>) |
+
+### Skills
+
+* `mde-supabase`
+* `mde-stripe`
+* `testing`
+
+### Docs
+
+* `../docs/01-mermaid-diagrams.md`
+* `../docs/05-production-task-standard.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/mde-supabase/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/mde-stripe/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/testing/SKILL.md`
+* [https://docs.stripe.com/webhooks](<https://docs.stripe.com/webhooks>)
+
+### Repo refs
+
+* `/home/sk/mdeai/github/events/Hi.Events`
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Add contest tickets, QR check-in, and paid vote credits where **Stripe owns money** and **Supabase stores webhook-derived truth only**.
+
+## 2\. Goals
+
+* No fulfillment from success URL or client-side “paid” flags.
+* Idempotent `stripe_webhook_events`; signature verification required.
+* `consume_paid_vote_credit()` feeds CTEST-002 vote RPC safely.
+
+## 3\. Features
+
+| Object | Purpose |
+| -- | -- |
+| `contest_ticket_tiers` | Tier capacity/pricing |
+| `contest_ticket_orders` | pending/paid/refunded/cancelled |
+| `contest_tickets` | QR-bearing tickets |
+| `contest_check_ins` | Append-only scans |
+| `paid_vote_products` | Vote bundles |
+| `paid_vote_orders` | Checkout session mapping |
+| `paid_vote_credits` | Webhook-issued credits |
+| `stripe_webhook_events` | Idempotency log |
+| `issue_ticket_from_paid_order()` | Post-webhook ticket issue |
+| `consume_paid_vote_credit()` | Single-use credit → vote flow |
+| `check_in_ticket()` | QR validate + log |
+
+Refs: Hi.Events patterns only (AGPL — no copy); reuse mdeapp EVP ticket checkout patterns where compatible.
+
+## 4\. Workflows
+
+1. Migration + RLS (orders/credits server-write heavy).
+2. Webhook route: verify signature → idempotent upsert → issue ticket/credit.
+3. Port patterns from existing event ticket flow in `mdeapp`.
+4. Stripe test fixtures → evidence.
+
+## 5\. User Journeys
+
+* Andrés buys VIP ticket or vote pack → webhook issues QR/credits → `/me/tickets` shows wallet → staff scans once at door.
+
+## 6\. Agents
+
+* No agent handles payments, credits, or check-in truth.
+
+## 7\. Integrations
+
+* Stripe Checkout + webhooks; Next.js `src/app/api/**` server-only secrets.
+* Depends on CTEST-002 for credit consumption into vote ledger.
+
+## 8\. Summary
+
+Payment-derived state for tickets and paid votes — MVP-B after free-vote ledger (MVP-A).
+
+## 9\. Definition Of Done
+
+- [ ] Checkout creates pending order only.
+- [ ] Verified webhook marks paid and issues exactly one ticket/credit per event.
+- [ ] Duplicate webhook harmless.
+- [ ] Invalid signature rejected.
+- [ ] QR check-in: valid once; duplicate logged/rejected.
+- [ ] Credit consumed once through RPC.
+
+## 10\. Tests
+
+| Test | Expected |
+| -- | -- |
+| Stripe fixture paid | one ticket + audit row |
+| Duplicate event | no double issue |
+| Bad signature | 400/401 |
+| Success URL alone | no fulfillment |
+| Credit consume twice | second fails |
+| Playwright (later) | `e2e/contest/stripe-paid-vote.spec.ts` |
+
+**Do not:** fulfill from success URL; put Stripe secrets in client; Stripe Connect until sponsor payouts need it.
+
+## 11\. Mermaid diagrams
+
+### Stripe webhook fulfillment (no client truth)
+
+```mermaid
+sequenceDiagram
+  participant Fan
+  participant API as Checkout API
+  participant Stripe
+  participant WH as Webhook
+  participant DB as Supabase
+  Fan->>API: create session
+  API->>DB: pending order
+  Stripe->>WH: checkout.session.completed
+  WH->>WH: verify signature + idempotency
+  WH->>DB: paid + ticket or vote credit
+  Note over Fan,DB: Success URL alone never fulfills
+```
+
+**Production standard:** `../docs/05-production-task-standard.md`.","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:commerce, track:contest, track:events, type:data",,,,,"2026-06-03T03:38:34.267Z","2026-06-04T04:19:11.887Z",,,,,,"2026-06-10T03:38:34.847Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","a053a892-3c7d-43c5-8b7e-1a3a4c230659",6490,"","SAN-533, SAN-534",
+"SAN-536","Sanjiovani","CTEST-004 — CopilotKit contest workspace and approval cards","# CTEST-004 — CopilotKit contest workspace and approval cards
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-004` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest AI UI |
+| **Effort** | 1-2d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-001 |
+| **Linear** | SAN-536 |
+| **Evidence** | `tasks/contest/notes/CTEST-004-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-004-copilotkit-contest-workspace.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-004-copilotkit-contest-workspace.md>) |
+
+### Skills
+
+* `copilotkit`
+* `copilotkit-agui`
+* `copilotkit-develop`
+* `copilotkit-integrations`
+
+### Docs
+
+* `../docs/01-mermaid-diagrams.md`
+* `../docs/03-screens-wireframes.md`
+* `../docs/05-production-task-standard.md`
+* `../docs/06-shadcn-component-audit.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/copilotkit/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/copilotkit-agui/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/copilotkit-integrations/SKILL.md`
+* [https://docs.copilotkit.ai/mastra/](<https://docs.copilotkit.ai/mastra/>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Contest AI workspace on mdeapp **CopilotKit 1.55.2 Pattern 1** (in-process Mastra via `/api/copilotkit`) with HITL approval cards — no direct writes to votes, payments, or winners.
+
+## 2\. Goals
+
+* Routes: `/host/contests/new`, `/host/contests`, `/admin/contests`, `/sponsors` (shell + provider).
+* Card/action names **identical** to Mastra tool ids (CTEST-005).
+* `useCoAgent({ name })` keys match `Mastra({ agents: { … } })` map keys exactly.
+
+## 3\. Features
+
+| Card | Purpose |
+| -- | -- |
+| ContestDraftCard | Basics, rounds, venue, voting windows |
+| ContestantReadinessCard | Missing profile/media fields |
+| VotingIntegrityCard | Read-only anomaly summary |
+| SponsorProposalCard | Draft package copy |
+| PublishApprovalCard | HITL publish — `renderAndWaitForResponse` |
+| WinnerSnapshotCard | Locked SQL snapshot display only |
+
+**CopilotKit Phase 1 APIs only:**
+
+| Need | API |
+| -- | -- |
+| Shared state | `useCoAgent` |
+| Tool render | `useCopilotAction({ available: ""disabled"", render })` |
+| HITL | `renderAndWaitForResponse` |
+| Runtime | `/api/copilotkit` + `getLocalAgents({ mastra })` |
+
+## 4\. Workflows
+
+1. Add App Router pages + `CopilotKit` provider (relative `runtimeUrl=""/api/copilotkit""`).
+2. Register `useCopilotAction` mirrors for each contest tool id.
+3. shadcn: `Card`, `Button`, `Badge`, `Dialog`/`Sheet`, `Skeleton`, `Tooltip` per `../docs/06-shadcn-component-audit.md`.
+4. Probe runtime:
+
+   ```bash
+   curl -s -o /dev/null -w ""%{http_code}\n"" -X POST http://localhost:3001/api/copilotkit
+   ```
+
+## 5\. User Journeys
+
+* Roberto drafts contest on `/host/contests/new`; Patricia approves publish card; integrity/winner cards show deterministic data only.
+
+## 6\. Agents
+
+* UI binds to `contestHostAgent`, `votingIntegrityAgent`, `sponsorAgent` (CTEST-005) — names must match agent map keys.
+
+## 7\. Integrations
+
+| Surface | mdeapp pattern | Do not use |
+| -- | -- | -- |
+| Runtime | Pattern 1 `getLocalAgents` | Mastra separate-server `:4111/chat` only |
+| Version | CopilotKit `1.55.2` v1 hooks | v2 imports on same surface |
+| Logging | `logAgentRunForTurn` via runtime (F13) | Mastra HTTP `/chat` alone for DoD |
+
+## 8\. Summary
+
+Generative UI + HITL for contest setup; commits go through approval APIs/RPCs, not cards.
+
+## 9\. Definition Of Done
+
+- [ ] `/host/contests/new` returns 200 (auth as host).
+- [ ] `POST /api/copilotkit` returns 200 with contest agent connected.
+- [ ] Publish card requires explicit `respond()` approval.
+- [ ] No card writes vote/payment/winner/profile truth.
+- [ ] shadcn CLI proof recorded in evidence.
+
+## 10\. Tests
+
+| Test | Expected |
+| -- | -- |
+| Route smoke | GET `/host/contests/new` → 200 |
+| Runtime | POST `/api/copilotkit` → 200 |
+| Component | PublishApprovalCard blocks without `respond` |
+| Negative | Card action cannot call ledger insert RPC |
+| Browser | approval card visible in Playwright (CTEST-007) |
+
+**Do not:** self-host CopilotKit; mix v2 hooks; custom AG-UI backend unless Pattern 1 blocked.
+
+## 11\. Mermaid diagrams
+
+### CopilotKit + Mastra HITL (Pattern 1)
+
+```mermaid
+sequenceDiagram
+  participant Host as Roberto
+  participant CK as CopilotKit UI
+  participant API as /api/copilotkit
+  participant M as contestHostAgent
+  participant DB as approvals
+  Host->>CK: draft contest
+  CK->>API: AG-UI run
+  API->>M: tools draft only
+  M-->>CK: PublishApprovalCard
+  CK->>DB: commit after respond()
+```
+
+**Production standard:** `../docs/05-production-task-standard.md` + `../docs/06-shadcn-component-audit.md`.","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:ai, track:contest, track:events",,,,,"2026-06-03T03:38:36.432Z","2026-06-04T04:19:00.624Z",,,,,,"2026-06-10T03:38:36.899Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","5012c015-4b25-4685-8ecd-9a124013da00",6490,"","SAN-533",
+"SAN-537","Sanjiovani","CTEST-005 — Mastra and Gemini contest workflows","# CTEST-005 — Mastra and Gemini contest workflows
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-005` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest AI workflows |
+| **Effort** | 2-3d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-002, CTEST-004 |
+| **Linear** | SAN-537 |
+| **Evidence** | `tasks/contest/notes/CTEST-005-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-005-mastra-gemini-workflows.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-005-mastra-gemini-workflows.md>) |
+
+### Skills
+
+* `mastra`
+* `gemini`
+* `copilotkit-integrations`
+
+### Docs
+
+* `../docs/01-mermaid-diagrams.md`
+* `../docs/05-production-task-standard.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/mastra/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/gemini/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/gemini/references/model-registry.md`
+* [https://mastra.ai/workflows](<https://mastra.ai/workflows>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Register contest Mastra agents and Gemini structured-output tools that draft or read safely — never write vote/payment/winner truth. Every turn logs to `public.ai_runs`.
+
+## 2\. Goals
+
+* Production model: `gemini-3.5-flash` (re-verify via `gemini-api-docs-mcp` before coding).
+* Tool ids match CopilotKit action names (CTEST-004).
+* Extend `AGENT_MAP_KEY_TO_LOGGING` in `mdeapp/src/mastra/lib/log-agent-run.ts` with enum-safe `agent_type` values.
+
+## 3\. Features
+
+| Agent (map key) | Allowed | Forbidden |
+| -- | -- | -- |
+| `contestHostAgent` | Draft setup, approval queue | Publish without HITL |
+| `votingIntegrityAgent` | Read anomaly views | Mutate votes/winners |
+| `sponsorAgent` | Draft proposals | Send outreach / contracts |
+| `contestantCoachAgent` | Profile/prep/share copy drafts | Approve profile, vote, message leads |
+
+| Tool id | Boundary |
+| -- | -- |
+| `draft_contest_setup` | Draft only |
+| `queue_contest_publish_approval` | Approval row |
+| `summarize_vote_integrity` | Read-only |
+| `draft_sponsor_proposal` | Draft only |
+| `queue_sponsor_proposal_approval` | Approval row |
+| `draft_contestant_profile_questions` | Draft only |
+| `draft_contestant_prep_plan` | Draft only |
+| `draft_contestant_share_copy` | Draft only |
+
+## 4\. Workflows
+
+1. Probe installed Mastra beta APIs in `node_modules/@mastra/core` before copying patterns.
+2. Add agents in `src/mastra/agents/` + register in `src/mastra/index.ts`.
+3. Zod schemas + working memory aligned with `src/lib/types.ts` (three-place rule if stateful).
+4. Wire `logAgentRunForTurn` on CopilotKit runtime path (not Mastra dev `/chat` alone).
+5. Replay + refusal evals → evidence.
+
+### Integration surface (required)
+
+| Surface | Probe | Phase 2 default |
+| -- | -- | -- |
+| CopilotKit in-process | `grep getLocalAgents mdeapp/src/app/api/copilotkit/route.ts` | **Yes** — product path |
+| Mastra HTTP `/chat` | Mastra dev Studio | Dev/debug only |
+| Agent map key | `useCoAgent({ name: ""contestHostAgent"" })` = `Mastra({ agents: { contestHostAgent } })` | Must match |
+
+### `ai_runs` vs `mastra_ai_spans`
+
+| Table | DoD for this task |
+| -- | -- |
+| `public.ai_runs` | **Required** — one row per contest agent turn via `logAgentRunForTurn` |
+| `public.mastra_ai_spans` | Optional dev telemetry; not contest DoD |
+
+### `agent_type` enum mapping (extend `log-agent-run.ts`)
+
+| Map key | `agent_type` (existing enum) |
+| -- | -- |
+| `contestHostAgent` | `event_curator` |
+| `votingIntegrityAgent` | `general_concierge` |
+| `sponsorAgent` | `event_curator` |
+| `contestantCoachAgent` | `general_concierge` |
+
+Do not invent new enum labels without migration.
+
+## 5\. User Journeys
+
+* Roberto asks for contest draft → approval queue; Patricia gets integrity summary; contestant gets coach copy — all commit via UI/RPC after HITL.
+
+## 6\. Agents
+
+See §3. Max four agents; no swarm.
+
+## 7\. Integrations
+
+* Gemini via `google(""gemini-3.5-flash"")` + `@ai-sdk/google`.
+* CopilotKit Pattern 1; Supabase approval rows + safe views.
+* MCP: `mcp__mastra__searchMastraDocs` for workflow shape; `gemini-api-docs-mcp` for model id.
+
+## 8\. Summary
+
+Draft/read-only AI layer with hard refusal boundaries and `ai_runs` audit trail.
+
+## 9\. Definition Of Done
+
+- [ ] Agents registered with stable map keys.
+- [ ] Tool ids match CTEST-004 card/action names.
+- [ ] `logAgentRunForTurn` fires on contest agent turns.
+- [ ] Zod-valid structured outputs.
+- [ ] Refusal evals pass (winner, DM, private scrape, mass message).
+- [ ] `npm test`, `npm run build` green.
+
+## 10\. Tests
+
+| Test | Expected |
+| -- | -- |
+| Workflow replay | `draft_contest_setup` returns valid Zod object |
+| Refusal: ""make X winner"" | no ledger write tool call |
+| Refusal: ""send sponsor DM"" | queued or blocked |
+| Refusal: private IG scrape | blocked |
+| SQL | `SELECT COUNT(*) FROM ai_runs WHERE agent_name LIKE 'contest%'` ≥ 1 per path |
+| Vitest | agent tool list + instruction boundaries |
+
+**Do not:** swarm agents; write ledgers from tools; use non-Gemini production models; add `onFinish` on Agent constructor (use stream/runtime logging).
+
+## 11\. Mermaid diagrams
+
+### Agent boundaries (draft vs forbidden writes)
+
+```mermaid
+flowchart LR
+  subgraph Allowed
+    D[draft_contest_setup]
+    S[summarize_vote_integrity read-only]
+    P[draft_sponsor_proposal]
+  end
+  subgraph Forbidden
+    W[write vote_ledger]
+    X[publish without HITL]
+    Y[send outreach]
+  end
+  D --> AR[ai_runs log]
+  S --> AR
+  W -.blocked.-> AR
+```
+
+**Production standard:** `../docs/05-production-task-standard.md`.","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:ai, track:contest, track:events",,,,,"2026-06-03T03:38:38.476Z","2026-06-04T04:18:52.441Z",,,,,,"2026-06-10T03:38:38.980Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","dab3c278-daed-459b-bfc8-0ba1830301d3",6491,"","SAN-534, SAN-536",
+"SAN-538","Sanjiovani","CTEST-006 — Contest screens, routes, and wireframes","# CTEST-006 — Contest screens, routes, and wireframes
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-006` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest UI |
+| **Effort** | 2-4d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-001, CTEST-002, CTEST-004 |
+| **Linear** | SAN-538 |
+| **Evidence** | `tasks/contest/notes/CTEST-006-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-006-screens-wireframes.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-006-screens-wireframes.md>) |
+
+### Skills
+
+* `mde-wireframe`
+* `copilotkit`
+* `shadcn`
+* `responsive-design`
+* `tailwind-responsive-ui`
+
+### Docs
+
+* `../docs/03-screens-wireframes.md`
+* `../docs/wireframes/README.md`
+* `../docs/05-production-task-standard.md`
+* `../docs/06-shadcn-component-audit.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/mde-wireframe/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/shadcn/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/responsive-design/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/responsive-design/SKILL.md`
+* [https://ui.shadcn.com/docs/forms/react-hook-form](<https://ui.shadcn.com/docs/forms/react-hook-form>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Route-by-route screen plan and wireframe handoffs before production UI. **Vote routes require CTEST-002 Done** before implementation (not just wireframes).
+
+## 2\. Goals
+
+* Every MVP-A route has wireframe + handoff under `docs/wireframes/`.
+* Responsive matrix: 375, 414, 768, 1024, 1440 — no horizontal overflow; 44px touch targets.
+* shadcn component list per screen; install gaps via CLI before build.
+
+## 3\. Features
+
+| Path | Persona | MVP track |
+| -- | -- | -- |
+| `/host/contests/new` | Roberto | A |
+| `/host/contests` | Roberto | A |
+| `/contests` | Fan | A |
+| `/contests/[slug]` | Fan | A |
+| `/contests/[slug]/signup` | Contestant | A (CTEST-008 implements) |
+| `/contests/[slug]/contestants/[id]` | Fan | A (CTEST-010) |
+| `/contests/[slug]/vote` | Fan | A — **blocked on CTEST-002** |
+| `/me/contestant-profile/*` | Contestant | A (CTEST-009) |
+| `/me/tickets` | Andrés | B (CTEST-003) |
+| `/admin/contests/*` | Patricia | A/B |
+| `/sponsors/*` | Patricia | B |
+| `/admin/discovery/contestants` | Patricia | B (CTEST-011) |
+| `/live/contests/[id]` | Producer | Post-MVP |
+
+Components: ContestWizard, ContestDraftCard, ContestSignupForm, VoteReceiptPanel, AdminContestTable, JudgeScoreGrid, DiscoverySandbox, etc. (see `03-screens-wireframes.md`).
+
+## 4\. Workflows
+
+1. Complete/patch `03-screens-wireframes.md` and each `docs/wireframes/*.md` with `repo_refs`, `code_refs`, shadcn list, states (loading/empty/error/success).
+2. shadcn audit:
+
+   ```bash
+   cd mdeapp
+   npx shadcn@latest info --json
+   npx shadcn@latest docs field table tabs select textarea --json
+   npx shadcn@latest add field table tabs select textarea --dry-run
+   ```
+3. Document mobile-first layouts; English only (Phase 1 language rule).
+4. Route smoke plan — implementation in CTEST-004/008/009/010, not required in this docs task unless promoted.
+
+## 5\. User Journeys
+
+* Roberto, contestant, fan, judge, Patricia, sponsor flows each mapped to routes and wireframes.
+
+## 6\. Agents
+
+* Document CopilotKit panel placement per screen; runtime wiring in CTEST-004/005/009.
+
+## 7\. Integrations
+
+* DESIGN.MD tokens; TanStack Table for admin; React Hook Form + Zod + shadcn Field for forms.
+
+## 8\. Summary
+
+Implementation handoff pack — prevents missing routes and responsive gaps.
+
+## 9\. Definition Of Done
+
+- [ ] Every MVP-A route has wireframe + handoff file.
+- [ ] Vote route handoff notes dependency on CTEST-002 RPCs.
+- [ ] Responsive widths documented per primary screen.
+- [ ] `06-shadcn-component-audit.md` lists install gaps.
+- [ ] Link check passes for `03-screens-wireframes.md` and `docs/wireframes/*.md`.
+
+## 10\. Tests
+
+| Check | Command | Expected |
+| -- | -- | -- |
+| Handoff files | `ls tasks/contest/docs/wireframes/*.md` | ≥ 18 files |
+| shadcn info | `npx shadcn@latest info --json` | exit 0 |
+| Section template | this file has §1–10 | pass |
+| Route impl (later) | `find mdeapp/src/app -path '*contest*'` | after CTEST-004+ |
+
+**Do not:** Spanish UI; live overlay MVP routes; implement vote UI before CTEST-002.
+
+## 11\. Mermaid diagrams
+
+### Contest screen map (MVP-A)
+
+```mermaid
+flowchart LR
+  Home[""/""] --> HostNew[""/host/contests/new""]
+  HostNew --> HostList[""/host/contests""]
+  HostList --> Public[""/contests/slug""]
+  Public --> Vote[""/contests/slug/vote""]
+  Public --> Signup[""/contests/slug/signup""]
+  Public --> Profile[""/contests/slug/contestants/id""]
+  Admin[""/admin/contests""] --> Fraud[""/admin/contests/id/votes""]
+```
+
+**Production standard:** `../docs/05-production-task-standard.md` + `../docs/06-shadcn-component-audit.md`.","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, scr, track:contest, track:events",,,,,"2026-06-03T03:38:40.829Z","2026-06-04T04:18:44.011Z",,,,,,"2026-06-10T03:38:41.322Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","7d3be8ae-a32c-42d5-a006-d2ef0b077443",6491,"","SAN-533, SAN-534, SAN-536",
+"SAN-539","Sanjiovani","CTEST-007 — Contest Playwright proof gates","# CTEST-007 — Contest Playwright proof gates
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-007` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest testing |
+| **Effort** | 1-2d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-002, CTEST-003, CTEST-006 |
+| **Linear** | SAN-539 |
+| **Evidence** | `tasks/contest/notes/CTEST-007-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-007-playwright-proof-gates.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-007-playwright-proof-gates.md>) |
+
+### Skills
+
+* `testing`
+* `playwright-cli`
+* `task-verifier`
+
+### Docs
+
+* `../../../../docs/plan/contests/docs/12-task-proof-gates.md`
+* `../docs/05-production-task-standard.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/testing/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/playwright-cli/SKILL.md`
+* [https://playwright.dev/docs/locators](<https://playwright.dev/docs/locators>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Define and maintain the contest E2E suite that blocks fake Done — SQL/RPC proof first, then Playwright on real routes.
+
+## 2\. Goals
+
+* `mdeapp/e2e/contest/*.spec.ts` covers MVP-A flows + negatives.
+* Done bundle runs with `npm run floor` and contest shard.
+* Fixtures: no live Stripe, WhatsApp, OpenClaw, or Postiz.
+
+## 3\. Features
+
+| Spec | Flow | Depends |
+| -- | -- | -- |
+| `host-contest-new.spec.ts` | Roberto draft + approval card | CTEST-004 |
+| `public-contest.spec.ts` | Fan hub + profile | CTEST-006/010 |
+| `contestant-signup.spec.ts` | Signup + URL intake | CTEST-008 |
+| `contestant-profile-editor.spec.ts` | Profile edit + review | CTEST-009 |
+| `contestant-photos.spec.ts` | Upload states | CTEST-009 |
+| `contestant-coach.spec.ts` | Coach without auto-publish | CTEST-009 |
+| `vote-free.spec.ts` | Valid vote + receipt | CTEST-002 |
+| `vote-negative.spec.ts` | Duplicate/closed/invalid | CTEST-002 |
+| `profile-share.spec.ts` | Share + UTM | CTEST-010 |
+| `stripe-paid-vote.spec.ts` | Webhook credit | CTEST-003 (MVP-B) |
+| `ticket-qr-checkin.spec.ts` | QR scan rules | CTEST-003 (MVP-B) |
+| `judge-scoring.spec.ts` | Score lock | CTEST-002 |
+| `sponsor-proposal.spec.ts` | HITL before send | CTEST-005 (MVP-B) |
+| `discovery-sandbox.spec.ts` | No send path | CTEST-011 (MVP-B) |
+| `responsive.spec.ts` | 375/414/768/1024/1440 | CTEST-006 |
+
+## 4\. Workflows
+
+1. Add test data factory (one contest, three contestants, judge, fixtures).
+2. Create specs as upstream routes land — **do not** mark CTEST-007 Done until MVP-A specs green.
+3. Run bundle:
+
+   ```bash
+   cd mdeapp
+   npm run test && npm run lint && npm run typecheck && npm run build
+   npm run verify:console && npm run floor
+   npx playwright test e2e/contest --project=chromium
+   ```
+4. Save traces/screenshots on failure; record in `tasks/contest/notes/CTEST-007-evidence.md`.
+
+## 5\. User Journeys
+
+* End-to-end proof for Roberto setup, contestant onboarding, fan vote, Patricia audit — per `12-task-proof-gates.md`.
+
+## 6\. Agents
+
+* E2E asserts coach/host cards do not auto-commit publish/vote without HITL.
+
+## 7\. Integrations
+
+* Playwright + existing mdeapp `PW_SKIP_WEBSERVER=1` patterns.
+* Cross-ref: `tasks/testing/evidence/` for ship evidence format.
+
+## 8\. Summary
+
+Anti-fake-done test gate for the contest vertical.
+
+## 9\. Definition Of Done
+
+- [ ] MVP-A specs exist and pass locally.
+- [ ] Test factory documented.
+- [ ] Negative vote/payment/approval tests included.
+- [ ] Responsive spec passes five widths.
+- [ ] Evidence lists all commands with exit codes.
+
+## 10\. Tests
+
+| Gate | Command | Expected |
+| -- | -- | -- |
+| Unit | `npm run test` | exit 0 |
+| Lint | `npm run lint` | exit 0 |
+| Build | `npm run build` | exit 0 |
+| Floor | `npm run floor` | exit 0 |
+| Contest E2E | `npx playwright test e2e/contest --project=chromium` | all MVP-A green |
+
+**Do not:** mark Done on docs-only if `mdeapp/src` changed without green E2E; hit production Stripe/WhatsApp.
+
+## 11\. Mermaid diagrams
+
+### Proof gate order (no fake Done)
+
+```mermaid
+flowchart TD
+  SQL[SQL or RPC proof] --> VIT[Vitest helpers]
+  VIT --> PW[Playwright e2e/contest]
+  PW --> EV[tasks/contest/notes evidence]
+  EV --> DONE[Task Done]
+  PW -.blocked if CTEST-002 not Done.-> VoteRoute[""/contests/*/vote""]
+```
+
+**Production standard:** `../docs/05-production-task-standard.md` + `../../../../docs/plan/contests/docs/12-task-proof-gates.md`.","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, track:contest, track:events, type:test",,,,,"2026-06-03T03:39:06.125Z","2026-06-04T04:18:36.389Z",,,,,,"2026-06-10T03:39:06.681Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","8cc5816c-fede-46e2-915e-904adbbf9503",6490,"","SAN-538, SAN-535, SAN-534",
+"SAN-540","Sanjiovani","CTEST-008 — Contestant signup, URL intake, and profile extraction","# CTEST-008 — Contestant signup, URL intake, and profile extraction
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-008` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest contestant onboarding |
+| **Effort** | 2-4d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-001, CTEST-006 |
+| **Linear** | SAN-540 |
+| **Evidence** | `tasks/contest/notes/CTEST-008-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-008-contestant-signup-url-intake.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-008-contestant-signup-url-intake.md>) |
+
+### Skills
+
+* `shadcn`
+* `mde-firecrawl`
+* `mde-supabase`
+* `testing`
+
+### Docs
+
+* `../docs/03-screens-wireframes.md`
+* `../docs/04-verification-report-2026-06-02.md`
+* `../docs/05-production-task-standard.md`
+* `../docs/06-shadcn-component-audit.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/shadcn/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/mde-firecrawl/SKILL.md`
+* [https://ui.shadcn.com/docs/forms/react-hook-form](<https://ui.shadcn.com/docs/forms/react-hook-form>)
+* [https://ui.shadcn.com/docs/components](<https://ui.shadcn.com/docs/components>)
+* [https://ui.shadcn.com/docs/cli](<https://ui.shadcn.com/docs/cli>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Create a contestant signup flow where a contestant can apply to a contest, paste an Instagram/public portfolio URL, upload initial profile data, and receive a source-attributed draft profile that Patricia or Roberto can approve.
+
+## 2\. Goals
+
+* Add `/contests/[slug]/signup` with a mobile-first shadcn form.
+* Use React Hook Form, Zod, `Field`, `FieldGroup`, `FieldError`, and `aria-invalid`.
+* Accept public URLs as optional inputs, including Instagram profile URLs, portfolio pages, agency pages, or personal sites.
+* Extract only public, allowed profile hints into a draft: display name, bio, public image URL candidates, location hints, category, and source URL.
+* Store extracted data as draft fields, never as approved profile truth.
+* Add admin review path for accepting, editing, or rejecting extracted profile suggestions.
+
+## 3\. Features
+
+* Contestants get a guided signup instead of a blank form.
+* Patricia can review profile drafts and source links before publication.
+* The system can ask follow-up questions when extracted data is incomplete.
+* Private content, login-gated pages, platform-prohibited scraping, and automatic contact are explicitly out of scope.
+
+## 4\. Workflows
+
+1. Inspect current shadcn config:
+
+   ```bash
+   cd mdeapp
+   npx shadcn@latest info --json
+   npx shadcn@latest docs field input input-group textarea select checkbox button card sheet alert spinner sonner --json
+   npx shadcn@latest add field input-group textarea select checkbox alert spinner sonner --dry-run
+   ```
+2. Add missing shadcn components only after reviewing the dry run.
+3. If absent, install form dependencies:
+
+   ```bash
+   cd mdeapp
+   npm install react-hook-form @hookform/resolvers
+   ```
+4. Create `/contests/[slug]/signup` with:
+   * Required fields: legal/display name, email, phone/WhatsApp, city, age eligibility acknowledgement, division/category.
+   * Optional fields: Instagram URL, portfolio URL, bio, talents, measurements if appropriate for the contest, availability, consent checkboxes.
+   * Upload placeholder or storage handoff for profile photos.
+5. Add server action/API route for draft submission.
+6. Use Firecrawl/OpenClaw only for public URL extraction through an allowlisted, rate-limited server-side path.
+7. Write `contestant_profile_extractions` rows with source URL, extracted JSON, confidence, and review status.
+8. Add Patricia admin review table under `/admin/contests/[id]/contestants`.
+
+## 5\. User Journeys
+
+* Contestant opens the public contest page, taps Apply, pastes an Instagram or portfolio URL, answers guided questions, and submits a draft application.
+* Patricia reviews extracted fields, edits the bio/photo choices, asks for missing information, and approves the contestant profile.
+* A failed extraction still lets the contestant complete the form manually.
+
+## 6\. Agents
+
+* `contestantOnboardingAgent` asks missing-profile questions and explains next steps.
+* URL extraction is tool-backed and draft-only.
+* No agent may approve a contestant, publish a profile, scrape private content, or contact a lead.
+
+## 7\. Integrations
+
+* Supabase tables from CTEST-001: `contestants`, `contestant_assets`, `contestant_social_links`, `contest_audit_events`.
+* New draft table: `contestant_profile_extractions`.
+* Firecrawl/OpenClaw for public URL extraction, bounded by allowlists and source logging.
+* shadcn React Hook Form for accessible validation.
+* Required shadcn components: `Field`, `FieldGroup`, `FieldLabel`, `FieldError`, `Input`, `InputGroup`, `InputGroupTextarea`, `Textarea`, `Select`, `Checkbox`, `Button`, `Card`, `Sheet`, `Alert`, `Spinner`, `Sonner`.
+
+## 8\. Summary
+
+This task fills the biggest missing contestant journey gap: signup and URL-assisted profile creation. It keeps extraction as an assistant, not a source of truth.
+
+## 9\. Definition Of Done
+
+- [ ] `/contests/[slug]/signup` renders on desktop and mobile.
+- [ ] Form uses React Hook Form + Zod + shadcn Field components.
+- [ ] shadcn CLI dry run completed for missing signup components before installation.
+- [ ] Invalid fields show accessible errors.
+- [ ] URL extraction stores source-attributed draft JSON.
+- [ ] Private/login-gated URLs fail closed with manual-entry fallback.
+- [ ] Admin can approve/edit/reject extracted suggestions.
+- [ ] Audit rows are written for submit, extraction, review, and approval.
+
+## 10\. Tests
+
+- [ ] Unit test Zod schema for required fields and URL validation.
+- [ ] Component test form error states.
+- [ ] Component test proves `Field data-invalid` and controls with `aria-invalid` render on validation errors.
+- [ ] API test: manual signup succeeds without URL.
+- [ ] API test: unsupported/private URL is rejected or skipped without blocking manual signup.
+- [ ] SQL proof: draft row, extraction row, audit row.
+- [ ] Playwright: mobile 375/414 and desktop 1440 signup flow.
+- [ ] Responsive proof: no horizontal overflow; touch targets at least 44px.
+- [ ] Rollback: disable URL extraction feature flag and keep manual signup working.
+
+## Production Standard Addendum
+
+This task must satisfy `../docs/05-production-task-standard.md`: create tasks, tech stack, feature, problem solving, agents/workflows/automations, user journey, Mermaid diagrams, skills to run, MCP/official docs, verification steps, real-world examples, data, frontend/backend wiring, success criteria, production-ready checklist, and testing.
+
+## 11\. Mermaid diagrams
+
+### Signup + URL extraction (draft only)
+
+```mermaid
+flowchart TD
+  C[Contestant] --> F[""/contests/slug/signup form""]
+  F --> U[Optional public URL]
+  U --> FC[Firecrawl scrape]
+  FC --> E[contestant_profile_extractions draft]
+  E --> R[Patricia review]
+  R -->|approved| P[contestants published fields]
+  R -->|rejected| F
+```","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, scr, track:contest, track:events",,,,,"2026-06-03T03:39:08.166Z","2026-06-04T04:18:30.249Z",,,,,,"2026-06-10T03:39:09.782Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","9229ee8e-7ac7-4b71-b1d2-de69f2a79e70",6490,"","SAN-533, SAN-538",
+"SAN-541","Sanjiovani","CTEST-009 — Contestant profile editor, photo uploads, and AI coach","# CTEST-009 — Contestant profile editor, photo uploads, and AI coach
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-009` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest contestant workspace |
+| **Effort** | 3-5d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-001, CTEST-004, CTEST-008 |
+| **Linear** | SAN-541 |
+| **Evidence** | `tasks/contest/notes/CTEST-009-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-009-contestant-profile-editor-coach.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-009-contestant-profile-editor-coach.md>) |
+
+### Skills
+
+* `shadcn`
+* `mde-supabase`
+* `copilotkit`
+* `testing`
+
+### Docs
+
+* `../docs/03-screens-wireframes.md`
+* `../docs/05-production-task-standard.md`
+* `../docs/06-shadcn-component-audit.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/shadcn/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/mde-supabase/SKILL.md`
+* [https://ui.shadcn.com/docs/forms/react-hook-form](<https://ui.shadcn.com/docs/forms/react-hook-form>)
+* [https://ui.shadcn.com/docs/components](<https://ui.shadcn.com/docs/components>)
+* [https://ui.shadcn.com/docs/cli](<https://ui.shadcn.com/docs/cli>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Give contestants a private workspace to edit their profile, upload approved photos, understand next steps, prepare for casting/events, and chat with a guide that helps improve the profile without publishing unapproved changes.
+
+## 2\. Goals
+
+* Add `/me/contestant-profile`, `/me/contestant-profile/photos`, and `/me/contestant-profile/coach`.
+* Add photo upload/storage rules for public profile images and private review-only documents.
+* Add a CopilotKit coach panel that suggests better bios, outfits/prep checklists, and event next steps.
+* Keep profile publication approval-gated.
+
+## 3\. Features
+
+* Profile completion checklist.
+* Photo gallery with pending/approved/rejected states.
+* Event/casting preparation checklist: venue, call time, dress code, documents, transport, rehearsal, sponsor obligations.
+* AI coach asks focused questions and drafts profile improvements.
+* Contestants can promote an approved profile after publication.
+
+## 4\. Workflows
+
+1. Create profile workspace routes.
+2. Run shadcn CLI verification:
+
+   ```bash
+   cd mdeapp
+   npx shadcn@latest info --json
+   npx shadcn@latest docs field input-group textarea select avatar alert empty spinner sonner tabs drawer --json
+   npx shadcn@latest add field input-group textarea select avatar alert empty spinner sonner tabs drawer --dry-run
+   ```
+3. Add storage buckets/policies or reuse contest media buckets from CTEST-001.
+4. Add profile completion calculation.
+5. Add coach action cards: `BioDraftCard`, `PhotoReadinessCard`, `PrepChecklistCard`, `PromotionPlanCard`.
+6. Add admin approval queue for profile/photo changes.
+
+## 5\. User Journeys
+
+* Contestant logs in, edits profile details, uploads photos, and submits changes for approval.
+* Contestant asks the coach what to prepare for casting and gets a checklist tied to contest events.
+* Patricia reviews pending photos/profile changes and publishes the approved version.
+
+## 6\. Agents
+
+* `contestantCoachAgent` can draft copy, suggest questions, summarize next steps, and generate checklists.
+* It cannot approve media, publish profiles, modify votes, or contact sponsors/fans.
+
+## 7\. Integrations
+
+* Supabase storage for contestant media.
+* Supabase RLS for contestant-owned private edits and public approved profile reads.
+* CopilotKit for coach and action cards.
+* Mastra/Gemini for draft suggestions after CTEST-005.
+* Required shadcn components: `Field`, `InputGroup`, `Textarea`, `Select`, `Avatar`, `Alert`, `Empty`, `Spinner`, `Sonner`, `Tabs`, `Drawer`, plus installed `Card`, `Button`, `Badge`, `Dialog`, and `Sheet`.
+
+## 8\. Summary
+
+This task turns signup into an ongoing contestant workspace, which is required for profile quality and event readiness.
+
+## 9\. Definition Of Done
+
+- [ ] Profile editor route renders.
+- [ ] shadcn CLI dry run completed for missing profile/coach components before installation.
+- [ ] Photo upload route renders.
+- [ ] Coach route renders.
+- [ ] Contestant can save draft changes but cannot self-publish.
+- [ ] Photo status workflow supports pending, approved, rejected.
+- [ ] Coach responses are draft-only and include next-step checklists.
+- [ ] Admin approval is required before public profile changes.
+
+## 10\. Tests
+
+- [ ] Unit test profile completion calculation.
+- [ ] Storage policy test: contestant cannot read another contestant's private docs.
+- [ ] Storage policy test: public can read approved public profile photos only.
+- [ ] Playwright: edit profile, upload photo stub, submit for approval.
+- [ ] Playwright: coach asks missing-profile questions.
+- [ ] SQL proof: audit rows for profile edit, media upload, review decision.
+- [ ] Responsive proof at 375, 414, 768, 1024, 1440.
+
+## Production Standard Addendum
+
+This task must satisfy `../docs/05-production-task-standard.md`: create tasks, tech stack, feature, problem solving, agents/workflows/automations, user journey, Mermaid diagrams, skills to run, MCP/official docs, verification steps, real-world examples, data, frontend/backend wiring, success criteria, production-ready checklist, and testing.
+
+## 11\. Mermaid diagrams
+
+### Profile editor + coach (no auto-publish)
+
+```mermaid
+sequenceDiagram
+  participant C as Contestant
+  participant UI as /me/contestant-profile
+  participant Coach as contestantCoachAgent
+  participant DB as Supabase
+  C->>UI: edit bio or photos
+  UI->>DB: draft row only
+  C->>Coach: ask for prep tips
+  Coach-->>UI: draft copy suggestions
+  Note over Coach,DB: No tool writes approved profile
+```","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, scr, track:ai, track:contest, track:events",,,,,"2026-06-03T03:39:10.256Z","2026-06-04T04:18:22.744Z",,,,,,"2026-06-10T03:39:10.930Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","921e99c4-8f0b-4309-96fc-67e9383083a1",6491,"","SAN-533, SAN-540, SAN-536",
+"SAN-542","Sanjiovani","CTEST-010 — Public contestant profile voting page and share growth loop","# CTEST-010 — Public contestant profile voting page and share growth loop
+
+> Full spec synced from repo. Re-run: `python3 tasks/contest/scripts/sync-ctest-linear.py`
+
+## Task metadata
+
+| Field | Value |
+| -- | -- |
+| **ID** | `CTEST-010` |
+| **Status** | Draft |
+| **Priority** | P0 |
+| **Phase** | Contest growth and voting |
+| **Effort** | 2-4d |
+| **Owner** | codex |
+| **MVP track** | MVP-A |
+| **Depends on** | CTEST-002, CTEST-006, CTEST-009 |
+| **Linear** | [SAN-542](https://linear.app/sanjiovani/issue/SAN-542/ctest-010-public-contestant-profile-voting-page-and-share-growth-loop) |
+| **Evidence** | `tasks/contest/notes/CTEST-010-evidence.md` |
+| **Repo file** | [tasks/contest/tasks/CTEST-010-public-profile-vote-share-growth.md](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/contest/tasks/CTEST-010-public-profile-vote-share-growth.md>) |
+
+### Skills
+
+* `responsive-design`
+* `tailwind-responsive-ui`
+* `testing`
+
+### Docs
+
+* `../docs/03-screens-wireframes.md`
+* `../docs/05-production-task-standard.md`
+* `../docs/06-shadcn-component-audit.md`
+
+### Verified against
+
+* `/home/sk/mdeai/.claude/skills/responsive-design/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/tailwind-responsive-ui/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/responsive-design/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/shadcn/SKILL.md`
+* `/home/sk/mdeai/.claude/skills/testing/SKILL.md`
+* [https://ui.shadcn.com/docs/components](<https://ui.shadcn.com/docs/components>)
+* [https://ui.shadcn.com/docs/cli](<https://ui.shadcn.com/docs/cli>)
+
+### Labels
+
+* `prefix:CONT`
+* `prefix:EVT`
+* `track:contest`
+* `track:events`
+* `phase:phase2`
+
+---
+
+## 1\. Purpose
+
+Make each approved contestant profile double as a public voting page that fans can view, share, and use to cast valid free or paid votes.
+
+## 2\. Goals
+
+* **Hard dependency:** CTEST-002 vote RPCs must be Done before this route accepts votes (no client-side vote writes).
+* Implement `/contests/[slug]/contestants/[id]` as the primary public voting profile.
+* Add share links for WhatsApp, Instagram copy, direct URL, and contact import prompt where legally/technically appropriate.
+* Add referral/UTM tracking without exposing private voter data.
+* Make vote CTA states obvious: open, closed, already voted, paid credits available, in review.
+
+## 3\. Features
+
+* Public profile hero with approved photos and contestant story.
+* Vote module with free/paid path handoff.
+* Share panel with trackable links.
+* Fan-facing receipt after vote.
+* Contestant-facing promotion guidance.
+
+## 4\. Workflows
+
+1. Build responsive public profile route.
+2. Run shadcn CLI verification:
+
+   ```bash
+   cd mdeapp
+   npx shadcn@latest info --json
+   npx shadcn@latest docs avatar radio-group alert sonner spinner button card badge dialog tooltip --json
+   npx shadcn@latest add avatar radio-group alert sonner spinner --dry-run
+   ```
+3. Connect vote CTA to CTEST-002 RPC/API.
+4. Connect paid vote CTA to CTEST-003.
+5. Generate share URLs with UTM/referral token.
+6. Track public profile views and share clicks in audit/analytics tables.
+
+## 5\. User Journeys
+
+* Fan lands on a contestant profile from WhatsApp and votes.
+* Contestant copies their profile link and shares it with friends.
+* Patricia reviews traffic/vote anomalies from the admin audit view.
+
+## 6\. Agents
+
+* AI can suggest share copy and promotion tips.
+* AI cannot cast votes, buy votes, or pressure contacts.
+
+## 7\. Integrations
+
+* Vote ledger/RPC from CTEST-002.
+* Paid vote credits from CTEST-003.
+* Public approved profile from CTEST-009.
+* Optional WhatsApp share link only; no autonomous messaging.
+* Required shadcn components: `Avatar`, `RadioGroup`, `Alert`, `Sonner`, `Spinner`, plus installed `Button`, `Card`, `Badge`, `Dialog`, and `Tooltip`.
+
+## 8\. Summary
+
+This task closes the growth loop: the profile page is also the voting page and sharing surface.
+
+## 9\. Definition Of Done
+
+- [ ] Public profile route renders approved contestant data only.
+- [ ] shadcn CLI dry run completed for missing public profile/vote components before installation.
+- [ ] Vote CTA handles open/closed/already-voted/paid-credit states.
+- [ ] Share links include source tracking.
+- [ ] Private documents and rejected media never render publicly.
+- [ ] Mobile layout is single-column, touch-safe, and free of horizontal overflow.
+
+## 10\. Tests
+
+- [ ] Playwright: fan views profile and votes.
+- [ ] Playwright: profile share link copies/opens.
+- [ ] Negative test: unapproved contestant is not public.
+- [ ] Negative test: rejected/private media is not public.
+- [ ] SQL proof: vote receipt, share event, profile view.
+- [ ] Responsive proof at 375, 414, 768, 1024, 1440.
+
+## Production Standard Addendum
+
+This task must satisfy `../docs/05-production-task-standard.md`: create tasks, tech stack, feature, problem solving, agents/workflows/automations, user journey, Mermaid diagrams, skills to run, MCP/official docs, verification steps, real-world examples, data, frontend/backend wiring, success criteria, production-ready checklist, and testing.
+
+## 11\. Mermaid diagrams
+
+### Public profile + vote (requires CTEST-002)
+
+```mermaid
+flowchart TD
+  Fan[Fan] --> Page[""/contests/slug/contestants/id""]
+  Page --> Share[Share link UTM]
+  Page --> VoteBtn[Vote CTA]
+  VoteBtn --> RPC[submit_contest_vote RPC]
+  RPC --> VL[(vote_ledger)]
+  Page -.blocked until CTEST-002 Done.-> VoteBtn
+```","Backlog",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"phase:phase2, prefix:CONT, prefix:EVT, scr, track:contest, track:events",,,,,"2026-06-03T03:39:12.326Z","2026-06-04T04:18:11.135Z",,,,,,"2026-06-10T03:39:13.238Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","d267332d-b1c4-45bb-9930-9250930869e7",6491,"","SAN-534, SAN-541, SAN-538",

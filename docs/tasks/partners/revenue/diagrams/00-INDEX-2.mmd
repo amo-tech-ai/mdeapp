@@ -1,0 +1,10 @@
+flowchart LR
+  C["Consumer pays<br/>ticket · booking"] --> STRIPE["Stripe"]
+  STRIPE --> SPLIT{"Split"}
+  SPLIT -- payout --> PARTNER["Partner"]
+  SPLIT -- fee --> MDE["mdeai"]
+  PARTNER --> SUB["Pays subscription / AI package"] --> MDE
+  SPON["Sponsor pays campaign"] --> MDE
+  AGY["Agency pays retainer"] --> MDE
+  MDE --> REINVEST["Reinvest: more demand → more partner GMV"]
+  REINVEST --> C

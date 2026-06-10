@@ -1,0 +1,1488 @@
+"ID","Team","Title","Description","Status","Estimate","Priority","Project ID","Project","Creator","Assignee","Labels","Cycle Number","Cycle Name","Cycle Start","Cycle End","Created","Updated","Started","Triaged","Completed","Canceled","Archived","Due Date","Parent issue","Initiatives","Project Milestone ID","Project Milestone","SLA Status","UUID","Time in status (minutes)","Related to","Blocked by","Duplicate of"
+"SAN-276","Sanjiovani","TRP-012 — Trip workspace shell (SCREEN-013)","## Product code
+
+**TRP-012** — Trip workspace shell (SCREEN-013)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-276 |
+| Spec | `TRIP-004` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Harden the `/trips/[id]` workspace shell so each trip has a stable page with header, tabs, ownership checks, and mobile-safe tab navigation before deeper itinerary/map work lands.
+
+## User journey
+
+Camila clicks a trip card → opens `/trips/[id]` → sees title, dates, destination, status, tabs for itinerary/map/bookings/saved-style areas → can switch tabs without losing context.
+
+## Frontend work
+
+* Route: `/trips/[id]`.
+* Components: `TripWorkspaceView`, tabs, header, back link.
+* Keep `data-testid=""trips-workspace""` and `trip-workspace-tabs`.
+* Add accessible tab semantics: `role=""tablist""`, `aria-selected`.
+* Keep Ideas and Bookings as dashed/stub surfaces until TRIP-006/TRIP-010.
+* Mobile: horizontal scroll tabs; no Mindtrip-style dense 3-panel layout for MVP.
+
+## Backend / Supabase work
+
+* Load only owner trip data with RLS-scoped loader.
+* Owner gets 200; non-owner gets 404.
+* Load trip header, items, and conflicts; no new schema.
+
+## Agent / CopilotKit / Mastra work
+
+* No trip-scoped CopilotKit split layout in MVP.
+* Later tasks may add `useCopilotReadable` trip context.
+* Gemini must not infer hidden trip data or bypass ownership.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Source file: `tasks/trips/tasks/TRIP-004-trip-workspace-shell.md`
+* Depends on: TRIP-003
+* Blocks: TRIP-005, TRIP-008, TRIP-009, TRIP-016, TRIP-018
+
+## Acceptance criteria
+
+- [ ] Owner GET `/trips/[id]` returns 200.
+- [ ] Non-owner returns 404.
+- [ ] Required test IDs exist.
+- [ ] Tab switch works without full page reload.
+
+## Do not do
+
+* Do not add Calendar, Media, or Chats tabs for MVP.
+* Do not add dense trip-scoped CopilotKit split layout yet.","Todo",,"Urgent","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:mvp, prefix:TRP, stack:nextjs, stack:supabase, track:trips",,,,,"2026-05-28T15:49:24.394Z","2026-06-08T05:59:29.752Z",,,,,,,,"Phase 1 — mdeai MVP launch","dbd176a7-c71c-4752-bdde-309003286c0e","🧳 Trips — Core",,"eee402fd-0610-440a-a615-6e56463dbd40",15845,"SAN-576","SAN-275",
+"SAN-282","Sanjiovani","TRP-018 — Booking confirm → trip_items sync","## Product code
+
+**TRP-018** — Booking confirm → trip_items sync
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-282 |
+| Spec | `TRIP-010` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Make paid tickets and confirmed showings appear automatically in Camila's trip itinerary when a `trip_id` is known. Stripe/payment truth remains the source; `trip_items` is the itinerary mirror.
+
+## User journey
+
+Andrés buys a salsa ticket or Camila confirms a viewing with a trip selected → payment/schedule truth is saved → itinerary row appears once → webhook replay does not duplicate it.
+
+## Frontend work
+
+* Booking confirmation card links to trip workspace itinerary tab.
+* Show paid/scheduled item in itinerary after sync.
+* Capture screenshot/evidence for ticket and viewing paths.
+
+## Backend / Supabase work
+
+* Extend event order/showing sync from `event_orders` and `showings` into `trip_items`.
+* Upsert idempotently on `unique_trip_item (trip_id, item_type, source_id)`.
+* Extend `item_type` via data-027 for `event`/`showing` as needed.
+* Snapshot event/showing title, venue/address, lat/lng, and `start_at`.
+* Store metadata: `order_id`, `stripe_payment_intent`, `webhook_event_id`, `sync_source`, `synced_at`.
+* Prefer edge function proximity to payment truth.
+* If trip item insert fails, return 500 so Stripe retries; do not cache webhook success until side effects are committed or explicitly queued for TRIP-013 repair.
+
+## Agent / CopilotKit / Mastra work
+
+* CopilotKit can render confirmation link/card.
+* Mastra can observe/display state but must not set paid status.
+* Gemini must not invent payment status, booking status, trip truth, or itinerary rows.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Source file: `tasks/trips/tasks/TRIP-010-booking-trip-item-sync.md`
+* Depends on: TRIP-007, data-028, data-029, EVP-001-core
+* Blocks: TRIP-013, TRIP-011, TRIP-017
+
+## Acceptance criteria
+
+- [ ] Paid ticket appears on itinerary when `trip_id` is provided at checkout.
+- [ ] Scheduled viewing appears after confirm flow.
+- [ ] Webhook replay does not duplicate rows.
+- [ ] SQL select and screenshot evidence attached.
+- [ ] Failure-mode test proves trip_items insert error is not cached as webhook success.
+
+## Do not do
+
+* Do not add a durable queue table for MVP; TRIP-013 adds lightweight repair first.
+* Do not let LLM set payment status.","Todo",,"Urgent","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:mvp, prefix:TRP, stack:nextjs, stack:supabase, track:trips",,,,,"2026-05-28T15:50:56.592Z","2026-06-02T12:59:42.327Z",,,,,,,,"Phase 1 — mdeai MVP launch","ab3a722a-342a-42cf-af26-a59bec57c067","🧳 Trips — MVP",,"f3a1ff69-935f-4b16-a4a4-68e425be3dfd",15843,"","SAN-279",
+"SAN-274","Sanjiovani","TRP-010 — Trips dashboard polish (SCREEN-012)","## Product code
+
+**TRP-010** — Trips dashboard polish (SCREEN-012)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-274 |
+| Spec | `TRIP-002` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Polish the existing `/trips` dashboard so Camila can see her own trip plans, grouped by status, with clear empty states and links into each trip workspace.
+
+## User journey
+
+Camila signs in → opens `/trips` → sees active/planning trip cards with dates and item counts → clicks one card → lands in `/trips/[id]`.
+
+## Frontend work
+
+* Route: `/trips`.
+* Keep `data-testid=""trips-dashboard""`.
+* Polish `TripsDashboardGrid` and trip cards.
+* Add status sections for active/planning/archived-style filtering using live trip status values.
+* Show date range, item count, and budget snippet when available.
+* Keep empty state and “Start in chat” CTA.
+* Add placeholder `[+ New trip]` entry point for TRIP-003.
+
+## Backend / Supabase work
+
+* Read only the signed-in user's `trips` and `trip_items(count)` through existing loader.
+* Respect RLS; no service-role path.
+* Do not introduce `trip_days`.
+
+## Agent / CopilotKit / Mastra work
+
+* No agent writes.
+* The dashboard may later expose readable state to CopilotKit, but this task is UI/read-only.
+* Gemini must not invent trip status or item counts.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Source file: `tasks/trips/tasks/TRIP-002-trips-dashboard-polish.md`
+* Depends on: TRIP-001, AUTH-003
+* Blocks: TRIP-003
+
+## Acceptance criteria
+
+- [ ] Authenticated user sees own trips grouped by status.
+- [ ] Empty state plus “Start in chat” CTA.
+- [ ] Card links to `/trips/[id]`.
+- [ ] Logged-out user sees sign-in prompt or AUTH-003 redirect.
+- [ ] `npm run floor` exits 0.
+- [ ] SCREEN-012 Playwright coverage exists here or in TRIP-011.
+
+## Do not do
+
+* Do not build the create modal here; TRIP-003 owns it.
+* Do not create `trip_days`.","Todo",,"Urgent","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:mvp, prefix:TRP, stack:maps, stack:nextjs, stack:playwright, stack:supabase, track:trips",,,,,"2026-05-28T15:49:18.218Z","2026-06-08T05:59:28.186Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"3f601448-5979-4685-95c4-c54143fe72d5",15845,"SAN-576","SAN-273",
+"SAN-273","Sanjiovani","TRP-009 — Trips Supabase audit + evidence","## Product code
+
+**TRP-009** — Trips Supabase audit + evidence
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-273 |
+| Spec | `TRIP-001` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Prove the Trips database foundation is real before anyone builds on top of it. This task checks the existing Supabase tables, RLS policies, indexes, and gaps so Camila's trip data has a trustworthy source of truth.
+
+## User journey
+
+Camila opens `/trips` or starts saving rentals/events → the app can rely on verified `trips`, `trip_items`, `saved_places`, `collections`, and `conflict_resolutions` tables → later add-to-trip, map, and booking sync tasks know exactly what exists.
+
+## Frontend work
+
+* No product UI build in this task.
+* Document which routes are currently present: `/trips`, `/trips/[id]`, `/saved` gap at source time.
+* Record evidence for future UI tasks to consume.
+
+## Backend / Supabase work
+
+* Dump columns, constraints, RLS policies, indexes, and row counts for `trips`, `trip_items`, `saved_places`, `collections`, `conflict_resolutions`, and `budget_tracking`.
+* Confirm `unique_trip_item`, `idx_trip_items_trip`, `idx_trip_items_dates`, and `idx_trips_user_id`.
+* Prove no new MVP tables are needed.
+* Identify gaps for data-027, data-028, data-029, and TRIP-010.
+* Add two-user RLS negative-test evidence.
+
+## Agent / CopilotKit / Mastra work
+
+* No agent implementation.
+* Document guardrail for later tools: Gemini must not invent booking, payment, or trip truth.
+* Future tools must use user-scoped Supabase clients except explicit server-only repair/payment paths.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Source file: `tasks/trips/tasks/TRIP-001-trips-supabase-audit-evidence.md`
+* Depends on: none
+* Blocks: TRIP-002, TRIP-010
+
+## Acceptance criteria
+
+- [ ] Evidence file committed at `tasks/trips/evidence/TRIP-001-schema.md`.
+- [ ] CORE verdict says zero new tables for MVP.
+- [ ] Gap list includes item_type extension, webhook to trip_items, and `/saved` route missing.
+- [ ] Cross-reference data-026 created or linked.
+- [ ] No migrations in this task.
+
+## Do not do
+
+* Do not create `trip_activity_log`.
+* Do not add a durable queue table for MVP.
+* Do not mark downstream Trips work ready without this evidence.","Todo",,"Urgent","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase, track:trips",,,,,"2026-05-28T15:49:14.627Z","2026-06-02T12:59:22.129Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"6732188e-f949-44ff-8bba-4322a65fb36f",15845,"","",
+"SAN-275","Sanjiovani","TRP-011 — Create trip modal + server action","## Product code
+
+**TRP-011** — Create trip modal + server action
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-275 |
+| Spec | `TRIP-003` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Add the modal that lets Camila create a new trip. It writes a `trips` row safely, validates dates, optionally starts budget tracking, and redirects her to the new workspace.
+
+## User journey
+
+Camila clicks `+ New trip` on `/trips` → enters title, destination, dates, travelers/budget → submits → the new trip appears and opens at `/trips/[id]`.
+
+## Frontend work
+
+* Create `components/trips/create-trip-modal.tsx`.
+* Trigger from the TRIP-002 dashboard button.
+* Fields: title, destination, dates, travelers metadata, budget, currency.
+* Validate start date is before or equal to end date.
+* Show pending, success, validation error, and submit-failure states.
+* Capture browser proof and screenshot.
+
+## Backend / Supabase work
+
+* Create `app/trips/actions/create-trip.ts` server action.
+* Insert into `trips` with `user_id = auth.uid()`.
+* Optionally insert `budget_tracking` when budget is provided.
+* Enforce RLS: users cannot insert for another user.
+* Redirect to `/trips/[id]` after insert.
+
+## Agent / CopilotKit / Mastra work
+
+* Defer `create_trip` Mastra/CopilotKit tool to TRIP-007 unless implemented in parallel with the same guardrails.
+* Gemini must not create trips without user confirmation.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Source file: `tasks/trips/tasks/TRIP-003-create-trip-modal.md`
+* Depends on: TRIP-002
+* Blocks: TRIP-004, TRIP-014, TRIP-018
+
+## Acceptance criteria
+
+- [ ] Modal creates a trip and it appears on dashboard.
+- [ ] RLS prevents insert for another user.
+- [ ] Invalid dates are rejected.
+- [ ] Browser proof and screenshot are attached.
+
+## Do not do
+
+* Do not require `mastra_threads` linkage for MVP.
+* Do not let Gemini create trips silently.","Todo",,"Urgent","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase, track:trips",,,,,"2026-05-28T15:49:21.229Z","2026-06-02T12:59:29.416Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"cb567d07-d2df-497b-82a1-43a093baf80f",15845,"","SAN-274",
+"SAN-284","Sanjiovani","TRP-020 — Trips RLS penetration verification","## Product code
+
+**TRP-020** — Trips RLS penetration verification
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-284 |
+| Spec | `TRIP-014` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+Source: /home/sk/mdeai/tasks/trips/tasks/TRIP-014-rls-penetration-verification.md
+Priority: P0
+
+## Summary
+
+Prove that Trips data cannot leak across users. This is the task that makes sure Camila cannot see, update, delete, join against, or infer another traveler’s trips or saved itinerary items.
+
+## User journey
+
+User A creates a trip and saves private rentals or events → User B logs in with a separate JWT → User B cannot read, mutate, delete, join, count, or infer User A’s trip data from app routes, direct Supabase calls, or edge/runtime paths.
+
+## Frontend work
+
+* Add/extend Playwright multi-user fixtures where useful.
+* Cover `/trips`, trip workspace routes, saved collections, itinerary, add-to-trip, conflict UI, and any API-backed buttons that mutate trip data.
+* Confirm UI does not reveal unauthorized counts, titles, map pins, conflict badges, or empty-state differences that leak private data.
+* Mobile behavior must preserve the same isolation; no cached cards from another user after account swap.
+
+## Backend / Supabase work
+
+* Verify RLS for `trips`, `trip_items`, saved-link tables used by Trips, conflict records, and any supporting views/RPCs.
+* Test SELECT, INSERT, UPDATE, DELETE, JOIN, count inference, and nested relation leakage.
+* Confirm service role is only used in approved server-only paths and never in browser/client code.
+* Add Supabase JWT swap tests or SQL-level proof scripts.
+* Validate edge functions and `/api/copilotkit` cannot bypass user ownership checks.
+
+## Agent / CopilotKit / Mastra work
+
+* Ensure CopilotKit readable state and HITL cards only receive the authenticated user’s trip rows.
+* Gemini must not expose, summarize, infer, or fabricate another user’s trip, booking, payment, or saved-item truth.
+* Agent tools must require user/session context and must fail closed when auth is missing.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Internal: TRIP-001, TRIP-003, TRIP-007, TRIP-009
+
+## Acceptance criteria
+
+* User A cannot SELECT, UPDATE, DELETE, JOIN, or infer User B’s trips or trip items.
+* Edge/runtime paths enforce the same ownership boundary as direct Supabase calls.
+* Service-role usage is proven absent from browser/client surfaces.
+* Multi-user proof is committed as evidence.
+* Any discovered policy gaps are fixed before TRIP-011 and TRIP-012 pass.
+
+## Do not do
+
+* Do not rely only on happy-path UI tests.
+* Do not treat service-role success as user-auth proof.
+* Do not mark complete without negative tests.
+* Do not weaken RLS for agent convenience.","Todo",,"High","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:post-mvp, prefix:TRP, stack:supabase, track:trips, type:test",,,,,"2026-05-28T15:53:56.217Z","2026-06-02T12:23:19.813Z",,,,,,,,"Phase 1 — mdeai MVP launch","ab5e06a1-2753-4761-9a69-16b40d541116","🔮 Trips — Hardening",,"96c70529-2d95-4a5f-bd9e-1f76188e77b7",15840,"","SAN-273, SAN-275, SAN-281, SAN-279",
+"SAN-291","Sanjiovani","TRP-027 — Production smoke + floor gate","## Product code
+
+**TRP-027** — Production smoke + floor gate
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-291 |
+| Spec | `TRIP-012` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+Source: /home/sk/mdeai/tasks/trips/tasks/TRIP-012-production-smoke-floor.md
+Priority: P1
+
+## Summary
+
+Create the final Trips release gate. This proves the MVP runs locally, passes tests, survives production smoke checks, and has enough evidence for Sofía to call it ship-ready instead of just implemented.
+
+## User journey
+
+Camila can open Trips in the deployed app → create/use a trip → see saved items, itinerary, map, conflicts, booking-backed items, mobile layout, and recovery behavior → Patricia and Sofía can verify logs and smoke evidence if something breaks.
+
+## Frontend work
+
+* Smoke `/trips`, saved collections, trip workspace, itinerary, map, conflict HITL, add-to-trip, and mobile viewports.
+* Confirm loading/error/empty states are production-safe.
+* Verify no console errors on critical Trips surfaces.
+* Capture production or preview screenshots/evidence as required by repo task lifecycle rules.
+
+## Backend / Supabase work
+
+* Run production-safe smoke checks for Trips tables, RLS, sync paths, reconciliation, cache hydration, lifecycle state, and observability logs.
+* Confirm no service-role key leaks to client bundles.
+* Verify Stripe-related paths with safe test-mode or mock evidence, not live accidental charges.
+* Check indexes/RPCs/policies required by Trips are present in the target environment.
+
+## Agent / CopilotKit / Mastra work
+
+* Smoke CopilotKit/Mastra connection on Trips-relevant actions and HITL cards.
+* Confirm Gemini is read-only for booking/payment/trip truth and cannot fabricate persisted state.
+* Verify agent traces/logs exist for Trips tools where implemented.
+* Keep model-dependent checks focused on connectivity and guardrails, not exact prose.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Internal: TRIP-011, TRIP-013, TRIP-015, TRIP-016, TRIP-017, TRIP-018
+
+## Acceptance criteria
+
+* Trips MVP passes local floor gates and production/preview smoke checks.
+* Evidence includes commands, URLs, screenshots/traces, and any known limitations.
+* RLS, sync, reconciliation, cache, mobile, observability, lifecycle, and retry coverage are accounted for.
+* Any production blocker is recorded and the issue stays open until resolved.
+* No task is marked Done without the required runtime proof unless it is pure-doc and marked N/A.
+
+## Do not do
+
+* Do not call the MVP production-ready on local-only proof.
+* Do not use real customer payments for smoke testing.
+* Do not ignore console errors or failed network calls.
+* Do not close this gate while upstream hardening tasks are incomplete.","Todo",,"High","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:mvp, prefix:TRP, stack:nextjs, track:trips, type:test",,,,,"2026-05-28T15:56:07.170Z","2026-06-02T12:59:45.901Z",,,,,,,,"Phase 1 — mdeai MVP launch","ab3a722a-342a-42cf-af26-a59bec57c067","🧳 Trips — MVP",,"a82b44ce-05fd-451d-b786-09c60aaf96d0",15838,"","SAN-286, SAN-283, SAN-288, SAN-290, SAN-285, SAN-287",
+"SAN-283","Sanjiovani","TRP-019 — Booking reconciliation repair worker","## Product code
+
+**TRP-019** — Booking reconciliation repair worker
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-283 |
+| Spec | `TRIP-013` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+Source: /home/sk/mdeai/tasks/trips/tasks/TRIP-013-booking-reconciliation-worker.md
+Priority: P0
+
+## Summary
+
+Add a lightweight repair path for the case where Stripe confirms a booking but the Trips itinerary item is missing. This protects Andrés or Miguel from paying for a ticket and then seeing an empty trip timeline.
+
+## User journey
+
+Andrés buys a ticket through Stripe → the webhook should create the related `trip_items` row → if that insert fails or times out, the reconciliation worker finds the paid booking later → the trip itinerary is repaired without manual support intervention.
+
+## Frontend work
+
+* No primary new screen for MVP.
+* Trips itinerary and workspace must show repaired booking items once the worker backfills them.
+* Admin/support surfaces may later expose repair results, but this task should keep the MVP UI impact limited to restored trip items.
+* Any user-visible recovered item must avoid duplicate itinerary entries.
+
+## Backend / Supabase work
+
+* Implement `repair_missing_trip_items()` as a lightweight reconciliation routine.
+* Run it every 15 minutes via `pg_cron` or the project-approved scheduled mechanism.
+* Compare paid/confirmed booking truth against `trip_items`.
+* Insert missing trip items idempotently.
+* Add indexes or uniqueness constraints needed to prevent duplicate repairs.
+* Record repair attempts and failures in structured logs or a minimal audit table/path used by TRIP-017.
+* Validate tenant/user ownership before writing repaired rows.
+
+## Agent / CopilotKit / Mastra work
+
+* No agent should create booking/payment/trip truth from model output.
+* Gemini may explain that a booking is being synced, but it must not invent payment status, booking status, Stripe status, or itinerary truth.
+* If a CopilotKit card references a repaired item, it must read from Supabase state only.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Internal: TRIP-010
+* External: data-028
+
+## Acceptance criteria
+
+* Paid bookings missing `trip_items` are detected and repaired.
+* Repair is idempotent and safe to run repeatedly.
+* Duplicate itinerary rows cannot be produced by repeated worker runs.
+* Failures are visible in logs/evidence for Patricia or Sofía to investigate.
+* Local proof includes a simulated missing-trip-item case and a successful repair.
+
+## Do not do
+
+* Do not introduce a heavyweight queue system for the MVP.
+* Do not make Gemini or Mastra the source of booking truth.
+* Do not mark bookings paid without Stripe-confirmed evidence.
+* Do not silently swallow repair failures.","Todo",,"High","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:post-mvp, prefix:TRP, stack:nextjs, stack:supabase, track:trips",,,,,"2026-05-28T15:53:36.563Z","2026-06-02T12:23:16.961Z",,,,,,,,"Phase 1 — mdeai MVP launch","ab5e06a1-2753-4761-9a69-16b40d541116","🔮 Trips — Hardening",,"a7002be3-7cb7-4069-8af2-1c83a6651e6c",15840,"","SAN-282",
+"SAN-279","Sanjiovani","TRP-015 — Add-to-trip from rental/event cards","## Product code
+
+**TRP-015** — Add-to-trip from rental/event cards
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-279 |
+| Spec | `TRIP-007` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Let Camila take a saved rental or event card and attach it to an active trip. The task creates the modal/tool/action path and protects the user from false success when a write fails.
+
+## User journey
+
+Camila saves a rental or event → chooses a trip → item appears in her itinerary → map and conflict checks update.
+
+## Frontend work
+
+* Create `components/trips/add-to-trip-modal.tsx`.
+* Entry points from rental card, event card, and saved collection row.
+* Trip picker for user's active trips.
+* Optional schedule fields: `start_at`, `end_at`.
+* Pending button/row state, rollback on failed insert, retry toast, and duplicate-click lock.
+* Show friendly duplicate/upsert message if `unique_trip_item` blocks duplicate add.
+
+## Backend / Supabase work
+
+* Insert/upsert `trip_items` with `trip_id`, `item_type`, `source_id`, schedule, title, lat/lng snapshot fields.
+* Use user-scoped Supabase client and RLS; no service role.
+* Validate source entity exists before insert.
+* Respect `unique_trip_item`.
+* Requires data-027 item_type/RPC support where needed.
+
+## Agent / CopilotKit / Mastra work
+
+* Create `src/mastra/tools/add-trip-item.ts`.
+* Optionally create `src/mastra/tools/create-trip.ts`.
+* Add CopilotKit `useCopilotAction` mirror `add_to_trip` with disabled availability and rendered card.
+* Add `useCopilotReadable` trip list on workspace when useful.
+* Gemini must not invent schedule, booking status, payment status, or trip truth.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Source file: `tasks/trips/tasks/TRIP-007-add-to-trip-from-cards.md`
+* Depends on: TRIP-006, data-027
+* Blocks: TRIP-010, TRIP-014, TRIP-019
+
+## Acceptance criteria
+
+- [ ] Insert creates a row visible on itinerary tab.
+- [ ] Duplicate add is blocked by unique index.
+- [ ] `title`, `latitude`, `longitude` are populated from source entity.
+- [ ] Agent name matches Mastra registry key.
+- [ ] Failed insert rolls back optimistic UI and shows retry path.
+- [ ] Double-click cannot create duplicate pending requests.
+
+## Do not do
+
+* Do not use service role in the agent/browser path.
+* Do not let Gemini invent schedule or booking status.","Todo",,"High","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:mvp, prefix:TRP, stack:nextjs, stack:supabase, track:trips",,,,,"2026-05-28T15:50:42.722Z","2026-06-02T12:59:37.776Z",,,,,,,,"Phase 1 — mdeai MVP launch","ab3a722a-342a-42cf-af26-a59bec57c067","🧳 Trips — MVP",,"0c41ba0a-829d-4aa2-a751-54807f316af3",15843,"","SAN-278",
+"SAN-280","Sanjiovani","TRP-016 — Trip map Google pins tab","## Product code
+
+**TRP-016** — Trip map Google pins tab
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-280 |
+| Spec | `TRIP-008` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Replace the current text coordinate list with a real Google Map tab for trip items, using snapshot coordinates first and safe cache/proxy behavior for details.
+
+## User journey
+
+Camila opens a trip map → sees markers for rentals, events, and restaurants already in her itinerary → bounds fit the pins → mobile map opens without hiding itinerary controls.
+
+## Frontend work
+
+* Create or refactor `components/trips/trip-map-panel.tsx`.
+* Use Google Map parent with required `mapId`.
+* Render `AdvancedMarker` for every `trip_items` row with finite lat/lng.
+* Fit bounds to all valid pins; ignore null/invalid coords.
+* Lazy-load map bundle when Map tab opens.
+* Cluster 10+ nearby pins.
+* Mobile map uses collapsible/bottom-sheet behavior.
+* Preserve `data-testid=""trip-map-panel""` and `trip-map-pin` semantics.
+
+## Backend / Supabase work
+
+* Read `trip_items.latitude/longitude` snapshot fields first.
+* Fallback priority: source entity second, Places cache third.
+* No browser-side Places API New calls.
+* Marker details must use MAP-005 cache/proxy if needed.
+
+## Agent / CopilotKit / Mastra work
+
+* No ADK write path.
+* No route optimization.
+* Gemini can describe visible pins only; it must not invent locations or coordinates.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Source file: `tasks/trips/tasks/TRIP-008-trip-map-google-pins.md`
+* Depends on: TRIP-005, MAP-008
+* Blocks: TRIP-015, TRIP-016
+
+## Acceptance criteria
+
+- [ ] Map tab renders without console errors.
+- [ ] Every scheduled item with coords shows marker.
+- [ ] `data-testid=""trip-map-panel""` preserved.
+- [ ] Parent map has required `mapId`.
+- [ ] Bounds fit all finite pins and ignore invalid/null coordinates.
+- [ ] Marker clustering verified with 10+ nearby pins.
+- [ ] No direct browser call to Places API New.
+
+## Do not do
+
+* Do not add route lines or Directions API; MAP-011 is POST-MVP.
+* Do not add ADK write path.","Todo",,"High","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:mvp, prefix:TRP, stack:maps, stack:nextjs, track:trips",,,,,"2026-05-28T15:50:48.739Z","2026-06-02T12:59:39.386Z",,,,,,,,"Phase 1 — mdeai MVP launch","ab3a722a-342a-42cf-af26-a59bec57c067","🧳 Trips — MVP",,"3da1765b-75d2-4ce7-aacc-628286b937e2",15843,"","SAN-277",
+"SAN-290","Sanjiovani","TRP-026 — Playwright suite (SCREEN-011/012/013)","## Product code
+
+**TRP-026** — Playwright suite (SCREEN-011/012/013)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-290 |
+| Spec | `TRIP-011` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+Source: /home/sk/mdeai/tasks/trips/tasks/TRIP-011-playwright-suite.md
+Priority: P1
+
+## Summary
+
+Add end-to-end browser coverage for the Trips MVP screens so Lucía can prove the dashboard, saved collections, workspace, conflicts, booking sync, RLS, and optimistic recovery work together.
+
+## User journey
+
+Camila opens Trips → creates a trip → saves a rental or event → adds it to the trip → sees itinerary/map/conflict updates → payment-backed items sync correctly → a second user cannot see her data → failures roll back and can be retried.
+
+## Frontend work
+
+* Cover SCREEN-011 saved collections, SCREEN-012 trips dashboard, and SCREEN-013 trip workspace.
+* Test create trip modal, add-to-trip, itinerary tab, map tab, conflict review, mobile layouts, retry/rollback, and empty/loading/error states.
+* Use stable selectors and persona-visible assertions.
+* Include console-error sweep where practical.
+* Capture screenshots or traces for failure diagnosis.
+
+## Backend / Supabase work
+
+* Seed or fixture users/trips/items safely for E2E.
+* Verify RLS isolation with separate user sessions/JWTs.
+* Assert booking sync and reconciliation evidence where deterministic local fixtures exist.
+* Clean test data without weakening production RLS.
+* Ensure test setup does not require service-role keys in browser code.
+
+## Agent / CopilotKit / Mastra work
+
+* Cover CopilotKit HITL conflict review and any trip tool UI involved in the MVP.
+* Verify agent-readable state reflects Supabase trip truth.
+* Gemini must not be treated as deterministic truth for booking/payment/trip state; tests should assert stored state, not model prose.
+* Mock or control agent behavior where needed to avoid flaky model-dependent tests.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Internal: TRIP-002, TRIP-004, TRIP-006, TRIP-009, TRIP-010, TRIP-014, TRIP-019
+
+## Acceptance criteria
+
+* Playwright covers dashboard, saved collections, workspace, add-to-trip, conflicts, booking sync, RLS proof, and retry recovery.
+* Tests run locally with the documented dev server pattern.
+* Evidence includes passing output and any screenshots/traces needed.
+* Failures are actionable and tied to the correct surface.
+* TRIP-012 can use this suite as a production smoke gate input.
+
+## Do not do
+
+* Do not create brittle tests that depend on Gemini wording.
+* Do not skip multi-user/RLS paths.
+* Do not require live Stripe charges for normal E2E.
+* Do not mark complete without localhost runtime proof where source/config is touched.","Todo",,"High","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:mvp, prefix:TRP, stack:nextjs, stack:playwright, track:trips, type:test",,,,,"2026-05-28T15:55:49.337Z","2026-06-02T12:59:43.950Z",,,,,,,,"Phase 1 — mdeai MVP launch","ab3a722a-342a-42cf-af26-a59bec57c067","🧳 Trips — MVP",,"17c423de-fb7d-4072-a440-f9b486f3ff5c",15838,"","SAN-274, SAN-289, SAN-278, SAN-281, SAN-276, SAN-282, SAN-284",
+"SAN-288","Sanjiovani","TRP-024 — Trip lifecycle states + archival rules","## Product code
+
+**TRP-024** — Trip lifecycle states + archival rules
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-288 |
+| Spec | `TRIP-018` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+Source: /home/sk/mdeai/tasks/trips/tasks/TRIP-018-trip-lifecycle-states.md
+Priority: P1
+
+## Summary
+
+Define and enforce clear trip states so stale, cancelled, active, completed, and archived trips behave predictably across dashboard, workspace, search, analytics, and sync logic.
+
+## User journey
+
+Camila creates a draft trip → starts using it as an active trip → after the travel dates pass it becomes completed or can be archived → cancelled trips stop receiving new booking sync unless explicitly allowed by rules.
+
+## Frontend work
+
+* Update `/trips` dashboard filtering for lifecycle states.
+* Show appropriate badges, empty states, and available actions for draft, active, completed, archived, and cancelled trips.
+* Disable or confirm destructive actions when a trip is archived/cancelled.
+* Keep workspace routes readable for archived/completed trips where expected.
+* Make mobile filters and state controls usable.
+
+## Backend / Supabase work
+
+* Define strict allowed states: `draft`, `active`, `completed`, `archived`, `cancelled` unless the source task narrows them.
+* Add transition rules and validation in server actions/RPCs.
+* Ensure booking sync, add-to-trip, reconciliation, conflict detection, and analytics respect lifecycle state.
+* Add indexes for dashboard filtering if needed.
+* Consider scheduled archival/completion based on dates only if explicitly in MVP scope.
+
+## Agent / CopilotKit / Mastra work
+
+* Agent tools may request allowed state transitions through server actions, not direct table writes.
+* Gemini must not invent trip lifecycle truth or silently reactivate archived/cancelled trips.
+* HITL confirmation is required for risky transitions such as archive/cancel/reactivate if implemented.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Internal: TRIP-001, TRIP-003, TRIP-004
+
+## Acceptance criteria
+
+* Trip states and allowed transitions are documented and enforced.
+* Dashboard filters and workspace behavior match the lifecycle rules.
+* Mutations fail closed for archived/cancelled states where appropriate.
+* Tests/proof cover valid and invalid transitions.
+* Analytics and smoke checks can distinguish active from stale trips.
+
+## Do not do
+
+* Do not leave `trips.status` as free-form behavior.
+* Do not add hidden states without UI and test coverage.
+* Do not let agents bypass transition rules.
+* Do not auto-delete user trips as part of archival.","Todo",,"High","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:post-mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase",,,,,"2026-05-28T15:55:10.625Z","2026-06-02T12:21:42.506Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"70987641-ea50-4de0-a228-8f5507a437b1",15839,"","SAN-273, SAN-275, SAN-276",
+"SAN-277","Sanjiovani","TRP-013 — Itinerary tab hardening","## Product code
+
+**TRP-013** — Itinerary tab hardening
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-277 |
+| Spec | `TRIP-005` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Improve the itinerary tab so Camila's saved trip items are grouped by day, conflicts are visible, and the next upcoming item is easy to scan.
+
+## User journey
+
+Camila opens a trip → sees her rental viewing, dinner, and event grouped by date → sees an overlap warning if two items conflict → knows what is next.
+
+## Frontend work
+
+* Harden `itinerary-panel.tsx` and `itinerary-logic.ts` behavior.
+* Add “UP NEXT” section for first future item.
+* Use item type badges from `itemTypeLabel`.
+* Show client-detected conflict banner.
+* Show stored `conflict_resolutions` when loaded.
+* Keep empty itinerary CTA.
+
+## Backend / Supabase work
+
+* Read `trip_items` grouped by `start_at` in app logic.
+* Read `conflict_resolutions` from existing loader.
+* Do not create `timeline_events` or `trip_days`.
+* Budget line remains a stub until later budget/payment tasks.
+
+## Agent / CopilotKit / Mastra work
+
+* No auto-rescheduling.
+* Conflict action/HITL is TRIP-009.
+* Gemini must not invent schedule details; it can only explain or propose after deterministic data exists.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Source file: `tasks/trips/tasks/TRIP-005-itinerary-tab-hardening.md`
+* Depends on: TRIP-004
+* Blocks: TRIP-006, TRIP-008, TRIP-009
+
+## Acceptance criteria
+
+- [ ] Items group by `start_at` local day.
+- [ ] Overlap banner appears when client detect finds conflicts.
+- [ ] Empty itinerary state includes CTA.
+- [ ] `npm test itinerary-logic` passes.
+
+## Do not do
+
+* Do not create `timeline_events`.
+* Do not build drag reorder; POST-MVP only.","Todo",,"High","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase, track:trips",,,,,"2026-05-28T15:49:28.479Z","2026-06-02T12:59:32.821Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"3721e816-1630-41a0-935d-257390004063",15845,"","SAN-276",
+"SAN-278","Sanjiovani","TRP-014 — Saved collections page (SCREEN-011)","## Product code
+
+**TRP-014** — Saved collections page (SCREEN-011)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-278 |
+| Spec | `TRIP-006` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Build `/saved`, the page where Camila can see her saved rentals, events, restaurants, and collections before adding them to a trip.
+
+## User journey
+
+Camila hearts a rental or event → opens `/saved` → reviews collections and saved cards → later chooses one to add to a trip through TRIP-007.
+
+## Frontend work
+
+* Create `app/saved/page.tsx`.
+* Show collection list and detail view or modal.
+* Show empty state per wireframe.
+* Add/enable nav link from chat chrome when ready.
+* Add `data-testid=""saved-page""`.
+* Prepare saved rows/cards for future add-to-trip entry point.
+
+## Backend / Supabase work
+
+* Query own `collections` where `deleted_at IS NULL`.
+* Join/hydrate `saved_places` by `collection_id`.
+* Hydrate polymorphic cards from apartment, event, and restaurant source tables.
+* Enforce RLS so User A cannot see User B saves.
+* Use `saved_places.collection_id`; do not create `collection_items`.
+
+## Agent / CopilotKit / Mastra work
+
+* Defer `save_place` tool; page shell and RLS first.
+* Later agent tools must use user-scoped Supabase clients.
+* Gemini must not invent saved locations or collection membership.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Source file: `tasks/trips/tasks/TRIP-006-saved-collections-page.md`
+* Depends on: TRIP-005
+* Blocks: TRIP-007, TRIP-019
+
+## Acceptance criteria
+
+- [ ] `/saved` returns 200 for authenticated users.
+- [ ] User A cannot see User B saves; RLS proof attached.
+- [ ] `data-testid=""saved-page""` exists.
+- [ ] Empty state appears when no collections exist.
+
+## Do not do
+
+* Do not create `collection_items`.
+* Do not let Gemini create or claim saved rows without a deterministic write.","Todo",,"High","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:mvp, prefix:TRP, stack:maps, stack:nextjs, stack:playwright, stack:supabase, track:trips",,,,,"2026-05-28T15:50:38.669Z","2026-06-02T12:59:36.507Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"1668f552-0bb2-4154-bdb5-4b50cbece2d1",15843,"SAN-253","SAN-277",
+"SAN-286","Sanjiovani","TRP-022 — Mobile workspace UX hardening","## Product code
+
+**TRP-022** — Mobile workspace UX hardening
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-286 |
+| Spec | `TRIP-016` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+Source: /home/sk/mdeai/tasks/trips/tasks/TRIP-016-mobile-workspace-ux-hardening.md
+Priority: P1
+
+## Summary
+
+Make the Trips workspace usable on phones. The map, itinerary, conflict review, and saved items need mobile-specific layout behavior so the MVP does not collapse into a cramped desktop screen.
+
+## User journey
+
+Camila opens a trip from her phone → switches between itinerary and map → reviews conflicts in a bottom sheet → adds or removes items without losing context → the workspace remains touch-friendly and readable.
+
+## Frontend work
+
+* Harden `/trips` and trip workspace routes for mobile viewports.
+* Add bottom sheet patterns for map pins, item details, and conflict review.
+* Define mobile map collapse/expand behavior.
+* Add sticky itinerary controls where needed.
+* Support touch gestures without accidental destructive actions.
+* Verify text wrapping, button sizing, tabs, empty states, loading states, and error toasts on small screens.
+
+## Backend / Supabase work
+
+* No new backend feature should be required solely for mobile.
+* Ensure mobile queries reuse the same Trips loaders, RLS, cache, and conflict data as desktop.
+* Avoid client-only shortcuts that bypass server validation.
+* Confirm pagination/batching does not overload mobile network use.
+
+## Agent / CopilotKit / Mastra work
+
+* CopilotKit cards and HITL prompts must fit mobile without hiding confirmation controls.
+* Gemini must not infer hidden state from collapsed UI; it can only reflect readable state passed by the app.
+* Agent actions must remain explicit and reversible where they mutate trip items.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Internal: TRIP-004, TRIP-008, TRIP-009
+
+## Acceptance criteria
+
+* Trip workspace is usable at common mobile widths.
+* Map, itinerary, saved items, and conflicts have mobile-safe layouts.
+* No overlapping controls, unreadable text, or trapped bottom sheets.
+* Touch interactions are tested manually or via Playwright where practical.
+* Mobile UX evidence is captured before production smoke.
+
+## Do not do
+
+* Do not build a separate mobile app.
+* Do not fork desktop and mobile logic into divergent data paths.
+* Do not hide core trip actions on mobile.
+* Do not let CopilotKit overlays block required confirmation buttons.","Todo",,"High","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:post-mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase",,,,,"2026-05-28T15:54:35.171Z","2026-06-02T12:21:42.647Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"b70795fb-63b7-4457-a1e9-9d66b03c08e9",15839,"","SAN-280, SAN-281, SAN-276",
+"SAN-289","Sanjiovani","TRP-025 — Retry + optimistic UI recovery","## Product code
+
+**TRP-025** — Retry + optimistic UI recovery
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-289 |
+| Spec | `TRIP-019` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+Source: /home/sk/mdeai/tasks/trips/tasks/TRIP-019-retry-optimistic-ui-recovery.md
+Priority: P1
+
+## Summary
+
+Make add-to-trip feel fast without lying to the user. Optimistic UI needs rollback, retry, pending, and duplicate-click protection so Camila never sees a saved card that quietly failed to persist.
+
+## User journey
+
+Camila taps “Add to trip” on a rental or event → the card shows pending/saved feedback → if Supabase succeeds, the item appears in the trip → if the insert fails, the UI rolls back and offers retry instead of pretending it worked.
+
+## Frontend work
+
+* Add optimistic pending state for add-to-trip actions.
+* Add rollback on failed insert or failed server action.
+* Add retry toast/action with clear copy.
+* Add duplicate-click spinner lock or disabled state.
+* Handle offline/timeout states where practical.
+* Apply the pattern to rental cards, event cards, saved collections, and any trip item mutation surface.
+* Ensure mobile toasts and pending states do not hide controls.
+
+## Backend / Supabase work
+
+* Make add-to-trip mutations idempotent.
+* Return clear typed errors for duplicate, auth, validation, RLS, network, and server failures.
+* Enforce uniqueness to prevent duplicate itinerary items.
+* Validate trip ownership, item type, source IDs, and lifecycle state.
+* Ensure retries do not create duplicates or inconsistent conflict records.
+
+## Agent / CopilotKit / Mastra work
+
+* Agent-triggered add-to-trip tools must return deterministic success/failure states.
+* CopilotKit actions should show pending, success, retry, and rollback UI where agent tools mutate trip state.
+* Gemini must not say an item was saved unless Supabase confirms it.
+* HITL cards must keep destructive or expensive retries explicit.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Internal: TRIP-007, TRIP-006
+
+## Acceptance criteria
+
+* Failed add-to-trip operations visibly roll back.
+* Users can retry safe failures without duplicate entries.
+* Pending state prevents duplicate clicks.
+* Server responses distinguish duplicate/success/failure states.
+* Playwright or component tests cover success, failure, duplicate, and retry paths.
+
+## Do not do
+
+* Do not show saved state before there is a rollback path.
+* Do not hide failed inserts behind silent console errors.
+* Do not let Gemini claim persistence without database confirmation.
+* Do not create duplicate trip items during retry.","Todo",,"High","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:post-mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase",,,,,"2026-05-28T15:55:29.782Z","2026-06-02T12:21:42.716Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"8c724605-c310-4703-8a7a-78598d6030d0",15839,"","SAN-278, SAN-279",
+"SAN-285","Sanjiovani","TRP-021 — Places cache + itinerary hydration","## Product code
+
+**TRP-021** — Places cache + itinerary hydration
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-285 |
+| Spec | `TRIP-015` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+Source: /home/sk/mdeai/tasks/trips/tasks/TRIP-015-places-cache-hydration.md
+Priority: P1
+
+## Summary
+
+Reduce Google Places cost and make Trips load reliably by caching place details and hydrating itinerary items from stored source data before calling external APIs.
+
+## User journey
+
+Camila opens a trip with saved rentals, events, restaurants, and attractions → the itinerary and map load from Supabase first → only missing or stale place details are refreshed → pins, names, addresses, and photos stay consistent without unnecessary Places calls.
+
+## Frontend work
+
+* Hydrate Trips itinerary and map tabs from cached server data.
+* Preserve loading, stale, refreshed, failed, and empty states.
+* Avoid duplicate fetch storms when switching between itinerary and map tabs.
+* Use React query/SWR-style caching if that is the established app pattern.
+* Mobile map/list switching must reuse the same hydrated data.
+
+## Backend / Supabase work
+
+* Reuse `place_details_cache` and existing Places cache strategy rather than creating unnecessary MVP tables.
+* Add server-side memoization or batching for itinerary hydration.
+* Ensure every Places API New call includes `X-Goog-FieldMask`.
+* Add validation for place IDs, source type, stale timestamps, and missing geometry.
+* Add indexes if hydration queries need them.
+* Avoid leaking cached place data through user-specific trip joins.
+
+## Agent / CopilotKit / Mastra work
+
+* Concierge or trip tools may read cached place facts and cite that the source is stored data.
+* Gemini must not invent addresses, map pins, booking/payment status, opening hours, or trip truth when cache data is missing.
+* Agent tools should request refresh through deterministic code paths, not model-generated API calls.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Internal: TRIP-008
+* External: MAP-005, data-007, data-030
+
+## Acceptance criteria
+
+* Itinerary and map hydration prefer Supabase/cache over direct Places calls.
+* Places requests use field masks and avoid duplicate calls during normal tab usage.
+* Missing geometry or stale cache produces a clear fallback path.
+* Cache behavior is covered by local tests or proof scripts.
+* Cost-risk notes are included in evidence.
+
+## Do not do
+
+* Do not call Places from every card render.
+* Do not create a broad new cache schema if existing `place_details_cache` fits.
+* Do not expose unrestricted Places data through private trip queries.
+* Do not let Gemini fabricate missing place details.","Todo",,"High","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:post-mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase",,,,,"2026-05-28T15:54:18.075Z","2026-06-02T12:21:42.778Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"0e2647e6-d9b1-4305-a352-7dcde656e05e",15840,"","SAN-280",
+"SAN-287","Sanjiovani","TRP-023 — Trips observability + sync logs","## Product code
+
+**TRP-023** — Trips observability + sync logs
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-287 |
+| Spec | `TRIP-017` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+Source: /home/sk/mdeai/tasks/trips/tasks/TRIP-017-observability-sync-logs.md
+Priority: P1
+
+## Summary
+
+Add enough logging and operational visibility to debug Trips failures in production. Patricia and Sofía need evidence when booking sync, conflict checks, agent tools, or map hydration fail.
+
+## User journey
+
+Camila reports that a saved item or paid ticket is missing from her trip → Patricia checks logs or an admin evidence path → the team can see whether add-to-trip, webhook sync, reconciliation, cache hydration, or the agent failed.
+
+## Frontend work
+
+* Surface user-safe failure messages and retry paths where Trips operations fail.
+* Do not expose raw internal traces to travelers.
+* Admin/support observability UI can be minimal or deferred, but evidence must be queryable.
+* Add trace IDs or operation IDs to user-visible support-safe copy where helpful.
+
+## Backend / Supabase work
+
+* Add structured logs for add-to-trip, booking sync, repair worker, conflict detection, Places hydration, and agent tool calls.
+* Record failed sync events with enough context to replay or investigate.
+* Consider minimal tables/paths such as `trip_sync_failures`, `trip_conflict_events`, and `agent_tool_calls` only if they are justified by the task docs and existing schema.
+* Include user/trip/item identifiers safely without leaking secrets.
+* Ensure Stripe webhook and repair logs include idempotency/replay evidence.
+
+## Agent / CopilotKit / Mastra work
+
+* Add trace IDs around trip tools and CopilotKit HITL cards.
+* Log tool input/output summaries without storing secrets or raw payment credentials.
+* Gemini must not invent booking/payment/trip truth when asked why something failed; it should refer to deterministic state or tell the user support needs to inspect logs.
+* Keep agent logs readable for Mastra traces.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Internal: TRIP-010, TRIP-013, TRIP-009
+
+## Acceptance criteria
+
+* Core Trips mutations and sync paths emit structured logs.
+* Booking sync and reconciliation failures are queryable.
+* Agent tool calls have trace IDs and safe summaries.
+* Logs avoid secrets and PII overexposure.
+* Production smoke can point to evidence for success/failure.
+
+## Do not do
+
+* Do not log Stripe secrets, service-role keys, tokens, or raw payment credentials.
+* Do not make observability depend on Gemini summaries.
+* Do not add large dashboards if structured logs solve the MVP need.
+* Do not swallow failures without traceable evidence.","Todo",,"High","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:post-mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase",,,,,"2026-05-28T15:54:54.126Z","2026-06-02T12:21:42.822Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"e673b3e7-8931-4076-9dc4-86702475d381",15839,"","SAN-283, SAN-282, SAN-281",
+"SAN-281","Sanjiovani","TRP-017 — Conflict detection persist + CopilotKit HITL","## Product code
+
+**TRP-017** — Conflict detection persist + CopilotKit HITL
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-281 |
+| Spec | `TRIP-009` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Persist schedule conflicts and give Camila a human-in-the-loop card to resolve them. The app can propose choices, but only the user can approve schedule changes.
+
+## User journey
+
+Camila adds dinner and an event that overlap → itinerary shows a conflict → CopilotKit renders a resolution card → Camila chooses how to fix it → `trip_items` and `conflict_resolutions` update.
+
+## Frontend work
+
+* Keep conflict banner with `data-testid=""itinerary-conflict""`.
+* Render conflict details and HITL resolution options.
+* Support move item A, move item B, or dismiss.
+* Ensure mobile conflict card fits and does not cover itinerary controls.
+
+## Backend / Supabase work
+
+* Upsert `conflict_resolutions` on overlap detect or insert.
+* Store `affected_items` JSON with item IDs and timestamps.
+* Status flow: `detected` to resolved state.
+* Normalize `start_at` and `end_at` as absolute timestamps; display in user/trip timezone.
+* Treat cross-midnight windows as one interval.
+* Store `metadata.conflict_version`.
+* Add tests for timezone-normalized same-day, cross-midnight, and DST-adjacent fixtures.
+
+## Agent / CopilotKit / Mastra work
+
+* Add scoped `create_conflict_resolution` / `resolve_trip_conflict` tool to the existing concierge/trip tool surface.
+* Use CopilotKit HITL via rendered approval card.
+* No new `timelineAgent` for MVP.
+* Gemini proposes options only; Supabase writes stay deterministic and user-approved.
+* Gemini must not invent booking/payment/trip truth or silently reschedule.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+## Dependencies
+
+* Source file: `tasks/trips/tasks/TRIP-009-conflict-persist-hitl.md`
+* Depends on: TRIP-005
+* Blocks: TRIP-011, TRIP-014, TRIP-016, TRIP-017
+
+## Acceptance criteria
+
+- [ ] Overlap shows banner and persisted row.
+- [ ] HITL card resolves without silent AI write.
+- [ ] `data-testid=""itinerary-conflict""` exists.
+- [ ] Unit test proves overlap detection unchanged.
+- [ ] Timezone/cross-midnight/DST-adjacent fixtures covered.
+- [ ] Travel-time conflicts documented as advisory until route cache work lands.
+
+## Do not do
+
+* Do not auto-reschedule without user approval.
+* Do not create timelineAgent/memoryAgent/recommendationAgent for MVP.","Todo",,"High","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase, track:trips",,,,,"2026-05-28T15:50:53.676Z","2026-06-02T12:59:41.098Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"4ccf57f9-c7e3-4847-a0e7-6759e5e920bf",15843,"","SAN-277",
+"SAN-170","Sanjiovani","TRP-002 — verifyCoffeeTourSources (Search Grounding)","## Product code
+
+**TRP-002** — verifyCoffeeTourSources (Search Grounding)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-170 |
+| Spec | `CTI-012` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `CTI-012`
+**Spec:** `tasks/agent/tasks/CTI-012-verify-tour-sources.md`
+**Repo status:** Open
+**Priority:** P2
+**Phase:** CTI-B
+**Depends on:** CTI-001A, MAP-002D, GS-001
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:post-mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase",,,,,"2026-05-27T05:50:17.026Z","2026-06-02T12:21:43.108Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"0ed3a186-dba4-4bd6-8fd0-2e419d5ad759",17884,"","SAN-158",
+"SAN-174","Sanjiovani","TRP-006 — Coffee tour intent chips on ChatQueryBar","## Product code
+
+**TRP-006** — Coffee tour intent chips on ChatQueryBar
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-174 |
+| Spec | `CTI-016` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `CTI-016`
+**Spec:** `tasks/agent/tasks/CTI-016-query-bar-chips.md`
+**Repo status:** Open
+**Priority:** P2
+**Phase:** CTI-B
+**Depends on:** CTI-004
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:post-mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase",,,,,"2026-05-27T05:50:22.448Z","2026-06-02T12:21:43.171Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"3edd06a0-7c95-4ab3-9cd3-5ba56e6acd86",17884,"","SAN-162",
+"SAN-177","Sanjiovani","TRP-008 — WhatsApp handoff for coffee tours","## Product code
+
+**TRP-008** — WhatsApp handoff for coffee tours
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-177 |
+| Spec | `CTI-020` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `CTI-020`
+**Spec:** `tasks/agent/tasks/CTI-020-whatsapp-handoff.md`
+**Repo status:** Open
+**Priority:** P3
+**Phase:** CTI-C
+**Depends on:** CTI-014, CTI-005, F08
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:post-mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase",,,,,"2026-05-27T05:50:24.329Z","2026-06-02T12:21:43.206Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"606d34cd-f7a7-48b9-81e3-75ec70f8d053",17884,"","SAN-163, SAN-172",
+"SAN-176","Sanjiovani","TRP-007 — Extract coffeeTourSearchWorkflow from concierge","## Product code
+
+**TRP-007** — Extract coffeeTourSearchWorkflow from concierge
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-176 |
+| Spec | `CTI-018` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `CTI-018`
+**Spec:** `tasks/agent/tasks/CTI-018-coffee-tour-workflow.md`
+**Repo status:** Open
+**Priority:** P3
+**Phase:** CTI-C
+**Depends on:** CTI-004, CTI-010
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:post-mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase",,,,,"2026-05-27T05:50:23.770Z","2026-06-02T12:21:43.235Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"e51fbaef-fbca-4ce8-b671-fa3f54eb0bc7",17884,"","SAN-168, SAN-162",
+"SAN-172","Sanjiovani","TRP-004 — saveCoffeeTour + user interactions RLS","## Product code
+
+**TRP-004** — saveCoffeeTour + user interactions RLS
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-172 |
+| Spec | `CTI-014` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `CTI-014`
+**Spec:** `tasks/agent/tasks/CTI-014-save-coffee-tour.md`
+**Repo status:** Open
+**Priority:** P2
+**Phase:** CTI-B
+**Depends on:** CTI-001A, CTI-007, F08
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:post-mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase",,,,,"2026-05-27T05:50:19.746Z","2026-06-02T12:21:43.260Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"39d40808-0154-496a-906e-81f80869c3b5",17884,"","SAN-165, SAN-158",
+"SAN-171","Sanjiovani","TRP-003 — ADK discovery merge into coffee_tours staging","## Product code
+
+**TRP-003** — ADK discovery merge into coffee_tours staging
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-171 |
+| Spec | `CTI-013` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `CTI-013`
+**Spec:** `tasks/agent/tasks/CTI-013-adk-discovery-merge.md`
+**Repo status:** Open
+**Priority:** P2
+**Phase:** CTI-B
+**Depends on:** CTI-001A, CTI-004, MAP-002
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:post-mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase",,,,,"2026-05-27T05:50:17.599Z","2026-06-02T12:21:43.294Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"3877ca73-20bf-4244-8646-11862749f5d1",17884,"","SAN-162, SAN-158",
+"SAN-173","Sanjiovani","TRP-005 — CoffeeTourCompareDrawer + compareCoffeeTours","## Product code
+
+**TRP-005** — CoffeeTourCompareDrawer + compareCoffeeTours
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-173 |
+| Spec | `CTI-015` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `CTI-015`
+**Spec:** `tasks/agent/tasks/CTI-015-compare-drawer.md`
+**Repo status:** Open
+**Priority:** P2
+**Phase:** CTI-B
+**Depends on:** CTI-007
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:post-mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase",,,,,"2026-05-27T05:50:21.820Z","2026-06-02T12:21:43.329Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"2db6f00c-68a3-4016-aadf-dd2c94624281",17884,"","SAN-165",
+"SAN-169","Sanjiovani","TRP-001 — coffee_tour_embeddings + server embed job","## Product code
+
+**TRP-001** — coffee_tour_embeddings + server embed job
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-169 |
+| Spec | `CTI-011` |
+| Prefix | TRP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `CTI-011`
+**Spec:** `tasks/agent/tasks/CTI-011-postMVP-embeddings-pipeline.md`
+**Repo status:** Open
+**Priority:** P2
+**Phase:** CTI-B
+**Depends on:** CTI-001A, CTI-010
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo",,"Medium","a855f860-4098-477d-9930-aad085fd2220","Trips","ai@socialmediaville.ca",,"phase:post-mvp, prefix:TRP, stack:maps, stack:nextjs, stack:supabase",,,,,"2026-05-27T05:50:16.404Z","2026-06-02T12:21:43.366Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"20e59ae5-4e9b-481f-b7fb-0c417a7e1529",17884,"","SAN-168, SAN-158",

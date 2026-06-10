@@ -111,23 +111,31 @@ Eliminating these patterns is the highest-ROI part of this skill.
 
 ## Worktree bootstrap
 
-Every branch gets an isolated worktree. Canonical root: `mdeapp/.worktrees/wt-san-NNN-slug/` — never work in the main worktree on a feature branch.
+Every branch gets an isolated worktree. Use `workspace/wt-san-NNN-slug/` — never work in the main worktree on a feature branch.
 
 ```bash
 # Start a new task — creates branch + worktree from origin/main
-bash scripts/worktree-add.sh <SAN-NNN> <slug>
-# Example: bash scripts/worktree-add.sh 500 event-filter-ui
-# Creates: mdeapp/.worktrees/wt-san-500-event-filter-ui/
+bash mdeapp/scripts/wt-new.sh <SAN-NNN> <slug>
+# Example: bash mdeapp/scripts/wt-new.sh 500 event-filter-ui
+# Creates: mdeapp/workspace/wt-san-500-event-filter-ui/
 # Branch:  ai/san-500-event-filter-ui
 
 # Audit all worktrees (shows stale/merged/dirty/unknown)
-bash scripts/worktree-audit.sh
+bash mdeapp/scripts/wt-audit.sh
+
+# Remove merged/closed worktrees (interactive, confirms each)
+bash mdeapp/scripts/wt-clean.sh --stale
 ```
 
-Manual fallback (only if the scripts are unavailable):
+Canonical worktree root: `mdeapp/workspace/wt-san-NNN-slug/`
+
+**If the scripts don't exist yet** (check with `ls mdeapp/scripts/wt-new.sh`):
+1. Read [references/worktree-ops.md](references/worktree-ops.md) for the full 20-line script bodies.
+2. Create them: `bash mdeapp/scripts/wt-new.sh` takes ~2 min to write once.
+3. Until they exist, fall back to git directly:
 ```bash
 git -C /home/sk/mdeai/mdeapp fetch origin main --quiet
-git -C /home/sk/mdeai/mdeapp worktree add .worktrees/wt-san-NNN-slug -b ai/san-NNN-slug origin/main
+git -C /home/sk/mdeai/mdeapp worktree add workspace/wt-san-NNN-slug -b ai/san-NNN-slug origin/main
 ```
 
 ---
@@ -166,18 +174,22 @@ Structured evidence script template → [references/evidence-template.md](refere
 
 ---
 
-## Wired package.json scripts (verified 2026-06-09)
+## Recommended package.json additions
 
-These exist in `mdeapp/package.json` — use them directly:
+Add these to `mdeapp/package.json` `scripts`:
 
-| Script | What it runs | Use for |
-|--------|--------------|---------|
-| `npm run check` | typecheck + full vitest suite, no build | Default pre-push for 80% of changes |
-| `npm run floor:fast` | parallel lint+typecheck+tests, then build+audit | PR-open gate (~half of serial floor) |
-| `npm run test:mastra` | `vitest run src/mastra/` | T2 — agent/schema changes |
-| `npm run test:lib` | `vitest run src/lib/` (260 tests, ~2.4s) | T2 — shared lib changes |
-| `npm run test:hooks` | `vitest run src/hooks/` | T2 — shared hook changes |
-| `npm run test:api` | `vitest run src/app/api/` | T2 — API route changes |
+```json
+"check":          "npm run typecheck && npm test -- --run",
+"floor:fast":     "concurrently --kill-others-on-fail 'npm run lint' 'npm run typecheck' 'npm test -- --run' && npm run build && npm run audit",
+"test:mastra":    "vitest run src/mastra/",
+"test:lib":       "vitest run src/lib/",
+"test:hooks":     "vitest run src/hooks/",
+"test:api":       "vitest run src/app/api/",
+"test:e2e:smoke": "npm run test:e2e:p0-focused"
+```
+
+`npm run check` = typecheck + full test suite, no build (~15s). Default for 80% of changes.
+`npm run floor:fast` = parallel lint+typecheck+tests, then serial build+audit (~45s vs ~3min sequential).
 
 ---
 

@@ -1,0 +1,3562 @@
+"ID","Team","Title","Description","Status","Estimate","Priority","Project ID","Project","Creator","Assignee","Labels","Cycle Number","Cycle Name","Cycle Start","Cycle End","Created","Updated","Started","Triaged","Completed","Canceled","Archived","Due Date","Parent issue","Initiatives","Project Milestone ID","Project Milestone","SLA Status","UUID","Time in status (minutes)","Related to","Blocked by","Duplicate of"
+"SAN-813","Sanjiovani","CRM-003 — Partner onboarding wizard (6-step, manual entry, no AI)","## CRM-003 — Partner onboarding wizard (6-step, manual entry, no AI)
+
+**Goal:** Multi-step form at `/partner/onboarding` that collects the partner's business profile. All fields filled manually — no Places API autofill, no AI co-pilot. Progress auto-saved to `partner_drafts.payload` on every step advance. Step 6 activates the partner.
+
+> Phase 2 note: AI business autofill (Places API → HITL confirm) and onboarding co-pilot will be added in SAN-800 (PTR-AI-001) after CopilotKit v2 migration.
+
+---
+
+## Route
+
+`/partner/onboarding?step=[1-6]`
+
+Progress bar at top (step N of 6). Back/Next navigation. Each step saves partial payload before advancing.
+
+---
+
+## Steps
+
+### Step 1 — Business info
+
+Fields: `business_name` (required), `description` (textarea, min 50 chars suggested), `phone`, `website`, `instagram`
+
+Validation: `business_name` required before advancing.
+
+### Step 2 — Location
+
+Fields: `address` (text), `neighborhood` (select: El Poblado / Laureles / El Centro / Envigado / Sabaneta / Other), `city` (default: Medellín)
+
+For venue/rental types, additional: `capacity_min`, `capacity_max`
+
+### Step 3 — Services + pricing
+
+Dynamic list of services. Each: `name`, `description`, `price_from`, `price_to`, `unit` (hour/event/month/person)
+
+Add/remove service rows. Min 1 service required to advance.
+
+For venue types: `price_per_hour` prominently shown.
+
+### Step 4 — Availability
+
+Weekly schedule grid: Mon–Sun × open/close times. Toggle day on/off. Saved as `partner_locations.availability` JSON.
+
+### Step 5 — Photos
+
+Upload ≥ 1 photo (min recommended: 3). Supabase Storage upload → `partner_assets` rows.
+Photo reorder via drag-and-drop. Mark primary photo.
+
+### Step 6 — Review + activate
+
+Summary of all entered info (read-only). Completion percentage displayed.
+""Activate my profile"" button → calls activate endpoint.
+
+---
+
+## Auto-save
+
+Every step advance: `PATCH /api/partner/drafts/[draftId]` with current step payload.
+Partial data never lost. On return visit to `/partner/onboarding`, resume from `partner_drafts.step`.
+
+---
+
+## Activate endpoint: `POST /api/partner/activate`
+
+```ts
+// Reads partner_drafts.payload → validates required fields
+// Updates partner_organizations: status → 'active', populates all fields
+// Creates partner_locations row (if applicable)
+// Creates partner_services rows
+// Calls compute_partner_completion_pct() RPC → updates profile_completion_pct
+// Returns: { partnerId, redirectUrl: '/partner/dashboard' }
+```
+
+---
+
+## Completion score
+
+After each step save, call `compute_partner_completion_pct()` and display as progress bar in the wizard header. No Gemini narrative — just the number.
+
+---
+
+## Acceptance criteria
+
+- [ ] All 6 steps render with correct fields for all 18 partner types
+- [ ] Venue/rental types show capacity + hourly pricing fields
+- [ ] Auto-save on every step advance (verified by refreshing mid-wizard)
+- [ ] Return visit resumes from correct step
+- [ ] Photo upload works → `partner_assets` rows created
+- [ ] Completion score updates after each step
+- [ ] Activate converts draft → `partner_organizations.status = 'active'`
+- [ ] Post-activation redirect to `/partner/dashboard`
+- [ ] Vitest: activate endpoint validates required fields, creates all rows
+- [ ] Playwright: full 6-step wizard → activate → dashboard redirect
+
+## Blocked by
+
+* CRM-001 (schema), CRM-002 (signup creates draft)
+
+## Blocks
+
+* CRM-005 (dashboard requires active partner)","Backlog","","Urgent","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-08T14:58:16.449Z","2026-06-08T14:58:17.813Z","","","","","","2026-06-09T14:58:17.810Z","","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","HighRisk","90f04b06-2d59-471d-a703-57347b2f4dcc","54","","",""
+"SAN-812","Sanjiovani","CRM-002 — Partner signup + auth flow","## CRM-002 — Partner signup + auth flow
+
+**Goal:** `/partner/signup` route where a new partner selects their type, creates an account (Supabase Auth), and is redirected to the onboarding wizard. Existing users signing up as partners skip the auth step.
+
+---
+
+## Routes (check sitemap before implementing)
+
+* `/partner/signup` — public, leads to `/partner/onboarding`
+* `/partner/login` — public, redirects to `/partner/dashboard` on success
+* `/partner/dashboard` — protected, redirects to `/partner/onboarding` if no active `partner_organizations` record
+
+---
+
+## Signup flow
+
+```
+1. /partner/signup
+   └─ Step A: ""What type of business?"" (18 partner type cards with icons)
+   └─ Step B: ""Create your account"" (email + password)
+        ↓ supabase.auth.signUp()
+        ↓ INSERT partner_organizations { user_id, type, status: 'draft' }
+        ↓ INSERT partner_drafts { user_id, partner_id, step: 1, status: 'in_progress' }
+        ↓ redirect → /partner/onboarding?step=1
+
+2. If user already authenticated:
+   └─ Skip Step B, go directly to partner type → partner_organizations insert
+
+3. /partner/login (existing partners)
+   └─ email + password → supabase.auth.signInWithPassword()
+   └─ check: has active partner_organizations record?
+      yes → /partner/dashboard
+      no  → /partner/onboarding (resume from last draft step)
+```
+
+---
+
+## Partner type cards
+
+18 types rendered as a 3×6 or 4×5 grid. Each card: icon + label. Types:
+`venue_owner`, `real_estate`, `restaurant`, `cafe`, `nightclub`, `event_host`, `sponsor`, `photographer`, `dj`, `band`, `catering`, `bar_service`, `security`, `transportation`, `flowers`, `marketing`, `legal`, `other`
+
+---
+
+## API route: `POST /api/partner/signup`
+
+```ts
+// Creates partner_organizations + partner_drafts transactionally
+// Returns: { partnerId, draftId, redirectUrl }
+// Uses service-role key (server-only, F13 carve-out) to insert after auth.signUp() resolves
+```
+
+---
+
+## Middleware guard
+
+`src/middleware.ts` — add `/partner/dashboard/*` to protected routes. Redirect to `/partner/login` if no session.
+
+---
+
+## Acceptance criteria
+
+- [ ] `/partner/signup` type selection step renders all 18 types
+- [ ] Email/password signup creates Supabase auth user + partner_organizations row
+- [ ] On success, redirected to `/partner/onboarding?step=1`
+- [ ] Existing user signing up as partner skips auth step
+- [ ] `/partner/login` authenticates + redirects correctly
+- [ ] Middleware blocks `/partner/dashboard/*` for unauthenticated users
+- [ ] `partner_organizations.status = 'draft'` on creation (not 'active' yet)
+- [ ] Vitest: signup API creates both records transactionally
+- [ ] Playwright: full signup → onboarding redirect flow
+
+## Blocked by
+
+* CRM-001 (schema must exist)
+
+## Blocks
+
+* CRM-003 (wizard starts after signup redirect)","Backlog","","Urgent","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-08T14:57:49.954Z","2026-06-08T14:57:51.111Z","","","","","","2026-06-09T14:57:51.109Z","","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","HighRisk","b7a98066-1641-48c2-8eda-9bc744280013","55","","",""
+"SAN-811","Sanjiovani","CRM-001 — Partner schema + RLS foundation (all 9 tables)","## CRM-001 — Partner schema + RLS foundation (all 9 tables)
+
+**Goal:** Single migration that creates the complete partner data model. Every table ships with RLS enabled and ≥ 1 policy on day 1. TypeScript types generated and committed.
+
+---
+
+## Tables
+
+### `partner_organizations`
+
+```sql
+CREATE TABLE partner_organizations (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL REFERENCES auth.users(id),
+  type text NOT NULL CHECK (type IN ('venue_owner','real_estate','restaurant','cafe','nightclub','event_host','sponsor','photographer','dj','band','catering','bar_service','security','transportation','flowers','marketing','legal','other')),
+  business_name text NOT NULL,
+  description text,
+  address text,
+  neighborhood text,
+  city text NOT NULL DEFAULT 'Medellín',
+  phone text,
+  website text,
+  instagram text,
+  profile_completion_pct integer NOT NULL DEFAULT 0 CHECK (profile_completion_pct BETWEEN 0 AND 100),
+  status text NOT NULL DEFAULT 'draft' CHECK (status IN ('draft','pending_review','active','suspended')),
+  settings jsonb NOT NULL DEFAULT '{}',
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE partner_organizations ENABLE ROW LEVEL SECURITY;
+CREATE POLICY ""owner_all"" ON partner_organizations FOR ALL USING (user_id = auth.uid());
+CREATE POLICY ""public_read_active"" ON partner_organizations FOR SELECT USING (status = 'active');
+```
+
+### `partner_drafts`
+
+```sql
+CREATE TABLE partner_drafts (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL REFERENCES auth.users(id),
+  partner_id uuid REFERENCES partner_organizations(id),
+  step integer NOT NULL DEFAULT 1,
+  payload jsonb NOT NULL DEFAULT '{}',  -- all wizard field values
+  status text NOT NULL DEFAULT 'in_progress' CHECK (status IN ('in_progress','submitted','abandoned')),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE partner_drafts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY ""owner_all"" ON partner_drafts FOR ALL USING (user_id = auth.uid());
+```
+
+### `partner_services`
+
+```sql
+CREATE TABLE partner_services (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  partner_id uuid NOT NULL REFERENCES partner_organizations(id) ON DELETE CASCADE,
+  name text NOT NULL,
+  description text,
+  price_from integer,  -- COP cents
+  price_to integer,    -- COP cents
+  unit text,           -- 'hour', 'event', 'month', 'person'
+  is_active boolean NOT NULL DEFAULT true,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE partner_services ENABLE ROW LEVEL SECURITY;
+CREATE POLICY ""owner_all"" ON partner_services FOR ALL
+  USING (partner_id IN (SELECT id FROM partner_organizations WHERE user_id = auth.uid()));
+CREATE POLICY ""public_read"" ON partner_services FOR SELECT USING (is_active = true);
+```
+
+### `partner_locations`
+
+```sql
+CREATE TABLE partner_locations (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  partner_id uuid NOT NULL REFERENCES partner_organizations(id) ON DELETE CASCADE,
+  name text,
+  address text NOT NULL,
+  neighborhood text,
+  lat double precision,
+  lng double precision,
+  capacity_min integer,
+  capacity_max integer,
+  price_per_hour integer,   -- COP cents; null for non-venue types
+  amenities jsonb NOT NULL DEFAULT '[]',
+  availability jsonb NOT NULL DEFAULT '{}',  -- { mon: [{open: ""09:00"", close: ""22:00""}], ... }
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE partner_locations ENABLE ROW LEVEL SECURITY;
+CREATE POLICY ""owner_all"" ON partner_locations FOR ALL
+  USING (partner_id IN (SELECT id FROM partner_organizations WHERE user_id = auth.uid()));
+CREATE POLICY ""public_read"" ON partner_locations FOR SELECT USING (true);
+```
+
+### `partner_assets`
+
+```sql
+CREATE TABLE partner_assets (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  partner_id uuid NOT NULL REFERENCES partner_organizations(id) ON DELETE CASCADE,
+  type text NOT NULL CHECK (type IN ('photo','logo','menu','document','video')),
+  url text NOT NULL,
+  storage_path text,
+  sort_order integer NOT NULL DEFAULT 0,
+  is_primary boolean NOT NULL DEFAULT false,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE partner_assets ENABLE ROW LEVEL SECURITY;
+CREATE POLICY ""owner_all"" ON partner_assets FOR ALL
+  USING (partner_id IN (SELECT id FROM partner_organizations WHERE user_id = auth.uid()));
+CREATE POLICY ""public_read"" ON partner_assets FOR SELECT USING (true);
+```
+
+### `partner_leads`
+
+```sql
+CREATE TABLE partner_leads (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  partner_id uuid NOT NULL REFERENCES partner_organizations(id),
+  consumer_user_id uuid REFERENCES auth.users(id),
+  consumer_name text NOT NULL,
+  consumer_email text,
+  consumer_phone text,
+  inquiry_text text NOT NULL,
+  event_date date,
+  budget_cop integer,
+  status text NOT NULL DEFAULT 'new' CHECK (status IN ('new','read','replied','booked','lost','dismissed')),
+  source text NOT NULL DEFAULT 'organic' CHECK (source IN ('organic','referral','event','search')),
+  last_message_at timestamptz NOT NULL DEFAULT now(),
+  follow_up_sent_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE partner_leads ENABLE ROW LEVEL SECURITY;
+CREATE POLICY ""owner_read_write"" ON partner_leads FOR ALL
+  USING (partner_id IN (SELECT id FROM partner_organizations WHERE user_id = auth.uid()));
+CREATE POLICY ""consumer_read_own"" ON partner_leads FOR SELECT
+  USING (consumer_user_id = auth.uid());
+```
+
+### `partner_members`
+
+```sql
+CREATE TABLE partner_members (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  partner_id uuid NOT NULL REFERENCES partner_organizations(id) ON DELETE CASCADE,
+  user_id uuid NOT NULL REFERENCES auth.users(id),
+  role text NOT NULL DEFAULT 'member' CHECK (role IN ('owner','admin','member')),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (partner_id, user_id)
+);
+ALTER TABLE partner_members ENABLE ROW LEVEL SECURITY;
+CREATE POLICY ""member_read"" ON partner_members FOR SELECT
+  USING (partner_id IN (SELECT id FROM partner_organizations WHERE user_id = auth.uid()));
+```
+
+### `revenue_ledger`
+
+```sql
+CREATE TABLE revenue_ledger (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  partner_id uuid NOT NULL REFERENCES partner_organizations(id),
+  amount integer NOT NULL,   -- COP cents
+  source_type text NOT NULL CHECK (source_type IN ('venue_booking','rental','event_sponsorship','lead_conversion','other')),
+  reference_id uuid,         -- booking_id or lead_id
+  description text,
+  ledger_date date NOT NULL DEFAULT CURRENT_DATE,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE revenue_ledger ENABLE ROW LEVEL SECURITY;
+CREATE POLICY ""owner_all"" ON revenue_ledger FOR ALL
+  USING (partner_id IN (SELECT id FROM partner_organizations WHERE user_id = auth.uid()));
+```
+
+### `partner_notifications`
+
+```sql
+CREATE TABLE partner_notifications (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  partner_id uuid NOT NULL REFERENCES partner_organizations(id),
+  lead_id uuid REFERENCES partner_leads(id),
+  type text NOT NULL CHECK (type IN ('new_lead','booking_request','booking_update','follow_up_reminder','system')),
+  title text NOT NULL,
+  body text,
+  read_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE partner_notifications ENABLE ROW LEVEL SECURITY;
+CREATE POLICY ""owner_all"" ON partner_notifications FOR ALL
+  USING (partner_id IN (SELECT id FROM partner_organizations WHERE user_id = auth.uid()));
+```
+
+---
+
+## TypeScript types
+
+```bash
+supabase gen types typescript --project-id zkwcbyxiwklihegjhuql > src/lib/supabase/types-generated.ts
+```
+
+Manual types file `src/lib/types/partner.ts` — re-exports + hand-written form types for wizard payload.
+
+---
+
+## Completion score RPC
+
+```sql
+CREATE OR REPLACE FUNCTION compute_partner_completion_pct(p_partner_id uuid)
+RETURNS integer LANGUAGE plpgsql AS $$
+DECLARE score integer := 0;
+BEGIN
+  SELECT
+    (CASE WHEN business_name IS NOT NULL THEN 10 ELSE 0 END) +
+    (CASE WHEN description IS NOT NULL AND length(description) >= 100 THEN 15 ELSE 0 END) +
+    (CASE WHEN address IS NOT NULL THEN 10 ELSE 0 END) +
+    (CASE WHEN phone IS NOT NULL THEN 5 ELSE 0 END) +
+    (SELECT CASE WHEN COUNT(*) >= 3 THEN 20 ELSE (COUNT(*) * 6)::integer END FROM partner_assets WHERE partner_id = p_partner_id AND type = 'photo') +
+    (SELECT CASE WHEN COUNT(*) >= 1 THEN 15 ELSE 0 END FROM partner_services WHERE partner_id = p_partner_id AND is_active = true) +
+    (SELECT CASE WHEN price_per_hour IS NOT NULL THEN 15 ELSE 0 END FROM partner_locations WHERE partner_id = p_partner_id LIMIT 1) +
+    (SELECT CASE WHEN availability != '{}' THEN 10 ELSE 0 END FROM partner_locations WHERE partner_id = p_partner_id LIMIT 1)
+  INTO score
+  FROM partner_organizations WHERE id = p_partner_id;
+  RETURN COALESCE(score, 0);
+END;
+$$;
+```
+
+Called on draft save + profile edit to keep `profile_completion_pct` current.
+
+---
+
+## Acceptance criteria
+
+- [ ] All 9 tables created with correct types and constraints
+- [ ] Every table has `ENABLE ROW LEVEL SECURITY` + ≥ 1 policy
+- [ ] TypeScript types generated and committed to `src/lib/supabase/types-generated.ts`
+- [ ] `compute_partner_completion_pct` RPC created and tested
+- [ ] Migration file under `supabase/migrations/`
+- [ ] Vitest: RLS policies tested with anon vs authenticated calls
+- [ ] No migration runs `DROP TABLE` or `ALTER COLUMN` on existing tables
+
+## Related
+
+* CRM-002 (signup writes to partner_organizations + partner_drafts)
+* CRM-003 (wizard writes to partner_drafts.payload)
+* CRM-009 (health score reads these tables)","Backlog","","Urgent","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-08T14:57:32.945Z","2026-06-08T14:57:35.457Z","","","","","","2026-06-09T14:57:35.454Z","","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","HighRisk","25a617da-ff86-44a8-a514-2c47cd9e905f","55","","",""
+"SAN-803","Sanjiovani","PTR-AI-004 — AI Partner Workspace: Copilot Sidebar as primary partner experience","## PTR-AI-004 — AI Partner Workspace: Copilot Sidebar as primary partner experience
+
+**Goal:** Replace the current forms/widgets paradigm with a persistent `CopilotSidebar` that lets partners ask natural language questions about their business and get AI-powered, actionable responses. This is the highest-leverage AI surface in the entire Partners domain.
+
+---
+
+## Concept
+
+The partner dashboard stops being a passive metrics screen. Instead, the Copilot Sidebar is always accessible — partners ask questions and get grounded answers with deeplinks:
+
+> ""Why are my leads down this week?""
+> → ""Your response rate dropped to 40% (from 82% last week). Two leads from Fri–Sat went unanswered 48h+. Reply now: \[Lead from Camila\] \[Lead from Roberto\]""
+
+> ""Should I lower my venue price for January?""
+> → ""Similar venues in El Poblado with 15% lower prices saw 2.3× more bookings in Jan 2025. Your current occupancy is 34% — a $90/hr rate (from $120) may optimize revenue.""
+
+> ""What should I do first today?""
+> → Needs Attention summary with direct action links
+
+---
+
+## CopilotKit implementation
+
+```tsx
+// src/components/partner/PartnerWorkspace.tsx
+import { CopilotSidebar } from ""@copilotkit/react-ui"";
+
+export function PartnerWorkspace({ children }: { children: React.ReactNode }) {
+  return (
+    <CopilotSidebar
+      defaultOpen={false}
+      labels={{
+        title: ""Partner AI"",
+        placeholder: ""Ask about your business..."",
+      }}
+      instructions={partnerSidebarInstructions}
+    >
+      {children}
+    </CopilotSidebar>
+  );
+}
+```
+
+* Wraps `/partner/**` layout — sidebar available on all partner pages
+* `instructions` injected with: partner type, health score, top 3 needs-attention items, revenue summary
+* `useCopilotReadable` provides live context: current page, partner profile, recent leads, revenue snapshot
+
+---
+
+## Suggested Actions chip bar
+
+Below the sidebar input, show 3 suggested action chips that update based on `partnerAgent` context:
+
+```tsx
+// chips regenerated on each sidebar open via suggest_partner_actions tool
+useCopilotAction({
+  name: ""suggest_partner_actions"",
+  available: ""disabled"",
+  render: ({ result }) => <SuggestedActionsBar actions={result.actions} />,
+});
+```
+
+Default chips (before personalization):
+
+* ""What should I focus on today?""
+* ""How are my leads performing?""
+* ""Show my revenue this month""
+
+---
+
+## Context injection via `useCopilotReadable`
+
+```tsx
+useCopilotReadable({
+  description: ""Current partner profile and business state"",
+  value: {
+    partnerType: partner.type,
+    healthScore: healthScore.score,
+    healthTier: healthScore.tier,
+    pendingLeads: leads.filter(l => l.status === ""pending"").length,
+    pendingBookings: bookings.filter(b => b.status === ""pending"").length,
+    revenueThisMonth: revenue.current30d,
+    revenueTrend: revenue.trend,
+  },
+});
+```
+
+---
+
+## `partnerAgent` tools exposed to workspace
+
+All existing tools are available in sidebar context. Key ones:
+
+* `get_needs_attention` → ""What needs my attention?""
+* `compute_health_score` → ""How is my business doing?""
+* `get_revenue_insights` → ""How is my revenue?""
+* `score_leads` → ""Which leads should I prioritize?""
+* `suggest_price_adjustment` → ""Should I change my pricing?""
+* `draft_lead_reply` → ""Help me reply to this lead""
+
+---
+
+## `ask_partner_ai` catch-all tool
+
+For questions that don't map to a structured tool, a catch-all Gemini call with full context:
+
+```ts
+ask_partner_ai({
+  question: string,
+  context: PartnerContext,
+})
+// Returns: { answer: string, actions: ActionLink[] }
+```
+
+Actions are rendered as inline chips in the sidebar response bubble.
+
+---
+
+## Mobile
+
+On mobile, `CopilotSidebar` becomes `CopilotPopup` — FAB bottom-right, same tools.
+
+---
+
+## Acceptance criteria
+
+- [ ] `CopilotSidebar` wraps `/partner/**` layout, opens/closes without layout shift
+- [ ] `useCopilotReadable` injects partner state on every partner page
+- [ ] Suggested Actions bar renders 3 chips on sidebar open
+- [ ] `ask_partner_ai` answers free-form questions with grounded responses
+- [ ] Structured tools (health, leads, revenue) invocable from natural language
+- [ ] Mobile: `CopilotPopup` FAB renders correctly on `/partner/**`
+- [ ] No CopilotKit v2 imports — v1 only (`@copilotkit/react-ui@1.55.2`)
+- [ ] Playwright: open sidebar, ask ""What should I do today?"", verify response renders
+
+---
+
+## Blocked by
+
+* SAN-705 (AGT-PTR-01) — `partnerAgent` foundation
+* SAN-802 (PTR-AI-003) — health score tool needed for context injection
+* SAN-801 (PTR-AI-002) — needs attention tool needed for suggested actions
+
+## Related
+
+* PTR-AI-005 (Lead Copilot surfaces lead tools in workspace)
+* PTR-AI-006 (Revenue tools surfaced via workspace chat)","Backlog","","Urgent","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, track:ai","","","","","2026-06-08T14:25:34.088Z","2026-06-08T14:25:35.274Z","","","","","","2026-06-09T14:25:35.268Z","","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","HighRisk","9255c553-58d1-487e-aeda-e95038c6a731","87","","",""
+"SAN-802","Sanjiovani","PTR-AI-003 — Business health score widget (MVP)","## PTR-AI-003 — Business health score widget (MVP)
+
+**Goal:** Composite 0–100 score that gives a partner an instant, honest signal of how their business is performing on the platform. MVP priority — shown prominently on the dashboard before revenue intelligence.
+
+---
+
+## Score formula
+
+| Signal | Weight | Source |
+| -- | -- | -- |
+| Profile completion | 25% | `partner_organizations.profile_completion_pct` |
+| Lead velocity (leads/7d vs prior 7d) | 25% | `partner_leads` query |
+| Response rate (replies within 24h) | 20% | `partner_leads` message timestamps |
+| Revenue trend (30d vs prior 30d) | 20% | `revenue_ledger` |
+| Listing quality score (photos ≥ 5, description ≥ 200 chars) | 10% | `partner_assets` + `partner_organizations` |
+
+**Score tiers:**
+
+* 80–100: ""Thriving"" (green)
+* 60–79: ""Growing"" (amber)
+* 40–59: ""Needs work"" (orange)
+* 0–39: ""At risk"" (red)
+
+---
+
+## Mastra tool
+
+```ts
+// partnerAgent tool: compute_health_score
+// Returns: { score: number, tier: string, breakdown: Record<string, number>, top_recommendation: string }
+compute_health_score({ partner_id: string })
+```
+
+Gemini generates `top_recommendation` as a single-sentence next action from the breakdown.
+
+---
+
+## CopilotKit wiring
+
+```tsx
+useCopilotAction({
+  name: ""compute_health_score"",
+  available: ""disabled"",
+  render: ({ result }) => (
+    <HealthScoreWidget
+      score={result.score}
+      tier={result.tier}
+      breakdown={result.breakdown}
+      recommendation={result.top_recommendation}
+    />
+  ),
+});
+```
+
+---
+
+## `HealthScoreWidget` component
+
+* Circular progress ring (score / 100) with tier color
+* Expandable: click → breakdown by signal with individual bars
+* `top_recommendation` shown below ring as one-line AI tip with deeplink
+* Trend badge: ""+5 vs last week"" / ""-3 vs last week""
+* Skeleton on load
+
+---
+
+## Supabase
+
+`compute_health_score` is a Supabase RPC function (or computed in the Mastra tool via direct query) — no new table required. Uses existing `partner_organizations`, `partner_leads`, `revenue_ledger`.
+
+RLS: tool called from server-side `partnerAgent` with user identity verified first (F13 carve-out pattern).
+
+---
+
+## Acceptance criteria
+
+- [ ] Score computes correctly against all 5 signals
+- [ ] Tier label + color matches thresholds
+- [ ] `top_recommendation` generated by Gemini from breakdown
+- [ ] Circular ring renders with correct color and animation (respects `prefers-reduced-motion`)
+- [ ] Expandable breakdown shows 5 bars
+- [ ] Trend badge shows delta vs prior week
+- [ ] Skeleton on load
+- [ ] Vitest: score formula edge cases (all 0, all 100, mixed)
+- [ ] Playwright: widget visible on `/partner/dashboard` for seeded partner
+
+---
+
+## Blocked by
+
+* SAN-705 (AGT-PTR-01) — `partnerAgent` must be initialized with capability flags
+
+## Related
+
+* PTR-AI-002 (health score feeds urgency ranking in ""Needs Attention"" panel)
+* PTR-AI-004 (health score surfaced in AI Workspace chat context)","Backlog","","Urgent","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, track:ai","","","","","2026-06-08T14:25:00.635Z","2026-06-08T14:25:01.626Z","","","","","","2026-06-09T14:25:01.623Z","","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","HighRisk","87bd7f65-b032-4161-a51a-0b205930044f","88","","",""
+"SAN-820","Sanjiovani","CRM-010 — Notifications system (table, bell, types, mark-read)","## CRM-010 — Notifications system (table, bell, types, mark-read)
+
+**Goal:** Partner-facing notification feed backed by `partner_notifications` table (created in CRM-001). Bell icon in dashboard header with unread count badge. 5 notification types wired to real system events.
+
+> Phase 2 note: SAN-806 (PTR-AI-007) will add AI follow-up draft notifications. SAN-801 (PTR-AI-002) will add the ""Needs Attention"" AI panel on top of this foundation.
+
+---
+
+## Notification types
+
+| Type | Trigger | Title template |
+| -- | -- | -- |
+| `new_lead` | New `partner_leads` row inserted | ""New inquiry from \[consumer_name\]"" |
+| `booking_request` | New `venue_bookings` row inserted | ""\[consumer_name\] requested a booking for \[date\]"" |
+| `booking_update` | Booking status changed | ""Booking \[approved / rejected / cancelled\] by \[consumer_name\]"" |
+| `follow_up_reminder` | Lead > 24h with status `new` | ""\[consumer_name\]'s inquiry is 24h old"" |
+| `system` | Admin broadcasts | system message |
+
+---
+
+## Trigger implementations
+
+### `new_lead`
+
+Insert on `POST /api/partner/leads/[id]/create` (or via Supabase DB trigger on `partner_leads`):
+
+```sql
+CREATE OR REPLACE FUNCTION notify_new_lead() RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO partner_notifications (partner_id, lead_id, type, title, body)
+  VALUES (NEW.partner_id, NEW.id, 'new_lead',
+    'New inquiry from ' || NEW.consumer_name,
+    LEFT(NEW.inquiry_text, 100));
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+CREATE TRIGGER tr_new_lead_notify
+  AFTER INSERT ON partner_leads
+  FOR EACH ROW EXECUTE FUNCTION notify_new_lead();
+```
+
+### `booking_request`
+
+Similar DB trigger on `venue_bookings INSERT`.
+
+### `follow_up_reminder`
+
+Simple server-side cron (Next.js `route.ts` with edge runtime or Mastra cron) runs every 4h:
+
+```ts
+// GET /api/cron/follow-up-check (protected by CRON_SECRET header)
+const staleLeads = await supabase
+  .from(""partner_leads"")
+  .select(""id, partner_id, consumer_name, last_message_at"")
+  .eq(""status"", ""new"")
+  .lt(""last_message_at"", new Date(Date.now() - 24 * 3600000).toISOString())
+  .is(""follow_up_sent_at"", null);
+
+for (const lead of staleLeads.data ?? []) {
+  await supabase.from(""partner_notifications"").insert({
+    partner_id: lead.partner_id, lead_id: lead.id,
+    type: ""follow_up_reminder"",
+    title: `${lead.consumer_name}'s inquiry is 24h old`,
+    body: ""Reply soon — leads go cold fast."",
+  });
+  await supabase.from(""partner_leads"")
+    .update({ follow_up_sent_at: new Date().toISOString() })
+    .eq(""id"", lead.id);
+}
+```
+
+No AI draft in Phase 1. Phase 2 (SAN-810) adds the Mastra `leadFollowUpWorkflow` with Gemini draft + HITL.
+
+---
+
+## Bell component
+
+`<NotificationBell />` in the dashboard header:
+
+* Fetches unread count: `SELECT COUNT(*) FROM partner_notifications WHERE partner_id = $1 AND read_at IS NULL`
+* Badge: red dot with count (max ""99+"")
+* Click → dropdown panel with last 10 notifications (type icon + title + time ago)
+* Click on notification → navigate to relevant page (lead/booking detail) + mark as read
+* ""Mark all read"" button
+
+---
+
+## API routes
+
+```
+GET  /api/partner/[id]/notifications?limit=10&unread=true
+POST /api/partner/[id]/notifications/mark-read  { ids: uuid[] | 'all' }
+```
+
+---
+
+## Supabase realtime (optional stretch)
+
+`supabase.channel(""partner_notifications"").on(""postgres_changes"", ...)` for live bell updates without polling. Only add if the Supabase realtime client is already initialized elsewhere in the codebase.
+
+---
+
+## Acceptance criteria
+
+- [ ] Bell shows correct unread count on dashboard load
+- [ ] `new_lead` DB trigger fires on partner_leads INSERT
+- [ ] `booking_request` DB trigger fires on venue_bookings INSERT
+- [ ] `follow_up_reminder` cron creates notification for 24h+ stale leads
+- [ ] `follow_up_sent_at` set on lead after reminder created (deduplication)
+- [ ] Mark individual + ""mark all read"" clears badge
+- [ ] Click notification navigates to correct page
+- [ ] Vitest: trigger logic, cron deduplication guard
+- [ ] Playwright: create lead seed → bell shows badge → mark read → badge clears
+
+## Blocked by
+
+* CRM-001 (schema), CRM-006 (lead triggers), CRM-007 (booking triggers)
+
+## Related
+
+* SAN-806 (PTR-AI-007) — Phase 2 adds AI draft to follow_up_reminder type
+* SAN-801 (PTR-AI-002) — Phase 2 builds ""Needs Attention"" panel from notification data","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-08T15:01:07.347Z","2026-06-08T15:01:08.648Z","","","","","","2026-06-15T15:01:08.643Z","","","dcf691eb-d63d-47ca-9449-aa5364ef4c3a","M3 — Monetize","MediumRisk","a383f675-c5a7-4f95-8ae7-f2893271a180","51","","",""
+"SAN-819","Sanjiovani","CRM-009 — Health score calculation (server-side, no AI, 5-signal composite)","## CRM-009 — Health score calculation (server-side, no AI, 5-signal composite)
+
+**Goal:** A pure server-side Supabase RPC (no Gemini) that computes a 0–100 composite health score from 5 data signals. Exposed as an API endpoint and displayed in the dashboard widget. Tier label and color only — no AI narrative.
+
+> Phase 2 note: SAN-802 (PTR-AI-003) will add Gemini-generated recommendation, circular progress ring animation, and breakdown visualization on top of this foundation.
+
+---
+
+## 5-signal formula
+
+| Signal | Weight | Computation |
+| -- | -- | -- |
+| Profile completion | 25% | `partner_organizations.profile_completion_pct` / 100 |
+| Lead velocity | 25% | leads in last 7d vs prior 7d — normalized 0–1 (no regression = 0.5, +100% = 1.0, -100% = 0) |
+| Response rate | 20% | `partner_leads WHERE status IN ('replied','booked') / total leads last 30d` |
+| Revenue trend | 20% | current 30d vs prior 30d pctChange — normalized: flat = 0.5, +50% = 1.0, -50% = 0 |
+| Listing quality | 10% | photos ≥ 5 (0.5 pts), description ≥ 200 chars (0.3 pts), phone set (0.2 pts) |
+
+Final score = `ROUND(weighted_sum * 100)`.
+
+---
+
+## Supabase RPC: `compute_health_score`
+
+```sql
+CREATE OR REPLACE FUNCTION compute_health_score(p_partner_id uuid)
+RETURNS jsonb LANGUAGE plpgsql AS $$
+DECLARE
+  profile_pct integer;
+  lead_velocity numeric;
+  response_rate numeric;
+  revenue_trend numeric;
+  listing_quality numeric;
+  final_score integer;
+  tier text;
+BEGIN
+  -- profile completion
+  SELECT profile_completion_pct INTO profile_pct
+  FROM partner_organizations WHERE id = p_partner_id;
+
+  -- lead velocity: leads this 7d vs prior 7d
+  SELECT
+    CASE
+      WHEN prior_count = 0 THEN 0.6
+      ELSE LEAST(1.0, GREATEST(0.0, 0.5 + (current_count::numeric - prior_count) / (2.0 * GREATEST(prior_count, 1))))
+    END INTO lead_velocity
+  FROM (
+    SELECT
+      COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '7 days') AS current_count,
+      COUNT(*) FILTER (WHERE created_at BETWEEN NOW() - INTERVAL '14 days' AND NOW() - INTERVAL '7 days') AS prior_count
+    FROM partner_leads WHERE partner_id = p_partner_id
+  ) t;
+
+  -- response rate
+  SELECT
+    CASE WHEN total = 0 THEN 0.5
+    ELSE replied::numeric / total END INTO response_rate
+  FROM (
+    SELECT
+      COUNT(*) AS total,
+      COUNT(*) FILTER (WHERE status IN ('replied','booked')) AS replied
+    FROM partner_leads
+    WHERE partner_id = p_partner_id AND created_at >= NOW() - INTERVAL '30 days'
+  ) t;
+
+  -- revenue trend
+  SELECT
+    CASE
+      WHEN prior_rev = 0 THEN 0.5
+      ELSE LEAST(1.0, GREATEST(0.0, 0.5 + (current_rev - prior_rev)::numeric / (2.0 * GREATEST(prior_rev, 1))))
+    END INTO revenue_trend
+  FROM (
+    SELECT
+      COALESCE(SUM(amount) FILTER (WHERE ledger_date >= CURRENT_DATE - 30), 0) AS current_rev,
+      COALESCE(SUM(amount) FILTER (WHERE ledger_date BETWEEN CURRENT_DATE - 60 AND CURRENT_DATE - 30), 0) AS prior_rev
+    FROM revenue_ledger WHERE partner_id = p_partner_id
+  ) t;
+
+  -- listing quality
+  SELECT
+    (CASE WHEN photo_count >= 5 THEN 0.5 WHEN photo_count >= 3 THEN 0.3 ELSE 0.0 END) +
+    (CASE WHEN desc_len >= 200 THEN 0.3 WHEN desc_len >= 100 THEN 0.15 ELSE 0.0 END) +
+    (CASE WHEN has_phone THEN 0.2 ELSE 0.0 END)
+  INTO listing_quality
+  FROM (
+    SELECT
+      (SELECT COUNT(*) FROM partner_assets WHERE partner_id = p_partner_id AND type = 'photo') AS photo_count,
+      COALESCE(LENGTH(description), 0) AS desc_len,
+      (phone IS NOT NULL) AS has_phone
+    FROM partner_organizations WHERE id = p_partner_id
+  ) t;
+
+  final_score := ROUND(
+    profile_pct * 0.0025 +      -- 25% of 100
+    lead_velocity * 25 +
+    response_rate * 20 +
+    revenue_trend * 20 +
+    listing_quality * 10
+  );
+
+  tier := CASE
+    WHEN final_score >= 80 THEN 'Thriving'
+    WHEN final_score >= 60 THEN 'Growing'
+    WHEN final_score >= 40 THEN 'Needs work'
+    ELSE 'At risk'
+  END;
+
+  RETURN jsonb_build_object(
+    'score', final_score,
+    'tier', tier,
+    'breakdown', jsonb_build_object(
+      'profile_completion', ROUND(profile_pct * 0.0025),
+      'lead_velocity', ROUND(lead_velocity * 25),
+      'response_rate', ROUND(response_rate * 20),
+      'revenue_trend', ROUND(revenue_trend * 20),
+      'listing_quality', ROUND(listing_quality * 10)
+    )
+  );
+END;
+$$;
+```
+
+---
+
+## API route
+
+```
+GET /api/partner/[id]/health-score
+→ { score: number, tier: string, breakdown: Record<string, number> }
+```
+
+Called on dashboard load and after any lead reply, booking approve, or profile edit.
+
+---
+
+## Dashboard widget (Phase 1)
+
+Simple `<HealthScoreBadge score={score} tier={tier} />` — number + colored tier pill. No ring, no breakdown, no AI narrative.
+
+Phase 2 (SAN-802) replaces this with the full `HealthScoreWidget` with ring + breakdown bars + Gemini recommendation.
+
+---
+
+## Acceptance criteria
+
+- [ ] `compute_health_score` RPC returns correct score + tier + breakdown
+- [ ] All 5 signals calculate correctly for edge cases (no leads, no revenue, new partner)
+- [ ] API endpoint returns data within 200ms
+- [ ] Dashboard widget shows score number + tier badge
+- [ ] Score refreshes after lead reply or booking approve
+- [ ] Tier colors: Thriving=green, Growing=amber, Needs work=orange, At risk=red
+- [ ] Vitest: formula edge cases (all zeros, all max, mixed)
+
+## Blocked by
+
+* CRM-001 (schema), CRM-006 (leads data), CRM-007 (revenue data)
+
+## Related
+
+* SAN-802 (PTR-AI-003) — Phase 2 adds Gemini narrative + ring on top of this RPC","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-08T15:00:41.152Z","2026-06-08T15:00:43.500Z","","","","","","2026-06-15T15:00:43.498Z","","","dcf691eb-d63d-47ca-9449-aa5364ef4c3a","M3 — Monetize","MediumRisk","cef15279-adcf-4e70-9940-12bb235a0779","52","","",""
+"SAN-818","Sanjiovani","CRM-008 — Revenue tracking (ledger display + period charts)","## CRM-008 — Revenue tracking (ledger display + period charts)
+
+**Goal:** `/partner/revenue` page showing the `revenue_ledger` as a list and as period-over-period charts. No Gemini narrative, no AI forecast — those come in Phase 2 (SAN-808, AGT-PTR-09).
+
+---
+
+## Route: `/partner/revenue`
+
+Two-tab layout: **Overview** (charts + period totals) | **Transactions** (ledger list)
+
+---
+
+## Overview tab
+
+### Period selector
+
+30d / 90d / 12m toggle. Default: 30d.
+
+### KPI cards (top row)
+
+* Total revenue (selected period)
+* Transaction count
+* Average deal size
+* Change vs. prior period (% + arrow)
+
+### Revenue chart
+
+Bar chart by week (for 30d/90d) or by month (12m). Uses a lightweight charting library (Recharts or similar — already in mdeapp deps). Each bar colored by `source_type`.
+
+### Source breakdown
+
+Horizontal bar or donut:
+
+```
+Venue bookings:      [====    ] 68%  $X,XXX
+Rentals:             [==      ] 24%  $X,XXX
+Event sponsorship:   [=       ] 8%   $X,XXX
+```
+
+---
+
+## Transactions tab
+
+Paginated table: date | description | source type | amount | reference (link to booking/lead)
+
+Sort by date (default) or amount. Filter by source_type.
+
+---
+
+## API route
+
+```
+GET /api/partner/[id]/revenue?window=30d|90d|12m
+→ {
+    current: { total, count, avgDeal },
+    prior: { total, count, avgDeal },
+    pctChange: number,
+    byWeek: [{ week: string, amount: number, source_type: string }],
+    bySource: [{ source_type: string, amount: number, pct: number }],
+  }
+
+GET /api/partner/[id]/revenue/transactions?page=1&source=
+→ paginated revenue_ledger rows
+```
+
+---
+
+## Acceptance criteria
+
+- [ ] Overview tab renders KPI cards + chart + source breakdown
+- [ ] Period selector changes all data (30d/90d/12m)
+- [ ] Transactions tab shows paginated ledger with correct filter
+- [ ] Chart animates correctly (respects prefers-reduced-motion)
+- [ ] Empty state when no revenue data
+- [ ] No Gemini narrative (Phase 2)
+- [ ] Vitest: period calculation, pctChange edge cases (prior = 0)
+- [ ] Playwright: switch to 90d → verify chart updates
+
+## Blocked by
+
+* CRM-001 (schema), CRM-007 (approve writes revenue_ledger)
+
+## Related
+
+* SAN-808 (AGT-PTR-09) — Phase 2 adds Gemini narrative + forecast to this data
+* CRM-011 (Mastra `get_revenue_summary` reads same queries)","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-08T15:00:10.834Z","2026-06-08T15:00:12.044Z","","","","","","2026-06-15T15:00:12.042Z","","","55709e3e-24cb-41c1-8131-f46f0c94feea","M2 — Deliver","MediumRisk","27e3c00c-5b65-4631-85fe-47b292a74d2c","52","","",""
+"SAN-817","Sanjiovani","CRM-007 — Bookings management (requests, approve/reject/counter, state machine)","## CRM-007 — Bookings management (requests, approve/reject/counter, state machine)
+
+**Goal:** `/partner/bookings` page where venue owners and rental partners manage booking requests. Approve, reject, or counter with a manually entered counter-price. No AI counter-offer suggestions — that's Phase 2 (SAN-804, PTR-AI-005).
+
+---
+
+## Scope
+
+Applies to partner types with `capabilities.bookings = true`: `venue_owner`, `real_estate`, `nightclub`, `event_host`.
+
+Other partner types (restaurant, café, sponsor etc.) see ""Bookings not applicable to your account type"" and a redirect to leads.
+
+---
+
+## Route: `/partner/bookings` + `/partner/bookings/[id]`
+
+### Booking list
+
+* Filter tabs: Pending / Approved / Rejected / Countered / Completed / Cancelled
+* Each booking card: consumer name, requested date, requested hours, total price, status badge
+* Sorted by requested date (ascending)
+
+### Booking detail `/partner/bookings/[id]`
+
+Booking info section:
+
+* Consumer: name, contact
+* Requested: date, start time, end time, number of guests
+* Requested price: $X,XXX
+* Notes from consumer
+
+Action panel (right):
+
+* **Approve** button → status `approved`, writes `revenue_ledger` entry
+* **Reject** button → status `rejected`, optional rejection note
+* **Counter** button → opens counter form: new price (COP) + message → status `countered`
+
+---
+
+## Booking state machine
+
+```
+pending → approved  (write revenue_ledger row)
+pending → rejected
+pending → countered
+countered → approved  (if consumer accepts counter)
+countered → rejected  (if consumer rejects counter)
+approved → completed  (after event date passes — cron or manual)
+approved → cancelled  (before event date)
+```
+
+---
+
+## Supabase: `venue_bookings` table
+
+```sql
+CREATE TABLE venue_bookings (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  partner_id uuid NOT NULL REFERENCES partner_organizations(id),
+  lead_id uuid REFERENCES partner_leads(id),
+  consumer_user_id uuid REFERENCES auth.users(id),
+  consumer_name text NOT NULL,
+  requested_date date NOT NULL,
+  time_start time NOT NULL,
+  time_end time NOT NULL,
+  guests integer,
+  requested_price_cop integer NOT NULL,
+  counter_price_cop integer,
+  counter_message text,
+  status text NOT NULL DEFAULT 'pending'
+    CHECK (status IN ('pending','approved','rejected','countered','completed','cancelled')),
+  rejection_note text,
+  idempotency_key text UNIQUE,  -- sha256(partner_id||consumer_id||date||time_start)
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE venue_bookings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY ""partner_all"" ON venue_bookings FOR ALL
+  USING (partner_id IN (SELECT id FROM partner_organizations WHERE user_id = auth.uid()));
+CREATE POLICY ""consumer_read_own"" ON venue_bookings FOR SELECT
+  USING (consumer_user_id = auth.uid());
+```
+
+Idempotency key prevents double-booking on retry (sha256 of partner+consumer+date+time).
+
+---
+
+## API routes
+
+```
+GET  /api/partner/[id]/bookings              → paginated list
+GET  /api/partner/bookings/[bookingId]       → booking detail
+POST /api/partner/bookings/[bookingId]/approve
+POST /api/partner/bookings/[bookingId]/reject   { note?: string }
+POST /api/partner/bookings/[bookingId]/counter  { price: number, message: string }
+```
+
+Approve handler writes `revenue_ledger` row:
+
+```ts
+await supabase.from(""revenue_ledger"").insert({
+  partner_id: booking.partner_id,
+  amount: booking.requested_price_cop,
+  source_type: ""venue_booking"",
+  reference_id: booking.id,
+  description: `Booking approved: ${booking.consumer_name} on ${booking.requested_date}`,
+});
+```
+
+---
+
+## Booking calendar
+
+Simple month-view calendar at `/partner/bookings/calendar` (Tab on the bookings page) showing confirmed bookings as colored blocks. Read-only. Uses existing date grid logic from `@vis.gl/react-google-maps` or a lightweight date grid.
+
+---
+
+## Acceptance criteria
+
+- [ ] `venue_bookings` table created with idempotency key + RLS
+- [ ] Booking list renders with correct filter tabs
+- [ ] Approve flow: status → approved + revenue_ledger row written
+- [ ] Reject flow: status → rejected + optional note saved
+- [ ] Counter flow: status → countered + counter_price + message saved
+- [ ] Calendar view shows approved bookings
+- [ ] Non-booking partner types see ""not applicable"" message
+- [ ] Idempotency key blocks duplicate submission
+- [ ] Vitest: approve writes revenue_ledger, idempotency guard
+- [ ] Playwright: pending booking → approve → calendar shows booking
+
+## Blocked by
+
+* CRM-001 (schema), CRM-005 (dashboard nav)
+
+## Related
+
+* SAN-794 (VEN-015) — venue booking HITL (Phase 2, consumer side)
+* SAN-804 (PTR-AI-005) — Phase 2 adds AI counter-offer suggestions","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-08T14:59:43.741Z","2026-06-08T14:59:44.592Z","","","","","","2026-06-15T14:59:44.589Z","","","55709e3e-24cb-41c1-8131-f46f0c94feea","M2 — Deliver","MediumRisk","d53b4d03-61bf-4139-b5da-54a757bc54a1","53","","",""
+"SAN-816","Sanjiovani","CRM-006 — Leads inbox (list, detail, reply, status management)","## CRM-006 — Leads inbox (list, detail, reply, status management)
+
+**Goal:** `/partner/leads` page where partners manage incoming inquiries. Lead list with status filters, lead detail with reply form, and status transitions. No AI scoring or reply drafts — those come in Phase 2 (SAN-804, PTR-AI-005).
+
+---
+
+## Route: `/partner/leads` + `/partner/leads/[id]`
+
+### Lead list `/partner/leads`
+
+* Filter tabs: All / New / Replied / Booked / Lost / Dismissed
+* Each lead card: consumer name, inquiry summary (truncated), date, status badge, event date (if set), budget (if set)
+* Sort: newest first (default), by event date
+* Click → lead detail
+
+### Lead detail `/partner/leads/[id]`
+
+* Left: full inquiry text, consumer info (name, email, phone), source, event date, budget
+* Center: reply form (textarea + Send button)
+* Right: status selector (New → Read → Replied → Booked → Lost → Dismissed) + history
+
+---
+
+## Reply flow
+
+```ts
+POST /api/partner/leads/[id]/reply
+// Body: { message: string }
+// Effects:
+//   UPDATE partner_leads SET status = 'replied', last_message_at = now()
+//   INSERT partner_notifications { type: 'lead_reply_sent', ... }  -- internal tracking
+//   (email send: Phase 2)
+```
+
+On first open: auto-marks lead as `read` if status was `new`.
+
+---
+
+## Status transitions
+
+```
+new → read (on open)
+read → replied (on send reply)
+replied → booked (manual via status selector)
+any → lost | dismissed (manual)
+```
+
+Status badge colors:
+
+* New: blue (urgent)
+* Read: gray
+* Replied: green
+* Booked: emerald
+* Lost: orange
+* Dismissed: muted
+
+---
+
+## New lead notification trigger
+
+When a new lead is created (from consumer inquiry form, Phase 2 scope for the consumer side), a `partner_notifications` row of type `new_lead` is inserted. Dashboard bell reflects this immediately.
+
+---
+
+## API routes
+
+```
+GET  /api/partner/[id]/leads          → paginated list with filters
+GET  /api/partner/leads/[leadId]      → lead detail
+POST /api/partner/leads/[leadId]/reply
+PATCH /api/partner/leads/[leadId]     → status update
+```
+
+---
+
+## Acceptance criteria
+
+- [ ] Lead list renders with all status filters working
+- [ ] Lead detail shows full inquiry + consumer info
+- [ ] Reply form sends → status updates → notification written
+- [ ] Status selector transitions correctly with correct colors
+- [ ] Auto-marks as read on first open
+- [ ] Pagination works for > 20 leads
+- [ ] Empty state per filter tab
+- [ ] No AI scoring badges (Phase 2)
+- [ ] Vitest: reply API sets status + last_message_at + notification
+- [ ] Playwright: open new lead → reply → verify status updates to 'replied'
+
+## Blocked by
+
+* CRM-001 (schema), CRM-005 (nav to leads from dashboard)
+
+## Related
+
+* SAN-804 (PTR-AI-005) — Phase 2 adds AI scoring + reply drafts to this page
+* CRM-011 (Mastra `get_pending_leads` tool reads this table)","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-08T14:59:20.168Z","2026-06-08T14:59:21.026Z","","","","","","2026-06-15T14:59:21.024Z","","","55709e3e-24cb-41c1-8131-f46f0c94feea","M2 — Deliver","MediumRisk","c9e17a34-f3a0-4978-a752-e7e6f04066ae","53","","",""
+"SAN-815","Sanjiovani","CRM-005 — Partner dashboard shell + static widgets","## CRM-005 — Partner dashboard shell + static widgets
+
+**Goal:** Three-panel `/partner/dashboard` with real data-driven widgets. No AI, no CopilotKit. All numbers computed server-side.
+
+> Phase 2 note: AI sidebar (CopilotSidebar), ""Needs Attention"" panel (SAN-801), and health score AI narrative (SAN-802) will be added after CopilotKit v2 migration.
+
+---
+
+## Layout
+
+Three-panel layout matching `docs/wireframes/venue-owners/001-venue-dashboard.md`:
+
+* **Left 280px** — nav links (Dashboard, Leads, Bookings, Revenue, Profile, Settings)
+* **Center** — main content area
+* **Right 360px** — summary widgets
+
+---
+
+## Center panel
+
+### Active items section
+
+Most recent 3 leads (new/unread) + most recent 3 pending bookings, each as a card with status badge and CTA.
+
+Empty state: ""No activity yet — your profile is being reviewed.""
+
+### Notifications feed
+
+Most recent 5 `partner_notifications` rows. Each: icon + title + time ago. ""Mark all read"" button.
+
+---
+
+## Right panel widgets
+
+### Pipeline widget
+
+```
+New leads:      [N]
+Replied:        [N]
+Booked:         [N]
+Lost:           [N]
+```
+
+Counts from `partner_leads` by status. Fetched server-side.
+
+### Revenue widget
+
+```
+This month:     $X,XXX
+Last month:     $X,XXX
+Change:         +/- X%
+```
+
+SUM from `revenue_ledger` for current and prior 30d window. No Gemini forecast.
+
+### Health score widget
+
+```
+[Score: 72] Growing
+```
+
+Number + tier label from `partner_organizations.profile_completion_pct` + real-time calculation. No circular ring yet (that's CRM-004 scope) — simple number + badge. Phase 2 will add the full `HealthScoreWidget` ring.
+
+### Notification bell
+
+Unread count badge. Links to notification feed.
+
+---
+
+## API routes
+
+```
+GET /api/partner/[id]/dashboard
+  → { partner, recentLeads, pendingBookings, notifications, revenue30d, revenuePrior30d, healthScore }
+```
+
+Single endpoint fetching all widget data to avoid 5 sequential calls on mount.
+
+---
+
+## Acceptance criteria
+
+- [ ] Dashboard loads in < 1s (single API call)
+- [ ] Left nav highlights current section
+- [ ] Center panel shows recent leads + bookings with correct statuses
+- [ ] Empty states render when no data
+- [ ] All 4 right widgets show real numbers from DB
+- [ ] Health score shows number + tier label (no ring yet)
+- [ ] Notification bell shows unread count
+- [ ] ""Mark all read"" clears badge
+- [ ] No CopilotKit imports in this feature
+- [ ] Vitest: dashboard API assembles all widget data correctly
+- [ ] Playwright: dashboard visible after signup → wizard → activate
+
+## Blocked by
+
+* CRM-001 (schema), CRM-003 (active partner required)
+
+## Blocks
+
+* CRM-006 (leads link from dashboard), CRM-007 (bookings link), CRM-008 (revenue link)","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-08T14:59:04.300Z","2026-06-08T14:59:05.231Z","","","","","","2026-06-15T14:59:05.229Z","","","55709e3e-24cb-41c1-8131-f46f0c94feea","M2 — Deliver","MediumRisk","2fdc86c9-6ea0-49bb-9ef0-b0a32f2ada0f","53","","",""
+"SAN-814","Sanjiovani","CRM-004 — Partner profile + edit UI","## CRM-004 — Partner profile + edit UI
+
+**Goal:** `/partner/profile` page where an active partner can view and edit all business information. Inline edit sections matching the 6 wizard steps. Profile completion score displayed prominently.
+
+---
+
+## Route: `/partner/profile`
+
+Three-section layout:
+
+* **Left rail** — profile completion score ring + quick links to incomplete sections
+* **Center** — editable sections (business info, location, services, availability, photos, pricing)
+* **Right rail** — public preview card (how the listing looks to consumers)
+
+---
+
+## Editable sections
+
+Each section has a heading, read-only summary view, and an ""Edit"" button that expands an inline edit form.
+
+| Section | Fields editable |
+| -- | -- |
+| Business info | business_name, description, phone, website, instagram |
+| Location | address, neighborhood, lat/lng (map picker via @vis.gl/react-google-maps) |
+| Services | add/edit/remove service rows |
+| Availability | weekly schedule grid (same as wizard step 4) |
+| Photos | upload new, reorder, delete, set primary |
+| Pricing | price_per_hour (venues), price ranges per service |
+
+---
+
+## Completion score ring
+
+Circular progress indicator (same component that Phase 2 `HealthScoreWidget` will build on) showing `profile_completion_pct` from `partner_organizations`.
+
+* Green: 80–100
+* Amber: 60–79
+* Orange: 40–59
+* Red: 0–39
+
+Below ring: ""Add 2 photos to reach 80%"" — static rule-based message derived from missing fields. No Gemini.
+
+---
+
+## Save flow
+
+Each section saves independently:
+
+```ts
+PATCH /api/partner/[id]/profile  
+// Body: partial update for that section
+// After save: re-calls compute_partner_completion_pct() RPC
+// Returns updated partner_organizations row
+```
+
+---
+
+## Public preview card
+
+Read-only right panel shows `PartnerCard` component as a consumer would see it on `/venues`, `/restaurants`, etc.
+
+---
+
+## Acceptance criteria
+
+- [ ] All 6 sections render current data from DB
+- [ ] Each section editable inline (expand/collapse)
+- [ ] Save updates correct table/columns
+- [ ] `profile_completion_pct` refreshes after each save
+- [ ] Completion ring renders with correct color tier
+- [ ] Missing-field nudge message is specific (not generic)
+- [ ] Photo upload/delete/reorder works
+- [ ] Public preview card renders correctly
+- [ ] Vitest: completion score ring color thresholds
+- [ ] Playwright: edit business name → save → verify change persists
+
+## Blocked by
+
+* CRM-001 (schema), CRM-003 (profile created in wizard)
+
+## Related
+
+* CRM-005 (dashboard links to profile edit)
+* SAN-802 (PTR-AI-003) — Phase 2 will add AI health score on top of this ring component","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-08T14:58:46.489Z","2026-06-08T14:58:48.036Z","","","","","","2026-06-15T14:58:48.032Z","","","55709e3e-24cb-41c1-8131-f46f0c94feea","M2 — Deliver","MediumRisk","eae67ab2-0f46-4f3c-b326-b150adcf5571","54","","",""
+"SAN-805","Sanjiovani","PTR-AI-006 — Dynamic pricing intelligence (venue & rental)","## PTR-AI-006 — Dynamic pricing intelligence (venue & rental)
+
+**Goal:** Give venue owners and rental brokers an AI pricing assistant that analyzes comparable listings, occupancy, and demand signals to suggest optimal price adjustments. Surfaces as a `CopilotSidebar` chat response and a standalone widget on the pricing settings page.
+
+---
+
+## Scope
+
+Partner types covered: Venue Owner, Real Estate Broker (rental). Not applicable to: restaurants, cafés, event hosts (they have fixed ticket pricing).
+
+Activated via capability flag `partnerAgent.capabilities.revenue` — only shown when flag is true.
+
+---
+
+## `suggest_price_adjustment` tool
+
+```ts
+suggest_price_adjustment({
+  partner_id: string,
+  listing_id: string,       // venue or rental
+  listing_type: ""venue"" | ""rental"",
+  time_window_days?: number, // default 30
+})
+// Returns:
+// {
+//   current_price: number,
+//   suggested_price: number,
+//   direction: ""increase"" | ""decrease"" | ""hold"",
+//   confidence: ""high"" | ""medium"" | ""low"",
+//   rationale: string,           // Gemini-generated 1-2 sentences
+//   comparable_count: number,
+//   occupancy_rate: number,
+// }
+```
+
+### Comparable analysis (Supabase queries)
+
+* Venues: `venue_bookings` — occupancy rate for same neighborhood + capacity range in last 30d
+* Rentals: `rentals` + `rental_inquiries` — inquiry-to-booking conversion for comparable sqft/neighborhood
+* Places API pgvector: semantic similarity to find ""comparable"" listings by description embedding
+
+### Gemini rationale generation
+
+System prompt includes: comparable price range, occupancy rate, seasonal factors (if peak period detected from event calendar), partner's current revenue trend.
+
+---
+
+## HITL price update
+
+When partner asks ""update my price"" from the suggestion:
+
+```tsx
+useCopilotAction({
+  name: ""suggest_price_adjustment"",
+  available: ""disabled"",
+  render: ({ result, respond }) => (
+    <PricingInsightCard
+      current={result.current_price}
+      suggested={result.suggested_price}
+      direction={result.direction}
+      rationale={result.rationale}
+      occupancyRate={result.occupancy_rate}
+      onApply={() => respond({ action: ""apply"", price: result.suggested_price })}
+      onCustom={(p) => respond({ action: ""apply"", price: p })}
+      onDismiss={() => respond({ action: ""dismiss"" })}
+    />
+  ),
+});
+```
+
+`respond({ action: ""apply"" })` triggers a Supabase update to `partner_locations.price_per_hour` (venue) or `rentals.price_monthly` (rental). **Price-lock rule**: never mutates a price if there are confirmed bookings/tickets at the old price — tool must check first.
+
+---
+
+## Pricing settings page widget
+
+On `/partner/settings/pricing`:
+
+* `PricingInsightCard` always visible (not just in sidebar)
+* ""Refresh"" button re-runs `suggest_price_adjustment`
+* Shows last 3 price change history from `revenue_ledger`
+
+---
+
+## Supabase
+
+No new tables. Reads `venue_bookings`, `partner_locations`, `rentals`, `revenue_ledger`. Writes to `partner_locations.price_per_hour` or `rentals.price_monthly` after HITL approval.
+
+Price-lock guard: `SELECT COUNT(*) FROM venue_bookings WHERE venue_id = $1 AND status = 'confirmed' AND price_locked_at > NOW() - INTERVAL '30 days'` — if > 0, block the update and surface a warning.
+
+---
+
+## Acceptance criteria
+
+- [ ] `suggest_price_adjustment` returns suggestion with direction + confidence + rationale
+- [ ] Only activates for venue/rental partner types (capability flag check)
+- [ ] HITL card renders in sidebar and on pricing settings page
+- [ ] Price-lock guard blocks update when confirmed bookings exist at old price
+- [ ] ""Apply"" sends HITL response → Supabase update fires
+- [ ] Gemini rationale is ≤ 2 sentences, grounded in comparable data
+- [ ] Vitest: price-lock guard, suggestion direction logic
+- [ ] Playwright: venue partner → pricing page → suggestion card visible → approve flow
+
+---
+
+## Blocked by
+
+* SAN-803 (PTR-AI-004) — pricing tool exposed via AI Workspace
+* SAN-705 (AGT-PTR-01) — capability flags must be wired (revenue flag)
+
+## Related
+
+* AGT-PTR-09 (SAN TBD) — revenue insights tool (reads same revenue_ledger)","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, track:ai","","","","","2026-06-08T14:26:33.543Z","2026-06-08T14:26:35.410Z","","","","","","2026-06-15T14:26:35.405Z","","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","MediumRisk","cd209324-ceea-4166-b26f-1f8ded077dee","86","","",""
+"SAN-804","Sanjiovani","PTR-AI-005 — Lead & Booking Copilot: scoring, reply drafts, HITL counter-offers","## PTR-AI-005 — Lead & Booking Copilot: scoring, reply drafts, HITL counter-offers
+
+**Goal:** Turn the leads and bookings inbox from a raw message list into an AI-assisted action queue. Partner sees scored leads, gets draft replies, and approves/edits counter-offers via HITL before send.
+
+---
+
+## Lead scoring
+
+### `score_leads` tool
+
+```ts
+score_leads({ partner_id: string, limit?: number })
+// Returns: ScoredLead[] sorted by priority
+```
+
+Scoring signals:
+
+* Inquiry budget vs partner's typical deal size
+* Event/booking date proximity (urgent = higher score)
+* Consumer profile completeness (verified profile = higher score)
+* Message tone/intent (Gemini classification: serious / browsing / spam)
+* Lead source (referral > organic > cold)
+
+Rendered as a `LeadScoreCard` list replacing the raw inbox — each card shows: name, inquiry summary, AI score badge (Hot / Warm / Cold), and action buttons.
+
+---
+
+## AI reply drafts
+
+### `draft_lead_reply` tool
+
+```ts
+draft_lead_reply({
+  partner_id: string,
+  lead_id: string,
+  draft_tone: ""professional"" | ""friendly"" | ""brief"",
+})
+// Returns: { draft: string, subject: string }
+```
+
+Gemini generates a contextually-aware reply using: partner's service type, lead's inquiry text, partner's past replies (from `partner_leads` thread history), and any standard FAQ content from `partner_services`.
+
+HITL via `renderAndWaitForResponse`:
+
+```tsx
+useCopilotAction({
+  name: ""draft_lead_reply"",
+  available: ""disabled"",
+  render: ({ result, respond }) => (
+    <LeadReplyDraftCard
+      draft={result.draft}
+      onApprove={() => respond({ action: ""send"", text: result.draft })}
+      onEdit={(edited) => respond({ action: ""send"", text: edited })}
+      onDiscard={() => respond({ action: ""discard"" })}
+    />
+  ),
+});
+```
+
+---
+
+## Booking counter-offer HITL
+
+### `suggest_counter_offer` tool
+
+When a booking request comes in with a budget below the partner's floor price:
+
+```ts
+suggest_counter_offer({
+  booking_request_id: string,
+  partner_floor_price: number,
+  requested_price: number,
+})
+// Returns: { suggested_counter: number, rationale: string, message_draft: string }
+```
+
+Counter-offer card blocks agent until partner approves/edits:
+
+```tsx
+useCopilotAction({
+  name: ""suggest_counter_offer"",
+  available: ""disabled"",
+  render: ({ result, respond }) => (
+    <CounterOfferCard
+      suggestedPrice={result.suggested_counter}
+      rationale={result.rationale}
+      messageDraft={result.message_draft}
+      onAccept={() => respond({ action: ""send_counter"", price: result.suggested_counter })}
+      onEdit={(p, m) => respond({ action: ""send_counter"", price: p, message: m })}
+      onDecline={() => respond({ action: ""decline"" })}
+    />
+  ),
+});
+```
+
+---
+
+## Supabase
+
+No new tables. Reads `partner_leads`, `partner_services`, `partner_locations`. Writes back to `partner_leads` on send/decline. All reads through `partnerAgent` server-side with verified identity (F13 carve-out).
+
+---
+
+## Acceptance criteria
+
+- [ ] `score_leads` returns sorted list with Hot/Warm/Cold classification
+- [ ] Lead inbox renders `LeadScoreCard` list with AI score badges
+- [ ] ""Draft Reply"" button triggers `draft_lead_reply` → HITL card appears
+- [ ] Partner can approve, edit, or discard draft — agent proceeds accordingly
+- [ ] `suggest_counter_offer` triggers when booking budget < floor price
+- [ ] Counter-offer HITL card blocks agent until resolved
+- [ ] 1 msg/24h rate limit enforced on bulk-style sends (audit_logs written)
+- [ ] Vitest: scoring formula tests, draft generation mock
+- [ ] Playwright: click ""Draft Reply"" on a lead, verify HITL card renders, approve flow
+
+---
+
+## Blocked by
+
+* SAN-705 (AGT-PTR-01) — `partnerAgent` initialization
+* SAN-803 (PTR-AI-004) — AI Workspace surfaces lead tools
+
+## Related
+
+* AGT-PTR-11 (SAN TBD) — `leadFollowUpWorkflow` Mastra background job for 24/48h nudges","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, track:ai","","","","","2026-06-08T14:26:03.773Z","2026-06-08T14:26:04.758Z","","","","","","2026-06-15T14:26:04.755Z","","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","MediumRisk","799320d5-6b47-4c4e-9716-c2f8882dc514","86","","",""
+"SAN-801","Sanjiovani","PTR-AI-002 — Dashboard ""Needs Attention"" AI panel","## PTR-AI-002 — Dashboard ""Needs Attention"" AI panel
+
+**Goal:** Surface the 1–3 most actionable items for the partner right now, generated by `partnerAgent` on dashboard load. Replaces passive metric widgets with a prioritized action queue.
+
+---
+
+## Spec
+
+### Panel location
+
+Right rail of `/partner/dashboard` (matches `docs/wireframes/venue-owners/001-venue-dashboard.md` + `docs/wireframes/hosts/001-host-dashboard.md` three-panel layout).
+
+### Items generated
+
+`partnerAgent` calls `get_needs_attention(partner_id)` tool which queries:
+
+* Leads unanswered > 48h → ""Reply to 2 leads — highest risk of going cold""
+* Booking requests pending > 24h → ""Approve or counter Camila's venue request""
+* Profile completion < 70% → ""Add 2 photos to unlock 3× more views""
+* Revenue 30d down > 15% from prior period → ""Revenue trend alert — see recommendations""
+* Upcoming event < 7 days, tickets < 50% sold → ""Jazz Night is 40% sold — promote now""
+
+### CopilotKit wiring
+
+```tsx
+// useCopilotAction mirrors get_needs_attention tool
+useCopilotAction({
+  name: ""get_needs_attention"",
+  available: ""disabled"",
+  render: ({ result }) => <NeedsAttentionPanel items={result.items} />,
+});
+```
+
+### `NeedsAttentionPanel` component
+
+* Max 3 items, ranked by urgency score from agent
+* Each item: icon + one-line copy + CTA button (deeplink to the relevant section)
+* Empty state: ""You're all caught up 🎉""
+* Skeleton: 3 placeholder rows on load
+
+---
+
+## Acceptance criteria
+
+- [ ] `get_needs_attention` Mastra tool queries leads, bookings, profile, revenue in one call
+- [ ] Panel renders ≤ 3 prioritized items with action CTAs
+- [ ] Empty state shown when no urgent items
+- [ ] Skeleton shown during agent call
+- [ ] Items link correctly to leads/bookings/profile/revenue sections
+- [ ] Vitest: tool returns correctly ranked items for mocked partner state
+- [ ] Playwright: dashboard panel visible with ≥ 1 item for seeded test partner
+
+---
+
+## Blocked by
+
+* SAN-800 (PTR-AI-001) — business context must be in `partner_drafts` before health check runs
+* AGT-PTR-01 (SAN-705) — `partnerAgent` capability flags must be wired
+
+## Related
+
+* PTR-AI-003 (health score feeds urgency ranking)
+* PTR-AI-004 (AI Workspace surfaces same items in sidebar chat context)","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, track:ai","","","","","2026-06-08T14:24:37.289Z","2026-06-08T14:24:38.276Z","","","","","","2026-06-15T14:24:38.273Z","","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","MediumRisk","29c301bf-244b-4f47-8460-c980a22b1b55","88","","",""
+"SAN-800","Sanjiovani","PTR-AI-001 — Signup wizard: business auto-fill from Places API","## Summary
+
+When a partner types their business name on step 1 of the signup wizard, `partnerAgent` calls Places API New (`searchText`) and pre-fills address, neighborhood, business type, rating, and opening hours into the wizard form. Removes the biggest friction point in onboarding — no manual address entry.
+
+## Done when
+
+- [ ] Wizard step 1 has a ""Business name"" field; after 300ms debounce, calls `prefill_business_profile(name, city=""Medellín"")` Mastra tool
+- [ ] Tool calls Places API New `searchText` with `X-Goog-FieldMask: places.id,places.displayName,places.formattedAddress,places.location,places.types,places.regularOpeningHours,places.rating`
+- [ ] Top result pre-fills: `partner_drafts.payload.address`, `.neighborhood`, `.lat`, `.lng`, `.type` (mapped from Places type), `.rating`
+- [ ] `useCopilotAction({ name: ""prefill_business_profile"", available: ""disabled"", render })` shows a ""We found your business — confirm?"" card with \[✅ Use This\] \[✕ Enter Manually\] buttons
+- [ ] On confirm: fields locked (gray, non-editable) with ""From Google Maps"" badge; partner can override with \[Edit\]
+- [ ] On skip/manual: fields remain editable; no auto-fill
+- [ ] `X-Goog-FieldMask` verified in test — fetch without field mask fails Vitest
+- [ ] Works for all 18 partner types — vertical is set from `places.types` mapping table
+
+## Implementation notes
+
+* Places type mapping: `restaurant` → `restaurant`, `lodging` → `rental_host`, `real_estate_agency` → `broker`, `event_venue` → `venue_owner`, fallback → `other`
+* Neighborhood mapping: reverse geocode `places.location` against Medellín neighborhood GeoJSON (`public/geojson/medellin-neighborhoods.json`)
+* Cache Places result for 24h keyed by `displayName + city` — prevent re-billing on re-opens
+* If 0 results: show ""No match found — enter manually"" inline, no error state
+* `partnerAgent` capability flag: `onboarding` — only the onboarding capability set includes this tool
+
+## Critical rules
+
+* `X-Goog-FieldMask` REQUIRED — do not request `photos`, `reviews`, or `websiteUri`
+* HITL confirm card REQUIRED before any auto-fill commits — never overwrite fields without user approval
+* Blocked by: SAN-705 (partnerAgent), SAN-706 (partner tools), SAN-709 (onboarding copilot)
+
+## References
+
+* Wireframe: `docs/partners/audit/05-signup-wizard.md`
+* Skill: `.claude/skills/mde-maps`, `.claude/skills/copilotkitV1`, `.claude/skills/mastra`
+* Related: SAN-709 onboarding copilot, MAP-005 FieldMask audit (SAN-776)","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, track:ai","","","","","2026-06-08T14:20:36.492Z","2026-06-08T14:20:38.359Z","","","","","","2026-06-15T14:20:38.356Z","","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","MediumRisk","d9b5fdeb-22e7-418e-a0d9-f1baa58733f7","92","","",""
+"SAN-799","Sanjiovani","PTR-AI-002 — Dashboard ""Needs Attention"" AI panel for partner dashboard","## Summary
+
+The partner dashboard `/dashboard` opens with an AI-surfaced ""Needs Attention"" panel: unread leads, incomplete profile fields, missing photos, low health score, unanswered booking requests. Same pattern as the host `AttentionWidget` on `/host`. Powered by `partnerAgent` scanning `partner_drafts`, `leads`, and `venue_bookings` on page load.
+
+## Done when
+
+- [ ] `analyze_partner_attention(partner_id)` Mastra tool (capability: `dashboard`) returns `AttentionItem[]`: `{ type, message, severity, cta_label, cta_action }`
+- [ ] At most 3 attention items shown (highest severity first); each has a \[Fix Now\] / \[Remind Me\] / \[Dismiss\] CTA
+- [ ] Example items:
+  - ""5 leads haven't been replied to in 48h"" → \[Reply with AI Draft\]
+  - ""Your profile is missing photos — listings with photos get 3× more views"" → \[Upload Now\]
+  - ""2 booking requests need a response"" → \[Review Bookings\]
+  - ""Business hours not set — customers can't tell when you're open"" → \[Add Hours\]
+- [ ] Items are dismissed by the partner and do NOT re-appear for 24h
+- [ ] `useCopilotReadable({ description: ""Partner attention items"", value: items })` exposes them to the copilot sidebar so the agent can reference them in chat
+- [ ] Loading state: 2 skeleton cards while `analyze_partner_attention` runs
+- [ ] Empty state: ""Everything looks good 🎉 — your profile is complete and leads are up to date""
+- [ ] Vitest: tool returns `type: ""unread_leads""` item when `leads WHERE partner_id = ? AND replied_at IS NULL AND created_at < NOW() - INTERVAL '48h'` has rows
+
+## Implementation notes
+
+* Severity levels: `critical` (booking needs response < 2h), `high` (leads > 48h unreplied), `medium` (missing photos), `low` (incomplete profile)
+* Item type → CTA mapping: `unread_leads` → trigger `draft_lead_reply` tool; `missing_photos` → navigate to assets tab; `booking_pending` → trigger booking HITL
+* Same component pattern as `AttentionWidget` in `src/components/host/` — build as `PartnerAttentionWidget`, not a fork
+
+## Critical rules
+
+* HITL required for any CTA that sends a message or approves a booking — attention items that trigger outbound communication must go through `renderAndWaitForResponse`
+* `analyze_partner_attention` is read-only — no writes
+* Items must be scoped to the requesting partner's `partner_id` — never cross-tenant
+
+## References
+
+* Wireframe: `docs/wireframes/hosts/001-host-dashboard.md` (AttentionWidget pattern)
+* Wireframe: `docs/wireframes/venue-owners/001-venue-dashboard.md` (AI Summary panel)
+* Skill: `.claude/skills/mastra`, `.claude/skills/copilotkitV1`
+* Blocked by: SAN-706 (partner tools), SAN-707 (dashboard copilot shell)
+* Related: PTR-AI-003 business health score, SAN-708 lead qual HITL","Duplicate","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, track:ai","","","","","2026-06-08T14:15:38.508Z","2026-06-08T14:15:44.542Z","","","","","","2026-06-15T14:15:44.527Z","","","55709e3e-24cb-41c1-8131-f46f0c94feea","M2 — Deliver","MediumRisk","2a4427f8-8bf3-44a6-b696-7d5d4b40edb4","97","","",""
+"SAN-798","Sanjiovani","PTR-AI-001 — Signup auto-fill: Places API pre-fill from business name during onboarding","## Summary
+
+When a partner types their business name in Step 1 of the signup wizard, the onboarding copilot calls `search_partner_business(name)` → Places API New → pre-fills address, neighborhood, lat/lng, business type, and opening hours into `partner_drafts.payload`. Reduces form abandonment and verifies the business is real.
+
+## Done when
+
+- [ ] Step 1 of signup wizard has a ""Business name"" field with a debounced (500ms) lookup
+- [ ] `search_partner_business(name, city)` Mastra tool calls Places API New `searchText` with `X-Goog-FieldMask: places.id,places.displayName,places.formattedAddress,places.location,places.types,places.regularOpeningHours`
+- [ ] Top 3 matches shown in a dropdown under the field; partner selects the correct one
+- [ ] On selection: `address`, `neighborhood`, `lat`, `lng`, `place_type`, `hours` auto-populate the wizard's draft fields
+- [ ] `partner_drafts.payload.external_place_id` stores the Places ID for future re-enrichment
+- [ ] If no match found: manual entry fallback (no blocking)
+- [ ] `partnerAgent` coaching message shows: ""We found your business — confirm the details below are correct""
+- [ ] Vitest: `search_partner_business(""Pergamino"", ""Medellín"")` returns ≥1 result with `formattedAddress` non-null
+
+## Implementation notes
+
+* Tool lives in `src/mastra/agents/partner.ts` under the `onboarding` capability flag
+* Uses same Places API key as `search_grounded_places` — no new credential
+* `place_type` from Places `types[]` array maps to mdeai partner type: `[""restaurant""]` → `type: ""restaurant""`, `[""bar"", ""night_club""]` → `type: ""nightlife""`, `[""real_estate_agency""]` → `type: ""broker""`, etc.
+* Only fires when `step === 1` (business identity step) — not on later wizard steps
+* Idempotent: re-selecting the same business doesn't create duplicate draft fields
+
+## Critical rules
+
+* `X-Goog-FieldMask` required on every Places call — no `places.photos`, `places.reviews`
+* Manual entry must always be available — Places lookup is a convenience, never a blocker
+* `external_place_id` stored for cron re-enrichment (ratings, hours changes over time)
+
+## References
+
+* Wireframe: `docs/partners/audit/05-signup-wizard.md`
+* Skill: `.claude/skills/mde-maps`, `.claude/skills/mastra`
+* Blocked by: SAN-705 (partnerAgent foundation), SAN-706 (Supabase tools)
+* Related: SAN-709 onboarding copilot, DATA-VEN-001 (SAN-792) for venue seed pattern","Duplicate","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, track:ai","","","","","2026-06-08T14:15:20.679Z","2026-06-08T14:15:21.516Z","","","","","","2026-06-15T14:15:21.513Z","","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","MediumRisk","04176d25-4dbe-4de2-b106-5d5ef05f40d6","97","","",""
+"SAN-726","Sanjiovani","MKT — mdeai for Business hub (/business) — partner-type cards overview","## /business — ""mdeai for Business"" hub (B2B front door + partner-type cards)
+
+**Audience:** any business evaluating mdeai as a partner/service — hosts, venues, brokers, restaurants, cafés, nightlife, sponsors, agencies, creators, tour operators. **Mindtrip-for-Business analog** (their `/business` = embed/API for travel brands; ours = ""list with us / sell with us / let us run your marketing"").
+**Goal:** one polished marketing front door that explains the value, then routes each business type to its specific landing or typed signup. This is the **parent hub** above `/business/ai`, `/business/event-marketing`, `/business/social` and a sibling to the supply-side `/partners` hub.
+
+**Why this is net-new (not a duplicate of** [SAN-692](https://linear.app/sanjiovani/issue/SAN-692/mkt-partner-hub-partners)**):** `/partners` is the supply-side self-serve signup hub (Host · Venue · Broker · Sponsor · Agency cards → typed signup). `/business` is the **brand/B2B marketing overview** — ""why partner with Medellín's AI concierge"" with social proof, real-results stats, and a demo CTA, whose cards fan out to *all* business surfaces (supply landings + AI services + event marketing + social). The site tree in `tasks/design/docs/marketing-pages.md` explicitly lists `/business (hub)` as its own node; only the children have issues today.
+
+### Reference
+
+* Competitor: Mindtrip for Business — screenshots in `mdeapp/screenshots/mindtrip/marketing/`:
+  * `Mindtrip-for-Business-Overview-*.png` (hero · ""Why leading travel brands choose…"" · Trusted-by logos · Real Results stats · testimonials · demo form)
+  * `Mindtrip-for-Business-Destinations-*.png`, `-Packages-*.png` (3-tier pricing + compare table), `-How-It-Works-*.png`
+* Spec: `tasks/design/docs/marketing-pages.md` (#10 + ""Site tree — marketing & business"", row 73–79, 114–119) · `tasks/design/partners/03-landing-pages.md`
+* Design tokens: **read** [`DESIGN.MD`](<DESIGN.MD>) — light luxury, oklch tokens, no hardcoded `gray-*`, skeletons + `prefers-reduced-motion`.
+
+### Content
+
+* **Hero:** ""Grow your business with Medellín's AI concierge"" + primary CTA (Book a demo) + secondary (Get started free → `/partners/signup`).
+* **Value section:** ""Why businesses choose mdeai"" — 3–4 benefit tiles (more bookings/leads, AI does the work, one concierge surface in front of every visitor).
+* **Partner-type card grid** — the core ask. One card per business type, each → correct landing or typed signup:
+  * Event Hosts → `/host` ([SAN-660](https://linear.app/sanjiovani/issue/SAN-660/mkt-for-event-hosts-landing-host))
+  * Venues / event spaces → `/venues` ([SAN-661](https://linear.app/sanjiovani/issue/SAN-661/mkt-for-venues-landing-venues))
+  * Rentals / Brokers → `/partners/rentals` ([SAN-691](https://linear.app/sanjiovani/issue/SAN-691/mkt-for-rentals-brokers-landing-partnersrentals))
+  * Restaurants → `/partners/restaurants` ([SAN-713](https://linear.app/sanjiovani/issue/SAN-713)) · Cafés → `/partners/cafes` ([SAN-679](https://linear.app/sanjiovani/issue/SAN-679)) · Nightlife → `/partners/nightlife` ([SAN-712](https://linear.app/sanjiovani/issue/SAN-712))
+  * Sponsors → `/sponsors` ([SAN-671](https://linear.app/sanjiovani/issue/SAN-671)) · Agencies / AI services → `/business/ai` ([SAN-663](https://linear.app/sanjiovani/issue/SAN-663))
+  * Event marketing → `/business/event-marketing` · Social (Postiz) → `/business/social` · Creators → `/partners/creator` ([SAN-696](https://linear.app/sanjiovani/issue/SAN-696))
+  * P2/P3 types may render as ""coming soon"" teaser cards.
+* **Social proof:** ""Trusted by"" logo strip + Real Results stat band (placeholder stats, content-managed).
+* **CTA band:** ""See mdeai for Business in action"" → demo form (store lead with `source=business`, ties to [SAN-684](https://linear.app/sanjiovani/issue/SAN-684/ptr-lead-generation-engine-channels-lead-store) lead-gen + [SAN-693](https://linear.app/sanjiovani/issue/SAN-693/mkt-contact-book-a-demo-contact) contact form pattern).
+
+### Build approach
+
+* Compose with **shadcn** primitives + **21st.dev** blocks (`.claude/skills/21st-dev-builder-v2`, `.claude/skills/shadcn`) — hero, card grid, logo marquee, stats band, testimonial, CTA/demo form. Reuse existing `src/components/ui/*` (card, button, etc.); only `add` net-new blocks.
+* English only (Phase 1 language scope). Light tokens from `DESIGN.MD`.
+
+### Acceptance criteria
+
+- [ ] Public `/business` route (not auth-gated); added to `sitemap.md` with correct status
+- [ ] Hero + value + **partner-type card grid** + social proof + demo CTA sections render
+- [ ] Every card links to its correct landing or `/partners/signup?type=…` (no dead links; teasers clearly marked)
+- [ ] Demo form submits → lead stored with `source=business`
+- [ ] Light tokens only (no hardcoded `gray-*`), mobile responsive, skeletons + `prefers-reduced-motion` honored
+- [ ] a11y pass (labels, focus, contrast)
+- [ ] Localhost runtime proof: `npm run dev` boots clean and `/business` responds 200 (anti-fake-done gate)
+
+### Related
+
+[SAN-692](https://linear.app/sanjiovani/issue/SAN-692/mkt-partner-hub-partners) (sibling: /partners supply hub) · [SAN-663](https://linear.app/sanjiovani/issue/SAN-663) (/business/ai child) · [SAN-665](https://linear.app/sanjiovani/issue/SAN-665/mkt-partner-signup-wizard-partnerssignup) (typed signup target) · [SAN-684](https://linear.app/sanjiovani/issue/SAN-684/ptr-lead-generation-engine-channels-lead-store) (lead store) · [SAN-693](https://linear.app/sanjiovani/issue/SAN-693/mkt-contact-book-a-demo-contact) (demo form pattern)","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","MKT, PTR, UX","","","","","2026-06-08T04:07:55.076Z","2026-06-08T05:58:53.243Z","","","","","","2026-06-15T04:07:58.958Z","SAN-667","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","MediumRisk","d63778e6-d162-4bc0-ab4e-e25dca5f3a42","705","SAN-691, SAN-692, SAN-660, SAN-663, SAN-712, SAN-713, SAN-693, SAN-661, SAN-671, SAN-684, SAN-696, SAN-679, SAN-665","",""
+"SAN-684","Sanjiovani","PTR — Lead-generation engine (channels → lead store)","## Lead-generation engine (channels → lead store)
+
+**Feature:** one lead store fed by all channels → AI qualify → route → convert. **Goal:** every inbound becomes an attributed, routed partner lead.
+
+**User story:** *As a partner, I want every inquiry (web, WhatsApp, social) to land in one inbox already qualified, so I only reply to real leads.*
+
+### User journey
+
+```mermaid
+flowchart LR
+  SRC[""SEO·Maps·social·referral·WhatsApp·email""] --> CAP[""/api/leads""]
+  CAP --> Q[""AI qualify + score""] --> RT[""Route to partner""] --> CONV[""Convert → fee""]
+```
+
+### Workflows · Agents · Automations
+
+* **Workflows:** normalize → qualify → route (Mastra workflow)
+* **Agents:** lead-qualifier agent (Gemini); drafts reply (HITL)
+* **Automations:** re-engage stale leads; attribution by `source`
+
+### Tech stack
+
+Mastra workflows · Gemini · Supabase (`leads`, `source` enum, `partner_id` FK) · Maps/Places (geo) · Chatwoot (WhatsApp inbound)
+
+### Success / Testing / Production-ready
+
+- [ ] `source` enum + FK · normalize pipeline · AI qualify+route
+- [ ] Vitest normalize · e2e: concierge intent → partner lead · RLS · `floor` green
+
+### Dependencies
+
+**Blocked by** [SAN-683](https://linear.app/sanjiovani/issue/SAN-683/ptr-partner-database-schema-rls-erd). **Relates** [SAN-689](https://linear.app/sanjiovani/issue/SAN-689/ptr-chatwoot-whatsapp-partner-comms) (Chatwoot inbound) · [SAN-670](https://linear.app/sanjiovani/issue/SAN-670/ptr-marketing-automation-engine-partner-lifecycle) (re-engage) · [SAN-677](https://linear.app/sanjiovani/issue/SAN-677/ptr-real-estate-broker-full-onboarding-cycle-e2e) (broker uses it).
+
+**Skills:** build=`mde-supabase`,`mastra` · verify=`task-verifier`,`testing`","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-06T12:45:00.537Z","2026-06-08T06:13:03.845Z","","","","","","2026-06-13T12:45:02.172Z","SAN-667","","55709e3e-24cb-41c1-8131-f46f0c94feea","M2 — Deliver","MediumRisk","17b1dc13-af2f-4203-81cf-441f2a512a71","3068","SAN-683, SAN-691, SAN-726, SAN-710, SAN-708, SAN-693","",""
+"SAN-677","Sanjiovani","PTR — Real-estate broker: full onboarding cycle (e2e)","## Real-estate broker — full onboarding cycle (e2e)
+
+**Feature:** e2e onboarding for brokers — list units, get AI-qualified leads. **Goal:** broker lists a Laureles 2BR; Camila schedules a viewing; **lead fee hits the ledger**.
+**User story:** *As a broker, I want AI to draft my listing and qualify leads, so I only spend time on serious viewings.*
+
+### User journey
+
+```mermaid
+flowchart LR
+  L[""/partners/rentals (SAN-691)""] --> S[""signup type=broker · bulk import (SAN-665)""]
+  S --> D[""Dashboard: listings·leads (SAN-690)""]
+  D --> AI[""AI listing + lead-qual + scheduling (SAN-669)""]
+  AI --> LEAD[""Camila → /api/leads/schedule-viewing""] --> R[""Lead fee (SAN-668)""]
+```
+
+### Workflows · Agents · Automations
+
+* **Workflows:** listing draft (vision) · lead qualify+route ([SAN-684](https://linear.app/sanjiovani/issue/SAN-684/ptr-lead-generation-engine-channels-lead-store)) · viewing schedule (HITL)
+* **Agents:** AI listing-draft · lead-qualifier · scheduling copilot
+* **Automations:** auto-reply + viewing reminders ([SAN-670](https://linear.app/sanjiovani/issue/SAN-670/ptr-marketing-automation-engine-partner-lifecycle))
+
+### Tech stack
+
+Next.js · CopilotKit · Mastra · Gemini (vision) · Supabase (`leads`) · Maps (`/rentals` pins) · reuse `/api/leads/schedule-viewing` (live)
+
+### Success / Testing / Production-ready
+
+- [ ] Landing 691 · signup 665 · dashboard 690 · revenue 668 · AI 669 · automation 670
+- [ ] e2e: list→schedule-viewing→lead · first qualified lead prod proof · RLS · HITL · `floor` green
+
+### Dependencies
+
+**Blocked by** [SAN-675](https://linear.app/sanjiovani/issue/SAN-675/ptr-event-host-full-onboarding-cycle-e2e). **Relates** [SAN-691](https://linear.app/sanjiovani/issue/SAN-691/mkt-for-rentals-brokers-landing-partnersrentals) (landing) · [SAN-684](https://linear.app/sanjiovani/issue/SAN-684/ptr-lead-generation-engine-channels-lead-store) (lead engine). **Owns:** Real-estate (`track:real`) + Data.
+**Skills:** build=`mde-task-lifecycle`,`mde-real-estate` · verify=`task-verifier`,`playwright-cli`","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, ptr:broker","","","","","2026-06-06T12:20:49.251Z","2026-06-06T13:43:43.715Z","","","","","","2026-06-13T12:20:51.950Z","SAN-667","","38153ebc-40a8-4d8b-9e31-b8fe0f0d1f48","M5 — Expand","MediumRisk","7ecc072b-6cfd-4340-a552-c3774094e543","3092","SAN-690, SAN-668, SAN-669, SAN-665, SAN-671, SAN-670, SAN-691","SAN-675",""
+"SAN-676","Sanjiovani","PTR — Nightclub/Bar: full onboarding cycle (e2e)","## Nightclub / bar — full onboarding cycle (e2e)
+
+**Feature:** e2e onboarding for nightclubs/bars — fill nights + table booking. **Goal:** a Provenza club lists, auto-ingests recurring nights, gets **first event/table booking**.
+**User story:** *As a club owner, I want my Tuesday salsa night to publish itself weekly and appear in ""tonight"", so I fill slow nights.*
+
+### User journey
+
+```mermaid
+flowchart LR
+  L[""/venues?v=nightclub (SAN-661)""] --> S[""signup type=venue/nightclub (SAN-665)""]
+  S --> D[""Dashboard: events·tables (SAN-690)""]
+  D --> ING[""OpenClaw recurring-night ingest (SAN-688)""]
+  D --> R[""Revenue: tickets·table % (SAN-668)""] --> G[""First event/table booking""]
+```
+
+### Workflows · Agents · Automations
+
+* **Workflows:** event publish · recurring-night ingest · table booking ([SAN-686](https://linear.app/sanjiovani/issue/SAN-686/ptr-booking-system-availability-approve-pay-notify))
+* **Agents:** `hostEventAgent` · booking copilot · `conciergeAgent` (""tonight"")
+* **Automations:** Postiz auto-posts · OpenClaw weekly ingest
+
+### Tech stack
+
+Next.js · CopilotKit · Mastra · Supabase · Stripe (tables) · Maps · **OpenClaw** · **Postiz** · Chatwoot
+
+### Success / Testing / Production-ready
+
+- [ ] Landing 661 · signup 665 · dashboard 690 · revenue 668 · AI 669 · ingest 670/688
+- [ ] e2e: publish recurring night → ""tonight"" · first booking prod proof · FieldMask · HITL · `floor` green
+
+### Dependencies
+
+**Blocked by** [SAN-675](https://linear.app/sanjiovani/issue/SAN-675/ptr-event-host-full-onboarding-cycle-e2e). **Relates** [SAN-686](https://linear.app/sanjiovani/issue/SAN-686/ptr-booking-system-availability-approve-pay-notify) (tables) · [SAN-688](https://linear.app/sanjiovani/issue/SAN-688/ptr-data-intelligence-enrichment-openclaw-places) (ingest) · [SAN-661](https://linear.app/sanjiovani/issue/SAN-661/mkt-for-venues-landing-venues) (landing). **Owns:** Venues + Events + OpenClaw.
+**Skills:** build=`mde-task-lifecycle`,`mde-supabase`,`shadcn` · verify=`task-verifier`,`playwright-cli`","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, ptr:nightclub","","","","","2026-06-06T12:20:44.040Z","2026-06-06T13:43:44.412Z","","","","","","2026-06-13T12:20:45.928Z","SAN-667","","38153ebc-40a8-4d8b-9e31-b8fe0f0d1f48","M5 — Expand","MediumRisk","0b657dcb-619c-4e5f-bb0e-d3f20aba9580","3092","SAN-661, SAN-665, SAN-669, SAN-668, SAN-670, SAN-671","SAN-675",""
+"SAN-675","Sanjiovani","PTR — Event host: full onboarding cycle (e2e)","## Event host — full onboarding cycle (e2e) · PILOT
+
+**Feature:** end-to-end onboarding for event hosts (Roberto) — the pilot that proves the platform. **Goal:** Roberto goes from `/host` to **first ticket sold**.
+
+**User story:** *As Roberto, I want to publish a sellable event in \~30s and see ticket revenue in one dashboard, so I run events without tooling overhead.*
+
+### User journey
+
+```mermaid
+flowchart LR
+  L[""/host (SAN-660)""] --> S[""signup type=host (SAN-665)""] --> D[""Dashboard (SAN-690)""]
+  D --> W[""/host/event/new wizard""] --> HITL{""Approve""} -- yes --> PUB[""Live: browse·map·concierge""]
+  PUB --> SELL[""Stripe ticket""] --> R[""Ticket % (SAN-668)""]
+```
+
+### Workflows · Agents · Automations
+
+* **Workflows:** host publish (validate→preview→publish, AGT-12) · checkout finalize
+* **Agents:** `hostEventAgent` (wizard) · `conciergeAgent` (surfacing)
+* **Automations:** AI promo + audience targeting ([SAN-670](https://linear.app/sanjiovani/issue/SAN-670/ptr-marketing-automation-engine-partner-lifecycle))
+
+### Tech stack
+
+Next.js · CopilotKit (wizard, live) · Mastra (`hostEventAgent`) · Stripe (tickets, live) · Supabase · Maps
+
+### Success / Testing / Production-ready
+
+- [ ] Landing 660 · signup 665 · dashboard 690 · revenue 668 · AI 669 · automation 670
+- [ ] Playwright e2e: publish→checkout→ticket · first ticket sold prod proof · HITL approve · `floor` green
+
+### Dependencies
+
+**Blocked by** [SAN-660](https://linear.app/sanjiovani/issue/SAN-660/mkt-for-event-hosts-landing-host) · 665 · 690 · 668 · 683. **Blocks** [SAN-676](https://linear.app/sanjiovani/issue/SAN-676/ptr-nightclubbar-full-onboarding-cycle-e2e)–682/699 (verticals follow the pilot). **Owns:** Events + Commerce.
+
+**Skills:** build=`mde-task-lifecycle`,`copilotkitV1` · verify=`task-verifier`,`playwright-cli`","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, ptr:host","","","","","2026-06-06T12:20:37.493Z","2026-06-07T14:15:04.371Z","","","","","","2026-06-13T12:20:41.575Z","SAN-667","","55709e3e-24cb-41c1-8131-f46f0c94feea","M2 — Deliver","MediumRisk","d02686c5-2c5d-4230-8edd-be1df966b305","3092","SAN-683, SAN-660, SAN-669, SAN-671, SAN-670, SAN-665","SAN-668, SAN-690",""
+"SAN-668","Sanjiovani","PTR — Revenue architecture & monetization config","## Revenue architecture & monetization config
+
+**Feature:** wire revenue streams (fee/lead/booking/sub/sponsorship) on live surfaces first. **Goal:** every partner transaction yields a platform fee; partners see earnings.
+
+**User story:** *As mdeai, I want a fee on every ticket/lead/booking and recurring subs, so the marketplace funds itself.*
+
+### User journey (ticket — live path)
+
+```mermaid
+flowchart LR
+  C[""Buyer""] --> CO[""Checkout (Stripe)""] --> WH[""Webhook finalize""]
+  WH --> SPLIT{""Split""} -- payout --> P[""Partner""]
+  SPLIT -- fee --> M[""mdeai (revenue_ledger)""]
+```
+
+### Workflows · Agents · Automations
+
+* **Workflows:** checkout finalize + compensation (AGT-15 pattern); payout (Connect); subscription renewal
+* **Agents:** none (deterministic money path)
+* **Automations:** renewal + win-back ([SAN-670](https://linear.app/sanjiovani/issue/SAN-670/ptr-marketing-automation-engine-partner-lifecycle))
+
+### Tech stack
+
+Stripe (Checkout · webhooks · Connect P2) · Supabase (`revenue_ledger`, `subscriptions`, RLS) · edge fn isolation (F13)
+
+### Success / Testing / Production-ready
+
+- [ ] Ticket % + rental lead fee wired · subs (Growth/Pro) · `revenue_ledger` rows
+- [ ] Vitest fee-split · prod ticket→fee proof · idempotent webhook · RLS · `floor` green
+
+### Dependencies
+
+**Blocked by** [SAN-690](https://linear.app/sanjiovani/issue/SAN-690/mkt-partner-dashboard-dashboard) (dashboard Revenue tab). **Relates** [SAN-686](https://linear.app/sanjiovani/issue/SAN-686/ptr-booking-system-availability-approve-pay-notify) (booking fees) · Commerce project · [SAN-664](https://linear.app/sanjiovani/issue/SAN-664/mkt-sponsors-sponsorship-sponsors)/681 (sponsorship).
+
+**Skills:** build=`mde-supabase` (Stripe) · verify=`task-verifier`,`testing`","Backlog","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-06T11:57:23.645Z","2026-06-08T05:58:57.837Z","","","","","","2026-06-13T11:57:24.411Z","SAN-667","","dcf691eb-d63d-47ca-9449-aa5364ef4c3a","M3 — Monetize","MediumRisk","441cae63-38ba-4230-b26c-403cc08363b0","3115","SAN-551, SAN-683, SAN-700, SAN-699, SAN-698, SAN-691, SAN-682, SAN-681, SAN-680, SAN-679, SAN-678, SAN-677, SAN-676","SAN-690",""
+"SAN-832","Sanjiovani","CRM-012 — Partner settings, account management + background workflow infrastructure","## Goal
+
+Complete the Phase 1 Partner CRM foundation with:
+
+1. Partner settings + account management page (`/partner/settings`)
+2. Partner hub index routing (`/partner` → dashboard or onboarding)
+3. Background workflow infrastructure (cron endpoint + follow-up scheduler)
+
+No AI, no CopilotKit, no Gemini. Pure server-side logic.
+
+---
+
+## Scope
+
+### `/partner` root page
+
+* Server component that checks `partner_profiles.onboarding_complete`
+* If `false` → redirect to `/partner/onboarding`
+* If `true` → redirect to `/partner/dashboard`
+* Handles unauthenticated → redirect to `/login?next=/partner`
+
+### `/partner/settings` page
+
+**Account section**
+
+* Display name, contact email, phone (editable)
+* `PATCH /api/partner/settings/account`
+
+**Notification preferences**
+
+* Toggles per notification type: `new_lead`, `booking_request`, `booking_update`, `follow_up_reminder`
+* Stored in `partner_profiles.notification_prefs` (jsonb column — add via migration)
+* `PATCH /api/partner/settings/notifications`
+
+**Pricing defaults**
+
+* Minimum booking hours, deposit percentage, cancellation window (days)
+* Stored in `partner_profiles.pricing_defaults` (jsonb column — add via migration)
+* `PATCH /api/partner/settings/pricing`
+
+**Danger zone**
+
+* ""Deactivate account"" → sets `partner_profiles.is_active = false`, signs out
+* `POST /api/partner/settings/deactivate` — requires `reason` string
+* No hard delete in Phase 1
+
+### API routes (all server-only, F13 carve-out applies)
+
+| Route | Method | Auth |
+| -- | -- | -- |
+| `/api/partner/settings/account` | PATCH | partner session |
+| `/api/partner/settings/notifications` | PATCH | partner session |
+| `/api/partner/settings/pricing` | PATCH | partner session |
+| `/api/partner/settings/deactivate` | POST | partner session |
+| `/api/cron/follow-up-check` | GET | `CRON_SECRET` header |
+
+### Cron endpoint — `/api/cron/follow-up-check`
+
+Runs on a schedule (daily at 9am COT). Finds leads where:
+
+* `status = 'new'` AND `created_at < NOW() - INTERVAL '24 hours'`
+* No existing `partner_notifications` row with `type = 'follow_up_reminder'` for the same `lead_id`
+
+Creates `partner_notifications` rows + logs to `partner_activity_log` with `action = 'follow_up_reminder_sent'`.
+
+Auth: validates `Authorization: Bearer ${CRON_SECRET}` header — reject with 401 if missing or wrong.
+
+```typescript
+// /api/cron/follow-up-check/route.ts (server-only, service-role allowed per F13)
+export async function GET(req: NextRequest) {
+  const secret = req.headers.get('authorization')?.replace('Bearer ', '');
+  if (secret !== process.env.CRON_SECRET) return new Response('Unauthorized', { status: 401 });
+  // ... query + insert notifications
+}
+```
+
+Vercel Cron config in `vercel.json`:
+
+```json
+{
+  ""crons"": [{ ""path"": ""/api/cron/follow-up-check"", ""schedule"": ""0 14 * * *"" }]
+}
+```
+
+(14:00 UTC = 09:00 COT)
+
+### Supabase migration additions
+
+```sql
+-- Add columns to partner_profiles
+ALTER TABLE partner_profiles
+  ADD COLUMN IF NOT EXISTS notification_prefs jsonb DEFAULT '{
+    ""new_lead"": true,
+    ""booking_request"": true,
+    ""booking_update"": true,
+    ""follow_up_reminder"": true
+  }'::jsonb,
+  ADD COLUMN IF NOT EXISTS pricing_defaults jsonb DEFAULT '{
+    ""min_booking_hours"": 3,
+    ""deposit_pct"": 30,
+    ""cancellation_window_days"": 7
+  }'::jsonb,
+  ADD COLUMN IF NOT EXISTS is_active boolean NOT NULL DEFAULT true;
+
+-- Index for cron query
+CREATE INDEX IF NOT EXISTS idx_partner_leads_cron
+  ON partner_leads(partner_id, status, created_at)
+  WHERE status = 'new';
+```
+
+RLS: `notification_prefs` and `pricing_defaults` inherit existing `partner_profiles` policies. `is_active = false` partners cannot log in — add check in auth middleware.
+
+---
+
+## UI Components
+
+* `PartnerSettingsLayout` — left nav tabs: Account · Notifications · Pricing · Danger Zone
+* `AccountSettingsForm` — react-hook-form + zod, optimistic updates
+* `NotificationPrefsForm` — toggle switches per notification type
+* `PricingDefaultsForm` — number inputs with validation
+* `DeactivateAccountModal` — confirmation dialog with reason textarea
+
+All forms: save button shows ""Saving…"" state, toast on success/error. No AI, no CopilotKit.
+
+---
+
+## Acceptance Criteria
+
+- [ ] `/partner` correctly routes to onboarding vs dashboard based on `onboarding_complete`
+- [ ] `/partner/settings` loads with all three settings sections
+- [ ] Account PATCH updates DB and shows success toast
+- [ ] Notification toggles persist across page reload
+- [ ] Pricing defaults saved and used as prefill in booking forms (CRM-007)
+- [ ] Deactivate flow sets `is_active = false` and signs out
+- [ ] `/api/cron/follow-up-check` rejects without correct `CRON_SECRET`
+- [ ] Cron creates `partner_notifications` for stale leads (tested via direct API call)
+- [ ] Vitest: all API route handlers covered
+- [ ] `npm run dev` boots clean, all routes return expected status codes
+
+---
+
+## Dependencies
+
+* Blocked by: CRM-001 (schema), CRM-010 (notifications table)
+* Related: CRM-006 (leads — cron targets `partner_leads`), CRM-007 (bookings — uses pricing defaults)
+
+---
+
+## Out of Scope (Phase 2)
+
+* Email/SMS delivery of follow-up reminders
+* AI-generated follow-up message suggestions (SAN-804)
+* White-label subdomain settings","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","phase:mvp","","","","","2026-06-08T15:05:33.378Z","2026-06-08T15:05:33.378Z","","","","","","","","","dcf691eb-d63d-47ca-9449-aa5364ef4c3a","M3 — Monetize","","d624f3ae-d5d8-4e58-b893-e9b0fbd6041f","47","","",""
+"SAN-821","Sanjiovani","CRM-011 — Mastra CRM tools foundation (data-access layer for Phase 2 AI)","## CRM-011 — Mastra CRM tools foundation (data-access layer for Phase 2 AI)
+
+**Goal:** Create the 5 core Mastra tools that Phase 2 AI agents will build on. These are pure data-access tools — they query Supabase and return structured results. No Gemini calls, no generative output, no CopilotKit wiring.
+
+> This is the data foundation for Phase 2. When the AI issues (SAN-801–810) are activated after CopilotKit v2 migration, they call these tools rather than writing new queries. Consistency is the goal.
+
+---
+
+## Tool 1: `get_partner_profile`
+
+```ts
+// src/mastra/agents/partner/tools/get-partner-profile.ts
+export const getPartnerProfile = createTool({
+  id: ""get_partner_profile"",
+  description: ""Fetch full partner profile including services, locations, and asset counts"",
+  inputSchema: z.object({ partner_id: z.string().uuid() }),
+  outputSchema: z.object({
+    partner: PartnerOrganizationSchema,
+    services: z.array(PartnerServiceSchema),
+    location: PartnerLocationSchema.nullable(),
+    photo_count: z.number(),
+    completion_pct: z.number(),
+  }),
+  execute: async ({ partner_id }) => {
+    // Supabase queries — runs server-side, identity pre-verified by API route
+    const [partner, services, location, assetCount] = await Promise.all([
+      supabase.from(""partner_organizations"").select(""*"").eq(""id"", partner_id).single(),
+      supabase.from(""partner_services"").select(""*"").eq(""partner_id"", partner_id).eq(""is_active"", true),
+      supabase.from(""partner_locations"").select(""*"").eq(""partner_id"", partner_id).maybeSingle(),
+      supabase.from(""partner_assets"").select(""id"", { count: ""exact"" }).eq(""partner_id"", partner_id).eq(""type"", ""photo""),
+    ]);
+    return { partner: partner.data, services: services.data ?? [], location: location.data, photo_count: assetCount.count ?? 0, completion_pct: partner.data?.profile_completion_pct ?? 0 };
+  },
+});
+```
+
+---
+
+## Tool 2: `get_pending_leads`
+
+```ts
+export const getPendingLeads = createTool({
+  id: ""get_pending_leads"",
+  inputSchema: z.object({ partner_id: z.string().uuid(), limit: z.number().default(10) }),
+  outputSchema: z.object({ leads: z.array(PartnerLeadSchema), total: z.number() }),
+  execute: async ({ partner_id, limit }) => {
+    const result = await supabase
+      .from(""partner_leads"")
+      .select(""*"", { count: ""exact"" })
+      .eq(""partner_id"", partner_id)
+      .in(""status"", [""new"", ""read""])
+      .order(""created_at"", { ascending: false })
+      .limit(limit);
+    return { leads: result.data ?? [], total: result.count ?? 0 };
+  },
+});
+```
+
+---
+
+## Tool 3: `get_revenue_summary`
+
+```ts
+export const getRevenueSummary = createTool({
+  id: ""get_revenue_summary"",
+  inputSchema: z.object({ partner_id: z.string().uuid(), window_days: z.number().default(30) }),
+  outputSchema: z.object({
+    current_total: z.number(),
+    prior_total: z.number(),
+    pct_change: z.number(),
+    by_source: z.array(z.object({ source_type: z.string(), amount: z.number() })),
+  }),
+  execute: async ({ partner_id, window_days }) => {
+    // Two queries: current window + prior window
+    // Returns structured summary — no Gemini narrative (Phase 2 adds that in SAN-808)
+  },
+});
+```
+
+---
+
+## Tool 4: `compute_health_score`
+
+```ts
+export const computeHealthScore = createTool({
+  id: ""compute_health_score"",
+  inputSchema: z.object({ partner_id: z.string().uuid() }),
+  outputSchema: z.object({
+    score: z.number(),
+    tier: z.enum([""Thriving"", ""Growing"", ""Needs work"", ""At risk""]),
+    breakdown: z.record(z.string(), z.number()),
+  }),
+  execute: async ({ partner_id }) => {
+    // Calls compute_health_score() Supabase RPC (defined in CRM-009)
+    const result = await supabase.rpc(""compute_health_score"", { p_partner_id: partner_id });
+    return result.data;
+  },
+});
+```
+
+---
+
+## Tool 5: `get_booking_requests`
+
+```ts
+export const getBookingRequests = createTool({
+  id: ""get_booking_requests"",
+  inputSchema: z.object({ partner_id: z.string().uuid(), status: z.enum([""pending"",""approved"",""all""]).default(""pending"") }),
+  outputSchema: z.object({ bookings: z.array(VenueBookingSchema), total: z.number() }),
+  execute: async ({ partner_id, status }) => {
+    const query = supabase.from(""venue_bookings"").select(""*"", { count: ""exact"" }).eq(""partner_id"", partner_id);
+    if (status !== ""all"") query.eq(""status"", status);
+    const result = await query.order(""requested_date"", { ascending: true }).limit(20);
+    return { bookings: result.data ?? [], total: result.count ?? 0 };
+  },
+});
+```
+
+---
+
+## File structure
+
+```
+src/mastra/agents/partner/
+  tools/
+    get-partner-profile.ts
+    get-pending-leads.ts
+    get-revenue-summary.ts
+    compute-health-score.ts
+    get-booking-requests.ts
+    index.ts              ← re-exports all 5
+  index.ts                ← partnerAgent definition (SAN-705 owns this)
+```
+
+These tools are imported by `partnerAgent` (SAN-705) and also called directly from API routes for the static dashboard (no agent needed for Phase 1 dashboard data).
+
+---
+
+## Acceptance criteria
+
+- [ ] All 5 tools defined with correct inputSchema / outputSchema / execute
+- [ ] Each tool runs against real Supabase data (no mocks in execute)
+- [ ] Server-side identity verified before any Supabase call (F13 carve-out pattern)
+- [ ] No Gemini / `@ai-sdk/google` imports in any tool file
+- [ ] No `@anthropic-ai/*` imports
+- [ ] Vitest: each tool's output shape matches schema for mocked Supabase responses
+
+## Blocked by
+
+* CRM-001 (schema), CRM-009 (health score RPC)
+
+## Related
+
+* SAN-705 (AGT-PTR-01) — partnerAgent registers these tools
+* SAN-801–810 — Phase 2 AI issues call these tools from agent context","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-08T15:01:28.320Z","2026-06-08T15:01:28.320Z","","","","","","","","","dcf691eb-d63d-47ca-9449-aa5364ef4c3a","M3 — Monetize","","91bf608e-7dde-4d65-b657-6c561250d77e","51","","",""
+"SAN-806","Sanjiovani","PTR-AI-007 — Auto follow-up reminder workflow (24/48h nudge with HITL)","## PTR-AI-007 — Auto follow-up reminder workflow (24/48h nudge with HITL)
+
+**Goal:** Catch unanswered leads before they go cold. A Mastra background workflow monitors `partner_leads` for no-reply situations and surfaces a HITL follow-up reminder with a draft message — the partner sees it in their dashboard and in the CopilotSidebar.
+
+---
+
+## Mastra workflow: `leadFollowUpWorkflow`
+
+```ts
+// src/mastra/workflows/leadFollowUpWorkflow.ts
+const leadFollowUpWorkflow = createWorkflow({
+  id: ""lead-follow-up"",
+  steps: [checkUnansweredLeads, draftFollowUp, notifyPartner, awaitPartnerAction],
+});
+```
+
+### Steps
+
+1. `checkUnansweredLeads` — scheduled every 4h via Mastra cron:
+   * Query `partner_leads WHERE status = 'pending' AND last_message_at < NOW() - INTERVAL '24 hours'`
+   * Emit one job per unanswered lead
+2. `draftFollowUp` — Gemini generates contextual follow-up draft:
+   * Input: original lead message, partner's service type, time since inquiry
+   * Output: `{ draft: string, urgency: ""high"" | ""medium"" }` — urgency based on booking date proximity
+3. `notifyPartner` — writes to `partner_notifications` table + pushes to CopilotSidebar context:
+   * Notification: ""Camila's inquiry is 24h old — she may be looking elsewhere""
+   * HITL card surfaces in dashboard ""Needs Attention"" panel (PTR-AI-002)
+4. `awaitPartnerAction` — `suspend()` until partner responds:
+   * **Approve draft** → send via `partner_leads` message write → mark notified
+   * **Edit & send** → send edited version
+   * **Snooze 24h** → re-queue job, update `snoozed_until` field
+   * **Mark irrelevant** → remove from queue, update `partner_leads.status = 'dismissed'`
+
+48h escalation: if 48h passes with no action, workflow sends once more with higher urgency tag. After that, no further nudges (avoids partner fatigue).
+
+---
+
+## `partner_notifications` table
+
+```sql
+CREATE TABLE partner_notifications (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  partner_id uuid NOT NULL REFERENCES partner_organizations(id),
+  lead_id uuid REFERENCES partner_leads(id),
+  type text NOT NULL CHECK (type IN ('follow_up_24h', 'follow_up_48h', 'booking_pending', 'health_alert')),
+  message text NOT NULL,
+  draft text,
+  snoozed_until timestamptz,
+  resolved_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+-- RLS: partner can only see their own notifications
+ALTER TABLE partner_notifications ENABLE ROW LEVEL SECURITY;
+CREATE POLICY ""partner_own_notifications"" ON partner_notifications
+  FOR ALL USING (
+    partner_id IN (SELECT id FROM partner_organizations WHERE user_id = auth.uid())
+  );
+```
+
+---
+
+## Bulk message consent guard
+
+* Max 1 follow-up message per lead per 24h window (enforced in `checkUnansweredLeads` step)
+* Partner must have opted in to ""AI follow-up reminders"" in their settings (default: on, with opt-out)
+* All sends written to `audit_logs` with `action = 'ai_follow_up_sent'`
+* **Never auto-send** — every message goes through HITL before delivery
+
+---
+
+## CopilotKit surface
+
+The follow-up nudge card appears in:
+
+1. Dashboard ""Needs Attention"" panel (PTR-AI-002) — rendered by `get_needs_attention` tool
+2. AI Workspace sidebar (PTR-AI-004) — partnerAgent mentions it in context
+
+When partner opens sidebar and asks ""any urgent follow-ups?"", agent calls `get_pending_follow_ups(partner_id)` and renders `FollowUpReminderCard` list.
+
+---
+
+## Acceptance criteria
+
+- [ ] `leadFollowUpWorkflow` runs every 4h and detects leads > 24h unanswered
+- [ ] Gemini draft follows context of original inquiry
+- [ ] HITL card blocks workflow until partner acts (approve/edit/snooze/dismiss)
+- [ ] Snooze re-queues for 24h; dismiss marks lead as irrelevant
+- [ ] 48h escalation fires once; no further nudges after that
+- [ ] `partner_notifications` table has RLS enabled + policy
+- [ ] Opt-out setting respected — no nudges if disabled
+- [ ] All sends written to `audit_logs`
+- [ ] Vitest: 24/48h timing logic, draft generation mock, snooze re-queue
+- [ ] Playwright: follow-up card visible in ""Needs Attention"" panel, approve flow
+
+---
+
+## Blocked by
+
+* SAN-704 (AGT-PTR-01) — `partnerAgent` must exist
+* SAN-801 (PTR-AI-002) — ""Needs Attention"" panel must exist to surface notifications
+
+## Related
+
+* AGT-PTR-11 (SAN TBD) — engine-layer `leadFollowUpWorkflow` in AI & Intelligence project (this issue is the UX/product face; that issue is the Mastra engine)","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, track:ai","","","","","2026-06-08T14:27:05.906Z","2026-06-08T14:27:05.906Z","","","","","","","","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","","a027867c-e732-47cb-b090-48c1f4b27d7d","85","","",""
+"SAN-703","Sanjiovani","MKT — Venue features deep-dive (/venues/features)","## /venues/features — Venue product deep-dive (B2B)
+
+**Feature:** deep-dive features page for venues evaluating mdeai after `/venues`. **Goal:** convert undecided venues with detail on each service. **Phase: P2.****
+****User story:** *As a venue owner comparing options, I want to see exactly what AI booking/Postiz/OpenClaw do for me, so I commit.*
+
+### User journey
+
+```mermaid
+flowchart LR
+  V[""/venues (SAN-661)""] --> F[""/venues/features (deep-dive)""] --> CTA[""List your venue""] --> SU[""signup?type=venue (SAN-665)""]
+```
+
+### Content · Workflows · Tech
+
+* Feature grid: listing · concierge surfacing · AI event booking · Postiz · OpenClaw · leads/CRM · reporting — each with a ""how it works"" mini-flow
+* **Agents/Automations:** demos of the venue copilot + Postiz pipeline (read-only)
+* **Tech:** Next.js · shadcn · tailwind · CopilotKit (demo)
+
+### Success / Testing / Production-ready
+
+- [ ] Public `/venues/features` linked from `/venues` tiles · CTA → `?type=venue`
+- [ ] Playwright: load + CTA · localhost 200 · light tokens · `floor` green
+
+### Dependencies
+
+**Relates** [SAN-661](https://linear.app/sanjiovani/issue/SAN-661/mkt-for-venues-landing-venues) (`/venues`) · [SAN-678](https://linear.app/sanjiovani/issue/SAN-678/ptr-restaurant-full-onboarding-cycle-e2e)–680 (venue verticals) · [SAN-687](https://linear.app/sanjiovani/issue/SAN-687/ptr-brand-assets-social-automation-pipeline-postiz) (Postiz) · [SAN-688](https://linear.app/sanjiovani/issue/SAN-688/ptr-data-intelligence-enrichment-openclaw-places) (OpenClaw).
+**Skills:** build=`shadcn`,`tailwind-best-practices` · verify=`task-verifier`,`playwright-cli`","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","MKT, PTR, ptr:venue, UX","","","","","2026-06-06T13:10:12.385Z","2026-06-06T13:43:42.460Z","","","","","","","SAN-667","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","","51a7bee1-59c8-4176-b39f-c90a30e7d364","3042","SAN-661, SAN-678","",""
+"SAN-701","Sanjiovani","MKT — Event marketing services (/business/event-marketing)","## /business/event-marketing — Event promotion services (B2B)
+
+**Audience:** event hosts · venues needing promotion. **Phase: P2**.
+
+**Spec:** `03-landing-pages.md` sitemap · pairs with `/host` and [SAN-687](https://linear.app/sanjiovani/issue/SAN-687/ptr-brand-assets-social-automation-pipeline-postiz) Postiz pipeline
+
+### Content
+
+* AI event copy · Postiz scheduling · sponsor tie-ins · concierge placement
+* CTA → `/partners/signup?type=host` or contact
+
+### Acceptance criteria
+
+- [ ] Public `/business/event-marketing`
+- [ ] Links to [SAN-687](https://linear.app/sanjiovani/issue/SAN-687/ptr-brand-assets-social-automation-pipeline-postiz) when live
+
+### Related
+
+[SAN-660](https://linear.app/sanjiovani/issue/SAN-660/mkt-for-event-hosts-landing-host) · [SAN-687](https://linear.app/sanjiovani/issue/SAN-687/ptr-brand-assets-social-automation-pipeline-postiz) · [SAN-663](https://linear.app/sanjiovani/issue/SAN-663/mkt-ai-services-for-companies-businessai)","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","MKT, PTR, ptr:host, UX","","","","","2026-06-06T13:10:10.807Z","2026-06-06T13:43:39.778Z","","","","","","","SAN-667","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","","e7f4ebc3-fe33-4224-a3c9-3b6c67697f57","3042","SAN-660, SAN-663, SAN-687","",""
+"SAN-699","Sanjiovani","PTR — Tour operator: full onboarding cycle (e2e)","## Tour operator — full onboarding cycle (e2e)
+
+**Feature:** e2e onboarding for tour/activity operators — experiences included in AI itineraries + bookings. **Goal:** an operator lists experiences and gets **first booking** via the concierge/trips. **Phase: P2.****
+****User story:** *As a tour operator, I want the concierge to include my experience in tourists' itineraries, so I fill seats without OTAs.*
+
+### User journey
+
+```mermaid
+flowchart LR
+  L[""/partners?type=tour""] --> S[""signup type=tour (SAN-665)""]
+  S --> D[""Dashboard: bookings·leads (SAN-690)""]
+  D --> INC[""Included in AI itineraries / trips""] --> BK[""Booking (SAN-686)""] --> R[""Commission (SAN-668)""]
+```
+
+### Workflows · Agents · Automations
+
+* **Workflows:** itinerary inclusion · booking request→approve→pay ([SAN-686](https://linear.app/sanjiovani/issue/SAN-686/ptr-booking-system-availability-approve-pay-notify))
+* **Agents:** `conciergeAgent` (itinerary placement) · booking copilot
+* **Automations:** reminders + seasonal campaigns ([SAN-670](https://linear.app/sanjiovani/issue/SAN-670/ptr-marketing-automation-engine-partner-lifecycle))
+
+### Tech stack
+
+Next.js · CopilotKit · Mastra · Supabase · Stripe · Maps · (Trips workspace)
+
+### Success / Testing / Production-ready
+
+- [ ] Landing · signup 665 · dashboard 690 · revenue 668 · booking 686
+- [ ] e2e: list→itinerary inclusion→booking · first booking prod proof · HITL · `floor` green
+
+### Dependencies
+
+**Blocked by** [SAN-675](https://linear.app/sanjiovani/issue/SAN-675/ptr-event-host-full-onboarding-cycle-e2e) · [SAN-686](https://linear.app/sanjiovani/issue/SAN-686/ptr-booking-system-availability-approve-pay-notify). **P2.** **Owns:** Events / Trips.
+**Skills:** build=`mde-task-lifecycle`,`mastra`,`shadcn` · verify=`task-verifier`,`playwright-cli`","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, ptr:tour","","","","","2026-06-06T13:09:54.642Z","2026-06-06T13:43:49.287Z","","","","","","","SAN-667","","38153ebc-40a8-4d8b-9e31-b8fe0f0d1f48","M5 — Expand","","cbc9c00b-6b69-4117-9b3b-9d51f217bf26","3043","SAN-690, SAN-668, SAN-665, SAN-686","",""
+"SAN-695","Sanjiovani","MKT — Partner pricing (/pricing)","## /pricing — Plans across partner types
+
+**Audience:** supply + B2B evaluating tiers. **Grade B · 75** (`marketing-pages.md` #15). **Phase: P2** (after [SAN-668](https://linear.app/sanjiovani/issue/SAN-668/ptr-revenue-architecture-and-monetization-config) revenue config).
+
+**Spec:** `03-landing-pages.md` · `07-revenue.md` · `08-ai-services.md` (Free/Growth/Pro/Custom)
+
+### Content
+
+* Matrix: Host (ticket %) · Venue (featured/sub) · Broker (lead fee) · Sponsor (packages) · Agency (retainer)
+* CTAs → signup or contact
+
+### Acceptance criteria
+
+- [ ] Public `/pricing` with real numbers from [SAN-668](https://linear.app/sanjiovani/issue/SAN-668/ptr-revenue-architecture-and-monetization-config) (no placeholders at Done)
+- [ ] Each tier links to correct `?type=` signup
+
+### Related
+
+[SAN-668](https://linear.app/sanjiovani/issue/SAN-668/ptr-revenue-architecture-and-monetization-config) · [SAN-669](https://linear.app/sanjiovani/issue/SAN-669/ptr-ai-services-catalog-and-pricing-tiers)","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","MKT, PTR, UX","","","","","2026-06-06T13:09:44.030Z","2026-06-08T05:58:57.528Z","","","","","","","SAN-667","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","","00ac06d5-8302-4afd-a9e9-4252c3e3cf9a","3043","SAN-669","SAN-668",""
+"SAN-694","Sanjiovani","MKT — Contests / Giveaways hub (/contests)","## /contests — Contests & giveaways (consumer + sponsor tie-in)
+
+**Audience:** consumers + sponsors. **Grade B · 76** (`marketing-pages.md` #14). **Phase: P2** — pairs with `/sponsors`.
+
+**Spec:** `10-contests-growth.md` · platform work in [SAN-671](https://linear.app/sanjiovani/issue/SAN-671/ptr-contests-and-growth-loops)
+
+### Content
+
+* Active contests · sponsor-funded giveaways · entry CTA
+* Sponsor CTA → `/sponsors`
+
+### Acceptance criteria
+
+- [ ] Public `/contests` shell (can ship empty state until [SAN-671](https://linear.app/sanjiovani/issue/SAN-671/ptr-contests-and-growth-loops))
+- [ ] Sponsor placements labeled per PRD trust rules
+
+### Related
+
+[SAN-664](https://linear.app/sanjiovani/issue/SAN-664/mkt-sponsors-sponsorship-sponsors) (sponsors) · [SAN-671](https://linear.app/sanjiovani/issue/SAN-671/ptr-contests-and-growth-loops) (growth loops)","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","MKT, prefix:CONT, PTR, UX","","","","","2026-06-06T13:09:43.655Z","2026-06-06T13:43:31.590Z","","","","","","","SAN-667","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","","f07d5e51-35cd-43e5-833c-814b876ec59e","3043","SAN-664, SAN-671","",""
+"SAN-689","Sanjiovani","PTR — Chatwoot + WhatsApp partner comms","**From PRD §6.10.** Diagram: `diagrams/prd-partners-4.svg`.
+
+**Feature:** Chatwoot + WhatsApp partner comms. **Goal:** WhatsApp/web → Chatwoot → Mastra (intent/draft) → HITL or human handoff → Supabase → dashboard. Lead capture · support · bookings · campaigns · follow-ups.
+
+### Success criteria
+
+- [ ] Inbox + webhook route · Mastra intent/draft · HITL/handoff · conversation rows
+
+### Testing
+
+- [ ] Spike: inbound WhatsApp → lead in dashboard
+
+### Production-ready checklist
+
+- [ ] Defer auto-reply until [SAN-685](https://linear.app/sanjiovani/issue/SAN-685/ptr-partner-ai-copilot-capability-sets-tools-hitl) · `floor` green
+  **Blocked by:** [SAN-683](https://linear.app/sanjiovani/issue/SAN-683/ptr-partner-database-schema-rls-erd).
+  **Skills:** build=`chatwoot-cli`,`mastra` · verify=`task-verifier`","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","CHATW, PTR","","","","","2026-06-06T12:45:22.398Z","2026-06-06T13:43:31.316Z","","","","","","","SAN-667","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","","2faab9c9-ed88-425f-86e8-7dd98103d215","3067","SAN-553, SAN-555, SAN-683","",""
+"SAN-688","Sanjiovani","PTR — Data intelligence / enrichment (OpenClaw + Places)","**From PRD §6.11 +** `revenue/03-data-intelligence.md`**.** Diagram: `diagrams/03-data-intelligence-1.svg`.
+
+**Feature:** enrichment/ingestion (OpenClaw public events · Places · grounding). **Goal:** sources → normalize → signals → HITL QA → store, compliantly.
+
+### Success criteria
+
+- [ ] Ingest → normalize → `*_signals` → HITL QA gate · consent-or-public · citation · PII redaction · FieldMask
+
+### Testing
+
+- [ ] Ingest dry-run → QA queue
+
+### Production-ready checklist
+
+- [ ] Folds into Data + OpenClaw views (no new pipeline) · `floor` green
+  **Blocked by:** [SAN-683](https://linear.app/sanjiovani/issue/SAN-683/ptr-partner-database-schema-rls-erd).
+  **Skills:** build=`mde-supabase`,`mde-maps` · verify=`task-verifier`","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, stack:openclaw","","","","","2026-06-06T12:45:18.647Z","2026-06-06T13:43:31.128Z","","","","","","","SAN-667","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","","d62f7533-e6dc-4eca-a25c-ba376e7af5a8","3067","SAN-201, SAN-683","",""
+"SAN-687","Sanjiovani","PTR — Brand assets + social automation pipeline (Postiz)","**From PRD §6.9 +** `revenue/06-assets-and-social.md`**.** Diagrams: `diagrams/06-assets-and-social-*.svg`.
+
+**Feature:** asset store + Postiz social pipeline. **Goal:** upload→validate→AI process→store→use feeding content→AI draft→HITL approve→schedule→publish→analytics (IG/FB/TikTok/LinkedIn/WhatsApp/GBP).
+
+### Success criteria
+
+- [ ] Asset store (Supabase Storage, RLS) · Postiz scheduling · HITL publish gate
+
+### Testing
+
+- [ ] e2e: draft → approve → scheduled
+
+### Production-ready checklist
+
+- [ ] Postiz env on Vercel · HITL on all public posts · `floor` green · **P2****
+****Blocked by:** [SAN-683](https://linear.app/sanjiovani/issue/SAN-683/ptr-partner-database-schema-rls-erd).
+  **Skills:** build=`mastra`,`mde-supabase` · verify=`task-verifier`","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-06T12:45:14.085Z","2026-06-06T13:43:31.397Z","","","","","","","SAN-667","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","","35326213-af1a-4b0d-974a-e2f904d1c13f","3067","SAN-213, SAN-683, SAN-701, SAN-697","",""
+"SAN-686","Sanjiovani","PTR — Booking system (availability → approve → pay → notify)","## Booking system (availability → approve → pay → notify)
+
+**Feature:** booking for restaurants·cafés·nightlife·venues·tours·hotels·wellness. **Goal:** a guest requests, the partner approves (HITL), payment (optional) + notifications fire, follow-up collects a review.
+
+**User story:** *As a venue, I want booking requests with AI-drafted replies I approve, so I fill the room without manual back-and-forth.*
+
+### User journey
+
+```mermaid
+flowchart LR
+  AV[""Availability""] --> REQ[""Request (consumer/concierge)""] --> APP{""HITL approve""}
+  APP -- yes --> PAY{""Paid?""}
+  PAY -- yes --> STR[""Stripe (P2)""]
+  PAY -- no --> CONF[""Confirm""]
+  STR & CONF --> NOTIF[""Notify (Chatwoot/WhatsApp/email)""] --> FUP[""Follow-up + review""]
+```
+
+### Workflows · Agents · Automations
+
+* **Workflows:** booking request → HITL approve → (pay) → notify → follow-up (Mastra workflow + bail/compensation)
+* **Agents:** booking copilot (draft reply, check availability) — capability set of [SAN-685](https://linear.app/sanjiovani/issue/SAN-685/ptr-partner-ai-copilot-capability-sets-tools-hitl)
+* **Automations:** reminders + review request ([SAN-670](https://linear.app/sanjiovani/issue/SAN-670/ptr-marketing-automation-engine-partner-lifecycle))
+
+### Tech stack
+
+Mastra workflows · Supabase (`bookings`, RLS) · Stripe (P2 paid) · Chatwoot/WhatsApp + email (notify)
+
+### Success / Testing / Production-ready
+
+- [ ] Availability · request→HITL · Stripe (P2) · notifications · follow-up+review
+- [ ] e2e: request→approve→confirm/notify · P1 = request/HITL/notify only · RLS · `floor` green
+
+### Dependencies
+
+**Blocked by** [SAN-683](https://linear.app/sanjiovani/issue/SAN-683/ptr-partner-database-schema-rls-erd) · [SAN-690](https://linear.app/sanjiovani/issue/SAN-690/mkt-partner-dashboard-dashboard). **Relates** [SAN-668](https://linear.app/sanjiovani/issue/SAN-668/ptr-revenue-architecture-and-monetization-config) (booking fees) · [SAN-689](https://linear.app/sanjiovani/issue/SAN-689/ptr-chatwoot-whatsapp-partner-comms) (notify) · used by [SAN-676](https://linear.app/sanjiovani/issue/SAN-676/ptr-nightclubbar-full-onboarding-cycle-e2e)/680/699 verticals.
+
+**Skills:** build=`mde-supabase`,`mastra` · verify=`task-verifier`,`testing`","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-06T12:45:08.763Z","2026-06-06T17:02:58.159Z","","","","","","","SAN-667","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","","e24c8711-a923-4c40-b676-68bcee6a7bcd","3067","SAN-551, SAN-683, SAN-711, SAN-680, SAN-699","SAN-690",""
+"SAN-685","Sanjiovani","PTR — Partner AI copilot (capability sets, tools, HITL)","## Partner AI copilot — parent epic (split into AGT-PTR)
+
+**Audit:** `tasks/design/partners/AI/07-ai-intelligence-partners-audit.md`
+
+**ONE** CopilotKit copilot + Mastra `partnerAgent` — capability flags for onboarding · dashboard · leads · booking · revenue. Not separate agents per vertical.
+
+### Child tasks (AI & Intelligence)
+
+| ID | Task |
+| -- | -- |
+| [SAN-705](https://linear.app/sanjiovani/issue/SAN-705/agt-ptr-01-partner-agent-foundation-partneragent) | AGT-PTR-01 Partner agent foundation |
+| [SAN-706](https://linear.app/sanjiovani/issue/SAN-706/agt-ptr-02-partner-scoped-supabase-tools-api-routes) | AGT-PTR-02 Partner-safe Supabase tools |
+| [SAN-709](https://linear.app/sanjiovani/issue/SAN-709/agt-ptr-03-onboarding-copilot-partnerssignup) | AGT-PTR-03 Onboarding copilot |
+| [SAN-707](https://linear.app/sanjiovani/issue/SAN-707/agt-ptr-04-dashboard-copilot-shell-dashboard) | AGT-PTR-04 Dashboard copilot |
+| [SAN-708](https://linear.app/sanjiovani/issue/SAN-708/agt-ptr-05-lead-qualification-hitl-reply-draft) | AGT-PTR-05 Lead qualification + HITL |
+| [SAN-711](https://linear.app/sanjiovani/issue/SAN-711/agt-ptr-06-partner-hitl-policy-module) | AGT-PTR-06 HITL policy module |
+| [SAN-710](https://linear.app/sanjiovani/issue/SAN-710/agt-ptr-07-concierge-lead-partner-id-attribution) | AGT-PTR-07 Concierge partner_id attribution |
+
+### Execution order
+
+[SAN-683](https://linear.app/sanjiovani/issue/SAN-683/ptr-partner-database-schema-rls-erd) → 705 → 706 → 709/707/708 → 711/710
+
+**Blocked by:** [SAN-683](https://linear.app/sanjiovani/issue/SAN-683/ptr-partner-database-schema-rls-erd) schema
+**Blocks:** [SAN-665](https://linear.app/sanjiovani/issue/SAN-665/mkt-partner-signup-wizard-partnerssignup) AI · [SAN-690](https://linear.app/sanjiovani/issue/SAN-690/mkt-partner-dashboard-dashboard) AI · [SAN-684](https://linear.app/sanjiovani/issue/SAN-684/ptr-lead-generation-engine-channels-lead-store) · [SAN-686](https://linear.app/sanjiovani/issue/SAN-686/ptr-booking-system-availability-approve-pay-notify)
+
+**Skills:** mastra · copilotkitV1 · mde-supabase","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, stack:copilotkit, stack:mastra","","","","","2026-06-06T12:45:04.397Z","2026-06-08T00:40:42.927Z","","","","","","","SAN-667","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","","9fb8be74-358d-43f5-b80c-7c762fff5072","3067","SAN-673, SAN-683, SAN-723, SAN-665","",""
+"SAN-682","Sanjiovani","PTR — Agency/company: AI-services delivery cycle (e2e)","## Agency / company — AI-services delivery cycle (e2e)
+
+**Feature:** e2e cycle for agencies/companies buying AI builds (the agency revenue line). **Goal:** a local chain buys an AI + Postiz retainer and gets a delivered engagement.
+**User story:** *As a company, I want mdeai to build + run my AI/social, so I get agency outcomes without hiring.*
+
+### User journey
+
+```mermaid
+flowchart LR
+  L[""/business/ai (SAN-663)""] --> S[""signup type=agency · scoping (SAN-665)""]
+  S --> D[""Dashboard: projects·deliverables (SAN-690)""]
+  D --> AI[""Bespoke builds · Postiz · OpenClaw (SAN-669)""]
+  AI --> R[""Retainer + setup (SAN-668)""] --> G[""First engagement delivered""]
+```
+
+### Workflows · Agents · Automations
+
+* **Workflows:** scoping → build → deliver (per engagement)
+* **Agents:** bespoke Mastra agents per client; Postiz/OpenClaw operators
+* **Automations:** per-engagement reporting
+
+### Tech stack
+
+Mastra · CopilotKit · Gemini · Supabase · **Postiz** · **OpenClaw** · Stripe (retainer)
+
+### Success / Testing / Production-ready
+
+- [ ] Landing 663 · signup 665 · dashboard 690 · revenue 668 · AI 669 · automation 670
+- [ ] e2e: scoping→project created · first engagement prod proof · HITL · `floor` green
+
+### Dependencies
+
+**Blocked by** [SAN-675](https://linear.app/sanjiovani/issue/SAN-675/ptr-event-host-full-onboarding-cycle-e2e) · [SAN-669](https://linear.app/sanjiovani/issue/SAN-669/ptr-ai-services-catalog-and-pricing-tiers). **P2 — don't block P0 on agency revenue.** **Owns:** AI & Intelligence.
+**Skills:** build=`mde-task-lifecycle`,`mastra` · verify=`task-verifier`","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, ptr:agency","","","","","2026-06-06T12:21:12.694Z","2026-06-07T14:16:43.897Z","","","","","","","SAN-667","","38153ebc-40a8-4d8b-9e31-b8fe0f0d1f48","M5 — Expand","","83601ac0-534b-422a-a2bf-4e2fad75e7d5","3091","SAN-690, SAN-663, SAN-668, SAN-670, SAN-665, SAN-671","SAN-669, SAN-675",""
+"SAN-681","Sanjiovani","PTR — Sponsor: full cycle (e2e)","## Sponsor — full cycle (e2e)
+
+**Feature:** End-to-end cycle for **sponsors/brands** — packages → AI match → labeled placements → ROI.
+**Goal:** A brand sponsors a salsa festival; a **labeled, grounded placement** runs in chat with an ROI report.
+
+```mermaid
+flowchart LR
+  L[""Landing /sponsors (SAN-664)""] --> S[""Signup type=sponsor · brief (SAN-665)""]
+  S --> REV{""Patricia review""}
+  REV -- approved --> D[""Sponsor dashboard: campaigns · ROI (SAN-690)""]
+  D --> AI[""AI: sponsorship match + optimize (SAN-669)""]
+  AI --> R[""Revenue: sponsorship packages (SAN-668)""]
+  R --> G[""Launch + first campaign (labeled)""]
+```
+
+### Success criteria
+
+- [ ] Landing `/sponsors` ([SAN-664](https://linear.app/sanjiovani/issue/SAN-664/mkt-sponsors-sponsorship-sponsors))
+- [ ] Signup config type=sponsor (brief + Patricia-review gate / admin route) ([SAN-665](https://linear.app/sanjiovani/issue/SAN-665/mkt-partner-signup-wizard-partnerssignup))
+- [ ] Dashboard: campaigns · reach · ROI ([SAN-690](https://linear.app/sanjiovani/issue/SAN-690/mkt-partner-dashboard-dashboard))
+- [ ] Revenue: sponsorship packages ([SAN-668](https://linear.app/sanjiovani/issue/SAN-668/ptr-revenue-architecture-and-monetization-config))
+- [ ] AI: sponsorship matching + campaign optimize ([SAN-669](https://linear.app/sanjiovani/issue/SAN-669/ptr-ai-services-catalog-and-pricing-tiers))
+- [ ] Automation: reporting ([SAN-670](https://linear.app/sanjiovani/issue/SAN-670/ptr-marketing-automation-engine-partner-lifecycle))
+
+### Testing
+
+- [ ] Playwright e2e: brief → review → labeled placement renders
+- [ ] localhost boot clean; `/sponsors` → 200
+
+### Production-ready checklist
+
+- [ ] First campaign proof on prod — **placement clearly labeled + grounded**
+- [ ] Admin review gate enforced; `floor` green
+
+**Owns:** AI & Intelligence + Commerce. **Blocked by:** [SAN-675](https://linear.app/sanjiovani/issue/SAN-675/ptr-event-host-full-onboarding-cycle-e2e) · [SAN-669](https://linear.app/sanjiovani/issue/SAN-669/ptr-ai-services-catalog-and-pricing-tiers).
+**Skills:** build=`mde-task-lifecycle`,`mastra` · verify=`task-verifier`","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, ptr:sponsor","","","","","2026-06-06T12:21:09.937Z","2026-06-06T13:43:43.099Z","","","","","","","SAN-667","","38153ebc-40a8-4d8b-9e31-b8fe0f0d1f48","M5 — Expand","","57af18f9-d0bb-42e1-9fd8-200800974796","3091","SAN-664, SAN-668, SAN-665, SAN-671, SAN-670","SAN-675, SAN-669",""
+"SAN-680","Sanjiovani","PTR — Venue/event space: full onboarding cycle (e2e)","## Venue / event space — full onboarding cycle (e2e)
+
+**Feature:** e2e onboarding for venue/event-space owners (rent the room). **Goal:** a space owner reaches **first space booking**, AI handling event-booking requests (HITL).
+**User story:** *As a space owner, I want AI to field booking requests and let me approve, so I rent the room without endless DMs.*
+
+### User journey
+
+```mermaid
+flowchart LR
+  L[""/venues?v=space (SAN-661)""] --> S[""signup type=venue/space (SAN-665)""]
+  S --> D[""Dashboard: space requests·bookings (SAN-690)""]
+  D --> AI[""AI event booking — requests→HITL (SAN-669/686)""]
+  AI --> R[""Booking commission (SAN-668)""] --> G[""First space booking""]
+```
+
+### Workflows · Agents · Automations
+
+* **Workflows:** availability · booking request→HITL→confirm ([SAN-686](https://linear.app/sanjiovani/issue/SAN-686/ptr-booking-system-availability-approve-pay-notify))
+* **Agents:** booking copilot (draft reply, availability)
+* **Automations:** availability sync + reminders ([SAN-670](https://linear.app/sanjiovani/issue/SAN-670/ptr-marketing-automation-engine-partner-lifecycle))
+
+### Tech stack
+
+Next.js · CopilotKit · Mastra · Supabase (`bookings`) · Stripe (P2) · Chatwoot/WhatsApp (notify)
+
+### Success / Testing / Production-ready
+
+- [ ] Landing 661 · signup 665 · dashboard 690 · revenue 668 · AI booking 669/686 · automation 670
+- [ ] e2e: request→HITL approve→confirm · first space booking prod proof · RLS · HITL · `floor` green
+
+### Dependencies
+
+**Blocked by** [SAN-675](https://linear.app/sanjiovani/issue/SAN-675/ptr-event-host-full-onboarding-cycle-e2e). **Relates** [SAN-686](https://linear.app/sanjiovani/issue/SAN-686/ptr-booking-system-availability-approve-pay-notify) (booking) · [SAN-703](https://linear.app/sanjiovani/issue/SAN-703/mkt-venue-features-deep-dive-venuesfeatures) (venue features). **Owns:** Venues + Events.
+**Skills:** build=`mde-task-lifecycle`,`mde-supabase`,`shadcn` · verify=`task-verifier`,`playwright-cli`","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, ptr:venue","","","","","2026-06-06T12:21:07.010Z","2026-06-07T14:16:53.617Z","","","","","","","SAN-667","","38153ebc-40a8-4d8b-9e31-b8fe0f0d1f48","M5 — Expand","","b00194be-397a-42b5-b54c-408dad6f0251","3091","SAN-690, SAN-686, SAN-661, SAN-668, SAN-669, SAN-671, SAN-665, SAN-670","SAN-675",""
+"SAN-679","Sanjiovani","PTR — Café: full onboarding cycle (e2e)","## Café — full onboarding cycle (e2e)
+
+**Feature:** e2e onboarding for cafés (nomad/remote-work angle) — listing + remote-work tags + posts. **Goal:** a nomad finds a quiet wifi café in Laureles via the concierge.
+**User story:** *As a café owner, I want digital nomads to find me for ""café to work from"", so I fill weekday daytime seats.*
+
+### User journey
+
+```mermaid
+flowchart LR
+  L[""/venues?v=cafe (SAN-661)""] --> S[""signup type=venue/cafe · remote-work tags (SAN-665)""]
+  S --> D[""Dashboard: listing·marketing (SAN-690)""]
+  D --> AI[""AI: posts + remote-work tagging (SAN-669)""] --> SURF[""Concierge surfacing""] --> R[""Featured (SAN-668)""]
+```
+
+### Workflows · Agents · Automations
+
+* **Workflows:** concierge surfacing · auto-tag (wifi/quiet)
+* **Agents:** `conciergeAgent` · tagging copilot
+* **Automations:** Postiz cadence ([SAN-670](https://linear.app/sanjiovani/issue/SAN-670/ptr-marketing-automation-engine-partner-lifecycle))
+
+### Tech stack
+
+Next.js · CopilotKit · Mastra · Gemini · Supabase · Maps · **Postiz**
+
+### Success / Testing / Production-ready
+
+- [ ] Landing 661 · signup 665 · dashboard 690 · revenue 668 · AI 669 · automation 670
+- [ ] e2e: list→concierge ""café to work from"" · prod proof · HITL · `floor` green
+
+### Dependencies
+
+**Blocked by** [SAN-675](https://linear.app/sanjiovani/issue/SAN-675/ptr-event-host-full-onboarding-cycle-e2e) (after venue pipeline proven). **Owns:** Venues + Data.
+**Skills:** build=`mde-task-lifecycle`,`mde-supabase`,`shadcn` · verify=`task-verifier`,`playwright-cli`","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, ptr:cafe","","","","","2026-06-06T12:21:01.096Z","2026-06-08T04:07:55.076Z","","","","","","","SAN-667","","38153ebc-40a8-4d8b-9e31-b8fe0f0d1f48","M5 — Expand","","b93f363c-7ce4-4bd7-8c1a-76902b6bf0f0","3091","SAN-690, SAN-661, SAN-668, SAN-670, SAN-669, SAN-671, SAN-665, SAN-726, SAN-714","SAN-675",""
+"SAN-678","Sanjiovani","PTR — Restaurant: full onboarding cycle (e2e)","## Restaurant — full onboarding cycle (e2e)
+
+**Feature:** e2e onboarding for restaurants — listing + concierge surfacing + AI marketing. **Goal:** an El Poblado rooftop gets **surfaced in concierge answers** and lands reservations.
+**User story:** *As a restaurant owner, I want the concierge to recommend me for ""dinner in Provenza"" and AI to handle reviews/posts, so I get covers without a marketing team.*
+
+### User journey
+
+```mermaid
+flowchart LR
+  L[""/venues?v=restaurant (SAN-661)""] --> S[""signup type=venue/restaurant (SAN-665)""]
+  S --> D[""Dashboard: listing·reviews·marketing (SAN-690)""]
+  D --> AI[""AI: menu·review replies·promos (SAN-669)""]
+  AI --> SURF[""Concierge surfacing""] --> R[""Featured + reservation fee (SAN-668)""]
+```
+
+### Workflows · Agents · Automations
+
+* **Workflows:** concierge surfacing · review-reply (HITL) · promo
+* **Agents:** `conciergeAgent` (grounded) · review/menu copilot
+* **Automations:** Postiz posts · review collection ([SAN-670](https://linear.app/sanjiovani/issue/SAN-670/ptr-marketing-automation-engine-partner-lifecycle))
+
+### Tech stack
+
+Next.js · CopilotKit · Mastra · Gemini · Supabase · Maps/Places · **Postiz**
+
+### Success / Testing / Production-ready
+
+- [ ] Landing 661 · signup 665 · dashboard 690 · revenue 668 · AI 669 · automation 670
+- [ ] e2e: list→concierge ""dinner in Provenza"" · grounded surfacing prod proof · HITL · `floor` green
+
+### Dependencies
+
+**Blocked by** [SAN-675](https://linear.app/sanjiovani/issue/SAN-675/ptr-event-host-full-onboarding-cycle-e2e). Booking ([SAN-686](https://linear.app/sanjiovani/issue/SAN-686/ptr-booking-system-availability-approve-pay-notify)) = P2 → **lead-only at P1**. **Owns:** Venues + Data.
+**Skills:** build=`mde-task-lifecycle`,`mde-supabase`,`shadcn` · verify=`task-verifier`,`playwright-cli`","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, ptr:restaurant","","","","","2026-06-06T12:20:55.248Z","2026-06-07T14:17:18.793Z","","","","","","","SAN-667","","38153ebc-40a8-4d8b-9e31-b8fe0f0d1f48","M5 — Expand","","7406b67e-834a-4044-8d5e-7ce5b36308d5","3092","SAN-690, SAN-661, SAN-668, SAN-671, SAN-669, SAN-670, SAN-665, SAN-703","SAN-675",""
+"SAN-673","Sanjiovani","PTR — AI concierge ↔ partner interaction wiring","## AI concierge ↔ partner interaction wiring
+
+**Feature:** the concierge routes consumer intent to partner inventory and the same co-pilot spans consumer → signup → dashboard. **Goal:** demand reliably reaches the right partner, grounded and labeled.
+
+**User story:** *As a tourist, I want ""rooftop tonight in Provenza"" to surface a real, bookable venue, so I act in one step.*
+
+### User journey
+
+```mermaid
+flowchart LR
+  U[""Intent""] --> AI[""Concierge (Mastra+Gemini)""] --> GND[""Ground (Places·Supabase·signals)""]
+  GND --> MATCH[""Match partner""] --> ACT[""Book/lead""] --> FUP[""Follow-up → loyalty""]
+```
+
+### Workflows · Agents · Automations
+
+* **Workflows:** intent → ground → match → action (per vertical)
+* **Agents:** `conciergeAgent` + faithfulness/grounding scorers; shares co-pilot with [SAN-685](https://linear.app/sanjiovani/issue/SAN-685/ptr-partner-ai-copilot-capability-sets-tools-hitl)
+* **Automations:** post-action follow-up; loyalty
+
+### Tech stack
+
+Mastra · CopilotKit · Gemini · Supabase (signals) · Maps/Places (`mapId`, FieldMask)
+
+### Success / Testing / Production-ready
+
+- [ ] Grounded routing · sponsored = labeled · HITL on money · prompt matrix (events/venues/rentals)
+- [ ] mastra-smoke-test · prod prompt-matrix evidence · grounded-only (no fabrication) · `floor` green
+
+### Dependencies
+
+**Relates** [SAN-685](https://linear.app/sanjiovani/issue/SAN-685/ptr-partner-ai-copilot-capability-sets-tools-hitl) (copilot capability sets) · [SAN-684](https://linear.app/sanjiovani/issue/SAN-684/ptr-lead-generation-engine-channels-lead-store) (leads) · [SAN-686](https://linear.app/sanjiovani/issue/SAN-686/ptr-booking-system-availability-approve-pay-notify) (booking) · feeds all verticals.
+
+**Skills:** build=`mastra`,`copilotkitV1` · verify=`task-verifier`,`mastra-smoke-test`","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-06T11:57:34.587Z","2026-06-06T14:19:15.965Z","","","","","","","SAN-667","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","","7f8c317d-c349-4884-80be-2ed0a25f08a0","3115","SAN-685","",""
+"SAN-671","Sanjiovani","PTR — Contests & growth loops","Part 9 — `tasks/design/partners/10-contests-growth.md`. Diagrams: `diagrams/10-contests-growth-*.svg`.
+
+**Feature:** growth loops + contests. **Goal:** referral first (prove it), then ambassador/creator/sponsor-contests/loyalty/gamification. Aligns to `prefix:CONT` vertical.
+
+### Success criteria
+
+- [ ] Referral loop live + anti-abuse (dedupe/rate-limit/verify-before-payout) · sponsor content labeled
+
+### Testing
+
+- [ ] Referral attribution test
+
+### Production-ready checklist
+
+- [ ] Keep Backlog until a P0 vertical proves referral · `floor` green
+  **Skills:** build=`mde-supabase`,`shadcn` · verify=`task-verifier`","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","prefix:CONT, PTR","","","","","2026-06-06T11:57:30.650Z","2026-06-08T04:07:55.076Z","","","","","","","SAN-667","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","","68503a8c-6b04-4cfc-bbed-c1282496181a","3115","SAN-726, SAN-700, SAN-694, SAN-682, SAN-681, SAN-680, SAN-679, SAN-678, SAN-677, SAN-676, SAN-675","",""
+"SAN-670","Sanjiovani","PTR — Marketing automation engine (partner lifecycle)","## Marketing automation engine (partner lifecycle)
+
+**Feature:** lifecycle automations across partner stages. **Goal:** welcome · re-engage · upsell · review · renewal · win-back — run automatically, HITL on money/public.
+**User story:** *As a partner, I want timely nudges (finish your listing, you have 3 unanswered leads, renew), so I stay active without thinking about it.*
+
+### User journey (engine)
+
+```mermaid
+flowchart TD
+  EV[""Event: signup·booking·inactivity·expiry""] --> R{""Mastra workflow router""}
+  R --> W[""welcome""] & RE[""re-engage""] & UP[""upsell""] & RV[""review""] & RN[""renewal/win-back""]
+  W & RE & UP & RV & RN --> GATE{""money/public?""}
+  GATE -- yes --> HITL[""HITL""] --> SEND[""email·WhatsApp·Postiz""]
+  GATE -- no --> SEND --> LOG[""log → dashboard Opportunities""]
+```
+
+### Workflows · Agents · Automations
+
+* **Workflows:** lifecycle router + per-stage workflows (Mastra)
+* **Agents:** content drafter (Gemini); reuse copilot
+* **Automations:** the deliverable — triggered by events
+
+### Tech stack
+
+Mastra workflows · Gemini · **Postiz** (social) · **Chatwoot/WhatsApp** · email · Supabase (`automations`, logs)
+
+### Success / Testing / Production-ready
+
+- [ ] MVP = welcome + re-engagement · HITL on money/public · log → Opportunities
+- [ ] Workflow trigger → gated send test · no auto-spend without HITL · `floor` green
+
+### Dependencies
+
+**Relates** [SAN-687](https://linear.app/sanjiovani/issue/SAN-687/ptr-brand-assets-social-automation-pipeline-postiz) (Postiz) · [SAN-689](https://linear.app/sanjiovani/issue/SAN-689/ptr-chatwoot-whatsapp-partner-comms) (Chatwoot) · [SAN-684](https://linear.app/sanjiovani/issue/SAN-684/ptr-lead-generation-engine-channels-lead-store) (lead re-engage); used by every vertical.
+**Skills:** build=`mastra`,`chatwoot-cli` · verify=`task-verifier`","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-06T11:57:28.703Z","2026-06-08T06:13:03.845Z","","","","","","","SAN-667","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","","ec423155-cebc-40ee-ac96-ac7994d462f8","3115","SAN-691, SAN-665, SAN-682, SAN-681, SAN-680, SAN-679, SAN-678, SAN-677, SAN-676, SAN-675","",""
+"SAN-669","Sanjiovani","PTR — AI services catalog & pricing tiers","Part 7 — `tasks/design/partners/08-ai-services.md`.
+
+**Feature:** package sellable AI services into Free/Growth/Pro/Custom tiers. **Goal:** partners buy AI that does their work (menu/review/promo · listing/lead-qual · event create/price · sponsorship match · Postiz · OpenClaw).
+
+### Success criteria
+
+- [ ] Tiers mapped to `partner_services` rows · Free = 1 service cap · reuse Mastra agents
+
+### Testing
+
+- [ ] Entitlement gating test
+
+### Production-ready checklist
+
+- [ ] HITL on money/public · Gemini-only · `floor` green
+  **Skills:** build=`mastra` · verify=`task-verifier`","Backlog","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-06T11:57:25.736Z","2026-06-06T13:43:30.667Z","","","","","","","SAN-667","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","","70df4f05-d286-4a0b-b6cd-11950938f3e0","3115","SAN-700, SAN-698, SAN-695, SAN-680, SAN-679, SAN-678, SAN-677, SAN-676, SAN-675","",""
+"SAN-702","Sanjiovani","MKT — Marketplace vendor landing (/partners/vendor)","## /partners/vendor — Marketplace vendor acquisition
+
+**Audience:** event-service vendors (DJs, photographers, catering). **Phase: P3** — after [SAN-672](https://linear.app/sanjiovani/issue/SAN-672/ptr-marketplace-expansion-event-services-first).
+
+**Spec:** `03-landing-pages.md` · `11-marketplace.md`
+
+### Content
+
+* Storefront · commission · payouts · AI listing optimize
+* CTA → `/partners/signup?type=vendor`
+
+### Acceptance criteria
+
+- [ ] Public landing
+- [ ] Hub card on `/partners`
+
+### Related
+
+[SAN-672](https://linear.app/sanjiovani/issue/SAN-672/ptr-marketplace-expansion-event-services-first) · [SAN-698](https://linear.app/sanjiovani/issue/SAN-698/ptr-vendor-marketplace-vendor-cycle-e2e) (vendor e2e)","Backlog","","Low","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","MKT, PTR, ptr:vendor, UX","","","","","2026-06-06T13:10:11.813Z","2026-06-06T13:43:49.498Z","","","","","","","SAN-667","","38153ebc-40a8-4d8b-9e31-b8fe0f0d1f48","M5 — Expand","","9e7e7f26-c5e2-428b-8133-5744dc0bb978","3042","SAN-698, SAN-672","",""
+"SAN-700","Sanjiovani","PTR — Influencer/creator: full program cycle (e2e)","Vertical for **influencers / creators**. Owns: AI & Intelligence. **Phase: P3**.
+
+- [ ] Landing `/partners/creator` — [SAN-696](https://linear.app/sanjiovani/issue/SAN-696/mkt-creator-program-landing-partnerscreator)
+- [ ] Signup config (type=partner/creator) — [SAN-665](https://linear.app/sanjiovani/issue/SAN-665/mkt-partner-signup-wizard-partnerssignup)
+- [ ] Dashboard analytics + affiliate — [SAN-690](https://linear.app/sanjiovani/issue/SAN-690/mkt-partner-dashboard-dashboard)
+- [ ] Revenue: rev-share — [SAN-668](https://linear.app/sanjiovani/issue/SAN-668/ptr-revenue-architecture-and-monetization-config)
+- [ ] AI: guide builder — [SAN-669](https://linear.app/sanjiovani/issue/SAN-669/ptr-ai-services-catalog-and-pricing-tiers)
+- [ ] Growth: referral — [SAN-671](https://linear.app/sanjiovani/issue/SAN-671/ptr-contests-and-growth-loops)
+- [ ] Launch + first affiliate conversion (proof)
+
+**Spec:** `index-partners.md`","Backlog","","Low","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, ptr:influencer","","","","","2026-06-06T13:09:55.065Z","2026-06-06T13:43:49.067Z","","","","","","","SAN-667","","38153ebc-40a8-4d8b-9e31-b8fe0f0d1f48","M5 — Expand","","8aa1f8c2-8451-4086-a731-df023386087d","3043","SAN-690, SAN-668, SAN-671, SAN-669, SAN-696, SAN-665","",""
+"SAN-698","Sanjiovani","PTR — Vendor: marketplace vendor cycle (e2e)","Vertical onboarding for **marketplace vendors**. Owns: Commerce Platform. **Phase: P3** — after [SAN-672](https://linear.app/sanjiovani/issue/SAN-672/ptr-marketplace-expansion-event-services-first).
+
+- [ ] Landing `/partners/vendor` (or hub card)
+- [ ] Signup config (type=vendor) — [SAN-665](https://linear.app/sanjiovani/issue/SAN-665/mkt-partner-signup-wizard-partnerssignup)
+- [ ] Dashboard Marketplace tab — [SAN-690](https://linear.app/sanjiovani/issue/SAN-690/mkt-partner-dashboard-dashboard)
+- [ ] Revenue: commission + vendor sub — [SAN-668](https://linear.app/sanjiovani/issue/SAN-668/ptr-revenue-architecture-and-monetization-config)
+- [ ] AI: storefront optimize — [SAN-669](https://linear.app/sanjiovani/issue/SAN-669/ptr-ai-services-catalog-and-pricing-tiers)
+- [ ] Launch + first sale (proof)
+
+**Spec:** `11-marketplace.md` · `index-partners.md`","Backlog","","Low","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR, ptr:vendor","","","","","2026-06-06T13:09:53.127Z","2026-06-06T13:43:48.945Z","","","","","","","SAN-667","","38153ebc-40a8-4d8b-9e31-b8fe0f0d1f48","M5 — Expand","","4f532fd9-775b-4b50-9df6-b05869d693a6","3043","SAN-690, SAN-668, SAN-669, SAN-665, SAN-672, SAN-702","",""
+"SAN-697","Sanjiovani","MKT — Postiz social services (/business/social)","## /business/social — Social media management (Postiz)
+
+**Audience:** venues · hosts · SMBs. **Grade C+ · 70** (`marketing-pages.md` #17). **Phase: P3**.
+
+**Spec:** `revenue/06-assets-and-social.md` · delivery via [SAN-687](https://linear.app/sanjiovani/issue/SAN-687/ptr-brand-assets-social-automation-pipeline-postiz)
+
+### Content
+
+* Done-for-you Postiz scheduling · AI drafts · HITL approve
+* CTA → signup or contact
+
+### Acceptance criteria
+
+- [ ] Public `/business/social`
+- [ ] Links to [SAN-687](https://linear.app/sanjiovani/issue/SAN-687/ptr-brand-assets-social-automation-pipeline-postiz) pipeline when live
+
+### Related
+
+[SAN-687](https://linear.app/sanjiovani/issue/SAN-687/ptr-brand-assets-social-automation-pipeline-postiz) · [SAN-663](https://linear.app/sanjiovani/issue/SAN-663/mkt-ai-services-for-companies-businessai)","Backlog","","Low","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","MKT, PTR, UX","","","","","2026-06-06T13:09:52.637Z","2026-06-06T13:43:32.905Z","","","","","","","SAN-667","","55334505-c685-48e5-b06f-671a92ee1084","M4 — Augment","","8a31c49c-1cd6-4dd4-ae19-07151229231c","3043","SAN-663, SAN-687","",""
+"SAN-696","Sanjiovani","MKT — Creator program landing (/partners/creator)","## /partners/creator — Influencer / creator program
+
+**Audience:** influencers promoting Medellín + affiliate revenue. **Phase: P3**.
+
+**Spec:** `03-landing-pages.md` · vertical in `index-partners.md`
+
+### Content
+
+* Guides · affiliate links · analytics · AI guide builder
+* CTA → `/partners/signup?type=partner` (creator config)
+
+### Acceptance criteria
+
+- [ ] Public landing
+- [ ] Links to signup + [SAN-700](https://linear.app/sanjiovani/issue/SAN-700/ptr-influencercreator-full-program-cycle-e2e) (creator e2e)
+
+### Related
+
+[SAN-700](https://linear.app/sanjiovani/issue/SAN-700/ptr-influencercreator-full-program-cycle-e2e) · [SAN-665](https://linear.app/sanjiovani/issue/SAN-665/mkt-partner-signup-wizard-partnerssignup)","Backlog","","Low","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","MKT, PTR, ptr:influencer, UX","","","","","2026-06-06T13:09:51.419Z","2026-06-08T04:07:55.076Z","","","","","","","SAN-667","","38153ebc-40a8-4d8b-9e31-b8fe0f0d1f48","M5 — Expand","","e42d7d0a-d1d4-4da4-b3fe-e31fdf977e76","3043","SAN-665, SAN-726, SAN-700","",""
+"SAN-672","Sanjiovani","PTR — Marketplace expansion (event services first)","Part 10 — `tasks/design/partners/11-marketplace.md`. Diagrams: `diagrams/11-marketplace-*.svg`. **Phase 3+ — do not build early.**
+
+**Feature:** services marketplace. **Goal:** wedge = event services (DJs/photographers/catering) sold to on-platform hosts; AI concierge as matcher. Reuse COMM/Medusa.
+
+### Success criteria
+
+- [ ] Event-services catalog + booking + payout via Medusa · concierge matcher
+
+### Testing
+
+- [ ] e2e: host needs DJ → AI matches → book
+
+### Production-ready checklist
+
+- [ ] Deferred to Phase 3 · no early build · `floor` green when built
+  **Skills:** build=`medusa`,`mde-supabase` · verify=`task-verifier`","Backlog","","Low","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-06T11:57:32.572Z","2026-06-06T13:43:42.588Z","","","","","","","SAN-667","","38153ebc-40a8-4d8b-9e31-b8fe0f0d1f48","M5 — Expand","","f54eaf8c-ab8e-4c5c-90ad-ec2af6ede4a2","3115","SAN-702, SAN-698","",""
+"SAN-712","Sanjiovani","MKT — For Nightlife landing (/partners/nightlife)","## MKT — For Nightlife landing (/partners/nightlife)
+
+Acquisition landing for nightclub/bar partners. **Gap found in the Partners forensic audit**: Nightlife is the most-built consumer vertical (\~70%) but has **no partner-acquisition page** — wasted demand.
+
+* Route: `/partners/nightlife` (one `/partners/<type>` IA namespace)
+* CTA: ""List your venue / Get VIP bookings"" → `/partners/signup` (type=venue, category=nightclub)
+* Content: VIP table booking, guest list, featured placement, revenue (10–15% table fee)
+* Reuse the shared landing template (do not fork a new layout)
+
+Depends on signup wizard ([SAN-665](https://linear.app/sanjiovani/issue/SAN-665/mkt-partner-signup-wizard-partnerssignup)). Source: `docs/audit/partners-forensic-audit.md` §3/§18.","Todo","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","MKT, PTR, UX","","","","","2026-06-06T17:01:42.573Z","2026-06-08T08:11:59.722Z","","","","","","2026-06-13T17:01:49.360Z","SAN-667","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","MediumRisk","785991f8-c013-47e9-9abd-bb56b18a7032","2811","SAN-665, SAN-692, SAN-726, SAN-690, SAN-667","",""
+"SAN-713","Sanjiovani","MKT — For Restaurants landing (/partners/restaurants)","## MKT — For Restaurants landing (/partners/restaurants)
+
+Acquisition landing for restaurant partners. **Gap found in the audit**: Restaurants are \~55% built on the consumer side but have **no partner-acquisition page**.
+
+* Route: `/partners/restaurants`
+* CTA: ""Get diners / Manage reservations"" → `/partners/signup` (type=venue, category=restaurant)
+* Content: reservations, featured placement, AI marketing retainer, review management
+* Reuse the shared landing template
+
+Depends on signup wizard ([SAN-665](https://linear.app/sanjiovani/issue/SAN-665/mkt-partner-signup-wizard-partnerssignup)). Source: `docs/audit/partners-forensic-audit.md` §3/§18.","Todo","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","MKT, PTR, UX","","","","","2026-06-06T17:02:06.651Z","2026-06-08T05:58:43.873Z","","","","","","2026-06-13T17:02:07.733Z","SAN-667","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","MediumRisk","30290401-7918-4867-8e37-2151f40aedd4","2810","SAN-665, SAN-726, SAN-667","",""
+"SAN-690","Sanjiovani","MKT — Partner dashboard (/dashboard)","## /dashboard — partner home (post-signup delivery)
+
+> Dashboard task (recreated under a clean number; prior [SAN-666](https://linear.app/sanjiovani/issue/SAN-666/mkt-partner-dashboard-dashboard) canceled).
+
+**Feature:** one role-aware partner dashboard; tabs filtered by enabled services. **Goal:** every partner manages listings/leads/revenue/marketing from one shell; `/broker/*` folds in as alias.
+
+**Decision (resolved):** new `/dashboard` (rationale: `06-dashboards.md`). Wireframe: `partners/wireframes/partner-signup-wireframe.html` (band 05). PRD §6.3.
+
+### Success criteria
+
+- [ ] Role-aware nav (only enabled-service tabs): Overview · Listings/Events · Leads & bookings (HITL) · Revenue · Marketing (Postiz) · Assets · AI Services · Automation · Analytics · Team · Settings · ✦ AI assistant
+- [ ] First slice = Overview + Leads + completion-score ring
+- [ ] 301 `/broker/*` → `/dashboard?role=broker`
+
+### Testing
+
+- [ ] Playwright e2e per role · localhost `/dashboard` → 200
+
+### Production-ready checklist
+
+- [ ] RLS-scoped reads · AI assistant reuses signup co-pilot · `floor` green
+
+**Blocked by:** [SAN-683](https://linear.app/sanjiovani/issue/SAN-683/ptr-partner-database-schema-rls-erd) ✅ (schema live) · [SAN-723](https://linear.app/sanjiovani/issue/SAN-723/mkt-partner-signup-wizard-partnerssignup) (signup wizard must ship first — activate API returns `redirectTo: /dashboard` but route does not exist yet).
+
+**Skills:** build=`shadcn`,`copilotkitV1` · verify=`task-verifier`,`playwright-cli`","Todo","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","MKT, PTR, UX","","","","","2026-06-06T12:49:57.418Z","2026-06-08T13:02:45.186Z","","","","","","2026-06-13T12:49:58.706Z","SAN-667","","55709e3e-24cb-41c1-8131-f46f0c94feea","M2 — Deliver","MediumRisk","9caee694-eee9-4ddf-bcd3-10b5c07b51b8","968","SAN-712, SAN-665, SAN-723, SAN-716, SAN-683, SAN-733, SAN-729, SAN-678, SAN-679, SAN-680, SAN-682, SAN-700, SAN-699, SAN-698, SAN-677, SAN-674, SAN-691","SAN-707",""
+"SAN-693","Sanjiovani","MKT — Contact / Book a demo (/contact)","## /contact — Contact / Book a demo
+
+**Audience:** hosts · venues · brokers · B2B · sponsors not ready for self-serve signup. **Grade B+ · 82** (`marketing-pages.md` #8).
+**Goal:** capture high-touch supply + B2B leads (sales pipeline for Patricia).
+
+**Spec:** `tasks/design/partners/03-landing-pages.md` sitemap
+
+### Content
+
+* Short form: name · email · partner type · message
+* Secondary path on all B2B landings (""Book a demo"" / ""Talk to us"")
+* Optional Calendly/embed later — Phase 1 = form → Supabase lead or email
+
+### Acceptance criteria
+
+- [ ] Public `/contact`
+- [ ] Form submits (store lead with `source=contact`)
+- [ ] Linked from `/host` `/venues` `/partners/rentals` `/sponsors` `/business/ai` footers
+- [ ] a11y + mobile
+
+### Related
+
+[SAN-684](https://linear.app/sanjiovani/issue/SAN-684/ptr-lead-generation-engine-channels-lead-store) (lead-gen engine) · [SAN-691](https://linear.app/sanjiovani/issue/SAN-691/mkt-for-rentals-brokers-landing-partnersrentals) · [SAN-660](https://linear.app/sanjiovani/issue/SAN-660/mkt-for-event-hosts-landing-host) · [SAN-661](https://linear.app/sanjiovani/issue/SAN-661/mkt-for-venues-landing-venues)","Todo","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","MKT, PTR, UX","","","","","2026-06-06T13:09:41.943Z","2026-06-08T08:11:59.722Z","","","","","","2026-06-13T13:09:42.696Z","SAN-667","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","MediumRisk","5ce77e6e-f326-4a82-b42c-e47f3e8697e3","3043","SAN-691, SAN-660, SAN-684, SAN-661, SAN-665, SAN-692, SAN-726","",""
+"SAN-674","Sanjiovani","PTR — Partner UX pack: wireframes + 30 mermaid SVGs + decisions","## Partner UX pack — wireframes + diagrams + decisions
+
+**Feature:** consolidated UX deliverables for the partner ecosystem (epic [SAN-667](https://linear.app/sanjiovani/issue/SAN-667/ptr-partner-ecosystem-master-plan-epic)). **Goal:** single home for wireframes, validated diagrams, and the resolved decisions.
+
+### Contents
+
+* Wireframes: `partners/wireframes/` (partner-signup · venues · host) + `wireframe/home-mindtrip-style-wireframe.html`
+* Diagrams: `partners/diagrams/` — **38** `.svg` (journeys ×10, revenue, lifecycle, ERD, gantt), mermaid-cli validated
+* Decisions: new `/dashboard` ([SAN-690](https://linear.app/sanjiovani/issue/SAN-690/mkt-partner-dashboard-dashboard)); one engine, per-type signup config
+
+### Success criteria
+
+- [ ] Wireframes reviewed/approved · diagrams embedded in build issues · decisions ratified
+
+### Testing
+
+- [ ] All mermaid render (0 failures) — done
+
+### Production-ready checklist
+
+- [ ] n/a (tracking/UX) — flips In Review after sign-off
+  **Skills:** build=`mermaid-diagrams`,`shadcn` · verify=`task-verifier`","Todo","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","MKT, PTR, UX","","","","","2026-06-06T12:05:59.117Z","2026-06-06T13:43:14.416Z","","","","","","2026-06-13T12:06:00.122Z","SAN-667","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","MediumRisk","ac524160-b43b-4f97-84d5-681300f1a76c","3107","SAN-691, SAN-690, SAN-660, SAN-665, SAN-661, SAN-692","",""
+"SAN-661","Sanjiovani","MKT — For Venues landing (/venues)","## /venues — For Venues (B2B marketing landing)
+
+**Feature:** B2B landing for venues (restaurant/café/nightclub/space) via `?v=` variants. **Goal:** get a venue to book a demo / list; sells AI event booking · Postiz · OpenClaw · listing · leads · reporting. Wireframe: `partners/wireframes/venues-wireframe.html` (Grade A·88).
+
+### Success criteria
+
+- [ ] `app/venues/page.tsx` + `?v=restaurant|cafe|nightclub|space` variants (canonical meta each)
+- [ ] Bands: hero · services grid · how-it-works · dark trust · pricing · demo form · footer
+- [ ] Demo form → `/api/leads` with validation + success/error
+
+### Testing
+
+- [ ] Playwright e2e: each `?v=` variant + form submit · localhost `/venues` → 200
+
+### Production-ready checklist
+
+- [ ] Form persists lead · RLS · `floor` green
+  **Skills:** build=`shadcn`,`tailwind-best-practices` · verify=`task-verifier`,`playwright-cli`","Todo","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","MKT, PTR, ptr:cafe, ptr:nightclub, ptr:restaurant, ptr:venue, UX","","","","","2026-06-06T11:31:09.228Z","2026-06-08T08:11:59.722Z","","","","","","2026-06-13T11:31:10.137Z","SAN-667","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","MediumRisk","7d2325c9-9569-453f-a0b8-302d2cf0dded","3139","SAN-665, SAN-692, SAN-726, SAN-703, SAN-693, SAN-680, SAN-679, SAN-678, SAN-676, SAN-674","",""
+"SAN-714","Sanjiovani","MKT — For Cafés landing (/partners/cafes)","## MKT — For Cafés landing (/partners/cafes)
+
+Acquisition landing for café partners (café onboarding cycle [SAN-679](https://linear.app/sanjiovani/issue/SAN-679/ptr-cafe-full-onboarding-cycle-e2e) exists, but no landing).
+
+* Route: `/partners/cafes`
+* CTA: ""Get discovered / Loyalty"" → `/partners/signup` (type=venue, category=cafe)
+* Content: featured placement, loyalty program, happy-hour promos (low-cost, high-frequency tiers)
+* Reuse the shared landing template
+
+Depends on signup wizard ([SAN-665](https://linear.app/sanjiovani/issue/SAN-665/mkt-partner-signup-wizard-partnerssignup)). Source: `docs/audit/partners-forensic-audit.md` §3/§18.","Todo","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","MKT, PTR, UX","","","","","2026-06-06T17:02:26.075Z","2026-06-08T05:58:45.166Z","","","","","","","SAN-667","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","","ea7ca507-12ae-4c02-89e0-bb576e60b9f8","2810","SAN-679, SAN-665, SAN-667","",""
+"SAN-662","Sanjiovani","MKT — About page (/about)","## /about — About page
+
+**Feature:** marketing About page. **Goal:** ""why mdeai"" — story, mission (AI concierge for Medellín), team, trust/grounding promise. Reference: `screenshots/mindtrip/marketing/about-mindtrip.png`. (⚫ POST in `sitemap.md`.)
+
+### Success criteria
+
+- [ ] Hero + mission + how-we-ground-answers + team + CTA (concierge / host)
+- [ ] Light tokens; mobile responsive; loading/empty handled
+- [ ] Reuse home nav/footer
+
+### Testing
+
+- [ ] Playwright: load + CTA · localhost `/about` → 200
+
+### Production-ready checklist
+
+- [ ] `floor` green · a11y pass
+  **Note:** needs a Mindtrip-style wireframe pass (follow `home-mindtrip-style-wireframe.html`).
+  **Skills:** build=`shadcn`,`tailwind-best-practices` · verify=`task-verifier`,`playwright-cli`","Todo","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","MKT, PTR, UX","","","","","2026-06-06T11:31:12.268Z","2026-06-06T13:19:26.006Z","","","","","","","SAN-667","","","","","c74daf91-ea00-4633-9ce3-f839bbb4dd69","3139","","",""
+"SAN-692","Sanjiovani","MKT — Partner hub marketing page (/partners)","## /partners — Partner hub marketing page
+
+**Audience:** any supply-side partner evaluating mdeai. **Goal:** Mindtrip-style business landing — partner-type cards → the right flow per type. Reference: `screenshots/mindtrip/marketing/Mindtrip-for-Business-*.png`.
+
+### Scope
+
+Mindtrip-style business landing page with partner-type cards: **Host, Venue, Broker, Sponsor, Agency.**
+
+Each card links to:
+
+| Card | Destination | Route status (verified 2026-06-07) |
+| -- | -- | -- |
+| Host | `/host/event/new` | ✅ LIVE |
+| Venue | `/restaurants` (or venue booking flow) | ✅ LIVE |
+| Broker | `/partners/rentals` | ⚫ not built — SAN-691 (MKT — For Rentals / Brokers landing) |
+| Sponsor | `/sponsors` | ⚫ not built — SAN-664 (MKT — Sponsors / Sponsorship landing) |
+| Agency | `/business/ai` | ⚫ not built — SAN-663 (MKT — AI Services for companies) |
+
+### Blocker — RESOLVED
+
+Sitemap conflict resolved: `/partners` was `⚫ POST` in `sitemap.md` while Linear marked it M1/High. **Flipped to** `🔵 MVP P1` and the partner-ecosystem routes added to the sitemap tree (`/partners/signup`, `/partners/rentals`, `/sponsors`, `/business/ai`, `/venues`, `/pricing`, `/contact`, etc.) + summary counts updated.
+
+### ⚠️ Pre-build note — 3 of 5 card destinations 404 today
+
+On-disk verification: **no placeholder routes exist** for `/partners`, `/partners/rentals`, `/sponsors`, or `/business/ai` on main. `/partners/signup` exists only on the unmerged `ai/san-723` branch. So Broker/Sponsor/Agency cards will 404 until those landings ship (or stub placeholders are added first).
+
+### Acceptance criteria
+
+- [ ] Public `/partners` (not auth-gated), light tokens, mobile responsive
+- [ ] 5 type cards (Host · Venue · Broker · Sponsor · Agency) link to the destinations above
+- [ ] Marquee matches SAN-674 (PTR — Partner UX pack) wireframe; `prefers-reduced-motion` fallback
+- [ ] Card destinations exist (or are stubbed) — no dead links at launch
+
+### Status
+
+**Do not build until scope is approved for the current cycle.** Branch prepared: `ai/san-692-mkt-partner-hub-marketing-page-partners`.
+
+### Related
+
+* SAN-723 (MKT — Partner signup wizard) · SAN-665 (PTR — POST /api/partners/activate) — the funnel target
+* Type landings: SAN-691 (MKT — For Rentals / Brokers) · SAN-664 (MKT — Sponsors / Sponsorship) · SAN-663 (MKT — AI Services for companies) · SAN-661 (MKT — For Venues)
+* SAN-674 (PTR — Partner UX pack: wireframes) — marquee/card wireframe source
+* Parent epic: SAN-667 (PTR — Partner Ecosystem master plan)","In Progress","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","ai@socialmediaville.ca","MKT, PTR, UX","1","Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-06-06T13:09:40.859Z","2026-06-08T12:02:56.937Z","2026-06-08T05:58:54.427Z","","","","","2026-06-13T13:09:47.412Z","SAN-667","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","MediumRisk","bc6eb94a-a5be-461d-b43f-34a550dc0455","576","SAN-691, SAN-661, SAN-712, SAN-693, SAN-674, SAN-660, SAN-665, SAN-723, SAN-726","",""
+"SAN-667","Sanjiovani","PTR — Partner Ecosystem Master Plan (epic)","## Partner Ecosystem Master Plan (epic)
+
+**Feature:** mdeai's supply + B2B + marketplace platform — partner acquisition, onboarding (one AI signup wizard), dashboards, revenue, AI/marketing automation, contests, marketplace — for 18 partner types as **configurations of one platform**.
+**Goal:** turn the concierge's demand into partner value + platform fees, without building a new platform per type.
+
+```mermaid
+flowchart LR
+  C[""Consumer / concierge""] --> MKT[""Marketing pages""] --> SU[""Signup wizard""] --> DASH[""Dashboard""]
+  DASH --> AI[""AI services + automation""] --> TXN[""Transactions""] --> FEE[""mdeai fee""] --> C
+```
+
+### Success criteria (program)
+
+- [ ] P0 verticals live e2e: host ([SAN-675](https://linear.app/sanjiovani/issue/SAN-675/ptr-event-host-full-onboarding-cycle-e2e)) · nightclub ([SAN-676](https://linear.app/sanjiovani/issue/SAN-676/ptr-nightclubbar-full-onboarding-cycle-e2e)) · broker ([SAN-677](https://linear.app/sanjiovani/issue/SAN-677/ptr-real-estate-broker-full-onboarding-cycle-e2e))
+- [ ] Platform shipped: schema ([SAN-683](https://linear.app/sanjiovani/issue/SAN-683/ptr-partner-database-schema-rls-erd)) · signup ([SAN-665](https://linear.app/sanjiovani/issue/SAN-665/mkt-partner-signup-wizard-partnerssignup)) · dashboard ([SAN-690](https://linear.app/sanjiovani/issue/SAN-690/mkt-partner-dashboard-dashboard)) · revenue ([SAN-668](https://linear.app/sanjiovani/issue/SAN-668/ptr-revenue-architecture-and-monetization-config))
+- [ ] First partner-driven transaction on prod (ticket / lead / booking)
+
+### Testing
+
+- [ ] Per-vertical Playwright e2e + `floor` green across the program
+
+### Production-ready checklist
+
+- [ ] ≥1 P0 vertical proven on prod with evidence
+- [ ] PRD ratified (`prd-partners.md` exits DRAFT)
+- [ ] Anti-overengineering held (no per-type dashboards/agents)
+
+**Blueprint:** `tasks/design/partners/00-INDEX.md` · **PRD:** `prd-partners.md`. Dashboard task = [SAN-690](https://linear.app/sanjiovani/issue/SAN-690/mkt-partner-dashboard-dashboard).
+**Skills:** build=`mde-task-lifecycle` · verify=`task-verifier`","In Progress","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","","PTR","","","","","2026-06-06T11:56:54.383Z","2026-06-08T05:58:42.645Z","2026-06-08T00:40:43.745Z","","","","","2026-06-13T11:56:55.145Z","","","","","MediumRisk","e7b31306-5d82-4835-a442-b84fad661eae","912","SAN-115, SAN-714, SAN-551, SAN-713, SAN-712, SAN-660","",""
+"SAN-660","Sanjiovani","MKT — For Event Hosts landing (/host)","## /host — For Event Hosts (marketing landing)
+
+**Feature:** public marketing landing for event hosts (Roberto). **Goal:** drive hosts into the live `/host/event/new` wizard — ""publish a sellable event in \~30s with AI."" Wireframe: `partners/wireframes/host-wireframe.html` (Grade A·92).
+
+### Success criteria
+
+- [ ] Public `app/host/page.tsx` (not auth-walled); CTA → `/partners/signup?type=host` / wizard
+- [ ] Bands: hero + wizard mock · how-it-works · features · proof · CTA · footer
+- [ ] Light tokens; mobile responsive; loading/empty/error
+
+### Testing
+
+- [ ] Playwright e2e: load + CTA nav · localhost `/host` → 200 (public)
+
+### Production-ready checklist
+
+- [ ] Prod `/host` returns public page (not 307 login) · `floor` green
+  **Reuse:** CopilotKit wizard, Stripe, HITL (live). **Related:** [SAN-118](https://linear.app/sanjiovani/issue/SAN-118/evt-014-host-events-list-page)/366.
+  **Skills:** build=`shadcn`,`tailwind-best-practices` · verify=`task-verifier`,`playwright-cli`","In Progress","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","ai@socialmediaville.ca","MKT, PTR, ptr:host, UX","1","Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-06-06T11:31:05.113Z","2026-06-08T06:51:53.896Z","2026-06-08T06:41:59.730Z","","","","","2026-06-13T11:31:06.358Z","SAN-667","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","MediumRisk","66322de7-2cdd-49d7-a8c2-a388a41db9ac","541","SAN-691, SAN-118, SAN-366, SAN-665, SAN-726, SAN-115, SAN-701, SAN-693, SAN-692, SAN-675, SAN-674, SAN-667","",""
+"SAN-664","Sanjiovani","MKT — Sponsors / Sponsorship (/sponsors)","## /sponsors — Sponsorship (B2B)
+
+**Feature:** B2B landing for sponsors/brands. **Goal:** brands sponsor events + contests — sponsorship revenue line. Pairs with `/contests` ([SAN-671](https://linear.app/sanjiovani/issue/SAN-671/ptr-contests-and-growth-loops)).
+
+### Success criteria
+
+- [ ] Hero + audience reach + sponsorship packages + case examples + contact/demo form (→ `/api/leads`)
+- [ ] Mindtrip-style B2B layout; light tokens; responsive
+
+### Testing
+
+- [ ] Playwright: load + form · localhost `/sponsors` → 200
+
+### Production-ready checklist
+
+- [ ] Lead persists · `floor` green
+  **Open:** sponsored placements on concierge must stay **labeled + grounded**. Needs wireframe pass.
+  **Skills:** build=`shadcn`,`tailwind-best-practices` · verify=`task-verifier`,`playwright-cli`","In Progress","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","ai@socialmediaville.ca","MKT, PTR, ptr:sponsor, UX","1","Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-06-06T11:31:23.292Z","2026-06-08T05:58:54.356Z","2026-06-08T05:58:54.334Z","","","","","","SAN-667","","38153ebc-40a8-4d8b-9e31-b8fe0f0d1f48","M5 — Expand","","c8a5354f-f8ae-4526-b190-7794d59ded6f","594","SAN-694, SAN-681, SAN-665","",""
+"SAN-663","Sanjiovani","MKT — AI Services for companies (/business/ai)","## /business/ai — AI services / agency (B2B)
+
+**Feature:** B2B landing selling mdeai's AI build/automation. **Goal:** local companies buy AI builds (the agency line) — analog of Mindtrip Business. Reference: `screenshots/mindtrip/marketing/Mindtrip-for-Business-*`.
+
+### Success criteria
+
+- [ ] Hero + services (AI builds · automation · Postiz · OpenClaw) + how-it-works + packages/pricing + demo form (→ `/api/leads`)
+- [ ] Mindtrip-style B2B layout (reuse `venues-wireframe.html` shell); light tokens; responsive
+
+### Testing
+
+- [ ] Playwright: load + demo form · localhost `/business/ai` → 200
+
+### Production-ready checklist
+
+- [ ] Lead persists · `floor` green
+  **Open:** near-term revenue line vs positioning (affects Home prominence). Needs wireframe pass. **P2.****
+****Skills:** build=`shadcn`,`tailwind-best-practices` · verify=`task-verifier`,`playwright-cli`","In Progress","","Medium","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","ai@socialmediaville.ca","MKT, PTR, ptr:agency, UX","1","Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-06-06T11:31:16.057Z","2026-06-08T05:58:54.357Z","2026-06-08T05:58:54.335Z","","","","","","SAN-667","","38153ebc-40a8-4d8b-9e31-b8fe0f0d1f48","M5 — Expand","","d7314b68-ed73-40f1-ad70-8832cc92f347","594","SAN-726, SAN-701, SAN-697, SAN-682, SAN-665","",""
+"SAN-691","Sanjiovani","MKT — For Rentals / Brokers landing (/partners/rentals)","## /partners/rentals — Rentals AI (B2B landing)
+
+**Feature:** public marketing landing for brokers/real-estate hosts. **Goal:** turn Camila's rental demand into broker signups + qualified leads. (Grade A-·85.)
+
+**User story:** *As a broker, I want my listings to reach people already searching rentals in Laureles, so I get booked viewings without ad spend.*
+
+### Wireframe ✅ verified 2026-06-08
+
+| Item | Path |
+| -- | -- |
+| **Wireframe** | `tasks/partners/wireframes/partners-rentals-wireframe.html` |
+| **Shell parent** | `tasks/partners/wireframes/venues-wireframe.html` (Mindtrip B2B bands) |
+| **Design inventory** | `tasks/design/DESIGN-INVENTORY.md` — ✅ partners-rentals-wire |
+| **Disk status** | `mdeapp/src/app/partners/rentals/page.tsx` — **placeholder shell** (PR #123); full landing not built |
+
+**7 bands (wireframe sections 01–07):**
+
+1. B2B nav — primary CTA ""List your rental"" → `?type=broker`
+2. Hero — ""Turn Camila's searches into booked viewings"" + dual CTA (list / book demo)
+3. Services grid — 6 cards: AI listing draft · lead qualification · schedule-viewing HITL · map+concierge · leads CRM · reporting
+4. How it works — 4 steps + `/rentals` map pin preview
+5. Trust band + pricing teaser — Free listing · per qualified lead · subscription ([SAN-668](https://linear.app/sanjiovani/issue/SAN-668/ptr-revenue-architecture-and-monetization-config))
+6. Demo/list form — name · email · agency · # units · area · message → `/api/leads`
+7. Footer — cross-links Venues · Hosts · Pricing
+
+**Handoff (from wireframe):** build full `PartnerLandingTemplate` from placeholder; CTA → `/partners/signup?type=broker`; reuse live `/api/leads/schedule-viewing`.
+
+### User journey
+
+```mermaid
+flowchart LR
+  B[""Broker (SEO/referral)""] --> P[""/partners/rentals""] --> CTA[""List your rental""]
+  CTA --> SU[""signup?type=broker (SAN-723)""] --> D[""Dashboard: listings·leads (SAN-690)""]
+  D --> LEAD[""Camila schedules viewing → /api/leads/schedule-viewing""] --> FEE[""Lead fee (SAN-668)""]
+```
+
+### Workflows · Agents · Automations
+
+* **Workflows:** lead capture → qualify → route (shared [SAN-684](https://linear.app/sanjiovani/issue/SAN-684/ptr-lead-generation-engine-channels-lead-store))
+* **Agents:** concierge demo embed (read-only); AI listing-draft preview
+* **Automations:** broker welcome + lead re-engage ([SAN-670](https://linear.app/sanjiovani/issue/SAN-670/ptr-marketing-automation-engine-partner-lifecycle))
+
+### Tech stack
+
+Next.js 16 · shadcn · tailwind · CopilotKit (demo input) · Supabase (`leads`) · Maps (`/rentals` pins)
+
+### Page content · AC
+
+- [ ] Replace placeholder with wireframe bands 01–07
+- [ ] Public page · CTA → `?type=broker` · secondary → `/contact` ([SAN-693](https://linear.app/sanjiovani/issue/SAN-693/mkt-contact-book-a-demo-contact))
+- [ ] Mentions live `/api/leads/schedule-viewing` in copy
+- [ ] Light tokens · `mapId` on any map preview · no new shadcn
+- [ ] Playwright: load + CTA nav · localhost `/partners/rentals` → 200 · `floor` green
+
+### Dependencies
+
+**Relates** [SAN-723](https://linear.app/sanjiovani/issue/SAN-723/mkt-partner-signup-wizard-partnerssignup) (broker signup) · [SAN-690](https://linear.app/sanjiovani/issue/SAN-690/mkt-partner-dashboard-dashboard) (broker tabs) · [SAN-668](https://linear.app/sanjiovani/issue/SAN-668/ptr-revenue-architecture-and-monetization-config) (lead fee) · [SAN-684](https://linear.app/sanjiovani/issue/SAN-684/ptr-lead-generation-engine-channels-lead-store) (lead engine) · [SAN-677](https://linear.app/sanjiovani/issue/SAN-677/ptr-real-estate-broker-full-onboarding-cycle-e2e) (broker vertical e2e).
+
+**Skills:** build=`shadcn`,`mde-real-estate`,`tailwind-best-practices` · verify=`task-verifier`,`playwright-cli`","In Review","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","ai@socialmediaville.ca","MKT, PTR, ptr:broker, UX","1","Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-06-06T13:08:02.739Z","2026-06-08T08:11:59.722Z","2026-06-08T05:58:54.333Z","","","","","2026-06-13T13:08:03.827Z","SAN-667","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","MediumRisk","cc4a0903-4178-4802-bdc4-cbcde48fa1b8","551","SAN-723, SAN-670, SAN-684, SAN-668, SAN-677, SAN-690, SAN-665, SAN-692, SAN-660, SAN-726, SAN-693, SAN-674","",""
+"SAN-723","Sanjiovani","MKT — Partner signup wizard (/partners/signup)","## /partners/signup — wire signup UI to activate API
+
+**Split from** [SAN-665](https://linear.app/sanjiovani/issue/SAN-665/ptr-post-apipartnersactivate-activate-api) **(2026-06-07):** [SAN-665](https://linear.app/sanjiovani/issue/SAN-665/ptr-post-apipartnersactivate-activate-api) shipped `POST /api/partners/activate` only. This issue owns the signup **page + step-1 wizard** that calls it.
+
+**Spec:** `tasks/design/partners/audit/05-signup-wizard.md` · wireframe band 04 in `partners/wireframes/partner-signup-wireframe.html`
+
+### Scope (M1 slice)
+
+- [ ] Route `app/partners/signup/page.tsx` — `?type=` + optional `?draft=`
+- [ ] Type picker when `type` missing/invalid (8 partner types)
+- [ ] Step-1 form → `POST /api/partners/activate` via client helper
+- [ ] Auth gate → `/login?next=…` on 401
+- [ ] Success states 201/200; **defer** `/dashboard` **redirect** until [SAN-690](https://linear.app/sanjiovani/issue/SAN-690/mkt-partner-dashboard-dashboard)
+- [ ] Settings whitelist: `businessName`, `category`, `neighborhood` only
+- [ ] Vitest + component tests green
+
+### Out of scope (later issues)
+
+* Full 10-step wizard + AI co-pilot ([SAN-685](https://linear.app/sanjiovani/issue/SAN-685/ptr-partner-ai-copilot-capability-sets-tools-hitl) / AGT-PTR)
+* Dashboard shell ([SAN-690](https://linear.app/sanjiovani/issue/SAN-690/mkt-partner-dashboard-dashboard))
+* Draft autosave API routes
+
+### Branch / PR
+
+* Branch: `ai/san-665-signup-activate-integration` → rename to `ai/san-723-signup-activate-integration` on push
+* Planned PR: `feat(partners): wire signup activation flow (SAN-723)`
+
+### Dependencies
+
+* **Blocked by:** [SAN-665](https://linear.app/sanjiovani/issue/SAN-665/ptr-post-apipartnersactivate-activate-api) ✅ (activate API merged #111 + cubic hotfix #113)
+* **Blocks:** [SAN-690](https://linear.app/sanjiovani/issue/SAN-690/mkt-partner-dashboard-dashboard) dashboard, M1 landings CTAs
+
+### Evidence
+
+* API smoke: `tasks/testing/evidence/2026-06-07/san665-activate-smoke.md`
+* PRs: [amo-tech-ai/mdeapp#111](https://linear.app/sanjiovani/review/featpartners-post-apipartnersactivate-san-665-7a087005074b) · [amo-tech-ai/mdeapp#113](https://linear.app/sanjiovani/review/fixpartners-address-cubic-san-665-activate-review-91a98d9b78d0)","Done","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","ai@socialmediaville.ca","MKT, phase:mvp, PTR, UX","1","Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-06-08T00:40:42.927Z","2026-06-08T07:10:09.884Z","2026-06-08T00:40:43.111Z","","2026-06-08T04:55:15.135Z","","","2026-06-15T00:40:43.963Z","SAN-667","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","Completed","96f1be68-2808-4815-8679-2ef5b09b674e","636","SAN-690, SAN-692, SAN-665, SAN-685, SAN-691","",""
+"SAN-683","Sanjiovani","PTR — Partner database schema + RLS (ERD)","## Partner DB schema + RLS (ERD) — foundational
+
+[**Feature:** the partner Supabase schema (RLS-tight). **Goal:** every partner surface has somewhere to persist — unblocks the program.](<https://github.com/sanjiovani/mdeai/blob/main/tasks/design/partners/audit/06b-supabase-audit.md>)
+**User story:** *As Patricia, I want partner data with RLS so partners see only their own rows and I can moderate safely.*
+
+> **Design resolved by live audit** (`audit/06b-supabase-audit.md`) — **extend, don't duplicate**. Migrations **ptr001–ptr013** are written in `mdeapp/supabase/migrations/` and verified against the live DB; **not yet applied**.
+
+### EXTEND existing (no duplicates)
+
+* `public.leads` → +`partner_id`,`listing_kind`,`listing_id` (ptr010)
+* `public.bookings` → +`partner_id`,`approved_by`,`approved_at`,`partner_notes`,`partner_status` (ptr011)
+
+### NEW tables (namespaced to avoid clashes)
+
+`partner_organizations` · `partners` (bridges `sponsor.organizations` + `landlord_profiles`, no copy) · `partner_members` · `partner_drafts` (wizard autosave) · `partner_services` · `partner_locations` · `partner_assets` (+ Storage) · `revenue_ledger` (immutable, idempotent). Enums/helpers in ptr001; RLS helpers (`partner_ids_for_user`) ptr005.
+
+### Deferred (anti-overengineering)
+
+`messages`/`conversations` → reuse Mastra (M2/Chatwoot [SAN-689](https://linear.app/sanjiovani/issue/SAN-689/ptr-chatwoot-whatsapp-partner-comms)) · `campaigns`/`automations` → `partners.settings` jsonb stub now, tables at M4.
+
+### Tech stack
+
+Supabase · PostgreSQL · pgvector · RLS · `mcp apply_migration` · generated TS types
+
+### Success / Testing / Production-ready
+
+- [ ] Apply ptr001–ptr013 (`apply_migration`) — order valid (partners before leads/bookings ALTER)
+- [ ] RLS ≥1 policy/table; service-role server-only (F13); `profile_id = auth.uid()` (verified: [profiles.id](<http://profiles.id>) = auth uid)
+- [ ] One RLS pen-test (anon blocked) · advisors clean · generated types committed · `floor` green
+
+### Dependencies
+
+**Blocks** [SAN-665](https://linear.app/sanjiovani/issue/SAN-665/mkt-partner-signup-wizard-partnerssignup) · 690 · 684 · 686 · 687 · 688 · 689 (+ all verticals via 675). **No blockers** — Todo, start now.
+**Skills:** build=`mde-supabase` · verify=`task-verifier`,`mde-supabase`","Done","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","ai@socialmediaville.ca","PTR, type:data","","","","","2026-06-06T12:44:36.494Z","2026-06-07T19:24:14.398Z","2026-06-06T14:01:20.941Z","","2026-06-07T19:24:14.383Z","","","2026-06-13T12:44:37.220Z","SAN-667","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","Completed","f3313bc0-4005-4504-8d1f-9792e66d9fa1","1228","SAN-710, SAN-706, SAN-705, SAN-665, SAN-690, SAN-689, SAN-688, SAN-687, SAN-686, SAN-685, SAN-684, SAN-668, SAN-115, SAN-675","",""
+"SAN-665","Sanjiovani","PTR — POST /api/partners/activate (activate API)","## Scope (approved 2026-06-07)
+
+Implement activate API only. No dashboard UI. No full signup wizard.
+
+## Approved design decisions
+
+| Decision | Choice | Reason |
+| -- | -- | -- |
+| `redirectTo` | `/dashboard` | Correct final destination; dashboard shell added separately |
+| `draftId` | Optional — link if provided, set `submitted_at` | No auto-link latest draft (risks wrong draft attachment) |
+| Duplicate partner | HTTP 200 idempotent with existing `partnerId` | No 409 — caller can safely retry |
+| Client-supplied `status`/`tier`/`completion_score` | Stripped/blocked at schema layer | No privilege escalation from client |
+
+## API contract
+
+```
+POST /api/partners/activate
+Authorization: Bearer <session-token>   (required)
+
+Body:
+{
+  type: ""host"" | ""venue"" | ""broker"" | ""sponsor"" | ""agency"" | ""vendor"" | ""tour"" | ""creator"",
+  draftId?: string  // UUID — optional, links draft to partner
+}
+
+201 Created  (new partner)
+{ partnerId, type, status: ""draft"", redirectTo: ""/dashboard"" }
+
+200 OK  (duplicate — partner already exists for this user+type)
+{ partnerId, type, status: ""draft"", redirectTo: ""/dashboard"" }
+
+400  invalid type / validation failure
+401  unauthenticated
+404  draftId provided but not found
+403  draftId belongs to another user
+429  rate limited
+503  service role unavailable
+```
+
+## Implementation
+
+Branch: `ai/san-665-partners-activate-api`
+PR title: `feat(partners): POST /api/partners/activate (SAN-665)`
+
+Files:
+
+* `src/lib/partners/partner-types.ts` — PARTNER_TYPES enum + PARTNER_ACTIVATE_REDIRECT
+* `src/lib/partners/activate-schema.ts` — Zod validation, strip blocked settings keys
+* `src/lib/partners/activate-partner.ts` — business logic: idempotent create, owner member upsert, optional draft link
+* `src/app/api/partners/activate/route.ts` — auth → validate → service_role write
+* `src/__tests__/api/partners-activate.test.ts` — unit + route tests
+
+## Test coverage
+
+- [ ] 401 unauthenticated
+- [ ] 400 invalid partner type
+- [ ] 201 on first create
+- [ ] 200 on duplicate (idempotent)
+- [ ] `partner_members` owner row created
+- [ ] No status/tier escalation from client
+- [ ] Draft link: sets `partner_id` + `submitted_at`
+- [ ] Draft not found → 404
+- [ ] Draft forbidden → 403
+
+## Hard rules
+
+* Auth required (via `createClient().auth.getUser()`)
+* Zod validates `partner_type`
+* Strips/blocks client `status`, `tier`, `completion_score`, `activated_at`
+* service_role writes only (`createServiceRoleClient`)
+* Creates owner `partner_members` row
+* Do not change prod database schema
+
+## Dependencies
+
+Blocked by [SAN-683](https://linear.app/sanjiovani/issue/SAN-683/ptr-partner-database-schema-rls-erd) (schema deployed ✅ as of 2026-06-06)","Done","","High","bf4241fd-4f7f-420d-bb16-ca2ec8bc3d4b","Partners","ai@socialmediaville.ca","ai@socialmediaville.ca","MKT, PTR, UX","","","","","2026-06-06T11:39:37.924Z","2026-06-08T05:58:53.272Z","2026-06-07T21:48:45.560Z","","2026-06-07T23:31:49.589Z","","","2026-06-13T11:39:38.776Z","SAN-667","","5d96565d-7aa8-43a9-a689-074d7891dc67","M1 — Acquire","Completed","9524e75e-301f-46f6-89bf-5bc1ed483ae6","944","SAN-726, SAN-693, SAN-692, SAN-691, SAN-661, SAN-660, SAN-714, SAN-713, SAN-712, SAN-675, SAN-685, SAN-670, SAN-664, SAN-663, SAN-709, SAN-683, SAN-723, SAN-705, SAN-700, SAN-699, SAN-698, SAN-696, SAN-690, SAN-682, SAN-681, SAN-680, SAN-679, SAN-678, SAN-677, SAN-676, SAN-674","",""

@@ -1,0 +1,70 @@
+%% mdeai — data-intelligence stack (live ER, 2026-06-01)
+%% Source of truth: Supabase zkwcbyxiwklihegjhuql · audit/DATA-FORENSIC-AUDIT-2026-06-01.md
+%% Render: https://mermaid.live or VS Code Mermaid preview
+%% Row counts = exact count(*) verified 2026-06-01. "pct" = % coverage.
+
+erDiagram
+  APARTMENTS ||--o{ LISTING_EMBEDDINGS : embeds
+  APARTMENTS ||--o{ RENTAL_SIGNALS : scores
+  APARTMENTS ||--o{ RENTAL_GROUNDING : grounds
+  EVENTS ||--o{ EVENT_EMBEDDINGS : embeds
+  EVENTS ||--o{ EVENT_SIGNALS : scores
+  EVENTS ||--o{ EVENT_GROUNDING : grounds
+  RESTAURANTS ||--o{ RESTAURANT_EMBEDDINGS : embeds
+  VENUE_ANCHORS ||--o{ VENUE_SIGNALS : scores
+  VENUE_ANCHORS ||--o{ VENUE_SOURCE_EVIDENCE : grounds
+  NEIGHBORHOODS ||--o{ NEIGHBORHOOD_PROFILES : profiles
+
+  APARTMENTS {
+    uuid id PK "44 rows"
+    uuid neighborhood_id FK "DATA-022 P2"
+  }
+  EVENTS {
+    uuid id PK "49 rows"
+  }
+  RESTAURANTS {
+    uuid id PK "44 rows"
+  }
+  VENUE_ANCHORS {
+    uuid id PK "30 rows"
+  }
+  NEIGHBORHOODS {
+    uuid id PK "13 rows"
+  }
+  LISTING_EMBEDDINGS {
+    uuid listing_id FK "44 · 100pct · HNSW"
+    vector embedding
+  }
+  EVENT_EMBEDDINGS {
+    uuid event_id FK "43 of 49 · 88pct · HNSW"
+    vector embedding
+  }
+  RESTAURANT_EMBEDDINGS {
+    uuid restaurant_id FK "43 of 44 · 98pct · HNSW"
+    vector embedding
+  }
+  RENTAL_SIGNALS {
+    uuid listing_id FK "44 rows"
+  }
+  EVENT_SIGNALS {
+    uuid event_id FK "49 rows"
+  }
+  VENUE_SIGNALS {
+    uuid venue_id FK "30 rows"
+  }
+  NEIGHBORHOOD_PROFILES {
+    uuid neighborhood_id FK "8 of 13 · 62pct"
+  }
+  VENUE_SOURCE_EVIDENCE {
+    uuid venue_id FK "20 rows"
+  }
+  EVENT_GROUNDING {
+    uuid event_id FK "0 rows EMPTY"
+  }
+  RENTAL_GROUNDING {
+    uuid listing_id FK "0 rows EMPTY"
+  }
+  EMBEDDING_JOBS {
+    uuid id PK "1 row · idle queue"
+    text status "fed by 3 embed triggers"
+  }

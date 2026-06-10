@@ -1,0 +1,44 @@
+{
+  "task": "data-023",
+  "date": "2026-05-29",
+  "project": "zkwcbyxiwklihegjhuql",
+  "persona": "Camila",
+  "queries": [
+    {
+      "id": "rental-001",
+      "prompt": "2BR in Laureles",
+      "sql_ref": "Q1",
+      "assert": { "max_rows": 8, "all_neighborhood": "Laureles", "min_bedrooms": 2 }
+    },
+    {
+      "id": "rental-002",
+      "prompt": "under $50/night in Poblado",
+      "sql_ref": "Q2",
+      "assert": { "max_price_daily": 50 }
+    },
+    {
+      "id": "rental-003",
+      "prompt": "good wifi for remote work",
+      "sql_ref": "Q3",
+      "assert": { "min_rows": 1 }
+    },
+    {
+      "id": "rental-004",
+      "prompt": "furnished long stay Laureles",
+      "sql_ref": "Q4",
+      "assert": { "furnished": true }
+    },
+    {
+      "id": "rental-005",
+      "prompt": "10BR castle Medellín",
+      "sql_ref": "Q5",
+      "assert": { "exact_rows": 0 }
+    },
+    {
+      "id": "rental-006",
+      "prompt": "index scan on price_daily filter",
+      "sql_ref": "Q6",
+      "assert": { "explain_contains": "idx_apartments_rental_search_daily" }
+    }
+  ]
+}

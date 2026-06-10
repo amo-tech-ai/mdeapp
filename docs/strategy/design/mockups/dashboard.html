@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>mdeai · User Dashboard — light luxury concierge mockup</title>
+<!--
+  mdeai User Dashboard mockup — DESIGN TARGET, not production code.
+  LIGHT luxury concierge direction (user-confirmed 2026-06-04): white/slate canvas,
+  teal primary, warm-gold accent, editorial serif display, Wanderlog-style image cards.
+  Tokens are the REAL shipped LIGHT values from mdeapp/src/app/globals.css :root.
+  Demonstrates all dashboard sections from the brief: top nav · hero greeting · upcoming
+  plans · saved collections · trips · events & tickets (QR) · reservations · personalized
+  recs (with "why") · intelligence map · recent activity · footer · floating AI FAB ·
+  mobile bottom nav · skeleton loader · empty state · hover elevation.
+  Self-contained: works offline. Playfair Display is progressive enhancement over Georgia.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ---- shipped LIGHT tokens (globals.css :root) ---- */
+    --background: oklch(0.985 0.002 247);
+    --foreground: oklch(0.208 0.042 265);
+    --card: oklch(1 0 0);
+    --primary: oklch(0.508 0.118 175);        /* teal */
+    --primary-foreground: oklch(0.985 0.002 247);
+    --secondary: oklch(0.968 0.007 247);
+    --muted: oklch(0.968 0.007 247);
+    --muted-foreground: oklch(0.554 0.046 257);
+    --accent: oklch(0.795 0.184 86);           /* warm gold */
+    --accent-foreground: oklch(0.208 0.042 265);
+    --border: oklch(0.929 0.013 255);
+    --border-strong: oklch(0.882 0.02 256);
+    --radius: 0.625rem;
+    /* per-vertical accents collapsed to ONE brand color (Wanderlog-style restraint).
+       Category is shown by the pin glyph + the text label, not by color. */
+    --v-cafe: var(--primary);
+    --v-restaurant: var(--primary);
+    --v-nightlife: var(--primary);
+    --v-rental: var(--primary);
+    /* shadows tuned for a light surface */
+    --shadow-sm: 0 1px 2px oklch(0.2 0.04 265 / 0.06);
+    --shadow-md: 0 6px 20px oklch(0.2 0.04 265 / 0.08);
+    --shadow-lg: 0 18px 48px oklch(0.2 0.04 265 / 0.14);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, "Geist", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  a { color: inherit; text-decoration: none; }
+  .serif { font-family: "Playfair Display", Georgia, "Times New Roman", serif; }
+
+  /* ============ TOP NAV ============ */
+  .topbar {
+    display: flex; align-items: center; gap: 22px;
+    height: 64px; padding: 0 28px;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 40;
+    background: color-mix(in oklab, var(--background) 82%, transparent);
+    backdrop-filter: blur(12px);
+  }
+  .wordmark { font-weight: 700; letter-spacing: -0.03em; font-size: 19px; }
+  .wordmark b { color: var(--primary); }
+  .nav { display: flex; gap: 18px; color: var(--muted-foreground); font-weight: 500; }
+  .nav a { position: relative; padding: 4px 0; transition: color .15s; white-space: nowrap; }
+  .nav a:hover { color: var(--foreground); }
+  .nav a.on { color: var(--foreground); }
+  .nav a.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -21px; height: 2px; background: var(--primary); border-radius: 2px; }
+  .spacer { flex: 1; }
+  .navsearch {
+    display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px;
+    border: 1px solid var(--border); border-radius: 999px; background: var(--card);
+    color: var(--muted-foreground); flex: 0 1 240px; min-width: 0; overflow: hidden; box-shadow: var(--shadow-sm);
+  }
+  .topbar .btn-accent, .avatar { flex: none; }
+  .navsearch input { border: 0; outline: 0; background: transparent; font: inherit; color: var(--foreground); width: 100%; min-width: 0; }
+  .navsearch input::placeholder { color: var(--muted-foreground); }
+  .avatar {
+    width: 38px; height: 38px; border-radius: 50%; flex: none;
+    background: linear-gradient(135deg, var(--primary), oklch(0.42 0.10 200));
+    color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 14px;
+    box-shadow: var(--shadow-sm); cursor: pointer;
+  }
+
+  /* ============ BUTTONS ============ */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border-strong); background: var(--card); color: var(--foreground);
+    border-radius: 999px; padding: 9px 18px; font: inherit; font-weight: 600;
+    cursor: pointer; transition: background .15s, border-color .15s, transform .1s, box-shadow .15s;
+    box-shadow: var(--shadow-sm);
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .btn-primary { background: var(--primary); color: var(--primary-foreground); border-color: transparent; }
+  .btn-accent { background: var(--accent); color: var(--accent-foreground); border-color: transparent; }
+  .btn-accent:hover { filter: brightness(1.04); }
+  .btn-ghost { border-color: transparent; background: transparent; color: var(--muted-foreground); box-shadow: none; padding: 8px 12px; }
+  .btn-ghost:hover { color: var(--foreground); background: var(--secondary); box-shadow: none; }
+  .btn-sm { padding: 6px 12px; font-size: 12.5px; }
+
+  /* ============ PAGE SHELL ============ */
+  .page { max-width: 1240px; margin: 0 auto; padding: 0 28px 120px; }
+  section { margin-top: 44px; }
+  .sec-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 16px; }
+  .sec-head h2 { margin: 0; font-size: 22px; letter-spacing: -0.01em; font-weight: 600; }
+  .sec-head .sub { color: var(--muted-foreground); font-size: 13px; margin-top: 2px; }
+  .sec-head a.see { color: var(--primary); font-weight: 600; font-size: 13px; }
+  .sec-head a.see:hover { text-decoration: underline; }
+
+  /* ============ HERO ============ */
+  .hero {
+    position: relative; margin-top: 24px; border-radius: calc(var(--radius) * 1.8);
+    overflow: hidden; box-shadow: var(--shadow-lg);
+    min-height: 320px; display: flex; align-items: flex-end;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(130% 130% at 85% 4%, oklch(0.945 0.085 86 / 0.85), transparent 60%),
+      linear-gradient(120deg, oklch(0.97 0.02 78), oklch(0.985 0.006 250) 55%, oklch(0.965 0.03 74));
+  }
+  .hero-bg::after { /* faux Aburrá-valley ridgeline — soft warm neutral */
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 46%;
+    background: linear-gradient(180deg, transparent, oklch(0.91 0.02 86 / 0.6));
+    clip-path: polygon(0 60%, 12% 48%, 26% 58%, 38% 40%, 52% 56%, 64% 38%, 78% 52%, 90% 42%, 100% 54%, 100% 100%, 0 100%);
+  }
+  .hero-inner { position: relative; padding: 36px 40px; color: var(--foreground); width: 100%; }
+  .hero .eyebrow { font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: oklch(0.52 0.13 72); font-weight: 700; }
+  .hero h1 { margin: 6px 0 4px; font-size: 44px; line-height: 1.04; letter-spacing: -0.02em; font-weight: 600; }
+  .hero .tag { color: var(--muted-foreground); font-size: 15px; max-width: 520px; }
+  .hero .meta { color: var(--muted-foreground); font-size: 13px; margin-top: 4px; }
+  .hero-ask {
+    margin-top: 20px; display: flex; align-items: center; gap: 10px;
+    background: var(--card); border: 1px solid var(--border);
+    box-shadow: var(--shadow-md); border-radius: 999px; padding: 8px 8px 8px 18px; max-width: 560px;
+  }
+  .hero-ask > span { color: var(--accent); }
+  .hero-ask input { flex: 1; border: 0; outline: 0; background: transparent; font: inherit; font-size: 15px; color: var(--foreground); }
+  .hero-ask input::placeholder { color: var(--muted-foreground); }
+  .hero-cta { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+
+  /* ============ HORIZONTAL SCROLLERS ============ */
+  .scroller { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(260px, 1fr); gap: 16px; overflow-x: auto; padding-bottom: 6px; scroll-snap-type: x mandatory; }
+  .scroller > * { scroll-snap-align: start; }
+  .scroller::-webkit-scrollbar { height: 8px; }
+  .scroller::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 8px; }
+
+  /* ============ CARDS (Wanderlog-style image cards) ============ */
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: border-color .15s, transform .14s, box-shadow .18s;
+    box-shadow: var(--shadow-sm);
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--border-strong); }
+  .thumb { position: relative; aspect-ratio: 16/10; }
+  .thumb .badges { position: absolute; left: 10px; top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .thumb .heart {
+    position: absolute; right: 10px; top: 10px; width: 32px; height: 32px; border-radius: 50%;
+    background: oklch(1 0 0 / 0.85); display: grid; place-items: center; cursor: pointer;
+    box-shadow: var(--shadow-sm); transition: transform .12s; border: 0; color: var(--foreground); font-size: 15px;
+  }
+  .thumb .heart:hover { transform: scale(1.08); }
+  .thumb .heart.sv { color: var(--v-restaurant); }
+  .pill { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: oklch(1 0 0 / 0.9); color: var(--foreground); box-shadow: var(--shadow-sm); }
+  .pill.dark { background: oklch(0.18 0.03 265 / 0.7); color: #fff; backdrop-filter: blur(4px); }
+  /* faux premium photography — ONE warm-stone placeholder; real Places photos carry the color in prod */
+  .ph { background-size: cover; background-position: center; }
+  .ph-cafe, .ph-rest, .ph-night, .ph-rental,
+  .ph-trip, .ph-event, .ph-warm, .ph-green {
+    background: linear-gradient(150deg, oklch(0.970 0.015 180), oklch(0.926 0.030 184));
+  }
+  .ph-vig::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 58%, oklch(0.48 0.03 195 / 0.07)); }
+  .card-body { padding: 13px 14px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .card-body .name { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; }
+  .card-body .where { color: var(--muted-foreground); font-size: 12.5px; }
+  .card-body .row { display: flex; align-items: center; gap: 8px; color: var(--muted-foreground); font-size: 12.5px; }
+  .star { color: var(--accent); font-weight: 700; }
+  .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-strong); display: inline-block; }
+  .desc { color: var(--muted-foreground); font-size: 12.5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .actions { display: flex; gap: 8px; margin-top: auto; padding-top: 6px; }
+  .actions .btn { flex: 1; justify-content: center; }
+
+  /* ============ UPCOMING PLANS ============ */
+  .plan {
+    display: grid; grid-template-columns: 52px 1fr; gap: 14px; align-items: center;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 16px; box-shadow: var(--shadow-sm); transition: box-shadow .15s, transform .12s;
+  }
+  .plan:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .daychip { text-align: center; border-radius: calc(var(--radius) * 0.8); overflow: hidden; border: 1px solid var(--border); }
+  .daychip .mo { background: var(--primary); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: .06em; padding: 3px 0; text-transform: uppercase; }
+  .daychip .dy { font-size: 20px; font-weight: 700; padding: 4px 0; }
+  .plan .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .plan .name { font-weight: 600; font-size: 14.5px; letter-spacing: -0.01em; }
+  .plan .meta { color: var(--muted-foreground); font-size: 12.5px; margin-top: 2px; }
+  /* status pills are neutral — the label text carries the meaning (Wanderlog restraint) */
+  .tagchip { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--secondary); color: var(--muted-foreground); border: 1px solid var(--border); }
+
+  /* ============ COLLECTIONS ============ */
+  .coll-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .coll {
+    position: relative; border-radius: var(--radius); overflow: hidden; aspect-ratio: 3/2;
+    box-shadow: var(--shadow-sm); cursor: pointer; transition: transform .14s, box-shadow .18s;
+  }
+  .coll:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .coll .overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 42%, oklch(1 0 0 / 0.94)); }
+  .coll .label { position: absolute; left: 14px; right: 14px; bottom: 12px; color: var(--foreground); }
+  .coll .label .t { font-weight: 700; font-size: 16px; letter-spacing: -0.01em; }
+  .coll .label .c { font-size: 12px; color: var(--muted-foreground); margin-top: 1px; }
+  .coll .ic { position: absolute; right: 12px; top: 12px; width: 30px; height: 30px; border-radius: 50%; background: oklch(1 0 0 / 0.92); border: 1px solid var(--border); box-shadow: var(--shadow-sm); display: grid; place-items: center; font-size: 14px; }
+
+  /* ============ EVENTS & TICKETS ============ */
+  .ticket {
+    display: grid; grid-template-columns: 1fr 96px; background: var(--card);
+    border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow-sm); transition: box-shadow .15s, transform .12s;
+  }
+  .ticket:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .ticket .info { padding: 14px 16px; display: flex; flex-direction: column; gap: 5px; }
+  .ticket .ev { font-weight: 600; font-size: 15px; }
+  .ticket .vn { color: var(--muted-foreground); font-size: 12.5px; }
+  .ticket .meta { display: flex; gap: 8px; align-items: center; color: var(--muted-foreground); font-size: 12.5px; }
+  .ticket .status { margin-top: 4px; }
+  .badge-ok { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: oklch(0.508 0.118 175 / 0.14); color: var(--primary); }
+  .qr {
+    border-left: 1px dashed var(--border-strong); display: grid; place-items: center; padding: 12px;
+    background: repeating-conic-gradient(var(--foreground) 0% 25%, transparent 0% 50%) 0 0 / 8px 8px;
+    background-color: #fff;
+  }
+  .qr .q { width: 64px; height: 64px; background:
+      linear-gradient(#000 0 0) 0 0/22px 22px no-repeat,
+      linear-gradient(#000 0 0) 100% 0/22px 22px no-repeat,
+      linear-gradient(#000 0 0) 0 100%/22px 22px no-repeat,
+      repeating-linear-gradient(0deg, #000 0 4px, #fff 4px 8px),
+      repeating-linear-gradient(90deg, #000 0 4px, #fff 4px 8px);
+    background-blend-mode: multiply; border-radius: 4px; }
+
+  /* ============ RESERVATIONS ============ */
+  .resv-list { display: flex; flex-direction: column; gap: 10px; }
+  .resv {
+    display: grid; grid-template-columns: 40px 1fr auto auto; gap: 14px; align-items: center;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 12px 16px; box-shadow: var(--shadow-sm);
+  }
+  .resv .ic { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 16px; background: var(--secondary); border: 1px solid var(--border); }
+  .resv .name { font-weight: 600; }
+  .resv .meta { color: var(--muted-foreground); font-size: 12.5px; }
+  .resv .when { text-align: right; font-size: 12.5px; color: var(--muted-foreground); }
+  .badge-pending { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--secondary); color: var(--muted-foreground); border: 1px solid var(--border); }
+  .badge-conf { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: oklch(0.508 0.118 175 / 0.14); color: var(--primary); }
+
+  /* ============ RECOMMENDATIONS (with "why") ============ */
+  .rec-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .why { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--primary); background: oklch(0.508 0.118 175 / 0.10); border-radius: 8px; padding: 6px 9px; line-height: 1.35; }
+  .why b { font-weight: 700; }
+
+  /* ============ INTELLIGENCE MAP ============ */
+  .maprow { display: grid; grid-template-columns: 320px 1fr; gap: 18px; align-items: stretch; }
+  .map-list { display: flex; flex-direction: column; gap: 10px; }
+  .mli {
+    display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: center;
+    background: var(--card); border: 1px solid var(--border); border-radius: calc(var(--radius) * 0.8);
+    padding: 10px 12px; cursor: pointer; transition: border-color .15s, box-shadow .15s, transform .12s;
+  }
+  .mli:hover, .mli.active { border-color: var(--primary); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .mpin-s { width: 22px; height: 22px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); box-shadow: var(--shadow-sm); }
+  .mpin-rest { background: var(--v-restaurant); }
+  .mpin-cafe { background: var(--v-cafe); }
+  .mpin-night { background: var(--v-nightlife); }
+  .mpin-rental { background: var(--v-rental); }
+  .mli .name { font-weight: 600; font-size: 13.5px; }
+  .mli .meta { color: var(--muted-foreground); font-size: 12px; }
+  .map {
+    position: relative; border-radius: var(--radius); overflow: hidden; min-height: 360px;
+    border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+    background:
+      linear-gradient(0deg, oklch(0.93 0.02 160 / 0.5), transparent 40%),
+      linear-gradient(90deg, oklch(0.90 0.015 247), oklch(0.94 0.01 200));
+  }
+  .map .road { position: absolute; background: oklch(1 0 0 / 0.8); }
+  .map .water { position: absolute; inset: auto 0 0 0; height: 30%; background: linear-gradient(0deg, oklch(0.80 0.07 200 / 0.5), transparent); }
+  .map .green { position: absolute; border-radius: 40%; background: oklch(0.84 0.09 150 / 0.55); }
+  .mpin {
+    position: absolute; width: 28px; height: 28px; border-radius: 50% 50% 50% 0; transform: translate(-50%,-100%) rotate(-45deg);
+    box-shadow: var(--shadow-md); border: 2px solid #fff; display: grid; place-items: center;
+    background: var(--primary);
+  }
+  .mpin span { transform: rotate(45deg); color: #fff; font-size: 12px; }
+  .mpin.hl { z-index: 3; outline: 4px solid oklch(0.508 0.118 175 / 0.25); }
+  .map .legend { position: absolute; right: 12px; bottom: 12px; background: oklch(1 0 0 / 0.92); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; font-size: 11.5px; box-shadow: var(--shadow-sm); display: grid; gap: 5px; }
+  .map .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+
+  /* ============ RECENT ACTIVITY ============ */
+  .timeline { border-left: 2px solid var(--border); margin-left: 8px; padding-left: 20px; display: flex; flex-direction: column; gap: 18px; }
+  .tl { position: relative; }
+  .tl::before { content: ""; position: absolute; left: -27px; top: 3px; width: 12px; height: 12px; border-radius: 50%; background: var(--primary); border: 2px solid var(--background); }
+  .tl .t { font-weight: 600; }
+  .tl .meta { color: var(--muted-foreground); font-size: 12.5px; }
+
+  /* ============ SKELETON / EMPTY STATE ============ */
+  .sk { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .sk .b { background: linear-gradient(90deg, var(--secondary) 25%, oklch(0.94 0.01 247) 37%, var(--secondary) 63%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; }
+  .sk .b.img { aspect-ratio: 16/10; }
+  .sk .b.line { height: 12px; border-radius: 6px; margin: 12px 14px 0; }
+  .sk .b.line.short { width: 55%; margin-bottom: 14px; }
+  @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+  .empty {
+    grid-column: 1 / -1; text-align: center; border: 1px dashed var(--border-strong); border-radius: var(--radius);
+    padding: 36px 24px; color: var(--muted-foreground); background: var(--card);
+  }
+  .empty .ic { font-size: 26px; margin-bottom: 8px; }
+  .empty .t { color: var(--foreground); font-weight: 600; font-size: 15px; }
+  .empty p { margin: 6px auto 14px; max-width: 360px; }
+
+  /* ============ FOOTER ============ */
+  footer { border-top: 1px solid var(--border); margin-top: 64px; padding: 36px 28px; color: var(--muted-foreground); }
+  .foot-in { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+  .foot-in .cols { display: flex; gap: 56px; flex-wrap: wrap; }
+  .foot-in h4 { color: var(--foreground); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; margin: 0 0 10px; }
+  .foot-in a { display: block; padding: 3px 0; font-size: 13px; }
+  .foot-in a:hover { color: var(--foreground); }
+
+  /* ============ FLOATING AI CONCIERGE ============ */
+  .fab {
+    position: fixed; right: 26px; bottom: 26px; z-index: 50;
+    display: flex; align-items: center; gap: 10px; padding: 12px 18px 12px 14px;
+    background: var(--accent); color: var(--accent-foreground); border: 0; border-radius: 999px;
+    font: inherit; font-weight: 700; cursor: pointer; box-shadow: var(--shadow-lg);
+    transition: transform .14s, filter .15s;
+  }
+  .fab:hover { transform: translateY(-2px); filter: brightness(1.04); }
+  .fab .orb { width: 24px; height: 24px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff, oklch(0.86 0.10 86)); box-shadow: 0 0 0 4px oklch(1 0 0 / 0.35); }
+
+  /* ============ MOBILE BOTTOM NAV ============ */
+  .botnav { display: none; }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px) {
+    .coll-grid { grid-template-columns: repeat(2, 1fr); }
+    .rec-grid { grid-template-columns: repeat(2, 1fr); }
+    .maprow { grid-template-columns: 1fr; }
+    .map { min-height: 280px; }
+  }
+  @media (max-width: 640px) {
+    .nav, .navsearch { display: none; }
+    .hero h1 { font-size: 32px; }
+    .hero-inner { padding: 24px 22px; }
+    .coll-grid, .rec-grid { grid-template-columns: 1fr 1fr; }
+    .page { padding: 0 16px 96px; }
+    .fab { bottom: 78px; }
+    .ticket { grid-template-columns: 1fr 84px; }
+    .botnav {
+      display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 45;
+      height: 62px; background: color-mix(in oklab, var(--background) 92%, transparent);
+      backdrop-filter: blur(12px); border-top: 1px solid var(--border);
+      justify-content: space-around; align-items: center; padding-bottom: env(safe-area-inset-bottom);
+    }
+    .botnav a { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--muted-foreground); font-size: 10.5px; font-weight: 600; }
+    .botnav a.on { color: var(--primary); }
+    .botnav .gi { font-size: 19px; }
+  }
+
+  /* ============ MOTION SAFETY ============ */
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+    .sk .b { background: var(--secondary); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ TOP NAV ============ -->
+<header class="topbar">
+  <div class="wordmark">mde<b>·</b>ai</div>
+  <nav class="nav">
+    <a href="#" class="on">Home</a>
+    <a href="#">Explore</a>
+    <a href="#">Trips</a>
+    <a href="#">Saved</a>
+    <a href="#">Events</a>
+    <a href="#">Rentals</a>
+  </nav>
+  <div class="spacer"></div>
+  <label class="navsearch">
+    <span aria-hidden="true">🔍</span>
+    <input placeholder="Search places, events, neighborhoods…" />
+  </label>
+  <button class="btn btn-accent btn-sm">✦ Ask AI Concierge</button>
+  <div class="avatar" title="Sanjiv">S</div>
+</header>
+
+<main class="page">
+
+  <!-- ============ HERO / GREETING ============ -->
+  <section class="hero" style="margin-top:24px">
+    <div class="hero-bg"></div>
+    <div class="hero-inner">
+      <div class="eyebrow">Your Medellín Concierge</div>
+      <h1 class="serif">Good evening, Sanjiv</h1>
+      <div class="tag">El Poblado · 24°C, clear skies tonight. Three of your saved spots have tables open after 8pm.</div>
+      <div class="hero-ask">
+        <span aria-hidden="true">✦</span>
+        <input placeholder="Ask me anything — “rooftop cocktails near Provenza, no cover”" />
+        <button class="btn btn-primary btn-sm">Ask</button>
+      </div>
+      <div class="hero-cta">
+        <button class="btn btn-accent">Explore Medellín</button>
+        <button class="btn">View this week’s plan</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ UPCOMING PLANS ============ -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2 class="serif">Upcoming plans</h2>
+        <div class="sub">Your next few days in the city</div>
+      </div>
+      <a class="see" href="#">View calendar →</a>
+    </div>
+    <div class="scroller">
+      <div class="plan">
+        <div class="daychip"><div class="mo">Jun</div><div class="dy">06</div></div>
+        <div>
+          <div class="top"><div class="name">Salsa night · Son Havana</div><span class="tagchip t-event">Ticket</span></div>
+          <div class="meta">10:30 PM · Laureles · 2 guests</div>
+        </div>
+      </div>
+      <div class="plan">
+        <div class="daychip"><div class="mo">Jun</div><div class="dy">07</div></div>
+        <div>
+          <div class="top"><div class="name">Brunch · Al Alma</div><span class="tagchip t-resv">Reservation</span></div>
+          <div class="meta">11:00 AM · El Poblado · Table for 2</div>
+        </div>
+      </div>
+      <div class="plan">
+        <div class="daychip"><div class="mo">Jun</div><div class="dy">09</div></div>
+        <div>
+          <div class="top"><div class="name">Guatapé day trip</div><span class="tagchip t-trip">Trip</span></div>
+          <div class="meta">7:00 AM pickup · Full day · 4 stops</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SAVED COLLECTIONS ============ -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2 class="serif">Saved collections</h2>
+        <div class="sub">Curated lists you’re building</div>
+      </div>
+      <a class="see" href="#">All collections →</a>
+    </div>
+    <div class="coll-grid">
+      <div class="coll ph ph-night ph-vig"><div class="overlay"></div><div class="ic">♥</div><div class="label"><div class="t">Date Night</div><div class="c">8 places</div></div></div>
+      <div class="coll ph ph-cafe ph-vig"><div class="overlay"></div><div class="ic">☕</div><div class="label"><div class="t">Remote Work Cafés</div><div class="c">12 places</div></div></div>
+      <div class="coll ph ph-rest ph-vig"><div class="overlay"></div><div class="ic">🍽</div><div class="label"><div class="t">Luxury Dining</div><div class="c">6 places</div></div></div>
+      <div class="coll ph ph-night ph-vig"><div class="overlay"></div><div class="ic">🎶</div><div class="label"><div class="t">Nightlife</div><div class="c">15 places</div></div></div>
+      <div class="coll ph ph-rental ph-vig"><div class="overlay"></div><div class="ic">🏠</div><div class="label"><div class="t">Apartments</div><div class="c">9 saved</div></div></div>
+      <div class="coll ph ph-trip ph-vig"><div class="overlay"></div><div class="ic">⛰</div><div class="label"><div class="t">Weekend Escapes</div><div class="c">5 ideas</div></div></div>
+    </div>
+  </section>
+
+  <!-- ============ TRIPS ============ -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2 class="serif">Your trips</h2>
+        <div class="sub">Itineraries planned with your concierge</div>
+      </div>
+      <a class="see" href="#">All trips →</a>
+    </div>
+    <div class="scroller">
+      <article class="card">
+        <div class="thumb ph ph-trip ph-vig"><div class="badges"><span class="pill">In progress</span></div></div>
+        <div class="card-body">
+          <div class="name">Medellín — 5 nights</div>
+          <div class="where">Jun 5 – Jun 10 · 14 places · El Poblado base</div>
+          <div class="desc">Coffee crawl, Comuna 13 graffiti tour, two dinners booked, salsa night, Guatapé day trip.</div>
+          <div class="actions"><button class="btn btn-sm btn-primary">Open itinerary</button><button class="btn btn-sm">Share</button></div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="thumb ph ph-green ph-vig"><div class="badges"><span class="pill">Draft</span></div></div>
+        <div class="card-body">
+          <div class="name">Guatapé & El Peñol</div>
+          <div class="where">Jun 9 · Day trip · 4 stops</div>
+          <div class="desc">Climb the rock, boat on the reservoir, late lunch in the pueblo, back by sunset.</div>
+          <div class="actions"><button class="btn btn-sm btn-primary">Open itinerary</button><button class="btn btn-sm">Share</button></div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="thumb ph ph-warm ph-vig"></div>
+        <div class="card-body">
+          <div class="name">Coffee Region escape</div>
+          <div class="where">Idea · 2–3 nights · Salento</div>
+          <div class="desc">Cocora Valley wax palms, a finca stay, and the Wednesday market in Filandia.</div>
+          <div class="actions"><button class="btn btn-sm">Plan with AI</button></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ EVENTS & TICKETS ============ -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2 class="serif">Events & tickets</h2>
+        <div class="sub">Tap a ticket for your QR pass</div>
+      </div>
+      <a class="see" href="#">All tickets →</a>
+    </div>
+    <div class="scroller">
+      <article class="ticket">
+        <div class="info">
+          <div class="ev">Salsa Night · Live Orchestra</div>
+          <div class="vn">Son Havana · Laureles</div>
+          <div class="meta">Fri Jun 6 · 10:30 PM · 2 × General</div>
+          <div class="status"><span class="badge-ok">✓ Confirmed</span></div>
+        </div>
+        <div class="qr"><div class="q"></div></div>
+      </article>
+      <article class="ticket">
+        <div class="info">
+          <div class="ev">Rooftop Sessions w/ DJ Camilo</div>
+          <div class="vn">Envy Rooftop · El Poblado</div>
+          <div class="meta">Sat Jun 7 · 9:00 PM · 1 × VIP</div>
+          <div class="status"><span class="badge-ok">✓ Confirmed</span></div>
+        </div>
+        <div class="qr"><div class="q"></div></div>
+      </article>
+      <article class="ticket">
+        <div class="info">
+          <div class="ev">Comuna 13 Graffiti & Food Tour</div>
+          <div class="vn">San Javier · meets at Metro</div>
+          <div class="meta">Sun Jun 8 · 2:00 PM · 2 × Standard</div>
+          <div class="status"><span class="badge-ok">✓ Confirmed</span></div>
+        </div>
+        <div class="qr"><div class="q"></div></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ RESERVATIONS & BOOKINGS ============ -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2 class="serif">Reservations & bookings</h2>
+        <div class="sub">Tables, stays and experiences</div>
+      </div>
+      <a class="see" href="#">Manage →</a>
+    </div>
+    <div class="resv-list">
+      <div class="resv">
+        <div class="ic ic-rest">🍽</div>
+        <div><div class="name">Carmen</div><div class="meta">Tasting menu · El Poblado</div></div>
+        <div class="when">Sat Jun 7<br/>8:30 PM · 2</div>
+        <span class="badge-conf">Confirmed</span>
+      </div>
+      <div class="resv">
+        <div class="ic ic-rest">🍽</div>
+        <div><div class="name">Al Alma</div><div class="meta">Brunch · El Poblado</div></div>
+        <div class="when">Sun Jun 7<br/>11:00 AM · 2</div>
+        <span class="badge-pending">Pending</span>
+      </div>
+      <div class="resv">
+        <div class="ic ic-rental">🏠</div>
+        <div><div class="name">Provenza Loft · 2BR</div><div class="meta">Short stay · Provenza</div></div>
+        <div class="when">Jun 12 – 16<br/>4 nights · 2</div>
+        <span class="badge-conf">Confirmed</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PERSONALIZED RECOMMENDATIONS (with "why") ============ -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2 class="serif">Recommended for you</h2>
+        <div class="sub">Tuned to your taste and tonight’s context</div>
+      </div>
+      <a class="see" href="#">Refine →</a>
+    </div>
+    <div class="rec-grid">
+      <article class="card">
+        <div class="thumb ph ph-rest ph-vig">
+          <div class="badges"><span class="pill">Restaurant</span></div>
+          <button class="heart" aria-label="Save">♡</button>
+        </div>
+        <div class="card-body">
+          <div class="name">Oci.Mde</div>
+          <div class="row"><span class="star">★ 4.7</span><span class="dot"></span><span>$$$</span><span class="dot"></span><span>El Poblado</span></div>
+          <div class="why"><span>✦</span><span><b>Why:</b> matches your Luxury Dining list · open 8 PM tonight</span></div>
+          <div class="actions"><button class="btn btn-sm btn-primary">Details</button><button class="btn btn-sm">Ask</button></div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="thumb ph ph-cafe ph-vig">
+          <div class="badges"><span class="pill">Café</span></div>
+          <button class="heart" aria-label="Save">♡</button>
+        </div>
+        <div class="card-body">
+          <div class="name">Pergamino Café</div>
+          <div class="row"><span class="star">★ 4.6</span><span class="dot"></span><span>$$</span><span class="dot"></span><span>Provenza</span></div>
+          <div class="why"><span>✦</span><span><b>Why:</b> fast wifi + outlets · near your loft</span></div>
+          <div class="actions"><button class="btn btn-sm btn-primary">Details</button><button class="btn btn-sm">Ask</button></div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="thumb ph ph-night ph-vig">
+          <div class="badges"><span class="pill">Nightlife</span></div>
+          <button class="heart" aria-label="Save">♡</button>
+        </div>
+        <div class="card-body">
+          <div class="name">Salón Amador</div>
+          <div class="row"><span class="star">★ 4.5</span><span class="dot"></span><span>$$</span><span class="dot"></span><span>Provenza</span></div>
+          <div class="why"><span>✦</span><span><b>Why:</b> electronic vibe you saved · open till 3 AM</span></div>
+          <div class="actions"><button class="btn btn-sm btn-primary">Details</button><button class="btn btn-sm">Ask</button></div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="thumb ph ph-rental ph-vig">
+          <div class="badges"><span class="pill">Rental</span></div>
+          <button class="heart" aria-label="Save">♡</button>
+        </div>
+        <div class="card-body">
+          <div class="name">Astra · Studio w/ balcony</div>
+          <div class="row"><span class="star">★ 4.8</span><span class="dot"></span><span>$98/nt</span><span class="dot"></span><span>Manila</span></div>
+          <div class="why"><span>✦</span><span><b>Why:</b> walkable to cafés you saved · quiet street</span></div>
+          <div class="actions"><button class="btn btn-sm btn-primary">Details</button><button class="btn btn-sm">Ask</button></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ INTELLIGENCE MAP ============ -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2 class="serif">Your Medellín, mapped</h2>
+        <div class="sub">Saved places and tonight’s picks — hover a card to light its pin</div>
+      </div>
+      <a class="see" href="#">Open full map →</a>
+    </div>
+    <div class="maprow">
+      <div class="map-list">
+        <div class="mli active"><span class="mpin-s mpin-rest"></span><div><div class="name">Carmen</div><div class="meta">Restaurant · El Poblado</div></div><span class="star">★ 4.7</span></div>
+        <div class="mli"><span class="mpin-s mpin-cafe"></span><div><div class="name">Pergamino</div><div class="meta">Café · Provenza</div></div><span class="star">★ 4.6</span></div>
+        <div class="mli"><span class="mpin-s mpin-night"></span><div><div class="name">Salón Amador</div><div class="meta">Nightlife · Provenza</div></div><span class="star">★ 4.5</span></div>
+        <div class="mli"><span class="mpin-s mpin-rental"></span><div><div class="name">Provenza Loft</div><div class="meta">Rental · Provenza</div></div><span class="star">★ 4.8</span></div>
+      </div>
+      <div class="map">
+        <div class="road" style="left:0;right:0;top:42%;height:6px"></div>
+        <div class="road" style="left:0;right:0;top:66%;height:4px"></div>
+        <div class="road" style="top:0;bottom:0;left:38%;width:5px"></div>
+        <div class="road" style="top:0;bottom:0;left:64%;width:4px"></div>
+        <div class="green" style="left:8%;top:10%;width:120px;height:90px"></div>
+        <div class="green" style="right:10%;top:18%;width:90px;height:80px"></div>
+        <div class="water"></div>
+        <div class="mpin hl" style="left:30%;top:38%"><span>🍽</span></div>
+        <div class="mpin" style="left:58%;top:30%"><span>☕</span></div>
+        <div class="mpin" style="left:54%;top:58%"><span>♪</span></div>
+        <div class="mpin" style="left:70%;top:50%"><span>🏠</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RECENT ACTIVITY + SKELETON/EMPTY DEMO ============ -->
+  <section>
+    <div class="sec-head">
+      <div>
+        <h2 class="serif">Recent activity</h2>
+        <div class="sub">What you and your concierge did lately</div>
+      </div>
+    </div>
+    <div class="maprow" style="grid-template-columns: 1fr 1fr; align-items:start">
+      <div class="timeline">
+        <div class="tl"><div class="t">Booked Carmen for Sat 8:30 PM</div><div class="meta">2 hours ago · via AI Concierge</div></div>
+        <div class="tl"><div class="t">Saved Salón Amador to “Nightlife”</div><div class="meta">Yesterday · 11:02 PM</div></div>
+        <div class="tl"><div class="t">Added Guatapé day trip to itinerary</div><div class="meta">Yesterday · 9:14 PM</div></div>
+        <div class="tl"><div class="t">Bought 2 tickets · Salsa Night</div><div class="meta">2 days ago</div></div>
+      </div>
+      <!-- demonstrates skeleton + empty-state patterns the brief asked for -->
+      <div>
+        <div class="sub" style="margin-bottom:10px; color:var(--muted-foreground)">Loading nearby tonight…</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px">
+          <div class="sk"><div class="b img"></div><div class="b line"></div><div class="b line short"></div></div>
+          <div class="empty">
+            <div class="ic">✦</div>
+            <div class="t">Nothing saved here yet</div>
+            <p>Ask your concierge for “quiet cafés in Laureles” and they’ll appear here.</p>
+            <button class="btn btn-accent btn-sm">Ask AI Concierge</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="foot-in">
+    <div>
+      <div class="wordmark" style="font-size:17px">mde<b>·</b>ai</div>
+      <div style="margin-top:8px; max-width:260px; font-size:13px">Your AI concierge for Medellín — places, events, stays and nights out, planned around you.</div>
+    </div>
+    <div class="cols">
+      <div>
+        <h4>Explore</h4>
+        <a href="#">Restaurants</a><a href="#">Cafés</a><a href="#">Nightlife</a><a href="#">Rentals</a><a href="#">Events</a>
+      </div>
+      <div>
+        <h4>Account</h4>
+        <a href="#">Trips</a><a href="#">Saved</a><a href="#">Tickets</a><a href="#">Reservations</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="#">About</a><a href="#">Hosts</a><a href="#">Partners</a><a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ FLOATING AI CONCIERGE ============ -->
+<button class="fab" aria-label="Open AI concierge"><span class="orb"></span> Ask AI Concierge</button>
+
+<!-- ============ MOBILE BOTTOM NAV ============ -->
+<nav class="botnav">
+  <a href="#" class="on"><span class="gi">⌂</span>Home</a>
+  <a href="#"><span class="gi">🔍</span>Search</a>
+  <a href="#"><span class="gi">🗺</span>Trips</a>
+  <a href="#"><span class="gi">♥</span>Saved</a>
+  <a href="#"><span class="gi">◔</span>Profile</a>
+</nav>
+
+</body>
+</html>

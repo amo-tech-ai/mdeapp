@@ -1,0 +1,2640 @@
+"ID","Team","Title","Description","Status","Estimate","Priority","Project ID","Project","Creator","Assignee","Labels","Cycle Number","Cycle Name","Cycle Start","Cycle End","Created","Updated","Started","Triaged","Completed","Canceled","Archived","Due Date","Parent issue","Initiatives","Project Milestone ID","Project Milestone","SLA Status","UUID","Time in status (minutes)","Related to","Blocked by","Duplicate of"
+"SAN-795","Sanjiovani","VEN-020 — venue_bookings schema + RLS: booking lifecycle + idempotency + audit","## Summary
+
+Create the `venue_bookings` table with full lifecycle states, RLS policies for host/owner access, idempotency key, and integration with `audit_logs`. Unblocks `requestVenueBooking` tool and `check_availability` read queries.
+
+## Done when
+
+- [ ] Migration at `supabase/migrations/YYYYMMDD_venue_bookings.sql` with:
+  - `venue_bookings(id uuid PK, venue_id uuid FK venues, host_id uuid FK auth.users, date date, time_start time, time_end time, guests int, status text, cost_estimate numeric, deposit_amount numeric, idempotency_key text UNIQUE, notes text, created_at timestamptz)`
+  - Status enum: `pending | approved | rejected | cancelled | completed`
+  - Constraint: `idempotency_key = sha256(venue_id || host_id || date || time_start)`
+- [ ] RLS enabled; policies:
+  - `host_owns_bookings`: host can INSERT own bookings; SELECT/UPDATE own rows
+  - `owner_sees_venue_bookings`: venue owner can SELECT + UPDATE bookings for their venues
+  - `admin_all_bookings`: admin role sees all
+- [ ] `supabase db push` applied to project `zkwcbyxiwklihegjhuql`
+- [ ] Vitest: host cannot read another host's bookings; owner can read own venue's bookings
+
+## Implementation notes
+
+* Idempotency key prevents double-booking on network retry: `sha256(venue_id || host_id || date || time_start)` — insert with `ON CONFLICT (idempotency_key) DO NOTHING`
+* Lifecycle state machine: `pending` → `approved` (owner action) → `completed` (post-event); OR `pending` → `rejected`/`cancelled` (either party)
+* `audit_logs` integration: trigger or application-level write on every status change — `action: ""venue_booking_status_changed""`, `payload: { from_status, to_status }`
+* `cost_estimate` and `deposit_amount` stored at booking time — not recomputed on read (price may change)
+
+## Critical rules
+
+* RLS is mandatory — owner must NOT see bookings from other venues; host must NOT see another host's bookings
+* `idempotency_key` UNIQUE constraint prevents race conditions from double-submit
+* `deposit_amount` is informational at booking time — actual charge happens in Stripe after owner approval
+
+## References
+
+* Skill: `.claude/skills/mde-supabase`
+* Blocked by: DATA-VEN-001 (venues table must exist)
+* Blocks: VEN-015 requestVenueBooking tool, VEN-010 check_availability
+* Related: DATA-001 audit_logs (SAN-756), WF-004 venueShortlistWorkflow (SAN-747)","Backlog",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"track:ai",,,,,"2026-06-08T14:08:23.964Z","2026-06-08T14:08:24.768Z",,,,,,"2026-06-15T14:08:24.765Z",,"Phase 1 — mdeai MVP launch","c5568997-f473-41ce-9593-fbfcf8bf41ad","🍽️ Venues UI & Booking","MediumRisk","a365d645-e002-4755-8ebe-cac19a509942",106,"","",
+"SAN-794","Sanjiovani","VEN-015 — requestVenueBooking HITL: Mastra tool + CopilotKit generative booking card","## Summary
+
+Implement the `requestVenueBooking` HITL Mastra tool and its matching CopilotKit generative card. When Roberto (or any event host) confirms a venue shortlist, the agent surfaces a booking confirmation card — no auto-submission until the host clicks ""Send Request"".
+
+## Done when
+
+- [ ] `requestVenueBooking(venue_id, date, time_start, time_end, guests, notes)` tool uses `renderAndWaitForResponse` — suspends until host confirms
+- [ ] HITL card shows: venue name, date, time range, guest count, estimated cost (`hours × price_per_hour`), 30% deposit amount, ""This sends a request to \[owner_name\]"" note
+- [ ] On `respond({ confirmed: true })`: writes row to `venue_bookings` with `status: 'pending'`; owner notified (Supabase realtime or edge function)
+- [ ] On `respond({ confirmed: false })`: tool returns cancelled state; no write
+- [ ] `useCopilotAction({ name: ""requestVenueBooking"", available: ""disabled"", render: BookingHITLCard })` mirrors the HITL in chat
+- [ ] `BookingHITLCard` renders: venue photo, all booking details, \[✅ Send Request\] and \[✕ Cancel\] buttons
+- [ ] Audit log: every `respond({ confirmed: true })` writes to `audit_logs(action: ""venue_booking_requested"", user_id, entity_id: venue_id, payload: { date, guests, cost_estimate })`
+- [ ] Vitest: `requestVenueBooking` suspends until `respond()` called; `venue_bookings` row exists after confirm; no row after cancel
+
+## Implementation notes
+
+* Pre-fill from working memory: if `MdeState.eventDraft` has `date` and `expected_capacity`, pass them as defaults to the HITL card
+* Cost estimate: `Math.ceil((time_end - time_start) / 3600) * venue.price_per_hour`; deposit = `cost_estimate * 0.30`
+* Idempotency: check for existing `venue_bookings` row before writing (same venue_id + date + host_id) to prevent double-submit on retry
+* Owner notification: POST to `/api/notifications/venue-booking-request` — does NOT charge deposit at this step (approval flow)
+
+## Critical rules
+
+* `requestVenueBooking` MUST use `renderAndWaitForResponse` — never auto-submit booking without explicit host confirmation
+* Deposit is NOT charged at booking request time — only after owner approves (charged via Stripe in a follow-up step)
+* Audit log write is mandatory — no silent booking mutations
+* Every `<AdvancedMarker>` on the venue detail page must use `getMapId()` (SAN-788)
+
+## References
+
+* Wireframe: `docs/wireframes/venues/002-venue-details.md` (Booking Request HITL section)
+* Skill: `.claude/skills/mastra`, `.claude/skills/copilotkitV1`
+* Blocked by: VEN-010 (venueAgent tools), VEN-020 (venue_bookings schema)
+* Related: WF-004 venueShortlistWorkflow (SAN-747), DATA-001 audit_logs RLS (SAN-756)","Backlog",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"MAS, track:ai",,,,,"2026-06-08T14:08:11.536Z","2026-06-08T14:08:12.264Z",,,,,,"2026-06-15T14:08:12.257Z",,"Phase 1 — mdeai MVP launch","c5568997-f473-41ce-9593-fbfcf8bf41ad","🍽️ Venues UI & Booking","MediumRisk","e9630f28-a60b-4995-a6c5-6c8575a2183d",106,"","",
+"SAN-793","Sanjiovani","VEN-010 — venueAgent Mastra tools: search_venues + get_venue_details + check_availability","## Summary
+
+Implement the three core Mastra tools for `venueAgent` (already registered at SAN-740): `search_venues`, `get_venue_details`, and `check_availability`. These power the venue shortlist flow on `/venues` — Roberto describes his event, agent returns ranked venue cards with AI pick reasons.
+
+## Done when
+
+- [ ] `search_venues(query, capacity, type, amenities[])` tool queries Supabase `venues` table + optional Places API enrichment; returns `VenueResult[]` with `ai_pick_reason` (e.g. ""Best catering match for 250 guests"")
+- [ ] Results update `MdeState.mapPins[]` with `entity_type: ""venue""`, gray pin color
+- [ ] `get_venue_details(venue_id)` returns full venue record: amenities, pricing tiers (Mon–Thu/Fri–Sun), capacity range, owner profile
+- [ ] `check_availability(venue_id, date, duration_hours)` queries `venue_bookings` table for conflicts; returns `{ available: boolean, next_available: string | null }`
+- [ ] `useCopilotAction({ name: ""search_venues"", available: ""disabled"", render })` renders `VenueCard` in chat with \[View\] \[Shortlist\] \[Inquire\] buttons
+- [ ] `useCopilotAction({ name: ""get_venue_details"", available: ""disabled"", render })` renders venue detail card
+- [ ] `routerAgent` routes `""venue_search""` and `""venue_booking""` intent to `venueAgent`
+- [ ] Vitest: `search_venues({ capacity: 250, type: ""rooftop"" })` returns ≥1 result with `ai_pick_reason` non-null
+
+## Implementation notes
+
+* `ai_pick_reason`: agent generates a one-line reason by comparing event context (from working memory `MdeState.eventDraft`) with venue amenities — ""Best catering match for your jazz event type""
+* `VenueResult` type: `{ id, name, type, neighborhood, capacity_max, price_per_hour, amenities: string[], rating, ai_pick_reason, ai_score }`
+* Shortlist: up to 3 venues stored in `MdeState.venueShortlist[]`; `useCopilotReadable` exposes shortlist to agent for comparison
+* `check_availability` must check `venue_bookings WHERE venue_id = ? AND date = ? AND status != 'cancelled'`
+
+## Critical rules
+
+* Gray pin color for venue markers (wireframe `consumer/004-explore-map.md`)
+* Every `<AdvancedMarker>` needs `mapId` on parent `<Map>` — use `getMapId()` from MAP-008B (SAN-788)
+* `check_availability` is read-only — no writes; `requestVenueBooking` (VEN-015) handles the write path
+
+## References
+
+* Wireframe: `docs/wireframes/venues/001-venue-search.md`, `002-venue-details.md`
+* Skill: `.claude/skills/mastra`, `.claude/skills/copilotkitV1`, `.claude/skills/mde-maps`
+* Blocked by: DATA-VEN-001 (seed data), venueAgent foundation (SAN-740)
+* Related: VEN-015 booking HITL, WF-004 venueShortlistWorkflow (SAN-747)","Backlog",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"MAS, track:ai",,,,,"2026-06-08T14:07:44.698Z","2026-06-08T14:07:47.652Z",,,,,,"2026-06-15T14:07:47.587Z",,"Phase 1 — mdeai MVP launch","c5568997-f473-41ce-9593-fbfcf8bf41ad","🍽️ Venues UI & Booking","MediumRisk","b9adcb19-d750-47c6-83c0-1ff25aee4247",106,"","",
+"SAN-792","Sanjiovani","DATA-VEN-001 — Venue + restaurant + nightlife data seed: Places API backfill cron","## Summary
+
+Seed the `venues`, `restaurants`, and `nightlife` tables with real Medellín inventory by running a Places API backfill — fetching top venues by category from El Poblado, Laureles, and El Centro neighborhoods. Without this data, venueAgent returns empty results.
+
+## Done when
+
+- [ ] `scripts/seed-venues.ts` fetches from Places API New `searchNearby` for each combination of `(neighborhood, type)`:
+  - `type: ""event_venue""` → `venues` table
+  - `type: ""restaurant""` → `restaurants` table
+  - `type: ""night_club"" | ""bar""` → `nightlife` table
+- [ ] `X-Goog-FieldMask: places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.priceLevel,places.regularOpeningHours` on every fetch
+- [ ] Upsert on `external_id = places.id` — idempotent, safe to re-run
+- [ ] Minimum seeded: 10 venues, 20 restaurants, 10 nightlife in El Poblado + Laureles
+- [ ] `supabase/seeds/venues.sql` generated from script output for deterministic test fixtures
+- [ ] Supabase scheduled cron (`pg_cron` or Vercel cron) refreshes stale records weekly
+- [ ] RLS: anon can SELECT `status = 'active'` rows; only service-role INSERT/UPDATE
+- [ ] Vitest: `venues` table has ≥1 row with `neighborhood = 'El Poblado'` after seed
+
+## Implementation notes
+
+* Neighborhoods to seed: El Poblado, Laureles, El Centro (the 3 most tourist-dense)
+* Rate limit: 10 req/s on Places API New — batch with 100ms delay between calls
+* `priceLevel` mapping: Places `PRICE_LEVEL_INEXPENSIVE` → `$`, `MODERATE` → `$$`, `EXPENSIVE` → `$$$`
+* Store `places_id` (Google's ID) as `external_id` for future re-enrichment without re-search
+* The cron refresh should only update `rating`, `regularOpeningHours.openNow` — not change `name` or `address` (to preserve manual edits)
+
+## Critical rules
+
+* `X-Goog-FieldMask` required — do not request `photos`, `reviews`, or `websiteUri` unless a UI component displays them (those SKUs are billed separately)
+* Backfill script runs with service-role key — must be in `scripts/`, never `src/`
+* Seed data is test infrastructure — do NOT commit real `places_id` values to version control (they could change)
+
+## References
+
+* Skill: `.claude/skills/mde-maps`, `.claude/skills/mde-supabase`
+* Related: venueAgent tools VEN-010, SEARCH-001 (SAN-790), MAP-005 FieldMask audit (SAN-776)
+* Wireframe: `docs/wireframes/venues/001-venue-search.md`","Backlog",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"track:ai",,,,,"2026-06-08T14:07:26.884Z","2026-06-08T14:07:28.224Z",,,,,,"2026-06-15T14:07:28.161Z",,"Phase 1 — mdeai MVP launch","965e980f-9946-4be1-83f0-a1d14de7d589","🍽️ Data Foundation","MediumRisk","644e2cc6-6c54-476f-89ac-e42e8c5dd606",106,"","",
+"SAN-559","Sanjiovani","VEN — Nightlife VIP table booking + Stripe deposit","## Improvement task — Nightlife VIP deposit
+
+**Canonical owner (deferred R2):** C10 — `tasks/revenue/C10-nightlife-vip-deposit.md` (import after [SAN-551](https://linear.app/sanjiovani/issue/SAN-551/rev-c2-create-checkout-tool-checkout-widget)).
+
+VIP table Stripe deposit flow. Merge with C10 spec when R2 imports; blocked on create_checkout.
+
+Also depends on checkout widget ([SAN-563](https://linear.app/sanjiovani/issue/SAN-563/ck-shared-in-chat-checkout-applegoogle-pay-wallet-widget) / [SAN-551](https://linear.app/sanjiovani/issue/SAN-551/rev-c2-create-checkout-tool-checkout-widget) UI scope).","Backlog",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"area:venues, phase:post-mvp, prefix:VEN, stack:stripe, stack:supabase",,,,,"2026-06-05T18:52:35.109Z","2026-06-05T19:24:10.456Z",,,,,,"2026-06-12T18:52:36.023Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","079b689f-e0e0-47eb-9adf-22ca30e8d80b",4135,"SAN-551","SAN-563",
+"SAN-560","Sanjiovani","VEN — Restaurant reservation management + confirmation/no-show loop","## Improvement task — Restaurants
+
+**Canonical owner (deferred R4):** M7 — [spec](<https://github.com/amo-tech-ai/mdeai/blob/main/tasks/revenue/M7-restaurant-reservation-management.md>) (import after [SAN-551](<https://linear.app/sanjiovani/issue/SAN-551>) / R2 batch).
+
+Venue inbox/calendar, WhatsApp confirmation loop, no-show handling — merge with M7 when R4 imports; blocked on `create_checkout` + C7 WhatsApp confirm.
+
+**Roadmap context:** [improvement roadmap](<https://github.com/amo-tech-ai/mdeapp/blob/main/docs/prd/mde-ai-improvement-roadmap.md>) Phase 1 · [dashboard](<https://github.com/amo-tech-ai/mdeapp/blob/main/docs/dashboard.md>)
+
+## Acceptance (defer to M7 spec)
+
+- [ ] Venue can confirm/decline; diner notified.
+- [ ] No-show + cancel states tracked.","Backlog",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"area:venues, phase:post-mvp, prefix:VEN, stack:supabase, stack:whatsapp, track:venues",,,,,"2026-06-05T18:52:41.565Z","2026-06-05T19:10:43.935Z",,,,,,"2026-06-12T18:52:43.285Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","7386953f-f962-45d2-9f25-6525bb93aa55",4123,"SAN-551","",
+"SAN-311","Sanjiovani","VEN-032 — Admin booking queue (/admin/bookings)","## Product code
+
+**VEN-032** — Admin booking queue (/admin/bookings)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-311](https://linear.app/sanjiovani/issue/SAN-311/ven-032-admin-booking-queue-adminbookings) |
+| Spec | `VEN-024` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Queue of pending venue booking requests with approve/edit/reject for WA drafts.
+
+## User journey
+
+1. Patricia opens admin bookings.
+2. Reviews Tourist's club request + draft message.
+3. Approves → triggers outbox (CAF-016).
+
+## Frontend work
+
+* Filter by venue_kind and status
+* Preview whatsapp_draft
+* Link to place detail
+
+## Backend / Supabase work
+
+Patricia approval → CAF-016
+
+## Agent / CopilotKit / Mastra work
+
+None
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-023
+
+## Acceptance criteria
+
+> Authored 2026-06-08 from disk spec `tasks/venues/tasks/mvp/024-ven-admin-booking-queue.md` (see DESIGN-LINEAR-AUDIT.md).
+
+- [ ] `/admin/bookings` gated to admin role; non-admin → 403.
+- [ ] Lists `venue_booking_requests` filterable by `venue_kind` + status (pending/sent/needs_user) via DataTable.
+- [ ] Row → preview `whatsapp_draft`; edit before send; link to place detail.
+- [ ] Approve updates status + enqueues outbox (CAF-016); RLS UPDATE policy present (User A ≠ admin proof).
+- [ ] Admin-fixture Playwright; `floor` exit 0.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-166
+* Task ID: VEN-024
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/024-ven-admin-booking-queue.md
+* Repo status: Not Started
+* Priority: P1
+* Milestone: P1.5 — Venues MVP
+* Persona: Patricia (admin)
+* Surface: `/admin/bookings`
+
+*Source markdown file is the source of truth.*","Backlog",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, scr, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:18.249Z","2026-06-08T06:21:33.472Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"dde36000-e737-4b4a-8d73-187ea4aa0ebe",730,"","SAN-310",
+"SAN-797","Sanjiovani","VEN-032 — Concierge venue instructions + working memory slots for venue preferences","## Summary
+
+Extend `MdeState` working memory with venue preference slots and add venue-aware instructions to `conciergeAgent` and `venueAgent`. Camila saying ""I prefer outdoor venues under $100/hr"" should be remembered across sessions and auto-applied to future venue searches.
+
+## Done when
+
+- [ ] `MdeState` Zod schema extended with `venuePreferences: { type?: string, capacity_min?: number, price_max_per_hour?: number, amenities?: string[], neighborhoods?: string[] }` — updated in THREE places: Mastra agent file, `src/lib/types.ts`, `packages/types/src/`
+- [ ] `venueAgent` reads `MdeState.venuePreferences` as defaults for `search_venues` — if user has `type: ""outdoor""`, pass as default filter without re-asking
+- [ ] `conciergeAgent` system prompt updated with venue instruction block: ""If user mentions venue preferences, call `update_venue_preferences` tool to persist them""
+- [ ] `update_venue_preferences(prefs)` Mastra tool writes to `MdeState.venuePreferences` and persists to `user_preferences.venue_json` column in Supabase
+- [ ] `/me/profile` Preference Form extended with venue section: type selector, price/hr max slider, amenity checkboxes (per wireframe `consumer/003-user-profile.md` pattern)
+- [ ] Vitest: after `update_venue_preferences({ type: ""rooftop"", price_max_per_hour: 100 })`, next `search_venues` call uses those defaults without being told again
+
+## Implementation notes
+
+* Follow the exact `UserPreferences` pattern from `consumer/003-user-profile.md` — add `venue_type`, `venue_price_max_per_hour`, `venue_amenities` columns to `user_preferences` table (or extend `preferences` jsonb column)
+* Working memory sync: on session start, seed `MdeState.venuePreferences` from `user_preferences.venue_json` if working memory is empty (same pattern as rental preferences)
+* Schema change touches THREE places — Zod in agent, TS type in `src/lib/types.ts`, `packages/types/src/` — miss one and `useCoAgent` type inference breaks
+
+## Critical rules
+
+* Working memory schema changes MUST update all three files atomically — stale type in any one location causes `useCoAgent` type mismatch (see CLAUDE.md Architecture Invariants)
+* `update_venue_preferences` is a write tool — HITL not required (preference saves are low-stakes), but no service-role key access
+
+## References
+
+* Wireframe: `docs/wireframes/consumer/003-user-profile.md` (Preference Form section)
+* Skill: `.claude/skills/mastra`, `.claude/skills/copilotkitV1`
+* Blocked by: VEN-010 (venueAgent tools must exist before preferences slot in)
+* Related: rentalAgent working memory (SAN-750), AGT-02 resource memory (SAN-597)","Backlog",,"Medium","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"MAS, track:ai",,,,,"2026-06-08T14:09:02.635Z","2026-06-08T14:09:02.635Z",,,,,,,,"Phase 1 — mdeai MVP launch","7e8f026e-0ae6-4d49-b5bd-edecdeb8b918","🔮 Venues Post-MVP",,"42eb2bcc-3a23-473a-9714-97e7e14f361d",105,"","",
+"SAN-796","Sanjiovani","VEN-025 — Playwright e2e: venue search → shortlist → booking HITL flow","## Summary
+
+End-to-end Playwright test for Roberto's venue search + shortlist + booking request flow: chat intent → `venueAgent` returns venue cards → shortlist comparison panel → `requestVenueBooking` HITL confirm → booking row created.
+
+## Done when
+
+- [ ] Test file at `e2e/venues/venue-booking-hitl.spec.ts`
+- [ ] Navigates to `/venues` as authenticated Roberto user
+- [ ] Types: ""Find a rooftop venue in El Poblado for 250 guests with AV system""
+- [ ] Asserts ≥1 `VenueCard` appears in chat with `data-testid=""venue-card""`
+- [ ] Asserts gray venue pin appears on map (`data-testid=""map-pin-venue""`)
+- [ ] Clicks ""Shortlist"" on first result → asserts shortlist panel shows venue name
+- [ ] Clicks ""Inquire"" → `BookingHITLCard` appears with venue name, date, estimated cost
+- [ ] Fills date picker and clicks ""✅ Send Request""
+- [ ] Asserts `venue_bookings` row exists with `status: 'pending'` (via Supabase query in test)
+- [ ] Test passes in CI with `npx playwright test e2e/venues/venue-booking-hitl.spec.ts`
+
+## Implementation notes
+
+* Seed: test requires DATA-VEN-001 seed data with ≥1 venue in El Poblado with `amenities` including ""av_system""
+* Auth: Roberto test account authenticated via Supabase magic link in `globalSetup`
+* HITL timing: `page.waitForSelector('[data-testid=""booking-hitl-card""]', { timeout: 15000 })`
+* Map pin assertion: gray pin color — `data-testid=""map-pin-venue""` or CSS class check
+* DB assertion: use Supabase anon client with Roberto's JWT to verify booking row
+
+## Critical rules
+
+* Must run against localhost with `npm run dev` — per CLAUDE.md ""localhost runtime proof required for Done""
+* Test must assert the `venue_bookings` row was actually written — not just that the UI showed success
+* HITL confirm must be via UI click, not direct API call
+
+## References
+
+* Wireframe: `docs/wireframes/venues/001-venue-search.md`, `002-venue-details.md`
+* Skill: `.claude/skills/testing`
+* Blocked by: VEN-010, VEN-015, VEN-020 must all ship first
+* Related: TEST-001 Roberto event creation (SAN-754), WF-004 venueShortlistWorkflow (SAN-747)","Backlog",,"Medium","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"track:ai",,,,,"2026-06-08T14:08:36.862Z","2026-06-08T14:08:36.862Z",,,,,,,,"Phase 1 — mdeai MVP launch","c5568997-f473-41ce-9593-fbfcf8bf41ad","🍽️ Venues UI & Booking",,"51d9a7b6-1092-4b57-85f8-c0c484ea34c6",105,"","",
+"SAN-547","Sanjiovani","AUTH-009 — JWT → Mastra RequestContext for tools","'> **Plain English:** Camila's booking tool runs as *her* user — not anonymous server identity.
+
+**Queue:** Discovery Beta row 26 · **Spec:** `tasks/data/tasks-data/AUTH-009-jwt-request-context.md`
+
+**Blocks:** VEN-019 CopilotKit HITL booking (row 27) · **Depends:** AUTH-006 patterns
+
+## Scope
+
+1. After `getUser()` in `/api/copilotkit/route.ts`, pass `access_token` into Mastra `RequestContext`
+2. Tool layer reads token for RLS-scoped Supabase client
+3. One tool migrated end-to-end (e.g. user-scoped booking read)
+
+## Acceptance
+
+- [ ] Signed-in chat turn → tool uses user-scoped client
+- [ ] Anonymous chat → catalog tools still work
+- [ ] Token never logged
+- [ ] `npm run test` pass on touched files
+
+## Refs
+
+* `tasks.md` rows 26–27
+* [SAN-302](https://linear.app/sanjiovani/issue/SAN-302/ven-023-requestvenuebooking-copilotkit-action) (VEN-019 HITL) blocked until this ships","Todo",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:ATH, stack:copilotkit, stack:mastra, stack:supabase, track:venues",,,,,"2026-06-04T01:26:56.178Z","2026-06-04T01:26:57.921Z",,,,,,"2026-06-05T01:26:57.915Z",,"Phase 1 — mdeai MVP launch",,,"Breached","f6675315-2849-4e35-b721-5a4616ab9503",6627,"SAN-302","",
+"SAN-313","Sanjiovani","VEN-034 — Venue booking RLS penetration tests","## Product code
+
+**VEN-034** — Venue booking RLS penetration tests
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-313 |
+| Spec | `VEN-025` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Negative RLS proof for the venue booking request path. The booking table is exposed through app and agent flows, so the MVP needs proof that User A cannot read or mutate User B's rows and non-admins cannot approve/send WhatsApp.
+
+## User journey
+
+Camila submits a restaurant request. A different account must not see the booking on status chips, admin queues, CopilotKit readable state, tool traces, or Supabase joins.
+
+## Frontend work
+
+* Multi-user SELECT, INSERT, UPDATE, DELETE checks.
+* Admin-only approval/send checks.
+* Anon behavior explicitly tested: denied unless routed through an approved edge path.
+* Join/count inference checks for booking queues and status chips.
+
+## Backend / Supabase work
+
+1. Create User A booking request.
+2. Swap to User B JWT.
+3. Prove User B cannot SELECT, UPDATE, DELETE, or infer User A's row.
+4. Prove non-admin cannot approve or enqueue WhatsApp.
+5. Prove Patricia/admin path can act only through the audited approval flow.
+
+## Agent / CopilotKit / Mastra work
+
+Mastra and CopilotKit tools must use the authenticated user's scoped context or a server-only service path with explicit ownership checks. Gemini must never reveal, infer, or fabricate another user's booking truth.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-015
+* VEN-021
+* VEN-024
+
+## Acceptance criteria
+
+- [ ] SQL or Playwright fixture proves User A cannot SELECT User B bookings.
+- [ ] UPDATE/DELETE isolation is tested, not only SELECT.
+- [ ] Non-admin approval/send path returns 403 or no-op.
+- [ ] Anon direct insert/read behavior is explicitly documented and tested.
+- [ ] No service-role key is present in browser/client code.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-168
+* Task ID: VEN-025
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/025-ven-rls-penetration-tests.md
+* Repo status: Not Started
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Camila, Tourist, Patricia, Sofia
+* Surface: Supabase, `/chat`, `/admin/bookings`
+
+*Source markdown file is the source of truth.*","Todo",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:19.574Z","2026-06-02T13:02:18.596Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"a856250c-5bbe-4c69-b205-bb2ce414b310",15683,"SAN-314, SAN-304, SAN-298","SAN-311",
+"SAN-293","Sanjiovani","VEN-014 — RestaurantDetailPanel + rental-ui-context","## Product code
+
+**VEN-014** — RestaurantDetailPanel + rental-ui-context
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-293](https://linear.app/sanjiovani/issue/SAN-293/ven-014-restaurantdetailpanel-rental-ui-context) |
+| Spec | `VEN-010` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Restaurant detail panel — hours, photos, cuisine, price, CTA to book.
+
+## User journey
+
+1. Carlos clicks restaurant card.
+2. Right column shows detail (map collapses or splits).
+3. Request booking opens sheet.
+
+## Frontend work
+
+* Right-column toggle like café
+* Places detail + DB merge
+* Book CTA → CKV-005 sheet
+
+## Backend / Supabase work
+
+None
+
+## Agent / CopilotKit / Mastra work
+
+None — UI reads detail API
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-009
+
+## Acceptance criteria
+
+> Authored 2026-06-08 from disk spec `tasks/venues/tasks/mvp/010-ven-restaurant-detail-panel.md` (see DESIGN-LINEAR-AUDIT.md).
+
+- [ ] Card click opens `data-testid=""restaurant-detail-panel""` (right column / mobile sheet) — not the café panel.
+- [ ] Renders photos, hours/open-now, cuisine, price, description, Directions (secondary action).
+- [ ] `RestaurantVenueDetail` type + `openRestaurantDetail`/`closeRestaurantDetail` + siblings list in `rental-ui-context`.
+- [ ] Places hydrate via `/api/places/detail` (FieldMask); degrade gracefully on cache miss.
+- [ ] Book CTA → `openVenueBooking({venue_kind:'restaurant'})` opens the real `VenueBookingForm` (not stub).
+- [ ] Map pin `data-selected` on hover/select; Playwright SCREEN-023 detail+booking path; `floor` exit 0.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-148
+* Task ID: VEN-010
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/010-ven-restaurant-detail-panel.md
+* Repo status: Not Started
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Carlos
+* Surface: `/chat` right column
+
+*Source markdown file is the source of truth.*","Todo",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:00.739Z","2026-06-08T06:21:03.358Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"79037759-2f57-4164-9875-11d147e2b793",15683,"SAN-314, SAN-297","SAN-292",
+"SAN-303","Sanjiovani","VEN-024 — Tool and CopilotKit action registry CI test","## Product code
+
+**VEN-024** — Tool and CopilotKit action registry CI test
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-303 |
+| Spec | `VEN-029` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+A registry test that catches silent tool render failures caused by mismatched Mastra tool IDs, CopilotKit action names, and rendered card names.
+
+## User journey
+
+Camila asks to book a restaurant. The rendered booking card appears reliably because the agent tool and UI action names are tested as one contract.
+
+## Frontend work
+
+* Central registry assertions for venue tool/action IDs.
+* Test that `requestVenueBooking` is registered in Mastra and has a matching CopilotKit renderer/action.
+* Grep or Vitest gate in `npm run floor` or the nearest existing floor script.
+* `/api/copilotkit` trace/smoke check where feasible.
+
+## Backend / Supabase work
+
+1. Developer changes a tool name.
+2. Registry test fails before runtime.
+3. Developer updates Mastra and CopilotKit names together.
+
+## Agent / CopilotKit / Mastra work
+
+The venue booking tool must have a stable name across Mastra, CopilotKit, HITL render, and tests. Gemini must not compensate for missing renders by narrating hidden tool failures.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-018
+* VEN-019
+
+## Acceptance criteria
+
+- [ ] Test fails when Mastra tool name and CopilotKit render/action name diverge.
+- [ ] Test covers restaurant, cafe, and nightlife booking entry paths.
+- [ ] `/api/copilotkit` route still responds after registry change.
+- [ ] Gate is documented in VEN-031 evidence.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-158
+* Task ID: VEN-029
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/029-ven-tool-action-registry-ci.md
+* Repo status: Not Started
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Sofia, Lucia
+* Surface: `/api/copilotkit`, Mastra tool registry, CopilotKit renders
+
+*Source markdown file is the source of truth.*","Todo",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:12.517Z","2026-06-03T02:36:27.063Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"12f8da0b-32ca-4833-aa9a-e9cc310c3290",15683,"SAN-314","SAN-302, SAN-301",
+"SAN-300","Sanjiovani","VEN-021 — VenueBookingSheet component","## Product code
+
+**VEN-021** — VenueBookingSheet component
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-300](https://linear.app/sanjiovani/issue/SAN-300/ven-021-venuebookingsheet-component) |
+| Spec | `VEN-017` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Shared booking form for all three kinds — date, party si
+
+## User journey
+
+1. User clicks Request booking.
+2. Sheet collects party details.
+3. Submit → pending row + chip.
+
+## Frontend work
+
+* venue_kind aware fields
+* Standalone + HITL modes
+* Aligns with CAF-008 schema
+
+## Backend / Supabase work
+
+Submit triggers MSV-002
+
+## Agent / CopilotKit / Mastra work
+
+Opened by user or CKV-006 tool render
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* None
+
+## Acceptance criteria
+
+> Authored 2026-06-08 from disk spec `tasks/venues/tasks/mvp/017-ven-booking-sheet.md` (see DESIGN-LINEAR-AUDIT.md).
+
+- [ ] `VenueBookingForm` uses `react-hook-form` + `zodResolver(venueBookingFormSchema)` (not `useState`).
+- [ ] All inputs inside shadcn `FieldGroup`/`Field`; `data-invalid`/`aria-invalid` on validation fail.
+- [ ] Fields: name, email, phone/WhatsApp, date, time, party size, occasion, special requests, WhatsApp consent (required).
+- [ ] `venue_kind` prop drives café/restaurant/nightlife wrappers — all three open the shared form (no stub).
+- [ ] Sign-in gate when logged out; submit → `POST /api/venue-booking/request` → pending row + honest ""confirm on WhatsApp"" copy.
+- [ ] HITL `renderAndWaitForResponse` reuses the same form (VEN-019); Vitest schema/resolver + Playwright required-field/consent; `floor` exit 0.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-155
+* Task ID: VEN-017
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/017-ven-booking-sheet.md
+* Repo status: Not Started
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Sarah, Carlos, Tourist
+* Surface: `/chat` sheet overlay
+
+*Source markdown file is the source of truth.*","Todo",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:05.275Z","2026-06-08T06:21:25.313Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"fb860d30-e241-4b24-ada2-eb51611fe7e2",15683,"SAN-304","",
+"SAN-302","Sanjiovani","VEN-023 — requestVenueBooking CopilotKit action","## Product code
+
+**VEN-023** — requestVenueBooking CopilotKit action
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-302 |
+| Spec | `VEN-019` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Generative UI mirror for booking tool — renderAndWaitForResponse pattern like Roberto's event publish.
+
+## User journey
+
+1. Agent invokes booking tool.
+2. Sheet renders in chat.
+3. User submits; agent continues with booking id.
+
+## Frontend work
+
+* Disabled useCopilotAction + agent tool
+* Pre-fill from detail context
+* Both Mastra action names (CKV-009)
+
+## Backend / Supabase work
+
+Blocked until respond()
+
+## Agent / CopilotKit / Mastra work
+
+`conciergeAgent` + requestVenueBooking
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-016
+* VEN-017
+* VEN-018
+
+## Acceptance criteria
+
+- [ ] Tool name grep matches Mastra registry exactly
+- [ ] POST `/api/copilotkit` trace shows tool-input + tool-output
+- [ ] No `confirmed` UX before DB status says so
+- [ ] Vitest: render with mock `respond`
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-157
+* Task ID: VEN-019
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/019-ven-booking-copilot-action.md
+* Repo status: Not Started
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: All booking personas
+* Surface: `/chat` CopilotKit HITL
+
+*Source markdown file is the source of truth.*","Todo",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:copilotkit, track:venues",,,,,"2026-05-28T18:31:11.156Z","2026-06-04T01:45:21.321Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"88567619-14af-43a3-9683-333d09db925d",15683,"SAN-307, SAN-304, SAN-547","SAN-301, SAN-300, SAN-299",
+"SAN-306","Sanjiovani","VEN-027 — Booking retry and optimistic UI recovery","## Product code
+
+**VEN-027** — Booking retry and optimistic UI recovery
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-306 |
+| Spec | `VEN-028` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Failure-safe booking UX. A user should never see ""request received"" if Supabase did not confirm the row, and a failed request should give a retry path without duplicating records.
+
+## User journey
+
+Tourist requests a nightlife table while on unstable mobile data. If the request fails, the sheet stays honest and offers retry; Patricia does not receive duplicate rows.
+
+## Frontend work
+
+* Pending state on submit.
+* Rollback on failed insert/tool response.
+* Retry toast/action.
+* Duplicate-click lock.
+* Failed booking state and timeout copy.
+* Offline/network error handling where practical.
+
+## Backend / Supabase work
+
+1. User submits booking.
+2. UI enters pending state.
+3. Success shows pending booking chip.
+4. Duplicate returns existing booking chip.
+5. Failure rolls back and offers retry.
+
+## Agent / CopilotKit / Mastra work
+
+CopilotKit rendered cards must reflect deterministic tool states: pending, success, already exists, failed, retrying. Gemini must not say a booking was saved unless Supabase confirms it.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-017
+* VEN-019
+* VEN-021
+* VEN-026
+
+## Acceptance criteria
+
+- [ ] Failed insert does not show successful pending state.
+- [ ] Retry succeeds without duplicate booking rows.
+- [ ] Timeout/offline state is visible.
+- [ ] Duplicate click cannot send concurrent booking writes.
+- [ ] Playwright or component test covers success, failure, duplicate, and retry.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-161
+* Task ID: VEN-028
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/028-ven-booking-retry-error-recovery.md
+* Repo status: Not Started
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Camila, Tourist
+* Surface: VenueBookingSheet, detail panels, booking status chips
+
+*Source markdown file is the source of truth.*","Todo",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:14.830Z","2026-06-02T13:02:07.702Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"12a59686-29b7-4b20-861f-45dd6a505605",15683,"SAN-314, SAN-304","SAN-305, SAN-302, SAN-300",
+"SAN-299","Sanjiovani","VEN-020 — requestVenueBooking Mastra tool","## Product code
+
+**VEN-020** — requestVenueBooking Mastra tool
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-299 |
+| Spec | `VEN-016` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Mastra tool that inserts a `venue_booking_requests` row when user (or agent) submits a booking.
+
+## User journey
+
+1. User completes VenueBookingSheet.
+2. Tool inserts pending row.
+3. Returns bookingRequestId to UI chip.
+
+## Frontend work
+
+* 
+
+## Backend / Supabase work
+
+Called from MSV-007 or directly
+
+## Agent / CopilotKit / Mastra work
+
+`conciergeAgent.tools.requestVenueBooking`
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-015
+
+## Acceptance criteria
+
+- [ ] RLS: user can insert own row only
+- [ ] Invalid `venue_kind` rejected
+- [ ] Vitest with mocked Supabase
+- [ ] Tool name matches Mastra registry key exactly
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-154
+* Task ID: VEN-016
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/016-ven-request-venue-booking-tool.md
+* Repo status: Not Started
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Sarah, Carlos, Tourist
+* Surface: `/chat` + Supabase
+
+*Source markdown file is the source of truth.*","Todo",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:04.744Z","2026-06-02T13:01:32.882Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"d5ba9388-7777-45b1-92d0-1897499d1a93",15683,"SAN-304, SAN-298","",
+"SAN-308","Sanjiovani","VEN-029 — draftVenueWhatsApp Mastra tool","## Product code
+
+**VEN-029** — draftVenueWhatsApp Mastra tool
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-308 |
+| Spec | `VEN-022` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Gemini drafts WhatsApp message to venue — stored on row, never auto-sent.
+
+## User journey
+
+1. Booking row exists.
+2. Workflow/agent calls draft tool.
+3. Patricia sees draft in CAF-017.
+
+## Frontend work
+
+* gemini-3.5-flash draft
+* Updates whatsapp_draft column
+* No Twilio in tool
+
+## Backend / Supabase work
+
+MSV-007 step 3
+
+## Agent / CopilotKit / Mastra work
+
+`draftVenueWhatsApp` on concierge or workflow
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-016
+
+## Acceptance criteria
+
+*Not specified in source task.*
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-163
+* Task ID: VEN-022
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/022-ven-draft-venue-whatsapp.md
+* Repo status: Not Started
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Patricia
+* Surface: Booking row field
+
+*Source markdown file is the source of truth.*","Todo",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, stack:whatsapp, track:venues",,,,,"2026-05-28T18:31:16.277Z","2026-06-02T13:02:10.972Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"76b4075d-f5e4-4135-8a6d-79b12d987f3e",15683,"","SAN-299",
+"SAN-309","Sanjiovani","VEN-030 — WhatsApp consent and suppression list","## Product code
+
+**VEN-030** — WhatsApp consent and suppression list
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-309 |
+| Spec | `VEN-027` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Compliance guardrails around WhatsApp sending. Patricia can approve a draft, but the send path must still require consent, approved templates where needed, suppression checks, and delivery failure logs.
+
+## User journey
+
+Patricia approves a venue booking message. If the recipient has opted out or the template is paused, no message is sent and Patricia sees the failure reason.
+
+## Frontend work
+
+* Store user/recipient opt-in source and timestamp.
+* Approved template IDs for business-initiated messages.
+* Suppression list checked before enqueue/send.
+* Twilio failure codes logged and visible to admin/support.
+* No cold-message path for venues or users.
+
+## Backend / Supabase work
+
+1. Patricia approves WhatsApp draft.
+2. Worker checks consent and suppression.
+3. Worker uses an approved template or valid in-session path.
+4. Twilio response is logged.
+5. Failed sends update booking status to `needs_user` or `send_failed`.
+
+## Agent / CopilotKit / Mastra work
+
+Gemini may draft copy, but it must never send. Mastra tools cannot bypass consent or suppression checks. Any outbound send must be deterministic, audited, and approval-gated.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-022
+
+## Acceptance criteria
+
+- [ ] Opt-in fields or consent lookup are part of the send contract.
+- [ ] Suppression list blocks outbound sends.
+- [ ] Approved template ID is stored/logged for template sends.
+- [ ] Twilio failure code and message SID are logged.
+- [ ] Tests cover opt-out, missing consent, and template failure.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-164
+* Task ID: VEN-027
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/027-ven-whatsapp-consent-suppression.md
+* Repo status: Not Started
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Tourist, venue operators, Patricia
+* Surface: `/admin/bookings`, WA outbox worker
+
+*Source markdown file is the source of truth.*","Todo",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, stack:whatsapp, track:venues",,,,,"2026-05-28T18:31:16.934Z","2026-06-02T13:02:12.656Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"481bb616-eebd-46f5-bc49-64bacc69ec75",15683,"","SAN-308",
+"SAN-305","Sanjiovani","VEN-026 — Venue booking idempotency and duplicate prevention","## Product code
+
+**VEN-026** — Venue booking idempotency and duplicate prevention
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-305 |
+| Spec | `VEN-026` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+An idempotent booking write contract so repeat submits, tool replay, retries, and network timeouts do not create duplicate venue booking requests.
+
+## User journey
+
+Camila taps submit twice on a weak mobile connection. She sees one pending request, not two rows in Patricia's queue.
+
+## Frontend work
+
+* Deterministic idempotency key for booking submissions.
+* Unique constraint or RPC conflict handling for same user/place/request window.
+* Typed duplicate response that the UI can render as ""already requested"".
+* Replay-safe Mastra tool result.
+
+## Backend / Supabase work
+
+1. User submits booking request.
+2. App computes idempotency key from user, venue, requested time, party si
+
+## Agent / CopilotKit / Mastra work
+
+`requestVenueBooking` must return deterministic `created`, `already_exists`, or `failed` states. Gemini must not claim a new request was created unless Supabase confirms it.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-015
+* VEN-016
+* VEN-021
+
+## Acceptance criteria
+
+- [ ] Double submit produces one `venue_booking_requests` row.
+- [ ] Tool retry returns existing booking row and clear duplicate state.
+- [ ] Database constraint or RPC proves duplicate prevention outside the browser.
+- [ ] Status chip uses the canonical row returned from Supabase.
+- [ ] Test covers replay/double-click behavior.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-160
+* Task ID: VEN-026
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/026-ven-booking-idempotency-duplicates.md
+* Repo status: Not Started
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Camila, Tourist, Patricia
+* Surface: VenueBookingSheet, Mastra tool, Supabase
+
+*Source markdown file is the source of truth.*","Todo",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:13.807Z","2026-06-02T23:13:28.840Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"fd40355b-51f3-4b59-8ace-b04bd8b9855a",15683,"SAN-298, SAN-304","SAN-299",
+"SAN-312","Sanjiovani","VEN-033 — Admin audit log for approval and send actions","## Product code
+
+**VEN-033** — Admin audit log for approval and send actions
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-312 |
+| Spec | `VEN-030` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+An audit trail for admin approval and WhatsApp send actions. Venue booking automation needs replay evidence: who approved, what changed, what was sent, and what failed.
+
+## User journey
+
+Patricia sees a booking marked `sent`; Sofia can verify which admin approved it and whether Twilio accepted or rejected the message.
+
+## Frontend work
+
+* Audit rows for approve, edit, enqueue, send, fail, retry, cancel.
+* Actor user ID, booking ID, outbox ID, Twilio SID/error, timestamp.
+* Admin-only read access.
+* No secrets or raw tokens in logs.
+* Links from booking queue to latest audit state where useful.
+
+## Backend / Supabase work
+
+1. Patricia edits and approves a draft.
+2. Audit row records approval actor and changed fields.
+3. Worker enqueues/sends WA and records result.
+4. Failure or retry appends another audit event.
+
+## Agent / CopilotKit / Mastra work
+
+Mastra/Gemini can draft copy only. Approval and send audit events must come from deterministic server/admin paths, not model claims.
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-023
+* VEN-024
+* VEN-027
+
+## Acceptance criteria
+
+- [ ] Approval/edit/enqueue/send/fail actions are auditable.
+- [ ] Admin-only read path is enforced.
+- [ ] Logs contain no service-role keys, tokens, or raw secrets.
+- [ ] Failed send can be traced from booking row to outbox/audit row.
+- [ ] Playwright/admin smoke includes audit evidence or SQL proof.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-167
+* Task ID: VEN-030
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/030-ven-admin-audit-log.md
+* Repo status: Not Started
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Patricia, Sofia
+* Surface: `/admin/bookings`, WA outbox worker
+
+*Source markdown file is the source of truth.*","Todo",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:18.960Z","2026-06-02T13:02:16.059Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"8d17b794-25d6-40c9-8b57-007931cfa181",15683,"SAN-314","SAN-309, SAN-311, SAN-310",
+"SAN-292","Sanjiovani","VEN-013 — RestaurantResultCard + search-tool-renders","## Product code
+
+**VEN-013** — RestaurantResultCard + search-tool-renders
+
+| Traceability | Value |
+| -- | -- |
+| Linear | [SAN-292](https://linear.app/sanjiovani/issue/SAN-292/ven-013-restaurantresultcard-search-tool-renders) |
+| Spec | `VEN-009` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Dedicated restaurant result cards replacing GenericResults — photo, cuisine, rating, neighborhood.
+
+## User journey
+
+1. Carlos searches Italian El Poblado.
+2. Polished cards appear in chat column.
+3. Click opens RestaurantDetailPanel.
+
+## Frontend work
+
+* RestaurantResultCard component
+* useCopilotAction disabled render
+* Map pin sync category=restaurant
+
+## Backend / Supabase work
+
+None
+
+## Agent / CopilotKit / Mastra work
+
+`conciergeAgent` → searchRestaurantsTool
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* DATA-004
+
+## Acceptance criteria
+
+> Authored 2026-06-08 from disk spec `tasks/venues/tasks/mvp/009-ven-restaurant-result-card.md` (see DESIGN-LINEAR-AUDIT.md).
+
+- [ ] Card renders Places photo (16:10 via `/api/places/photo`), name, ★rating, cuisine tag, neighborhood, price tier; `data-testid=""restaurant-card""`.
+- [ ] Both Mastra action names registered (`MASTRA_COPILOT_TOOL_ACTIONS.restaurants` + `MASTRA_TOOL_IDS.restaurants`), `available:""disabled""` render.
+- [ ] Replaces `GenericResults` in the restaurant branch of `search-tool-renders.tsx`.
+- [ ] Click → `openRestaurantDetail`; map pin sync `category=""restaurant""` + hover→pin highlight.
+- [ ] 2-line `line-clamp` (no mid-sentence truncation); skeleton on load; gradient+glyph fallback (no broken icon).
+- [ ] Vitest snapshot + Playwright SCREEN-023 green; `floor` exit 0.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-147
+* Task ID: VEN-009
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/009-ven-restaurant-result-card.md
+* Repo status: Not Started
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Carlos
+* Surface: `/chat` restaurant results
+
+*Source markdown file is the source of truth.*","Todo",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:00.069Z","2026-06-08T06:20:54.330Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"033bf725-f4cc-41ab-899f-38d98e6547c1",15683,"","",
+"SAN-301","Sanjiovani","VEN-022 — mastra-tool-action-names booking keys","## Product code
+
+**VEN-022** — mastra-tool-action-names booking keys
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-301 |
+| Spec | `VEN-018` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Registry mapping Mastra tool ids to CopilotKit useCopilotAction names — both must match exactly.
+
+## User journey
+
+1. New tool added to concierge.
+2. Registry updated with two names.
+3. Cards render; no AG-UI name mismatch.
+
+## Frontend work
+
+* Central registry file
+* Grep gate in floor/hooks
+* Covers booking + search tools
+
+## Backend / Supabase work
+
+None
+
+## Agent / CopilotKit / Mastra work
+
+All concierge tools with UI renders
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-016
+
+## Acceptance criteria
+
+*Not specified in source task.*
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-156
+* Task ID: VEN-018
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/018-ven-mastra-tool-action-names.md
+* Repo status: Not Started
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Sofía — prevents silent 404s
+* Surface: mastra-tool-action-names.ts
+
+*Source markdown file is the source of truth.*","Todo",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:10.483Z","2026-06-02T13:01:41.958Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"9a16a520-0f88-4012-b749-741d09eecd2e",15683,"","SAN-299",
+"SAN-310","Sanjiovani","VEN-031 — WhatsApp approval + wa_outbox","## Product code
+
+**VEN-031** — WhatsApp approval + wa_outbox
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-310 |
+| Spec | `VEN-023` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+After Patricia approves draft, enqueue WhatsApp send via outbox — idempotent, audited.
+
+## User journey
+
+1. Patricia approves draft in admin.
+2. Outbox row created.
+3. Worker sends WA; booking status → sent.
+
+## Frontend work
+
+* approval_requests → wa_outbox
+* No send from Mastra tools directly
+* English Phase 1 copy
+
+## Backend / Supabase work
+
+Patricia HITL gate (MSV-010 advanced)
+
+## Agent / CopilotKit / Mastra work
+
+None — edge worker
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-022
+* VEN-027
+
+## Acceptance criteria
+
+*Not specified in source task.*
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-165
+* Task ID: VEN-023
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/023-ven-wa-approval-outbox.md
+* Repo status: Not Started
+* Priority: P1
+* Milestone: P1.5 — Venues MVP
+* Persona: Patricia
+* Surface: `/admin` + edge WA worker
+
+*Source markdown file is the source of truth.*","Todo",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:17.620Z","2026-06-04T01:53:27.123Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"bb923cce-cb21-4a4a-8504-db1e01ec1323",15683,"","SAN-309, SAN-308",
+"SAN-164","Sanjiovani","VEN-007 — rankCoffeeTours scoring function","## Product code
+
+**VEN-007** — rankCoffeeTours scoring function
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-164 |
+| Spec | `VEN-035` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Build the **scoring brain** that orders tours using facts (ratings, distance, verified sources) plus intent — not Gemini guesses. Ship **before** VEN-036 so the search tool always returns a sorted list.
+
+## User journey
+
+**As a Tourist,** I want *“social impact coffee tour”* to surface La Sierra first, **so that** recommendations match what I asked — with weak or unverified tours hidden or flagged.
+
+## Frontend work
+
+1. Pure TypeScript/SQL ranker — no LLM in the math.
+2. Score /100 with documented weights.
+3. Thresholds: hide <55; “limited verification” <70.
+4. **No pgvector** until VEN-044.
+
+## Backend / Supabase work
+
+| Layer | File | Action |
+| -- | -- | -- |
+| Ranker | `mdeapp/src/mastra/lib/rank-coffee-tours.ts` | Create |
+| Signals | `coffee_tour_rank_signals` upsert on rank | Optional in VEN-032 |
+
+## Agent / CopilotKit / Mastra work
+
+*Not specified in source task.*
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-033
+* VEN-034
+* F50B
+
+## Acceptance criteria
+
+1. Vitest: `intent: social_impact` boosts La Sierra tour.
+2. Vitest: viewport bias reorders by distance.
+3. Vitest: score < 55 → filtered out; score 55–69 → `limitedVerification: true`.
+4. `rankCoffeeTours` pure function — no Gemini in score math; **no pgvector** until VEN-044 wires vector blend.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-173
+* Task ID: VEN-035
+* Legacy ID: CTI-006
+* Source: tasks/venues/tasks/mvp/035-ven-rank-coffee-tours.md
+* Repo status: Open
+* Priority: P1
+* Milestone: P1.5 — Venues MVP
+* Persona: Tourist / Patricia / Sofia
+* Surface: /chat, map, coffee-tour data
+
+*Source markdown file is the source of truth.*","Todo",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:post-mvp, prefix:VEN, stack:maps, stack:supabase",,,,,"2026-05-27T05:50:13.108Z","2026-06-02T12:15:53.422Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"a0efefc1-1707-4c01-bb6a-2e223f44bf22",17884,"","SAN-161, SAN-160",
+"SAN-163","Sanjiovani","VEN-006 — Places API enrich for coffee tour rows","## Product code
+
+**VEN-006** — Places API enrich for coffee tour rows
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-163 |
+| Spec | `VEN-037` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+For tours that have a real Google `place_id`, pull photos, hours, and review counts from Places API (with field masks) — same pipeline Camila already uses for grounded restaurants.
+
+## User journey
+
+**As a Tourist,** I want to see a photo and star rating on a tour card when Google has them, **so that** the card feels as trustworthy as a restaurant suggestion — without the agent making up ratings.
+
+## Frontend work
+
+1. `enrichCoffeeTourWithPlaces` tool or inline step in `searchCoffeeTours` when `place_id` set.
+2. `X-Goog-FieldMask` on every Places call.
+3. Cache via `place_details_cache` (MAP-018E).
+
+## Backend / Supabase work
+
+| Layer | File | Action |
+| -- | -- | -- |
+| Tool/helper | `mdeapp/src/mastra/tools/enrich-coffee-tour-places.ts` | Create |
+| Reuse | MAP-018B client / \`normali |  |
+
+## Agent / CopilotKit / Mastra work
+
+*Not specified in source task.*
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-034
+* MAP-018B
+* MAP-004
+
+## Acceptance criteria
+
+1. Seeded tour with valid `place_id` returns photo proxy URL on card.
+2. Missing `place_id` → card still renders with ""limited verification"" badge.
+3. No client-side Places API key.
+4. Every Places call includes `X-Goog-FieldMask`; cache via MAP-018E where possible.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-175
+* Task ID: VEN-037
+* Legacy ID: CTI-005
+* Source: tasks/venues/tasks/mvp/037-ven-places-enrich-coffee-tours.md
+* Repo status: Open
+* Priority: P1
+* Milestone: P1.5 — Venues MVP
+* Persona: Tourist / Patricia / Sofia
+* Surface: /chat, map, coffee-tour data
+
+*Source markdown file is the source of truth.*","Todo",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:post-mvp, prefix:VEN, stack:maps, stack:supabase",,,,,"2026-05-27T05:50:12.517Z","2026-06-03T02:36:27.172Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"4a5a5f55-13ad-467e-876b-85ddbffc1731",17884,"","SAN-161",
+"SAN-175","Sanjiovani","VEN-012 — /tours/[slug] detail page","## Product code
+
+**VEN-012** — /tours/\[slug\] detail page
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-175 |
+| Spec | `VEN-043` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+A **public page per tour** (`/tours/la-sierra`) Camila can share on WhatsApp — facts from DB only, optional map, sources listed — no agent required.
+
+## User journey
+
+**As a Tourist,** I want a link I can send my friend, **so that** they see the same tour details (price hints, map, sources) without opening chat.
+
+## Frontend work
+
+1. `mdeapp/src/app/tours/[slug]/page.tsx`
+2. Server fetch by `slug` — RLS public read on `coffee_tours` policy TBD.
+3. OG tags later (MAP-023).
+
+## Backend / Supabase work
+
+*Not specified in source task.*
+
+## Agent / CopilotKit / Mastra work
+
+*Not specified in source task.*
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-032
+* VEN-038
+
+## Acceptance criteria
+
+*Not specified in source task.*
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-181
+* Task ID: VEN-043
+* Legacy ID: CTI-017
+* Source: tasks/venues/tasks/mvp/043-ven-tour-detail-page.md
+* Repo status: Open
+* Priority: P3
+* Milestone: P1.5 — Venues MVP
+* Persona: Tourist / Patricia / Sofia
+* Surface: /chat, map, coffee-tour data
+
+*Source markdown file is the source of truth.*","Todo",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:post-mvp, prefix:VEN, stack:maps, stack:supabase",,,,,"2026-05-27T05:50:23.091Z","2026-06-02T12:15:53.795Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"41b6a5a8-9f40-41b8-aec7-38a207b6efaf",17884,"","SAN-165, SAN-158",
+"SAN-160","Sanjiovani","VEN-003 — CoffeeTour types + Zod schemas","## Product code
+
+**VEN-003** — CoffeeTour types + Zod schemas
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-160 |
+| Spec | `VEN-033` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Define **one shared language** (TypeScript +
+
+## User journey
+
+**As Sofía (QA),** I want invalid tour payloads to fail at parse time in Vitest, **so that** a bad seed row or tool response cannot crash Camila’s chat mid-demo.
+
+## Frontend work
+
+1. `CoffeeTour`, `CoffeeTourCardDTO`, `CoffeeTourSearchFilters`, `CoffeeTourRankSignals`.
+2. 
+
+## Backend / Supabase work
+
+| Layer | File | Action |
+| -- | -- | -- |
+| Types | `mdeapp/src/lib/types/coffee-tour.ts` | Create/expand |
+| Tests | `mdeapp/src/lib/types/__tests__/coffee-tour.test.ts` | Create |
+
+## Agent / CopilotKit / Mastra work
+
+*Not specified in source task.*
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-032
+
+## Acceptance criteria
+
+1. Invalid tool payload fails
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-171
+* Task ID: VEN-033
+* Legacy ID: CTI-002
+* Source: tasks/venues/tasks/mvp/033-ven-coffee-tour-types.md
+* Repo status: Open
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Tourist / Patricia / Sofia
+* Surface: /chat, map, coffee-tour data
+
+*Source markdown file is the source of truth.*","Todo",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:post-mvp, prefix:VEN, stack:maps, stack:supabase",,,,,"2026-05-27T05:50:10.770Z","2026-06-02T12:15:53.844Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"90d22430-0fa4-4874-ba1c-f2bdc3a4e746",17884,"","SAN-158",
+"SAN-167","Sanjiovani","VEN-010 — smoke:coffee-tours script","## Product code
+
+**VEN-010** — smoke:coffee-tours script
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-167 |
+| Spec | `VEN-040` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+One command (`npm run smoke:coffee-tours`) proves the whole tour flow works on localhost — routing, cards, pins, scores — for Lucía/Sofía before anyone marks Phase A Done.
+
+## User journey
+
+**As Lucía (QA),** I want an automated smoke script, **so that** we never mark CTI Done without proof that tour search beats restaurant search on a real dev server.
+
+## Frontend work
+
+1. `mdeapp/scripts/smoke-coffee-tours.mjs`
+2. `package.json` script `smoke:coffee-tours`
+3. Env `SMOKE_COFFEE_TOUR_QUERY` default: `list best coffee farm tours in medellin`
+
+## Backend / Supabase work
+
+| Layer | File | Action |
+| -- | -- | -- |
+| Script | `mdeapp/scripts/smoke-coffee-tours.mjs` | Create |
+| Package | `mdeapp/package.json` | Add script |
+
+## Agent / CopilotKit / Mastra work
+
+*Not specified in source task.*
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-038
+* VEN-039
+
+## Acceptance criteria
+
+1. `npm run smoke:coffee-tours` exit 0 with dev on :3001 + Mastra :4111.
+2. Blocking: tour query uses `searchCoffeeTours`, not `search-restaurants`.
+3. ≥3 tour cards and ≥3 map pins with `listingType=coffee_tour`.
+4. No visible card with score < 55; no critical console errors.
+5. Output captured in VEN-042 evidence template.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-178
+* Task ID: VEN-040
+* Legacy ID: CTI-009
+* Source: tasks/venues/tasks/mvp/040-ven-smoke-coffee-tours.md
+* Repo status: Open
+* Priority: P1
+* Milestone: P1.5 — Venues MVP
+* Persona: Tourist / Patricia / Sofia
+* Surface: /chat, map, coffee-tour data
+
+*Source markdown file is the source of truth.*","Todo",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:post-mvp, prefix:VEN, stack:maps, stack:supabase",,,,,"2026-05-27T05:50:15.259Z","2026-06-02T12:15:53.873Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"a237bc31-a86a-48d0-8b8a-391a10bf5085",17884,"","SAN-166, SAN-165",
+"SAN-168","Sanjiovani","VEN-011 — Phase A evidence + task-verifier closeout","## Product code
+
+**VEN-011** — Phase A evidence + task-verifier closeout
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-168 |
+| Spec | `VEN-042` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Collect **proof** (logs, screenshots, curl, smoke output) that Phase A actually works — then flip tasks to Done only if task-verifier agrees. No “fake Done.”
+
+## User journey
+
+**As Sofía (dev/QA),** I need a single evidence file Patricia can skim, **so that** we know Tourist-facing tour search shipped — without claiming embeddings or OpenClaw that are not built yet.
+
+## Frontend work
+
+1. `tasks/notes/CTI-A-evidence.md` with:
+   * `npm run dev` clean boot (:3001)
+   * `npm run smoke:coffee-tours` output
+   * Vitest count
+   * Screenshot or browser note (5 tour cards + pins)
+2. Update `tasks/agent/tasks/INDEX.md` statuses.
+3. Optional: `CHANGELOG.md` + `tasks/todo.md` via Phase 5 ship.
+
+## Backend / Supabase work
+
+*Not specified in source task.*
+
+## Agent / CopilotKit / Mastra work
+
+*Not specified in source task.*
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-040
+
+## Acceptance criteria
+
+1. task-verifier checklist passes for VEN-032/B + 002–009 claims.
+2. Evidence notes ≥3 verified `place_id` in seed + routing test green.
+3. Phase A explicitly **excludes** semantic/embedding search (VEN-044 not Done).
+4. No task marked Done without evidence file row.
+5. Agent does not list tour names in prose on smoke query (MAP-018).
+6. `npm run floor` + `npm test` + `npm run smoke:coffee-tours` all green in evidence.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-180
+* Task ID: VEN-042
+* Legacy ID: CTI-010
+* Source: tasks/venues/tasks/mvp/042-ven-coffee-tour-phase-a-evidence.md
+* Repo status: Open
+* Priority: P1
+* Milestone: P1.5 — Venues MVP
+* Persona: Tourist / Patricia / Sofia
+* Surface: /chat, map, coffee-tour data
+
+*Source markdown file is the source of truth.*","Todo",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:post-mvp, prefix:VEN, stack:maps, stack:supabase",,,,,"2026-05-27T05:50:15.846Z","2026-06-02T12:15:53.902Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"1d886a48-c905-4696-91ca-55e02cd1008e",17884,"","SAN-167",
+"SAN-162","Sanjiovani","VEN-005 — Concierge tour intent + searchCoffeeTours tool","## Product code
+
+**VEN-005** — Concierge tour intent + searchCoffeeTours tool
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-162 |
+| Spec | `VEN-036` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Teach the **concierge agent** to call a dedicated tour search tool when someone asks for farm tours — and **never** route those questions to restaurant search.
+
+## User journey
+
+**As a Tourist on** `/chat`**,** I want *“coffee farm tour”* to return ranked farm tours from our database, **so that** I do not get café recommendations or hallucinated tour URLs.
+
+## Frontend work
+
+1. Mastra tool `searchCoffeeTours` with
+
+## Backend / Supabase work
+
+| Layer | File | Action |
+| -- | -- | -- |
+| Tool | `mdeapp/src/mastra/tools/search-coffee-tours.ts` | Create |
+| Agent | `mdeapp/src/mastra/agents/concierge.ts` | Modify |
+| Register | `mdeapp/src/mastra/index.ts` | Modify |
+
+## Agent / CopilotKit / Mastra work
+
+*Not specified in source task.*
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-033
+* VEN-034
+* VEN-035
+* MAP-002
+* MAP-018C
+
+## Acceptance criteria
+
+1. Vitest: tool called when message contains ""coffee farm tour"".
+2. **Blocking:** same test suite asserts `search-restaurants` / generic café grounded tool **not** called for tour keywords (`coffee tour`, `farm tour`, `finca`, `cafetero`).
+3. Tool does not invent URLs/ratings — only DB + Places enrich path (VEN-037).
+4. Results with `finalScore` < 55 **excluded** from tool output; < 70 include `limitedVerification` badge (VEN-035/007).
+5. `useCoAgent({ name: ""conciergeAgent"" })` unchanged; agent key matches Mastra registry.
+6. Phase A: **no** embedding/semantic rank — SQL ranker only until VEN-044.
+7. localhost: chat triggers tool; cards render after VEN-038.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-174
+* Task ID: VEN-036
+* Legacy ID: CTI-004
+* Source: tasks/venues/tasks/mvp/036-ven-search-coffee-tours-tool.md
+* Repo status: Open
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Tourist / Patricia / Sofia
+* Surface: /chat, map, coffee-tour data
+
+*Source markdown file is the source of truth.*","Todo",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:post-mvp, prefix:VEN, stack:maps, stack:supabase",,,,,"2026-05-27T05:50:11.954Z","2026-06-02T12:15:53.938Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"f2e7d936-d2dd-4708-8847-ae3f71f39220",17884,"","SAN-164, SAN-161, SAN-160",
+"SAN-161","Sanjiovani","VEN-004 — Seed 5 verified coffee tours","## Product code
+
+**VEN-004** — Seed 5 verified coffee tours
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-161 |
+| Spec | `VEN-034` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Load **real Medellín coffee farm tours** into Supabase from curated research — at least five operators, with **three verified Google** `place_id`**s** so maps and Places enrich work on day one.
+
+## User journey
+
+**As a Tourist on** `/chat`**,** I want to see La Sierra, La Casa Grande, and other real operators — not names the model invented — **so that** I can trust the “Book” and “Map” buttons.
+
+## Frontend work
+
+1. Seed script + optional SQL for dev/staging.
+2. ≥5 tours; ≥3 with verified `place_id`.
+3. Profiles + sources for narrative and provenance.
+4. Low-confidence listings marked `verified=false`.
+
+## Backend / Supabase work
+
+| Layer | File | Action |
+| -- | -- | -- |
+| Seed script | `mdeapp/scripts/seed-coffee-tours.mjs` | Create |
+| SQL optional | `mdeapp/supabase/seed/coffee_tours.sql` | Create |
+| Profiles | `coffee_tour_profiles` rows | `ai_summary`, `best_for` from `06-coffee-tours.md` |
+
+## Agent / CopilotKit / Mastra work
+
+*Not specified in source task.*
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-032
+
+## Acceptance criteria
+
+1. `SELECT count(*) FROM coffee_tours` ≥ 5 on dev.
+2. `count(*) WHERE place_id IS NOT NULL` **≥ 3** — verified before UI work (VEN-038+).
+3. Each row has `slug`, `neighborhood`; lat/lng from Places or seed doc — not agent-invented.
+4. At least 3 rows have `coffee_tour_sources` with URL provenance.
+5. Artisan / low-confidence tours excluded or `verified=false`.
+6. Seed script exits non-
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-172
+* Task ID: VEN-034
+* Legacy ID: CTI-003
+* Source: tasks/venues/tasks/mvp/034-ven-seed-coffee-tours.md
+* Repo status: Open
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Tourist / Patricia / Sofia
+* Surface: /chat, map, coffee-tour data
+
+*Source markdown file is the source of truth.*","Todo",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:post-mvp, prefix:VEN, stack:maps, stack:supabase",,,,,"2026-05-27T05:50:11.333Z","2026-06-02T12:15:53.964Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"ae6f3e40-578c-466d-9f30-b980da217d5a",17884,"","SAN-158",
+"SAN-166","Sanjiovani","VEN-009 — Map pins + results column for coffee tours","## Product code
+
+**VEN-009** — Map pins + results column for coffee tours
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-166 |
+| Spec | `VEN-039` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Put **tour locations on the chat map** so Tourists see where farms are — using `meta.listingType: ""coffee_tour""` so pins are not confused with café pins.
+
+## User journey
+
+**As a Tourist on** `/chat`**,** I want tour results on the map and in the results strip, **so that** I can pick a neighborhood before I book.
+
+## Frontend work
+
+1. Pins: `category: grounded` (interim) with `meta.listingType: ""coffee_tour""` required on every tour pin — do not rely on category alone. Add MAP-030 `tour` glyph when that task extends categories.
+2. `chat-results-column.tsx`: tour-aware copy (reuse MAP-031 logic).
+3. `panToPin` on card click (MAP-015 / F50).
+
+## Backend / Supabase work
+
+| Layer | File | Action |
+| -- | -- | -- |
+| Map | `mdeapp/src/components/maps/ChatMap.tsx` | Verify cluster path |
+| Results | `mdeapp/src/components/chat/chat-results-column.tsx` | Minor copy/testid |
+| Marker | `CategoryMapMarker` | Optional ☕/tour glyph |
+
+## Agent / CopilotKit / Mastra work
+
+*Not specified in source task.*
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-038
+* MAP-030
+* MAP-031
+* F50
+* F50B
+
+## Acceptance criteria
+
+1. `list coffee tours in medellin` → ≥3 pins on map.
+2. Every tour pin has `meta.listingType: ""coffee_tour""`.
+3. No `results-empty` when pins exist (MAP-031).
+4. `AdvancedMarker` parent has `mapId`.
+5. Card click triggers `panToPin` (F50).
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-177
+* Task ID: VEN-039
+* Legacy ID: CTI-008
+* Source: tasks/venues/tasks/mvp/039-ven-map-pins-coffee-tours.md
+* Repo status: Open
+* Priority: P1
+* Milestone: P1.5 — Venues MVP
+* Persona: Tourist / Patricia / Sofia
+* Surface: /chat, map, coffee-tour data
+
+*Source markdown file is the source of truth.*","Todo",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:post-mvp, prefix:VEN, stack:maps, stack:supabase",,,,,"2026-05-27T05:50:14.720Z","2026-06-02T12:15:53.997Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"1d935bdb-76f7-4939-b89d-1a3310621b03",17884,"","SAN-165",
+"SAN-159","Sanjiovani","VEN-002 — coffee_tour_search_logs + coffee_tour_cache","## Product code
+
+**VEN-002** — coffee_tour_search_logs + coffee_tour_cache
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-159 |
+| Spec | `VEN-041` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Add **ops tables** so Patricia can see what tourists searched for and cache expensive Google Places responses — without bloating the first schema migration.
+
+**Second migration** after VEN-032. Not required for the first chat demo, but needed before Phase A closeout (VEN-042).
+
+## User journey
+
+**As Patricia (admin),** I want search queries and API cache rows logged server-side, **so that** I can debug slow tour searches and control Places API cost without exposing logs to anonymous users.
+
+## Frontend work
+
+1. `coffee_tour_search_logs` + `coffee_tour_cache` tables with RLS.
+2. Independent migration — rollback does not drop core tables.
+3. Optional wiring from `searchCoffeeTours` in Phase A.
+
+## Backend / Supabase work
+
+*Not specified in source task.*
+
+## Agent / CopilotKit / Mastra work
+
+*Not specified in source task.*
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-032
+
+## Acceptance criteria
+
+1. RLS enabled; service-role writes only from server/edge.
+2. `searchCoffeeTours` (VEN-036) may insert logs after this lands — **optional in Phase A** if timeboxed.
+3. Migration independent — rollback does not drop core tables.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-179
+* Task ID: VEN-041
+* Legacy ID: CTI-001B
+* Source: tasks/venues/tasks/mvp/041-ven-coffee-tour-logs-cache.md
+* Repo status: Open
+* Priority: P1
+* Milestone: P1.5 — Venues MVP
+* Persona: Tourist / Patricia / Sofia
+* Surface: /chat, map, coffee-tour data
+
+*Source markdown file is the source of truth.*","Todo",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:post-mvp, prefix:VEN, stack:maps, stack:supabase",,,,,"2026-05-27T05:50:10.156Z","2026-06-02T12:15:54.024Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"3178e198-10f9-4ddc-b0d1-43ef3402f316",17884,"","SAN-158",
+"SAN-158","Sanjiovani","VEN-001 — Supabase coffee_tours core tables + RLS","## Product code
+
+**VEN-001** — Supabase coffee_tours core tables + RLS
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-158 |
+| Spec | `VEN-032` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Create the **database home** for coffee farm tours in Supabase — names, neighborhoods, Google `place_id`, sources, and “why we recommend this” text — with row-level security so tourists cannot overwrite Patricia’s curated data.
+
+**Split from monolithic CTI-001.** Ship **before** logs (VEN-041) or embeddings (VEN-044).
+
+## User journey
+
+**As Patricia (admin),** I need tour data stored in real tables with RLS, **so that** when a Tourist asks Camila’s chat for farm tours, the agent reads facts from Postgres — not invented listings.
+
+## Frontend work
+
+1. Five core tables migrated with RLS on user-owned data only.
+2. `get_advisors` clean — no public write to canonical tours.
+3. Unique `slug` and `place_id` where present.
+4. No pgvector in this migration (VEN-044 later).
+
+## Backend / Supabase work
+
+*Not specified in source task.*
+
+## Agent / CopilotKit / Mastra work
+
+*Not specified in source task.*
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* F08
+
+## Acceptance criteria
+
+1. `apply_migration` succeeds; `get_advisors` clean on all five tables.
+2. Anonymous client cannot `INSERT` into `coffee_tours`.
+3. Authenticated user can `INSERT` own row in `coffee_tour_user_interactions` only.
+4. Unique `slug`; unique `place_id` where not null.
+5. **No** `pgvector` extension required in this migration.
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-170
+* Task ID: VEN-032
+* Legacy ID: CTI-001A
+* Source: tasks/venues/tasks/mvp/032-ven-coffee-tour-core-schema.md
+* Repo status: Open
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Tourist / Patricia / Sofia
+* Surface: /chat, map, coffee-tour data
+
+*Source markdown file is the source of truth.*","Todo",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:post-mvp, prefix:VEN, stack:maps, stack:supabase",,,,,"2026-05-27T05:50:09.651Z","2026-06-02T12:15:54.078Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"d4c485c4-135b-4ef6-a5de-4ed0850e75e6",17884,"","",
+"SAN-165","Sanjiovani","VEN-008 — CoffeeTourCard + CopilotKit tool render","## Product code
+
+**VEN-008** — CoffeeTourCard + CopilotKit tool render
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-165 |
+| Spec | `VEN-038` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Show **rich tour cards** in the Copilot sidebar — score, why we recommend it, who it’s best for, and Map / Website buttons — using the same generative-UI pattern as grounded restaurant cards.
+
+## User journey
+
+**As a Tourist on** `/chat`**,** I want tour results as visual cards (not a wall of text), **so that** I can compare options and open the map in one tap.
+
+## Frontend work
+
+1. `CoffeeTourCard`, `CoffeeTourScoreBadge`, `CoffeeTourSourceBadges`.
+2. `search-tool-renders.tsx`: `coffeeTourRender` for `searchCoffeeTours`.
+3. `useCopilotAction` disabled mirror with matching tool name.
+4. `ToolPinsSync` compatible pin ids.
+
+## Backend / Supabase work
+
+| Layer | File | Action |
+| -- | -- | -- |
+| Card | `mdeapp/src/components/copilot/coffee-tour-card.tsx` | Create |
+| Renders | `mdeapp/src/components/copilot/search-tool-renders.tsx` | Modify |
+| Tests | `mdeapp/src/components/copilot/__tests__/coffee-tour-card.test.tsx` | Create |
+
+## Agent / CopilotKit / Mastra work
+
+*Not specified in source task.*
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-036
+* VEN-035
+* VEN-034
+* MAP-018F
+* MAP-019
+
+## Acceptance criteria
+
+1. Vitest: renders score badge when `finalScore` set.
+2. Maps CTA uses `mapsUrl` only — no synthesi
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-176
+* Task ID: VEN-038
+* Legacy ID: CTI-007
+* Source: tasks/venues/tasks/mvp/038-ven-coffee-tour-card-ui.md
+* Repo status: Open
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Tourist / Patricia / Sofia
+* Surface: /chat, map, coffee-tour data
+
+*Source markdown file is the source of truth.*","Todo",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:post-mvp, prefix:VEN, stack:maps, stack:supabase",,,,,"2026-05-27T05:50:13.947Z","2026-06-02T12:15:54.117Z",,,,,,,,"Phase 1 — mdeai MVP launch",,,,"e525751e-bae6-46e7-9c87-51530bd59620",17884,"","SAN-161, SAN-164, SAN-162",
+"SAN-827","Sanjiovani","UX-042 — Nightlife: prod-synthetic 5th query (order 4)","## UX-042 — Nightlife (order **4**)
+
+**Parent:** [SAN-822](<https://linear.app/sanjiovani/issue/SAN-822>) · **Label:** CHAT
+**Blocked by:** [SAN-824](<https://linear.app/sanjiovani/issue/SAN-824>)
+
+### Goal
+
+Production regression for nightlife vertical.
+
+### Scope (v2 — lean)
+
+* Add **5th query** to `e2e/prod-synthetic-smoke.spec.ts` (nightlife prompt)
+* Reuse `home-to-chat` nightlife case · VEN-025 routing
+* **Do not** add `e2e/nightlife.spec.ts` unless prod-synthetic flakes
+
+### Commit
+
+`test(nightlife): add regression coverage`","Todo",,"Medium","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"area:concierge, CHAT, phase:mvp, stack:playwright, track:ux, track:venues, type:test",,,,,"2026-06-08T15:03:46.337Z","2026-06-08T15:12:28.166Z",,,,,,,"SAN-822","Phase 1 — mdeai MVP launch",,,,"6c5113dc-1d8a-4014-a6b1-176fdaa3031d",50,"","SAN-824",
+"SAN-826","Sanjiovani","UX-041 — Cafés: Place ID audit + graceful booking degrade (order 6)","## UX-041 — Cafés (order **6**)
+
+**Parent:** [SAN-822](<https://linear.app/sanjiovani/issue/SAN-822>) · **Label:** CHAT
+**Blocked by:** [SAN-825](<https://linear.app/sanjiovani/issue/SAN-825>)
+
+### Goal
+
+Improve Place ID coverage reporting; booking degrades cleanly without fake IDs.
+
+### Scope (v2)
+
+* Audit % of café cards with verified `placeId`
+* Improve booking-sheet copy when missing ID
+* **Do not** invent synthetic Place IDs
+
+### Commit
+
+`fix(cafes): improve place validation coverage`","Todo",,"Low","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"area:concierge, CHAT, phase:mvp, stack:maps, stack:supabase, track:ux, track:venues",,,,,"2026-06-08T15:03:43.138Z","2026-06-08T15:12:36.420Z",,,,,,,"SAN-822","Phase 1 — mdeai MVP launch",,,,"f71e0cb3-e21c-4a12-9431-054920b2a37d",50,"","SAN-825",
+"SAN-825","Sanjiovani","UX-040 — Restaurants: measure placeholders, warm cache if needed (order 5)","## UX-040 — Restaurants (order **5** — deprioritized)
+
+**Parent:** [SAN-822](<https://linear.app/sanjiovani/issue/SAN-822>) · **Label:** CHAT
+**Blocked by:** [SAN-827](<https://linear.app/sanjiovani/issue/SAN-827>)
+
+### Goal
+
+Reduce `restaurant-card-photo-placeholder` rate only if hurting UX.
+
+### Scope (v2)
+
+1. **Measure** placeholder % on prod (screenshot sample n≥20)
+2. If >30%: warm Places photo cache / improve fallback chain
+3. No card redesign
+
+### Commit
+
+`fix(restaurants): improve image fallback handling`","Todo",,"Low","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"area:concierge, CHAT, phase:mvp, stack:maps, track:ux, track:venues",,,,,"2026-06-08T15:03:42.329Z","2026-06-08T15:12:36.184Z",,,,,,,"SAN-822","Phase 1 — mdeai MVP launch",,,,"aa8c694e-c3ba-4dd5-b916-08a042fce791",50,"","SAN-827",
+"SAN-549","Sanjiovani","Wire conciergeAgent intent:nightlife for search-grounded-places (post SAN-294)","## Context
+
+PR #68 merged (`ac8390e`): `search-grounded-places` accepts optional `intent: cafe | general | nightlife`.
+
+Tool-only merge — chat does not benefit until the agent passes `intent` when classification is confident.
+
+## Work
+
+* Update `conciergeAgent` instructions / tool args to pass `intent: ""nightlife""` for confident nightlife routing (not ambiguous café overlap).
+* Verify in `/chat` with generic nightlife query (e.g. ""popular venues tonight Provenza"").
+
+## Out of scope
+
+* Browse page (`/nightlife`) — already shipped [SAN-491](https://linear.app/sanjiovani/issue/SAN-491/screen-022-nightlife-listings-map)
+* Refactor search-grounded-places tool schema
+
+## Depends on
+
+[SAN-294](https://linear.app/sanjiovani/issue/SAN-294/ven-015-nightlife-intent-in-search-grounded-places) / VEN-011 (Done)","In Progress",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca","ai@socialmediaville.ca","phase:mvp, stack:mastra, track:venues",,,,,"2026-06-04T13:29:55.435Z","2026-06-06T01:00:36.686Z","2026-06-04T15:10:24.739Z",,,,,"2026-06-11T13:29:56.772Z",,"Phase 1 — mdeai MVP launch",,,"MediumRisk","978d22dd-d586-4018-913b-3160a83029ad",3808,"SAN-491, SAN-294","",
+"SAN-520","Sanjiovani","VEN-014b — Places detail retry guard","## Status (2026-06-02)
+
+**Done** — hotfix on `main` @ `435c476` via [amo-tech-ai/mdeapp#52](https://linear.app/sanjiovani/review/fixvenues-guard-places-detail-retry-storms-87978b263760).
+
+Stops repeated `/api/places/detail` and Google `getPlace` calls while Places returns 403/502:
+
+* Client in-flight dedupe per `placeId`
+* 10m client failure cache (403/502/503)
+* 10m server negative cache per `placeId`
+
+**Parent:** VEN-014 ([SAN-297](<https://linear.app/sanjiovani/issue/SAN-297>)) stays **In Review** until live miss→hit proof.
+
+**Evidence:** `tasks/venues/tasks/evidence/VEN-014b-verify-2026-06-02.md`
+
+**Spec:** `tasks/venues/tasks/mvp/014b-ven-places-retry-guard.md`","Done",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, track:venues",,,,,"2026-06-02T22:52:26.142Z","2026-06-02T22:52:26.142Z",,,"2026-06-02T22:52:26.318Z",,,,,"Phase 1 — mdeai MVP launch",,,,"d13a7cab-a9ae-465a-a868-6f99cb0c7777",8221,"SAN-297","",
+"SAN-296","Sanjiovani","VEN-017 — NightlifeDetailPanel + mobile sheet","## Status (2026-06-02)
+
+**Spec VEN-013** · **Repo:** In Review · Shipped in [amo-tech-ai/mdeapp#48](https://linear.app/sanjiovani/review/featvenues-grounded-nightlife-split-and-detail-panel-20e4a304c7d9) (`269c436` on `main`).
+
+`NightlifeDetailPanel` + mobile sheet on `/chat`.
+
+---
+
+## Product code
+
+**VEN-017** — NightlifeDetailPanel + mobile sheet · **Spec: VEN-013**
+
+| Linear | [SAN-296](https://linear.app/sanjiovani/issue/SAN-296/ven-017-nightlifedetailpanel-mobile-sheet) |
+| Source | `tasks/venues/tasks/mvp/013-ven-nightlife-detail-panel.md` |
+
+## Acceptance
+
+- [X] Panel + booking CTA stub
+- [X] Places enrichment via `usePlaceDetails`
+- [ ] Production sign-off → Done
+
+*Source markdown is source of truth.*","Done",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:02.530Z","2026-06-03T03:03:33.186Z","2026-06-02T17:51:51.341Z",,"2026-06-03T03:03:32.561Z",,,,,"Phase 1 — mdeai MVP launch",,,,"8fe44ca7-e5a4-48ee-8c05-cd6432334956",7970,"SAN-314, SAN-297, SAN-295","",
+"SAN-297","Sanjiovani","VEN-018 — Places cache and field-mask enforcement","## Status (2026-06-02)
+
+**Spec:** VEN-014 · **Repo:** In Review
+
+| Ship | PR | `main` |
+| -- | -- | -- |
+| Read-through cache + field mask | [amo-tech-ai/mdeapp#50](https://linear.app/sanjiovani/review/featvenues-add-places-detail-cache-read-through-bb51e86f729d) | `aa1d5af` |
+| Retry guard | [amo-tech-ai/mdeapp#52](https://linear.app/sanjiovani/review/fixvenues-guard-places-detail-retry-storms-87978b263760) · [SAN-520](<https://linear.app/sanjiovani/issue/SAN-520>) **Done** | `435c476` |
+
+**Done gate deferred:** live `X-Places-Cache: miss` → `hit` (GCP Places parked).
+
+**Evidence:** `tasks/venues/tasks/evidence/VEN-014-verify-2026-06-02.md`
+
+**Next:** VEN-021 booking persist · open PR [amo-tech-ai/mdeapp#49](https://linear.app/sanjiovani/review/fixvenues-stabilize-cafe-ask-prompt-e2e-selector-98876900b3e1) (031b e2e)
+
+---
+
+## Product code
+
+**VEN-014** (catalog title VEN-018) · [SAN-297](https://linear.app/sanjiovani/issue/SAN-297/ven-018-places-cache-and-field-mask-enforcement) · `014-ven-places-cache-field-mask.md`
+
+## Acceptance (repo)
+
+- [X] Read-through cache + field mask
+- [X] Café + nightlife `usePlaceDetails`
+- [X] Retry guard ([SAN-520](https://linear.app/sanjiovani/issue/SAN-520/ven-014b-places-detail-retry-guard))
+- [ ] Live miss→hit proof (deferred)","Done",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:03.163Z","2026-06-03T03:03:31.814Z","2026-06-02T22:52:26.828Z",,"2026-06-03T03:03:31.800Z",,,,,"Phase 1 — mdeai MVP launch",,,,"12ed38bb-81fb-4d6d-a5dc-f81052204e9e",7970,"SAN-314, SAN-296, SAN-293, SAN-520","",
+"SAN-295","Sanjiovani","VEN-016 — Grounded render café vs nightlife kind split","## Status (2026-06-02)
+
+**Spec VEN-012** · **Repo:** In Review · Shipped in [amo-tech-ai/mdeapp#48](https://linear.app/sanjiovani/review/featvenues-grounded-nightlife-split-and-detail-panel-20e4a304c7d9) (`269c436` on `main`).
+
+Nightlife grounded cards open `NightlifeDetailPanel` (not café tabs).
+
+---
+
+## Product code
+
+**VEN-016** — Grounded render café vs nightlife kind split · **Spec: VEN-012**
+
+| Linear | [SAN-295](https://linear.app/sanjiovani/issue/SAN-295/ven-016-grounded-render-cafe-vs-nightlife-kind-split) |
+| Source | `tasks/venues/tasks/mvp/012-ven-grounded-kind-split.md` |
+
+## Acceptance
+
+- [X] Nightlife query → nightlife panel
+- [X] Café queries unchanged
+- [ ] Production sign-off → Done
+
+*Source markdown is source of truth.*","Done",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:01.922Z","2026-06-03T03:03:31.520Z","2026-06-02T17:51:50.868Z",,"2026-06-03T03:03:31.506Z",,,,,"Phase 1 — mdeai MVP launch",,,,"b4dec420-7766-493e-b4fb-d7d0e9682e57",7970,"SAN-296, SAN-294","",
+"SAN-294","Sanjiovani","VEN-015 — Nightlife intent in search-grounded-places","## Product code
+
+**VEN-015** — Nightlife intent in search-grounded-places
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-294 |
+| Spec | `VEN-011` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+Add `intent:nightlife` to grounded places tool so clubs/bars return separately from cafés and restaurants.
+
+## User journey
+
+1. Tourist: 'reggaeton Proven
+
+## Frontend work
+
+* 
+
+## Backend / Supabase work
+
+| File | Action |
+| -- | -- |
+| `src/mastra/tools/search-grounded-places.ts` | Modify |
+| `src/mastra/tools/__tests__/search-grounded-places-quality.test.ts` | Modify |
+| `src/mastra/agents/concierge.ts` | Modify (minimal — full rules in ven-025) |
+
+## Agent / CopilotKit / Mastra work
+
+`conciergeAgent` → `search-grounded-places`
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* DATA-005
+
+## Acceptance criteria
+
+- [ ] `intent:nightlife` excludes café-bar hybrids wrongly tagged
+- [ ] Proven
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-149
+* Task ID: VEN-011
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/011-ven-nightlife-grounding-intent.md
+* Repo status: Not Started
+* Priority: P0
+* Milestone: P1.5 — Venues MVP
+* Persona: Tourist
+* Surface: `/chat` nightlife queries
+
+*Source markdown file is the source of truth.*","Done",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca","ai@socialmediaville.ca","phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:01.338Z","2026-06-04T13:29:55.435Z","2026-06-04T13:27:04.711Z",,"2026-06-04T13:29:32.857Z",,,,,"Phase 1 — mdeai MVP launch",,,,"977ac2f5-80ce-4043-9453-9c72a46233a4",5904,"SAN-295, SAN-549","",
+"SAN-298","Sanjiovani","VEN-019 — venue_booking_requests migration + RLS","## Status (2026-06-02)
+
+**Spec:** `VEN-015` (repo) · maps to catalog **VEN-019** · **Repo:** In Review
+
+| Ship | Evidence |
+| -- | -- |
+| Migration `venue_booking_requests` + RLS on Supabase | `tasks/venues/tasks/evidence/VEN-015-verify-2026-06-02.md` |
+| Migration file | `mdeapp/supabase/migrations/20260529234934_data009_venue_booking_requests.sql` |
+
+**Unblocks:** VEN-021 persist ([SAN-304](https://linear.app/sanjiovani/issue/SAN-304/ven-025-venuebookingsheet-db-persist)) — web insert path uses this table.
+
+User approves **Done** after reviewing evidence.","Done",,"Urgent","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:03.976Z","2026-06-03T03:03:31.930Z","2026-06-02T23:13:23.494Z",,"2026-06-03T03:03:31.911Z",,,,,"Phase 1 — mdeai MVP launch",,,,"c4ca4a06-4d85-4997-87f5-f3205d01de46",7970,"SAN-313, SAN-305, SAN-299, SAN-304","",
+"SAN-307","Sanjiovani","VEN-028 — Booking status chips on detail panels","## Status (2026-06-03) — **Done**
+
+**Spec:** VEN-020 · **Merged:** PR #55 → `main` @ `3772d79`
+
+### Proof
+
+Signed-in RLS query returns `pending` for `ChIJven021proof01`:
+
+| Field | Value |
+| -- | -- |
+| Row id | `5b98fb38-3265-4d2c-9031-b9bb8eb53ac5` |
+| Chip label | Request pending |
+| Script | `scripts/prove-ven-020-status-fetch.mjs` |
+
+Evidence: `tasks/venues/tasks/evidence/VEN-020-verify-2026-06-02.md`
+
+### Tests
+
+`npm run test -- venue-booking-status` — 13 passed
+
+### Follow-up
+
+* Refetch chip after booking sheet submit (optional)
+* Restaurant detail panel when sheet exists","Done",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:15.449Z","2026-06-03T00:09:02.095Z",,,"2026-06-03T00:09:01.964Z",,,,,"Phase 1 — mdeai MVP launch",,,,"23716276-40f5-49a3-bf2d-a22e91d44219",8145,"SAN-314, SAN-304, SAN-302","",
+"SAN-314","Sanjiovani","VEN-035 — Playwright SCREEN-021/022/023","## Product code
+
+**VEN-035** — Playwright SCREEN-021/022/023
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-314 |
+| Spec | `VEN-031` |
+| Prefix | VEN |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Summary
+
+End-to-end tests for SCREEN-021 café, 022 nightlife, 023 restaurant on `/chat`.
+
+## User journey
+
+1. CI runs Playwright against localhost.
+2. Each kind: search → card → detail.
+3. 021 adds booking pending assertion.
+
+## Frontend work
+
+* Three screen specs
+* Console error sweep
+* Unblocks CAF-018
+
+## Backend / Supabase work
+
+Booking smoke on 021
+
+## Agent / CopilotKit / Mastra work
+
+Live concierge in dev
+
+## Tech stack
+
+Next.js 16, React 19, Tailwind 4, shadcn/ui, CopilotKit 1.55.2, Mastra, Gemini, Supabase, Google Maps, Places API, Stripe where relevant, Playwright.
+
+Gemini must not invent venue facts, booking state, payment truth, Places details, ratings, coordinates, WhatsApp send status, or trip/tour truth.
+
+## Dependencies
+
+* VEN-010
+* VEN-013
+* VEN-020
+* VEN-025
+* VEN-014
+* VEN-028
+* VEN-029
+* VEN-030
+
+## Acceptance criteria
+
+*Not specified in source task.*
+
+## Do not do
+
+*Not specified in source task.*
+
+## Tracking
+
+* IMP: IMP-169
+* Task ID: VEN-031
+* Legacy ID: n/a
+* Source: tasks/venues/tasks/mvp/031-ven-playwright-venue-screens.md
+* Repo status: Not Started
+* Priority: P1
+* Milestone: P1.5 — Venues MVP
+* Persona: Lucía
+* Surface: Playwright e2e
+
+*Source markdown file is the source of truth.*","Done",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca","ai@socialmediaville.ca","phase:mvp, prefix:VEN, stack:playwright, track:venues",,,,,"2026-05-28T18:31:20.275Z","2026-06-04T01:45:20.548Z","2026-06-03T05:16:13.043Z",,"2026-06-03T06:06:22.582Z",,,,,"Phase 1 — mdeai MVP launch",,,,"cb657750-df4a-436f-b013-25d576fae352",7788,"SAN-312, SAN-303, SAN-306, SAN-297, SAN-313, SAN-307, SAN-296, SAN-293, SAN-490","",
+"SAN-304","Sanjiovani","VEN-025 — VenueBookingSheet + DB persist","## Status (2026-06-02) — **Done**
+
+**Spec:** VEN-021 · **Merged:** PR #53 → `main` @ `bf2599d`
+
+### Live insert proof
+
+| Field | Value |
+| -- | -- |
+| Row id | `5b98fb38-3265-4d2c-9031-b9bb8eb53ac5` |
+| user_id | `a5f6adc5-5e86-4730-8ade-3617893a4f68` |
+| venue_kind | `cafe` |
+| status | `pending` |
+| source | `web` |
+| created_at | `2026-06-02T23:22:38Z` |
+
+Evidence: `tasks/venues/tasks/evidence/VEN-021-verify-2026-06-02.md`
+
+Probe: `scripts/prove-ven-021-insert.mjs` (magic-link session → POST `/api/venue-booking/request`).
+
+### Follow-up
+
+* **Hotfix:** `crypto` import (webpack broke on `node:crypto` in route) — commit pending on `main`
+* **VEN-028** status chips — recommended next
+* Restaurant sheet, agent HITL (VEN-019), VEN-026 409 UX — out of scope","Done",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"phase:mvp, prefix:VEN, stack:maps, stack:supabase, track:venues",,,,,"2026-05-28T18:31:13.138Z","2026-06-02T23:22:49.868Z","2026-06-02T23:13:21.896Z",,"2026-06-02T23:22:49.780Z",,,,,"Phase 1 — mdeai MVP launch",,,,"fe9e8496-c515-46b4-897d-ef6ecf40592f",8191,"SAN-313, SAN-307, SAN-306, SAN-305, SAN-298, SAN-302, SAN-300, SAN-299, SAN-501","",
+"SAN-558","Sanjiovani","CAF — Cafés page → live (listings + detail + map)","## Improvement shell — duplicate
+
+**Canonical owner:** [SAN-519](<https://linear.app/sanjiovani/issue/SAN-519>) SCREEN-028 — `/cafes` browse listing.
+
+Clone the **venues recipe** (proven: [SAN-490](<https://linear.app/sanjiovani/issue/SAN-490>) restaurants Done, nightlife live). Chat café cards already ship via [SAN-114](<https://linear.app/sanjiovani/issue/SAN-114>) (SCREEN-021 Done).
+
+**Phase:** MVP **vertical** polish — `phase:mvp` on SCREEN-028 track; **not** revenue pilot (no [SAN-551](https://linear.app/sanjiovani/issue/SAN-551/rev-c2-create-checkout-tool-checkout-widget) dependency).
+
+**Roadmap:** [Phase 1 cafés](<https://github.com/amo-tech-ai/mdeapp/blob/main/docs/prd/mde-ai-improvement-roadmap.md>) · implement from [SAN-519](https://linear.app/sanjiovani/issue/SAN-519/screen-028-cafes-browse-listing-cafes) spec only.","Duplicate",,"High","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"area:venues, phase:mvp, prefix:CAF, stack:maps, stack:nextjs, track:venues",,,,,"2026-06-05T18:52:30.348Z","2026-06-05T19:40:15.471Z",,,,"2026-06-05T19:40:13.585Z",,,,"Phase 1 — mdeai MVP launch",,,,"c61bc670-699e-4a52-9d42-783ebb6df163",4094,"","","SAN-519"

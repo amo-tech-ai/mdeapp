@@ -1,0 +1,9 @@
+flowchart TD
+  START["/partners/signup?type=…"] --> S1["1 Profile"]
+  S1 --> S2["2 Services"] --> S3["3 Pricing"] --> S4["4 Photos"] --> S5["5 Location"]
+  S5 --> S6["6 Goals"] --> S7["7 AI setup"] --> S8["8 Marketing"] --> S9["9 Automation"] --> S10["10 Launch"]
+  S10 --> CHK{"Activation<br/>checklist met?"}
+  CHK -- yes --> LIVE["Go live → Dashboard"]
+  CHK -- no --> DRAFT["Save as draft<br/>AI nudges missing items"]
+  DRAFT -. resume .-> S1
+  COP(["✦ Co-pilot: prefill · validate · explain · score"]) -.assists.- S1 & S2 & S3 & S4 & S5 & S6 & S7 & S8 & S9 & S10

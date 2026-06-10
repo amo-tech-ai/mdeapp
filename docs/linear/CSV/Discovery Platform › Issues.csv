@@ -1,0 +1,877 @@
+"ID","Team","Title","Description","Status","Estimate","Priority","Project ID","Project","Creator","Assignee","Labels","Cycle Number","Cycle Name","Cycle Start","Cycle End","Created","Updated","Started","Triaged","Completed","Canceled","Archived","Due Date","Parent issue","Initiatives","Project Milestone ID","Project Milestone","SLA Status","UUID","Time in status (minutes)","Related to","Blocked by","Duplicate of"
+"SAN-465","Sanjiovani","MAP-011A — ADK sidecar compute_routes (Grounding Lite MCP)","Replace compute_routes stub with Grounding Lite MCP invoke in ADK sidecar and normalize duration strings — prerequisite for MAP-011 route previews.
+
+**Spec:** `tasks/maps/MAP-011A-adk-compute-routes.md`
+**Priority:** P1 — prerequisite for MAP-011
+**Depends on:** MAP-002B ✅, MAP-002 ✅
+**Blocks:** MAP-011
+
+## Gates
+
+* ADK sidecar calls Grounding Lite compute_routes correctly
+* Duration normalized to human-readable (""\~18 min drive"" not raw JSON)
+* Unit test for normalization function","Todo","","High","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","phase:post-mvp, prefix:MAP, stack:maps, track:maps","","","","","2026-06-02T12:27:24.051Z","2026-06-02T12:27:24.051Z","","","","","","","","Phase 1 — mdeai MVP launch","3677d7d6-75dc-46eb-8d88-c1bb75b0fcd8","🗺️ Maps — P1 Hardening","","6e0d4e4e-d0ef-44ec-ae9b-ac88beac4771","8846","","",""
+"SAN-105","Sanjiovani","MAP-005 — Places proxy edge + places_cache + RLS","'> **Plain English:** Put all Google Places API calls behind a Supabase edge function with a cache so repeat searches don't bill Google twice.
+
+**Order:** Post-MVP maps depth — after MAP-010 autocomplete; before MAP-006 nearby search.
+
+**Spec:** `tasks/maps/MAP-005-places-proxy-cache.md` · **Depends on:** MAP-004 · **Blocks:** MAP-006, MAP-010
+
+---
+
+Server-only **Places API (New)** via edge function `places-proxy`, cache tables with TTL, RLS — browsers never hold `GOOGLE_MAPS_API_KEY`. Mastra tools call the edge URL.
+
+**Note:** [SAN-229](https://linear.app/sanjiovani/issue/SAN-229/map-011-route-previews-commute-cards) tracks MAP-011 (route previews) separately — this issue is MAP-005 only.","Todo","","High","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","phase:post-mvp, prefix:MAP, stack:maps, stack:supabase, track:maps","","","","","2026-05-27T05:49:14.206Z","2026-06-03T00:14:12.428Z","","","","","","","","Phase 1 — mdeai MVP launch","826c4c00-bd2c-4c3f-84f5-7da6c6d0702f","🔮 Search — Grounding","","2d96050d-321f-4b9e-b86b-5e888c81eed0","17884","","",""
+"SAN-106","Sanjiovani","MAP-006 — Nearby Search + Show nearby on RentalCard","'> **Plain English:** Add a ""Show nearby"" button on rental cards that drops café/gym pins around the listing without clearing rental pins.
+
+**Order:** Post-MVP — after MAP-005 places proxy; before MAP-012 neighborhood cards.
+
+**Spec:** `tasks/maps/MAP-006-nearby-search.md` · **Depends on:** MAP-005 · **Blocks:** MAP-012
+
+---
+
+Mastra tool `searchNearbyPlaces` (max 5 results, \~800m radius) via MAP-005 proxy. Merge into `MapContext` under a separate category; rentals/events stay visible.
+
+**Note:** [SAN-230](https://linear.app/sanjiovani/issue/SAN-230/map-012-neighborhood-intelligence-cards) tracks MAP-012 (neighborhood intelligence cards) separately — this issue is MAP-006 only.","Todo","","High","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","phase:post-mvp, prefix:MAP, stack:maps, stack:nextjs, track:maps","","","","","2026-05-27T05:49:14.827Z","2026-06-03T00:14:14.319Z","","","","","","","","Phase 1 — mdeai MVP launch","826c4c00-bd2c-4c3f-84f5-7da6c6d0702f","🔮 Search — Grounding","","b9422372-1829-48fe-94c5-5d492feb29ae","17884","SAN-103","SAN-107",""
+"SAN-104","Sanjiovani","MAP-010 — Place autocomplete for Roberto host venue","## Product code
+
+**MAP-004** — Place autocomplete — Roberto host venue
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-104 |
+| Spec | `MAP-010` |
+| Prefix | MAP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Purpose
+
+Server-proxied **Place Autocomplete (New)** for the host event wizard: debounced input, **session token** per wizard session, Colombia region bias, field mask on suggestions — **zero** Places API key in the browser bundle.
+
+## Goals
+
+Server-proxied **Place Autocomplete (New)** for the host event wizard: debounced input, **session token** per wizard session, Colombia region bias, field mask on suggestions — **zero** Places API key in the browser bundle.
+
+## Features
+
+* Implement **Place autocomplete — Roberto host venue** per spec
+
+## Real-world example
+
+Server-proxied **Place Autocomplete (New)** for the host event wizard: debounced input, **session token** per wizard session, Colombia region bias, field mask on suggestions — **zero** Places API key in the browser bundle.
+
+## Tracking
+
+| Field | Value |
+| -- | -- |
+| Task ID | `MAP-010` |
+| Spec | `tasks/maps/MAP-010-place-autocomplete-venue.md` |
+| Type | screen build spec |
+| Repo status | Not Started |
+| Priority | P1 |
+| Phase | mvp |
+
+---
+
+*Spec file on disk is source of truth. Repo* `status: Done` *→ Linear **In Review** until user approves Done.*","Todo","","High","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","phase:mvp, prefix:MAP, stack:maps, stack:nextjs, track:maps","","","","","2026-05-27T05:49:13.513Z","2026-06-02T12:26:51.204Z","","","","","","","","Phase 1 — mdeai MVP launch","3677d7d6-75dc-46eb-8d88-c1bb75b0fcd8","🗺️ Maps — P1 Hardening","","ff60d4ae-6fe1-4ddf-b850-310611cf792a","17884","SAN-102","",""
+"SAN-466","Sanjiovani","MAP-034 — Advanced marker UX polish — selection, badges, mobile, a11y","Harden AdvancedMarker UX: selected state rings, price badges, mobile bottom sheet, and accessibility labels. Post-MVP refinement.
+
+**Spec:** `tasks/maps/MAP-034-advanced-marker-ux-polish.md`
+**Priority:** P2 — post-MVP
+**Depends on:** MAP-008 ✅, MAP-009 ✅, MAP-030 ✅
+
+## Gates
+
+* Selected marker shows ring/highlight state
+* Price badge visible on rental/event markers
+* Mobile bottom sheet opens on marker tap
+* aria-label on all AdvancedMarkers
+* No DEMO_MAP_ID warning","Todo","","Medium","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","phase:post-mvp, prefix:MAP, stack:maps, stack:nextjs, track:maps","","","","","2026-06-02T12:27:28.103Z","2026-06-02T12:27:28.103Z","","","","","","","","Phase 1 — mdeai MVP launch","b9e3059d-b535-402e-a756-3c1beedb3f81","🔮 Vectors & Rerank","","cef40086-b3e5-47a2-bb53-df3f4251d94c","8846","","",""
+"SAN-230","Sanjiovani","MAP-012 — Neighborhood intelligence cards","## Product code
+
+**MAP-012** — Neighborhood news search (Search fallback)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-230 |
+| Spec | `GS-008` |
+| Prefix | MAP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `GS-008`
+**Spec:** `tasks/grounding-search/tasks/GS-008-neighborhood-news-search.md`
+**Repo status:** Not Started
+**Priority:** P3
+**Phase:** Phase 2.1
+**Depends on:** MAP-002D, MAP-012A
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo","","Medium","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","phase:post-mvp, prefix:MAP, stack:maps, stack:nextjs, track:maps","","","","","2026-05-27T05:58:19.398Z","2026-06-02T12:26:59.989Z","","","","","","","","Phase 1 — mdeai MVP launch","826c4c00-bd2c-4c3f-84f5-7da6c6d0702f","🔮 Search — Grounding","","72c94957-a190-4e93-87c5-0ac41e2ea0dc","17875","","SAN-107",""
+"SAN-229","Sanjiovani","MAP-011 — Route previews + commute cards","## Product code
+
+**MAP-011** — Restaurant opening / closure verification (Search)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-229 |
+| Spec | `GS-007` |
+| Prefix | MAP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `GS-007`
+**Spec:** `tasks/grounding-search/tasks/GS-007-restaurant-closure-verify.md`
+**Repo status:** Not Started
+**Priority:** P3
+**Phase:** Phase 2.1
+**Depends on:** MAP-002D, MAP-006
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Todo","","Medium","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","phase:post-mvp, prefix:MAP, stack:maps, stack:nextjs, track:maps","","","","","2026-05-27T05:58:18.858Z","2026-06-02T12:26:58.609Z","","","","","","","","Phase 1 — mdeai MVP launch","826c4c00-bd2c-4c3f-84f5-7da6c6d0702f","🔮 Search — Grounding","","a98a9b1f-c94f-4ddd-8dc6-5770d307c642","17875","SAN-103","",""
+"SAN-101","Sanjiovani","MAP-002A — ADK LlmAgent + McpToolset package (Phase 2)","## Product code
+
+**MAP-001** — ADK LlmAgent + McpToolset package (Phase 2 follow-up)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-101 |
+| Spec | `MAP-002A-ADK` |
+| Prefix | MAP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Purpose
+
+Replace or wrap the thin FastAPI handler with an official **ADK** `LlmAgent` **+** `McpToolset` layout (per `travel-planner-google-maps-mcp` sample) while keeping the **same JSON contract** in [`plan/ADK/sidecar-api-contract.md`](<../../plan/ADK/sidecar-api-contract.md>).
+
+## Goals
+
+Replace or wrap the thin FastAPI handler with an official **ADK** `LlmAgent` **+** `McpToolset` layout (per `travel-planner-google-maps-mcp` sample) while keeping the **same JSON contract** in [`plan/ADK/sidecar-api-contract.md`](<../../plan/ADK/sidecar-api-contract.md>).
+
+## Features
+
+* Implement **ADK LlmAgent + McpToolset package (Phase 2 follow-up)** per spec
+
+## Real-world example
+
+Replace or wrap the thin FastAPI handler with an official **ADK** `LlmAgent` **+** `McpToolset` layout (per `travel-planner-google-maps-mcp` sample) while keeping the **same JSON contract** in [`plan/ADK/sidecar-api-contract.md`](<../../plan/ADK/sidecar-api-contract.md>).
+
+## Tracking
+
+| Field | Value |
+| -- | -- |
+| Task ID | `MAP-002A-ADK` |
+| Spec | `tasks/maps/MAP-002A-ADK-agent-package.md` |
+| Type | screen build spec |
+| Repo status | Not started |
+| Priority | P2 |
+| Phase | Phase 2 — maps intelligence hardening |
+| Depends on | \[MAP-002\] |
+
+---
+
+*Spec file on disk is source of truth. Repo* `status: Done` *→ Linear **In Review** until user approves Done.*","Todo","","Medium","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","phase:phase2, prefix:MAP, stack:maps, track:maps","","","","","2026-05-27T05:49:09.622Z","2026-06-02T12:27:01.796Z","","","","","","","","Phase 1 — mdeai MVP launch","b9e3059d-b535-402e-a756-3c1beedb3f81","🔮 Vectors & Rerank","","6e67b0f6-cbd4-46b6-a9bf-e208cf849e96","17884","","",""
+"SAN-107","Sanjiovani","MAP-012A — Colombia coverage spike — Places Aggregate vs Insights","## Product code
+
+**MAP-007** — Colombia coverage spike — Places Aggregate vs Insights
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-107 |
+| Spec | `MAP-012A` |
+| Prefix | MAP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Purpose
+
+Colombia coverage spike — Places Aggregate vs Insights — see spec for full scope.
+
+## Goals
+
+Colombia coverage spike — Places Aggregate vs Insights — see spec for full scope.
+
+## Features
+
+* Implement **Colombia coverage spike — Places Aggregate vs Insights** per spec
+* Unblocks: \[MAP-012\]
+
+## Real-world example
+
+When shipped, a user can complete **Colombia coverage spike — Places Aggregate vs Insights** on mdeai without workarounds.
+
+## Tracking
+
+| Field | Value |
+| -- | -- |
+| Task ID | `MAP-012A` |
+| Spec | `tasks/maps/MAP-012A-colombia-aggregate-insights-spike.md` |
+| Type | screen build spec |
+| Repo status | Not Started |
+| Priority | P2 |
+| Phase | Post-MVP gate |
+| Depends on | \[MAP-004\] |
+| Evidence | `../notes/MAP-012A-spike-evidence.md` |
+
+---
+
+*Spec file on disk is source of truth. Repo* `status: Done` *→ Linear **In Review** until user approves Done.*","Todo","","Medium","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","phase:post-mvp, prefix:MAP, stack:maps, track:maps","","","","","2026-05-27T05:49:15.483Z","2026-06-02T12:26:55.703Z","","","","","","","","Phase 1 — mdeai MVP launch","826c4c00-bd2c-4c3f-84f5-7da6c6d0702f","🔮 Search — Grounding","","9be8eeda-486e-4586-bd82-91b9850336ab","17884","","",""
+"SAN-108","Sanjiovani","MAP-023 — Static Maps API — event location previews + OG images","## Product code
+
+**MAP-008** — Static Maps API — event location previews + OG images
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-108 |
+| Spec | `MAP-023` |
+| Prefix | MAP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Purpose
+
+Static Maps API — event location previews + OG images — see spec for full scope.
+
+## Goals
+
+Static Maps API — event location previews + OG images — see spec for full scope.
+
+## Features
+
+* Implement **Static Maps API — event location previews + OG images** per spec
+
+## Real-world example
+
+When shipped, a user can complete **Static Maps API — event location previews + OG images** on mdeai without workarounds.
+
+## Tracking
+
+| Field | Value |
+| -- | -- |
+| Task ID | `MAP-023` |
+| Spec | `tasks/maps/MAP-023-static-maps-event-previews.md` |
+| Type | screen build spec |
+| Repo status | Not Started |
+| Priority | P3 |
+| Phase | Post-MVP marketing |
+| Depends on | \[MAP-004\] |
+
+---
+
+*Spec file on disk is source of truth. Repo* `status: Done` *→ Linear **In Review** until user approves Done.*","Todo","","Low","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","phase:post-mvp, prefix:MAP, stack:maps, stack:nextjs, track:maps","","","","","2026-05-27T05:49:16.358Z","2026-06-02T12:26:56.978Z","","","","","","","","Phase 1 — mdeai MVP launch","826c4c00-bd2c-4c3f-84f5-7da6c6d0702f","🔮 Search — Grounding","","47d3b65b-3c16-4699-bac8-e97868f6b1df","17884","","",""
+"SAN-790","Sanjiovani","SEARCH-001 — search_grounded_places: restaurant + nightlife tool with Places API grounding","## Summary
+
+Harden the existing `search_grounded_places` Mastra tool (used by `conciergeAgent` for restaurant/nightlife/cafe queries) to return structured results with opening hours, price level, and grounding sources — and ensure every Places API call uses `X-Goog-FieldMask`.
+
+## Done when
+
+- [ ] `search_grounded_places(query, domain, lat, lng)` returns `GroundedPlace[]` with: `id, displayName, formattedAddress, location, openNow, priceLevel, rating, grounding_source: ""places_api""`
+- [ ] Every Places API call in the tool uses `X-Goog-FieldMask: places.id,places.displayName,places.formattedAddress,places.location,places.currentOpeningHours,places.priceLevel,places.rating` — no `photos` unless explicitly needed
+- [ ] `openNow` filter: agent passes `openNow: true` for queries like ""open now"" or ""tonight"" — uses `currentOpeningHours.openNow` field
+- [ ] Results update `MdeState.mapPins[]` via `useCoAgent` — domain-colored pins per wireframe (Orange 🍽️, Brown ☕, Dark blue 🌙)
+- [ ] `useCopilotAction({ name: ""search_grounded_places"", available: ""disabled"", render })` renders restaurant/cafe/nightlife cards in chat
+- [ ] Vitest: tool returns ≥1 result for ""quiet cafe Laureles"", `grounding_source` = ""places_api"", `openNow` field present
+- [ ] Faithfulness scorer (SAN-590) passes — agent cites place name from API response, not hallucinated
+
+## Implementation notes
+
+* Current implementation exists in `src/mastra/agents/index.ts` — this is a hardening + typing task, not a rewrite
+* Domain → pin color mapping: `restaurant` → orange, `cafe` → brown, `nightlife` → dark_blue (matches `consumer/004-explore-map.md`)
+* `openNow` on Places API New: use `currentOpeningHours.openNow` boolean (New API) — not legacy `opening_hours.open_now`
+* For ""vibe"" queries (""rooftop with jazz""): combine Places `textSearch` with `keyword` parameter; return top 5, let agent rerank by vibe match
+
+## Critical rules
+
+* `X-Goog-FieldMask` on EVERY Places fetch — never fetch `places.photos` or `places.reviews` in this tool
+* Map pin update via `useCoAgent` is required — not optional UI enhancement
+* `openNow` must use real-time Places API value, not a cached/static field
+
+## References
+
+* Wireframe: `docs/wireframes/consumer/004-explore-map.md`, `docs/wireframes/restaurants/001-restaurant-search.md`
+* Skill: `.claude/skills/mde-maps`, `.claude/skills/mastra`, `.claude/skills/copilotkitV1`
+* Related: MAP-005 FieldMask audit (SAN-776), GS-005 grounding (SAN-780), conciergeAgent","Backlog","","High","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","track:ai","","","","","2026-06-08T14:06:41.332Z","2026-06-08T14:06:42.026Z","","","","","","2026-06-15T14:06:42.022Z","","Phase 1 — mdeai MVP launch","826c4c00-bd2c-4c3f-84f5-7da6c6d0702f","🔮 Search — Grounding","MediumRisk","a84cfbb3-1c0f-4370-96bb-8f9814a9de28","107","","",""
+"SAN-788","Sanjiovani","MAP-008B — NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID: CI env guard + Vercel deployment check","## Summary
+
+Every `<Map>` component that renders `<AdvancedMarker>` requires `mapId` — sourced from `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID`. If this env var is missing in Vercel preview or prod, markers silently fail to render. Add a build-time guard and CI check to catch this before deployment.
+
+## Done when
+
+- [ ] `src/lib/maps/config.ts` exports `getMapId()` that throws at module-load time if `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` is empty or missing (fail-fast, not silent null)
+- [ ] All `<Map mapId={...}>` usages in `src/` use `getMapId()` — no inline `process.env` access
+- [ ] `npm run build` fails with a clear error message if `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` is unset
+- [ ] Vitest test: `getMapId()` throws `MapConfigError` when env var is absent
+- [ ] Vercel project has `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` set in all environments (dev, preview, prod) — verified via Vercel dashboard screenshot in PR
+- [ ] GitHub Actions workflow step checks `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` is non-empty before `next build`
+
+## Implementation notes
+
+* Pattern: `export function getMapId() { const id = process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID; if (!id) throw new Error('NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID is not set — AdvancedMarker requires mapId'); return id; }`
+* Affected components: `<ExploreMap>`, `<RentalMapPanel>`, `<EventMapPanel>`, any future domain map
+* Why this matters: `<AdvancedMarker>` without `mapId` on the parent `<Map>` renders no marker at all — no error, no pin, silent failure
+
+## Critical rules
+
+* CLAUDE.md hard rule: ""Every `<AdvancedMarker>`: `mapId` on the parent `<Map>`""
+* `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` must be in Infisical Cloud under `/` path for `dev` env — do not commit the value
+
+## References
+
+* CLAUDE.md hard rules: ""Every `<AdvancedMarker>`: `mapId` on the parent `<Map>`""
+* Wireframe: `docs/wireframes/consumer/004-explore-map.md` (Technical Notes section)
+* Skill: `.claude/skills/mde-maps`
+* Related: MAP-005 Places audit (SAN-776), rentalAgent map pins (SAN-750)","Backlog","","High","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","track:ai","","","","","2026-06-08T14:06:10.334Z","2026-06-08T14:06:22.128Z","","","","","","2026-06-15T14:06:20.364Z","","Phase 1 — mdeai MVP launch","3677d7d6-75dc-46eb-8d88-c1bb75b0fcd8","🗺️ Maps — P1 Hardening","MediumRisk","f4492535-a14b-4e72-be97-b0f761596779","107","","",""
+"SAN-780","Sanjiovani","SEARCH-002 — Hybrid rental + event search with confidence score","## Summary
+
+Extend `search_rentals` and `search_events` Mastra tools to blend Supabase full-text search with Places API grounding, returning a `confidence_score` and `grounding_sources[]` on each result. Agent can explain WHY a result was ranked first.
+
+## Done when
+
+- [ ] `search_rentals` returns `{ results: RentalResult[], grounding_sources: GroundingSource[] }` — sources list the Supabase row IDs and any Places API data that informed ranking
+- [ ] `search_events` returns same shape
+- [ ] Confidence score (0–100) on each result: `{ ...result, confidence: 87, confidence_reason: ""Exact neighborhood + price match"" }`
+- [ ] Agent uses `grounding_sources` to answer ""why did you show me this?"" — not hallucinated reasons
+- [ ] `useCopilotReadable({ value: groundingSources })` exposes sources to CopilotKit so chat can cite them
+- [ ] Vitest: grounding sources array is non-empty for any result with a Google Places enrichment
+- [ ] Faithfulness scorer (SAN-590 AGT-00A) passes on grounded replies
+
+## Implementation notes
+
+* Supabase FTS: `to_tsvector('english', title || ' ' || description)` + `plainto_tsquery` for natural language queries
+* Places grounding: for rentals, match neighborhood to Places API `addressComponents`; for events, match venue name to `displayName`
+* Confidence formula: `base_score(FTS rank) * location_match_bonus * price_match_bonus` — normalize to 0–100
+* `GroundingSource` type: `{ source_type: ""supabase"" | ""places_api"", entity_id: string, field: string, value: string }`
+* Anti-hallucination: if `grounding_sources` is empty, agent MUST NOT claim a specific location attribute — fall back to ""based on listing description""
+
+## Critical rules
+
+* `X-Goog-FieldMask` required on every Places API call in the grounding layer
+* Grounding sources must be verifiable at runtime — no static/cached reasoning strings passed as sources
+* SAN-590 (faithfulness scorer) must pass before this ships — grounding without a scorer is unguarded
+
+## References
+
+* Wireframe: `docs/wireframes/rentals/001-rental-search.md`, `docs/wireframes/events/001-event-discovery.md`
+* Skill: `.claude/skills/mde-maps`, `.claude/skills/mastra`
+* Related: SAN-590 AGT-00A faithfulness, SAN-606 AGT-04A grounding assertion, rentalAgent (SAN-750), eventAgent (SAN-749)","Backlog","","High","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","track:ai","","","","","2026-06-08T14:05:30.654Z","2026-06-08T14:05:40.801Z","","","","","","2026-06-15T14:05:40.771Z","","Phase 1 — mdeai MVP launch","826c4c00-bd2c-4c3f-84f5-7da6c6d0702f","🔮 Search — Grounding","MediumRisk","c5d2f4da-8e27-4e32-bdf0-d264e30cc2f0","108","","",""
+"SAN-776","Sanjiovani","MAP-005 — Places cache cost audit: FieldMask enforcement + caching layer","## Summary
+
+Audit every Places API New call in `src/mastra/` and `src/app/api/` for `X-Goog-FieldMask` compliance, then add a caching layer to prevent redundant billing on repeated venue/restaurant lookups.
+
+## Done when
+
+- [ ] `grep -r ""places.googleapis.com"" src/` lists every call site; each has `X-Goog-FieldMask` with a field-level list (never `*`)
+- [ ] Fields scoped to the minimum needed per surface:
+  - Venue search: `places.id,places.displayName,places.formattedAddress,places.location,places.rating`
+  - Explore pins: `places.id,places.displayName,places.location`
+  - Restaurant detail: `places.id,places.displayName,places.formattedAddress,places.regularOpeningHours,places.priceLevel`
+- [ ] Caching: Upstash Redis or `unstable_cache` (Next.js) wraps Places fetch with 24h TTL keyed by `placeId + fieldMask hash`
+- [ ] Vitest test: any `fetch` to `places.googleapis.com` without `X-Goog-FieldMask` fails the suite
+- [ ] Billing before/after documented in `docs/maps/places-cache-audit.md`
+
+## Implementation notes
+
+* Fetching `photos` SKU costs 7× more than `displayName` — each unused field is a cost landmine
+* Cache key: `sha256(placeId + sortedFields)` → store in Upstash with `EX 86400`
+* `search_grounded_places` tool in `conciergeAgent` is the highest-volume caller — prioritize that first
+* Cost formula: if `search_grounded_places` fires 10× per session for 1,000 DAU = 10,000 calls/day → `places.photos` vs `places.id,displayName,location` is \~$70/day vs $1/day at scale
+
+## Critical rules
+
+* `X-Goog-FieldMask` is a hard rule in CLAUDE.md — treat missing mask as a billing P0
+* Never fetch `places.reviews` or `places.photos` unless the UI component displaying them ships in the same PR
+* Caching must NOT cache error responses or empty results
+
+## References
+
+* CLAUDE.md: ""Every Places API New call: `X-Goog-FieldMask` (cost lever)""
+* Skill: `.claude/skills/mde-maps`
+* Related: INFRA-001 FieldMask audit (SAN-753), venueAgent MAP-010","Backlog","","High","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","track:ai","","","","","2026-06-08T14:05:20.351Z","2026-06-08T14:05:21.371Z","","","","","","2026-06-15T14:05:21.369Z","","Phase 1 — mdeai MVP launch","3677d7d6-75dc-46eb-8d88-c1bb75b0fcd8","🗺️ Maps — P1 Hardening","MediumRisk","4d11318e-d627-48ac-a0f0-a275278804de","108","","",""
+"SAN-791","Sanjiovani","VEC-002 — Semantic rerank: cosine similarity reranking for rental + event search","## Summary
+
+After VEC-001 ships, add a semantic rerank step to `search_rentals` and `search_events`: embed the user's query at runtime, call `match_embeddings`, and merge cosine-similarity rank with the Supabase FTS rank for a blended final score. Camila gets results ordered by actual preference match, not just keyword overlap.
+
+## Done when
+
+- [ ] `search_rentals` accepts `semantic: true` flag; when set, embeds `query` string via Gemini, calls `match_embeddings(""rental"", query_embedding, 20)`, merges with FTS top-20, returns blended top-10
+- [ ] Blended score formula: `0.6 * cosine_score + 0.4 * fts_rank` — tunable via env var `SEMANTIC_WEIGHT` (default 0.6)
+- [ ] Working memory boost: if user has `preferences.neighborhoods = [""Laureles""]`, results in Laureles get `+0.1` score bonus
+- [ ] `search_events` same pattern: semantic + FTS blend with genre preference boost from working memory
+- [ ] Vitest: for query ""quiet furnished apartment with fast wifi"", semantic result ranks a listing with ""furnished, 300Mbps"" in description above a cheaper listing without those terms
+- [ ] Latency guard: rerank adds < 300ms p95 to tool response time (embedding is \~100ms, `match_embeddings` with HNSW < 50ms)
+- [ ] Blocked by: VEC-001 (SAN-787) — `embeddings` table + `match_embeddings` function must exist
+
+## Implementation notes
+
+* Runtime embedding: `gemini-embedding-004` via `ai` SDK (`embed` from `@ai-sdk/google`) — same credential as agent
+* Blended score: normalize FTS rank to 0–1 before mixing (`fts_rank / max_rank`)
+* `SEMANTIC_WEIGHT`: expose as env var so A/B testing is possible without code change
+* Cache query embedding: same query string in the same session returns cached embedding (no re-embed for pagination)
+* For working memory boost: read `MdeState.preferences.neighborhoods` from agent context — already available via `useCoAgent`
+
+## Critical rules
+
+* Semantic rerank is additive — if `match_embeddings` fails (cold start, extension not loaded), fall back to FTS-only result; never throw
+* Blocked by VEC-001 — do not start before `embeddings` table and HNSW index exist
+* No `@anthropic-ai/sdk` — Gemini embedding only
+
+## References
+
+* Skill: `.claude/skills/gemini`, `.claude/skills/mde-supabase`, `.claude/skills/mastra`
+* Blocked by: VEC-001 pgvector foundation (SAN-787)
+* Related: GS-005 hybrid search (SAN-780), rentalAgent (SAN-750), eventAgent (SAN-749)","Backlog","","Medium","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","track:ai","","","","","2026-06-08T14:07:09.884Z","2026-06-08T14:07:09.884Z","","","","","","","","Phase 1 — mdeai MVP launch","b9e3059d-b535-402e-a756-3c1beedb3f81","🔮 Vectors & Rerank","","12be169f-a743-43dd-99e9-0f74b0b895b1","106","","",""
+"SAN-789","Sanjiovani","MAP-035 — Neighborhood intel layer: agent-readable city stats on /explore","## Summary
+
+Add a neighborhood stats layer that aggregates event counts, rental density, and active listing counts per Medellín neighborhood. Exposed to the agent via `useCopilotReadable` so the concierge can answer ""what's happening in Laureles this weekend?"" without a real-time query.
+
+## Done when
+
+- [ ] Supabase materialized view `neighborhood_stats` refreshed every 6h: `{ neighborhood, event_count_7d, rental_count_active, avg_rental_price, top_event_genre }`
+- [ ] Server component on `/explore` fetches `neighborhood_stats` and passes to `useCopilotReadable({ description: ""Neighborhood activity stats"", value: stats })`
+- [ ] `conciergeAgent` can cite stats in responses: ""Laureles has 3 events this weekend and 12 available rentals averaging $1,050/mo""
+- [ ] Map overlay: neighborhood polygons (GeoJSON) colored by `event_count_7d` intensity — low opacity fill, toggled by ""Show Activity"" button
+- [ ] Left panel on `/explore` shows AI summary: ""8 events, 15 rentals visible in this view"" (updates on map pan)
+- [ ] Vitest: `neighborhood_stats` view returns non-null `event_count_7d` for ""Laureles"" when test fixtures exist
+
+## Implementation notes
+
+* GeoJSON: Medellín neighborhood polygons are public domain — store in `public/geojson/medellin-neighborhoods.json`
+* Stats refresh: Supabase scheduled job (`pg_cron`) or Next.js `revalidate = 21600` server component
+* `useCopilotReadable`: keep payload under 500 tokens — summarize top 5 neighborhoods only, not all 16
+* Map overlay: use `google.maps.Data` layer for polygon rendering (not `AdvancedMarker`) — no `mapId` needed for Data layers
+
+## Critical rules
+
+* `useCopilotReadable` value must be serializable JSON — no class instances or function refs
+* Neighborhood polygons must not be fetched from a third-party API at runtime (billing + latency) — bundle in `public/`
+* Materialized view refresh must NOT block the main query path
+
+## References
+
+* Wireframe: `docs/wireframes/consumer/004-explore-map.md` (AI Chat in Map Context section)
+* Skill: `.claude/skills/mde-maps`, `.claude/skills/copilotkitV1`
+* Related: MAP-005 (SAN-776), ExploreMap component, conciergeAgent `search_grounded_places`","Backlog","","Medium","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","track:ai","","","","","2026-06-08T14:06:25.464Z","2026-06-08T14:06:25.464Z","","","","","","","","Phase 1 — mdeai MVP launch","3677d7d6-75dc-46eb-8d88-c1bb75b0fcd8","🗺️ Maps — P1 Hardening","","d8709d6b-5ea3-4c21-9da5-2b9f868da0a8","107","","",""
+"SAN-787","Sanjiovani","VEC-001 — pgvector foundation: embeddings table + backfill for rentals + events","## Summary
+
+Enable the `pgvector` extension on Supabase, create an `embeddings` table, and run a backfill job that embeds all active rental and event descriptions using Gemini's text embedding model. Foundation for semantic search and reranking.
+
+## Done when
+
+- [ ] `pgvector` extension enabled on Supabase project `zkwcbyxiwklihegjhuql` (`CREATE EXTENSION IF NOT EXISTS vector`)
+- [ ] `embeddings` table: `(id uuid PK, entity_type text, entity_id uuid FK, embedding vector(768), model text, created_at timestamptz)`
+- [ ] RLS: only service-role can INSERT/UPDATE; anon + authenticated can SELECT (needed for similarity queries)
+- [ ] Backfill script at `scripts/backfill-embeddings.ts`: iterates `rentals WHERE status = 'available'` and `events WHERE status = 'published'`, calls `gemini-embedding-004` (or equivalent), inserts rows
+- [ ] HNSW index: `CREATE INDEX ON embeddings USING hnsw (embedding vector_cosine_ops)` for fast ANN queries
+- [ ] `match_embeddings(query_embedding, entity_type, limit)` Supabase function returns ranked `entity_id[]`
+- [ ] Vitest: `match_embeddings` returns ≥1 result for a known rental query (""2BR Laureles furnished"")
+- [ ] Migration at `supabase/migrations/YYYYMMDD_pgvector_embeddings.sql`
+
+## Implementation notes
+
+* Embedding model: use `gemini-embedding-004` (768 dimensions) via `GOOGLE_GENERATIVE_AI_API_KEY` — same key as agents; no new credential needed
+* Embed: `title + ' ' + description + ' ' + neighborhood` for rentals; `title + ' ' + description + ' ' + venue_name` for events
+* Backfill: batch 50 rows at a time; rate-limit to 10 req/s to avoid Gemini quota
+* `match_embeddings` SQL: `SELECT entity_id FROM embeddings WHERE entity_type = $1 ORDER BY embedding <=> $2 LIMIT $3`
+* Incremental updates: trigger on INSERT/UPDATE of `rentals` and `events` tables → call edge function to embed + upsert
+
+## Critical rules
+
+* HNSW index is required before production — sequential scan on 10K+ rows will timeout
+* Service-role key for backfill script is allowed only in `scripts/` (not `src/`) — runs outside the app
+* No `@anthropic-ai/sdk` — Gemini embedding API only
+
+## References
+
+* Skill: `.claude/skills/mde-supabase`, `.claude/skills/gemini`
+* Related: VEC-002 semantic rerank (next issue), SEARCH-001 hybrid rental search
+* Supabase project: `zkwcbyxiwklihegjhuql`","Backlog","","Medium","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","track:ai","","","","","2026-06-08T14:05:44.476Z","2026-06-08T14:05:44.476Z","","","","","","","","Phase 1 — mdeai MVP launch","b9e3059d-b535-402e-a756-3c1beedb3f81","🔮 Vectors & Rerank","","f5cfce2f-fdaf-426d-99b3-8fb7e2355415","108","","",""
+"SAN-733","Sanjiovani","Fix /chat — restore GeoChatShell + homepage ?q= handoff","## Summary
+
+**P0 launch blocker.** D-13 ([SAN-579](https://linear.app/sanjiovani/issue/SAN-579/d-13-re-skin-home-from-home-wireframe)) removed `GeoChatShell` from `/` and left `/chat` as a redirect stub. Local fix is **partially working**; prod still broken.
+
+| Surface | Local (`:3001`) | Prod (`mdeai.co`) |
+| -- | -- | -- |
+| `/chat` | ✅ 200 — GeoChatShell renders | 🔴 307 → `/` (marketing only) |
+| Home Ask → chat | 🟡 opens `/chat` but no `?q=` auto-send | 🔴 redirect loop to hero prefill |
+| Concierge verticals | ✅ rentals, cafés, events, map pins | 🔴 unreachable |
+
+**Rule:** One concierge. Reuse existing `GeoChatShell`. No second CopilotKit. No new chat UI.
+
+**Disk spec:** `docs/partners/audit/08-conceirge-chat.md`
+
+**Branch:** `ai/san-NNN-fix-chat-restore-geochat-shell`
+
+---
+
+## Architecture (target)
+
+```mermaid
+flowchart LR
+  subgraph home [""/ marketing""]
+    Hero[HomeHero Ask]
+    FAB[HomeFab]
+  end
+  subgraph chat [""/chat GeoChatShell""]
+    Shell[MapContextProvider]
+    Canvas[ChatCanvas]
+    CK[CopilotChat]
+    Bootstrap[ConciergeInitialPrompt]
+  end
+  subgraph root [Root layout]
+    Provider[MdeCopilotKitProvider]
+  end
+  Hero -->|""/chat?q=""| chat
+  FAB -->|""/chat""| chat
+  Bootstrap --> CK
+  Provider --> home
+  Provider --> chat
+```
+
+---
+
+## Phase A — Verify local fix (mostly done)
+
+### Already shipped in working tree
+
+- [X] `src/app/chat/page.tsx` — `MapContextProvider` + `GeoChatShell`
+- [X] `e2e/helpers/maps-layout.ts` — `gotoConcierge()` → `/chat`; `gotoHome` aliased
+
+### Confirm on disk
+
+| Check | Expected |
+| -- | -- |
+| `/chat` route exists | yes |
+| `GeoChatShell` reused | yes |
+| `MapContextProvider` wraps chat | yes |
+| No duplicate CopilotKit provider | yes |
+| e2e helper uses `/chat` | yes |
+
+### Local smoke
+
+```bash
+curl -I http://localhost:3001/chat          # expect 200
+curl -s http://localhost:3001/chat | rg chat-canvas
+```
+
+### Visual (Chrome MCP)
+
+- [ ] 3-panel layout: nav · chat · map
+- [ ] Chat input (`.copilotKitInput`)
+- [ ] Rental query → cards + pins
+- [ ] Café query → grounded cards + pins
+- [ ] Events query → event cards
+
+---
+
+## Phase B — Finish ship checklist
+
+### Step 1 — `?q=` homepage handoff (TODO)
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant Home as / marketing
+  participant Chat as /chat
+  participant Bootstrap as ConciergeInitialPrompt
+
+  User->>Home: Ask ""suggest cafes in medellin""
+  Home->>Chat: navigate /chat?q=...
+  Chat->>Bootstrap: read q param
+  Bootstrap->>Bootstrap: auto-send once (fast-path or onSend)
+  Bootstrap->>Chat: router.replace(""/chat"") strip q
+  Chat->>User: cards + map pins
+```
+
+**File:** `src/components/chat/concierge-initial-prompt.tsx` (new, small)
+
+**Mount in:** `geo-chat-shell.tsx` or `chat-center-panel.tsx`
+
+**Rules:**
+
+* Reuse `ConciergeChatInput` send order (rental → event → grounded → restaurant → agent)
+* Send once only — guard with ref; strip `?q=` after send
+* No second chat, no duplicate agent state
+
+### Step 2 — Home CTAs (verify only)
+
+Inspect `src/components/home/*` — should already route to `/chat?q=...`. **Do not change** if correct.
+
+Optional: `/?q=foo` server redirect → `/chat?q=foo` in `src/app/page.tsx`.
+
+### Step 3 — sitemap.md
+
+```text
+/       ✅ LIVE  marketing home
+/chat   ✅ LIVE  concierge (GeoChatShell)
+```
+
+### Step 4 — Validation
+
+```bash
+cd mdeapp
+NODE_OPTIONS=--max-old-space-size=8192 npm run typecheck
+NODE_OPTIONS=--max-old-space-size=8192 npm run lint
+npm test -- --run
+npx playwright test e2e/*chat*.spec.ts e2e/maps*.spec.ts --project=chromium --workers=1
+npm run floor   # if green
+```
+
+### Step 5 — Prod smoke (after deploy)
+
+```bash
+for i in $(seq 1 10); do curl -sI https://www.mdeai.co/chat | head -1; done
+# expect 200, not 307→/
+```
+
+Manual:
+
+* `https://www.mdeai.co/chat` → ask café query → cards + pins
+* Home Ask → `/chat?q=...` → auto-send → cards + pins
+
+---
+
+## Out of scope
+
+* New chat component or second CopilotKit provider
+* Design polish, new cards, new agents
+* [SAN-690](https://linear.app/sanjiovani/issue/SAN-690/mkt-partner-dashboard-dashboard) dashboard
+* `/chats` route (optional alias later)
+
+---
+
+## Commit / PR
+
+```text
+fix(chat): restore concierge route and homepage prompt handoff
+```
+
+```md
+## Summary
+- Restored `/chat` → GeoChatShell + MapContextProvider
+- Updated e2e gotoConcierge → `/chat`
+- Added `?q=` auto-send shim
+- Updated sitemap.md
+
+## Validation
+- [ ] typecheck
+- [ ] lint
+- [ ] unit tests
+- [ ] maps/chat e2e
+- [ ] floor
+- [ ] prod 10× smoke
+```
+
+---
+
+## Acceptance criteria
+
+- [ ] `GET /chat` → 200 with `data-testid=""chat-canvas""` (local + prod)
+- [ ] Home Ask lands on `/chat` and auto-sends query
+- [ ] Rentals, events, cafés, restaurants, nightlife queries return cards + map pins
+- [ ] Playwright concierge e2e green with `/chat` helper
+- [ ] `sitemap.md` reflects `/` marketing + `/chat` concierge
+- [ ] Evidence in `tasks/testing/evidence/YYYY-MM-DD/concierge-restore-RESULTS.md`","Done","","Urgent","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","ai@socialmediaville.ca","CHAT, phase:launch","1","Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-06-08T13:02:45.186Z","2026-06-08T15:12:39.892Z","2026-06-08T13:12:05.314Z","","2026-06-08T14:05:11.288Z","","","2026-06-09T13:02:46.688Z","","Phase 1 — mdeai MVP launch","","","Completed","fe48c7ac-ecf4-473b-9283-0764ccab7e0b","108","SAN-579, SAN-690, SAN-822","",""
+"SAN-103","Sanjiovani","MAP-003 — Nearby Search [SUPERSEDED by MAP-006/SAN-106]","## Product code
+
+**MAP-003** — Nearby Search + Show nearby on RentalCard
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-103 |
+| Spec | `MAP-006` |
+| Prefix | MAP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Purpose
+
+Ship a Mastra tool (or edge-backed action) wrapping `places:searchNearby` with strict `locationRestriction`, `includedTypes`, `maxResultCount`, and audited `X-Goog-FieldMask`. UI CTA on rental/event cards merges results into MAP-001 pin pipeline under a distinct category (e.g. `nearby` / `restaurant`).
+
+## Goals
+
+Ship a Mastra tool (or edge-backed action) wrapping `places:searchNearby` with strict `locationRestriction`, `includedTypes`, `maxResultCount`, and audited `X-Goog-FieldMask`. UI CTA on rental/event cards merges results into MAP-001 pin pipeline under a distinct category (e.g. `nearby` / `restaurant`).
+
+## Features
+
+* Implement **Nearby Search + Show nearby on RentalCard** per spec
+* Unblocks: \[MAP-012\]
+
+## Real-world example
+
+Ship a Mastra tool (or edge-backed action) wrapping `places:searchNearby` with strict `locationRestriction`, `includedTypes`, `maxResultCount`, and audited `X-Goog-FieldMask`. UI CTA on rental/event cards merges results into MAP-001 pin pipeline under a distinct category (e.g. `nearby` / `restaurant`).
+
+## Tracking
+
+| Field | Value |
+| -- | -- |
+| Task ID | `MAP-006` |
+| Spec | `tasks/maps/MAP-006-nearby-search.md` |
+| Type | screen build spec |
+| Repo status | Not Started |
+| Priority | P1 |
+| Phase | Post-MVP — Camila cross-sell |
+| Depends on | \[MAP-005, F46\] |
+
+---
+
+*Spec file on disk is source of truth. Repo* `status: Done` *→ Linear **In Review** until user approves Done.*","Canceled","","High","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","phase:phase2, prefix:MAP, track:maps","","","","","2026-05-27T05:49:12.950Z","2026-06-02T12:31:29.944Z","","","","2026-06-02T12:31:29.908Z","","","","Phase 1 — mdeai MVP launch","","","","1b88f32e-34f0-4ef9-ab30-6ac6752682e7","8842","SAN-229, SAN-106, SAN-102","",""
+"SAN-102","Sanjiovani","MAP-002 — places-proxy edge [SUPERSEDED by MAP-005/SAN-105]","## Product code
+
+**MAP-002** — places-proxy edge + places_cache + RLS
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-102 |
+| Spec | `MAP-005` |
+| Prefix | MAP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+## Purpose
+
+Server-only **Places API (New)** access for mdeapp: edge function `places-proxy` wraps MAP-004 `google-places-client.ts`, persists responses in Supabase with TTL, and enforces RLS so browsers never hold `GOOGLE_MAPS_API_KEY`.
+
+## Goals
+
+Server-only **Places API (New)** access for mdeapp: edge function `places-proxy` wraps MAP-004 `google-places-client.ts`, persists responses in Supabase with TTL, and enforces RLS so browsers never hold `GOOGLE_MAPS_API_KEY`.
+
+## Features
+
+* Implement **places-proxy edge + places_cache + RLS** per spec
+* Unblocks: \[MAP-006, MAP-010\]
+
+## Real-world example
+
+Server-only **Places API (New)** access for mdeapp: edge function `places-proxy` wraps MAP-004 `google-places-client.ts`, persists responses in Supabase with TTL, and enforces RLS so browsers never hold `GOOGLE_MAPS_API_KEY`.
+
+## Tracking
+
+| Field | Value |
+| -- | -- |
+| Task ID | `MAP-005` |
+| Spec | `tasks/maps/MAP-005-places-proxy-cache.md` |
+| Type | screen build spec |
+| Repo status | Not Started |
+| Priority | P1 |
+| Phase | Post-MVP — cost-safe Places at scale |
+| Depends on | \[MAP-004\] |
+
+---
+
+*Spec file on disk is source of truth. Repo* `status: Done` *→ Linear **In Review** until user approves Done.*","Canceled","","High","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","phase:phase2, prefix:MAP, track:maps","","","","","2026-05-27T05:49:12.397Z","2026-06-02T12:31:27.585Z","","","","2026-06-02T12:31:27.567Z","","","","Phase 1 — mdeai MVP launch","","","","0f1d7c41-46b0-4ed8-9276-61040d373912","8842","SAN-104, SAN-103","",""
+"SAN-231","Sanjiovani","GS-009 — Sponsor research (Search grounding)","## Product code
+
+**MAP-013** — Sponsor research (Search grounding)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-231 |
+| Spec | `GS-009` |
+| Prefix | MAP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `GS-009`
+**Spec:** `tasks/grounding-search/tasks/GS-009-sponsor-research-search.md`
+**Repo status:** Not Started
+**Priority:** P3
+**Phase:** Phase 3
+**Depends on:** MAP-002D
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Backlog","","Low","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","phase:phase2, prefix:MAP, track:maps","","","","","2026-05-27T05:58:19.936Z","2026-06-02T12:31:34.216Z","","","","2026-06-02T12:31:34.199Z","","","","Phase 1 — mdeai MVP launch","","","","74334966-37ea-4b55-b236-f561c72269b4","8842","","",""
+"SAN-228","Sanjiovani","GS-006 — Gemini tool combination spike (Search + MCP)","## Product code
+
+**MAP-010** — Gemini tool combination spike (Search + MCP)
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-228 |
+| Spec | `GS-006` |
+| Prefix | MAP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `GS-006`
+**Spec:** `tasks/grounding-search/tasks/GS-006-tool-combination-spike.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Phase 2.1
+**Depends on:** MAP-002D
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Backlog","","Low","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","phase:phase2, prefix:MAP, track:maps","","","","","2026-05-27T05:58:18.307Z","2026-06-02T12:31:33.088Z","","","","2026-06-02T12:31:33.052Z","","","","Phase 1 — mdeai MVP launch","","","","f4d0d7cf-7015-4ed7-bfc8-a23e10825352","8842","","",""
+"SAN-227","Sanjiovani","GS-005 — Verify ticket source + venue update tools","## Product code
+
+**MAP-009** — Verify ticket source + venue update tools
+
+| Traceability | Value |
+| -- | -- |
+| Linear | SAN-227 |
+| Spec | `GS-005` |
+| Prefix | MAP |
+
+*Catalog naming:* `scripts/linear-apply-prefix-catalog.mjs` *· Registry:* `tasks/linear/prefix-catalog.json`
+
+---
+
+**Task ID:** `GS-005`
+**Spec:** `tasks/grounding-search/tasks/GS-005-verify-ticket-venue-tools.md`
+**Repo status:** Not Started
+**Priority:** P2
+**Phase:** Phase 2.1
+**Depends on:** MAP-002D, GS-002
+
+---
+
+*Imported from mdeai tasks/ — spec file is source of truth.*","Backlog","","Low","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","ai@socialmediaville.ca","phase:phase2, prefix:MAP, track:maps","","","","","2026-05-27T05:58:17.754Z","2026-06-02T12:31:31.680Z","","","","2026-06-02T12:31:31.665Z","","","","Phase 1 — mdeai MVP launch","","","","25e59384-c529-4166-b04d-1ce853a1642b","8842","","",""
+"SAN-463","Sanjiovani","MAP-002B — Production ADK sidecar — Cloud Run + Vercel env","Deploy ADK grounding sidecar to Cloud Run and wire GOOGLE_ADK_SIDECAR_URL on Vercel for production café/rental queries.
+
+**Spec:** `tasks/maps/MAP-002B-prod-adk-deploy.md`
+**Priority:** P0 — MVP hardening gate
+**Depends on:** MAP-002 ✅
+
+## Gates
+
+* Cloud Run service deployed and health-checked
+* GOOGLE_ADK_SIDECAR_URL set on Vercel preview + prod
+* ADK grounding queries return non-error on production URL
+* No API keys in browser bundles","Duplicate","","Urgent","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","phase:mvp, prefix:MAP, stack:maps, track:maps, type:chore","","","","","2026-06-02T12:27:14.682Z","2026-06-02T23:39:08.428Z","","","","2026-06-02T23:39:08.565Z","","","","Phase 1 — mdeai MVP launch","3677d7d6-75dc-46eb-8d88-c1bb75b0fcd8","🗺️ Maps — P1 Hardening","","07621dad-e68f-4b8c-9932-c9c923dea98e","8174","","","SAN-368"
+"SAN-464","Sanjiovani","MAP-008B — Vercel Map ID + API key restriction verify","Verify NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID is set on Vercel preview/prod and Advanced Markers render correctly — not falling back to DEMO_MAP_ID.
+
+**Spec:** `tasks/maps/MAP-008B-vercel-map-id-verify.md`
+**Priority:** P0 — MVP hardening gate
+**Depends on:** MAP-008 ✅
+
+## Gates
+
+* NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID present in Vercel env (preview + prod)
+* AdvancedMarker renders without console warning about DEMO_MAP_ID
+* API key has HTTP referrer restriction (not unrestricted)
+* Screenshot evidence committed","Duplicate","","Urgent","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","","phase:mvp, prefix:MAP, stack:maps, track:maps, type:chore","","","","","2026-06-02T12:27:19.005Z","2026-06-02T23:39:08.004Z","","","","2026-06-02T23:39:08.083Z","","","","Phase 1 — mdeai MVP launch","3677d7d6-75dc-46eb-8d88-c1bb75b0fcd8","🗺️ Maps — P1 Hardening","","e48aa510-5032-4178-88d7-28dc920ef9de","8174","","","SAN-369"

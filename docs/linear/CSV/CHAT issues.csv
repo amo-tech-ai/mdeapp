@@ -1,0 +1,292 @@
+"ID","Team","Title","Description","Status","Estimate","Priority","Project ID","Project","Creator","Assignee","Labels","Cycle Number","Cycle Name","Cycle Start","Cycle End","Created","Updated","Started","Triaged","Completed","Canceled","Archived","Due Date","Parent issue","Initiatives","Project Milestone ID","Project Milestone","SLA Status","UUID","Time in status (minutes)","Related to","Blocked by","Duplicate of"
+"SAN-822","Sanjiovani","UX-037 — Concierge improvements sprint (post SAN-733)","## UX-037 — Concierge Improvements Sprint (v2)
+
+**Label:** `CHAT` · **View:** [CHAT board](<https://linear.app/sanjiovani/view/chat-5e4071d8144e>)
+
+### Docs (source of truth)
+
+| Doc | Path |
+| -- | -- |
+| **Tracker** (diagrams · user stories · Mastra audit) | `mdeapp/linear/markdown/CHAT.md` |
+| Audit gate | `mdeapp/linear/audit-checklist.md` |
+| Task index | `mdeapp/docs/notes/june-9-chat-tasks.md` |
+| AI & Intelligence | [project](<https://linear.app/sanjiovani/project/ai-and-intelligence-fe206edb90b2/issues>) |
+
+### Predecessor
+
+[SAN-733](<https://linear.app/sanjiovani/issue/SAN-733>) ✅ Done — PR #134 · prod `/` + `/chat` 200
+
+### Execution order (v2)
+
+`823 → 828 → 824 → 827 → 825 → 826 → 829 → 830 → 831`
+
+| Order | Issue | User story | Persona |
+| -- | -- | -- | -- |
+| 1 | [SAN-823](<https://linear.app/sanjiovani/issue/SAN-823>) Rentals fast-path | US-C2 | Camila |
+| 2 | [SAN-828](<https://linear.app/sanjiovani/issue/SAN-828>) CopilotKit smoke | US-L2 | Lucía |
+| 3 | [SAN-824](<https://linear.app/sanjiovani/issue/SAN-824>) Event pins ≥95% | US-A1 | Andrés |
+| 4 | [SAN-827](<https://linear.app/sanjiovani/issue/SAN-827>) Nightlife prod-synthetic | US-T1 | Tourist |
+| 5 | [SAN-825](<https://linear.app/sanjiovani/issue/SAN-825>) Restaurant photos | US-T2 | Tourist |
+| 6 | [SAN-826](<https://linear.app/sanjiovani/issue/SAN-826>) Café Place IDs | US-T3 | Tourist |
+| 7 | [SAN-829](<https://linear.app/sanjiovani/issue/SAN-829>) Validation gate | US-L1 | Lucía |
+| 8 | [SAN-830](<https://linear.app/sanjiovani/issue/SAN-830>) Docs | — | — |
+| 9 | [SAN-831](<https://linear.app/sanjiovani/issue/SAN-831>) Ship PR | — | — |
+
+### Scores
+
+* Sprint: **42/100** (planning 67% · implementation 0%)
+* Launch readiness: **8.3/10** → target **≥9.0** @ [SAN-831](https://linear.app/sanjiovani/issue/SAN-831/ux-046-concierge-sprint-ship-single-pr-order-9)
+* Mastra adoption (consumer chat): **\~50%** — intentional Phase 1 (one agent + fast-path; workflows parked)
+
+### Skills
+
+copilotkitV1 · mastra · gemini · mde-maps · mde-supabase · task-verifier · mermaid-diagrams
+
+### Evidence root
+
+`tasks/testing/evidence/YYYY-MM-DD/chat-sprint/`
+
+### Branch
+
+`ai/san-822-ux-037-concierge-improvements-sprint`
+
+### Hard rules
+
+1. One vertical at a time · tests green before next
+2. Separate commit per task · one PR @ [SAN-831](https://linear.app/sanjiovani/issue/SAN-831/ux-046-concierge-sprint-ship-single-pr-order-9)
+3. **No new agents** · **no UI redesign**
+4. Gemini only · CopilotKit **1.55.2 v1**
+5. `task-verifier` before Done","Todo",,"High","1faa8d97-2c93-4e56-b1e9-08a41013c980","UX","ai@socialmediaville.ca",,"area:concierge, CHAT, phase:mvp, stack:copilotkit, stack:mastra, stack:playwright, track:ux",,,,,"2026-06-08T15:03:27.243Z","2026-06-08T16:15:55.472Z",,,,,,"2026-06-15T15:03:28.558Z",,"",,,"MediumRisk","c4ae08d7-b862-4404-9f46-1692f89888ef",74,"SAN-407, SAN-406, SAN-733, SAN-485, SAN-484","",
+"SAN-831","Sanjiovani","UX-046 — Concierge sprint: ship single PR (order 9)","## UX-046 — Ship PR (order **9**)
+
+**Parent:** [SAN-822](<https://linear.app/sanjiovani/issue/SAN-822>) · **Blocked by:** [SAN-830](<https://linear.app/sanjiovani/issue/SAN-830>)
+
+**Title:** `feat(concierge): improve search quality, map coverage and reliability`
+
+**Magic words:** `Closes SAN-822`
+
+**Branch:** `ai/san-822-ux-037-concierge-improvements-sprint`
+
+### PR checklist
+
+- [ ] 3–8 small commits (one per [SAN-823](https://linear.app/sanjiovani/issue/SAN-823/ux-038-rentals-pattern-based-fast-path-neighborhood-intent)…826 implementation)
+- [ ] Floor green on branch
+- [ ] `linear/audit-checklist.md` sprint exit gates passed
+- [ ] Launch readiness ≥ **9.0**
+
+**Tracker:** `mdeapp/linear/markdown/CHAT.md`","Todo",,"High","1faa8d97-2c93-4e56-b1e9-08a41013c980","UX","ai@socialmediaville.ca",,"area:concierge, CHAT, phase:mvp, track:pr, track:ux",,,,,"2026-06-08T15:04:04.317Z","2026-06-08T16:16:18.130Z",,,,,,"2026-06-15T15:04:05.062Z","SAN-822","",,,"MediumRisk","f7fd46b2-1d64-4d29-80b3-d23cafed29dc",73,"","SAN-830",
+"SAN-824","Sanjiovani","UX-039 — Events: pin coverage via upstream coords + geocode gaps","## UX-039 — Events (order **3**)
+
+**Parent:** [SAN-822](<https://linear.app/sanjiovani/issue/SAN-822>) · **Blocked by:** [SAN-828](<https://linear.app/sanjiovani/issue/SAN-828>)
+**User story:** US-A1 · **Persona:** Andrés
+
+### Goal
+
+≥95% event pin coverage on concierge result sets.
+
+### Approach (prefer upstream)
+
+1. **Fix/enrich venue lat/lng in** `/api/events/search` and event payload
+2. Geocode fallback + cache **only for rows still missing coords** (`X-Goog-FieldMask`)
+3. No new agent
+
+### Done criteria
+
+- [ ] ≥95% of pinned events have lat/lng
+- [ ] `e2e/home-to-chat` events: cards; pins when coords present
+
+### Commit
+
+`fix(events): improve venue pin coverage`
+
+**Tracker:** `mdeapp/linear/markdown/CHAT.md` § [SAN-824](https://linear.app/sanjiovani/issue/SAN-824/ux-039-events-pin-coverage-via-upstream-coords-geocode-gaps)
+**Evidence:** `tasks/testing/evidence/YYYY-MM-DD/chat-sprint/san-824-events/`","Todo",,"High","43b16e0a-96de-478d-9842-f2467c0f7b8c","Events Platform","ai@socialmediaville.ca",,"area:concierge, CHAT, phase:mvp, prefix:EVT, stack:maps, stack:mastra, track:ux",,,,,"2026-06-08T15:03:39.897Z","2026-06-08T16:16:07.624Z",,,,,,"2026-06-15T15:03:40.747Z","SAN-822","Phase 1 — mdeai MVP launch",,,"MediumRisk","16edc310-434b-42d8-a1ea-47f3318d58a8",74,"","SAN-828",
+"SAN-823","Sanjiovani","UX-038 — Rentals: pattern-based fast-path (neighborhood + intent)","## UX-038 — Rentals (order **1**)
+
+**Parent:** [SAN-822](<https://linear.app/sanjiovani/issue/SAN-822>) · **User story:** US-C2 · **Persona:** Camila
+
+### Goal
+
+`apartments in laureles` → search when **parser confidence + neighborhood signals** — not blind clarify skip.
+
+### Scope
+
+* Extend `rental-query-parser.ts` / `shouldInstantRentalClarify` (align [SAN-406](<https://linear.app/sanjiovani/issue/SAN-406>), [SAN-484](<https://linear.app/sanjiovani/issue/SAN-484>))
+* No new agent · no UI redesign
+* Preserve schedule-viewing HITL
+
+### Done criteria
+
+- [ ] `rental-card` ≥1 · `map-pin` ≥1 · URL `/chat` (no `?q=`)
+- [ ] `rental-schedule-cta` → `schedule-viewing-modal`
+- [ ] Vitest `rental-query-parser` / fast-path green
+- [ ] `e2e/home-to-chat` rentals PASS
+
+### Tests
+
+`e2e/home-to-chat` rentals · vague + fast-path · `chat-smoke.mjs`
+
+### Commit
+
+`fix(rentals): improve search routing and latency`
+
+**Tracker:** `mdeapp/linear/markdown/CHAT.md` § [SAN-823](https://linear.app/sanjiovani/issue/SAN-823/ux-038-rentals-pattern-based-fast-path-neighborhood-intent)
+**Evidence:** `tasks/testing/evidence/YYYY-MM-DD/chat-sprint/san-823-rentals/`","Todo",,"High","08c5830f-74c1-459c-803c-d873609522ce","Real Estate","ai@socialmediaville.ca",,"area:concierge, area:rentals, CHAT, phase:mvp, stack:copilotkit, stack:mastra, track:real, track:ux",,,,,"2026-06-08T15:03:38.469Z","2026-06-08T16:16:05.160Z",,,,,,"2026-06-15T15:03:41.822Z","SAN-822","Phase 1 — mdeai MVP launch",,,"MediumRisk","b3b3f4af-3bc8-4a10-89fe-1a0be1c5480f",74,"SAN-484, SAN-406, SAN-407, SAN-485","",
+"SAN-828","Sanjiovani","UX-043 — CopilotKit: audit empty POST 401 vs 400 (order 2)","## UX-043 — CopilotKit API (order **2**)
+
+**Parent:** [SAN-822](<https://linear.app/sanjiovani/issue/SAN-822>) · **Blocked by:** [SAN-823](<https://linear.app/sanjiovani/issue/SAN-823>)
+**User story:** US-L2 · **Persona:** Lucía
+
+### Problem
+
+`POST /api/copilotkit` empty body → **401** on prod; smoke expects **400**.
+
+### Audit first (do not assume bug)
+
+1. `src/app/api/copilotkit/route.ts` + middleware
+2. CopilotKit v1 docs (`copilotkitV1` skill)
+3. **Fix route** OR **update smoke** — document decision
+4. No CopilotKit POST storm (<8 POSTs/query)
+
+### Done criteria
+
+- [ ] Decision documented in evidence
+- [ ] `chat-smoke.mjs` PASS localhost + prod OR smoke updated with rationale
+
+### Commit
+
+`fix(api): align copilotkit error responses` (or `chore(smoke):` if 401 correct)
+
+**Tracker:** `mdeapp/linear/markdown/CHAT.md` § [SAN-828](https://linear.app/sanjiovani/issue/SAN-828/ux-043-copilotkit-audit-empty-post-401-vs-400-order-2)
+**Evidence:** `tasks/testing/evidence/YYYY-MM-DD/chat-sprint/san-828-copilotkit/`","Todo",,"High","7826f699-5ded-44e3-8fc1-0a17fd9910ca","Platform Infrastructure","ai@socialmediaville.ca",,"area:concierge, CHAT, phase:mvp, stack:copilotkit, stack:nextjs, track:ux",,,,,"2026-06-08T15:03:48.848Z","2026-06-08T16:16:05.902Z",,,,,,"2026-06-15T15:12:40.637Z","SAN-822","Phase 1 — mdeai MVP launch",,,"MediumRisk","092a1909-9501-4e1e-97bb-2ae5828431f5",73,"","SAN-823",
+"SAN-829","Sanjiovani","UX-044 — Concierge sprint: full validation gate (order 7)","## UX-044 — Validation (order **7**)
+
+**Parent:** [SAN-822](<https://linear.app/sanjiovani/issue/SAN-822>) · **Blocked by:** [SAN-826](<https://linear.app/sanjiovani/issue/SAN-826>)
+**User story:** US-L1 · **Persona:** Lucía
+
+```bash
+cd mdeapp && npm run lint && npm test -- --run
+npm run typecheck && npm run floor
+npx playwright test e2e/home-to-chat.spec.ts --project=chromium
+node ../tasks/testing/scripts/chat-smoke.mjs --base https://www.mdeai.co
+```
+
+### Done criteria
+
+- [ ] Floor green
+- [ ] E2E 7/7 PASS
+- [ ] Smoke saved (green or documented waiver)
+- [ ] `chat-sprint/RESULTS.md` written
+
+**Tracker:** `mdeapp/linear/markdown/CHAT.md` § [SAN-829](https://linear.app/sanjiovani/issue/SAN-829/ux-044-concierge-sprint-full-validation-gate-order-7)
+**Evidence:** `tasks/testing/evidence/YYYY-MM-DD/chat-sprint/san-829-floor/`","Todo",,"High","1faa8d97-2c93-4e56-b1e9-08a41013c980","UX","ai@socialmediaville.ca",,"area:concierge, CHAT, phase:mvp, stack:playwright, track:ux, type:test",,,,,"2026-06-08T15:03:55.272Z","2026-06-08T16:16:15.769Z",,,,,,"2026-06-15T15:03:56.190Z","SAN-822","",,,"MediumRisk","b70f7051-f5a1-4186-a916-77da687bc08b",73,"","SAN-826",
+"SAN-827","Sanjiovani","UX-042 — Nightlife: prod-synthetic 5th query (order 4)","## UX-042 — Nightlife (order **4**)
+
+**Parent:** [SAN-822](<https://linear.app/sanjiovani/issue/SAN-822>) · **Blocked by:** [SAN-824](<https://linear.app/sanjiovani/issue/SAN-824>)
+**User story:** US-T1 · **Persona:** Tourist
+
+### Goal
+
+5/5 prod-synthetic queries including nightlife.
+
+### Scope (v2 — lean)
+
+* Add **5th query** to `e2e/prod-synthetic-smoke.spec.ts` (nightlife prompt)
+* `nightlife-card` + `map-pin` on prod/local
+* VEN-025 routing: no `event-card` for bar queries
+* **Do not** add `e2e/nightlife.spec.ts` unless prod-synthetic flakes
+
+### Commit
+
+`test(nightlife): add regression coverage`
+
+**Tracker:** `mdeapp/linear/markdown/CHAT.md` § [SAN-827](https://linear.app/sanjiovani/issue/SAN-827/ux-042-nightlife-prod-synthetic-5th-query-order-4)
+**Evidence:** `tasks/testing/evidence/YYYY-MM-DD/chat-sprint/san-827-nightlife/`","Todo",,"Medium","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"area:concierge, CHAT, phase:mvp, stack:playwright, track:ux, track:venues, type:test",,,,,"2026-06-08T15:03:46.337Z","2026-06-08T16:16:08.281Z",,,,,,,"SAN-822","Phase 1 — mdeai MVP launch",,,,"6c5113dc-1d8a-4014-a6b1-176fdaa3031d",73,"","SAN-824",
+"SAN-830","Sanjiovani","UX-045 — Concierge sprint: documentation update (order 8)","## UX-045 — Docs (order **8**)
+
+**Parent:** [SAN-822](<https://linear.app/sanjiovani/issue/SAN-822>) · **Blocked by:** [SAN-829](<https://linear.app/sanjiovani/issue/SAN-829>)
+
+### Update
+
+* `mdeapp/docs/audits/concierge-audit.md` — before/after table
+* `mdeapp/docs/audits/launch-readiness.md` — target **≥9.0**
+* `mdeapp/linear/markdown/CHAT.md` — sprint scores refreshed
+* `mdeapp/docs/notes/june-9-chat-tasks.md` — status sync
+
+Include before/after metrics + screenshots per vertical.
+
+**Tracker:** `mdeapp/linear/markdown/CHAT.md` § [SAN-830](https://linear.app/sanjiovani/issue/SAN-830/ux-045-concierge-sprint-documentation-update-order-8)
+**Evidence:** `tasks/testing/evidence/YYYY-MM-DD/chat-sprint/san-830-docs/`","Todo",,"Medium","1faa8d97-2c93-4e56-b1e9-08a41013c980","UX","ai@socialmediaville.ca",,"area:concierge, CHAT, phase:mvp, track:ux",,,,,"2026-06-08T15:04:03.168Z","2026-06-08T16:16:16.978Z",,,,,,,"SAN-822","",,,,"496fe8e5-5e0c-47fb-b5e4-10841b557696",73,"","SAN-829",
+"SAN-826","Sanjiovani","UX-041 — Cafés: Place ID audit + graceful booking degrade (order 6)","## UX-041 — Cafés (order **6**)
+
+**Parent:** [SAN-822](<https://linear.app/sanjiovani/issue/SAN-822>) · **Blocked by:** [SAN-825](<https://linear.app/sanjiovani/issue/SAN-825>)
+**User story:** US-T3 · **Persona:** Tourist
+
+### Goal
+
+Place ID coverage audit; booking degrades cleanly without fake IDs.
+
+### Scope (v2)
+
+* Audit % of café cards with verified `placeId`
+* Improve booking-sheet copy when missing ID
+* **Do not** invent synthetic Place IDs
+
+### Done criteria
+
+- [ ] Coverage % in audit table
+- [ ] Clear degrade copy in `cafe-booking-sheet`
+
+### Commit
+
+`fix(cafes): improve place validation coverage`
+
+**Tracker:** `mdeapp/linear/markdown/CHAT.md` § [SAN-826](https://linear.app/sanjiovani/issue/SAN-826/ux-041-cafes-place-id-audit-graceful-booking-degrade-order-6)
+**Evidence:** `tasks/testing/evidence/YYYY-MM-DD/chat-sprint/san-826-cafes/`","Todo",,"Low","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"area:concierge, CHAT, phase:mvp, stack:maps, stack:supabase, track:ux, track:venues",,,,,"2026-06-08T15:03:43.138Z","2026-06-08T16:16:14.784Z",,,,,,,"SAN-822","Phase 1 — mdeai MVP launch",,,,"f71e0cb3-e21c-4a12-9431-054920b2a37d",74,"","SAN-825",
+"SAN-825","Sanjiovani","UX-040 — Restaurants: measure placeholders, warm cache if needed (order 5)","## UX-040 — Restaurants (order **5**)
+
+**Parent:** [SAN-822](<https://linear.app/sanjiovani/issue/SAN-822>) · **Blocked by:** [SAN-827](<https://linear.app/sanjiovani/issue/SAN-827>)
+**User story:** US-T2 · **Persona:** Tourist
+
+### Goal
+
+Measure placeholder rate; fix only if >30%.
+
+### Scope (v2)
+
+1. **Measure** `restaurant-card-photo-placeholder` % on prod (n≥20)
+2. If >30%: warm Places photo cache / improve fallback chain
+3. No card redesign
+
+### Done criteria
+
+- [ ] Placeholder % logged in `concierge-audit.md`
+- [ ] Code change only if threshold exceeded
+
+### Commit
+
+`fix(restaurants): improve image fallback handling`
+
+**Tracker:** `mdeapp/linear/markdown/CHAT.md` § [SAN-825](https://linear.app/sanjiovani/issue/SAN-825/ux-040-restaurants-measure-placeholders-warm-cache-if-needed-order-5)
+**Evidence:** `tasks/testing/evidence/YYYY-MM-DD/chat-sprint/san-825-restaurants/`","Todo",,"Low","b742a452-c4f2-41cb-97ba-ef86189adc1a","Venues","ai@socialmediaville.ca",,"area:concierge, CHAT, phase:mvp, stack:maps, track:ux, track:venues",,,,,"2026-06-08T15:03:42.329Z","2026-06-08T16:16:13.824Z",,,,,,,"SAN-822","Phase 1 — mdeai MVP launch",,,,"aa8c694e-c3ba-4dd5-b916-08a042fce791",74,"","SAN-827",
+"SAN-733","Sanjiovani","Fix /chat — restore GeoChatShell + homepage ?q= handoff","## ✅ Done — PR #134 merged
+
+**US-C1** · Prod verified: `GET /` + `GET /chat` → **200** · home `?q=` handoff works
+
+**Tracker:** [CHAT sprint](<https://linear.app/sanjiovani/view/chat-5e4071d8144e>) · Follow-up epic: [SAN-822](<https://linear.app/sanjiovani/issue/SAN-822>)
+
+---
+
+## Summary
+
+Restored canonical concierge at `/chat` (GeoChatShell). Marketing home at `/` hands off via `?q=` auto-send.
+
+| Surface | Prod (`mdeai.co`) |
+| -- | -- |
+| `/chat` | ✅ 200 — GeoChatShell |
+| `/` | ✅ 200 — marketing |
+| Home Ask → chat | ✅ `/chat?q=` auto-send |
+
+**PR:** [amo-tech-ai/mdeapp#134](https://linear.app/sanjiovani/review/fixchat-restore-geochatshell-on-chat-homepage-q-handoff-san-733-5eb95961b4ac)
+
+**Evidence:** `tasks/testing/evidence/2026-06-08/home-to-chat-vertical-e2e.txt`","Done",,"Urgent","40fd1312-4522-4739-9ae1-6d65e68b5714","Discovery Platform","ai@socialmediaville.ca","ai@socialmediaville.ca","CHAT, phase:launch",1,"Cycle 1","2026-06-08T05:00:00.000Z","2026-06-22T05:00:00.000Z","2026-06-08T13:02:45.186Z","2026-06-08T16:16:04.296Z","2026-06-08T13:12:05.314Z",,"2026-06-08T14:05:11.288Z",,,"2026-06-09T13:02:46.688Z",,"Phase 1 — mdeai MVP launch",,,"Completed","fe48c7ac-ecf4-473b-9283-0764ccab7e0b",132,"SAN-690, SAN-579, SAN-822","",

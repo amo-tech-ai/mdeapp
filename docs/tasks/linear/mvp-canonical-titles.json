@@ -1,0 +1,36 @@
+{
+  "generated": "2026-05-31",
+  "frozen": true,
+  "rule": "Linear title = {SPEC-ID} — {readable title}. SAN-* immutable. Disk spec paths unchanged.",
+  "deprecated": ["IMP-*", "EVP-*", "SCREEN-*", "F32", "F48", "G1", "G3", "RNT-*", "AIA-*", "ATH-*", "UIX-*", "SYS-*"],
+  "allowed_prefixes": ["MAP", "EVT", "RE", "VEN", "TRIP", "AUTH", "DATA", "UX", "PAY", "OPS", "TEST", "AI"],
+  "titles": [
+    { "linear": "SAN-178", "spec_id": "PAY-001", "title": "Live ticket purchase on production", "was": ["G1", "PAY-001"], "spec_path": "todo.md", "module": "payments" },
+    { "linear": "SAN-116", "spec_id": "PAY-003", "title": "Stripe webhook secret isolation", "was": ["EVP-003-core", "PAY-002"], "spec_path": "tasks/events/EVP-003-core-stripe-webhook-secret-audit.md", "module": "payments" },
+    { "linear": "SAN-117", "spec_id": "EVT-013", "title": "Event cards in AI chat", "was": ["EVP-013-core", "EVT-001"], "spec_path": "tasks/events/EVP-013-core-event-card-component.md", "module": "events" },
+    { "linear": "SAN-366", "spec_id": "EVT-002", "title": "Host publish production proof", "was": ["G3-core-host-publish-proof", "EVT-002"], "spec_path": "tasks/events/tasks/G3-core-host-publish-proof.md", "module": "events" },
+    { "linear": "SAN-115", "spec_id": "EVT-001", "title": "MVP launch proof ledger", "was": ["EVP-001-core", "OPS-001"], "spec_path": "tasks/events/EVP-001-core-production-proof-gates.md", "module": "events" },
+    { "linear": "SAN-100", "spec_id": "OPS-002", "title": "Production smoke matrix", "was": ["F32", "OPS-002"], "spec_path": "tasks/core/F32-production-smoke.md", "module": "platform" },
+    { "linear": "SAN-367", "spec_id": "AUTH-011", "title": "Production auth checklist", "was": ["AUTH-011", "ATH-001"], "spec_path": "tasks/data/tasks-data/AUTH-011-production-auth-checklist.md", "module": "auth" },
+    { "linear": "SAN-368", "spec_id": "MAP-002B", "title": "ADK grounding on production", "was": ["MAP-002B", "MAP-001"], "spec_path": "tasks/maps/MAP-002B-prod-adk-deploy.md", "module": "maps" },
+    { "linear": "SAN-369", "spec_id": "MAP-008B", "title": "Map ID on production", "was": ["MAP-008B", "MAP-002"], "spec_path": "tasks/maps/MAP-008B-vercel-map-id-verify.md", "module": "maps" },
+    { "linear": "SAN-315", "spec_id": "UX-001", "title": "Restore AI concierge on production", "was": ["UX-001", "AIA-001"], "spec_path": "tasks/ux/UX-001-restore-concierge-prod.md", "module": "ux" },
+    { "linear": "SAN-316", "spec_id": "UX-003", "title": "Rental price parser ($500/night)", "was": ["UX-003", "RNT-001"], "spec_path": "tasks/ux/UX-003-rental-price-parser-deploy.md", "module": "ux" },
+    { "linear": "SAN-320", "spec_id": "UX-002", "title": "Chat error bubble on RUN_ERROR", "was": ["UX-002", "AIA-002"], "spec_path": "tasks/ux/UX-002-chat-error-bubble.md", "module": "ux" },
+    { "linear": "SAN-319", "spec_id": "UX-005", "title": "Chat thinking indicator", "was": ["UX-005", "AIA-003"], "spec_path": "tasks/ux/UX-005-chat-thinking-indicator.md", "module": "ux" },
+    { "linear": "SAN-321", "spec_id": "UX-006", "title": "Reset chat and map on New chat", "was": ["UX-006", "AIA-004"], "spec_path": "tasks/ux/UX-006-new-chat-reset.md", "module": "ux" },
+    { "linear": "SAN-323", "spec_id": "UX-007", "title": "Clear ghost map pins after empty search", "was": ["UX-007", "MAP-003"], "spec_path": "tasks/ux/UX-007-clear-stale-markers.md", "module": "ux" },
+    { "linear": "SAN-324", "spec_id": "UX-008", "title": "Fix confusing Save button tooltip", "was": ["UX-008", "UIX-001"], "spec_path": "tasks/ux/UX-008-save-tooltip.md", "module": "ux" },
+    { "linear": "SAN-322", "spec_id": "UX-009", "title": "Production AI chat health monitor", "was": ["UX-009", "OPS-003"], "spec_path": "tasks/ux/UX-009-prod-chat-monitor.md", "module": "ux" },
+    { "linear": "SAN-318", "spec_id": "UX-010", "title": "Unified result cards M0–M5", "was": ["UX-010"], "spec_path": "tasks/ux/UX-010-unified-result-cards.md", "module": "ux" },
+    { "linear": "SAN-118", "spec_id": "EVT-014", "title": "Host events list page", "was": ["EVP-014-core"], "spec_path": "tasks/events/EVP-014-core-host-events-list-page.md", "module": "events" },
+    { "linear": "SAN-112", "spec_id": "UX-012", "title": "Login and signup polish", "was": ["SCREEN-017"], "spec_path": "tasks/screens/017-scr-login-signup-polish.md", "module": "ux" },
+    { "linear": "SAN-111", "spec_id": "UX-011", "title": "Map exploration panel", "was": ["SCREEN-010"], "spec_path": "tasks/maps/wireframes/011-scr-map-exploration-panel.md", "module": "ux" },
+    { "linear": "SAN-104", "spec_id": "MAP-010", "title": "Place autocomplete for venue", "was": ["MAP-010"], "spec_path": "tasks/maps/MAP-010-place-autocomplete-venue.md", "module": "maps" }
+  ],
+  "duplicates": [
+    { "linear": "SAN-272", "action": "close", "keep": "SAN-114", "reason": "WIRE-026 duplicate of SCREEN-021" },
+    { "linear": "SAN-317", "action": "canceled", "reason": "UX-004 superseded by UX-001" },
+    { "linear": "SAN-248", "action": "polish_only", "note": "Checkout UI polish; PAY-001 is the commerce proof" }
+  ]
+}

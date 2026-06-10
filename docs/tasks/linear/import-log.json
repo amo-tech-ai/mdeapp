@@ -1,0 +1,3970 @@
+{
+  "created": [
+    {
+      "id": "CTEST-000",
+      "identifier": "SAN-179",
+      "url": "https://linear.app/sanjiovani/issue/SAN-179/ctest-000-contest-diagrams-github-repo-decisions-and-scope-gate"
+    },
+    {
+      "id": "CTEST-001",
+      "identifier": "SAN-180",
+      "url": "https://linear.app/sanjiovani/issue/SAN-180/ctest-001-supabase-contest-core-schema-and-rls"
+    },
+    {
+      "id": "CTEST-002",
+      "identifier": "SAN-181",
+      "url": "https://linear.app/sanjiovani/issue/SAN-181/ctest-002-voting-and-judge-scoring-ledgers"
+    },
+    {
+      "id": "CTEST-003",
+      "identifier": "SAN-182",
+      "url": "https://linear.app/sanjiovani/issue/SAN-182/ctest-003-tickets-and-paid-vote-payment-derived-schema"
+    },
+    {
+      "id": "CTEST-004",
+      "identifier": "SAN-183",
+      "url": "https://linear.app/sanjiovani/issue/SAN-183/ctest-004-copilotkit-contest-workspace-and-approval-cards"
+    },
+    {
+      "id": "CTEST-005",
+      "identifier": "SAN-184",
+      "url": "https://linear.app/sanjiovani/issue/SAN-184/ctest-005-mastra-and-gemini-contest-workflows"
+    },
+    {
+      "id": "CTEST-006",
+      "identifier": "SAN-185",
+      "url": "https://linear.app/sanjiovani/issue/SAN-185/ctest-006-contest-screens-routes-and-wireframes"
+    },
+    {
+      "id": "CTEST-007",
+      "identifier": "SAN-186",
+      "url": "https://linear.app/sanjiovani/issue/SAN-186/ctest-007-contest-playwright-proof-gates"
+    },
+    {
+      "id": "OCL-001-core",
+      "identifier": "SAN-187",
+      "url": "https://linear.app/sanjiovani/issue/SAN-187/ocl-001-core-openclaw-gateway-health-stub"
+    },
+    {
+      "id": "OCL-002-core",
+      "identifier": "SAN-188",
+      "url": "https://linear.app/sanjiovani/issue/SAN-188/ocl-002-core-supabase-openclaw-jobs-automation-approvals"
+    },
+    {
+      "id": "OCL-003-core",
+      "identifier": "SAN-189",
+      "url": "https://linear.app/sanjiovani/issue/SAN-189/ocl-003-core-mastra-openclaw-approval-workflow"
+    },
+    {
+      "id": "OCL-004-core",
+      "identifier": "SAN-190",
+      "url": "https://linear.app/sanjiovani/issue/SAN-190/ocl-004-core-clawhub-safety-policy-no-unvetted-skills"
+    },
+    {
+      "id": "OCL-005-core",
+      "identifier": "SAN-191",
+      "url": "https://linear.app/sanjiovani/issue/SAN-191/ocl-005-core-openclaw-disabled-kill-switch"
+    },
+    {
+      "id": "OCL-006-core",
+      "identifier": "SAN-192",
+      "url": "https://linear.app/sanjiovani/issue/SAN-192/ocl-006-core-openclaw-vps-gemini-provider-model-routing"
+    },
+    {
+      "id": "OCL-007-core",
+      "identifier": "SAN-193",
+      "url": "https://linear.app/sanjiovani/issue/SAN-193/ocl-007-core-rotate-openclaw-gateway-token"
+    },
+    {
+      "id": "OCL-008-mvp",
+      "identifier": "SAN-194",
+      "url": "https://linear.app/sanjiovani/issue/SAN-194/ocl-008-mvp-admin-approvals-ui-openclaw-job-preview"
+    },
+    {
+      "id": "OCL-009-mvp",
+      "identifier": "SAN-195",
+      "url": "https://linear.app/sanjiovani/issue/SAN-195/ocl-009-mvp-openclaw-web-search-gemini-grounding-provider"
+    },
+    {
+      "id": "OCL-010-mvp",
+      "identifier": "SAN-196",
+      "url": "https://linear.app/sanjiovani/issue/SAN-196/ocl-010-mvp-mde-tour-enrich-mde-enrichment-skillmd-pack"
+    },
+    {
+      "id": "OCL-011-mvp",
+      "identifier": "SAN-197",
+      "url": "https://linear.app/sanjiovani/issue/SAN-197/ocl-011-mvp-mastra-enqueueopenclawjob-tool"
+    },
+    {
+      "id": "OCL-012-mvp",
+      "identifier": "SAN-198",
+      "url": "https://linear.app/sanjiovani/issue/SAN-198/ocl-012-mvp-e2e-reject-openclaw-job-without-approval"
+    },
+    {
+      "id": "OCL-013-mvp",
+      "identifier": "SAN-199",
+      "url": "https://linear.app/sanjiovani/issue/SAN-199/ocl-013-mvp-coffee-tours-source-crawler-verify"
+    },
+    {
+      "id": "OCL-014-postmvp",
+      "identifier": "SAN-200",
+      "url": "https://linear.app/sanjiovani/issue/SAN-200/ocl-014-postmvp-restaurants-menu-pdfhtml-extraction"
+    },
+    {
+      "id": "OCL-015-postmvp",
+      "identifier": "SAN-201",
+      "url": "https://linear.app/sanjiovani/issue/SAN-201/ocl-015-postmvp-cafes-instagram-creator-discovery-crawl"
+    },
+    {
+      "id": "OCL-016-postmvp",
+      "identifier": "SAN-202",
+      "url": "https://linear.app/sanjiovani/issue/SAN-202/ocl-016-postmvp-events-venue-intelligence-browser-enrich"
+    },
+    {
+      "id": "OCL-017-postmvp",
+      "identifier": "SAN-203",
+      "url": "https://linear.app/sanjiovani/issue/SAN-203/ocl-017-postmvp-events-directory-calendar-import"
+    },
+    {
+      "id": "OCL-018-postmvp",
+      "identifier": "SAN-204",
+      "url": "https://linear.app/sanjiovani/issue/SAN-204/ocl-018-postmvp-real-estate-listing-enrichment-crawl"
+    },
+    {
+      "id": "OCL-019-postmvp",
+      "identifier": "SAN-205",
+      "url": "https://linear.app/sanjiovani/issue/SAN-205/ocl-019-postmvp-marketing-sponsor-prospect-research"
+    },
+    {
+      "id": "OCL-020-postmvp",
+      "identifier": "SAN-206",
+      "url": "https://linear.app/sanjiovani/issue/SAN-206/ocl-020-postmvp-marketing-local-seo-competitor-page-monitor"
+    },
+    {
+      "id": "OCL-021-postmvp",
+      "identifier": "SAN-207",
+      "url": "https://linear.app/sanjiovani/issue/SAN-207/ocl-021-postmvp-correlation-ids-mastra-openclaw"
+    },
+    {
+      "id": "OCL-022-advanced",
+      "identifier": "SAN-208",
+      "url": "https://linear.app/sanjiovani/issue/SAN-208/ocl-022-advanced-whatsapp-templates-number-allowlist"
+    },
+    {
+      "id": "OCL-023-advanced",
+      "identifier": "SAN-209",
+      "url": "https://linear.app/sanjiovani/issue/SAN-209/ocl-023-advanced-events-t-24h-reminder-wa-drafts"
+    },
+    {
+      "id": "OCL-024-advanced",
+      "identifier": "SAN-210",
+      "url": "https://linear.app/sanjiovani/issue/SAN-210/ocl-024-advanced-events-sponsor-roi-browser-screenshots"
+    },
+    {
+      "id": "OCL-025-advanced",
+      "identifier": "SAN-211",
+      "url": "https://linear.app/sanjiovani/issue/SAN-211/ocl-025-advanced-events-external-publish-draft-outbox"
+    },
+    {
+      "id": "OCL-026-advanced",
+      "identifier": "SAN-212",
+      "url": "https://linear.app/sanjiovani/issue/SAN-212/ocl-026-advanced-contests-wa-leaderboard-reminder-drafts"
+    },
+    {
+      "id": "OCL-027-advanced",
+      "identifier": "SAN-213",
+      "url": "https://linear.app/sanjiovani/issue/SAN-213/ocl-027-advanced-marketing-postiz-approved-post-handoff"
+    },
+    {
+      "id": "OCL-030-postmvp",
+      "identifier": "SAN-214",
+      "url": "https://linear.app/sanjiovani/issue/SAN-214/ocl-030-postmvp-apify-openclaw-plugin-sandbox"
+    },
+    {
+      "id": "OCL-031-postmvp",
+      "identifier": "SAN-215",
+      "url": "https://linear.app/sanjiovani/issue/SAN-215/ocl-031-postmvp-events-sponsor-decision-maker-map"
+    },
+    {
+      "id": "OCL-032-postmvp",
+      "identifier": "SAN-216",
+      "url": "https://linear.app/sanjiovani/issue/SAN-216/ocl-032-postmvp-events-sponsor-proposal-draft-pack"
+    },
+    {
+      "id": "OCL-033-postmvp",
+      "identifier": "SAN-217",
+      "url": "https://linear.app/sanjiovani/issue/SAN-217/ocl-033-postmvp-events-vendor-recruitment-research"
+    },
+    {
+      "id": "OCL-034-postmvp",
+      "identifier": "SAN-218",
+      "url": "https://linear.app/sanjiovani/issue/SAN-218/ocl-034-postmvp-events-instagramfacebook-social-intelligence"
+    },
+    {
+      "id": "OCL-035-advanced",
+      "identifier": "SAN-219",
+      "url": "https://linear.app/sanjiovani/issue/SAN-219/ocl-035-advanced-events-approved-whatsapppostizsocial-campaign"
+    },
+    {
+      "id": "OCL-036-postmvp",
+      "identifier": "SAN-220",
+      "url": "https://linear.app/sanjiovani/issue/SAN-220/ocl-036-postmvp-events-repo-and-openclaw-skill-intake-audit-gate"
+    },
+    {
+      "id": "OCL-037-postmvp",
+      "identifier": "SAN-221",
+      "url": "https://linear.app/sanjiovani/issue/SAN-221/ocl-037-postmvp-events-event-planner-checklist-adapter"
+    },
+    {
+      "id": "OCL-038-postmvp",
+      "identifier": "SAN-222",
+      "url": "https://linear.app/sanjiovani/issue/SAN-222/ocl-038-postmvp-events-public-event-source-connector-adapters"
+    },
+    {
+      "id": "OCL-039-postmvp",
+      "identifier": "SAN-223",
+      "url": "https://linear.app/sanjiovani/issue/SAN-223/ocl-039-postmvp-events-source-health-and-connector-drift-monitor"
+    },
+    {
+      "id": "OCL-040-postmvp",
+      "identifier": "SAN-224",
+      "url": "https://linear.app/sanjiovani/issue/SAN-224/ocl-040-postmvp-events-event-page-qa-crawler"
+    },
+    {
+      "id": "OCL-041-advanced",
+      "identifier": "SAN-225",
+      "url": "https://linear.app/sanjiovani/issue/SAN-225/ocl-041-advanced-events-live-ops-ticker-and-role-specific-event"
+    },
+    {
+      "id": "OCL-042-mvp",
+      "identifier": "SAN-226",
+      "url": "https://linear.app/sanjiovani/issue/SAN-226/ocl-042-mvp-clawevents-openclaw-medellin-event-ingest-worker"
+    },
+    {
+      "id": "GS-005",
+      "identifier": "SAN-227",
+      "url": "https://linear.app/sanjiovani/issue/SAN-227/gs-005-verify-ticket-source-venue-update-tools"
+    },
+    {
+      "id": "GS-006",
+      "identifier": "SAN-228",
+      "url": "https://linear.app/sanjiovani/issue/SAN-228/gs-006-gemini-tool-combination-spike-search-mcp"
+    },
+    {
+      "id": "GS-007",
+      "identifier": "SAN-229",
+      "url": "https://linear.app/sanjiovani/issue/SAN-229/gs-007-restaurant-opening-closure-verification-search"
+    },
+    {
+      "id": "GS-008",
+      "identifier": "SAN-230",
+      "url": "https://linear.app/sanjiovani/issue/SAN-230/gs-008-neighborhood-news-search-search-fallback"
+    },
+    {
+      "id": "GS-009",
+      "identifier": "SAN-231",
+      "url": "https://linear.app/sanjiovani/issue/SAN-231/gs-009-sponsor-research-search-grounding"
+    },
+    {
+      "id": "SCREEN-001",
+      "identifier": "SAN-232",
+      "url": "https://linear.app/sanjiovani/issue/SAN-232/screen-001-home-chat-chrome-integration",
+      "kind": "scr"
+    },
+    {
+      "id": "WIRE-001",
+      "identifier": "SAN-233",
+      "url": "https://linear.app/sanjiovani/issue/SAN-233/wire-001-home-concierge-chat",
+      "kind": "wire"
+    },
+    {
+      "id": "SCREEN-003",
+      "identifier": "SAN-234",
+      "url": "https://linear.app/sanjiovani/issue/SAN-234/screen-003-chat-query-bar-filter-chips",
+      "kind": "scr"
+    },
+    {
+      "id": "WIRE-014",
+      "identifier": "SAN-235",
+      "url": "https://linear.app/sanjiovani/issue/SAN-235/wire-014-chat-chrome-nav-filters-workflow",
+      "kind": "wire"
+    },
+    {
+      "id": "SCREEN-006",
+      "identifier": "SAN-236",
+      "url": "https://linear.app/sanjiovani/issue/SAN-236/screen-006-event-card-in-thread-polish",
+      "kind": "scr"
+    },
+    {
+      "id": "SCREEN-014",
+      "identifier": "SAN-237",
+      "url": "https://linear.app/sanjiovani/issue/SAN-237/screen-014-event-detail-page",
+      "kind": "scr"
+    },
+    {
+      "id": "WIRE-019",
+      "identifier": "SAN-238",
+      "url": "https://linear.app/sanjiovani/issue/SAN-238/wire-019-event-detail-page",
+      "kind": "wire"
+    },
+    {
+      "id": "WIRE-003",
+      "identifier": "SAN-239",
+      "url": "https://linear.app/sanjiovani/issue/SAN-239/wire-003-event-discovery-in-thread",
+      "kind": "wire"
+    },
+    {
+      "id": "SCREEN-016",
+      "identifier": "SAN-240",
+      "url": "https://linear.app/sanjiovani/issue/SAN-240/screen-016-host-event-wizard-ui",
+      "kind": "scr"
+    },
+    {
+      "id": "WIRE-022",
+      "identifier": "SAN-241",
+      "url": "https://linear.app/sanjiovani/issue/SAN-241/wire-022-host-event-wizard",
+      "kind": "wire"
+    },
+    {
+      "id": "SCREEN-005",
+      "identifier": "SAN-242",
+      "url": "https://linear.app/sanjiovani/issue/SAN-242/screen-005-rental-card-polish-ctas",
+      "kind": "scr"
+    },
+    {
+      "id": "WIRE-002",
+      "identifier": "SAN-243",
+      "url": "https://linear.app/sanjiovani/issue/SAN-243/wire-002-rental-search-in-thread",
+      "kind": "wire"
+    },
+    {
+      "id": "WIRE-015",
+      "identifier": "SAN-244",
+      "url": "https://linear.app/sanjiovani/issue/SAN-244/wire-015-rentals-browse-catalog",
+      "kind": "wire"
+    },
+    {
+      "id": "SCREEN-007",
+      "identifier": "SAN-245",
+      "url": "https://linear.app/sanjiovani/issue/SAN-245/screen-007-venue-listing-detail-sheet",
+      "kind": "scr"
+    },
+    {
+      "id": "WIRE-004",
+      "identifier": "SAN-246",
+      "url": "https://linear.app/sanjiovani/issue/SAN-246/wire-004-venue-listing-detail-sheet",
+      "kind": "wire"
+    },
+    {
+      "id": "WIRE-008",
+      "identifier": "SAN-247",
+      "url": "https://linear.app/sanjiovani/issue/SAN-247/wire-008-map-exploration-panel",
+      "kind": "wire"
+    },
+    {
+      "id": "SCREEN-009",
+      "identifier": "SAN-248",
+      "url": "https://linear.app/sanjiovani/issue/SAN-248/screen-009-booking-checkout-modal-stripe",
+      "kind": "scr"
+    },
+    {
+      "id": "WIRE-006",
+      "identifier": "SAN-249",
+      "url": "https://linear.app/sanjiovani/issue/SAN-249/wire-006-booking-checkout-modal",
+      "kind": "wire"
+    },
+    {
+      "id": "WIRE-021",
+      "identifier": "SAN-250",
+      "url": "https://linear.app/sanjiovani/issue/SAN-250/wire-021-bookings-inbox",
+      "kind": "wire"
+    },
+    {
+      "id": "SCREEN-013",
+      "identifier": "SAN-251",
+      "url": "https://linear.app/sanjiovani/issue/SAN-251/screen-013-itinerary-panel",
+      "kind": "scr"
+    },
+    {
+      "id": "WIRE-005",
+      "identifier": "SAN-252",
+      "url": "https://linear.app/sanjiovani/issue/SAN-252/wire-005-itinerary-tab",
+      "kind": "wire"
+    },
+    {
+      "id": "SCREEN-011",
+      "identifier": "SAN-253",
+      "url": "https://linear.app/sanjiovani/issue/SAN-253/screen-011-saved-collections-page",
+      "kind": "scr"
+    },
+    {
+      "id": "WIRE-007",
+      "identifier": "SAN-254",
+      "url": "https://linear.app/sanjiovani/issue/SAN-254/wire-007-saved-collections",
+      "kind": "wire"
+    },
+    {
+      "id": "SCREEN-012",
+      "identifier": "SAN-255",
+      "url": "https://linear.app/sanjiovani/issue/SAN-255/screen-012-trips-dashboard",
+      "kind": "scr"
+    },
+    {
+      "id": "WIRE-018",
+      "identifier": "SAN-256",
+      "url": "https://linear.app/sanjiovani/issue/SAN-256/wire-018-trip-workspace-full-tabs",
+      "kind": "wire"
+    },
+    {
+      "id": "WIRE-017",
+      "identifier": "SAN-257",
+      "url": "https://linear.app/sanjiovani/issue/SAN-257/wire-017-trips-dashboard",
+      "kind": "wire"
+    },
+    {
+      "id": "WIRE-013",
+      "identifier": "SAN-258",
+      "url": "https://linear.app/sanjiovani/issue/SAN-258/wire-013-mindtrip-observed-patterns",
+      "kind": "wire"
+    },
+    {
+      "id": "SCREEN-015",
+      "identifier": "SAN-259",
+      "url": "https://linear.app/sanjiovani/issue/SAN-259/screen-015-my-tickets-qr",
+      "kind": "scr"
+    },
+    {
+      "id": "WIRE-020",
+      "identifier": "SAN-260",
+      "url": "https://linear.app/sanjiovani/issue/SAN-260/wire-020-my-tickets-qr",
+      "kind": "wire"
+    },
+    {
+      "id": "WIRE-016",
+      "identifier": "SAN-261",
+      "url": "https://linear.app/sanjiovani/issue/SAN-261/wire-016-explore-unified",
+      "kind": "wire"
+    },
+    {
+      "id": "SCREEN-008",
+      "identifier": "SAN-262",
+      "url": "https://linear.app/sanjiovani/issue/SAN-262/screen-008-schedule-viewing-modal-hitl-lead",
+      "kind": "scr"
+    },
+    {
+      "id": "SCREEN-004",
+      "identifier": "SAN-263",
+      "url": "https://linear.app/sanjiovani/issue/SAN-263/screen-004-workflow-progress-strip",
+      "kind": "scr"
+    },
+    {
+      "id": "WIRE-009",
+      "identifier": "SAN-264",
+      "url": "https://linear.app/sanjiovani/issue/SAN-264/wire-009-contest-discovery",
+      "kind": "wire"
+    },
+    {
+      "id": "SCREEN-019",
+      "identifier": "SAN-265",
+      "url": "https://linear.app/sanjiovani/issue/SAN-265/screen-019-loading-error-empty-states",
+      "kind": "scr"
+    },
+    {
+      "id": "WIRE-011",
+      "identifier": "SAN-266",
+      "url": "https://linear.app/sanjiovani/issue/SAN-266/wire-011-creator-dashboard",
+      "kind": "wire"
+    },
+    {
+      "id": "WIRE-010",
+      "identifier": "SAN-267",
+      "url": "https://linear.app/sanjiovani/issue/SAN-267/wire-010-nightlife-explorer",
+      "kind": "wire"
+    },
+    {
+      "id": "SCREEN-020",
+      "identifier": "SAN-268",
+      "url": "https://linear.app/sanjiovani/issue/SAN-268/screen-020-accessibility-pass-mvp-surfaces",
+      "kind": "scr"
+    },
+    {
+      "id": "WIRE-023",
+      "identifier": "SAN-269",
+      "url": "https://linear.app/sanjiovani/issue/SAN-269/wire-023-onboarding-wizard",
+      "kind": "wire"
+    },
+    {
+      "id": "WIRE-024",
+      "identifier": "SAN-270",
+      "url": "https://linear.app/sanjiovani/issue/SAN-270/wire-024-login-signup",
+      "kind": "wire"
+    },
+    {
+      "id": "WIRE-025",
+      "identifier": "SAN-271",
+      "url": "https://linear.app/sanjiovani/issue/SAN-271/wire-025-notifications",
+      "kind": "wire"
+    },
+    {
+      "id": "WIRE-026",
+      "identifier": "SAN-272",
+      "url": "https://linear.app/sanjiovani/issue/SAN-272/wire-026-cafe-listings-map-booking",
+      "kind": "wire"
+    },
+    {
+      "id": "DATA-001",
+      "identifier": "SAN-325",
+      "url": "https://linear.app/sanjiovani/issue/SAN-325/sys-021-venues-data-inventory-cafes-restaurants-nightclubs",
+      "imp": 155,
+      "dataOrder": 1,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-012",
+      "identifier": "SAN-326",
+      "url": "https://linear.app/sanjiovani/issue/SAN-326/sys-022-events-data-inventory-live-schema-vs-evp-roadmap",
+      "imp": 156,
+      "dataOrder": 2,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-019",
+      "identifier": "SAN-327",
+      "url": "https://linear.app/sanjiovani/issue/SAN-327/sys-023-rentals-data-inventory-live-schema-vs-real-estate-prd",
+      "imp": 157,
+      "dataOrder": 3,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-026",
+      "identifier": "SAN-328",
+      "url": "https://linear.app/sanjiovani/issue/SAN-328/sys-024-trips-data-inventory-live-schema-vs-trips-plan",
+      "imp": 158,
+      "dataOrder": 4,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-034",
+      "identifier": "SAN-329",
+      "url": "https://linear.app/sanjiovani/issue/SAN-329/sys-025-maps-geo-inventory-inventory-latlng-place-id-coverage",
+      "imp": 159,
+      "dataOrder": 5,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-002",
+      "identifier": "SAN-330",
+      "url": "https://linear.app/sanjiovani/issue/SAN-330/sys-026-three-kind-catalog-contract-cafe-restaurant-nightclub",
+      "imp": 160,
+      "dataOrder": 6,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-009",
+      "identifier": "SAN-331",
+      "url": "https://linear.app/sanjiovani/issue/SAN-331/sys-027-supabase-schema-migrations-venue-booking-anchors-rental",
+      "imp": 161,
+      "dataOrder": 7,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-035",
+      "identifier": "SAN-332",
+      "url": "https://linear.app/sanjiovani/issue/SAN-332/sys-028-cafe-listings-venue-anchors-seed-metadata-places-verify",
+      "imp": 162,
+      "dataOrder": 8,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-004",
+      "identifier": "SAN-333",
+      "url": "https://linear.app/sanjiovani/issue/SAN-333/sys-029-restaurant-catalog-verify-gap-fill-not-full-re-seed",
+      "imp": 163,
+      "dataOrder": 9,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-003",
+      "identifier": "SAN-334",
+      "url": "https://linear.app/sanjiovani/issue/SAN-334/sys-030-cafe-seed-sign-off-golden-query-map",
+      "imp": 164,
+      "dataOrder": 10,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-005",
+      "identifier": "SAN-335",
+      "url": "https://linear.app/sanjiovani/issue/SAN-335/sys-031-nightclub-bar-anchor-seed-places-verify",
+      "imp": 165,
+      "dataOrder": 11,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-006",
+      "identifier": "SAN-336",
+      "url": "https://linear.app/sanjiovani/issue/SAN-336/sys-032-golden-eval-queries-cafe-restaurant-nightclub",
+      "imp": 166,
+      "dataOrder": 12,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-007",
+      "identifier": "SAN-337",
+      "url": "https://linear.app/sanjiovani/issue/SAN-337/sys-033-place-details-cache-coverage-all-venue-kinds",
+      "imp": 167,
+      "dataOrder": 13,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-008",
+      "identifier": "SAN-338",
+      "url": "https://linear.app/sanjiovani/issue/SAN-338/sys-034-places-backfill-cron-edge-job",
+      "imp": 168,
+      "dataOrder": 14,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-010",
+      "identifier": "SAN-339",
+      "url": "https://linear.app/sanjiovani/issue/SAN-339/sys-035-postgres-function-search-path-hardening-batch",
+      "imp": 169,
+      "dataOrder": 15,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-011",
+      "identifier": "SAN-340",
+      "url": "https://linear.app/sanjiovani/issue/SAN-340/sys-036-edge-function-mvp-freeze-matrix-guest-lead-abuse-audit",
+      "imp": 170,
+      "dataOrder": 16,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-013",
+      "identifier": "SAN-341",
+      "url": "https://linear.app/sanjiovani/issue/SAN-341/sys-037-event-qa-schema-ask-host-qanda-moderation",
+      "imp": 171,
+      "dataOrder": 17,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-016",
+      "identifier": "SAN-342",
+      "url": "https://linear.app/sanjiovani/issue/SAN-342/sys-038-events-ai-content-approval-columns-vibe-tags-summary",
+      "imp": 172,
+      "dataOrder": 18,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-018",
+      "identifier": "SAN-343",
+      "url": "https://linear.app/sanjiovani/issue/SAN-343/sys-039-event-admin-ops-sql-exception-queue-views",
+      "imp": 173,
+      "dataOrder": 19,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-014",
+      "identifier": "SAN-344",
+      "url": "https://linear.app/sanjiovani/issue/SAN-344/sys-040-event-live-updates-schema-host-day-of-feed",
+      "imp": 174,
+      "dataOrder": 20,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-015",
+      "identifier": "SAN-345",
+      "url": "https://linear.app/sanjiovani/issue/SAN-345/sys-041-attendee-social-visibility-schema-audience-breakdown",
+      "imp": 175,
+      "dataOrder": 21,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-017",
+      "identifier": "SAN-346",
+      "url": "https://linear.app/sanjiovani/issue/SAN-346/sys-042-discovered-events-pipeline-schema-web-ingest-approval-queue",
+      "imp": 176,
+      "dataOrder": 22,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-020",
+      "identifier": "SAN-347",
+      "url": "https://linear.app/sanjiovani/issue/SAN-347/sys-043-leads-rental-fk-apartment-id-preferred-showing-at",
+      "imp": 177,
+      "dataOrder": 23,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-023",
+      "identifier": "SAN-348",
+      "url": "https://linear.app/sanjiovani/issue/SAN-348/sys-044-rental-golden-queries-camila-eval-sql-pack",
+      "imp": 178,
+      "dataOrder": 24,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-021",
+      "identifier": "SAN-349",
+      "url": "https://linear.app/sanjiovani/issue/SAN-349/sys-045-showings-lifecycle-lead-showing-row-bridge",
+      "imp": 179,
+      "dataOrder": 25,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-022",
+      "identifier": "SAN-350",
+      "url": "https://linear.app/sanjiovani/issue/SAN-350/sys-046-apartmentsneighborhood-id-fk-join-neighborhoods-table",
+      "imp": 180,
+      "dataOrder": 26,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-024",
+      "identifier": "SAN-351",
+      "url": "https://linear.app/sanjiovani/issue/SAN-351/sys-047-rental-booking-commerce-prep-bookings-payments-stripe",
+      "imp": 181,
+      "dataOrder": 27,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-025",
+      "identifier": "SAN-352",
+      "url": "https://linear.app/sanjiovani/issue/SAN-352/sys-048-hermes-rental-analytics-scoring-logs-market-snapshots",
+      "imp": 182,
+      "dataOrder": 28,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-027",
+      "identifier": "SAN-353",
+      "url": "https://linear.app/sanjiovani/issue/SAN-353/sys-049-trip-items-type-check-extension-insert-rpc",
+      "imp": 183,
+      "dataOrder": 29,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-029",
+      "identifier": "SAN-354",
+      "url": "https://linear.app/sanjiovani/issue/SAN-354/sys-050-commerce-trip-id-linkage-event-orders-leads-showings",
+      "imp": 184,
+      "dataOrder": 30,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-030",
+      "identifier": "SAN-355",
+      "url": "https://linear.app/sanjiovani/issue/SAN-355/sys-051-trips-golden-queries-pack",
+      "imp": 185,
+      "dataOrder": 31,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-028",
+      "identifier": "SAN-356",
+      "url": "https://linear.app/sanjiovani/issue/SAN-356/sys-052-event-orders-showings-trip-items-idempotent-sync",
+      "imp": 186,
+      "dataOrder": 32,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-031",
+      "identifier": "SAN-357",
+      "url": "https://linear.app/sanjiovani/issue/SAN-357/sys-053-trip-items-itinerary-covering-index",
+      "imp": 187,
+      "dataOrder": 33,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-032",
+      "identifier": "SAN-358",
+      "url": "https://linear.app/sanjiovani/issue/SAN-358/sys-054-mastra-threads-trip-id-metadata-index",
+      "imp": 188,
+      "dataOrder": 34,
+      "source": "data-import-2026-05-29"
+    },
+    {
+      "id": "DATA-033",
+      "identifier": "SAN-359",
+      "url": "https://linear.app/sanjiovani/issue/SAN-359/sys-055-route-cache-schema-rls-ttl",
+      "imp": 189,
+      "dataOrder": 35,
+      "source": "data-import-2026-05-29"
+    }
+  ],
+  "skipped": [
+    {
+      "id": "F20",
+      "identifier": "SAN-95",
+      "reason": "exists"
+    },
+    {
+      "id": "F21A",
+      "identifier": "SAN-96",
+      "reason": "exists"
+    },
+    {
+      "id": "F22",
+      "identifier": "SAN-97",
+      "reason": "exists"
+    },
+    {
+      "id": "F26",
+      "identifier": "SAN-98",
+      "reason": "exists"
+    },
+    {
+      "id": "F30",
+      "identifier": "SAN-99",
+      "reason": "exists"
+    },
+    {
+      "id": "F32",
+      "identifier": "SAN-100",
+      "reason": "exists"
+    },
+    {
+      "id": "MAP-002A-ADK",
+      "identifier": "SAN-101",
+      "reason": "exists"
+    },
+    {
+      "id": "MAP-005",
+      "identifier": "SAN-102",
+      "reason": "exists"
+    },
+    {
+      "id": "MAP-006",
+      "identifier": "SAN-103",
+      "reason": "exists"
+    },
+    {
+      "id": "MAP-010",
+      "identifier": "SAN-104",
+      "reason": "exists"
+    },
+    {
+      "id": "MAP-011",
+      "identifier": "SAN-105",
+      "reason": "exists"
+    },
+    {
+      "id": "MAP-012",
+      "identifier": "SAN-106",
+      "reason": "exists"
+    },
+    {
+      "id": "MAP-012A",
+      "identifier": "SAN-107",
+      "reason": "exists"
+    },
+    {
+      "id": "MAP-023",
+      "identifier": "SAN-108",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-001-core",
+      "identifier": "SAN-115",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-003-core",
+      "identifier": "SAN-116",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-013-core",
+      "identifier": "SAN-117",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-014-core",
+      "identifier": "SAN-118",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-015-mvp",
+      "identifier": "SAN-119",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-016-mvp",
+      "identifier": "SAN-120",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-018-mvp",
+      "identifier": "SAN-121",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-019-mvp",
+      "identifier": "SAN-122",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-020-mvp",
+      "identifier": "SAN-123",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-021-mvp",
+      "identifier": "SAN-124",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-022-mvp",
+      "identifier": "SAN-125",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-023-mvp",
+      "identifier": "SAN-126",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-024-mvp",
+      "identifier": "SAN-127",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-025-mvp",
+      "identifier": "SAN-128",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-026-mvp",
+      "identifier": "SAN-129",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-027-mvp",
+      "identifier": "SAN-130",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-028-mvp",
+      "identifier": "SAN-131",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-029-advanced",
+      "identifier": "SAN-132",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-030-advanced",
+      "identifier": "SAN-133",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-031-advanced",
+      "identifier": "SAN-134",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-032-mvp",
+      "identifier": "SAN-135",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-033-mvp",
+      "identifier": "SAN-136",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-034-mvp",
+      "identifier": "SAN-137",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-035-mvp",
+      "identifier": "SAN-138",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-036-mvp",
+      "identifier": "SAN-139",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-037-mvp",
+      "identifier": "SAN-140",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-038-postmvp",
+      "identifier": "SAN-141",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-039-postmvp",
+      "identifier": "SAN-142",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-040-postmvp",
+      "identifier": "SAN-143",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-041-advanced",
+      "identifier": "SAN-144",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-042-mvp",
+      "identifier": "SAN-145",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-043-mvp",
+      "identifier": "SAN-146",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-044-mvp",
+      "identifier": "SAN-147",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-045-mvp",
+      "identifier": "SAN-148",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-046-mvp",
+      "identifier": "SAN-149",
+      "reason": "exists"
+    },
+    {
+      "id": "EVP-047-postmvp",
+      "identifier": "SAN-150",
+      "reason": "exists"
+    },
+    {
+      "id": "VEC-001",
+      "identifier": "SAN-151",
+      "reason": "exists"
+    },
+    {
+      "id": "VEC-002",
+      "identifier": "SAN-152",
+      "reason": "exists"
+    },
+    {
+      "id": "VEC-003",
+      "identifier": "SAN-153",
+      "reason": "exists"
+    },
+    {
+      "id": "VEC-004",
+      "identifier": "SAN-154",
+      "reason": "exists"
+    },
+    {
+      "id": "VEC-005",
+      "identifier": "SAN-155",
+      "reason": "exists"
+    },
+    {
+      "id": "VEC-006",
+      "identifier": "SAN-156",
+      "reason": "exists"
+    },
+    {
+      "id": "VEC-007",
+      "identifier": "SAN-157",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-001A",
+      "identifier": "SAN-158",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-001B",
+      "identifier": "SAN-159",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-002",
+      "identifier": "SAN-160",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-003",
+      "identifier": "SAN-161",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-004",
+      "identifier": "SAN-162",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-005",
+      "identifier": "SAN-163",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-006",
+      "identifier": "SAN-164",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-007",
+      "identifier": "SAN-165",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-008",
+      "identifier": "SAN-166",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-009",
+      "identifier": "SAN-167",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-010",
+      "identifier": "SAN-168",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-011",
+      "identifier": "SAN-169",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-012",
+      "identifier": "SAN-170",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-013",
+      "identifier": "SAN-171",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-014",
+      "identifier": "SAN-172",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-015",
+      "identifier": "SAN-173",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-016",
+      "identifier": "SAN-174",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-017",
+      "identifier": "SAN-175",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-018",
+      "identifier": "SAN-176",
+      "reason": "exists"
+    },
+    {
+      "id": "CTI-020",
+      "identifier": "SAN-177",
+      "reason": "exists"
+    },
+    {
+      "id": "CTEST-000",
+      "identifier": "SAN-179",
+      "reason": "exists"
+    },
+    {
+      "id": "CTEST-001",
+      "identifier": "SAN-180",
+      "reason": "exists"
+    },
+    {
+      "id": "CTEST-002",
+      "identifier": "SAN-181",
+      "reason": "exists"
+    },
+    {
+      "id": "CTEST-003",
+      "identifier": "SAN-182",
+      "reason": "exists"
+    },
+    {
+      "id": "CTEST-004",
+      "identifier": "SAN-183",
+      "reason": "exists"
+    },
+    {
+      "id": "CTEST-005",
+      "identifier": "SAN-184",
+      "reason": "exists"
+    },
+    {
+      "id": "CTEST-006",
+      "identifier": "SAN-185",
+      "reason": "exists"
+    },
+    {
+      "id": "CTEST-007",
+      "identifier": "SAN-186",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-001-core",
+      "identifier": "SAN-187",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-002-core",
+      "identifier": "SAN-188",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-003-core",
+      "identifier": "SAN-189",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-004-core",
+      "identifier": "SAN-190",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-005-core",
+      "identifier": "SAN-191",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-006-core",
+      "identifier": "SAN-192",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-007-core",
+      "identifier": "SAN-193",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-008-mvp",
+      "identifier": "SAN-194",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-009-mvp",
+      "identifier": "SAN-195",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-010-mvp",
+      "identifier": "SAN-196",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-011-mvp",
+      "identifier": "SAN-197",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-012-mvp",
+      "identifier": "SAN-198",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-013-mvp",
+      "identifier": "SAN-199",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-014-postmvp",
+      "identifier": "SAN-200",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-015-postmvp",
+      "identifier": "SAN-201",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-016-postmvp",
+      "identifier": "SAN-202",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-017-postmvp",
+      "identifier": "SAN-203",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-018-postmvp",
+      "identifier": "SAN-204",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-019-postmvp",
+      "identifier": "SAN-205",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-020-postmvp",
+      "identifier": "SAN-206",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-021-postmvp",
+      "identifier": "SAN-207",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-022-advanced",
+      "identifier": "SAN-208",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-023-advanced",
+      "identifier": "SAN-209",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-024-advanced",
+      "identifier": "SAN-210",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-025-advanced",
+      "identifier": "SAN-211",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-026-advanced",
+      "identifier": "SAN-212",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-027-advanced",
+      "identifier": "SAN-213",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-030-postmvp",
+      "identifier": "SAN-214",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-031-postmvp",
+      "identifier": "SAN-215",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-032-postmvp",
+      "identifier": "SAN-216",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-033-postmvp",
+      "identifier": "SAN-217",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-034-postmvp",
+      "identifier": "SAN-218",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-035-advanced",
+      "identifier": "SAN-219",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-036-postmvp",
+      "identifier": "SAN-220",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-037-postmvp",
+      "identifier": "SAN-221",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-038-postmvp",
+      "identifier": "SAN-222",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-039-postmvp",
+      "identifier": "SAN-223",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-040-postmvp",
+      "identifier": "SAN-224",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-041-advanced",
+      "identifier": "SAN-225",
+      "reason": "exists"
+    },
+    {
+      "id": "OCL-042-mvp",
+      "identifier": "SAN-226",
+      "reason": "exists"
+    },
+    {
+      "id": "GS-005",
+      "identifier": "SAN-227",
+      "reason": "exists"
+    },
+    {
+      "id": "GS-006",
+      "identifier": "SAN-228",
+      "reason": "exists"
+    },
+    {
+      "id": "GS-007",
+      "identifier": "SAN-229",
+      "reason": "exists"
+    },
+    {
+      "id": "GS-008",
+      "identifier": "SAN-230",
+      "reason": "exists"
+    },
+    {
+      "id": "GS-009",
+      "identifier": "SAN-231",
+      "reason": "exists"
+    },
+    {
+      "id": "OPS-ANDRES-G1",
+      "identifier": "SAN-178",
+      "reason": "exists"
+    },
+    {
+      "id": "SCREEN-002",
+      "identifier": "SAN-110",
+      "reason": "exists"
+    },
+    {
+      "id": "SCREEN-010",
+      "identifier": "SAN-111",
+      "reason": "exists"
+    },
+    {
+      "id": "SCREEN-017",
+      "identifier": "SAN-112",
+      "reason": "exists"
+    },
+    {
+      "id": "SCREEN-018",
+      "identifier": "SAN-113",
+      "reason": "exists"
+    },
+    {
+      "id": "SCREEN-021",
+      "identifier": "SAN-114",
+      "reason": "exists"
+    },
+    {
+      "id": "CAFE-001",
+      "identifier": "SAN-109",
+      "reason": "exists"
+    }
+  ],
+  "errors": [],
+  "relations": [
+    {
+      "task": "F26",
+      "blockedBy": "F22",
+      "blocker": "SAN-97"
+    },
+    {
+      "task": "MAP-006",
+      "blockedBy": "MAP-005",
+      "blocker": "SAN-102"
+    },
+    {
+      "task": "MAP-010",
+      "blockedBy": "MAP-005",
+      "blocker": "SAN-102"
+    },
+    {
+      "task": "MAP-012",
+      "blockedBy": "MAP-006",
+      "blocker": "SAN-103"
+    },
+    {
+      "task": "MAP-012",
+      "blockedBy": "MAP-012A",
+      "blocker": "SAN-107"
+    },
+    {
+      "task": "CAFE-001",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152"
+    },
+    {
+      "task": "SCREEN-010",
+      "blockedBy": "SCREEN-018",
+      "blocker": "SAN-113"
+    },
+    {
+      "task": "EVP-013-core",
+      "blockedBy": "F22",
+      "blocker": "SAN-97"
+    },
+    {
+      "task": "EVP-014-core",
+      "blockedBy": "F22",
+      "blocker": "SAN-97"
+    },
+    {
+      "task": "EVP-014-core",
+      "blockedBy": "EVP-013-core",
+      "blocker": "SAN-117"
+    },
+    {
+      "task": "EVP-015-mvp",
+      "blockedBy": "EVP-001-core",
+      "blocker": "SAN-115"
+    },
+    {
+      "task": "EVP-015-mvp",
+      "blockedBy": "EVP-013-core",
+      "blocker": "SAN-117"
+    },
+    {
+      "task": "EVP-016-mvp",
+      "blockedBy": "EVP-015-mvp",
+      "blocker": "SAN-119"
+    },
+    {
+      "task": "EVP-016-mvp",
+      "blockedBy": "MAP-010",
+      "blocker": "SAN-104"
+    },
+    {
+      "task": "EVP-020-mvp",
+      "blockedBy": "EVP-019-mvp",
+      "blocker": "SAN-122"
+    },
+    {
+      "task": "EVP-021-mvp",
+      "blockedBy": "EVP-023-mvp",
+      "blocker": "SAN-126"
+    },
+    {
+      "task": "EVP-022-mvp",
+      "blockedBy": "EVP-020-mvp",
+      "blocker": "SAN-123"
+    },
+    {
+      "task": "EVP-023-mvp",
+      "blockedBy": "EVP-019-mvp",
+      "blocker": "SAN-122"
+    },
+    {
+      "task": "EVP-024-mvp",
+      "blockedBy": "EVP-022-mvp",
+      "blocker": "SAN-125"
+    },
+    {
+      "task": "EVP-025-mvp",
+      "blockedBy": "EVP-022-mvp",
+      "blocker": "SAN-125"
+    },
+    {
+      "task": "EVP-026-mvp",
+      "blockedBy": "EVP-020-mvp",
+      "blocker": "SAN-123"
+    },
+    {
+      "task": "EVP-027-mvp",
+      "blockedBy": "EVP-025-mvp",
+      "blocker": "SAN-128"
+    },
+    {
+      "task": "EVP-028-mvp",
+      "blockedBy": "EVP-027-mvp",
+      "blocker": "SAN-130"
+    },
+    {
+      "task": "EVP-029-advanced",
+      "blockedBy": "EVP-001-core",
+      "blocker": "SAN-115"
+    },
+    {
+      "task": "EVP-029-advanced",
+      "blockedBy": "EVP-003-core",
+      "blocker": "SAN-116"
+    },
+    {
+      "task": "EVP-030-advanced",
+      "blockedBy": "EVP-029-advanced",
+      "blocker": "SAN-132"
+    },
+    {
+      "task": "EVP-031-advanced",
+      "blockedBy": "EVP-025-mvp",
+      "blocker": "SAN-128"
+    },
+    {
+      "task": "EVP-032-mvp",
+      "blockedBy": "EVP-013-core",
+      "blocker": "SAN-117"
+    },
+    {
+      "task": "EVP-032-mvp",
+      "blockedBy": "EVP-016-mvp",
+      "blocker": "SAN-120"
+    },
+    {
+      "task": "EVP-033-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-034-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-035-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-036-mvp",
+      "blockedBy": "EVP-016-mvp",
+      "blocker": "SAN-120"
+    },
+    {
+      "task": "EVP-036-mvp",
+      "blockedBy": "EVP-024-mvp",
+      "blocker": "SAN-127"
+    },
+    {
+      "task": "EVP-036-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-037-mvp",
+      "blockedBy": "EVP-033-mvp",
+      "blocker": "SAN-136"
+    },
+    {
+      "task": "EVP-037-mvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138"
+    },
+    {
+      "task": "EVP-038-postmvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138"
+    },
+    {
+      "task": "EVP-038-postmvp",
+      "blockedBy": "EVP-037-mvp",
+      "blocker": "SAN-140"
+    },
+    {
+      "task": "EVP-039-postmvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138"
+    },
+    {
+      "task": "EVP-039-postmvp",
+      "blockedBy": "EVP-038-postmvp",
+      "blocker": "SAN-141"
+    },
+    {
+      "task": "EVP-040-postmvp",
+      "blockedBy": "EVP-038-postmvp",
+      "blocker": "SAN-141"
+    },
+    {
+      "task": "EVP-041-advanced",
+      "blockedBy": "EVP-038-postmvp",
+      "blocker": "SAN-141"
+    },
+    {
+      "task": "EVP-041-advanced",
+      "blockedBy": "EVP-039-postmvp",
+      "blocker": "SAN-142"
+    },
+    {
+      "task": "EVP-041-advanced",
+      "blockedBy": "EVP-040-postmvp",
+      "blocker": "SAN-143"
+    },
+    {
+      "task": "EVP-042-mvp",
+      "blockedBy": "EVP-033-mvp",
+      "blocker": "SAN-136"
+    },
+    {
+      "task": "EVP-042-mvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138"
+    },
+    {
+      "task": "EVP-042-mvp",
+      "blockedBy": "EVP-037-mvp",
+      "blocker": "SAN-140"
+    },
+    {
+      "task": "EVP-043-mvp",
+      "blockedBy": "EVP-016-mvp",
+      "blocker": "SAN-120"
+    },
+    {
+      "task": "EVP-043-mvp",
+      "blockedBy": "EVP-024-mvp",
+      "blocker": "SAN-127"
+    },
+    {
+      "task": "EVP-043-mvp",
+      "blockedBy": "EVP-036-mvp",
+      "blocker": "SAN-139"
+    },
+    {
+      "task": "EVP-044-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-044-mvp",
+      "blockedBy": "EVP-034-mvp",
+      "blocker": "SAN-137"
+    },
+    {
+      "task": "EVP-045-mvp",
+      "blockedBy": "EVP-034-mvp",
+      "blocker": "SAN-137"
+    },
+    {
+      "task": "EVP-046-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-046-mvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138"
+    },
+    {
+      "task": "EVP-046-mvp",
+      "blockedBy": "EVP-044-mvp",
+      "blocker": "SAN-147"
+    },
+    {
+      "task": "EVP-047-postmvp",
+      "blockedBy": "EVP-036-mvp",
+      "blocker": "SAN-139"
+    },
+    {
+      "task": "EVP-047-postmvp",
+      "blockedBy": "EVP-037-mvp",
+      "blocker": "SAN-140"
+    },
+    {
+      "task": "EVP-047-postmvp",
+      "blockedBy": "EVP-043-mvp",
+      "blocker": "SAN-146"
+    },
+    {
+      "task": "VEC-002",
+      "blockedBy": "VEC-001",
+      "blocker": "SAN-151"
+    },
+    {
+      "task": "VEC-002",
+      "blockedBy": "VEC-003",
+      "blocker": "SAN-153"
+    },
+    {
+      "task": "VEC-003",
+      "blockedBy": "VEC-001",
+      "blocker": "SAN-151"
+    },
+    {
+      "task": "VEC-004",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152"
+    },
+    {
+      "task": "VEC-004",
+      "blockedBy": "VEC-003",
+      "blocker": "SAN-153"
+    },
+    {
+      "task": "VEC-005",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152"
+    },
+    {
+      "task": "VEC-005",
+      "blockedBy": "VEC-003",
+      "blocker": "SAN-153"
+    },
+    {
+      "task": "VEC-005",
+      "blockedBy": "VEC-004",
+      "blocker": "SAN-154"
+    },
+    {
+      "task": "VEC-006",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152"
+    },
+    {
+      "task": "VEC-006",
+      "blockedBy": "VEC-005",
+      "blocker": "SAN-155"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "VEC-004",
+      "blocker": "SAN-154"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "VEC-005",
+      "blocker": "SAN-155"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "VEC-006",
+      "blocker": "SAN-156"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "CTI-010",
+      "blocker": "SAN-168"
+    },
+    {
+      "task": "CTI-001B",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-002",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-003",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-004",
+      "blockedBy": "CTI-002",
+      "blocker": "SAN-160"
+    },
+    {
+      "task": "CTI-004",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161"
+    },
+    {
+      "task": "CTI-004",
+      "blockedBy": "CTI-006",
+      "blocker": "SAN-164"
+    },
+    {
+      "task": "CTI-005",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161"
+    },
+    {
+      "task": "CTI-006",
+      "blockedBy": "CTI-002",
+      "blocker": "SAN-160"
+    },
+    {
+      "task": "CTI-006",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161"
+    },
+    {
+      "task": "CTI-007",
+      "blockedBy": "CTI-004",
+      "blocker": "SAN-162"
+    },
+    {
+      "task": "CTI-007",
+      "blockedBy": "CTI-006",
+      "blocker": "SAN-164"
+    },
+    {
+      "task": "CTI-007",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161"
+    },
+    {
+      "task": "CTI-008",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165"
+    },
+    {
+      "task": "CTI-009",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165"
+    },
+    {
+      "task": "CTI-009",
+      "blockedBy": "CTI-008",
+      "blocker": "SAN-166"
+    },
+    {
+      "task": "CTI-010",
+      "blockedBy": "CTI-009",
+      "blocker": "SAN-167"
+    },
+    {
+      "task": "CTI-011",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-011",
+      "blockedBy": "CTI-010",
+      "blocker": "SAN-168"
+    },
+    {
+      "task": "CTI-012",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-013",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-013",
+      "blockedBy": "CTI-004",
+      "blocker": "SAN-162"
+    },
+    {
+      "task": "CTI-014",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-014",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165"
+    },
+    {
+      "task": "CTI-015",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165"
+    },
+    {
+      "task": "CTI-016",
+      "blockedBy": "CTI-004",
+      "blocker": "SAN-162"
+    },
+    {
+      "task": "CTI-017",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-017",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165"
+    },
+    {
+      "task": "CTI-018",
+      "blockedBy": "CTI-004",
+      "blocker": "SAN-162"
+    },
+    {
+      "task": "CTI-018",
+      "blockedBy": "CTI-010",
+      "blocker": "SAN-168"
+    },
+    {
+      "task": "CTI-020",
+      "blockedBy": "CTI-014",
+      "blocker": "SAN-172"
+    },
+    {
+      "task": "CTI-020",
+      "blockedBy": "CTI-005",
+      "blocker": "SAN-163"
+    },
+    {
+      "task": "F26",
+      "blockedBy": "F22",
+      "blocker": "SAN-97"
+    },
+    {
+      "task": "MAP-006",
+      "blockedBy": "MAP-005",
+      "blocker": "SAN-102"
+    },
+    {
+      "task": "MAP-010",
+      "blockedBy": "MAP-005",
+      "blocker": "SAN-102"
+    },
+    {
+      "task": "MAP-012",
+      "blockedBy": "MAP-006",
+      "blocker": "SAN-103"
+    },
+    {
+      "task": "MAP-012",
+      "blockedBy": "MAP-012A",
+      "blocker": "SAN-107"
+    },
+    {
+      "task": "CAFE-001",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152"
+    },
+    {
+      "task": "SCREEN-010",
+      "blockedBy": "SCREEN-018",
+      "blocker": "SAN-113"
+    },
+    {
+      "task": "EVP-013-core",
+      "blockedBy": "F22",
+      "blocker": "SAN-97"
+    },
+    {
+      "task": "EVP-014-core",
+      "blockedBy": "F22",
+      "blocker": "SAN-97"
+    },
+    {
+      "task": "EVP-014-core",
+      "blockedBy": "EVP-013-core",
+      "blocker": "SAN-117"
+    },
+    {
+      "task": "EVP-015-mvp",
+      "blockedBy": "EVP-001-core",
+      "blocker": "SAN-115"
+    },
+    {
+      "task": "EVP-015-mvp",
+      "blockedBy": "EVP-013-core",
+      "blocker": "SAN-117"
+    },
+    {
+      "task": "EVP-016-mvp",
+      "blockedBy": "EVP-015-mvp",
+      "blocker": "SAN-119"
+    },
+    {
+      "task": "EVP-016-mvp",
+      "blockedBy": "MAP-010",
+      "blocker": "SAN-104"
+    },
+    {
+      "task": "EVP-020-mvp",
+      "blockedBy": "EVP-019-mvp",
+      "blocker": "SAN-122"
+    },
+    {
+      "task": "EVP-021-mvp",
+      "blockedBy": "EVP-023-mvp",
+      "blocker": "SAN-126"
+    },
+    {
+      "task": "EVP-022-mvp",
+      "blockedBy": "EVP-020-mvp",
+      "blocker": "SAN-123"
+    },
+    {
+      "task": "EVP-023-mvp",
+      "blockedBy": "EVP-019-mvp",
+      "blocker": "SAN-122"
+    },
+    {
+      "task": "EVP-024-mvp",
+      "blockedBy": "EVP-022-mvp",
+      "blocker": "SAN-125"
+    },
+    {
+      "task": "EVP-025-mvp",
+      "blockedBy": "EVP-022-mvp",
+      "blocker": "SAN-125"
+    },
+    {
+      "task": "EVP-026-mvp",
+      "blockedBy": "EVP-020-mvp",
+      "blocker": "SAN-123"
+    },
+    {
+      "task": "EVP-027-mvp",
+      "blockedBy": "EVP-025-mvp",
+      "blocker": "SAN-128"
+    },
+    {
+      "task": "EVP-028-mvp",
+      "blockedBy": "EVP-027-mvp",
+      "blocker": "SAN-130"
+    },
+    {
+      "task": "EVP-029-advanced",
+      "blockedBy": "EVP-001-core",
+      "blocker": "SAN-115"
+    },
+    {
+      "task": "EVP-029-advanced",
+      "blockedBy": "EVP-003-core",
+      "blocker": "SAN-116"
+    },
+    {
+      "task": "EVP-030-advanced",
+      "blockedBy": "EVP-029-advanced",
+      "blocker": "SAN-132"
+    },
+    {
+      "task": "EVP-031-advanced",
+      "blockedBy": "EVP-025-mvp",
+      "blocker": "SAN-128"
+    },
+    {
+      "task": "EVP-032-mvp",
+      "blockedBy": "EVP-013-core",
+      "blocker": "SAN-117"
+    },
+    {
+      "task": "EVP-032-mvp",
+      "blockedBy": "EVP-016-mvp",
+      "blocker": "SAN-120"
+    },
+    {
+      "task": "EVP-033-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-034-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-035-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-036-mvp",
+      "blockedBy": "EVP-016-mvp",
+      "blocker": "SAN-120"
+    },
+    {
+      "task": "EVP-036-mvp",
+      "blockedBy": "EVP-024-mvp",
+      "blocker": "SAN-127"
+    },
+    {
+      "task": "EVP-036-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-037-mvp",
+      "blockedBy": "EVP-033-mvp",
+      "blocker": "SAN-136"
+    },
+    {
+      "task": "EVP-037-mvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138"
+    },
+    {
+      "task": "EVP-038-postmvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138"
+    },
+    {
+      "task": "EVP-038-postmvp",
+      "blockedBy": "EVP-037-mvp",
+      "blocker": "SAN-140"
+    },
+    {
+      "task": "EVP-039-postmvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138"
+    },
+    {
+      "task": "EVP-039-postmvp",
+      "blockedBy": "EVP-038-postmvp",
+      "blocker": "SAN-141"
+    },
+    {
+      "task": "EVP-040-postmvp",
+      "blockedBy": "EVP-038-postmvp",
+      "blocker": "SAN-141"
+    },
+    {
+      "task": "EVP-041-advanced",
+      "blockedBy": "EVP-038-postmvp",
+      "blocker": "SAN-141"
+    },
+    {
+      "task": "EVP-041-advanced",
+      "blockedBy": "EVP-039-postmvp",
+      "blocker": "SAN-142"
+    },
+    {
+      "task": "EVP-041-advanced",
+      "blockedBy": "EVP-040-postmvp",
+      "blocker": "SAN-143"
+    },
+    {
+      "task": "EVP-042-mvp",
+      "blockedBy": "EVP-033-mvp",
+      "blocker": "SAN-136"
+    },
+    {
+      "task": "EVP-042-mvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138"
+    },
+    {
+      "task": "EVP-042-mvp",
+      "blockedBy": "EVP-037-mvp",
+      "blocker": "SAN-140"
+    },
+    {
+      "task": "EVP-043-mvp",
+      "blockedBy": "EVP-016-mvp",
+      "blocker": "SAN-120"
+    },
+    {
+      "task": "EVP-043-mvp",
+      "blockedBy": "EVP-024-mvp",
+      "blocker": "SAN-127"
+    },
+    {
+      "task": "EVP-043-mvp",
+      "blockedBy": "EVP-036-mvp",
+      "blocker": "SAN-139"
+    },
+    {
+      "task": "EVP-044-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-044-mvp",
+      "blockedBy": "EVP-034-mvp",
+      "blocker": "SAN-137"
+    },
+    {
+      "task": "EVP-045-mvp",
+      "blockedBy": "EVP-034-mvp",
+      "blocker": "SAN-137"
+    },
+    {
+      "task": "EVP-046-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-046-mvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138"
+    },
+    {
+      "task": "EVP-046-mvp",
+      "blockedBy": "EVP-044-mvp",
+      "blocker": "SAN-147"
+    },
+    {
+      "task": "EVP-047-postmvp",
+      "blockedBy": "EVP-036-mvp",
+      "blocker": "SAN-139"
+    },
+    {
+      "task": "EVP-047-postmvp",
+      "blockedBy": "EVP-037-mvp",
+      "blocker": "SAN-140"
+    },
+    {
+      "task": "EVP-047-postmvp",
+      "blockedBy": "EVP-043-mvp",
+      "blocker": "SAN-146"
+    },
+    {
+      "task": "VEC-002",
+      "blockedBy": "VEC-001",
+      "blocker": "SAN-151"
+    },
+    {
+      "task": "VEC-002",
+      "blockedBy": "VEC-003",
+      "blocker": "SAN-153"
+    },
+    {
+      "task": "VEC-003",
+      "blockedBy": "VEC-001",
+      "blocker": "SAN-151"
+    },
+    {
+      "task": "VEC-004",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152"
+    },
+    {
+      "task": "VEC-004",
+      "blockedBy": "VEC-003",
+      "blocker": "SAN-153"
+    },
+    {
+      "task": "VEC-005",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152"
+    },
+    {
+      "task": "VEC-005",
+      "blockedBy": "VEC-003",
+      "blocker": "SAN-153"
+    },
+    {
+      "task": "VEC-005",
+      "blockedBy": "VEC-004",
+      "blocker": "SAN-154"
+    },
+    {
+      "task": "VEC-006",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152"
+    },
+    {
+      "task": "VEC-006",
+      "blockedBy": "VEC-005",
+      "blocker": "SAN-155"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "VEC-004",
+      "blocker": "SAN-154"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "VEC-005",
+      "blocker": "SAN-155"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "VEC-006",
+      "blocker": "SAN-156"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "CTI-010",
+      "blocker": "SAN-168"
+    },
+    {
+      "task": "CTI-001B",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-002",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-003",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-004",
+      "blockedBy": "CTI-002",
+      "blocker": "SAN-160"
+    },
+    {
+      "task": "CTI-004",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161"
+    },
+    {
+      "task": "CTI-004",
+      "blockedBy": "CTI-006",
+      "blocker": "SAN-164"
+    },
+    {
+      "task": "CTI-005",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161"
+    },
+    {
+      "task": "CTI-006",
+      "blockedBy": "CTI-002",
+      "blocker": "SAN-160"
+    },
+    {
+      "task": "CTI-006",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161"
+    },
+    {
+      "task": "CTI-007",
+      "blockedBy": "CTI-004",
+      "blocker": "SAN-162"
+    },
+    {
+      "task": "CTI-007",
+      "blockedBy": "CTI-006",
+      "blocker": "SAN-164"
+    },
+    {
+      "task": "CTI-007",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161"
+    },
+    {
+      "task": "CTI-008",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165"
+    },
+    {
+      "task": "CTI-009",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165"
+    },
+    {
+      "task": "CTI-009",
+      "blockedBy": "CTI-008",
+      "blocker": "SAN-166"
+    },
+    {
+      "task": "CTI-010",
+      "blockedBy": "CTI-009",
+      "blocker": "SAN-167"
+    },
+    {
+      "task": "CTI-011",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-011",
+      "blockedBy": "CTI-010",
+      "blocker": "SAN-168"
+    },
+    {
+      "task": "CTI-012",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-013",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-013",
+      "blockedBy": "CTI-004",
+      "blocker": "SAN-162"
+    },
+    {
+      "task": "CTI-014",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-014",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165"
+    },
+    {
+      "task": "CTI-015",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165"
+    },
+    {
+      "task": "CTI-016",
+      "blockedBy": "CTI-004",
+      "blocker": "SAN-162"
+    },
+    {
+      "task": "CTI-017",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-017",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165"
+    },
+    {
+      "task": "CTI-018",
+      "blockedBy": "CTI-004",
+      "blocker": "SAN-162"
+    },
+    {
+      "task": "CTI-018",
+      "blockedBy": "CTI-010",
+      "blocker": "SAN-168"
+    },
+    {
+      "task": "CTI-020",
+      "blockedBy": "CTI-014",
+      "blocker": "SAN-172"
+    },
+    {
+      "task": "CTI-020",
+      "blockedBy": "CTI-005",
+      "blocker": "SAN-163"
+    },
+    {
+      "task": "CTEST-001",
+      "blockedBy": "CTEST-000",
+      "blocker": "SAN-179"
+    },
+    {
+      "task": "CTEST-002",
+      "blockedBy": "CTEST-001",
+      "blocker": "SAN-180"
+    },
+    {
+      "task": "CTEST-003",
+      "blockedBy": "CTEST-001",
+      "blocker": "SAN-180"
+    },
+    {
+      "task": "CTEST-003",
+      "blockedBy": "CTEST-002",
+      "blocker": "SAN-181"
+    },
+    {
+      "task": "CTEST-004",
+      "blockedBy": "CTEST-001",
+      "blocker": "SAN-180"
+    },
+    {
+      "task": "CTEST-005",
+      "blockedBy": "CTEST-002",
+      "blocker": "SAN-181"
+    },
+    {
+      "task": "CTEST-005",
+      "blockedBy": "CTEST-004",
+      "blocker": "SAN-183"
+    },
+    {
+      "task": "CTEST-006",
+      "blockedBy": "CTEST-001",
+      "blocker": "SAN-180"
+    },
+    {
+      "task": "CTEST-006",
+      "blockedBy": "CTEST-004",
+      "blocker": "SAN-183"
+    },
+    {
+      "task": "CTEST-007",
+      "blockedBy": "CTEST-002",
+      "blocker": "SAN-181"
+    },
+    {
+      "task": "CTEST-007",
+      "blockedBy": "CTEST-003",
+      "blocker": "SAN-182"
+    },
+    {
+      "task": "CTEST-007",
+      "blockedBy": "CTEST-006",
+      "blocker": "SAN-185"
+    },
+    {
+      "task": "OCL-003-core",
+      "blockedBy": "OCL-002-core",
+      "blocker": "SAN-188"
+    },
+    {
+      "task": "OCL-005-core",
+      "blockedBy": "OCL-001-core",
+      "blocker": "SAN-187"
+    },
+    {
+      "task": "OCL-006-core",
+      "blockedBy": "OCL-001-core",
+      "blocker": "SAN-187"
+    },
+    {
+      "task": "OCL-007-core",
+      "blockedBy": "OCL-001-core",
+      "blocker": "SAN-187"
+    },
+    {
+      "task": "OCL-008-mvp",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189"
+    },
+    {
+      "task": "OCL-009-mvp",
+      "blockedBy": "OCL-006-core",
+      "blocker": "SAN-192"
+    },
+    {
+      "task": "OCL-010-mvp",
+      "blockedBy": "OCL-004-core",
+      "blocker": "SAN-190"
+    },
+    {
+      "task": "OCL-010-mvp",
+      "blockedBy": "OCL-006-core",
+      "blocker": "SAN-192"
+    },
+    {
+      "task": "OCL-011-mvp",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189"
+    },
+    {
+      "task": "OCL-012-mvp",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189"
+    },
+    {
+      "task": "OCL-013-mvp",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "OCL-013-mvp",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161"
+    },
+    {
+      "task": "OCL-013-mvp",
+      "blockedBy": "OCL-009-mvp",
+      "blocker": "SAN-195"
+    },
+    {
+      "task": "OCL-013-mvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196"
+    },
+    {
+      "task": "OCL-014-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196"
+    },
+    {
+      "task": "OCL-014-postmvp",
+      "blockedBy": "OCL-009-mvp",
+      "blocker": "SAN-195"
+    },
+    {
+      "task": "OCL-015-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196"
+    },
+    {
+      "task": "OCL-016-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196"
+    },
+    {
+      "task": "OCL-016-postmvp",
+      "blockedBy": "OCL-017-postmvp",
+      "blocker": "SAN-203"
+    },
+    {
+      "task": "OCL-016-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214"
+    },
+    {
+      "task": "OCL-017-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196"
+    },
+    {
+      "task": "OCL-018-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196"
+    },
+    {
+      "task": "OCL-018-postmvp",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189"
+    },
+    {
+      "task": "OCL-019-postmvp",
+      "blockedBy": "OCL-009-mvp",
+      "blocker": "SAN-195"
+    },
+    {
+      "task": "OCL-019-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214"
+    },
+    {
+      "task": "OCL-020-postmvp",
+      "blockedBy": "OCL-009-mvp",
+      "blocker": "SAN-195"
+    },
+    {
+      "task": "OCL-020-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196"
+    },
+    {
+      "task": "OCL-021-postmvp",
+      "blockedBy": "OCL-011-mvp",
+      "blocker": "SAN-197"
+    },
+    {
+      "task": "OCL-023-advanced",
+      "blockedBy": "OCL-017-postmvp",
+      "blocker": "SAN-203"
+    },
+    {
+      "task": "OCL-023-advanced",
+      "blockedBy": "OCL-022-advanced",
+      "blocker": "SAN-208"
+    },
+    {
+      "task": "OCL-024-advanced",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196"
+    },
+    {
+      "task": "OCL-025-advanced",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189"
+    },
+    {
+      "task": "OCL-025-advanced",
+      "blockedBy": "OCL-017-postmvp",
+      "blocker": "SAN-203"
+    },
+    {
+      "task": "OCL-026-advanced",
+      "blockedBy": "OCL-022-advanced",
+      "blocker": "SAN-208"
+    },
+    {
+      "task": "OCL-027-advanced",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189"
+    },
+    {
+      "task": "OCL-027-advanced",
+      "blockedBy": "OCL-032-postmvp",
+      "blocker": "SAN-216"
+    },
+    {
+      "task": "OCL-027-advanced",
+      "blockedBy": "OCL-034-postmvp",
+      "blocker": "SAN-218"
+    },
+    {
+      "task": "OCL-030-postmvp",
+      "blockedBy": "OCL-004-core",
+      "blocker": "SAN-190"
+    },
+    {
+      "task": "OCL-030-postmvp",
+      "blockedBy": "OCL-005-core",
+      "blocker": "SAN-191"
+    },
+    {
+      "task": "OCL-030-postmvp",
+      "blockedBy": "OCL-007-core",
+      "blocker": "SAN-193"
+    },
+    {
+      "task": "OCL-030-postmvp",
+      "blockedBy": "OCL-008-mvp",
+      "blocker": "SAN-194"
+    },
+    {
+      "task": "OCL-030-postmvp",
+      "blockedBy": "OCL-012-mvp",
+      "blocker": "SAN-198"
+    },
+    {
+      "task": "OCL-031-postmvp",
+      "blockedBy": "OCL-019-postmvp",
+      "blocker": "SAN-205"
+    },
+    {
+      "task": "OCL-031-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214"
+    },
+    {
+      "task": "OCL-032-postmvp",
+      "blockedBy": "EVP-029-advanced",
+      "blocker": "SAN-132"
+    },
+    {
+      "task": "OCL-032-postmvp",
+      "blockedBy": "OCL-019-postmvp",
+      "blocker": "SAN-205"
+    },
+    {
+      "task": "OCL-032-postmvp",
+      "blockedBy": "OCL-031-postmvp",
+      "blocker": "SAN-215"
+    },
+    {
+      "task": "OCL-033-postmvp",
+      "blockedBy": "OCL-016-postmvp",
+      "blocker": "SAN-202"
+    },
+    {
+      "task": "OCL-033-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214"
+    },
+    {
+      "task": "OCL-034-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214"
+    },
+    {
+      "task": "OCL-034-postmvp",
+      "blockedBy": "EVP-015-mvp",
+      "blocker": "SAN-119"
+    },
+    {
+      "task": "OCL-035-advanced",
+      "blockedBy": "OCL-022-advanced",
+      "blocker": "SAN-208"
+    },
+    {
+      "task": "OCL-035-advanced",
+      "blockedBy": "OCL-027-advanced",
+      "blocker": "SAN-213"
+    },
+    {
+      "task": "OCL-035-advanced",
+      "blockedBy": "OCL-032-postmvp",
+      "blocker": "SAN-216"
+    },
+    {
+      "task": "OCL-035-advanced",
+      "blockedBy": "OCL-034-postmvp",
+      "blocker": "SAN-218"
+    },
+    {
+      "task": "OCL-036-postmvp",
+      "blockedBy": "OCL-004-core",
+      "blocker": "SAN-190"
+    },
+    {
+      "task": "OCL-036-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214"
+    },
+    {
+      "task": "OCL-037-postmvp",
+      "blockedBy": "OCL-036-postmvp",
+      "blocker": "SAN-220"
+    },
+    {
+      "task": "OCL-037-postmvp",
+      "blockedBy": "OCL-016-postmvp",
+      "blocker": "SAN-202"
+    },
+    {
+      "task": "OCL-037-postmvp",
+      "blockedBy": "OCL-033-postmvp",
+      "blocker": "SAN-217"
+    },
+    {
+      "task": "OCL-038-postmvp",
+      "blockedBy": "OCL-017-postmvp",
+      "blocker": "SAN-203"
+    },
+    {
+      "task": "OCL-038-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214"
+    },
+    {
+      "task": "OCL-038-postmvp",
+      "blockedBy": "OCL-036-postmvp",
+      "blocker": "SAN-220"
+    },
+    {
+      "task": "OCL-039-postmvp",
+      "blockedBy": "OCL-021-postmvp",
+      "blocker": "SAN-207"
+    },
+    {
+      "task": "OCL-039-postmvp",
+      "blockedBy": "OCL-038-postmvp",
+      "blocker": "SAN-222"
+    },
+    {
+      "task": "OCL-040-postmvp",
+      "blockedBy": "OCL-012-mvp",
+      "blocker": "SAN-198"
+    },
+    {
+      "task": "OCL-040-postmvp",
+      "blockedBy": "OCL-016-postmvp",
+      "blocker": "SAN-202"
+    },
+    {
+      "task": "OCL-040-postmvp",
+      "blockedBy": "OCL-017-postmvp",
+      "blocker": "SAN-203"
+    },
+    {
+      "task": "OCL-041-advanced",
+      "blockedBy": "OCL-022-advanced",
+      "blocker": "SAN-208"
+    },
+    {
+      "task": "OCL-041-advanced",
+      "blockedBy": "OCL-023-advanced",
+      "blocker": "SAN-209"
+    },
+    {
+      "task": "OCL-041-advanced",
+      "blockedBy": "OCL-035-advanced",
+      "blocker": "SAN-219"
+    },
+    {
+      "task": "OCL-041-advanced",
+      "blockedBy": "OCL-040-postmvp",
+      "blocker": "SAN-224"
+    },
+    {
+      "task": "OCL-042-mvp",
+      "blockedBy": "EVP-020-mvp",
+      "blocker": "SAN-123"
+    },
+    {
+      "task": "OCL-042-mvp",
+      "blockedBy": "EVP-022-mvp",
+      "blocker": "SAN-125"
+    },
+    {
+      "task": "GS-007",
+      "blockedBy": "MAP-006",
+      "blocker": "SAN-103"
+    },
+    {
+      "task": "GS-008",
+      "blockedBy": "MAP-012A",
+      "blocker": "SAN-107"
+    },
+    {
+      "task": "F26",
+      "blockedBy": "F22",
+      "blocker": "SAN-97"
+    },
+    {
+      "task": "MAP-006",
+      "blockedBy": "MAP-005",
+      "blocker": "SAN-102"
+    },
+    {
+      "task": "MAP-010",
+      "blockedBy": "MAP-005",
+      "blocker": "SAN-102"
+    },
+    {
+      "task": "MAP-012",
+      "blockedBy": "MAP-006",
+      "blocker": "SAN-103"
+    },
+    {
+      "task": "MAP-012",
+      "blockedBy": "MAP-012A",
+      "blocker": "SAN-107"
+    },
+    {
+      "task": "CAFE-001",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152"
+    },
+    {
+      "task": "SCREEN-010",
+      "blockedBy": "SCREEN-018",
+      "blocker": "SAN-113"
+    },
+    {
+      "task": "EVP-013-core",
+      "blockedBy": "F22",
+      "blocker": "SAN-97"
+    },
+    {
+      "task": "EVP-014-core",
+      "blockedBy": "F22",
+      "blocker": "SAN-97"
+    },
+    {
+      "task": "EVP-014-core",
+      "blockedBy": "EVP-013-core",
+      "blocker": "SAN-117"
+    },
+    {
+      "task": "EVP-015-mvp",
+      "blockedBy": "EVP-001-core",
+      "blocker": "SAN-115"
+    },
+    {
+      "task": "EVP-015-mvp",
+      "blockedBy": "EVP-013-core",
+      "blocker": "SAN-117"
+    },
+    {
+      "task": "EVP-016-mvp",
+      "blockedBy": "EVP-015-mvp",
+      "blocker": "SAN-119"
+    },
+    {
+      "task": "EVP-016-mvp",
+      "blockedBy": "MAP-010",
+      "blocker": "SAN-104"
+    },
+    {
+      "task": "EVP-020-mvp",
+      "blockedBy": "EVP-019-mvp",
+      "blocker": "SAN-122"
+    },
+    {
+      "task": "EVP-021-mvp",
+      "blockedBy": "EVP-023-mvp",
+      "blocker": "SAN-126"
+    },
+    {
+      "task": "EVP-022-mvp",
+      "blockedBy": "EVP-020-mvp",
+      "blocker": "SAN-123"
+    },
+    {
+      "task": "EVP-023-mvp",
+      "blockedBy": "EVP-019-mvp",
+      "blocker": "SAN-122"
+    },
+    {
+      "task": "EVP-024-mvp",
+      "blockedBy": "EVP-022-mvp",
+      "blocker": "SAN-125"
+    },
+    {
+      "task": "EVP-025-mvp",
+      "blockedBy": "EVP-022-mvp",
+      "blocker": "SAN-125"
+    },
+    {
+      "task": "EVP-026-mvp",
+      "blockedBy": "EVP-020-mvp",
+      "blocker": "SAN-123"
+    },
+    {
+      "task": "EVP-027-mvp",
+      "blockedBy": "EVP-025-mvp",
+      "blocker": "SAN-128"
+    },
+    {
+      "task": "EVP-028-mvp",
+      "blockedBy": "EVP-027-mvp",
+      "blocker": "SAN-130"
+    },
+    {
+      "task": "EVP-029-advanced",
+      "blockedBy": "EVP-001-core",
+      "blocker": "SAN-115"
+    },
+    {
+      "task": "EVP-029-advanced",
+      "blockedBy": "EVP-003-core",
+      "blocker": "SAN-116"
+    },
+    {
+      "task": "EVP-030-advanced",
+      "blockedBy": "EVP-029-advanced",
+      "blocker": "SAN-132"
+    },
+    {
+      "task": "EVP-031-advanced",
+      "blockedBy": "EVP-025-mvp",
+      "blocker": "SAN-128"
+    },
+    {
+      "task": "EVP-032-mvp",
+      "blockedBy": "EVP-013-core",
+      "blocker": "SAN-117"
+    },
+    {
+      "task": "EVP-032-mvp",
+      "blockedBy": "EVP-016-mvp",
+      "blocker": "SAN-120"
+    },
+    {
+      "task": "EVP-033-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-034-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-035-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-036-mvp",
+      "blockedBy": "EVP-016-mvp",
+      "blocker": "SAN-120"
+    },
+    {
+      "task": "EVP-036-mvp",
+      "blockedBy": "EVP-024-mvp",
+      "blocker": "SAN-127"
+    },
+    {
+      "task": "EVP-036-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-037-mvp",
+      "blockedBy": "EVP-033-mvp",
+      "blocker": "SAN-136"
+    },
+    {
+      "task": "EVP-037-mvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138"
+    },
+    {
+      "task": "EVP-038-postmvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138"
+    },
+    {
+      "task": "EVP-038-postmvp",
+      "blockedBy": "EVP-037-mvp",
+      "blocker": "SAN-140"
+    },
+    {
+      "task": "EVP-039-postmvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138"
+    },
+    {
+      "task": "EVP-039-postmvp",
+      "blockedBy": "EVP-038-postmvp",
+      "blocker": "SAN-141"
+    },
+    {
+      "task": "EVP-040-postmvp",
+      "blockedBy": "EVP-038-postmvp",
+      "blocker": "SAN-141"
+    },
+    {
+      "task": "EVP-041-advanced",
+      "blockedBy": "EVP-038-postmvp",
+      "blocker": "SAN-141"
+    },
+    {
+      "task": "EVP-041-advanced",
+      "blockedBy": "EVP-039-postmvp",
+      "blocker": "SAN-142"
+    },
+    {
+      "task": "EVP-041-advanced",
+      "blockedBy": "EVP-040-postmvp",
+      "blocker": "SAN-143"
+    },
+    {
+      "task": "EVP-042-mvp",
+      "blockedBy": "EVP-033-mvp",
+      "blocker": "SAN-136"
+    },
+    {
+      "task": "EVP-042-mvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138"
+    },
+    {
+      "task": "EVP-042-mvp",
+      "blockedBy": "EVP-037-mvp",
+      "blocker": "SAN-140"
+    },
+    {
+      "task": "EVP-043-mvp",
+      "blockedBy": "EVP-016-mvp",
+      "blocker": "SAN-120"
+    },
+    {
+      "task": "EVP-043-mvp",
+      "blockedBy": "EVP-024-mvp",
+      "blocker": "SAN-127"
+    },
+    {
+      "task": "EVP-043-mvp",
+      "blockedBy": "EVP-036-mvp",
+      "blocker": "SAN-139"
+    },
+    {
+      "task": "EVP-044-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-044-mvp",
+      "blockedBy": "EVP-034-mvp",
+      "blocker": "SAN-137"
+    },
+    {
+      "task": "EVP-045-mvp",
+      "blockedBy": "EVP-034-mvp",
+      "blocker": "SAN-137"
+    },
+    {
+      "task": "EVP-046-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135"
+    },
+    {
+      "task": "EVP-046-mvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138"
+    },
+    {
+      "task": "EVP-046-mvp",
+      "blockedBy": "EVP-044-mvp",
+      "blocker": "SAN-147"
+    },
+    {
+      "task": "EVP-047-postmvp",
+      "blockedBy": "EVP-036-mvp",
+      "blocker": "SAN-139"
+    },
+    {
+      "task": "EVP-047-postmvp",
+      "blockedBy": "EVP-037-mvp",
+      "blocker": "SAN-140"
+    },
+    {
+      "task": "EVP-047-postmvp",
+      "blockedBy": "EVP-043-mvp",
+      "blocker": "SAN-146"
+    },
+    {
+      "task": "VEC-002",
+      "blockedBy": "VEC-001",
+      "blocker": "SAN-151"
+    },
+    {
+      "task": "VEC-002",
+      "blockedBy": "VEC-003",
+      "blocker": "SAN-153"
+    },
+    {
+      "task": "VEC-003",
+      "blockedBy": "VEC-001",
+      "blocker": "SAN-151"
+    },
+    {
+      "task": "VEC-004",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152"
+    },
+    {
+      "task": "VEC-004",
+      "blockedBy": "VEC-003",
+      "blocker": "SAN-153"
+    },
+    {
+      "task": "VEC-005",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152"
+    },
+    {
+      "task": "VEC-005",
+      "blockedBy": "VEC-003",
+      "blocker": "SAN-153"
+    },
+    {
+      "task": "VEC-005",
+      "blockedBy": "VEC-004",
+      "blocker": "SAN-154"
+    },
+    {
+      "task": "VEC-006",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152"
+    },
+    {
+      "task": "VEC-006",
+      "blockedBy": "VEC-005",
+      "blocker": "SAN-155"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "VEC-004",
+      "blocker": "SAN-154"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "VEC-005",
+      "blocker": "SAN-155"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "VEC-006",
+      "blocker": "SAN-156"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "VEC-007",
+      "blockedBy": "CTI-010",
+      "blocker": "SAN-168"
+    },
+    {
+      "task": "CTI-001B",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-002",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-003",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-004",
+      "blockedBy": "CTI-002",
+      "blocker": "SAN-160"
+    },
+    {
+      "task": "CTI-004",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161"
+    },
+    {
+      "task": "CTI-004",
+      "blockedBy": "CTI-006",
+      "blocker": "SAN-164"
+    },
+    {
+      "task": "CTI-005",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161"
+    },
+    {
+      "task": "CTI-006",
+      "blockedBy": "CTI-002",
+      "blocker": "SAN-160"
+    },
+    {
+      "task": "CTI-006",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161"
+    },
+    {
+      "task": "CTI-007",
+      "blockedBy": "CTI-004",
+      "blocker": "SAN-162"
+    },
+    {
+      "task": "CTI-007",
+      "blockedBy": "CTI-006",
+      "blocker": "SAN-164"
+    },
+    {
+      "task": "CTI-007",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161"
+    },
+    {
+      "task": "CTI-008",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165"
+    },
+    {
+      "task": "CTI-009",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165"
+    },
+    {
+      "task": "CTI-009",
+      "blockedBy": "CTI-008",
+      "blocker": "SAN-166"
+    },
+    {
+      "task": "CTI-010",
+      "blockedBy": "CTI-009",
+      "blocker": "SAN-167"
+    },
+    {
+      "task": "CTI-011",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-011",
+      "blockedBy": "CTI-010",
+      "blocker": "SAN-168"
+    },
+    {
+      "task": "CTI-012",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-013",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-013",
+      "blockedBy": "CTI-004",
+      "blocker": "SAN-162"
+    },
+    {
+      "task": "CTI-014",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-014",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165"
+    },
+    {
+      "task": "CTI-015",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165"
+    },
+    {
+      "task": "CTI-016",
+      "blockedBy": "CTI-004",
+      "blocker": "SAN-162"
+    },
+    {
+      "task": "CTI-017",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "CTI-017",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165"
+    },
+    {
+      "task": "CTI-018",
+      "blockedBy": "CTI-004",
+      "blocker": "SAN-162"
+    },
+    {
+      "task": "CTI-018",
+      "blockedBy": "CTI-010",
+      "blocker": "SAN-168"
+    },
+    {
+      "task": "CTI-020",
+      "blockedBy": "CTI-014",
+      "blocker": "SAN-172"
+    },
+    {
+      "task": "CTI-020",
+      "blockedBy": "CTI-005",
+      "blocker": "SAN-163"
+    },
+    {
+      "task": "CTEST-001",
+      "blockedBy": "CTEST-000",
+      "blocker": "SAN-179"
+    },
+    {
+      "task": "CTEST-002",
+      "blockedBy": "CTEST-001",
+      "blocker": "SAN-180"
+    },
+    {
+      "task": "CTEST-003",
+      "blockedBy": "CTEST-001",
+      "blocker": "SAN-180"
+    },
+    {
+      "task": "CTEST-003",
+      "blockedBy": "CTEST-002",
+      "blocker": "SAN-181"
+    },
+    {
+      "task": "CTEST-004",
+      "blockedBy": "CTEST-001",
+      "blocker": "SAN-180"
+    },
+    {
+      "task": "CTEST-005",
+      "blockedBy": "CTEST-002",
+      "blocker": "SAN-181"
+    },
+    {
+      "task": "CTEST-005",
+      "blockedBy": "CTEST-004",
+      "blocker": "SAN-183"
+    },
+    {
+      "task": "CTEST-006",
+      "blockedBy": "CTEST-001",
+      "blocker": "SAN-180"
+    },
+    {
+      "task": "CTEST-006",
+      "blockedBy": "CTEST-004",
+      "blocker": "SAN-183"
+    },
+    {
+      "task": "CTEST-007",
+      "blockedBy": "CTEST-002",
+      "blocker": "SAN-181"
+    },
+    {
+      "task": "CTEST-007",
+      "blockedBy": "CTEST-003",
+      "blocker": "SAN-182"
+    },
+    {
+      "task": "CTEST-007",
+      "blockedBy": "CTEST-006",
+      "blocker": "SAN-185"
+    },
+    {
+      "task": "OCL-003-core",
+      "blockedBy": "OCL-002-core",
+      "blocker": "SAN-188"
+    },
+    {
+      "task": "OCL-005-core",
+      "blockedBy": "OCL-001-core",
+      "blocker": "SAN-187"
+    },
+    {
+      "task": "OCL-006-core",
+      "blockedBy": "OCL-001-core",
+      "blocker": "SAN-187"
+    },
+    {
+      "task": "OCL-007-core",
+      "blockedBy": "OCL-001-core",
+      "blocker": "SAN-187"
+    },
+    {
+      "task": "OCL-008-mvp",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189"
+    },
+    {
+      "task": "OCL-009-mvp",
+      "blockedBy": "OCL-006-core",
+      "blocker": "SAN-192"
+    },
+    {
+      "task": "OCL-010-mvp",
+      "blockedBy": "OCL-004-core",
+      "blocker": "SAN-190"
+    },
+    {
+      "task": "OCL-010-mvp",
+      "blockedBy": "OCL-006-core",
+      "blocker": "SAN-192"
+    },
+    {
+      "task": "OCL-011-mvp",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189"
+    },
+    {
+      "task": "OCL-012-mvp",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189"
+    },
+    {
+      "task": "OCL-013-mvp",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158"
+    },
+    {
+      "task": "OCL-013-mvp",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161"
+    },
+    {
+      "task": "OCL-013-mvp",
+      "blockedBy": "OCL-009-mvp",
+      "blocker": "SAN-195"
+    },
+    {
+      "task": "OCL-013-mvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196"
+    },
+    {
+      "task": "OCL-014-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196"
+    },
+    {
+      "task": "OCL-014-postmvp",
+      "blockedBy": "OCL-009-mvp",
+      "blocker": "SAN-195"
+    },
+    {
+      "task": "OCL-015-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196"
+    },
+    {
+      "task": "OCL-016-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196"
+    },
+    {
+      "task": "OCL-016-postmvp",
+      "blockedBy": "OCL-017-postmvp",
+      "blocker": "SAN-203"
+    },
+    {
+      "task": "OCL-016-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214"
+    },
+    {
+      "task": "OCL-017-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196"
+    },
+    {
+      "task": "OCL-018-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196"
+    },
+    {
+      "task": "OCL-018-postmvp",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189"
+    },
+    {
+      "task": "OCL-019-postmvp",
+      "blockedBy": "OCL-009-mvp",
+      "blocker": "SAN-195"
+    },
+    {
+      "task": "OCL-019-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214"
+    },
+    {
+      "task": "OCL-020-postmvp",
+      "blockedBy": "OCL-009-mvp",
+      "blocker": "SAN-195"
+    },
+    {
+      "task": "OCL-020-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196"
+    },
+    {
+      "task": "OCL-021-postmvp",
+      "blockedBy": "OCL-011-mvp",
+      "blocker": "SAN-197"
+    },
+    {
+      "task": "OCL-023-advanced",
+      "blockedBy": "OCL-017-postmvp",
+      "blocker": "SAN-203"
+    },
+    {
+      "task": "OCL-023-advanced",
+      "blockedBy": "OCL-022-advanced",
+      "blocker": "SAN-208"
+    },
+    {
+      "task": "OCL-024-advanced",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196"
+    },
+    {
+      "task": "OCL-025-advanced",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189"
+    },
+    {
+      "task": "OCL-025-advanced",
+      "blockedBy": "OCL-017-postmvp",
+      "blocker": "SAN-203"
+    },
+    {
+      "task": "OCL-026-advanced",
+      "blockedBy": "OCL-022-advanced",
+      "blocker": "SAN-208"
+    },
+    {
+      "task": "OCL-027-advanced",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189"
+    },
+    {
+      "task": "OCL-027-advanced",
+      "blockedBy": "OCL-032-postmvp",
+      "blocker": "SAN-216"
+    },
+    {
+      "task": "OCL-027-advanced",
+      "blockedBy": "OCL-034-postmvp",
+      "blocker": "SAN-218"
+    },
+    {
+      "task": "OCL-030-postmvp",
+      "blockedBy": "OCL-004-core",
+      "blocker": "SAN-190"
+    },
+    {
+      "task": "OCL-030-postmvp",
+      "blockedBy": "OCL-005-core",
+      "blocker": "SAN-191"
+    },
+    {
+      "task": "OCL-030-postmvp",
+      "blockedBy": "OCL-007-core",
+      "blocker": "SAN-193"
+    },
+    {
+      "task": "OCL-030-postmvp",
+      "blockedBy": "OCL-008-mvp",
+      "blocker": "SAN-194"
+    },
+    {
+      "task": "OCL-030-postmvp",
+      "blockedBy": "OCL-012-mvp",
+      "blocker": "SAN-198"
+    },
+    {
+      "task": "OCL-031-postmvp",
+      "blockedBy": "OCL-019-postmvp",
+      "blocker": "SAN-205"
+    },
+    {
+      "task": "OCL-031-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214"
+    },
+    {
+      "task": "OCL-032-postmvp",
+      "blockedBy": "EVP-029-advanced",
+      "blocker": "SAN-132"
+    },
+    {
+      "task": "OCL-032-postmvp",
+      "blockedBy": "OCL-019-postmvp",
+      "blocker": "SAN-205"
+    },
+    {
+      "task": "OCL-032-postmvp",
+      "blockedBy": "OCL-031-postmvp",
+      "blocker": "SAN-215"
+    },
+    {
+      "task": "OCL-033-postmvp",
+      "blockedBy": "OCL-016-postmvp",
+      "blocker": "SAN-202"
+    },
+    {
+      "task": "OCL-033-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214"
+    },
+    {
+      "task": "OCL-034-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214"
+    },
+    {
+      "task": "OCL-034-postmvp",
+      "blockedBy": "EVP-015-mvp",
+      "blocker": "SAN-119"
+    },
+    {
+      "task": "OCL-035-advanced",
+      "blockedBy": "OCL-022-advanced",
+      "blocker": "SAN-208"
+    },
+    {
+      "task": "OCL-035-advanced",
+      "blockedBy": "OCL-027-advanced",
+      "blocker": "SAN-213"
+    },
+    {
+      "task": "OCL-035-advanced",
+      "blockedBy": "OCL-032-postmvp",
+      "blocker": "SAN-216"
+    },
+    {
+      "task": "OCL-035-advanced",
+      "blockedBy": "OCL-034-postmvp",
+      "blocker": "SAN-218"
+    },
+    {
+      "task": "OCL-036-postmvp",
+      "blockedBy": "OCL-004-core",
+      "blocker": "SAN-190"
+    },
+    {
+      "task": "OCL-036-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214"
+    },
+    {
+      "task": "OCL-037-postmvp",
+      "blockedBy": "OCL-036-postmvp",
+      "blocker": "SAN-220"
+    },
+    {
+      "task": "OCL-037-postmvp",
+      "blockedBy": "OCL-016-postmvp",
+      "blocker": "SAN-202"
+    },
+    {
+      "task": "OCL-037-postmvp",
+      "blockedBy": "OCL-033-postmvp",
+      "blocker": "SAN-217"
+    },
+    {
+      "task": "OCL-038-postmvp",
+      "blockedBy": "OCL-017-postmvp",
+      "blocker": "SAN-203"
+    },
+    {
+      "task": "OCL-038-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214"
+    },
+    {
+      "task": "OCL-038-postmvp",
+      "blockedBy": "OCL-036-postmvp",
+      "blocker": "SAN-220"
+    },
+    {
+      "task": "OCL-039-postmvp",
+      "blockedBy": "OCL-021-postmvp",
+      "blocker": "SAN-207"
+    },
+    {
+      "task": "OCL-039-postmvp",
+      "blockedBy": "OCL-038-postmvp",
+      "blocker": "SAN-222"
+    },
+    {
+      "task": "OCL-040-postmvp",
+      "blockedBy": "OCL-012-mvp",
+      "blocker": "SAN-198"
+    },
+    {
+      "task": "OCL-040-postmvp",
+      "blockedBy": "OCL-016-postmvp",
+      "blocker": "SAN-202"
+    },
+    {
+      "task": "OCL-040-postmvp",
+      "blockedBy": "OCL-017-postmvp",
+      "blocker": "SAN-203"
+    },
+    {
+      "task": "OCL-041-advanced",
+      "blockedBy": "OCL-022-advanced",
+      "blocker": "SAN-208"
+    },
+    {
+      "task": "OCL-041-advanced",
+      "blockedBy": "OCL-023-advanced",
+      "blocker": "SAN-209"
+    },
+    {
+      "task": "OCL-041-advanced",
+      "blockedBy": "OCL-035-advanced",
+      "blocker": "SAN-219"
+    },
+    {
+      "task": "OCL-041-advanced",
+      "blockedBy": "OCL-040-postmvp",
+      "blocker": "SAN-224"
+    },
+    {
+      "task": "OCL-042-mvp",
+      "blockedBy": "EVP-020-mvp",
+      "blocker": "SAN-123"
+    },
+    {
+      "task": "OCL-042-mvp",
+      "blockedBy": "EVP-022-mvp",
+      "blocker": "SAN-125"
+    },
+    {
+      "task": "GS-007",
+      "blockedBy": "MAP-006",
+      "blocker": "SAN-103"
+    },
+    {
+      "task": "GS-008",
+      "blockedBy": "MAP-012A",
+      "blocker": "SAN-107"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+%% mdeai — migration replay debt (DATA-050, 2026-06-01)
+%% Render: https://mermaid.live
+%% Companion: tasks/data/evidence/DATA-050-base-table-backfill.md §9
+%% Live: remote applied 76 · local files 77 · drift = 1 local-only base-tables migration
+
+stateDiagram-v2
+  [*] --> Replaying
+  Replaying --> B1_landlord : needs landlord base tables
+  B1_landlord --> B2_columns : stub local-only, unapplied
+  B2_columns --> B3_orphans : add landlord_id and moderation_status
+  B3_orphans --> B4_reorder : 5 orphan FK targets
+  B4_reorder --> CleanReplay : rename and reorder data045 data047
+  CleanReplay --> [*]
+
+  note right of B1_landlord : 20260430140000 in tree, NOT applied remotely
+  note right of B2_columns : apartments columns added out-of-band, no migration
+  note right of B3_orphans : 5 empty tables — media_assets, approvals x2, email_outbox, wait_list
+  note right of CleanReplay : GATED — human-approved migration repair only

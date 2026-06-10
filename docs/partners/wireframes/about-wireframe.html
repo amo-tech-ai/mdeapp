@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MDE — /about Wireframe</title>
+<style>
+  :root{
+    --bg: oklch(0.985 0.002 247); --surface: oklch(1 0 0); --ink: oklch(0.28 0.03 257);
+    --muted: oklch(0.55 0.02 257); --line: oklch(0.90 0.006 257); --line-2: oklch(0.84 0.008 257);
+    --primary: oklch(0.508 0.118 175); --primary-soft: oklch(0.95 0.03 178);
+    --accent: oklch(0.795 0.184 86); --accent-soft: oklch(0.96 0.05 90); --map: oklch(0.62 0.10 235);
+    --ph: linear-gradient(150deg, oklch(0.970 0.015 180), oklch(0.926 0.030 184));
+    --gold-band: linear-gradient(135deg, oklch(0.90 0.10 92), oklch(0.83 0.16 80));
+    --ink-band: oklch(0.22 0.02 257);
+    --radius:14px; --shadow:0 1px 2px oklch(0.4 0.03 257 / 0.05), 0 8px 24px oklch(0.4 0.03 257 / 0.06);
+  }
+  *{box-sizing:border-box;} html{scroll-behavior:smooth;} @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .serif{font-family:"Playfair Display",Georgia,serif;} a{color:var(--primary);text-decoration:none;} code{font-family:ui-monospace,Menlo,monospace;font-size:0.92em;}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 20px 80px;}
+  header.top{position:sticky;top:0;z-index:20;background:oklch(0.985 0.002 247 / 0.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .top-inner{max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;letter-spacing:-0.02em;} .brand .dot{width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,var(--accent),oklch(0.74 0.16 70));}
+  .brand small{font-weight:500;color:var(--muted);} .top-spacer{flex:1;} .legend{display:flex;gap:6px;flex-wrap:wrap;}
+  .titleblock{padding:34px 0 14px;} .titleblock h1{margin:0 0 6px;font-size:30px;letter-spacing:-0.02em;font-weight:600;} .titleblock p{margin:0;color:var(--muted);max-width:64ch;}
+  .meta-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:600;border:1px solid var(--line-2);background:var(--surface);color:var(--muted);white-space:nowrap;}
+  .chip.t21{background:var(--primary-soft);border-color:transparent;color:oklch(0.40 0.10 175);} .chip.shad{background:oklch(0.95 0.005 257);border-color:transparent;color:oklch(0.40 0.02 257);}
+  .chip.ai{background:var(--accent-soft);border-color:transparent;color:oklch(0.48 0.12 80);} .chip.map{background:oklch(0.95 0.03 235);border-color:transparent;color:oklch(0.42 0.10 235);}
+  .chip.custom{background:repeating-linear-gradient(45deg,oklch(0.97 0.004 257),oklch(0.97 0.004 257) 5px,oklch(0.94 0.006 257) 5px,oklch(0.94 0.006 257) 10px);border:1px dashed var(--line-2);color:var(--muted);}
+  .chip.mt{background:oklch(0.95 0.04 60);border-color:transparent;color:oklch(0.45 0.12 60);}
+  .info{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);margin:8px 0 4px;} .info h4{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;} .rules li{margin:3px 0;} .rules b{color:var(--ink);}
+  .row{display:grid;grid-template-columns:30px minmax(0,1fr) 360px;gap:18px;align-items:start;padding:22px 0;border-top:1px solid var(--line);scroll-margin-top:70px;} .row:first-of-type{border-top:none;}
+  .rail .n{font-family:ui-monospace,Menlo,monospace;font-size:13px;font-weight:700;color:var(--primary);background:var(--primary-soft);border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;position:sticky;top:64px;}
+  .wire{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);} .wire .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:10px;}
+  .g{height:9px;border-radius:5px;background:oklch(0.92 0.006 257);} .g.dk{background:oklch(0.86 0.01 257);} .g.lt{background:oklch(1 0 0 / 0.5);}
+  .g.w70{width:70%;} .g.w55{width:55%;} .g.w40{width:40%;} .g.w85{width:85%;} .g.tall{height:15px;}
+  .stack>*{margin-bottom:7px;} .stack>*:last-child{margin-bottom:0;}
+  .img{background:var(--ph);border-radius:9px;position:relative;} .img::after{content:"IMG";position:absolute;top:6px;left:7px;font-size:9px;font-weight:700;letter-spacing:0.1em;color:oklch(0.45 0.04 190 / 0.55);}
+  .bar{display:flex;align-items:center;gap:10px;}
+  .pl{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:oklch(0.95 0.005 257);font-size:11px;color:var(--muted);border:1px solid var(--line);}
+  .pl.solid{background:var(--primary);color:#fff;border-color:transparent;font-weight:600;} .pl.gold{background:var(--accent);color:oklch(0.30 0.06 80);border-color:transparent;font-weight:700;}
+  .pl.ghost{background:transparent;} .pl.out{background:transparent;border:1.5px solid var(--primary);color:var(--primary);font-weight:600;}
+  .hero{background:var(--gold-band);border-radius:18px;padding:34px 26px;position:relative;overflow:hidden;text-align:center;}
+  .hero .eyebrow{display:inline-block;background:oklch(1 0 0 / 0.55);border-radius:999px;padding:3px 10px;font-size:10.5px;font-weight:700;color:oklch(0.35 0.08 80);margin-bottom:10px;}
+  .hero h2{font-size:34px;line-height:1.05;margin:0 auto 12px;color:oklch(0.26 0.04 70);letter-spacing:-0.02em;max-width:16ch;}
+  .feat{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface);} .feat .ic{width:26px;height:26px;border-radius:8px;background:var(--primary-soft);margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:13px;}
+  .feat h5{margin:0 0 5px;font-size:12.5px;} .feat p{margin:0;font-size:11px;color:var(--muted);}
+  .cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;} .cols5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+  .band{border:1px dashed var(--line-2);border-radius:11px;padding:14px 16px;display:flex;align-items:center;gap:12px;background:oklch(0.985 0.003 90);} .band.gold{background:var(--accent-soft);border-color:transparent;}
+  .feature{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--surface);} .feature .img{height:120px;}
+  .team{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;} .tcard{border:1px solid var(--line);border-radius:11px;padding:12px;text-align:center;} .av{width:40px;height:40px;border-radius:50%;background:var(--ph);margin:0 auto 8px;}
+  .wordmark{font-size:46px;font-weight:800;letter-spacing:-0.04em;color:oklch(0.90 0.01 257);line-height:1;}
+  .spec{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--primary);border-radius:12px;padding:14px 15px;box-shadow:var(--shadow);position:sticky;top:64px;} .spec.ai-led{border-left-color:var(--accent);}
+  .spec h3{margin:0 0 9px;font-size:15px;} .spec .picks{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px;} .spec ul.notes{margin:0;padding-left:16px;color:var(--muted);font-size:12.5px;} .spec ul.notes li{margin:3px 0;} .spec ul.notes b{color:var(--ink);font-weight:600;} .spec .mt{font-size:11px;color:oklch(0.45 0.12 60);background:oklch(0.96 0.04 60);border-radius:7px;padding:5px 7px;margin-bottom:8px;}
+  .handoff{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);margin-top:24px;} .handoff h4{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);} .handoff ul{margin:0;padding-left:18px;} .handoff li{margin:4px 0;}
+  @media (max-width:900px){.row{grid-template-columns:24px 1fr;}.spec{grid-column:1/-1;position:static;}.rail .n{position:static;}.grid2,.cols3,.cols5,.feature,.team{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner"><div class="brand"><span class="dot"></span>mde<span style="color:var(--muted)">·</span>ai&nbsp;<small>/about wireframe</small></div><div class="top-spacer"></div><div class="legend"><span class="chip mt">▣ marketing/story shell</span><span class="chip shad">shadcn/ui</span><span class="chip ai">grounding story</span><span class="chip custom">custom</span></div></div></header>
+<div class="wrap">
+  <div class="titleblock"><h1 class="serif">/about — wireframe</h1><p>Marketing/story page (route <code>/about</code>, SAN-662). Trust + mission, not a B2B form. Reuses the home Mindtrip-style shell. The differentiator band is <b>"how we ground answers"</b> (no scams, grounded in Google Maps).</p>
+  <div class="meta-row"><span class="chip">audience: all (trust)</span><span class="chip">no demo form — story</span><span class="chip">CTA = Ask concierge / Become a partner</span><span class="chip">EN · Phase 1</span></div></div>
+
+  <section class="row"><div class="rail"><span class="n">01</span></div><div class="wire"><div class="lbl">Nav</div><div class="bar"><span class="pl ghost" style="font-weight:700;color:var(--ink)">mde·ai</span><div class="bar" style="margin-left:auto;"><div class="g" style="width:54px;"></div><div class="g" style="width:54px;"></div><span class="pl solid">Host</span></div></div></div><aside class="spec"><h3>01 · Nav</h3><div class="picks"><span class="chip shad">navigation-menu</span></div><ul class="notes"><li>Reuse home nav/footer</li></ul></aside></section>
+
+  <section class="row"><div class="rail"><span class="n">02</span></div><div class="wire"><div class="lbl">Hero — mission line</div><div class="hero"><span class="eyebrow">About mde·ai</span><h2 class="serif">Medellín, answered.</h2><div class="bar" style="justify-content:center;"><div class="g lt w55" style="height:8px;"></div></div></div></div><aside class="spec"><h3>02 · Hero</h3><div class="mt">Mindtrip /about: big mission statement</div><div class="picks"><span class="chip custom">gold band</span></div><ul class="notes"><li>One-line mission; serif headline</li></ul></aside></section>
+
+  <section class="row"><div class="rail"><span class="n">03</span></div><div class="wire"><div class="lbl">Mission / why mdeai</div><div class="feature"><div class="stack"><div class="g tall w70 dk"></div><div class="g w85"></div><div class="g w85"></div><div class="g w55"></div></div><div class="img"></div></div></div><aside class="spec"><h3>03 · Mission</h3><ul class="notes"><li>The AI concierge for Medellín — discovery + planning + booking in one chat</li><li>Why now: tourists/nomads/locals underserved by list-of-links sites</li></ul></aside></section>
+
+  <section class="row"><div class="rail"><span class="n">04</span></div><div class="wire"><div class="lbl">How we ground answers — the differentiator</div><div class="cols3"><div class="feat"><div class="ic">◉</div><h5>Grounded in Google Maps</h5><p>Real places, hours, ratings.</p></div><div class="feat"><div class="ic">✔</div><h5>Verified listings</h5><p>No scams; human QA.</p></div><div class="feat"><div class="ic ai" style="background:var(--accent-soft);">✦</div><h5>Never invented</h5><p>AI cites sources; no fabricated stats.</p></div></div></div><aside class="spec ai-led"><h3>04 · Grounding (trust)</h3><div class="mt">Our anti-scam, anti-hallucination promise</div><ul class="notes"><li>This is what sets us apart — say it plainly</li><li>Ties to grounding/scorer work (AI & Intelligence)</li></ul></aside></section>
+
+  <section class="row"><div class="rail"><span class="n">05</span></div><div class="wire"><div class="lbl">What we cover — 5 verticals</div><div class="cols5"><div class="feat" style="text-align:center;"><div class="ic" style="margin:0 auto 6px;"></div><div class="g w70" style="margin:0 auto;"></div></div><div class="feat" style="text-align:center;"><div class="ic" style="margin:0 auto 6px;"></div><div class="g w70" style="margin:0 auto;"></div></div><div class="feat" style="text-align:center;"><div class="ic" style="margin:0 auto 6px;"></div><div class="g w70" style="margin:0 auto;"></div></div><div class="feat" style="text-align:center;"><div class="ic" style="margin:0 auto 6px;"></div><div class="g w70" style="margin:0 auto;"></div></div><div class="feat" style="text-align:center;"><div class="ic" style="margin:0 auto 6px;"></div><div class="g w70" style="margin:0 auto;"></div></div></div></div><aside class="spec"><h3>05 · Verticals</h3><ul class="notes"><li>Rentals · Restaurants · Nightlife · Events · Cafés</li><li>Glyph + label (no category color)</li></ul></aside></section>
+
+  <section class="row"><div class="rail"><span class="n">06</span></div><div class="wire"><div class="lbl">For hosts &amp; partners (cross-link)</div><div class="band gold"><div class="stack" style="flex:1;"><div class="g tall w55 dk"></div><div class="g w70"></div></div><span class="pl solid">Become a partner →</span></div></div><aside class="spec"><h3>06 · Partner cross-link</h3><ul class="notes"><li>Brief: "run a venue/event? partner with us" → <code>/partners</code></li></ul></aside></section>
+
+  <section class="row"><div class="rail"><span class="n">07</span></div><div class="wire"><div class="lbl">Team / values (optional)</div><div class="team"><div class="tcard"><div class="av"></div><div class="g w70" style="margin:0 auto;"></div></div><div class="tcard"><div class="av"></div><div class="g w70" style="margin:0 auto;"></div></div><div class="tcard"><div class="av"></div><div class="g w70" style="margin:0 auto;"></div></div><div class="tcard"><div class="av"></div><div class="g w70" style="margin:0 auto;"></div></div></div></div><aside class="spec"><h3>07 · Team</h3><div class="picks"><span class="chip shad">avatar · card</span></div><ul class="notes"><li>Optional this phase; defer if no real bios</li></ul></aside></section>
+
+  <section class="row"><div class="rail"><span class="n">08</span></div><div class="wire"><div class="lbl">Final CTA + footer</div><div class="band gold" style="margin-bottom:12px;"><div class="g tall w55 dk"></div><span class="pl gold" style="margin-left:auto;">✦ Ask the concierge</span></div><div class="wordmark serif">mde·ai</div></div><aside class="spec"><h3>08 · CTA + footer</h3><div class="picks"><span class="chip t21">large-name-footer</span></div><ul class="notes"><li>Dual CTA: Ask concierge (consumers) + Become a partner</li></ul></aside></section>
+
+  <div class="handoff"><h4>Handoff</h4><ul><li><b>What:</b> SAN-662 About — story/trust page (not B2B form). Reuses home shell + grounding story.</li><li><b>Open:</b> team section — include or defer until real bios.</li><li><b>Next:</b> build `app/about/page.tsx`; reuse home nav/footer; light tokens.</li></ul></div>
+</div></body></html>

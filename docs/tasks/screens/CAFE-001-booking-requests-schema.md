@@ -1,0 +1,1 @@
+../venues/CAFE-001-booking-requests-schema.md

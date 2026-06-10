@@ -1,0 +1,724 @@
+{
+  "generated": "2026-05-31T19:04:29.796Z",
+  "issues": [
+    {
+      "id": "UX-015",
+      "order": 1,
+      "priority": 1,
+      "state": "In Review",
+      "milestone": "🚨 Launch Critical",
+      "updateIdentifier": "SAN-320",
+      "blockedBy": [],
+      "linear": {
+        "id": "1eaec6f2-9517-4095-8750-582e3aa334c6",
+        "identifier": "SAN-320",
+        "title": "UX-002 — Chat error bubble on RUN_ERROR",
+        "url": "https://linear.app/sanjiovani/issue/SAN-320/ux-002-chat-error-bubble-on-run-error"
+      }
+    },
+    {
+      "id": "UX-013",
+      "order": 2,
+      "priority": 1,
+      "state": "Todo",
+      "milestone": "🚨 Launch Critical",
+      "blockedBy": [],
+      "linear": {
+        "id": "3d4d1608-f82a-420f-afd5-556514a1cb7d",
+        "identifier": "SAN-427",
+        "title": "UX-013 — Wire venue_anchors into café search fallback",
+        "url": "https://linear.app/sanjiovani/issue/SAN-427/ux-013-wire-venue-anchors-into-cafe-search-fallback"
+      }
+    },
+    {
+      "id": "UX-014",
+      "order": 3,
+      "priority": 1,
+      "state": "Todo",
+      "milestone": "🚨 Launch Critical",
+      "blockedBy": [],
+      "linear": {
+        "id": "2fad344a-71b1-44e4-8d8a-95dc99f2bc1f",
+        "identifier": "SAN-428",
+        "title": "UX-014 — Emit agent tool cards without writer.custom",
+        "url": "https://linear.app/sanjiovani/issue/SAN-428/ux-014-emit-agent-tool-cards-without-writercustom"
+      }
+    },
+    {
+      "id": "UX-019",
+      "order": 4,
+      "priority": 1,
+      "state": "Todo",
+      "milestone": "🚨 Launch Critical",
+      "blockedBy": [],
+      "linear": {
+        "id": "38ba4acd-dc9e-405d-a487-232009397288",
+        "identifier": "SAN-429",
+        "title": "UX-019 — Stop event fast-path hijacking restaurant queries (B-09)",
+        "url": "https://linear.app/sanjiovani/issue/SAN-429/ux-019-stop-event-fast-path-hijacking-restaurant-queries-b-09"
+      }
+    },
+    {
+      "id": "UX-016",
+      "order": 5,
+      "priority": 2,
+      "state": "Todo",
+      "milestone": "🚨 Launch Critical",
+      "blockedBy": [
+        "UX-015"
+      ],
+      "linear": {
+        "id": "f4e46e43-e068-4a13-9501-5c0bc817babc",
+        "identifier": "SAN-430",
+        "title": "UX-016 — Playwright RUN_ERROR → error bubble e2e",
+        "url": "https://linear.app/sanjiovani/issue/SAN-430/ux-016-playwright-run-error-error-bubble-e2e"
+      }
+    },
+    {
+      "id": "UX-031",
+      "order": 6,
+      "priority": 2,
+      "state": "Todo",
+      "milestone": "🚨 Launch Critical",
+      "blockedBy": [
+        "UX-019",
+        "UX-013"
+      ],
+      "linear": {
+        "id": "edec163d-bcf9-4c93-b5ee-846430ab7a9b",
+        "identifier": "SAN-431",
+        "title": "UX-031 — Live audit vertical smoke — 4-query regression matrix",
+        "url": "https://linear.app/sanjiovani/issue/SAN-431/ux-031-live-audit-vertical-smoke-4-query-regression-matrix"
+      }
+    },
+    {
+      "id": "UX-017",
+      "order": 7,
+      "priority": 2,
+      "state": "Todo",
+      "milestone": "🚨 Launch Critical",
+      "blockedBy": [
+        "UX-015",
+        "UX-013",
+        "UX-014"
+      ],
+      "linear": {
+        "id": "462f1723-b01a-4360-8196-b4814329db0b",
+        "identifier": "SAN-432",
+        "title": "UX-017 — Rebase PR #19 onto main; resolve conflicts",
+        "url": "https://linear.app/sanjiovani/issue/SAN-432/ux-017-rebase-pr-19-onto-main-resolve-conflicts"
+      }
+    },
+    {
+      "id": "UX-035",
+      "order": 8,
+      "priority": 2,
+      "state": "Todo",
+      "milestone": "🚨 Launch Critical",
+      "blockedBy": [],
+      "note": "Prod verify for merged UX-003 / SAN-316",
+      "linear": {
+        "id": "6ccfd879-4070-4140-84f0-a4960ec64673",
+        "identifier": "SAN-433",
+        "title": "UX-035 — Verify UX-003 rental parser on production",
+        "url": "https://linear.app/sanjiovani/issue/SAN-433/ux-035-verify-ux-003-rental-parser-on-production"
+      }
+    },
+    {
+      "id": "UX-021",
+      "order": 9,
+      "priority": 1,
+      "state": "Todo",
+      "milestone": "🍽️ Discovery — UI",
+      "blockedBy": [],
+      "linear": {
+        "id": "69992161-d51d-4f38-9222-6902076bbca4",
+        "identifier": "SAN-434",
+        "title": "UX-021 — WCAG aria-labels, testId defaults, data-result-kind on all cards",
+        "url": "https://linear.app/sanjiovani/issue/SAN-434/ux-021-wcag-aria-labels-testid-defaults-data-result-kind-on-all-cards"
+      }
+    },
+    {
+      "id": "UX-022",
+      "order": 10,
+      "priority": 1,
+      "state": "Todo",
+      "milestone": "🍽️ Discovery — UI",
+      "blockedBy": [
+        "UX-014"
+      ],
+      "linear": {
+        "id": "5aa0b72e-0aa5-45b2-94bc-44b528f81349",
+        "identifier": "SAN-435",
+        "title": "UX-022 — DomainResults wrapper — fix restaurant/attraction registrar and pin sync",
+        "url": "https://linear.app/sanjiovani/issue/SAN-435/ux-022-domainresults-wrapper-fix-restaurantattraction-registrar-and"
+      }
+    },
+    {
+      "id": "UX-027",
+      "order": 11,
+      "priority": 1,
+      "state": "In Review",
+      "milestone": "🚨 Launch Critical",
+      "updateIdentifier": "SAN-324",
+      "blockedBy": [],
+      "linear": {
+        "id": "f5eafe57-cd6d-468e-8fb5-3b900b863835",
+        "identifier": "SAN-324",
+        "title": "UX-008 — Fix confusing Save button tooltip",
+        "url": "https://linear.app/sanjiovani/issue/SAN-324/ux-008-fix-confusing-save-button-tooltip"
+      }
+    },
+    {
+      "id": "UX-020",
+      "order": 12,
+      "priority": 3,
+      "state": "Todo",
+      "milestone": "🍽️ Discovery — UI",
+      "blockedBy": [
+        "UX-022"
+      ],
+      "linear": {
+        "id": "a6f27393-39d1-46a6-a5a4-e0c936bb5f4a",
+        "identifier": "SAN-436",
+        "title": "UX-020 — CardInteractionProps and shared card types",
+        "url": "https://linear.app/sanjiovani/issue/SAN-436/ux-020-cardinteractionprops-and-shared-card-types"
+      }
+    },
+    {
+      "id": "UX-023",
+      "order": 13,
+      "priority": 2,
+      "state": "Todo",
+      "milestone": "🍽️ Discovery — UI",
+      "blockedBy": [
+        "UX-020"
+      ],
+      "linear": {
+        "id": "2fbfb5f6-5171-4adb-bd5f-771902184491",
+        "identifier": "SAN-437",
+        "title": "UX-023 — Extract ResultCardShell and card primitives from CafeResultCard",
+        "url": "https://linear.app/sanjiovani/issue/SAN-437/ux-023-extract-resultcardshell-and-card-primitives-from-caferesultcard"
+      }
+    },
+    {
+      "id": "UX-024",
+      "order": 14,
+      "priority": 2,
+      "state": "Todo",
+      "milestone": "🍽️ Discovery — UI",
+      "blockedBy": [
+        "UX-023"
+      ],
+      "linear": {
+        "id": "9243dd6e-8d9e-4971-b3c4-ee1d3b55293a",
+        "identifier": "SAN-438",
+        "title": "UX-024 — Hover and focus → pin highlight on RentalCard and EventCard",
+        "url": "https://linear.app/sanjiovani/issue/SAN-438/ux-024-hover-and-focus-pin-highlight-on-rentalcard-and-eventcard"
+      }
+    },
+    {
+      "id": "UX-025",
+      "order": 15,
+      "priority": 2,
+      "state": "Todo",
+      "milestone": "🍽️ Discovery — UI",
+      "blockedBy": [
+        "UX-023"
+      ],
+      "linear": {
+        "id": "bc7a6b5a-0c3b-45a3-b2e3-0f9f6b771555",
+        "identifier": "SAN-439",
+        "title": "UX-025 — RestaurantCard rich — photo, rating, badges, detail panel",
+        "url": "https://linear.app/sanjiovani/issue/SAN-439/ux-025-restaurantcard-rich-photo-rating-badges-detail-panel"
+      }
+    },
+    {
+      "id": "UX-028",
+      "order": 16,
+      "priority": 2,
+      "state": "Todo",
+      "milestone": "🍽️ Discovery — UI",
+      "blockedBy": [
+        "UX-025"
+      ],
+      "linear": {
+        "id": "f5c52797-20bd-44b8-a583-21bfe4fa2088",
+        "identifier": "SAN-440",
+        "title": "UX-028 — PlaceResultCard minimum fallback upgrade",
+        "url": "https://linear.app/sanjiovani/issue/SAN-440/ux-028-placeresultcard-minimum-fallback-upgrade"
+      }
+    },
+    {
+      "id": "UX-030",
+      "order": 17,
+      "priority": 2,
+      "state": "Todo",
+      "milestone": "🍽️ Discovery — UI",
+      "blockedBy": [
+        "UX-022"
+      ],
+      "linear": {
+        "id": "a62bd18e-b394-4327-b4e5-85df84acc708",
+        "identifier": "SAN-441",
+        "title": "UX-030 — Card system tests — pin parity and Playwright per domain",
+        "url": "https://linear.app/sanjiovani/issue/SAN-441/ux-030-card-system-tests-pin-parity-and-playwright-per-domain"
+      }
+    },
+    {
+      "id": "UX-026",
+      "order": 18,
+      "priority": 3,
+      "state": "Todo",
+      "milestone": "🍽️ Discovery — UI",
+      "blockedBy": [
+        "UX-023"
+      ],
+      "linear": {
+        "id": "6824714b-e99d-434f-8f79-421e334ee3a6",
+        "identifier": "SAN-442",
+        "title": "UX-026 — AttractionCard rich on ResultCardShell",
+        "url": "https://linear.app/sanjiovani/issue/SAN-442/ux-026-attractioncard-rich-on-resultcardshell"
+      }
+    },
+    {
+      "id": "UX-029",
+      "order": 19,
+      "priority": 3,
+      "state": "Todo",
+      "milestone": "🍽️ Discovery — UI",
+      "blockedBy": [
+        "UX-026"
+      ],
+      "linear": {
+        "id": "fba52176-6bca-4936-9fa3-792fcaf67ef4",
+        "identifier": "SAN-443",
+        "title": "UX-029 — Retire orphaned GroundedPlaceCard and dead grounding UI",
+        "url": "https://linear.app/sanjiovani/issue/SAN-443/ux-029-retire-orphaned-groundedplacecard-and-dead-grounding-ui"
+      }
+    },
+    {
+      "id": "UX-032",
+      "order": 20,
+      "priority": 3,
+      "state": "Todo",
+      "milestone": "🚨 Launch Critical",
+      "updateIdentifier": "SAN-321",
+      "blockedBy": [
+        "UX-015"
+      ],
+      "linear": {
+        "id": "28655ccb-c0b6-4fa0-81b5-34dd173baee2",
+        "identifier": "SAN-321",
+        "title": "UX-006 — Reset chat and map on New chat",
+        "url": "https://linear.app/sanjiovani/issue/SAN-321/ux-006-reset-chat-and-map-on-new-chat"
+      }
+    },
+    {
+      "id": "UX-033",
+      "order": 21,
+      "priority": 3,
+      "state": "Todo",
+      "milestone": "🚨 Launch Critical",
+      "updateIdentifier": "SAN-323",
+      "blockedBy": [
+        "UX-015"
+      ],
+      "linear": {
+        "id": "c944bf9f-0c60-4e59-9f72-436aadd27c56",
+        "identifier": "SAN-323",
+        "title": "UX-007 — Clear ghost map pins after empty search",
+        "url": "https://linear.app/sanjiovani/issue/SAN-323/ux-007-clear-ghost-map-pins-after-empty-search"
+      }
+    },
+    {
+      "id": "UX-034",
+      "order": 22,
+      "priority": 3,
+      "state": "Todo",
+      "milestone": "🚨 Launch Critical",
+      "updateIdentifier": "SAN-322",
+      "blockedBy": [
+        "UX-015",
+        "UX-031"
+      ],
+      "linear": {
+        "id": "e70142b4-2fb4-4507-9f59-c7c854140c70",
+        "identifier": "SAN-322",
+        "title": "UX-009 — Production AI chat health monitor",
+        "url": "https://linear.app/sanjiovani/issue/SAN-322/ux-009-production-ai-chat-health-monitor"
+      }
+    },
+    {
+      "id": "UX-018",
+      "order": 23,
+      "priority": 3,
+      "state": "Backlog",
+      "milestone": "Deferred — Grounding search",
+      "blockedBy": [],
+      "linear": {
+        "id": "22609232-a20e-4e41-b70f-3e0466b2d845",
+        "identifier": "SAN-444",
+        "title": "UX-018 — Set ADK_GROUNDING_URL on Vercel (Phase 2)",
+        "url": "https://linear.app/sanjiovani/issue/SAN-444/ux-018-set-adk-grounding-url-on-vercel-phase-2"
+      }
+    }
+  ],
+  "created": [
+    {
+      "id": "UX-013",
+      "identifier": "SAN-427",
+      "url": "https://linear.app/sanjiovani/issue/SAN-427/ux-013-wire-venue-anchors-into-cafe-search-fallback",
+      "order": 2
+    },
+    {
+      "id": "UX-014",
+      "identifier": "SAN-428",
+      "url": "https://linear.app/sanjiovani/issue/SAN-428/ux-014-emit-agent-tool-cards-without-writercustom",
+      "order": 3
+    },
+    {
+      "id": "UX-019",
+      "identifier": "SAN-429",
+      "url": "https://linear.app/sanjiovani/issue/SAN-429/ux-019-stop-event-fast-path-hijacking-restaurant-queries-b-09",
+      "order": 4
+    },
+    {
+      "id": "UX-016",
+      "identifier": "SAN-430",
+      "url": "https://linear.app/sanjiovani/issue/SAN-430/ux-016-playwright-run-error-error-bubble-e2e",
+      "order": 5
+    },
+    {
+      "id": "UX-031",
+      "identifier": "SAN-431",
+      "url": "https://linear.app/sanjiovani/issue/SAN-431/ux-031-live-audit-vertical-smoke-4-query-regression-matrix",
+      "order": 6
+    },
+    {
+      "id": "UX-017",
+      "identifier": "SAN-432",
+      "url": "https://linear.app/sanjiovani/issue/SAN-432/ux-017-rebase-pr-19-onto-main-resolve-conflicts",
+      "order": 7
+    },
+    {
+      "id": "UX-035",
+      "identifier": "SAN-433",
+      "url": "https://linear.app/sanjiovani/issue/SAN-433/ux-035-verify-ux-003-rental-parser-on-production",
+      "order": 8
+    },
+    {
+      "id": "UX-021",
+      "identifier": "SAN-434",
+      "url": "https://linear.app/sanjiovani/issue/SAN-434/ux-021-wcag-aria-labels-testid-defaults-data-result-kind-on-all-cards",
+      "order": 9
+    },
+    {
+      "id": "UX-022",
+      "identifier": "SAN-435",
+      "url": "https://linear.app/sanjiovani/issue/SAN-435/ux-022-domainresults-wrapper-fix-restaurantattraction-registrar-and",
+      "order": 10
+    },
+    {
+      "id": "UX-020",
+      "identifier": "SAN-436",
+      "url": "https://linear.app/sanjiovani/issue/SAN-436/ux-020-cardinteractionprops-and-shared-card-types",
+      "order": 12
+    },
+    {
+      "id": "UX-023",
+      "identifier": "SAN-437",
+      "url": "https://linear.app/sanjiovani/issue/SAN-437/ux-023-extract-resultcardshell-and-card-primitives-from-caferesultcard",
+      "order": 13
+    },
+    {
+      "id": "UX-024",
+      "identifier": "SAN-438",
+      "url": "https://linear.app/sanjiovani/issue/SAN-438/ux-024-hover-and-focus-pin-highlight-on-rentalcard-and-eventcard",
+      "order": 14
+    },
+    {
+      "id": "UX-025",
+      "identifier": "SAN-439",
+      "url": "https://linear.app/sanjiovani/issue/SAN-439/ux-025-restaurantcard-rich-photo-rating-badges-detail-panel",
+      "order": 15
+    },
+    {
+      "id": "UX-028",
+      "identifier": "SAN-440",
+      "url": "https://linear.app/sanjiovani/issue/SAN-440/ux-028-placeresultcard-minimum-fallback-upgrade",
+      "order": 16
+    },
+    {
+      "id": "UX-030",
+      "identifier": "SAN-441",
+      "url": "https://linear.app/sanjiovani/issue/SAN-441/ux-030-card-system-tests-pin-parity-and-playwright-per-domain",
+      "order": 17
+    },
+    {
+      "id": "UX-026",
+      "identifier": "SAN-442",
+      "url": "https://linear.app/sanjiovani/issue/SAN-442/ux-026-attractioncard-rich-on-resultcardshell",
+      "order": 18
+    },
+    {
+      "id": "UX-029",
+      "identifier": "SAN-443",
+      "url": "https://linear.app/sanjiovani/issue/SAN-443/ux-029-retire-orphaned-groundedplacecard-and-dead-grounding-ui",
+      "order": 19
+    },
+    {
+      "id": "UX-018",
+      "identifier": "SAN-444",
+      "url": "https://linear.app/sanjiovani/issue/SAN-444/ux-018-set-adk-grounding-url-on-vercel-phase-2",
+      "order": 23
+    }
+  ],
+  "updated": [
+    {
+      "id": "UX-015",
+      "identifier": "SAN-320",
+      "url": "https://linear.app/sanjiovani/issue/SAN-320/ux-002-chat-error-bubble-on-run-error",
+      "order": 1
+    },
+    {
+      "id": "UX-027",
+      "identifier": "SAN-324",
+      "url": "https://linear.app/sanjiovani/issue/SAN-324/ux-008-fix-confusing-save-button-tooltip",
+      "order": 11
+    },
+    {
+      "id": "UX-032",
+      "identifier": "SAN-321",
+      "url": "https://linear.app/sanjiovani/issue/SAN-321/ux-006-reset-chat-and-map-on-new-chat",
+      "order": 20
+    },
+    {
+      "id": "UX-033",
+      "identifier": "SAN-323",
+      "url": "https://linear.app/sanjiovani/issue/SAN-323/ux-007-clear-ghost-map-pins-after-empty-search",
+      "order": 21
+    },
+    {
+      "id": "UX-034",
+      "identifier": "SAN-322",
+      "url": "https://linear.app/sanjiovani/issue/SAN-322/ux-009-production-ai-chat-health-monitor",
+      "order": 22
+    }
+  ],
+  "errors": [],
+  "relations": [
+    {
+      "task": "UX-016",
+      "blockedBy": "UX-015",
+      "blocker": "SAN-320"
+    },
+    {
+      "task": "UX-031",
+      "blockedBy": "UX-019",
+      "blocker": "SAN-429"
+    },
+    {
+      "task": "UX-031",
+      "blockedBy": "UX-013",
+      "blocker": "SAN-427"
+    },
+    {
+      "task": "UX-017",
+      "blockedBy": "UX-015",
+      "blocker": "SAN-320"
+    },
+    {
+      "task": "UX-017",
+      "blockedBy": "UX-013",
+      "blocker": "SAN-427"
+    },
+    {
+      "task": "UX-017",
+      "blockedBy": "UX-014",
+      "blocker": "SAN-428"
+    },
+    {
+      "task": "UX-022",
+      "blockedBy": "UX-014",
+      "blocker": "SAN-428"
+    },
+    {
+      "task": "UX-020",
+      "blockedBy": "UX-022",
+      "blocker": "SAN-435"
+    },
+    {
+      "task": "UX-023",
+      "blockedBy": "UX-020",
+      "blocker": "SAN-436"
+    },
+    {
+      "task": "UX-024",
+      "blockedBy": "UX-023",
+      "blocker": "SAN-437"
+    },
+    {
+      "task": "UX-025",
+      "blockedBy": "UX-023",
+      "blocker": "SAN-437"
+    },
+    {
+      "task": "UX-028",
+      "blockedBy": "UX-025",
+      "blocker": "SAN-439"
+    },
+    {
+      "task": "UX-030",
+      "blockedBy": "UX-022",
+      "blocker": "SAN-435"
+    },
+    {
+      "task": "UX-026",
+      "blockedBy": "UX-023",
+      "blocker": "SAN-437"
+    },
+    {
+      "task": "UX-029",
+      "blockedBy": "UX-026",
+      "blocker": "SAN-442"
+    },
+    {
+      "task": "UX-032",
+      "blockedBy": "UX-015",
+      "blocker": "SAN-320"
+    },
+    {
+      "task": "UX-033",
+      "blockedBy": "UX-015",
+      "blocker": "SAN-320"
+    },
+    {
+      "task": "UX-034",
+      "blockedBy": "UX-015",
+      "blocker": "SAN-320"
+    },
+    {
+      "task": "UX-034",
+      "blockedBy": "UX-031",
+      "blocker": "SAN-431"
+    }
+  ],
+  "sort": [
+    {
+      "id": "UX-015",
+      "order": 1,
+      "sortOrder": 1000
+    },
+    {
+      "id": "UX-013",
+      "order": 2,
+      "sortOrder": 2000
+    },
+    {
+      "id": "UX-014",
+      "order": 3,
+      "sortOrder": 3000
+    },
+    {
+      "id": "UX-019",
+      "order": 4,
+      "sortOrder": 4000
+    },
+    {
+      "id": "UX-016",
+      "order": 5,
+      "sortOrder": 5000
+    },
+    {
+      "id": "UX-031",
+      "order": 6,
+      "sortOrder": 6000
+    },
+    {
+      "id": "UX-017",
+      "order": 7,
+      "sortOrder": 7000
+    },
+    {
+      "id": "UX-035",
+      "order": 8,
+      "sortOrder": 8000
+    },
+    {
+      "id": "UX-021",
+      "order": 9,
+      "sortOrder": 9000
+    },
+    {
+      "id": "UX-022",
+      "order": 10,
+      "sortOrder": 10000
+    },
+    {
+      "id": "UX-027",
+      "order": 11,
+      "sortOrder": 11000
+    },
+    {
+      "id": "UX-020",
+      "order": 12,
+      "sortOrder": 12000
+    },
+    {
+      "id": "UX-023",
+      "order": 13,
+      "sortOrder": 13000
+    },
+    {
+      "id": "UX-024",
+      "order": 14,
+      "sortOrder": 14000
+    },
+    {
+      "id": "UX-025",
+      "order": 15,
+      "sortOrder": 15000
+    },
+    {
+      "id": "UX-028",
+      "order": 16,
+      "sortOrder": 16000
+    },
+    {
+      "id": "UX-030",
+      "order": 17,
+      "sortOrder": 17000
+    },
+    {
+      "id": "UX-026",
+      "order": 18,
+      "sortOrder": 18000
+    },
+    {
+      "id": "UX-029",
+      "order": 19,
+      "sortOrder": 19000
+    },
+    {
+      "id": "UX-032",
+      "order": 20,
+      "sortOrder": 20000
+    },
+    {
+      "id": "UX-033",
+      "order": 21,
+      "sortOrder": 21000
+    },
+    {
+      "id": "UX-034",
+      "order": 22,
+      "sortOrder": 22000
+    },
+    {
+      "id": "UX-018",
+      "order": 23,
+      "sortOrder": 23000
+    }
+  ]
+}

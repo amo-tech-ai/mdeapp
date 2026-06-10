@@ -1,0 +1,18 @@
+{
+  "generated": "2026-05-29T23:27:33Z",
+  "source": "Linear MCP save_issue",
+  "project": "MDEAPP",
+  "labels": ["track:ux", "ux-order:01…10", "imp:093…102", "phase-1"],
+  "issues": [
+    { "id": "UX-003", "imp": 93, "uxOrder": 1, "identifier": "SAN-316", "url": "https://linear.app/sanjiovani/issue/SAN-316", "state": "Todo", "milestone": "P0 — MVP gates" },
+    { "id": "UX-002", "imp": 94, "uxOrder": 2, "identifier": "SAN-320", "url": "https://linear.app/sanjiovani/issue/SAN-320", "state": "Todo", "blockedBy": ["SAN-316"] },
+    { "id": "UX-005", "imp": 95, "uxOrder": 3, "identifier": "SAN-319", "url": "https://linear.app/sanjiovani/issue/SAN-319", "state": "Todo", "blockedBy": ["SAN-316"], "note": "Same PR as UX-002" },
+    { "id": "UX-009", "imp": 101, "uxOrder": 4, "identifier": "SAN-322", "url": "https://linear.app/sanjiovani/issue/SAN-322", "state": "Todo", "blockedBy": ["SAN-320", "SAN-319"] },
+    { "id": "UX-006", "imp": 98, "uxOrder": 5, "identifier": "SAN-321", "url": "https://linear.app/sanjiovani/issue/SAN-321", "state": "Todo", "blockedBy": ["SAN-322"] },
+    { "id": "UX-007", "imp": 99, "uxOrder": 6, "identifier": "SAN-323", "url": "https://linear.app/sanjiovani/issue/SAN-323", "state": "Todo", "blockedBy": ["SAN-322"] },
+    { "id": "UX-008", "imp": 100, "uxOrder": 7, "identifier": "SAN-324", "url": "https://linear.app/sanjiovani/issue/SAN-324", "state": "Todo", "blockedBy": ["SAN-321", "SAN-323"] },
+    { "id": "UX-001", "imp": 97, "uxOrder": 8, "identifier": "SAN-315", "url": "https://linear.app/sanjiovani/issue/SAN-315", "state": "Done", "note": "PR #13" },
+    { "id": "UX-004", "imp": 96, "uxOrder": 9, "identifier": "SAN-317", "url": "https://linear.app/sanjiovani/issue/SAN-317", "state": "Backlog", "optional": true },
+    { "id": "UX-010", "imp": 102, "uxOrder": 10, "identifier": "SAN-318", "url": "https://linear.app/sanjiovani/issue/SAN-318", "state": "In Progress", "milestone": "P1 — Screens & café", "note": "After C-012 merge" }
+  ]
+}

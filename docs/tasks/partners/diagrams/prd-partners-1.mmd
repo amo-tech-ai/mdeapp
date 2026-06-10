@@ -1,0 +1,22 @@
+flowchart TD
+  CON["Consumer"] --> MKT["Marketing pages"]
+  MKT --> SIGN["Partner signup (typed wizard)"]
+  SIGN --> ONB["Onboarding (AI co-pilot)"]
+  ONB --> DASH["Universal dashboard"]
+  DASH --> AISVC["AI services"]
+  DASH --> BOOK["Bookings / leads"]
+  AISVC --> COM["Commerce (Stripe)"]
+  BOOK --> COM
+  COM --> AUTO["Automation (lifecycle)"]
+  AUTO --> RET["Retention"]
+  RET --> CON
+  subgraph Platform["Shared platform services"]
+    COPILOT["CopilotKit + Mastra agents"]
+    DATA["Supabase + pgvector + RLS"]
+    GEO["Maps · Places · grounding"]
+    COMM["Chatwoot · WhatsApp · email"]
+    SOCIAL["Postiz social"]
+    INGEST["OpenClaw ingestion"]
+  end
+  DASH -.uses.- Platform
+  AISVC -.uses.- Platform

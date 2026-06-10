@@ -1,0 +1,1135 @@
+{
+  "at": "2026-05-30T12:27:02.409Z",
+  "dryRun": false,
+  "auditOnly": false,
+  "registryCount": 57,
+  "misCount": 35,
+  "intCount": 22,
+  "phase1Active": [
+    "VEC-001",
+    "DATA-039",
+    "DATA-040",
+    "DATA-041",
+    "DATA-042",
+    "DATA-043",
+    "DATA-044",
+    "DATA-045",
+    "DATA-047",
+    "SEARCH-003",
+    "MASTRA-MIS-001"
+  ],
+  "missingInRegistry": {
+    "AI-005": "No spec in intelligence-plan §5.5 — gap in AI-001…020 range",
+    "AI-006": "No spec in intelligence-plan §5.5",
+    "AI-007": "No spec in intelligence-plan §5.5",
+    "AI-008": "No spec in intelligence-plan §5.5",
+    "AI-009": "No spec in intelligence-plan §5.5",
+    "AI-016": "No spec in intelligence-plan §5.5",
+    "AI-017": "No spec in intelligence-plan §5.5",
+    "AI-018": "No spec in intelligence-plan §5.5",
+    "AI-019": "No spec in intelligence-plan §5.5"
+  },
+  "created": [
+    {
+      "id": "MASTRA-MIS-001",
+      "identifier": "SAN-426",
+      "url": "https://linear.app/sanjiovani/issue/SAN-426/mastra-mis-001-canonical-production-routing-concierge-only",
+      "phase": "intel-1",
+      "san": "SAN-426"
+    }
+  ],
+  "updated": [
+    {
+      "id": "VEC-001",
+      "identifier": "SAN-370",
+      "url": "https://linear.app/sanjiovani/issue/SAN-370/vec-001-pgvector-inventory-duplicate-hnsw-cleanup",
+      "state": "Done"
+    },
+    {
+      "id": "VEC-002",
+      "identifier": "SAN-371",
+      "url": "https://linear.app/sanjiovani/issue/SAN-371/vec-002-semantic-v1-schema-rls-plan",
+      "state": "intel-deferred"
+    },
+    {
+      "id": "VEC-003",
+      "identifier": "SAN-372",
+      "url": "https://linear.app/sanjiovani/issue/SAN-372/vec-003-model-registry-embedding-contract",
+      "state": "intel-1b"
+    },
+    {
+      "id": "VEC-004",
+      "identifier": "SAN-373",
+      "url": "https://linear.app/sanjiovani/issue/SAN-373/vec-004-embedding-text-builders-worker",
+      "state": "intel-1b"
+    },
+    {
+      "id": "VEC-005",
+      "identifier": "SAN-374",
+      "url": "https://linear.app/sanjiovani/issue/SAN-374/vec-005-golden-semantic-eval-harness",
+      "state": "intel-1b"
+    },
+    {
+      "id": "VEC-006",
+      "identifier": "SAN-375",
+      "url": "https://linear.app/sanjiovani/issue/SAN-375/vec-006-semantic-search-logs-observability-phase-2",
+      "state": "intel-deferred"
+    },
+    {
+      "id": "VEC-007",
+      "identifier": "SAN-376",
+      "url": "https://linear.app/sanjiovani/issue/SAN-376/vec-007-coffee-tour-vector-compatibility",
+      "state": "intel-deferred"
+    },
+    {
+      "id": "DATA-039",
+      "identifier": "SAN-377",
+      "url": "https://linear.app/sanjiovani/issue/SAN-377/data-039-restaurants-schema-patch-neighborhood-nullable-pricehours",
+      "state": "Done"
+    },
+    {
+      "id": "DATA-040",
+      "identifier": "SAN-378",
+      "url": "https://linear.app/sanjiovani/issue/SAN-378/data-040-embedding-jobs-queue",
+      "state": "Done"
+    },
+    {
+      "id": "DATA-041",
+      "identifier": "SAN-379",
+      "url": "https://linear.app/sanjiovani/issue/SAN-379/data-041-venue-signals-polymorphic-seed-human-qa-top-30",
+      "state": "Done"
+    },
+    {
+      "id": "DATA-042",
+      "identifier": "SAN-380",
+      "url": "https://linear.app/sanjiovani/issue/SAN-380/data-042-event-signals-seed-published-events",
+      "state": "Done"
+    },
+    {
+      "id": "DATA-043",
+      "identifier": "SAN-381",
+      "url": "https://linear.app/sanjiovani/issue/SAN-381/data-043-rental-signals-seed-44-apartments",
+      "state": "Done"
+    },
+    {
+      "id": "DATA-044",
+      "identifier": "SAN-382",
+      "url": "https://linear.app/sanjiovani/issue/SAN-382/data-044-neighborhood-profiles-astorga-seed",
+      "state": "Done"
+    },
+    {
+      "id": "DATA-045",
+      "identifier": "SAN-383",
+      "url": "https://linear.app/sanjiovani/issue/SAN-383/data-045-evidence-grounding-tables",
+      "state": "Done"
+    },
+    {
+      "id": "DATA-046",
+      "identifier": "SAN-384",
+      "url": "https://linear.app/sanjiovani/issue/SAN-384/data-046-golden-queries-v2-signal-backed",
+      "state": "intel-1b"
+    },
+    {
+      "id": "DATA-047",
+      "identifier": "SAN-385",
+      "url": "https://linear.app/sanjiovani/issue/SAN-385/data-047-search-logs-rank-explanation-observability",
+      "state": "Done"
+    },
+    {
+      "id": "SEARCH-001",
+      "identifier": "SAN-386",
+      "url": "https://linear.app/sanjiovani/issue/SAN-386/search-001-wire-hybrid-search-listings-rental-signals",
+      "state": "intel-1b"
+    },
+    {
+      "id": "SEARCH-002",
+      "identifier": "SAN-387",
+      "url": "https://linear.app/sanjiovani/issue/SAN-387/search-002-wire-hybrid-search-events-event-signals",
+      "state": "intel-1b"
+    },
+    {
+      "id": "SEARCH-003",
+      "identifier": "SAN-388",
+      "url": "https://linear.app/sanjiovani/issue/SAN-388/search-003-wire-hybrid-search-restaurants-venue-signals",
+      "state": "Done"
+    },
+    {
+      "id": "SEARCH-004",
+      "identifier": "SAN-389",
+      "url": "https://linear.app/sanjiovani/issue/SAN-389/search-004-cross-domain-retrieval-workflow",
+      "state": "intel-deferred"
+    },
+    {
+      "id": "SEARCH-005",
+      "identifier": "SAN-390",
+      "url": "https://linear.app/sanjiovani/issue/SAN-390/search-005-like-this-place-similarity-search",
+      "state": "intel-deferred"
+    },
+    {
+      "id": "SEARCH-006",
+      "identifier": "SAN-391",
+      "url": "https://linear.app/sanjiovani/issue/SAN-391/search-006-conversational-query-planner",
+      "state": "intel-deferred"
+    },
+    {
+      "id": "SEARCH-007",
+      "identifier": "SAN-392",
+      "url": "https://linear.app/sanjiovani/issue/SAN-392/search-007-signal-fusion-ranker",
+      "state": "intel-deferred"
+    },
+    {
+      "id": "AI-001",
+      "identifier": "SAN-393",
+      "url": "https://linear.app/sanjiovani/issue/SAN-393/ai-001-cross-domain-discovery-workflow",
+      "state": "intel-deferred"
+    },
+    {
+      "id": "AI-002",
+      "identifier": "SAN-394",
+      "url": "https://linear.app/sanjiovani/issue/SAN-394/ai-002-itinerary-planning-workflow",
+      "state": "intel-deferred"
+    },
+    {
+      "id": "AI-003",
+      "identifier": "SAN-395",
+      "url": "https://linear.app/sanjiovani/issue/SAN-395/ai-003-signal-enrichment-batch-job",
+      "state": "intel-1b"
+    },
+    {
+      "id": "AI-004",
+      "identifier": "SAN-396",
+      "url": "https://linear.app/sanjiovani/issue/SAN-396/ai-004-grounding-verification-pipeline",
+      "state": "intel-1b"
+    },
+    {
+      "id": "AI-010",
+      "identifier": "SAN-397",
+      "url": "https://linear.app/sanjiovani/issue/SAN-397/ai-010-hidden-gem-detection-job",
+      "state": "intel-deferred"
+    },
+    {
+      "id": "AI-011",
+      "identifier": "SAN-398",
+      "url": "https://linear.app/sanjiovani/issue/SAN-398/ai-011-local-vs-tourist-classifier",
+      "state": "intel-deferred"
+    },
+    {
+      "id": "AI-012",
+      "identifier": "SAN-399",
+      "url": "https://linear.app/sanjiovani/issue/SAN-399/ai-012-vibe-extraction-refresh-on-catalog-change",
+      "state": "intel-deferred"
+    },
+    {
+      "id": "AI-013",
+      "identifier": "SAN-400",
+      "url": "https://linear.app/sanjiovani/issue/SAN-400/ai-013-nightlife-timing-engine",
+      "state": "intel-deferred"
+    },
+    {
+      "id": "AI-014",
+      "identifier": "SAN-401",
+      "url": "https://linear.app/sanjiovani/issue/SAN-401/ai-014-recommendation-graph-builder",
+      "state": "intel-deferred"
+    },
+    {
+      "id": "AI-015",
+      "identifier": "SAN-402",
+      "url": "https://linear.app/sanjiovani/issue/SAN-402/ai-015-user-taste-vector-opt-in",
+      "state": "intel-deferred"
+    },
+    {
+      "id": "AI-020",
+      "identifier": "SAN-403",
+      "url": "https://linear.app/sanjiovani/issue/SAN-403/ai-020-multi-agent-concierge-router",
+      "state": "intel-deferred"
+    },
+    {
+      "id": "INT-001",
+      "identifier": "SAN-404",
+      "url": "https://linear.app/sanjiovani/issue/SAN-404/int-001-turn-1-chat-routing-one-intent-schema-for-rentals-events-cafes",
+      "state": "intel-conv"
+    },
+    {
+      "id": "INT-002",
+      "identifier": "SAN-405",
+      "url": "https://linear.app/sanjiovani/issue/SAN-405/int-002-parse-camilas-monthly-rental-budget-june-dates-medellin-city",
+      "state": "intel-conv"
+    },
+    {
+      "id": "INT-003",
+      "identifier": "SAN-406",
+      "url": "https://linear.app/sanjiovani/issue/SAN-406/int-003-neighborhood-clarify-not-generic-budgetdates-re-ask",
+      "state": "intel-conv"
+    },
+    {
+      "id": "INT-004",
+      "identifier": "SAN-407",
+      "url": "https://linear.app/sanjiovani/issue/SAN-407/int-004-remove-canned-rental-clarify-bypass-before-concierge-agent",
+      "state": "intel-conv"
+    },
+    {
+      "id": "INT-005",
+      "identifier": "SAN-408",
+      "url": "https://linear.app/sanjiovani/issue/SAN-408/int-005-regression-suite-hero-queries-never-hit-wrong-path",
+      "state": "intel-conv"
+    },
+    {
+      "id": "INT-006",
+      "identifier": "SAN-409",
+      "url": "https://linear.app/sanjiovani/issue/SAN-409/int-006-sql-date-filters-for-rental-availability-search",
+      "state": "intel-conv"
+    },
+    {
+      "id": "INT-007",
+      "identifier": "SAN-410",
+      "url": "https://linear.app/sanjiovani/issue/SAN-410/int-007-roberto-finds-salsa-events-this-weekend-near-provenza",
+      "state": "intel-conv"
+    },
+    {
+      "id": "INT-008",
+      "identifier": "SAN-411",
+      "url": "https://linear.app/sanjiovani/issue/SAN-411/int-008-tourist-finds-quiet-laureles-cafe-for-remote-work",
+      "state": "intel-conv"
+    },
+    {
+      "id": "INT-009",
+      "identifier": "SAN-412",
+      "url": "https://linear.app/sanjiovani/issue/SAN-412/int-009-copilotkit-mirrors-map-slot-state-to-agent",
+      "state": "intel-conv"
+    },
+    {
+      "id": "INT-010",
+      "identifier": "SAN-413",
+      "url": "https://linear.app/sanjiovani/issue/SAN-413/int-010-working-memory-syncs-intent-across-chat-turns",
+      "state": "intel-conv"
+    },
+    {
+      "id": "INT-011",
+      "identifier": "SAN-414",
+      "url": "https://linear.app/sanjiovani/issue/SAN-414/int-011-durable-user-preferences-schema-rls",
+      "state": "intel-memory"
+    },
+    {
+      "id": "INT-012",
+      "identifier": "SAN-415",
+      "url": "https://linear.app/sanjiovani/issue/SAN-415/int-012-user-interactions-log-for-ranking-feedback",
+      "state": "intel-memory"
+    },
+    {
+      "id": "INT-013",
+      "identifier": "SAN-416",
+      "url": "https://linear.app/sanjiovani/issue/SAN-416/int-013-retrieve-preferences-before-every-search",
+      "state": "intel-memory"
+    },
+    {
+      "id": "INT-014",
+      "identifier": "SAN-417",
+      "url": "https://linear.app/sanjiovani/issue/SAN-417/int-014-ranking-boost-from-remembered-preferences",
+      "state": "intel-memory"
+    },
+    {
+      "id": "INT-015",
+      "identifier": "SAN-418",
+      "url": "https://linear.app/sanjiovani/issue/SAN-418/int-015-memory-evidence-tests-prefs-affect-results",
+      "state": "intel-memory"
+    },
+    {
+      "id": "INT-016",
+      "identifier": "SAN-419",
+      "url": "https://linear.app/sanjiovani/issue/SAN-419/int-016-pgvector-semantic-memory-for-cross-session-recall",
+      "state": "intel-memory"
+    },
+    {
+      "id": "INT-017",
+      "identifier": "SAN-420",
+      "url": "https://linear.app/sanjiovani/issue/SAN-420/int-017-gemini-embeddings-for-preference-memory",
+      "state": "intel-memory"
+    },
+    {
+      "id": "INT-018",
+      "identifier": "SAN-421",
+      "url": "https://linear.app/sanjiovani/issue/SAN-421/int-018-cross-domain-personalization-rentals-events-venues",
+      "state": "intel-memory"
+    },
+    {
+      "id": "INT-019",
+      "identifier": "SAN-422",
+      "url": "https://linear.app/sanjiovani/issue/SAN-422/int-019-memory-settings-ui-user-controls-what-we-remember",
+      "state": "intel-memory"
+    },
+    {
+      "id": "INT-020",
+      "identifier": "SAN-423",
+      "url": "https://linear.app/sanjiovani/issue/SAN-423/int-020-observational-memory-learning-from-chat-behavior",
+      "state": "intel-memory"
+    },
+    {
+      "id": "INT-021",
+      "identifier": "SAN-424",
+      "url": "https://linear.app/sanjiovani/issue/SAN-424/int-021-restaurant-venue-search-with-cuisinecapacity-clarify",
+      "state": "intel-conv"
+    },
+    {
+      "id": "INT-022",
+      "identifier": "SAN-425",
+      "url": "https://linear.app/sanjiovani/issue/SAN-425/int-022-routing-confidence-telemetry-085-050-bands",
+      "state": "intel-conv"
+    }
+  ],
+  "skipped": [],
+  "errors": [],
+  "collisions": [
+    {
+      "specId": "VEN-002",
+      "issues": [
+        {
+          "id": "ad2f986c-fdb7-4427-a354-9d9522440835",
+          "identifier": "SAN-363",
+          "title": "VEN-002 — Build rich attraction result cards",
+          "url": "https://linear.app/sanjiovani/issue/SAN-363/ven-002-build-rich-attraction-result-cards",
+          "labels": {
+            "nodes": [
+              {
+                "name": "area:concierge"
+              },
+              {
+                "name": "prefix:VEN"
+              },
+              {
+                "name": "phase:post-mvp"
+              },
+              {
+                "name": "track:ux"
+              },
+              {
+                "name": "stack:supabase"
+              },
+              {
+                "name": "stack:maps"
+              },
+              {
+                "name": "stack:copilotkit"
+              },
+              {
+                "name": "stack:mastra"
+              }
+            ]
+          }
+        },
+        {
+          "id": "3178e198-10f9-4ddc-b0d1-43ef3402f316",
+          "identifier": "SAN-159",
+          "title": "VEN-002 — coffee_tour_search_logs + coffee_tour_cache",
+          "url": "https://linear.app/sanjiovani/issue/SAN-159/ven-002-coffee-tour-search-logs-coffee-tour-cache",
+          "labels": {
+            "nodes": [
+              {
+                "name": "prefix:VEN"
+              },
+              {
+                "name": "phase:post-mvp"
+              },
+              {
+                "name": "stack:supabase"
+              },
+              {
+                "name": "stack:maps"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "specId": "VEN-001",
+      "issues": [
+        {
+          "id": "5f4d0d3b-e973-45d6-9898-ffee3a5e92fd",
+          "identifier": "SAN-362",
+          "title": "VEN-001 — Build rich restaurant result cards",
+          "url": "https://linear.app/sanjiovani/issue/SAN-362/ven-001-build-rich-restaurant-result-cards",
+          "labels": {
+            "nodes": [
+              {
+                "name": "area:concierge"
+              },
+              {
+                "name": "prefix:VEN"
+              },
+              {
+                "name": "phase:post-mvp"
+              },
+              {
+                "name": "track:ux"
+              },
+              {
+                "name": "stack:supabase"
+              },
+              {
+                "name": "stack:maps"
+              },
+              {
+                "name": "stack:copilotkit"
+              },
+              {
+                "name": "stack:mastra"
+              }
+            ]
+          }
+        },
+        {
+          "id": "d4c485c4-135b-4ef6-a5de-4ed0850e75e6",
+          "identifier": "SAN-158",
+          "title": "VEN-001 — Supabase coffee_tours core tables + RLS",
+          "url": "https://linear.app/sanjiovani/issue/SAN-158/ven-001-supabase-coffee-tours-core-tables-rls",
+          "labels": {
+            "nodes": [
+              {
+                "name": "prefix:VEN"
+              },
+              {
+                "name": "phase:post-mvp"
+              },
+              {
+                "name": "stack:supabase"
+              },
+              {
+                "name": "stack:maps"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "specId": "EVT-002",
+      "issues": [
+        {
+          "id": "593e31ef-89be-4aa3-9a41-2ddcdca7cce2",
+          "identifier": "SAN-366",
+          "title": "EVT-002 — Host publish production proof",
+          "url": "https://linear.app/sanjiovani/issue/SAN-366/evt-002-host-publish-production-proof",
+          "labels": {
+            "nodes": [
+              {
+                "name": "area:launch"
+              },
+              {
+                "name": "area:events"
+              },
+              {
+                "name": "prefix:EVT"
+              },
+              {
+                "name": "phase:launch"
+              },
+              {
+                "name": "stack:stripe"
+              },
+              {
+                "name": "stack:mastra"
+              },
+              {
+                "name": "stack:nextjs"
+              }
+            ]
+          }
+        },
+        {
+          "id": "f244a411-288c-4d1b-9fde-9fa8ea5e9508",
+          "identifier": "SAN-120",
+          "title": "EVT-002 — Event maps + venue integration",
+          "url": "https://linear.app/sanjiovani/issue/SAN-120/evt-002-event-maps-venue-integration",
+          "labels": {
+            "nodes": [
+              {
+                "name": "prefix:EVT"
+              },
+              {
+                "name": "phase:post-mvp"
+              },
+              {
+                "name": "stack:stripe"
+              },
+              {
+                "name": "stack:mastra"
+              },
+              {
+                "name": "stack:nextjs"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "specId": "EVT-014",
+      "issues": [
+        {
+          "id": "f0357d6b-dc35-4c06-b373-d9c17dc4336f",
+          "identifier": "SAN-132",
+          "title": "EVT-014 — Sponsor CRM-lite + proposal drafts",
+          "url": "https://linear.app/sanjiovani/issue/SAN-132/evt-014-sponsor-crm-lite-proposal-drafts",
+          "labels": {
+            "nodes": [
+              {
+                "name": "prefix:EVT"
+              },
+              {
+                "name": "phase:post-mvp"
+              },
+              {
+                "name": "stack:stripe"
+              },
+              {
+                "name": "stack:mastra"
+              },
+              {
+                "name": "stack:nextjs"
+              }
+            ]
+          }
+        },
+        {
+          "id": "8170d1bf-4e5b-45dc-85f1-9e93f3e2c6ed",
+          "identifier": "SAN-118",
+          "title": "EVT-014 — Host events list page",
+          "url": "https://linear.app/sanjiovani/issue/SAN-118/evt-014-host-events-list-page",
+          "labels": {
+            "nodes": [
+              {
+                "name": "area:events"
+              },
+              {
+                "name": "prefix:EVT"
+              },
+              {
+                "name": "phase:post-mvp"
+              },
+              {
+                "name": "stack:stripe"
+              },
+              {
+                "name": "stack:mastra"
+              },
+              {
+                "name": "stack:nextjs"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "specId": "EVT-013",
+      "issues": [
+        {
+          "id": "7dea1b8d-9006-4f96-86f0-e1b834a2345a",
+          "identifier": "SAN-131",
+          "title": "EVT-013 — Production readiness checklist",
+          "url": "https://linear.app/sanjiovani/issue/SAN-131/evt-013-production-readiness-checklist",
+          "labels": {
+            "nodes": [
+              {
+                "name": "prefix:EVT"
+              },
+              {
+                "name": "phase:post-mvp"
+              },
+              {
+                "name": "stack:stripe"
+              },
+              {
+                "name": "stack:mastra"
+              },
+              {
+                "name": "stack:nextjs"
+              }
+            ]
+          }
+        },
+        {
+          "id": "d0e82c9e-b497-4379-907f-88cb43f095b7",
+          "identifier": "SAN-117",
+          "title": "EVT-013 — Event cards in AI chat",
+          "url": "https://linear.app/sanjiovani/issue/SAN-117/evt-013-event-cards-in-ai-chat",
+          "labels": {
+            "nodes": [
+              {
+                "name": "area:launch"
+              },
+              {
+                "name": "area:events"
+              },
+              {
+                "name": "prefix:EVT"
+              },
+              {
+                "name": "phase:launch"
+              },
+              {
+                "name": "stack:stripe"
+              },
+              {
+                "name": "stack:mastra"
+              },
+              {
+                "name": "stack:nextjs"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "specId": "EVT-001",
+      "issues": [
+        {
+          "id": "149db62b-7305-461a-aaa7-239007012997",
+          "identifier": "SAN-119",
+          "title": "EVT-001 — Grounded event discovery",
+          "url": "https://linear.app/sanjiovani/issue/SAN-119/evt-001-grounded-event-discovery",
+          "labels": {
+            "nodes": [
+              {
+                "name": "prefix:EVT"
+              },
+              {
+                "name": "phase:post-mvp"
+              },
+              {
+                "name": "stack:stripe"
+              },
+              {
+                "name": "stack:mastra"
+              },
+              {
+                "name": "stack:nextjs"
+              }
+            ]
+          }
+        },
+        {
+          "id": "03791e39-044e-4990-9d1c-c825e5f71455",
+          "identifier": "SAN-115",
+          "title": "EVT-001 — MVP launch proof ledger",
+          "url": "https://linear.app/sanjiovani/issue/SAN-115/evt-001-mvp-launch-proof-ledger",
+          "labels": {
+            "nodes": [
+              {
+                "name": "area:launch"
+              },
+              {
+                "name": "prefix:OPS"
+              },
+              {
+                "name": "phase:launch"
+              },
+              {
+                "name": "stack:nextjs"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "specId": "CAF-001",
+      "issues": [
+        {
+          "id": "72cc6e55-4c01-434d-a9b4-b0fa0ebc01bf",
+          "identifier": "SAN-114",
+          "title": "CAF-001 — Build café discovery cards in chat",
+          "url": "https://linear.app/sanjiovani/issue/SAN-114/caf-001-build-cafe-discovery-cards-in-chat",
+          "labels": {
+            "nodes": [
+              {
+                "name": "area:venues"
+              },
+              {
+                "name": "prefix:CAF"
+              },
+              {
+                "name": "phase:post-mvp"
+              },
+              {
+                "name": "stack:maps"
+              },
+              {
+                "name": "stack:copilotkit"
+              },
+              {
+                "name": "stack:nextjs"
+              }
+            ]
+          }
+        },
+        {
+          "id": "afea5713-7903-47db-aa68-537f999199ae",
+          "identifier": "SAN-109",
+          "title": "CAF-001 — Cafe booking requests schema + RLS",
+          "url": "https://linear.app/sanjiovani/issue/SAN-109/caf-001-cafe-booking-requests-schema-rls",
+          "labels": {
+            "nodes": [
+              {
+                "name": "prefix:CAF"
+              },
+              {
+                "name": "phase:post-mvp"
+              },
+              {
+                "name": "stack:maps"
+              },
+              {
+                "name": "stack:copilotkit"
+              },
+              {
+                "name": "stack:nextjs"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "specId": "MAP-010",
+      "issues": [
+        {
+          "id": "f4d0d7cf-7015-4ed7-bfc8-a23e10825352",
+          "identifier": "SAN-228",
+          "title": "MAP-010 — Gemini tool combination spike (Search + MCP)",
+          "url": "https://linear.app/sanjiovani/issue/SAN-228/map-010-gemini-tool-combination-spike-search-mcp",
+          "labels": {
+            "nodes": [
+              {
+                "name": "prefix:MAP"
+              },
+              {
+                "name": "phase:post-mvp"
+              },
+              {
+                "name": "stack:maps"
+              },
+              {
+                "name": "stack:gemini"
+              },
+              {
+                "name": "stack:nextjs"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ff60d4ae-6fe1-4ddf-b850-310611cf792a",
+          "identifier": "SAN-104",
+          "title": "MAP-010 — Place autocomplete for venue",
+          "url": "https://linear.app/sanjiovani/issue/SAN-104/map-010-place-autocomplete-for-venue",
+          "labels": {
+            "nodes": [
+              {
+                "name": "prefix:MAP"
+              },
+              {
+                "name": "phase:post-mvp"
+              },
+              {
+                "name": "stack:maps"
+              },
+              {
+                "name": "stack:gemini"
+              },
+              {
+                "name": "stack:nextjs"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "dependencyGaps": [],
+  "labelCheck": [
+    {
+      "name": "track:intelligence",
+      "ok": true
+    },
+    {
+      "name": "track:data",
+      "ok": true
+    },
+    {
+      "name": "phase:intel-0",
+      "ok": true
+    },
+    {
+      "name": "phase:intel-1",
+      "ok": true
+    },
+    {
+      "name": "phase:intel-1b",
+      "ok": true
+    },
+    {
+      "name": "phase:intel-deferred",
+      "ok": true
+    },
+    {
+      "name": "phase:intel-conv",
+      "ok": true
+    },
+    {
+      "name": "phase:intel-memory",
+      "ok": true
+    },
+    {
+      "name": "stack:supabase",
+      "ok": true
+    },
+    {
+      "name": "stack:pgvector",
+      "ok": true
+    },
+    {
+      "name": "stack:search",
+      "ok": true
+    },
+    {
+      "name": "stack:mastra",
+      "ok": true
+    },
+    {
+      "name": "layer:observability",
+      "ok": true
+    },
+    {
+      "name": "layer:signals",
+      "ok": true
+    },
+    {
+      "name": "layer:ranking",
+      "ok": true
+    },
+    {
+      "name": "layer:grounding",
+      "ok": true
+    },
+    {
+      "name": "layer:routing",
+      "ok": true
+    },
+    {
+      "name": "layer:memory",
+      "ok": true
+    },
+    {
+      "name": "intel-order:01",
+      "ok": true
+    },
+    {
+      "name": "intel-order:11",
+      "ok": true
+    },
+    {
+      "name": "intel-order:12",
+      "ok": true
+    },
+    {
+      "name": "intel-order:18",
+      "ok": true
+    },
+    {
+      "name": "intel-order:02",
+      "ok": true
+    },
+    {
+      "name": "intel-order:03",
+      "ok": true
+    },
+    {
+      "name": "intel-order:04",
+      "ok": true
+    },
+    {
+      "name": "intel-order:05",
+      "ok": true
+    },
+    {
+      "name": "intel-order:06",
+      "ok": true
+    },
+    {
+      "name": "intel-order:07",
+      "ok": true
+    },
+    {
+      "name": "intel-order:08",
+      "ok": true
+    },
+    {
+      "name": "intel-order:17",
+      "ok": true
+    },
+    {
+      "name": "intel-order:09",
+      "ok": true
+    },
+    {
+      "name": "intel-order:13",
+      "ok": true
+    },
+    {
+      "name": "intel-order:14",
+      "ok": true
+    },
+    {
+      "name": "intel-order:10",
+      "ok": true
+    },
+    {
+      "name": "intel-order:11",
+      "ok": true
+    },
+    {
+      "name": "intel-order:16",
+      "ok": true
+    },
+    {
+      "name": "intel-order:15",
+      "ok": true
+    },
+    {
+      "name": "int-seq:01",
+      "ok": true
+    },
+    {
+      "name": "int-seq:02",
+      "ok": true
+    },
+    {
+      "name": "int-seq:03",
+      "ok": true
+    },
+    {
+      "name": "int-seq:04",
+      "ok": true
+    },
+    {
+      "name": "int-seq:05",
+      "ok": true
+    },
+    {
+      "name": "int-seq:06",
+      "ok": true
+    },
+    {
+      "name": "int-seq:07",
+      "ok": true
+    },
+    {
+      "name": "int-seq:08",
+      "ok": true
+    },
+    {
+      "name": "int-seq:09",
+      "ok": true
+    },
+    {
+      "name": "int-seq:10",
+      "ok": true
+    },
+    {
+      "name": "int-seq:11",
+      "ok": true
+    },
+    {
+      "name": "int-seq:12",
+      "ok": true
+    },
+    {
+      "name": "int-seq:13",
+      "ok": true
+    },
+    {
+      "name": "int-seq:14",
+      "ok": true
+    },
+    {
+      "name": "int-seq:15",
+      "ok": true
+    },
+    {
+      "name": "int-seq:16",
+      "ok": true
+    },
+    {
+      "name": "int-seq:17",
+      "ok": true
+    },
+    {
+      "name": "int-seq:18",
+      "ok": true
+    },
+    {
+      "name": "int-seq:19",
+      "ok": true
+    },
+    {
+      "name": "int-seq:20",
+      "ok": true
+    },
+    {
+      "name": "int-seq:21",
+      "ok": true
+    },
+    {
+      "name": "int-seq:22",
+      "ok": true
+    }
+  ],
+  "views": [
+    {
+      "name": "INTELLIGENCE",
+      "filter": "project:MDEAPP label:track:intelligence"
+    },
+    {
+      "name": "INTEL Phase 1",
+      "filter": "project:MDEAPP label:phase:intel-1 state:Todo,\"In Progress\",\"In Review\",\"Done\""
+    },
+    {
+      "name": "INT Conversational (INT-001…022)",
+      "filter": "project:MDEAPP label:phase:intel-conv"
+    },
+    {
+      "name": "INT Memory (INT-011…020)",
+      "filter": "project:MDEAPP label:phase:intel-memory"
+    },
+    {
+      "name": "INTEL Search",
+      "filter": "project:MDEAPP label:track:intelligence label:stack:search"
+    },
+    {
+      "name": "INTEL Supabase",
+      "filter": "project:MDEAPP label:track:intelligence label:stack:supabase"
+    },
+    {
+      "name": "INTEL Ranking",
+      "filter": "project:MDEAPP label:track:intelligence label:layer:ranking"
+    },
+    {
+      "name": "INTEL Grounding",
+      "filter": "project:MDEAPP label:track:intelligence label:layer:grounding"
+    },
+    {
+      "name": "INTEL Observability",
+      "filter": "project:MDEAPP label:track:intelligence label:layer:observability"
+    },
+    {
+      "name": "INT Routing layer",
+      "filter": "project:MDEAPP label:layer:routing"
+    },
+    {
+      "name": "INT Memory layer",
+      "filter": "project:MDEAPP label:layer:memory"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-06-08T19:09:10.508Z",
+  "base": "https://www.mdeai.co",
+  "results": [
+    {
+      "id": "J1-hero",
+      "query": "apartments in laureles",
+      "surface": "homepage",
+      "timestamp": "2026-06-08T19:09:10.508Z",
+      "pass": false,
+      "actual": {
+        "error": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /^search$/i })\n    - locator resolved to <button disabled type=\"submit\" aria-label=\"Search\" class=\"flex min-h-[36px] items-center gap-1.5 rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-accent-foreground transition-colors duration-150 hover:bg-accent/90 disabled:pointer-events-none disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-foreground motion-reduce:transition-none\">…</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is not enabled\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is not enabled\n    - retrying click action\n      - waiting 100ms\n    56 × waiting for element to be visible, enabled and stable\n       - element is not enabled\n     - retrying click action\n       - waiting 500ms\n"
+      },
+      "consoleErrors": 0,
+      "networkErrors": 0
+    },
+    {
+      "id": "J2-chat",
+      "query": "2BR poblado under 900",
+      "surface": "chat",
+      "timestamp": "2026-06-08T19:09:10.508Z",
+      "pass": false,
+      "actual": {
+        "clarifyText": false,
+        "cards": 0,
+        "pins": 1,
+        "url": "https://www.mdeai.co/chat"
+      },
+      "consoleErrors": 1,
+      "networkErrors": 0
+    },
+    {
+      "id": "J3-chat",
+      "query": "furnished studio estadio",
+      "surface": "chat",
+      "timestamp": "2026-06-08T19:09:10.508Z",
+      "pass": false,
+      "actual": {
+        "clarifyText": true,
+        "cards": 1,
+        "pins": 1,
+        "url": "https://www.mdeai.co/chat"
+      },
+      "consoleErrors": 1,
+      "networkErrors": 0
+    },
+    {
+      "id": "J4-neg",
+      "query": "help me find a place",
+      "surface": "chat",
+      "timestamp": "2026-06-08T19:09:10.508Z",
+      "pass": false,
+      "actual": {
+        "clarifyText": false,
+        "cards": 0,
+        "pins": 1,
+        "url": "https://www.mdeai.co/chat"
+      },
+      "consoleErrors": 1,
+      "networkErrors": 0
+    },
+    {
+      "id": "J5-neg",
+      "query": "I am moving soon",
+      "surface": "chat",
+      "timestamp": "2026-06-08T19:09:10.508Z",
+      "pass": false,
+      "actual": {
+        "clarifyText": false,
+        "cards": 0,
+        "pins": 1,
+        "url": "https://www.mdeai.co/chat"
+      },
+      "consoleErrors": 1,
+      "networkErrors": 0
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+flowchart LR
+  WA["WhatsApp / web chat"] --> CW["Chatwoot"]
+  CW --> MAS["Mastra (intent · draft)"]
+  MAS --> GATE{"Auto-reply ok?"}
+  GATE -- yes --> SEND["Reply"]
+  GATE -- no --> HUMAN["Human handoff (partner/ops)"]
+  MAS --> SB["Supabase (lead/conversation)"]
+  SB --> DASH["Dashboard Leads/Bookings"]
