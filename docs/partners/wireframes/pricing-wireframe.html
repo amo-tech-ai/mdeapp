@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MDE — Partner Pricing (/pricing) Wireframe + Component Spec</title>
+<style>
+  :root{
+    --bg: oklch(0.985 0.002 247); --surface: oklch(1 0 0); --ink: oklch(0.28 0.03 257);
+    --muted: oklch(0.55 0.02 257); --line: oklch(0.90 0.006 257); --line-2: oklch(0.84 0.008 257);
+    --primary: oklch(0.508 0.118 175); --primary-soft: oklch(0.95 0.03 178);
+    --accent: oklch(0.795 0.184 86); --accent-soft: oklch(0.96 0.05 90); --map: oklch(0.62 0.10 235);
+    --ph: linear-gradient(150deg, oklch(0.970 0.015 180), oklch(0.926 0.030 184));
+    --gold-band: linear-gradient(135deg, oklch(0.90 0.10 92), oklch(0.83 0.16 80));
+    --teal-band: linear-gradient(135deg, oklch(0.90 0.06 180), oklch(0.82 0.09 185));
+    --ink-band: oklch(0.22 0.02 257);
+    --radius: 14px; --shadow: 0 1px 2px oklch(0.4 0.03 257 / 0.05), 0 8px 24px oklch(0.4 0.03 257 / 0.06);
+  }
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; } @media (prefers-reduced-motion: reduce){ html{ scroll-behavior: auto; } }
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+  .serif{ font-family: "Playfair Display", Georgia, "Times New Roman", serif; }
+  a{ color:var(--primary); text-decoration:none; } a:hover{ text-decoration:underline; }
+  code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:0.92em; }
+  .wrap{ max-width: 1200px; margin:0 auto; padding: 0 20px 80px; }
+  header.top{ position:sticky; top:0; z-index:20; background:oklch(0.985 0.002 247 / 0.86); backdrop-filter: blur(10px); border-bottom:1px solid var(--line); }
+  .top-inner{ max-width:1200px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .brand{ display:flex; align-items:center; gap:9px; font-weight:700; letter-spacing:-0.02em; }
+  .brand .dot{ width:22px; height:22px; border-radius:7px; background:linear-gradient(135deg, var(--accent), oklch(0.74 0.16 70)); }
+  .brand small{ font-weight:500; color:var(--muted); } .top-spacer{ flex:1; } .legend{ display:flex; gap:6px; flex-wrap:wrap; }
+  .titleblock{ padding:34px 0 14px; }
+  .titleblock h1{ margin:0 0 6px; font-size:30px; letter-spacing:-0.02em; font-weight:600; }
+  .titleblock p{ margin:0; color:var(--muted); max-width:66ch; }
+  .meta-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .chip{ display:inline-flex; align-items:center; gap:6px; padding:3px 9px; border-radius:999px; font-size:11.5px; font-weight:600; border:1px solid var(--line-2); background:var(--surface); color:var(--muted); white-space:nowrap; }
+  .chip b{ font-weight:800; }
+  .chip.t21{ background:var(--primary-soft); border-color:transparent; color:oklch(0.40 0.10 175); }
+  .chip.shad{ background:oklch(0.95 0.005 257); border-color:transparent; color:oklch(0.40 0.02 257); }
+  .chip.ai{ background:var(--accent-soft); border-color:transparent; color:oklch(0.48 0.12 80); }
+  .chip.map{ background:oklch(0.95 0.03 235); border-color:transparent; color:oklch(0.42 0.10 235); }
+  .chip.custom{ background:repeating-linear-gradient(45deg, oklch(0.97 0.004 257), oklch(0.97 0.004 257) 5px, oklch(0.94 0.006 257) 5px, oklch(0.94 0.006 257) 10px); border:1px dashed var(--line-2); color:var(--muted); }
+  .chip.mt{ background:oklch(0.95 0.04 60); border-color:transparent; color:oklch(0.45 0.12 60); }
+  .info{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); margin:8px 0 4px; }
+  .info h4{ margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:18px; } .rules li{ margin:3px 0; } .rules b{ color:var(--ink); }
+  .row{ display:grid; grid-template-columns: 30px minmax(0,1fr) 360px; gap:18px; align-items:start; padding:22px 0; border-top:1px solid var(--line); scroll-margin-top:70px; }
+  .row:first-of-type{ border-top:none; }
+  .rail .n{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:13px; font-weight:700; color:var(--primary); background:var(--primary-soft); border-radius:8px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; position:sticky; top:64px; }
+  .wire{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
+  .wire .lbl{ font-size:10.5px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:10px; }
+  .g{ height:9px; border-radius:5px; background:oklch(0.92 0.006 257); }
+  .g.dk{ background:oklch(0.86 0.01 257); }
+  .g.w70{ width:70%; } .g.w55{ width:55%; } .g.w40{ width:40%; } .g.w85{ width:85%; } .g.w25{ width:25%; } .g.w30{ width:30%; }
+  .g.tall{ height:15px; } .g.lt{ background:oklch(1 0 0 / 0.5); }
+  .stack > *{ margin-bottom:7px; } .stack > *:last-child{ margin-bottom:0; }
+  .bar{ display:flex; align-items:center; gap:10px; }
+  .pl{ display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:999px; background:oklch(0.95 0.005 257); font-size:11px; color:var(--muted); border:1px solid var(--line); }
+  .pl.solid{ background:var(--primary); color:#fff; border-color:transparent; font-weight:600; }
+  .pl.gold{ background:var(--accent); color:oklch(0.30 0.06 80); border-color:transparent; font-weight:700; }
+  .pl.ghost{ background:transparent; } .pl.out{ background:transparent; border:1.5px solid var(--primary); color:var(--primary); font-weight:600; }
+  .pl.dark{ background:oklch(0.30 0.02 257); color:#fff; border-color:transparent; font-weight:600; }
+  .navrow{ display:flex; align-items:center; gap:14px; } .navrow .g{ width:54px; }
+  /* hero */
+  .hero{ background:var(--teal-band); border-radius:18px; padding:32px 26px; position:relative; overflow:hidden; text-align:center; }
+  .hero .eyebrow{ display:inline-block; background:oklch(1 0 0 / 0.55); border-radius:999px; padding:3px 10px; font-size:10.5px; font-weight:700; color:oklch(0.32 0.06 185); margin-bottom:10px; }
+  .hero h2{ font-size:30px; line-height:1.05; margin:0 auto 12px; color:oklch(0.24 0.04 200); letter-spacing:-0.02em; max-width:18ch; }
+  .hero .ctas{ display:flex; gap:8px; justify-content:center; margin-top:8px; }
+  /* tab switcher */
+  .tabs{ display:flex; gap:6px; justify-content:center; flex-wrap:wrap; background:oklch(1 0 0 / 0.55); border-radius:999px; padding:5px; width:max-content; margin:14px auto 0; }
+  .tab{ padding:6px 14px; border-radius:999px; font-size:11.5px; font-weight:600; color:oklch(0.35 0.04 200); }
+  .tab.on{ background:var(--primary); color:#fff; }
+  /* pricing table */
+  .ptable{ border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .ptable .tr{ display:grid; grid-template-columns: 1.4fr repeat(4, 1fr); border-top:1px solid var(--line); }
+  .ptable .tr:first-child{ border-top:none; }
+  .ptable .tr.head{ background:oklch(0.975 0.004 257); font-weight:700; font-size:11.5px; }
+  .ptable .td{ padding:9px 11px; font-size:11.5px; border-left:1px solid var(--line); }
+  .ptable .td:first-child{ border-left:none; color:var(--muted); font-weight:600; }
+  .ptable .td.hot{ background:var(--primary-soft); }
+  .tbd{ display:inline-block; padding:1px 7px; border-radius:6px; background:var(--accent-soft); color:oklch(0.48 0.12 80); font-weight:800; font-size:10px; letter-spacing:0.05em; }
+  .inc{ color:var(--primary); font-weight:800; } .exc{ color:var(--line-2); font-weight:800; }
+  .warn{ margin-top:10px; border:1.5px dashed oklch(0.70 0.14 80); background:var(--accent-soft); border-radius:10px; padding:8px 11px; font-size:11px; color:oklch(0.42 0.10 80); font-weight:600; }
+  /* accordion */
+  .acc{ border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .acc .it{ border-top:1px solid var(--line); padding:11px 13px; }
+  .acc .it:first-child{ border-top:none; }
+  .acc .q{ display:flex; align-items:center; justify-content:space-between; font-size:12.5px; font-weight:600; }
+  .acc .q .chev{ color:var(--muted); font-size:11px; }
+  .acc .a{ margin-top:8px; }
+  /* cta band */
+  .ctaband{ background:var(--gold-band); border-radius:16px; padding:24px; text-align:center; }
+  .spec{ background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--primary); border-radius:12px; padding:14px 15px; box-shadow:var(--shadow); position:sticky; top:64px; }
+  .spec.ai-led{ border-left-color:var(--accent); } .spec.map-led{ border-left-color:var(--map); }
+  .spec h3{ margin:0 0 9px; font-size:15px; letter-spacing:-0.01em; }
+  .spec .picks{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:9px; }
+  .spec ul.notes{ margin:0; padding-left:16px; color:var(--muted); font-size:12.5px; } .spec ul.notes li{ margin:3px 0; } .spec ul.notes b{ color:var(--ink); font-weight:600; }
+  .spec .mt{ font-size:11px; color:oklch(0.45 0.12 60); background:oklch(0.96 0.04 60); border-radius:7px; padding:5px 7px; margin-bottom:8px; }
+  .handoff{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); margin-top:24px; }
+  .handoff h4{ margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+  .handoff ul{ margin:0; padding-left:18px; } .handoff li{ margin:4px 0; }
+  @media (max-width: 900px){
+    .row{ grid-template-columns: 24px 1fr; } .spec{ grid-column: 1 / -1; position:static; } .rail .n{ position:static; }
+    .grid2{ grid-template-columns:1fr; }
+    .ptable .tr{ grid-template-columns: 1.2fr repeat(4, minmax(56px,1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><span class="dot"></span>mde<span style="color:var(--muted)">·</span>ai&nbsp;<small>Partner Pricing — wireframe</small></div>
+    <div class="top-spacer"></div>
+    <div class="legend">
+      <span class="chip mt">▣ standard pricing-page pattern</span>
+      <span class="chip t21">21st.dev</span><span class="chip shad">shadcn/ui</span><span class="chip ai">AI services</span><span class="chip custom">custom</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="titleblock">
+    <h1 class="serif">Partner pricing — wireframe &amp; component spec</h1>
+    <p>One pricing page for all partner types (route <code>/pricing</code>, task <b>D-PTR-06</b> · SAN-695 · MKT — Partner pricing). Goal: kill the #1 demo-call question — <b>what's free, what's commission, what's subscription</b> — for Hosts, Venues, Rentals, Sponsors and AI services. Each tab's CTA carries its <code>?type=</code> into <code>/partners/signup</code>.</p>
+    <div class="meta-row">
+      <span class="chip">audience: all partner types (supply)</span>
+      <span class="chip">CTA = Start free / Talk to us — per tab</span>
+      <span class="chip">numbers: <b>docs/08-ai-services.md</b> only — never invent</span>
+      <span class="chip">EN only · P1</span>
+    </div>
+  </div>
+
+  <div class="info">
+    <h4>Pricing model in one line per partner type (values TBD until revenue docs decide)</h4>
+    <div class="grid2">
+      <ul class="rules" style="margin:0; padding-left:18px;">
+        <li><b>Hosts</b> — free listing; ticket fee % on paid events</li>
+        <li><b>Venues</b> — free listing; lead fee / booking commission; AI services subscription</li>
+        <li><b>Rentals</b> — free listing; booking commission</li>
+      </ul>
+      <ul class="rules" style="margin:0; padding-left:18px;">
+        <li><b>Sponsors</b> — placement packages (Growth/Pro) + custom</li>
+        <li><b>AI services</b> — Postiz · OpenClaw · concierge — subscription / retainer</li>
+        <li><b>Source of truth:</b> <code>docs/08-ai-services.md</code> + <code>revenue/04-commerce-payments.md</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 01 NAV -->
+  <section class="row" id="s1">
+    <div class="rail"><span class="n">01</span></div>
+    <div class="wire">
+      <div class="lbl">B2B nav — Solutions · Pricing (active) · Sign in · Start free</div>
+      <div class="navrow">
+        <span class="pl ghost" style="font-weight:700;color:var(--ink)">mde·ai <span style="color:var(--muted);font-weight:500;">for business</span></span>
+        <div class="navrow" style="margin-left:auto;"><div class="g"></div><div class="g dk"></div><span class="pl out">Sign in</span><span class="pl solid">Start free</span></div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>01 · B2B nav</h3>
+      <div class="picks"><span class="chip shad">navigation-menu · button</span></div>
+      <ul class="notes"><li>Same nav as <code>/venues</code> + <code>/host</code>; "Pricing" link is the active state here</li><li>Primary CTA shifts to <b>Start free</b> (this page is the conversion step)</li></ul>
+    </aside>
+  </section>
+
+  <!-- 02 HERO + TYPE SWITCHER -->
+  <section class="row" id="s2">
+    <div class="rail"><span class="n">02</span></div>
+    <div class="wire">
+      <div class="lbl">Hero — "Start free. Pay when you earn." + partner-type switcher</div>
+      <div class="hero">
+        <span class="eyebrow">Pricing for partners</span>
+        <h2 class="serif">Start free. Pay when you earn.</h2>
+        <div class="bar" style="justify-content:center;"><div class="g lt w55" style="height:8px;"></div></div>
+        <div class="tabs">
+          <span class="tab on">Hosts</span>
+          <span class="tab">Venues</span>
+          <span class="tab">Rentals</span>
+          <span class="tab">Sponsors</span>
+          <span class="tab">AI services</span>
+        </div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>02 · Hero + switcher</h3>
+      <div class="mt">21st.dev: pricing → <code>21st.dev/s/pricing</code> · tabs → <code>21st.dev/s/tabs</code></div>
+      <div class="picks"><span class="chip t21">pricing hero w/ toggle</span><span class="chip shad">tabs</span><span class="chip custom">teal band</span></div>
+      <ul class="notes">
+        <li>Headline is fixed copy: <b>"Start free. Pay when you earn."</b></li>
+        <li>5 tabs drive the whole page: table + FAQ emphasis + CTA <code>?type=</code></li>
+        <li>Tab state in URL (<code>/pricing?type=venue</code>) so partner pages can deep-link</li>
+        <li>Re-token 21st.dev picks to oklch vars; respect <code>prefers-reduced-motion</code></li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- 03 PRICING TABLE -->
+  <section class="row" id="s3">
+    <div class="rail"><span class="n">03</span></div>
+    <div class="wire">
+      <div class="lbl">Pricing table — per tab · Free / Growth / Pro / Custom (shown: Venues tab)</div>
+      <div class="ptable">
+        <div class="tr head">
+          <div class="td">Venues</div>
+          <div class="td">Free</div>
+          <div class="td hot">Growth ★</div>
+          <div class="td">Pro</div>
+          <div class="td">Custom</div>
+        </div>
+        <div class="tr">
+          <div class="td">Listing &amp; visibility</div>
+          <div class="td"><span class="inc">✓</span></div>
+          <div class="td hot"><span class="inc">✓</span></div>
+          <div class="td"><span class="inc">✓</span> featured</div>
+          <div class="td"><span class="inc">✓</span> featured</div>
+        </div>
+        <div class="tr">
+          <div class="td">AI services (Postiz · OpenClaw)</div>
+          <div class="td"><span class="exc">—</span></div>
+          <div class="td hot"><span class="tbd">TBD</span></div>
+          <div class="td"><span class="tbd">TBD</span></div>
+          <div class="td">retainer <span class="tbd">TBD</span></div>
+        </div>
+        <div class="tr">
+          <div class="td">Fees — ticket % · lead fee · booking commission</div>
+          <div class="td"><span class="tbd">TBD</span></div>
+          <div class="td hot"><span class="tbd">TBD</span></div>
+          <div class="td"><span class="tbd">TBD</span></div>
+          <div class="td">negotiated</div>
+        </div>
+        <div class="tr">
+          <div class="td">Monthly price</div>
+          <div class="td">$0</div>
+          <div class="td hot"><span class="tbd">TBD</span>/mo</div>
+          <div class="td"><span class="tbd">TBD</span>/mo</div>
+          <div class="td">Contact</div>
+        </div>
+        <div class="tr">
+          <div class="td"></div>
+          <div class="td"><span class="pl out">Start free</span></div>
+          <div class="td hot"><span class="pl solid">Choose Growth</span></div>
+          <div class="td"><span class="pl out">Choose Pro</span></div>
+          <div class="td"><span class="pl dark">Talk to us</span></div>
+        </div>
+      </div>
+      <div class="warn">⚠ All <span class="tbd">TBD</span> values come from <code>docs/08-ai-services.md</code> + <code>revenue/04-commerce-payments.md</code> — do NOT invent numbers in build. Wireframe placeholders only.</div>
+    </div>
+    <aside class="spec ai-led">
+      <h3>03 · Pricing table (per tab)</h3>
+      <div class="mt">21st.dev: comparisons → <code>21st.dev/s/comparisons</code> · pricing → <code>21st.dev/s/pricing</code></div>
+      <div class="picks"><span class="chip t21">comparison table</span><span class="chip shad">table · badge · button</span><span class="chip ai">AI services row</span></div>
+      <ul class="notes">
+        <li>Columns fixed across tabs: <b>Free / Growth / Pro / Custom</b>; Growth highlighted</li>
+        <li>Rows per spec: <b>listing · AI services · fees</b> (ticket % · lead fee · booking commission · retainer) + price row</li>
+        <li>Tab swap re-renders rows; fee row wording changes per type (Hosts = ticket %, Venues = lead fee/commission, Rentals = booking commission, Sponsors = package, AI services = subscription/retainer)</li>
+        <li><b>Acceptance:</b> every number traces to a revenue doc or renders the <span class="tbd">TBD</span> badge — no invented prices</li>
+        <li>Column CTAs route same as the CTA band (08-style <code>?type=</code> + <code>&amp;plan=</code>)</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- 04 FAQ ACCORDION -->
+  <section class="row" id="s4">
+    <div class="rail"><span class="n">04</span></div>
+    <div class="wire">
+      <div class="lbl">FAQ — accordion (fees · payouts · cancellation)</div>
+      <div class="acc">
+        <div class="it">
+          <div class="q">What fees do I actually pay? <span class="chev">▾</span></div>
+          <div class="a stack"><div class="g w85"></div><div class="g w70"></div><div class="g w40"></div></div>
+        </div>
+        <div class="it"><div class="q">How and when do I get paid? (payouts via Stripe) <span class="chev">▸</span></div></div>
+        <div class="it"><div class="q">Can I cancel anytime? <span class="chev">▸</span></div></div>
+        <div class="it"><div class="q">Is the free tier really free? <span class="chev">▸</span></div></div>
+        <div class="it"><div class="q">What's included in AI services? <span class="chev">▸</span></div></div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>04 · FAQ accordion</h3>
+      <div class="mt">21st.dev: accordions → <code>21st.dev/s/accordions</code></div>
+      <div class="picks"><span class="chip t21">FAQ accordion</span><span class="chip shad">accordion</span></div>
+      <ul class="notes">
+        <li>Required topics per spec: <b>fees</b> · <b>payouts via Stripe</b> · <b>cancellation</b>; +2 trust questions</li>
+        <li>First item open by default; one-at-a-time expand</li>
+        <li>Payout answer names Stripe explicitly (Andrés' ticket money path) — keep copy aligned with <code>revenue/04-commerce-payments.md</code></li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- 05 CTA BAND -->
+  <section class="row" id="s5">
+    <div class="rail"><span class="n">05</span></div>
+    <div class="wire">
+      <div class="lbl">CTA band — per-tab CTA carries ?type= into /partners/signup</div>
+      <div class="ctaband">
+        <div class="stack" style="max-width:46ch; margin:0 auto 12px;"><div class="g tall w70 dk" style="margin:0 auto;"></div><div class="g lt w85" style="margin:0 auto;"></div></div>
+        <div class="bar" style="justify-content:center;">
+          <span class="pl solid">Start free — Hosts</span>
+          <span class="pl ghost" style="border:1px solid oklch(0.45 0.10 80 / 0.4);">→ /partners/signup?type=host</span>
+        </div>
+        <div class="bar" style="justify-content:center; margin-top:8px; flex-wrap:wrap;">
+          <span class="pl">?type=venue</span><span class="pl">?type=rental</span><span class="pl">?type=sponsor</span><span class="pl">?type=ai-services</span>
+        </div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>05 · CTA band</h3>
+      <div class="picks"><span class="chip t21">CTA section</span><span class="chip shad">button</span><span class="chip custom">gold band</span></div>
+      <ul class="notes">
+        <li>CTA copy + target follow the <b>active tab</b>: <code>/partners/signup?type=host|venue|rental|sponsor|ai-services</code></li>
+        <li><b>Acceptance:</b> all 5 tabs render and each CTA carries the right <code>?type=</code> — Playwright smoke asserts this</li>
+        <li>Custom column CTA goes to demo form (<code>/venues</code> §08 pattern), not signup</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- 06 FOOTER -->
+  <section class="row" id="s6">
+    <div class="rail"><span class="n">06</span></div>
+    <div class="wire">
+      <div class="lbl">Footer — business links</div>
+      <div class="bar" style="align-items:flex-start; gap:22px;">
+        <div class="stack" style="flex:1;"><div class="g w70"></div><div class="g w55"></div><div class="g w55"></div></div>
+        <div class="stack" style="flex:1;"><div class="g w70"></div><div class="g w55"></div><div class="g w55"></div></div>
+        <div class="stack" style="flex:1;"><div class="g w70"></div><div class="g w55"></div></div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>06 · Footer</h3>
+      <div class="picks"><span class="chip t21">large-name-footer</span></div>
+      <ul class="notes"><li>Same footer as <code>/venues</code>: Solutions (Venues · Hosts · Rentals · Sponsors) · Company · Resources · Legal</li></ul>
+    </aside>
+  </section>
+
+  <div class="handoff">
+    <h4>Handoff</h4>
+    <ul>
+      <li><b>What this is:</b> the <code>/pricing</code> partner pricing page (D-PTR-06 · SAN-695 · MKT — Partner pricing). One page, 5 partner types via tabs; standard pricing-page pattern (no Mindtrip source page). Siblings: <code>venues-wireframe.html</code> (§07 pricing teaser links here).</li>
+      <li><b>Numbers:</b> every price/fee is <b>TBD</b> here on purpose — source of truth is <code>docs/08-ai-services.md</code> + <code>revenue/04-commerce-payments.md</code>. Build fails acceptance if any number can't be traced to a revenue doc.</li>
+      <li><b>21st.dev category map:</b> hero/tiers → <code>/s/pricing</code> · comparison table → <code>/s/comparisons</code> · FAQ → <code>/s/accordions</code> · switcher → <code>/s/tabs</code>. Re-token everything to oklch vars.</li>
+      <li><b>Components:</b> shadcn <code>tabs · table · accordion · badge · button</code>; tab state mirrored to <code>?type=</code> in the URL so the CTA band + table stay in sync.</li>
+      <li><b>Acceptance (from spec):</b> 5 tabs render · each CTA carries the right <code>?type=</code> · no invented prices · tokens/motion rules · localhost 200 · floor green · Playwright smoke.</li>
+      <li><b>Open questions:</b> (1) which tiers are public vs "contact sales" per type? (2) does the AI-services tab sell standalone or only as add-on to a listing type? (3) annual toggle in v1 or later?</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

@@ -28,7 +28,7 @@ prod: https://www.mdeai.co
 │   ├── [overlay] venue-detail-sheet ✅ LIVE    Venue / rental / event detail slides over chat
 │   └── [overlay] schedule-viewing  ✅ LIVE    Camila books a rental viewing (HITL lead capture)
 │
-├── /rentals                         🔵 MVP P0  Redirects to `/chat` today — **REAL-011 (SAN-478)** ships catalog browse
+├── /rentals                         ✅ LIVE    Rental browse catalog — **REAL-011 (SAN-478)** shipped (prod 200, no redirect)
 │   └── /rentals/[id]                🔵 MVP P1  Rental detail page (REAL-012 / SAN-479)
 │
 ├── /events                          ✅ LIVE    Public events catalog — **SCREEN-027 (SAN-518)** + **SAN-586** API · nav enabled (SAN-584)
@@ -60,16 +60,16 @@ prod: https://www.mdeai.co
 ├── /signup                          ✅ LIVE    Signup (functional, visual polish pending)
 │
 ├── /about                           ⚫ POST    Marketing — about mdeai
-├── /partners                        🔵 MVP P1  Partner hub marketing page — type cards → host/venue/broker/sponsor/agency flows (SAN-692)
+├── /partners                        ⚠️ SHELL   Basic hub live (200) — full type-card hub SAN-692 In Progress; design task D-PTR-01
 │   ├── /partners/signup             ✅ LIVE    Typed partner signup wizard (?type=…) — SAN-723 merged (#115); calls SAN-665 activate API
-│   ├── /partners/rentals            ⚠️ SHELL   Placeholder (200, "coming soon") — Broker card target; full landing SAN-691
+│   ├── /partners/rentals            🔵 MVP P1  **404 on prod** (verified 2026-06-10, shell never deployed) — Broker landing SAN-691 In Review; wireframe done
 │   ├── /partners/creator            ⚫ POST    Influencer / creator program (SAN-700)
 │   └── /partners/vendor             💫 PHASE 2 Marketplace vendor onboarding (SAN-698/702)
-├── /sponsors                        ⚠️ SHELL   Placeholder (200, "coming soon") — Sponsor card target; full landing SAN-664
-├── /business/ai                     ⚠️ SHELL   Placeholder (200, "coming soon") — Agency card target; full landing SAN-663 (child of /business SAN-726)
+├── /sponsors                        🔵 MVP P2  **404 on prod** (verified 2026-06-10, shell never deployed) — Sponsor landing SAN-664 In Progress; wireframe done
+├── /business/ai                     🔵 MVP P2  **404 on prod** (verified 2026-06-10, shell never deployed) — Agency landing SAN-663 In Progress; wireframe done (child of /business SAN-726)
 │   ├── /business/social             ⚫ POST    Postiz social management (SAN-697)
 │   └── /business/event-marketing    ⚫ POST    Event marketing services (SAN-701)
-├── /venues                          ⚫ POST    Venue landing (?v=restaurant|cafe|nightclub) — Venue card → /restaurants for MVP (SAN-661)
+├── /venues                          🔵 MVP P0  Venue landing (?v=restaurant|cafe|nightclub|space) — **SAN-661 build-ready** (wireframe + copy + pinned components, D-PTR-02); ships PartnerLandingShell
 │   └── /venues/features             ⚫ POST    Venue features deep-dive (SAN-703)
 ├── /pricing                         ⚫ POST    Partner pricing across types (SAN-695)
 ├── /contact                         ⚫ POST    Book a demo / sales (SAN-693)
@@ -199,7 +199,7 @@ WhatsApp Business (+57 XXX)          💫 PHASE 2 Same Mastra brain, WhatsApp re
 | `ticket-payment-webhook` | Stripe finalize edge fn **deployed** (v33 ACTIVE, `verify_jwt=false`, idempotent, finalize RPC). Remaining: Stripe Dashboard event subscriptions + live checkout→finalize e2e proof | 🟡 verify |
 | `/chat` nav rail | `/chat` serves GeoChatShell (SAN-733); `/` is marketing entry with `?q=` handoff. Nav-rail on concierge shell | ✅ resolved |
 | Mobile bottom-sheet | SCREEN-018 mobile responsive shell shipped (SAN-489 Done, PR #51) | ✅ resolved |
-| `/rentals` display | Redirects to `/chat` — **SAN-478** ships catalog; sidebar greyed until Done | P0 |
+| `/rentals` display | Live on prod (SAN-478 catalog browse shipped; verified 2026-06-10, HTTP 200 no redirect) | ✅ resolved |
 | `/restaurants` browse | Live on prod (SAN-490 + SAN-575 re-skin) | ✅ resolved |
 | `/events` browse | Live on prod (SAN-518 + SAN-586); Events nav enabled (SAN-584) | ✅ resolved |
 | `/cafes` browse | Live on prod (SAN-519); Cafés nav enabled (SAN-584 pattern) | ✅ resolved |
