@@ -9,5 +9,3 @@
 | **HTML wireframes** | [`wireframes/`](wireframes/) |
 | **Audits** | [`audit/`](audit/) |
 | **Tests / notes** | [`tests/`](tests/) · [`notes/`](notes/) |
-
-**Compat:** `docs/partners/` → symlink to this folder (same files as `@docs/partners`).
