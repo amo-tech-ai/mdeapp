@@ -178,4 +178,60 @@ describe("fetchEventVenueOfferingsByPlaceId", () => {
     expect(result.data.packages).toHaveLength(1);
     expect(result.data.packages[0]?.name).toBe("Rooftop Celebration");
   });
+
+  it("still returns offerings (partnerId null) and warns when partner_id is missing", async () => {
+    let call = 0;
+    const responses = [
+      {
+        data: {
+          id: LOCATION_ID,
+          partner_id: null,
+          label: "Unlinked Venue",
+          neighborhood: "Provenza",
+          google_place_id: MAMACITA_PLACE_ID,
+        },
+        error: null,
+      },
+      {
+        data: [
+          {
+            id: "off-1",
+            offering_key: "birthday",
+            event_types: ["birthday"],
+            amenities: ["rooftop"],
+            minimum_spend: 5000000,
+            price_per_person_from: 85000,
+          },
+        ],
+        error: null,
+      },
+      { data: [], error: null },
+    ];
+    const chain = {
+      maybeSingle: vi.fn(async () => responses[call++]),
+      then(onFulfilled: (value: unknown) => unknown) {
+        const payload = responses[call++];
+        return Promise.resolve(payload).then(onFulfilled);
+      },
+    };
+    const eq = vi.fn(() => chain);
+    const select = vi.fn(() => ({ eq }));
+    const from = vi.fn(() => ({ select }));
+    const supabase = { from } as unknown as SupabaseClient<Database>;
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const result = await fetchEventVenueOfferingsByPlaceId(
+      supabase,
+      MAMACITA_PLACE_ID,
+    );
+
+    expect(result.ok).toBe(true);
+    if (!result.ok || !result.data) throw new Error("expected payload");
+    // Venue is NOT hidden — offerings still surface...
+    expect(result.data.offerings).toHaveLength(1);
+    // ...but partnerId is null so the proposal CTA is suppressed downstream.
+    expect(result.data.partnerId).toBeNull();
+    expect(warnSpy).toHaveBeenCalledOnce();
+    warnSpy.mockRestore();
+  });
 });

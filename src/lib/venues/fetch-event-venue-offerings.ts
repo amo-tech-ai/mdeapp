@@ -62,8 +62,17 @@ export async function fetchEventVenueOfferingsByPlaceId(
     return { ok: false, message: locError.message };
   }
 
-  if (!location?.id || !location.partner_id) {
+  if (!location?.id) {
     return { ok: true, data: null };
+  }
+
+  // partner_id is required to request a proposal (SAN-495/496). When it's
+  // missing we still surface the venue's offerings — we just can't offer the
+  // proposal CTA — so a data gap warns instead of silently hiding the venue.
+  if (!location.partner_id) {
+    console.warn(
+      `[fetchEventVenueOfferings] partner_locations.${location.id} has no partner_id — proposal CTA will be absent`,
+    );
   }
 
   const { data: offeringRows, error: offError } = await supabase
@@ -99,7 +108,7 @@ export async function fetchEventVenueOfferingsByPlaceId(
   return {
     ok: true,
     data: {
-      partnerId: String(location.partner_id),
+      partnerId: location.partner_id ? String(location.partner_id) : null,
       partnerLocationId: String(location.id),
       locationLabel: String(location.label ?? trimmed),
       neighborhood:

@@ -151,16 +151,20 @@ export function EventVenueOfferingsSheet({
 }) {
   const { openEventProposalShell } = useRentalUi();
 
-  const handleRequestProposal = target
-    ? () => {
-        openEventProposalShell({
-          venueTitle: target.title,
-          placeId: target.payload.placeId,
-          partnerId: target.payload.partnerId,
-          partnerLocationId: target.payload.partnerLocationId,
-        });
-      }
-    : undefined;
+  // Only offer the proposal CTA when we have a partnerId — the proposal insert
+  // (SAN-496) requires it. Venues with a null partner_id still show offerings.
+  const proposalPartnerId = target?.payload.partnerId ?? null;
+  const handleRequestProposal =
+    target && proposalPartnerId
+      ? () => {
+          openEventProposalShell({
+            venueTitle: target.title,
+            placeId: target.payload.placeId,
+            partnerId: proposalPartnerId,
+            partnerLocationId: target.payload.partnerLocationId,
+          });
+        }
+      : undefined;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
