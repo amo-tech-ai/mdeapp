@@ -1,0 +1,29 @@
+supabase/seeds/san493_event_venues.sql
+  s_d1b7a3779fe462::t_ebf294f47ad541 1-157
+docs/tasks/testing/scripts/san493-seed-verify.sql
+  s_d1b7a3779fe462::t_f9a56a63dcae9b 1-9,11-18,20-121
+  s_d1b7a3779fe462::t_465d7f80e7b6c4 10,19
+docs/tasks/events/specs/venue-booking/EVT-034-seed.md
+  s_d1b7a3779fe462::t_6da1ae09e3a123 132
+  s_d1b7a3779fe462::t_a6e3a670338075 4
+docs/tasks/testing/evidence/2026-06-09/SAN-493-seed-RESULTS.md
+  s_d1b7a3779fe462::t_dad34787e1c885 1-87
+docs/tasks/testing/evidence/2026-06-09/SAN-493-seed-verify.log
+  s_d1b7a3779fe462::t_bb94f97a66b496 1-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "df9942fccd3b0f0e52b62fb665746f377091d9ce",
+  "prompts": {},
+  "sessions": {
+    "s_d1b7a3779fe462": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "26292875-287f-4fbd-bce0-3bd9e158b377",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
