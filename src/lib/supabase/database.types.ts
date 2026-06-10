@@ -1,6 +1,3 @@
-/** Generated — do not edit by hand. Regenerate:
- *  supabase gen types typescript --project-id zkwcbyxiwklihegjhuql > src/lib/supabase/database.types.ts
- */
 export type Json =
   | string
   | number
@@ -452,16 +449,7 @@ export type Database = {
           party_size: number | null
           payment_method: string | null
           payment_reference: string | null
-          partner_type:
-        | "host"
-        | "venue"
-        | "broker"
-        | "sponsor"
-        | "agency"
-        | "vendor"
-        | "tour"
-        | "creator"
-      payment_status: Database["public"]["Enums"]["payment_status"] | null
+          payment_status: Database["public"]["Enums"]["payment_status"] | null
           quantity: number | null
           resource_id: string
           resource_title: string
@@ -2469,21 +2457,29 @@ export type Database = {
         Row: {
           apartment_id: string | null
           assigned_agent_id: string | null
+          budget_max: number | null
+          budget_min: number | null
+          conversion_probability: number | null
           created_at: string
           email: string | null
+          hot_lead_alerted: boolean | null
           id: string
           idempotency_key: string | null
           intent: string | null
+          last_contacted_at: string | null
           listing_id: string | null
           listing_kind: string | null
           metadata: Json
           name: string | null
           neighborhood_id: string | null
+          next_followup_at: string | null
           notes: string | null
           partner_id: string | null
           phone: string | null
+          pipeline_stage: string | null
           preferred_showing_at: string | null
           score: number | null
+          score_breakdown: Json | null
           source: string
           status: string
           trip_id: string | null
@@ -2493,21 +2489,29 @@ export type Database = {
         Insert: {
           apartment_id?: string | null
           assigned_agent_id?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          conversion_probability?: number | null
           created_at?: string
           email?: string | null
+          hot_lead_alerted?: boolean | null
           id?: string
           idempotency_key?: string | null
           intent?: string | null
+          last_contacted_at?: string | null
           listing_id?: string | null
           listing_kind?: string | null
           metadata?: Json
           name?: string | null
           neighborhood_id?: string | null
+          next_followup_at?: string | null
           notes?: string | null
           partner_id?: string | null
           phone?: string | null
+          pipeline_stage?: string | null
           preferred_showing_at?: string | null
           score?: number | null
+          score_breakdown?: Json | null
           source?: string
           status?: string
           trip_id?: string | null
@@ -2517,21 +2521,29 @@ export type Database = {
         Update: {
           apartment_id?: string | null
           assigned_agent_id?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          conversion_probability?: number | null
           created_at?: string
           email?: string | null
+          hot_lead_alerted?: boolean | null
           id?: string
           idempotency_key?: string | null
           intent?: string | null
+          last_contacted_at?: string | null
           listing_id?: string | null
           listing_kind?: string | null
           metadata?: Json
           name?: string | null
           neighborhood_id?: string | null
+          next_followup_at?: string | null
           notes?: string | null
           partner_id?: string | null
           phone?: string | null
+          pipeline_stage?: string | null
           preferred_showing_at?: string | null
           score?: number | null
+          score_breakdown?: Json | null
           source?: string
           status?: string
           trip_id?: string | null
@@ -4832,56 +4844,6 @@ export type Database = {
           },
         ]
       }
-      revenue_ledger: {
-        Row: {
-          amount_cents: number
-          created_at: string
-          currency: string
-          id: string
-          idempotency_key: string | null
-          metadata: Json
-          partner_id: string
-          platform_fee_cents: number
-          source_id: string | null
-          source_kind: string
-          stripe_reference: string | null
-        }
-        Insert: {
-          amount_cents: number
-          created_at?: string
-          currency?: string
-          id?: string
-          idempotency_key?: string | null
-          metadata?: Json
-          partner_id: string
-          platform_fee_cents?: number
-          source_id?: string | null
-          source_kind: string
-          stripe_reference?: string | null
-        }
-        Update: {
-          amount_cents?: number
-          created_at?: string
-          currency?: string
-          id?: string
-          idempotency_key?: string | null
-          metadata?: Json
-          partner_id?: string
-          platform_fee_cents?: number
-          source_id?: string | null
-          source_kind?: string
-          stripe_reference?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "revenue_ledger_partner_id_fkey"
-            columns: ["partner_id"]
-            isOneToOne: false
-            referencedRelation: "partners"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       payments: {
         Row: {
           amount: number
@@ -5706,6 +5668,56 @@ export type Database = {
           yelp_id?: string | null
         }
         Relationships: []
+      }
+      revenue_ledger: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          currency: string
+          id: string
+          idempotency_key: string | null
+          metadata: Json
+          partner_id: string
+          platform_fee_cents: number
+          source_id: string | null
+          source_kind: string
+          stripe_reference: string | null
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          currency?: string
+          id?: string
+          idempotency_key?: string | null
+          metadata?: Json
+          partner_id: string
+          platform_fee_cents?: number
+          source_id?: string | null
+          source_kind: string
+          stripe_reference?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          idempotency_key?: string | null
+          metadata?: Json
+          partner_id?: string
+          platform_fee_cents?: number
+          source_id?: string | null
+          source_kind?: string
+          stripe_reference?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "revenue_ledger_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       saved_places: {
         Row: {
@@ -7633,8 +7645,6 @@ export type Database = {
         }
         Returns: string
       }
-      partner_ids_for_user: { Args: never; Returns: string[] }
-      partner_organization_ids_for_user: { Args: never; Returns: string[] }
       is_admin: { Args: never; Returns: boolean }
       is_moderator: { Args: never; Returns: boolean }
       is_suppressed: {
@@ -7725,6 +7735,8 @@ export type Database = {
         }
         Returns: Json
       }
+      partner_ids_for_user: { Args: never; Returns: string[] }
+      partner_organization_ids_for_user: { Args: never; Returns: string[] }
       populate_geometry_columns:
         | { Args: { tbl_oid: unknown; use_typmod?: boolean }; Returns: number }
         | { Args: { use_typmod?: boolean }; Returns: string }

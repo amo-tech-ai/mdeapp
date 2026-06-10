@@ -47,6 +47,7 @@ export function ConciergeSessionProvider({ children }: { children: ReactNode }) 
     closeVenueDetail,
     closeCafeDetail,
     closeCafeBooking,
+    closeEventVenueOfferings,
     clearLeadConfirmation,
   } = useRentalUi();
 
@@ -68,6 +69,7 @@ export function ConciergeSessionProvider({ children }: { children: ReactNode }) 
     closeVenueDetail();
     closeCafeDetail();
     closeCafeBooking();
+    closeEventVenueOfferings();
     clearLeadConfirmation();
     clearConciergeError();
     setSessionKey((k) => k + 1);
@@ -89,6 +91,7 @@ export function ConciergeSessionProvider({ children }: { children: ReactNode }) 
     closeVenueDetail,
     closeCafeDetail,
     closeCafeBooking,
+    closeEventVenueOfferings,
     clearLeadConfirmation,
   ]);
 

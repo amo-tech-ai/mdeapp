@@ -71,4 +71,33 @@ describe("RestaurantCard", () => {
     expect(html).toContain("w-full");
     expect(html).toContain("object-cover");
   });
+
+  it("hides event venue CTA when no offerings handler is provided", () => {
+    const html = renderToStaticMarkup(
+      <RestaurantCard
+        title="No Events Here"
+        pinId="restaurant-plain"
+        testId="restaurant-card"
+      />,
+    );
+    expect(html).not.toContain('data-testid="event-venue-cta"');
+    expect(html).not.toContain('data-testid="restaurant-hosts-events-badge"');
+  });
+
+  it("shows event venue CTA with 44px touch target when offerings exist", () => {
+    const html = renderToStaticMarkup(
+      <RestaurantCard
+        title="Mamacita"
+        pinId="restaurant-mamacita"
+        testId="restaurant-card"
+        hostsEvents
+        onOpenEventVenue={() => undefined}
+      />,
+    );
+    expect(html).toContain('data-testid="event-venue-cta"');
+    expect(html).toContain("h-11");
+    expect(html).toContain("min-w-11");
+    expect(html).toContain('data-testid="restaurant-hosts-events-badge"');
+    expect(html).toContain("Hosts Events");
+  });
 });

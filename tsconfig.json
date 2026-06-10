@@ -24,10 +24,13 @@
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "*.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "e2e/**/*.ts",
+    "scripts/**/*.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "supabase/functions", "commerce/**"]
+  "exclude": ["node_modules", "supabase/functions", "commerce/**", "github/**", "docs/**", ".worktrees/**"]
 }

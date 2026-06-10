@@ -6,7 +6,7 @@ import { VenueCardShell } from "@/components/browse/venue-card-shell";
 import { formatGroundedRating } from "@/lib/places-display";
 import { mapsDeepLinksEnabled } from "@/lib/maps-deep-links";
 import { cn } from "@/lib/utils";
-import { ExternalLink, Info, MapPin } from "lucide-react";
+import { ExternalLink, Info, MapPin, PartyPopper } from "lucide-react";
 import type { CardInteractionProps, ResultKind } from "@/components/cards/card-interaction-props";
 
 export type RestaurantCardProps = {
@@ -26,6 +26,9 @@ export type RestaurantCardProps = {
   mediaLayout?: "inline" | "cover";
 } & CardInteractionProps & {
   resultKind?: ResultKind;
+  /** True when SAN-492 offerings exist for this place (SAN-494). */
+  hostsEvents?: boolean;
+  onOpenEventVenue?: () => void;
 };
 
 function cuisineLabel(cuisine?: string): string | null {
@@ -146,6 +149,8 @@ export function RestaurantCard({
   selected,
   onSelect,
   onOpenDetails,
+  hostsEvents = false,
+  onOpenEventVenue,
 }: RestaurantCardProps) {
   const ratingText = formatGroundedRating(rating);
   const typeLabel = cuisineLabel(cuisine) ?? "Restaurant";
@@ -169,12 +174,29 @@ export function RestaurantCard({
 
   const summaryText =
     blurb && blurb !== neighborhood ? blurb : null;
-  const showFooter = Boolean(mapsUrl) || Boolean(onOpenDetails);
+  const showFooter =
+    Boolean(mapsUrl) || Boolean(onOpenDetails) || Boolean(onOpenEventVenue);
 
   const footerContent = (
     <>
       <RestaurantMapLinks mapsUrl={mapsUrl} />
       <div className="flex flex-wrap gap-1.5">
+        {onOpenEventVenue ? (
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            className="h-11 min-w-11 px-3"
+            data-testid="event-venue-cta"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenEventVenue();
+            }}
+          >
+            <PartyPopper data-icon="inline-start" aria-hidden />
+            Event Venue
+          </Button>
+        ) : null}
         {onOpenDetails ? (
           <Button
             type="button"
@@ -277,6 +299,14 @@ export function RestaurantCard({
           )}
         >
           <Badge variant="secondary">{typeLabel}</Badge>
+          {hostsEvents ? (
+            <Badge
+              variant="outline"
+              data-testid="restaurant-hosts-events-badge"
+            >
+              Hosts Events
+            </Badge>
+          ) : null}
           {priceLabel ? <Badge variant="outline">{priceLabel}</Badge> : null}
         </div>
 
