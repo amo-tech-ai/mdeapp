@@ -1,0 +1,26 @@
+src/components/chat/venue-booking-direct-hitl-context.tsx
+  s_1f0f569465d6d8::t_6cead21af18db0 21-23,29,32-34,37-51,73,80-102,108-115
+  s_1f0f569465d6d8::t_c186940e63a2a6 58
+  s_1f0f569465d6d8::t_e76e58e7642748 1-20,24-28,30-31,35-36,52-57,59-72,74-79,103-107,116-123
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "15ca2835478fb6ce09b18f7f5b8eef49d578a0c6",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
