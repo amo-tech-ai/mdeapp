@@ -1,0 +1,19 @@
+e2e/san-494-event-venue-cta.spec.ts
+  s_d1b7a3779fe462::t_54b6b5600bfc31 1-143
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "b85500b097d998b5923ef14446a24752656dce6b",
+  "prompts": {},
+  "sessions": {
+    "s_d1b7a3779fe462": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "26292875-287f-4fbd-bce0-3bd9e158b377",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
