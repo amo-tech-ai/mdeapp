@@ -25,6 +25,7 @@ import { ScheduleViewingModal } from "@/components/modals/schedule-viewing-modal
 import { VenueDetailSheet } from "@/components/sheets/venue-detail-sheet";
 import { CafeBookingSheet } from "@/components/sheets/cafe-booking-sheet";
 import { EventVenueOfferingsSheet } from "@/components/sheets/event-venue-offerings-sheet";
+import { EventProposalShell } from "@/components/sheets/event-proposal-shell";
 import { NightlifeBookingSheet } from "@/components/sheets/nightlife-booking-sheet";
 import { RestaurantBookingSheet } from "@/components/sheets/restaurant-booking-sheet";
 import { useRentalUi } from "@/components/chat/rental-ui-context";
@@ -55,6 +56,23 @@ function EventVenueOfferingsSheetMount() {
       open={eventVenueOfferingsOpen}
       onOpenChange={(open) => {
         if (!open) closeEventVenueOfferings();
+      }}
+    />
+  );
+}
+
+function EventProposalShellMount() {
+  const {
+    eventProposalShellTarget,
+    eventProposalShellOpen,
+    closeEventProposalShell,
+  } = useRentalUi();
+  return (
+    <EventProposalShell
+      target={eventProposalShellTarget}
+      open={eventProposalShellOpen}
+      onOpenChange={(open) => {
+        if (!open) closeEventProposalShell();
       }}
     />
   );
@@ -139,6 +157,7 @@ export function GeoChatShell() {
                         <RestaurantBookingSheetMount />
                         <NightlifeBookingSheetMount />
                         <EventVenueOfferingsSheetMount />
+                        <EventProposalShellMount />
                       </div>
                       </ConciergeSessionProvider>
                     </EventLocalChatProvider>

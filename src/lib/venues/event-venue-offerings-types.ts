@@ -17,6 +17,8 @@ export type EventVenuePackageSummary = {
 };
 
 export type EventVenueOfferingsPayload = {
+  /** null when the venue's partner_location has no partner_id — proposal CTA is then hidden. */
+  partnerId: string | null;
   partnerLocationId: string;
   locationLabel: string;
   neighborhood: string | null;
