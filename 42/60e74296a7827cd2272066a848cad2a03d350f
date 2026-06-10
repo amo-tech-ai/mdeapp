@@ -1,0 +1,58 @@
+src/mastra/agents/concierge.ts
+  s_1f0f569465d6d8::t_ade50b12feead8 279-284
+  s_1f0f569465d6d8::t_d8a22e159fb93a 304
+  s_1f0f569465d6d8::t_c7424a85837472 11
+src/mastra/tools/request-venue-booking.ts
+  s_1f0f569465d6d8::t_0662f63bf8ad96 87-91
+  s_1f0f569465d6d8::t_34ff8201d9a26b 1-27,33-35,40-54,56-86,92-96
+  s_1f0f569465d6d8::t_a87e89cdb7b217 28-32,36-39,55
+src/platform/copilot/mastra-tool-action-names.ts
+  s_e5791ab83b9bb7::t_6c4305207049a3 12,23
+src/mastra/tools/__tests__/request-venue-booking.test.ts
+  s_1f0f569465d6d8::t_a1fa0093b5976e 5-8
+  s_1f0f569465d6d8::t_8c208bb9b19fcd 20-21
+  s_1f0f569465d6d8::t_cbe006c03ed724 73,75
+  s_1f0f569465d6d8::t_4452a75070d98f 80
+  s_1f0f569465d6d8::t_40ba395a7c0669 58
+  s_1f0f569465d6d8::t_f892a9b6c98322 1-4,9-19,22-57,59-72,74,76-79,81-105
+src/components/chat/venue-booking-hitl-panel.tsx
+  s_1f0f569465d6d8::t_fd09e81680b0a8 1-154
+src/components/copilot/concierge-venue-booking-bridge.tsx
+  s_1f0f569465d6d8::t_d722df14f24c6b 3,12-18,20-37,39-43,62-63,66-75
+  s_1f0f569465d6d8::t_981870d7b19dcc 1-2,4-11,19,38,44-61,64-65,76-81
+src/components/chat/geo-chat-shell.tsx
+  s_1f0f569465d6d8::t_98ed9818d49123 125
+  s_1f0f569465d6d8::t_c59e388546df34 19
+src/lib/events/event-proposal-form-schema.ts
+  s_1f0f569465d6d8::t_c7751b8d6dd01f 1-33
+src/lib/events/event-venue-booking-core.ts
+  s_1f0f569465d6d8::t_9c50778d4eea59 1-103
+src/platform/copilot/__tests__/mastra-tool-action-names.test.ts
+  s_e5791ab83b9bb7::t_bbe01de9f9b0e5 29-33,38-46
+  s_1f0f569465d6d8::t_842e320f43aebb 34-37
+  s_1f0f569465d6d8::t_660ba8d11ec10d 4-7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "4260e74296a7827cd2272066a848cad2a03d350f",
+  "prompts": {},
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_e5791ab83b9bb7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b3e8d093-b1e2-4331-ac75-ef7af26a36e0",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
