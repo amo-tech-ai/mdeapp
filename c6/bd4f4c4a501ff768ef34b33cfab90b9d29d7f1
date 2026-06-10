@@ -1,0 +1,21 @@
+src/lib/events/event-venue-booking-core.test.ts
+  s_1f0f569465d6d8::t_6e8804ea839496 1-229
+src/lib/events/event-venue-booking-core.ts
+  s_1f0f569465d6d8::t_b9e243b43ea3af 20-88,90-91,112-124,150,164
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "c6bd4f4c4a501ff768ef34b33cfab90b9d29d7f1",
+  "prompts": {},
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
