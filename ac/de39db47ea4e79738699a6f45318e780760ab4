@@ -1,0 +1,19 @@
+src/components/copilot/restaurant-card.tsx
+  s_0baec5608e2475::t_f98f6b20f8c4c9 226
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "acde39db47ea4e79738699a6f45318e780760ab4",
+  "prompts": {},
+  "sessions": {
+    "s_0baec5608e2475": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3bd5f9d7-109c-4dce-8633-a9bc1d0da6e5",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
