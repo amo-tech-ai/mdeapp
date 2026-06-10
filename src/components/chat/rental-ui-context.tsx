@@ -93,7 +93,7 @@ export type RestaurantVenueDetail = {
   pinId: string;
   title: string;
   placeId?: string;
-  mapsUrl?: string | null;
+  mapsUrl?: string;
   neighborhood?: string;
   cuisine?: string;
   rating?: number;
