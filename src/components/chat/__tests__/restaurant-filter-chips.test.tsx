@@ -23,7 +23,9 @@ describe("restaurant filter chips", () => {
   });
 
   it("builds chip search prompts for immediate search", () => {
-    const chip = RESTAURANT_CUISINE_CHIPS.find((c) => c.id === "c-italian")!;
+    const chip = RESTAURANT_CUISINE_CHIPS.find((c) => c.id === "c-italian");
+    expect(chip).toBeDefined();
+    if (!chip) return;
     expect(restaurantChipSearchPrompt(chip)).toContain("Italian");
     expect(restaurantChipSearchPrompt(chip)).toContain("restaurants");
   });

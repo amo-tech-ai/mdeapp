@@ -62,8 +62,8 @@ export function buildRestaurantSearchParams(
       neighborhood: overrides.neighborhood ?? q?.neighborhood ?? s.neighborhood,
       cuisine: overrides.cuisine ?? q?.cuisine ?? s.cuisine,
       priceTier: overrides.priceTier ?? q?.priceTier ?? s.priceTier,
-      userLatitude: overrides.userLatitude ?? q?.ephemeralLatitude,
-      userLongitude: overrides.userLongitude ?? q?.ephemeralLongitude,
+      userLatitude: overrides.userLatitude,
+      userLongitude: overrides.userLongitude,
       limit: FAST_PATH_LIMIT,
     };
     const prompt =
@@ -79,17 +79,22 @@ export function buildRestaurantSearchParams(
   }
 
   if (q?.genericAskPending === true && hasRestaurantFastPathSignals(text, s)) {
+    const composed = composeRestaurantQueryText(text, {
+      ...s,
+      neighborhood: s.neighborhood ?? q.neighborhood,
+      cuisine: s.cuisine ?? q.cuisine,
+      priceTier: s.priceTier ?? q.priceTier,
+      nearMe: s.nearMe,
+    });
     return attachQueryText(
       {
         neighborhood: s.neighborhood ?? q.neighborhood,
         cuisine: s.cuisine ?? q.cuisine,
         priceTier: s.priceTier ?? q.priceTier,
-        userLatitude: s.nearMe ? q.ephemeralLatitude : undefined,
-        userLongitude: s.nearMe ? q.ephemeralLongitude : undefined,
-        queryText: text.trim(),
+        queryText: composed,
         limit: FAST_PATH_LIMIT,
       },
-      text,
+      composed,
     );
   }
 
@@ -110,15 +115,16 @@ export function buildRestaurantSearchParams(
   }
 
   if (looksLikeRestaurantDiscovery(text) && hasRestaurantFastPathSignals(text, s)) {
+    const composed = composeRestaurantQueryText(text, s);
     return attachQueryText(
       {
         neighborhood: s.neighborhood,
         cuisine: s.cuisine,
         priceTier: s.priceTier,
-        queryText: composeRestaurantQueryText(text, s),
+        queryText: composed,
         limit: FAST_PATH_LIMIT,
       },
-      text,
+      composed,
     );
   }
 

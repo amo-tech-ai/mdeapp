@@ -15,10 +15,10 @@ export type RestaurantFilterChip = {
 
 export const RESTAURANT_CUISINE_CHIPS: readonly RestaurantFilterChip[] = [
   { id: "c-steak", label: "Steak", group: "cuisine", cuisine: "steakhouse" },
-  { id: "c-italian", label: "Italian", group: "cuisine", cuisine: "international" },
+  { id: "c-italian", label: "Italian", group: "cuisine", cuisine: "italian" },
   { id: "c-sushi", label: "Sushi", group: "cuisine", cuisine: "seafood" },
   { id: "c-colombian", label: "Colombian", group: "cuisine", cuisine: "colombian" },
-  { id: "c-pizza", label: "Pizza", group: "cuisine", cuisine: "international" },
+  { id: "c-pizza", label: "Pizza", group: "cuisine", cuisine: "pizza" },
   { id: "c-vegan", label: "Vegan", group: "cuisine", cuisine: "vegetarian" },
 ] as const;
 
@@ -58,7 +58,7 @@ export const RESTAURANT_FILTER_CHIP_GROUPS = [
 export function restaurantChipSearchPrompt(chip: RestaurantFilterChip): string {
   const parts: string[] = [];
   if (chip.cuisine) parts.push(chip.label);
-  if (chip.vibe) parts.push(chip.vibe);
+  if (chip.vibe) parts.push(chip.label);
   if (chip.neighborhood) parts.push(`in ${chip.neighborhood}`);
   if (chip.nearMe) parts.push("near me");
   if (chip.priceTier) parts.push(chip.priceTier);
@@ -72,7 +72,7 @@ export function restaurantSearchParamsFromChip(
 ): RestaurantSearchApiParams {
   const queryParts: string[] = ["restaurants"];
   if (chip.cuisine) queryParts.unshift(chip.label);
-  if (chip.vibe) queryParts.unshift(chip.vibe);
+  if (chip.vibe) queryParts.unshift(chip.label);
   if (chip.neighborhood) queryParts.push(`in ${chip.neighborhood}`);
   if (chip.nearMe) queryParts.push("near me");
   if (chip.priceTier) queryParts.push(chip.priceTier);

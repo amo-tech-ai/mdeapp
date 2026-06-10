@@ -51,8 +51,6 @@ function buildRestaurantMemoryPatch(
     vibe: chip?.vibe,
     priceTier: params.priceTier,
     genericAskPending: false,
-    ephemeralLatitude: params.userLatitude,
-    ephemeralLongitude: params.userLongitude,
   };
 }
 

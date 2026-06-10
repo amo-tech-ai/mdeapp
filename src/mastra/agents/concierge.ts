@@ -12,6 +12,7 @@ import { FLASH_MODEL } from "../lib/models";
 import { getDefaultInputProcessors } from "../lib/agent-input-processors";
 import { MapUiStateSchema } from "@/platform/contracts/map-ui-state";
 import { formatEventSourcePromptHint } from "@/lib/events/trusted-event-sources";
+import { RESTAURANT_CLARIFY_MESSAGE } from "@/lib/restaurant-clarify-copy";
 
 export const conciergeWorkingMemorySchema = z.object({
   lastIntent: z
@@ -82,13 +83,11 @@ export const conciergeWorkingMemorySchema = z.object({
       neighborhood: z.string().optional(),
       cuisine: z.string().optional(),
       vibe: z.string().optional(),
-      priceTier: z.enum(['$', '$$', '$$$']).optional(),
+      priceTier: z.enum(['$', '$$', '$$$', '$$$$']).optional(),
       genericAskPending: z
         .boolean()
         .optional()
         .describe('True after restaurant clarify; clear when user picks a chip or search runs'),
-      ephemeralLatitude: z.number().optional(),
-      ephemeralLongitude: z.number().optional(),
     })
     .optional()
     .describe('Last restaurant query — refine from here on restaurant follow-ups'),
@@ -225,9 +224,8 @@ Decision rules (in order):
 3. hasCuisine OR hasVibe OR hasNeighborhood OR hasBudget OR hasNearMe → call search-restaurants immediately (queryText = user's phrase).
 4. Generic request ("suggest restaurants", "where to eat in Medellín" with no cuisine/vibe/area/budget) → send exactly ONE clarify message, set genericAskPending=true, do NOT call search-restaurants in the same turn. UI shows filter chips.
 
-Clarification format (one message):
-  What kind of restaurant are you looking for?
-  Tap a filter below — cuisine, vibe, area, or budget — and we'll search right away.
+Clarification format (one message — same copy as RESTAURANT_CLARIFY_MESSAGE in restaurant-clarify-copy.ts):
+${RESTAURANT_CLARIFY_MESSAGE}
 
 Hard rules for the restaurant gate:
 - Ask at most ONCE per fresh session unless the user starts a new generic ask.
@@ -237,7 +235,7 @@ Hard rules for the restaurant gate:
 Restaurant listing rules (critical):
 - NEVER name specific restaurants or say "Found N restaurants" unless search-restaurants ran in the SAME turn.
 - If the user asks again to show cards after a search, call search-restaurants again — do not answer from memory alone.
-- Reply in at most 2 short sentences: (1) how many matches and which area, (2) optional one short follow-up only if results are empty.
+- Reply in at most 2 short sentences: (1) how many matches and which area, (2) optional one short next-action (e.g. "Refine by cuisine", "Show more options") when results exist, or a recovery hint when empty.
 
 # Output formatting (events + rentals — UI renders cards)
 After search-events or search-rentals, the frontend renders cards and map pins from the tool — do NOT repeat card fields (title, price, URLs, amenities) in prose.

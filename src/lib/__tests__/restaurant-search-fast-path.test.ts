@@ -72,6 +72,13 @@ describe("restaurant search fast path", () => {
     expect(canFastPathRestaurantSearch("fine dining modern poblado")).toBe(true);
   });
 
+  it("preserves composed queryText on restaurant discovery fast-path", () => {
+    const params = buildRestaurantSearchParams("suggest restaurants in Provenza");
+    expect(params).not.toBeNull();
+    expect(params?.queryText).toMatch(/^restaurants\b/i);
+    expect(params?.queryText).not.toBe("suggest restaurants in Provenza");
+  });
+
   it("builds near-me chip params with ephemeral coordinates", () => {
     const params = restaurantSearchParamsFromChip(
       { id: "a-near", label: "Near me", group: "area", nearMe: true },

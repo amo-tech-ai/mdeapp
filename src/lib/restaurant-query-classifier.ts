@@ -39,7 +39,9 @@ const CUISINE_PATTERNS: Array<{ cuisine: string; re: RegExp }> = [
   { cuisine: "seafood", re: /\b(seafood|fish|ceviche|sushi|japanese)\b/i },
   { cuisine: "vegetarian", re: /\b(vegetarian|vegan|plant[- ]based)\b/i },
   { cuisine: "colombian", re: /\b(colombian|bandeja|paisa)\b/i },
-  { cuisine: "international", re: /\b(international|fusion|fine dining|italian|pizza|modern)\b/i },
+  { cuisine: "italian", re: /\b(italian)\b/i },
+  { cuisine: "pizza", re: /\b(pizza)\b/i },
+  { cuisine: "international", re: /\b(international|fusion|fine dining|modern)\b/i },
 ];
 
 const VIBE_PATTERNS: Array<{ vibe: string; re: RegExp }> = [

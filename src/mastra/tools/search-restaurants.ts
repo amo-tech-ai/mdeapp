@@ -14,6 +14,8 @@ const cuisineEnum = z.enum([
   'vegetarian',
   'cafe',
   'international',
+  'italian',
+  'pizza',
   'street-food',
 ]);
 
@@ -180,6 +182,8 @@ export function mapCuisineFromTypes(types: string[] | null): Cuisine {
   if (blob.includes('coffee') || blob.includes('café') || blob.includes('cafe')) return 'cafe';
   if (blob.includes('street') || blob.includes('food hall') || blob.includes('mercado')) return 'street-food';
   if (blob.includes('colombian') || blob.includes('traditional')) return 'colombian';
+  if (blob.includes('pizza')) return 'pizza';
+  if (blob.includes('italian')) return 'italian';
   return 'international';
 }
 
