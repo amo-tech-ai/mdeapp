@@ -13,6 +13,7 @@ import { EventSearchResultsProvider } from "@/components/chat/event-search-resul
 import { RichCardResultsProvider } from "@/components/chat/rich-card-results-context";
 import { EventLocalChatProvider } from "@/components/chat/event-local-chat-context";
 import { ConciergeSessionProvider } from "@/components/chat/concierge-session-context";
+import { VenueBookingDirectHitlProvider } from "@/components/chat/venue-booking-direct-hitl-context";
 import { FocusMapPinAction } from "@/components/copilot/focus-map-pin-action";
 import { MapUiSync } from "@/components/copilot/map-ui-sync";
 import { SearchToolRenders } from "@/components/copilot/search-tool-renders";
@@ -124,6 +125,7 @@ export function GeoChatShell() {
                 <EventSearchResultsProvider>
                   <RichCardResultsProvider>
                     <EventLocalChatProvider>
+                      <VenueBookingDirectHitlProvider>
                       <ConciergeSessionProvider>
                       <div className="flex min-h-screen flex-col">
                         <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-4 py-3 sm:px-6">
@@ -160,6 +162,7 @@ export function GeoChatShell() {
                         <EventProposalShellMount />
                       </div>
                       </ConciergeSessionProvider>
+                      </VenueBookingDirectHitlProvider>
                     </EventLocalChatProvider>
                   </RichCardResultsProvider>
                 </EventSearchResultsProvider>
