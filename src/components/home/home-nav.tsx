@@ -51,13 +51,16 @@ export function HomeNav() {
 
         {/* Desktop right actions */}
         <div className="ml-auto hidden items-center gap-2 sm:flex">
-          <Link
-            href="/saved"
-            className="flex min-h-[44px] items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none"
+          <Button
+            variant="ghost"
+            size="sm"
+            className="min-h-[44px] rounded-full text-muted-foreground"
+            nativeButton={false}
+            render={<Link href="/saved" />}
           >
             <BookmarkIcon className="size-3.5" aria-hidden="true" />
             Saved
-          </Link>
+          </Button>
           <Button
             variant="outline"
             size="sm"
@@ -75,12 +78,14 @@ export function HomeNav() {
           >
             Sign up
           </Button>
-          <Link
-            href="/host/event/new"
-            className="flex min-h-[44px] items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground transition-all duration-150 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 motion-reduce:transition-none"
+          <Button
+            size="sm"
+            className="min-h-[44px] rounded-full"
+            nativeButton={false}
+            render={<Link href="/host/event/new" />}
           >
             Host
-          </Link>
+          </Button>
         </div>
 
         {/* Mobile — Sheet handles animation + focus trap + Escape + aria-modal */}
