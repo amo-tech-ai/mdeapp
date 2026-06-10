@@ -1,0 +1,59 @@
+docs/research/mastra-booking-audit/phase6-linear-tasks.md
+  s_1f0f569465d6d8::t_f616c035abb1f2 1-121
+docs/research/mastra-booking-audit/final-report.md
+  s_1f0f569465d6d8::t_3b54f924db6332 1-172
+.gitignore
+  s_0baec5608e2475::t_f74eca6cfb14a3 27-33
+  s_0baec5608e2475::t_7b6252119259fc 25-26
+docs/ecommerce/ECOM-ROADMAP-001.md
+  s_0baec5608e2475::t_914a4f36280b7d 1
+docs/restaurant/04-openclaw.md
+  h_712413820f8934 1-67
+docs/research/mastra-booking-audit/phase3-mdeai-mapping.md
+  s_1f0f569465d6d8::t_6ec5f25beaacf8 1-116
+docs/research/mastra-booking-audit/repo-summary.md
+  s_1f0f569465d6d8::t_1d0fad1d19d87b 1-135
+docs/restaurant/06-mastra-booking.md
+  s_1f0f569465d6d8::t_1183270ea10f18 1-4
+docs/research/mastra-booking-audit/architecture-diagram.md
+  s_1f0f569465d6d8::t_475b1ee1b95ebc 1-187
+docs/research/mastra-booking-audit/phase5-recommended-architecture.md
+  s_1f0f569465d6d8::t_924e23284b39a2 1-132
+docs/research/mastra-booking-audit/README.md
+  s_1f0f569465d6d8::t_be722b07fd38a8 1-26
+docs/research/mastra-booking-audit/phase4-use-cases.md
+  s_1f0f569465d6d8::t_8879febba3c8ed 1-112
+docs/restaurant/08-mastra-booking.md
+  s_1f0f569465d6d8::t_2b9ce6bbbd44a2 1-212
+docs/research/mastra-booking-audit/features.md
+  s_1f0f569465d6d8::t_81bf6530633749 1-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "dd5179559dd130acfe95e93cc2ad6b80aa751788",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_0baec5608e2475": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3bd5f9d7-109c-4dce-8633-a9bc1d0da6e5",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
