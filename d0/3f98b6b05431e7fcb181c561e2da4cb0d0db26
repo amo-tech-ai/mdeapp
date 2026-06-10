@@ -1,0 +1,47 @@
+src/lib/restaurant-query-classifier.ts
+  s_d1b7a3779fe462::t_cb40353994eef3 42-44
+src/mastra/agents/concierge.ts
+  s_d1b7a3779fe462::t_d37474390fcb45 227-228
+  s_d1b7a3779fe462::t_b1d80aeee68634 15
+  s_d1b7a3779fe462::t_cba39de2985b6d 86
+  s_d1b7a3779fe462::t_1108b9b926a649 238
+src/components/chat/__tests__/restaurant-filter-chips.test.tsx
+  s_d1b7a3779fe462::t_9220264c7cc6bb 26-27
+  s_d1b7a3779fe462::t_860c649e89e1bf 28
+src/lib/restaurant-search-fast-path.ts
+  s_d1b7a3779fe462::t_366aa741274f85 82-88,94,97
+  s_d1b7a3779fe462::t_dfc44e1c2eb3d9 65-66
+  s_d1b7a3779fe462::t_9aa637ecacb6a3 118,124,127
+src/lib/__tests__/restaurant-search-fast-path.test.ts
+  s_d1b7a3779fe462::t_ff1069c50e1896 75-81
+src/app/api/restaurants/search/route.test.ts
+  s_d1b7a3779fe462::t_59c1b686a3915f 57-69
+src/app/api/restaurants/search/route.ts
+  s_d1b7a3779fe462::t_a7682ee26b1c90 9-39
+src/lib/restaurant-filter-chips.ts
+  s_d1b7a3779fe462::t_99cfb3a75f1e00 61
+  s_d1b7a3779fe462::t_3991de1fc80def 18
+  s_d1b7a3779fe462::t_88c430c974369b 21
+  s_d1b7a3779fe462::t_cc85ab7813601f 75
+src/mastra/tools/search-restaurants.ts
+  s_d1b7a3779fe462::t_82c7f1f2401be1 17-18
+  s_d1b7a3779fe462::t_ca82e34a18db2b 185-186
+src/lib/types.ts
+  s_d1b7a3779fe462::t_2bb922a8b12d29 45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "d03f98b6b05431e7fcb181c561e2da4cb0d0db26",
+  "prompts": {},
+  "sessions": {
+    "s_d1b7a3779fe462": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "26292875-287f-4fbd-bce0-3bd9e158b377",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
