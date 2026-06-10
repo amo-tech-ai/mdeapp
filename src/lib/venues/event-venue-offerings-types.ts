@@ -17,6 +17,7 @@ export type EventVenuePackageSummary = {
 };
 
 export type EventVenueOfferingsPayload = {
+  partnerId: string;
   partnerLocationId: string;
   locationLabel: string;
   neighborhood: string | null;

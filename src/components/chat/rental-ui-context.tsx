@@ -109,6 +109,14 @@ export type EventVenueOfferingsTarget = {
   payload: EventVenueOfferingsPayload;
 };
 
+/** SAN-495/496 event proposal review shell (placeholder — no DB write). */
+export type EventProposalShellTarget = {
+  venueTitle: string;
+  placeId: string;
+  partnerId: string;
+  partnerLocationId: string;
+};
+
 export type NightlifeVenueDetail = {
   kind: "nightlife";
   pinId: string;
@@ -143,6 +151,8 @@ type RentalUiContextValue = {
   nightlifeBookingOpen: boolean;
   eventVenueOfferingsTarget: EventVenueOfferingsTarget | null;
   eventVenueOfferingsOpen: boolean;
+  eventProposalShellTarget: EventProposalShellTarget | null;
+  eventProposalShellOpen: boolean;
   restaurantBookingTarget: RestaurantVenueDetail | null;
   restaurantBookingOpen: boolean;
   leadConfirmation: LeadConfirmation | null;
@@ -165,6 +175,8 @@ type RentalUiContextValue = {
   closeNightlifeBooking: () => void;
   openEventVenueOfferings: (target: EventVenueOfferingsTarget) => void;
   closeEventVenueOfferings: () => void;
+  openEventProposalShell: (target: EventProposalShellTarget) => void;
+  closeEventProposalShell: () => void;
   openRestaurantBooking: (target: RestaurantVenueDetail) => void;
   closeRestaurantBooking: () => void;
   setLeadConfirmation: (value: LeadConfirmation | null) => void;
@@ -201,6 +213,9 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
   const [eventVenueOfferingsTarget, setEventVenueOfferingsTarget] =
     useState<EventVenueOfferingsTarget | null>(null);
   const [eventVenueOfferingsOpen, setEventVenueOfferingsOpen] = useState(false);
+  const [eventProposalShellTarget, setEventProposalShellTarget] =
+    useState<EventProposalShellTarget | null>(null);
+  const [eventProposalShellOpen, setEventProposalShellOpen] = useState(false);
   const [restaurantBookingTarget, setRestaurantBookingTarget] =
     useState<RestaurantVenueDetail | null>(null);
   const [restaurantBookingOpen, setRestaurantBookingOpen] = useState(false);
@@ -297,6 +312,19 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
     setEventVenueOfferingsTarget(null);
   }, []);
 
+  const openEventProposalShell = useCallback(
+    (target: EventProposalShellTarget) => {
+      setEventProposalShellTarget(target);
+      setEventProposalShellOpen(true);
+    },
+    [],
+  );
+
+  const closeEventProposalShell = useCallback(() => {
+    setEventProposalShellOpen(false);
+    setEventProposalShellTarget(null);
+  }, []);
+
   const openRestaurantBooking = useCallback((target: RestaurantVenueDetail) => {
     setRestaurantBookingTarget(target);
     setRestaurantBookingOpen(true);
@@ -329,6 +357,8 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       nightlifeBookingOpen,
       eventVenueOfferingsTarget,
       eventVenueOfferingsOpen,
+      eventProposalShellTarget,
+      eventProposalShellOpen,
       restaurantBookingTarget,
       restaurantBookingOpen,
       leadConfirmation,
@@ -348,6 +378,8 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       closeNightlifeBooking,
       openEventVenueOfferings,
       closeEventVenueOfferings,
+      openEventProposalShell,
+      closeEventProposalShell,
       openRestaurantBooking,
       closeRestaurantBooking,
       setLeadConfirmation,
@@ -368,6 +400,8 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       nightlifeBookingOpen,
       eventVenueOfferingsTarget,
       eventVenueOfferingsOpen,
+      eventProposalShellTarget,
+      eventProposalShellOpen,
       restaurantBookingTarget,
       restaurantBookingOpen,
       leadConfirmation,
@@ -387,6 +421,8 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       closeNightlifeBooking,
       openEventVenueOfferings,
       closeEventVenueOfferings,
+      openEventProposalShell,
+      closeEventProposalShell,
       openRestaurantBooking,
       closeRestaurantBooking,
       clearLeadConfirmation,

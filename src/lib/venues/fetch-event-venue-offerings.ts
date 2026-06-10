@@ -51,7 +51,7 @@ export async function fetchEventVenueOfferingsByPlaceId(
 
   const { data: location, error: locError } = await supabase
     .from("partner_locations")
-    .select("id, label, neighborhood, google_place_id")
+    .select("id, partner_id, label, neighborhood, google_place_id")
     .eq("google_place_id", trimmed)
     .maybeSingle();
 
@@ -62,7 +62,7 @@ export async function fetchEventVenueOfferingsByPlaceId(
     return { ok: false, message: locError.message };
   }
 
-  if (!location?.id) {
+  if (!location?.id || !location.partner_id) {
     return { ok: true, data: null };
   }
 
@@ -99,6 +99,7 @@ export async function fetchEventVenueOfferingsByPlaceId(
   return {
     ok: true,
     data: {
+      partnerId: String(location.partner_id),
       partnerLocationId: String(location.id),
       locationLabel: String(location.label ?? trimmed),
       neighborhood:

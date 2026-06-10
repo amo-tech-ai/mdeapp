@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -12,10 +13,12 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
 import type { EventVenueOfferingsTarget } from "@/components/chat/rental-ui-context";
+import { useRentalUi } from "@/components/chat/rental-ui-context";
 
 function formatCop(price: number): string {
   return new Intl.NumberFormat("en-US", {
@@ -34,14 +37,16 @@ function offeringLabel(key: string): string {
 
 export function EventVenueOfferingsContent({
   target,
+  onRequestProposal,
 }: {
   target: EventVenueOfferingsTarget;
+  onRequestProposal?: () => void;
 }) {
   return (
     <div className="flex flex-col gap-4 px-4 pb-6 text-sm">
       <p className="text-muted-foreground">
-        Browse packages and event types for this venue. Proposal requests arrive
-        in a later release — no payment or booking yet.
+        Browse offerings and packages for this venue. Request a proposal to
+        start planning your private event.
       </p>
 
       {target.payload.offerings.length > 0 ? (
@@ -59,7 +64,13 @@ export function EventVenueOfferingsContent({
               >
                 <CardHeader>
                   <CardTitle>{offeringLabel(offering.offeringKey)}</CardTitle>
-                  {offering.pricePerPersonFrom != null ? (
+                  {offering.minimumSpend != null ? (
+                    <CardDescription
+                      data-testid="event-venue-offering-minimum-spend"
+                    >
+                      Minimum spend {formatCop(offering.minimumSpend)}
+                    </CardDescription>
+                  ) : offering.pricePerPersonFrom != null ? (
                     <CardDescription>
                       From {formatCop(offering.pricePerPersonFrom)} / guest
                     </CardDescription>
@@ -112,6 +123,19 @@ export function EventVenueOfferingsContent({
           </div>
         </section>
       ) : null}
+
+      {onRequestProposal ? (
+        <SheetFooter className="px-0">
+          <Button
+            type="button"
+            className="w-full"
+            onClick={onRequestProposal}
+            data-testid="request-proposal-btn"
+          >
+            Request proposal
+          </Button>
+        </SheetFooter>
+      ) : null}
     </div>
   );
 }
@@ -125,6 +149,19 @@ export function EventVenueOfferingsSheet({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { openEventProposalShell } = useRentalUi();
+
+  const handleRequestProposal = target
+    ? () => {
+        openEventProposalShell({
+          venueTitle: target.title,
+          placeId: target.payload.placeId,
+          partnerId: target.payload.partnerId,
+          partnerLocationId: target.payload.partnerLocationId,
+        });
+      }
+    : undefined;
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
@@ -144,7 +181,10 @@ export function EventVenueOfferingsSheet({
               </SheetDescription>
             </SheetHeader>
 
-            <EventVenueOfferingsContent target={target} />
+            <EventVenueOfferingsContent
+              target={target}
+              onRequestProposal={handleRequestProposal}
+            />
           </>
         ) : null}
       </SheetContent>

@@ -94,6 +94,17 @@ async function assertSheetFlow(page: Page) {
     page.locator('[data-testid="event-venue-offering-card"]').first(),
   ).toBeVisible();
 
+  const proposalBtn = page.locator('[data-testid="request-proposal-btn"]');
+  await expect(proposalBtn).toBeVisible();
+  await proposalBtn.click();
+  const proposalShell = page.locator('[data-testid="event-proposal-shell"]');
+  await expect(proposalShell).toBeVisible();
+  await expect(
+    page.locator('[data-testid="event-proposal-hitl-panel"]'),
+  ).toBeVisible();
+  await page.locator('[data-testid="event-proposal-cancel-btn"]').click();
+  await expect(proposalShell).not.toBeVisible();
+
   await page.keyboard.press("Escape");
   await expect(sheet).not.toBeVisible();
 }
