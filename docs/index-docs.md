@@ -53,7 +53,7 @@ rule: when a root-level file and a subdir file share a name, the subdir copy win
 | [`ecommerce/`](ecommerce/) | Medusa commerce direction (kept; single `medusa` skill) | 🟡 |
 | [`partners/`](partners/) | Partner stack (ptr001–014) docs | 🟡 |
 | [`linear/`](linear/) | Linear sync plans + queues | 🟡 |
-| [`wireframes/`](wireframes/) | AI-native marketplace wireframes (June 2026) | 🟢 |
+| [`wireframes/`](wireframes/) · [`wireframes/index-wire.md`](wireframes/index-wire.md) | Wireframe master index — domain packs, mobile, HTML, audits | 🟢 |
 | [`wireframes-design/`](wireframes-design/) · [`design/wireframes/`](design/wireframes/) | Legacy D-track SCR/WIRE specs (`04-detail-booking` → `mobile/events/`) | 🟢 |
 | [`design/wireframe/`](design/wireframe/) | HTML lo-fi mockups (cafes · restaurants · nightlife) | 🟢 |
 | [`prd/`](prd/) | PRD chunks (canonical PRD lives at outer `plan/prd.md`) | 🟡 |
