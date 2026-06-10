@@ -1,158 +1,107 @@
-# AI-Native Marketplace — Wireframe Documentation
-> Platform: Events · Rentals · Venues · Restaurants · Cafes · Nightlife · Sponsors · CRM  
-> Stack: Next.js · CopilotKit · Mastra · Supabase · Stripe · Google Maps · Gemini  
-> Updated: June 2026
-
-> **Legacy D-track wireframes:** [`../wireframes-design/`](../wireframes-design/) (SCR/WIRE 00–06, mobile, screens) — not this folder.
-
+---
+title: mdeai Wireframe Set — index, navigation map, priority
+date: 2026-05-31
+produced_with: .agents/skills/mde-wireframe (Route C — ASCII spec)
+fidelity: low-fi / structural (pre-build; not production mdeapp/src)
+locale: English only (Phase 1)
+companions:
+  - plan/competitors/12-mdeai-blueprint.md (product/design blueprint)
+  - plan/competitors/13-guidegeek.md (GuideGeek teardown)
+  - plan/screens/01-screens-plan.md · 02-chat-booking.md (existing screen plans)
 ---
 
-## Vision
+# mdeai Wireframe Set
 
-This is not Eventbrite + Airbnb glued together.  
-This is **ChatGPT + Google Maps + Eventbrite + Airbnb + OpenTable** with AI workflows, agents, and automation.
+> **Master index:** [`index-wire.md`](index-wire.md) — full tree (domain packs, mobile, HTML, audits). This README keeps the legacy D-track overview (00–06).
 
-```
-Traditional flow:  User → Search → Filter → Browse → Form → Confirm → Done
-AI-native flow:   User → Say intent → Agent plans → HITL approve → Done
-```
+Low-fidelity, structural wireframes for **mdeai.co** — the AI-powered Medellín concierge & intelligence platform (rentals · restaurants · nightlife · events · local discovery), web-`/chat`-first now, WhatsApp-native in Phase 2.
 
----
+These are **pre-build specs** (ASCII + component inventory + states), not production code. They align to `CLAUDE.md` hard rules, the personas (Camila, Roberto, Tourist, Andrés, Patricia, broker/venue), and the CTA strategy (**Schedule viewing / Buy tickets**, never external-OTA-primary).
 
-## Directory Structure
+## Files
 
-```
-wireframes/
-├── README.md                         ← this file
-├── AUDIT.md                          ← production readiness audit (v2: 93/100)
-├── _layout/
-│   ├── three-panel.md                ← core desktop layout
-│   └── navigation.md                 ← nav structure + routing
-├── _arch/
-│   ├── agents.md                     ← agent design reference
-│   ├── workflows.md                  ← workflow design reference
-│   └── copilotkit.md                 ← CopilotKit feature map
-├── auth/
-│   ├── 001-login.md                  ← NEW v2
-│   └── 002-signup.md                 ← NEW v2
-├── consumer/
-│   ├── 001-home.md
-│   ├── 002-saved-items.md            ← NEW v2
-│   ├── 003-user-profile.md           ← NEW v2
-│   └── 004-explore-map.md            ← NEW v2
-├── events/
-│   ├── 001-event-discovery.md
-│   ├── 002-event-details.md
-│   ├── 003-event-checkout.md
-│   └── 004-ticket-wallet.md
-├── rentals/
-│   ├── 001-rental-search.md
-│   ├── 002-rental-details.md
-│   └── 003-inquiry-viewing.md
-├── venues/
-│   ├── 001-venue-search.md
-│   └── 002-venue-details.md
-├── restaurants/
-│   ├── 001-restaurant-search.md
-│   └── 002-reservation.md
-├── cafes/
-│   └── 001-cafe-search.md
-├── nightlife/
-│   ├── 001-nightclub-discovery.md
-│   └── 002-vip-booking.md
-├── hosts/
-│   ├── 001-host-dashboard.md
-│   ├── 002-create-event.md
-│   ├── 003-ticket-management.md
-│   └── 004-attendee-management.md
-├── rental-hosts/
-│   ├── 001-rental-dashboard.md
-│   └── 002-lead-management.md
-├── venue-owners/
-│   └── 001-venue-dashboard.md
-├── sponsors/
-│   ├── 001-sponsor-dashboard.md
-│   └── 002-opportunity-discovery.md
-├── crm/
-│   └── 001-leads-pipeline.md
-└── admin/
-    ├── 001-ops-dashboard.md
-    └── 002-analytics-dashboard.md
+| File | Covers (of the 20 requested screens) |
+|---|---|
+| [00-foundations.md](00-foundations.md) | Design system (dark/light, type, grid, motion), reusable components, conversational components, map patterns, **#18 recommendation cards**, **#19 search/filter layouts**, global states |
+| [01-marketing.md](01-marketing.md) | **#1 Homepage**, **#2 AI concierge landing** |
+| [02-discovery.md](02-discovery.md) | **#3 Restaurant discovery**, **#4 Rental discovery**, **#5 Nightlife/events** |
+| [03-chat-maps-workspace.md](03-chat-maps-workspace.md) | **#7 Conversational search**, **#14 Concierge chat**, **#8 Maps+cards**, **#9 Trip workspace** |
+| [04-detail-booking.md](04-detail-booking.md) | **#11 Restaurant detail**, **#12 Rental detail**, **#10 Booking workflow** |
+| [05-whatsapp-mobile.md](05-whatsapp-mobile.md) | **#6 WhatsApp onboarding**, **#17 Mobile-first WhatsApp UI**, WA interaction patterns |
+| [06-user-operator-dashboards.md](06-user-operator-dashboards.md) | **#13 Saved/dashboard**, **#20 AI memory/personalization**, **#15 Broker/venue dashboard**, **#16 Admin ops** |
+
+## Navigation map
+
+```text
+PUBLIC / CONSUMER
+  /                     Home (hero + concierge input + verticals + trust)
+  /chat                 3-panel concierge (THE product) ── conversational search
+   ├─ maps + cards (right panel / mobile bottom sheet)
+   └─ trip workspace (saved → /trip/:id)
+  /rentals              Rental discovery (list + map) → /rentals/:id
+  /restaurants          Restaurant discovery → /restaurants/:id
+  /nightlife            Nightlife + events discovery → /events/:id
+  /saved                Saved places / collections / dashboard
+  /me/tickets/:id       Ticket wallet (QR)
+  /about · /partners · /login · /legal/*
+  WhatsApp (QR/number)  Phase 2 transport onto same brain
+
+HOST / SUPPLY
+  /host/event/new       Roberto AI publish wizard (HITL)
+  /host/events          Host dashboard (sales, payouts)
+  /broker               Broker/venue dashboard (leads, listings, reservations)
+
+OPS
+  /admin                Patricia: leads · approvals · listings · observability
 ```
 
----
+## Page hierarchy (depth)
 
-## Screen Inventory
-
-| # | Screen | Path | User Type | Phase | Priority | v2 |
-|---:|---|---|---|---|---|---|
-| 1 | Login | `/login` | All | Core | P0 | ✅ NEW |
-| 2 | Signup | `/signup` | All | Core | P0 | ✅ NEW |
-| 3 | Home / AI Concierge | `/` | Consumer | Core | P0 | ✅ Updated |
-| 4 | Saved Items | `/me/saved` | Consumer | Core | P1 | ✅ NEW |
-| 5 | User Profile | `/me/profile` | Consumer | Core | P1 | ✅ NEW |
-| 6 | Explore Map | `/explore` | Consumer | Core | P1 | ✅ NEW |
-| 7 | Event Discovery | `/events` | Consumer | Core | P0 | — |
-| 8 | Event Details | `/events/[slug]` | Consumer | Core | P0 | — |
-| 9 | Event Checkout | `/events/[slug]/checkout` | Consumer | Core | P0 | — |
-| 10 | Ticket Wallet | `/me/tickets` | Consumer | Core | P1 | — |
-| 11 | Rental Search | `/rentals` | Consumer | Core | P0 | ✅ Updated |
-| 12 | Rental Details | `/rentals/[id]` | Consumer | Core | P0 | — |
-| 13 | Rental Inquiry | `/rentals/[id]/inquire` | Consumer | Core | P1 | — |
-| 14 | Venue Search | `/venues` | Consumer | Core | P1 | — |
-| 15 | Venue Details | `/venues/[id]` | Consumer | Core | P1 | — |
-| 16 | Restaurant Search | `/restaurants` | Consumer | MVP | P1 | — |
-| 17 | Cafe Search | `/cafes` | Consumer | MVP | P2 | — |
-| 18 | Nightclub Discovery | `/nightlife` | Consumer | MVP | P2 | — |
-| 19 | Host Dashboard | `/host` | Event Host | Core | P0 | ✅ Updated |
-| 20 | Create Event | `/host/event/new` | Event Host | Core | P0 | — |
-| 21 | Ticket Management | `/host/events/[id]/tickets` | Event Host | Core | P0 | ✅ Updated |
-| 22 | Attendee Management | `/host/events/[id]/attendees` | Event Host | Core | P1 | ✅ Updated |
-| 23 | Rental Dashboard | `/host/rentals` | Rental Host | Core | P1 | — |
-| 24 | Venue Dashboard | `/host/venues` | Venue Owner | MVP | P1 | — |
-| 25 | Sponsor Dashboard | `/sponsor` | Sponsor | MVP | P1 | — |
-| 26 | CRM Leads Pipeline | `/admin/crm` | Admin/Host | MVP | P1 | ✅ Updated |
-| 27 | Admin Ops Dashboard | `/admin` | Admin | MVP | P1 | — |
-| 28 | Analytics Dashboard | `/admin/analytics` | Admin | MVP | P2 | — |
-
----
-
-## Core Layout
-
-All dashboard and discovery screens use the **three-panel layout**.  
-See [`_layout/three-panel.md`](./_layout/three-panel.md) for the complete spec.
-
-```
-┌──────────────┬──────────────────────────────┬──────────────────┐
-│  LEFT 280px  │      CENTER flex             │   RIGHT 360px    │
-│  Navigation  │   AI Chat + Generative UI    │  Map + Details   │
-│  Saved       │   Cards + Workflow progress  │  Forms + HITL    │
-│  Memory      │   HITL Approval panels       │  Analytics       │
-└──────────────┴──────────────────────────────┴──────────────────┘
+```text
+L0  /  (front door)
+L1  /chat  ── /rentals  ── /restaurants  ── /nightlife  ── /saved
+L2  detail: /rentals/:id  /restaurants/:id  /events/:id
+L2  workspace: /trip/:id          L2  wallet: /me/tickets/:id
+L1  supply: /host/event/new  /host/events  /broker
+L1  ops: /admin/*
 ```
 
----
+## Implementation priority (maps to docs/roadmap.md)
 
-## Phase Summary
+| # | Wireframe | Phase | Roadmap tie |
+|---|---|---|---|
+| 1 | `/chat` 3-panel + conversational search + maps+cards + rec cards | **MVP** | MAP-001→007, UX-010 |
+| 2 | Rental discovery + rental detail + Schedule-viewing lead | **MVP** | F17/F41, RE-001 |
+| 3 | Event detail → Stripe checkout → ticket wallet | **MVP** | EVT (O1) |
+| 4 | Host event wizard (Roberto, HITL) | **MVP** | F33–F38 (O2) |
+| 5 | Restaurant discovery + detail; nightlife/events | **MVP→**near | F19/F26 |
+| 6 | Homepage + concierge landing | **MVP** (marketing shell) | UX-011 (proposed) |
+| 7 | Saved/dashboard + trip workspace | Post-MVP | `trips` |
+| 8 | AI memory/personalization screens | Post-MVP | profile |
+| 9 | Broker/venue + admin dashboards | Post-MVP | F32 + new |
+| 10 | WhatsApp onboarding + mobile WA UI | Post-MVP/Adv | Phase 2 transport |
 
-| Phase | Screens | Agents | Workflows | Key Metric |
-|---|---|---|---|---|
-| **Core** (W1–4) | 1–10 | 5 | 3 | Roberto creates event in < 3 min |
-| **MVP** (W5–10) | 11–22 | 8 | 6 | Camila books rental from chat |
-| **Advanced** (W11–16) | 23–27+ | 12 | 10 | 30% of bookings from AI recommendations |
+## MVP vs Advanced (screen scope)
 
----
+- **MVP screens:** Home, `/chat` (search+maps+cards+rec cards), rental discovery+detail, event detail+checkout+wallet, restaurant discovery+detail, nightlife list, host wizard. Light Saved hooks.
+- **Post-MVP:** full Saved/collections dashboard, trip workspace, neighborhood pages, broker/venue dashboard, admin ops, AI memory/personalization UI.
+- **Advanced:** WhatsApp prod onboarding + native WA renderer, voice intake, white-label theming.
 
-## AI Interaction Patterns
+## Competitor patterns — copy / avoid (one-screen summary)
 
-| Pattern | CopilotKit Hook | Example |
+| Source | Copy | Avoid |
 |---|---|---|
-| Generative result cards | `useCopilotAction(render)` | Venue cards appear in chat |
-| Live map pins | `useCoAgent` state update | Pins update as agent searches |
-| HITL approval | `renderAndWaitForResponse` | "Publish event?" confirm card |
-| Page-aware agent | `useCopilotReadable` | Agent knows current listing |
-| Pre-filled forms | Working memory → form | Event form auto-populated |
+| **GuideGeek** | zero-friction conversational onboarding; persona/white-label; acquire-through-partners; ≤3 picks per WA bubble | mapless replies; unverified prices; redirect-out booking; thread-only memory |
+| **Airbnb** | card anatomy (photo carousel, ★count, **total price**, save heart); **price pins**; pill filters + map re-query; trust stack | filter walls; nightly-only price hiding totals |
+| **Mindtrip** | persistent map + workspace as the product; saved collections; community filters; cold-start ramps | heavy upfront generation w/o streaming |
+| **Google Maps** | mobile **bottom sheet** (peek/half/full); place sheet (photos/hours/popular times); list↔pin highlight | over-dense pins without clustering |
+| **WhatsApp** | interactive buttons/lists, location pins, voice notes, template alerts | pasting web HTML; long walls of text |
+| **ChatGPT** | streaming reveal; regenerate/edit; suggested follow-ups; clean message rhythm | infinite blank prompt with no ramps |
 
----
+Full rationale: [plan/competitors/12-mdeai-blueprint.md](../../../plan/competitors/12-mdeai-blueprint.md) §3–4, [13-guidegeek.md](../../../plan/competitors/13-guidegeek.md) Part B.
 
-*Cross-reference: [`../copilotkit-mastra/ai-native-marketplace-plan.md`](../copilotkit-mastra/ai-native-marketplace-plan.md)*
+## Confidence
+
+- Layout/structure: **high** (grounded in existing 3-panel plan + competitor teardowns).
+- Exact component names/data shapes: **medium** — mark TBD; reconcile with `plan/screens/` + `mdeapp/src/components/chat/chat-canvas.tsx` at build.
+- Open questions: (1) left-rail vs top-nav on desktop `/chat`; (2) bottom-sheet vs split on tablet; (3) Saved as page vs right-panel tab for MVP.
