@@ -1,7 +1,7 @@
 ---
 title: mdeapp/docs — master index
-updated: 2026-06-09
-verified: 2026-06-09 (freshness spot-checked against Linear sync notes + file mtimes)
+updated: 2026-06-10
+verified: 2026-06-10 (post PR #158 squash merge — 3,460 `docs/` paths tracked on `main`)
 rule: when a root-level file and a subdir file share a name, the subdir copy wins (relocation leftovers)
 ---
 
@@ -61,8 +61,8 @@ rule: when a root-level file and a subdir file share a name, the subdir copy win
 | [`notes/`](notes/) | Session notes (June 8–9 chat/docs-rebase) | 🟢 |
 | [`dashboard.md`](dashboard.md) · [`graphify-reference.md`](graphify-reference.md) | One-off references | 🟡 |
 
-## Known gaps (as of 2026-06-09)
+## Known gaps (as of 2026-06-10)
 
-1. 🔴 `docs/tasks/events/` (and most of `docs/`) is **untracked in the mdeapp repo** — commit it or it exists in no git history.
+1. 🟢 `docs/` restored on `main` via PR #158 (`6542210`) — **3,460** paths tracked; local-only notes/archives may sit untracked beside git (see [`index.md`](../index.md) restore table).
 2. 🔴 Stale root-level duplicates in `tasks/events/` (see ⚠ row) — delete after confirming subdir copies.
-3. 🔴 `tasks/INDEX.md` + `tasks/progres.md` predate this week's merges (#138–#146) — refresh or read `tasks/events/todo.md` + Linear instead.
+3. 🔴 `tasks/INDEX.md` + `tasks/progres.md` predate recent merges — refresh or read `tasks/events/todo.md` + Linear instead.

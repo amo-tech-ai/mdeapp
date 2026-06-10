@@ -4,7 +4,7 @@ Navigational map of `/home/sk/mdeai/mdeapp/` — the project root for the **mdea
 
 > **Repo split:** the sibling planning/workspace repo `github.com/amo-tech-ai/mdeai` lives one level up at `/home/sk/mdeai/` and `.gitignore`s `mdeapp/`. This repo (mdeapp) is self-contained for build/run/test; planning history lives in the parent. All paths below are **mdeapp-root-relative**.
 
-**Last indexed:** 2026-06-08
+**Last indexed:** 2026-06-10 (post [PR #158](https://github.com/amo-tech-ai/mdeapp/pull/158) docs restore on `main` @ `6542210`)
 
 ---
 
@@ -35,9 +35,11 @@ Local URLs: UI `http://localhost:3001` · CopilotKit runtime `…/api/copilotkit
 | `supabase/` | Migrations + edge functions (the canonical migration tree for this repo). |
 | `public/` | Static assets served by Next.js. |
 | `config/` | Tooling config (`mcporter.json`). |
-| `commerce/` | Standalone commerce work — `b2c-storefront/`, `mercur/`. |
+| `commerce/` | Standalone commerce — `mercur/` (tracked); `b2c-storefront/` local reference (gitignored). |
+| `graphify-out/` | Generated codebase graph (`graph.json`, `GRAPH_REPORT.md`) — gitignored, rebuilt on commit. |
+| `.worktrees/` | Canonical linked worktrees (`wt-san-NNN-slug/`) — gitignored. |
 | `workspace/` | Scratch / infra-workflow working area (`skills/`, worktree notes). |
-| `github/` | Vendored reference repos. |
+| `github/` | Vendored reference clones — gitignored (`/github/`). |
 | `.claude/` | Claude Code config — **skills scan root** (`.claude/skills/`), hooks, settings. |
 | `.agents/` | Canonical skill source library (not scanned; symlinked into `.claude/skills/`). |
 | `.mastra/` | Mastra build/runtime output. |
@@ -49,7 +51,11 @@ Local URLs: UI `http://localhost:3001` · CopilotKit runtime `…/api/copilotkit
 | File | Purpose |
 |---|---|
 | [`CLAUDE.md`](./CLAUDE.md) | Project instructions for Claude Code — hard rules, architecture, commands. **Read first.** |
+| [`index.md`](./index.md) | This file — repo map. |
+| [`lean.md`](./lean.md) | Lean orchestrator (class D/C/U/S, verify gates, pairing). |
+| [`prd.md`](./prd.md) · [`roadmap.md`](./roadmap.md) · [`plan.md`](./plan.md) | PRD index, roadmap, plan snapshot. |
 | [`DESIGN.MD`](./DESIGN.MD) | Color tokens (oklch), typography, layout, component anatomy, do/don't. **Read before any UI work.** |
+| [`LESSONS.md`](./LESSONS.md) | Past mistakes + hooks that guard each area. |
 | [`sitemap.md`](./sitemap.md) | Status of all routes (LIVE/SHELL/MVP/POST) + API inventory. **Read before adding/editing a route.** |
 | [`linear.md`](./linear.md) | Linear projects, phases, labels, branch naming, cycle, bulk scripts. |
 | [`linear-reference.md`](./linear-reference.md) | Linear taxonomy reference. |
@@ -82,19 +88,41 @@ Local URLs: UI `http://localhost:3001` · CopilotKit runtime `…/api/copilotkit
 
 ## Docs map (`docs/`)
 
-| Path | What it owns |
+> **Master router:** [`docs/index-docs.md`](./docs/index-docs.md) — freshness dots, events SoT, known gaps.
+> **Restore:** squash-merged via PR #158 (`6542210`); **3,460** paths tracked in git on `main`.
+
+| Path | What it owns | Tracked files |
+|---|---|---:|
+| [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) | Full app architecture onboarding. | 1 |
+| [`docs/README.md`](./docs/README.md) | Docs entry point. | 1 |
+| [`docs/tasks/`](./docs/tasks/) | **Execution backlog** — [`INDEX.md`](./docs/tasks/INDEX.md), `CONVENTIONS.md`, `MVP-REQUIRED.md`; domains: `events` (301), `partners` (160), `design`, `maps`, `real-estate`, `payments`, `mastra`, `copilotkit`, `testing/evidence`, … | ~1,400+ |
+| [`docs/prd/`](./docs/prd/) | App PRDs (canonical PRD v6.0 still at outer `plan/prd.md`). | varies |
+| [`docs/strategy/`](./docs/strategy/) · `strategic-audit.md` · `revenue-strategy*.md` | Strategy + revenue planning. | varies |
+| [`docs/wireframes/`](./docs/wireframes/) · [`docs/design/`](./docs/design/) | Wire specs + design system inventory. | 35 + 158 |
+| [`docs/screenshots/`](./docs/screenshots/) | Captured screens — **local symlink** → `/home/sk/mdeai/screenshots` (gitignored). | 0 in git |
+| [`docs/copilotkit-mastra/`](./docs/copilotkit-mastra/) | CopilotKit + Mastra integration research. | 6 |
+| [`docs/ecommerce/`](./docs/ecommerce/) | Medusa commerce tasks + evidence (`ECOM-C-*`). | 70 |
+| [`docs/partners/`](./docs/partners/) | Partner stack (ptr001–014). | 160 |
+| [`docs/restaurant/`](./docs/restaurant/) | Restaurant booking research (`04`–`08` mastra/openclaw). | 8 |
+| [`docs/events/`](./docs/events/) | Events notes + archives (plus [`docs/tasks/events/`](./docs/tasks/events/) as execution SoT). | local notes |
+| [`docs/research/`](./docs/research/) | Deep audits; `**/repos/` vendored clones gitignored. | markdown only |
+| [`docs/linear/`](./docs/linear/) · [`docs/audits/`](./docs/audits/) · [`docs/notes/`](./docs/notes/) | Linear exports, audits, session notes. | varies |
+| [`docs/docs-vault/`](./docs/docs-vault/) | Obsidian reference vault (gitignored bulk). | 0 in git |
+| [`docs/graphify-reference.md`](./docs/graphify-reference.md) | Graphify hook + `graphify-out/` usage. | 1 |
+| [`docs/localhost-qa-runbook.md`](./docs/localhost-qa-runbook.md) · `task-backlog.md` | QA runbook + backlog snapshot. | 2 |
+
+### Docs restore verification (2026-06-10)
+
+| Check | Result |
 |---|---|
-| [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) | Full app architecture onboarding. |
-| [`docs/README.md`](./docs/README.md) | Docs entry point. |
-| [`docs/tasks/`](./docs/tasks/) | **Execution backlog** (moved into this repo). Index at [`docs/tasks/INDEX.md`](./docs/tasks/INDEX.md); `CONVENTIONS.md`, `MVP-REQUIRED.md`; subdirs per area (`events`, `real-estate`, `maps`, `copilotkit`, `mastra`, `payments`, `intelligence`, `partners`, `testing/evidence`, `dashboard`, …). |
-| [`docs/prd/`](./docs/prd/) | PRDs — commerce marketplace, revenue engine, AI improvement roadmap, chatwoot integration. |
-| [`docs/strategy/`](./docs/strategy/) · `strategic-audit.md` · `revenue-strategy*.md` | Strategy + revenue planning. |
-| [`docs/wireframes/`](./docs/wireframes/) · [`docs/screenshots/`](./docs/screenshots/) | UX wireframes + captured screens. |
-| [`docs/copilotkit-mastra/`](./docs/copilotkit-mastra/) | CopilotKit + Mastra integration research. |
-| [`docs/ecommerce/`](./docs/ecommerce/) · [`docs/partners/`](./docs/partners/) · [`docs/restaurant/`](./docs/restaurant/) | Vertical-specific docs. |
-| [`docs/linear/`](./docs/linear/) · [`docs/audits/`](./docs/audits/) · [`docs/notes/`](./docs/notes/) | Linear exports, audits, working notes. |
-| [`docs/docs-vault/`](./docs/docs-vault/) | Obsidian vault of reference material. |
-| [`docs/localhost-qa-runbook.md`](./docs/localhost-qa-runbook.md) · `task-backlog.md` | QA runbook + backlog snapshot. |
+| Root nav (`lean.md`, `CLAUDE.md`, `plan.md`, `index-skills.md`, `prd.md`, `roadmap.md`, `sitemap.md`, `tasks.md`) | ✅ on disk + tracked |
+| `docs/` tracked in git | **3,460** files |
+| `docs/` on disk (incl. local-only notes) | **3,610** files (+150 local notes / archives) |
+| Gitlinks (nested repos) | **0** |
+| `.claude/` tracked | **311** paths; **34** skills in scan root |
+| Broken symlinks under `docs/` | **0** |
+| `docs/tasks/INDEX.md` relative links | ✅ spot-checked |
+| Intentionally **not** in git | `docs/screenshots/`, `docs/docs-vault/`, `docs/research/**/repos/`, `.obsidian/` caches |
 
 ---
 
@@ -120,5 +148,6 @@ Local URLs: UI `http://localhost:3001` · CopilotKit runtime `…/api/copilotkit
 | Add/edit a page | [`sitemap.md`](./sitemap.md) → `src/app/` |
 | Do UI work | [`DESIGN.MD`](./DESIGN.MD) → `src/components/ui/` |
 | Understand the agent | [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) → `src/mastra/` |
-| Pick up a task | [`docs/tasks/INDEX.md`](./docs/tasks/INDEX.md) · [`todo.md`](./todo.md) |
+| Pick up a task | [`docs/index-docs.md`](./docs/index-docs.md) → [`docs/tasks/INDEX.md`](./docs/tasks/INDEX.md) · [`todo.md`](./todo.md) |
+| Lean workflow / verify class | [`lean.md`](./lean.md) |
 | File a Linear issue | [`linear.md`](./linear.md) |
