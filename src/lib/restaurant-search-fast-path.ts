@@ -14,7 +14,7 @@ export type RestaurantSearchApiParams = {
   neighborhood?: string;
   cuisine?: string;
   queryText?: string;
-  priceTier?: "$" | "$$" | "$$$";
+  priceTier?: "$" | "$$" | "$$$" | "$$$$";
   userLatitude?: number;
   userLongitude?: number;
   limit?: number;
