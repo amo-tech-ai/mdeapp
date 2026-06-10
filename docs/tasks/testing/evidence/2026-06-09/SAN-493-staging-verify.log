@@ -1,0 +1,30 @@
+psql:docs/tasks/testing/scripts/san493-seed-verify.sql:7: NOTICE:  table "_san493_verify_results" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+DO
+DO
+INSERT 0 1
+DO
+DO
+DO
+INSERT 0 1
+
+=== SAN-493 SEED VERIFY ===
+            test_name             | result |                                                                               detail                                                                                
+----------------------------------+--------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ anon_sees_offerings              | PASS   | count=3 (expect >=3)
+ anon_sees_six_san493_venues      | PASS   | count=6 (expect >=6)
+ draft_partner_location_invisible | PASS   | visible=0 (expect 0)
+ draft_partner_proposal_fails     | PASS   | bookings.resource_id 00000000-0000-4000-a000-000000000032 must be a verified event-capable partner_location for active partner 00000000-0000-4000-a000-000000000014
+ mamacita_has_package             | PASS   | packages=1
+ mamacita_proposal_insert_ok      | PASS   | insert ok
+ six_partners_active_venue        | PASS   | partners=6
+(7 rows)
+
+
+ overall  
+----------
+ ALL PASS
+(1 row)
+
+DROP TABLE
