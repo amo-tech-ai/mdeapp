@@ -47,7 +47,7 @@ async function fetchEventSearch(
 
 export function useEventSearchFastPath() {
   const { state, setState } = useConciergeCoAgent();
-  const { clarifyPending, showClarify, showExchange, clearLocalMessages } =
+  const { clarifyPending, clarifyKind, showClarify, showExchange, clearLocalMessages } =
     useEventLocalChat();
   const { setToolResult } = useEventFastPath();
   const { setToolResult: setRestaurantToolResult } = useRestaurantFastPath();
@@ -151,6 +151,8 @@ export function useEventSearchFastPath() {
     async (text: string): Promise<boolean> => {
       const trimmed = text.trim();
       if (!trimmed) return false;
+      if (clarifyPending && clarifyKind === "restaurant") return false;
+      if (clarifyPending && clarifyKind === "rental") return false;
 
       const memory: ConciergeWorkingMemory = {
         ...(state ?? {}),
@@ -183,7 +185,7 @@ export function useEventSearchFastPath() {
       clearLocalMessages();
       return runSearch(trimmed, params, memory);
     },
-    [clarifyPending, clearLocalMessages, runSearch, setToolResult, setRestaurantToolResult, showClarify, state],
+    [clarifyKind, clarifyPending, clearLocalMessages, runSearch, setToolResult, setRestaurantToolResult, showClarify, state],
   );
 
   const handleEventChip = useCallback(

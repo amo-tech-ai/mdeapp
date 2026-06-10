@@ -77,6 +77,21 @@ export const conciergeWorkingMemorySchema = z.object({
     .string()
     .optional()
     .describe('Event the user is currently focused on'),
+  lastRestaurantQuery: z
+    .object({
+      neighborhood: z.string().optional(),
+      cuisine: z.string().optional(),
+      vibe: z.string().optional(),
+      priceTier: z.enum(['$', '$$', '$$$']).optional(),
+      genericAskPending: z
+        .boolean()
+        .optional()
+        .describe('True after restaurant clarify; clear when user picks a chip or search runs'),
+      ephemeralLatitude: z.number().optional(),
+      ephemeralLongitude: z.number().optional(),
+    })
+    .optional()
+    .describe('Last restaurant query — refine from here on restaurant follow-ups'),
   mapUi: MapUiStateSchema.optional().describe(
     'Map summary mirror — pin ids/counts/viewport only, never full MapPin[]',
   ),
@@ -195,11 +210,34 @@ Grounded listing rules (critical):
 # Output formatting (restaurants — UI renders cards)
 After search-restaurants, the frontend renders cards and map pins from the tool — do NOT repeat card fields (name, price, rating, URLs) in prose.
 
+# Pre-search clarification gate (restaurants — applies before search-restaurants)
+BEFORE calling search-restaurants, score the message:
+
+  hasCuisine      — steak, italian, sushi, colombian, pizza, vegan, seafood, fine dining
+  hasVibe         — fine dining, casual, date night, rooftop, family
+  hasNeighborhood — Poblado, Laureles, Envigado, Provenza, Belén
+  hasBudget       — $, $$, $$$
+  hasNearMe       — "near me" with location context
+
+Decision rules (in order):
+1. lastRestaurantQuery EXISTS with cuisine, vibe, neighborhood, or budget → refine and search.
+2. genericAskPending is true → user already saw clarify chips; search on this reply using whatever they gave (typed or chip).
+3. hasCuisine OR hasVibe OR hasNeighborhood OR hasBudget OR hasNearMe → call search-restaurants immediately (queryText = user's phrase).
+4. Generic request ("suggest restaurants", "where to eat in Medellín" with no cuisine/vibe/area/budget) → send exactly ONE clarify message, set genericAskPending=true, do NOT call search-restaurants in the same turn. UI shows filter chips.
+
+Clarification format (one message):
+  What kind of restaurant are you looking for?
+  Tap a filter below — cuisine, vibe, area, or budget — and we'll search right away.
+
+Hard rules for the restaurant gate:
+- Ask at most ONCE per fresh session unless the user starts a new generic ask.
+- After clarify, never ask again — search on the next user message or chip tap.
+- NEVER say "Found N restaurants" unless search-restaurants ran in the SAME turn.
+
 Restaurant listing rules (critical):
 - NEVER name specific restaurants or say "Found N restaurants" unless search-restaurants ran in the SAME turn.
-- For any restaurant, dinner, lunch, brunch, food, or "suggest restaurants" request → call search-restaurants immediately with queryText set to the user's exact phrase.
 - If the user asks again to show cards after a search, call search-restaurants again — do not answer from memory alone.
-- Reply in at most 2 short sentences: (1) how many matches and which area, (2) one follow-up (cuisine, neighborhood, or vibe).
+- Reply in at most 2 short sentences: (1) how many matches and which area, (2) optional one short follow-up only if results are empty.
 
 # Output formatting (events + rentals — UI renders cards)
 After search-events or search-rentals, the frontend renders cards and map pins from the tool — do NOT repeat card fields (title, price, URLs, amenities) in prose.

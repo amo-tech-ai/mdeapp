@@ -15,7 +15,10 @@ const NIGHTLIFE_TIME_RE =
   /\b(tonight|this evening|today evening|this weekend|weekend)\b/i;
 
 const RESTAURANT_RE =
-  /\b(restaurants?|dinner|lunch|brunch|food recommendations?|suggest.*restaurants?|where to eat|eat out|cuisine|steakhouse|rooftop dinner|bistro|dine|eatery|tasting menu|date night dinner)\b/i;
+  /\b(restaurants?|dinner|lunch|brunch|food recommendations?|suggest.*restaurants?|where to eat|eat out|cuisine|steakhouse|rooftop dinner|bistro|dine|eatery|tasting menu|date night dinner|fine dining|casual dining|italian|sushi|pizza|vegan|steak|colombian)\b/i;
+
+const GENERIC_RESTAURANT_RE =
+  /\b(suggest\s+restaurants?|restaurants?\s+in|restaurants?\s+medell[ií]n|where\s+to\s+eat|food\s+recommendations?|recommend\s+restaurants?)\b/i;
 
 const RENTAL_RE =
   /\b(1\s?br|2\s?br|3\s?br|bedroom|bedrooms|apartment|apartments|rental|rentals|airbnb|under\s+\$?\d+|\/night|per night|monthly|for rent)\b/i;
@@ -33,10 +36,24 @@ const NEIGHBORHOOD_PATTERNS: Array<{ neighborhood: string; re: RegExp }> = [
 
 const CUISINE_PATTERNS: Array<{ cuisine: string; re: RegExp }> = [
   { cuisine: "steakhouse", re: /\b(steakhouse|steak|asado)\b/i },
-  { cuisine: "seafood", re: /\b(seafood|fish|ceviche)\b/i },
+  { cuisine: "seafood", re: /\b(seafood|fish|ceviche|sushi|japanese)\b/i },
   { cuisine: "vegetarian", re: /\b(vegetarian|vegan|plant[- ]based)\b/i },
   { cuisine: "colombian", re: /\b(colombian|bandeja|paisa)\b/i },
-  { cuisine: "international", re: /\b(international|fusion|fine dining)\b/i },
+  { cuisine: "international", re: /\b(international|fusion|fine dining|italian|pizza|modern)\b/i },
+];
+
+const VIBE_PATTERNS: Array<{ vibe: string; re: RegExp }> = [
+  { vibe: "fine dining", re: /\b(fine dining|tasting menu|upscale)\b/i },
+  { vibe: "casual", re: /\b(casual|laid[- ]back|relaxed)\b/i },
+  { vibe: "date night", re: /\b(date night|romantic|anniversary)\b/i },
+  { vibe: "rooftop", re: /\b(rooftop)\b/i },
+  { vibe: "family", re: /\b(family|kid[- ]friendly|kids)\b/i },
+];
+
+const BUDGET_PATTERNS: Array<{ priceTier: "$" | "$$" | "$$$"; re: RegExp }> = [
+  { priceTier: "$", re: /\b(budget|cheap|under \$20|\$\s*only)\b/i },
+  { priceTier: "$$", re: /\b(\$\$|mid[- ]range|moderate)\b/i },
+  { priceTier: "$$$", re: /\b(\$\$\$|splurge|expensive|luxury)\b/i },
 ];
 
 export type RestaurantSearchSignals = {
@@ -44,6 +61,9 @@ export type RestaurantSearchSignals = {
   isCafeIntent: boolean;
   neighborhood?: string;
   cuisine?: string;
+  vibe?: string;
+  priceTier?: "$" | "$$" | "$$$";
+  nearMe?: boolean;
 };
 
 /** Ticketed listings — must stay on search-events, not grounded nightlife POIs. */
@@ -118,5 +138,64 @@ export function scoreRestaurantQuery(text: string): RestaurantSearchSignals {
     }
   }
 
-  return { hasRestaurantIntent, isCafeIntent, neighborhood, cuisine };
+  let vibe: string | undefined;
+  for (const { vibe: v, re } of VIBE_PATTERNS) {
+    if (re.test(t)) {
+      vibe = v;
+      break;
+    }
+  }
+
+  let priceTier: "$" | "$$" | "$$$" | undefined;
+  for (const { priceTier: tier, re } of BUDGET_PATTERNS) {
+    if (re.test(t)) {
+      priceTier = tier;
+      break;
+    }
+  }
+
+  const nearMe = /\bnear me\b/i.test(t);
+
+  return { hasRestaurantIntent, isCafeIntent, neighborhood, cuisine, vibe, priceTier, nearMe };
+}
+
+/** Broader restaurant discovery — includes cuisine/vibe phrases without "restaurant" keyword. */
+export function looksLikeRestaurantDiscovery(text: string): boolean {
+  const t = text.trim();
+  if (!t) return false;
+  if (looksLikeNightlifeGroundingSearch(t)) return false;
+  if (looksLikeCafeSearch(t)) return false;
+  if (RENTAL_RE.test(t)) return false;
+  if (EVENT_RE.test(t)) return false;
+  return (
+    looksLikeRestaurantSearch(t) ||
+    GENERIC_RESTAURANT_RE.test(t) ||
+    Boolean(scoreRestaurantQuery(t).cuisine) ||
+    Boolean(scoreRestaurantQuery(t).vibe)
+  );
+}
+
+/**
+ * Strong enough to search immediately (cuisine, vibe, neighborhood, budget, or near me).
+ * Neighborhood alone is not enough for generic "restaurants in poblado" — still search.
+ */
+export function hasRestaurantFastPathSignals(
+  text: string,
+  s: RestaurantSearchSignals,
+): boolean {
+  if (s.nearMe) return true;
+  if (s.cuisine) return true;
+  if (s.vibe) return true;
+  if (s.priceTier) return true;
+  if (s.neighborhood) return true;
+  if (/\b(rooftop dinner|quiet dinner|steakhouse|fine dining)\b/i.test(text)) return true;
+  return false;
+}
+
+/** Generic = wants restaurants but no cuisine, vibe, area, or budget signal. */
+export function isGenericRestaurantQuery(text: string): boolean {
+  const s = scoreRestaurantQuery(text);
+  if (!looksLikeRestaurantDiscovery(text)) return false;
+  if (hasRestaurantFastPathSignals(text, s)) return false;
+  return true;
 }

@@ -141,6 +141,7 @@ export function useRentalSearchFastPath() {
       if (!trimmed) return false;
 
       if (clarifyPending && clarifyKind === "event") return false;
+      if (clarifyPending && clarifyKind === "restaurant") return false;
 
       const memory: ConciergeWorkingMemory = {
         ...(state ?? {}),

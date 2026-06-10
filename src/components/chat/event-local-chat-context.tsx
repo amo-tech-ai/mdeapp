@@ -17,7 +17,7 @@ export type EventLocalChatMessage = {
   isClarify?: boolean;
 };
 
-export type LocalClarifyKind = "event" | "rental";
+export type LocalClarifyKind = "event" | "rental" | "restaurant";
 
 type EventLocalChatContextValue = {
   messages: EventLocalChatMessage[];

@@ -38,6 +38,16 @@ export type ConciergeWorkingMemory = {
     date?: string;
   }>;
   selectedEventId?: string;
+  lastRestaurantQuery?: {
+    neighborhood?: string;
+    cuisine?: string;
+    vibe?: string;
+    priceTier?: "$" | "$$" | "$$$";
+    genericAskPending?: boolean;
+    /** Ephemeral — used only for the active near-me search; never persisted to storage. */
+    ephemeralLatitude?: number;
+    ephemeralLongitude?: number;
+  };
   mapUi?: import("@/platform/contracts/map-ui-state").MapUiState;
 };
 
