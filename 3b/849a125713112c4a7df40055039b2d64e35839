@@ -1,0 +1,24 @@
+src/lib/supabase/database.types.ts
+  s_833826747c954b::t_89425a6b7b8ea1 452,2460-2462,2465,2469,2475,2479,2482,2492-2494,2497,2501,2507,2511,2514,2524-2526,2529,2533,2539,2543,2546,5672-5721,7738-7739
+src/lib/venues/fetch-event-venue-offerings.ts
+  s_833826747c954b::t_927e6394c1afb0 69,74
+  s_833826747c954b::t_b7f7ddd5ed3bbf 117-118
+  s_833826747c954b::t_cc1c5e08ce5577 16-24
+  s_833826747c954b::t_03cfa5abdab77c 101-102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "3b849a125713112c4a7df40055039b2d64e35839",
+  "prompts": {},
+  "sessions": {
+    "s_833826747c954b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "08e1e140-66b5-4c6a-8866-b25943278e96",
+        "model": "claude-fable-5"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
