@@ -7,21 +7,6 @@ import type {
 } from "@/lib/venues/event-venue-offerings-types";
 import { isSchemaUnavailableError } from "@/lib/venues/is-schema-unavailable-error";
 
-type LooseClient = SupabaseClient<Record<string, unknown>>;
-
-function asLooseClient(supabase: SupabaseClient<Database>): LooseClient {
-  return supabase as unknown as LooseClient;
-}
-
-// venue_event_offerings / venue_event_packages are not in database.types.ts
-// until the SAN-492 migration is applied, so rows are typed at the boundary.
-type PartnerLocationRow = {
-  id: string;
-  label: string | null;
-  neighborhood: string | null;
-  google_place_id: string;
-};
-
 function mapOffering(row: Record<string, unknown>): EventVenueOfferingSummary {
   return {
     id: String(row.id),
@@ -64,14 +49,11 @@ export async function fetchEventVenueOfferingsByPlaceId(
     return { ok: true, data: null };
   }
 
-  const client = asLooseClient(supabase);
-
-  const { data: locationData, error: locError } = await client
+  const { data: location, error: locError } = await supabase
     .from("partner_locations")
     .select("id, label, neighborhood, google_place_id")
     .eq("google_place_id", trimmed)
     .maybeSingle();
-  const location = locationData as PartnerLocationRow | null;
 
   if (locError) {
     if (isSchemaUnavailableError(locError)) {
@@ -84,7 +66,7 @@ export async function fetchEventVenueOfferingsByPlaceId(
     return { ok: true, data: null };
   }
 
-  const { data: offeringRows, error: offError } = await client
+  const { data: offeringRows, error: offError } = await supabase
     .from("venue_event_offerings")
     .select(
       "id, offering_key, event_types, amenities, minimum_spend, price_per_person_from",
@@ -98,14 +80,12 @@ export async function fetchEventVenueOfferingsByPlaceId(
     return { ok: false, message: offError.message };
   }
 
-  const offerings = ((offeringRows ?? []) as Record<string, unknown>[]).map(
-    mapOffering,
-  );
+  const offerings = (offeringRows ?? []).map(mapOffering);
   if (offerings.length === 0) {
     return { ok: true, data: null };
   }
 
-  const { data: packageRows, error: pkgError } = await client
+  const { data: packageRows, error: pkgError } = await supabase
     .from("venue_event_packages")
     .select("id, name, description, price_from, min_guests, max_guests")
     .eq("partner_location_id", location.id);
@@ -114,9 +94,7 @@ export async function fetchEventVenueOfferingsByPlaceId(
     return { ok: false, message: pkgError.message };
   }
 
-  const packages = ((packageRows ?? []) as Record<string, unknown>[]).map(
-    mapPackage,
-  );
+  const packages = (packageRows ?? []).map(mapPackage);
 
   return {
     ok: true,
