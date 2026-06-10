@@ -1,0 +1,1 @@
+mobile/events/04-detail-booking.md

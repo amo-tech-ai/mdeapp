@@ -3,6 +3,8 @@
 > Stack: Next.js · CopilotKit · Mastra · Supabase · Stripe · Google Maps · Gemini  
 > Updated: June 2026
 
+> **Legacy D-track wireframes:** [`../wireframes-design/`](../wireframes-design/) (SCR/WIRE 00–06, mobile, screens) — not this folder.
+
 ---
 
 ## Vision

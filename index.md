@@ -95,16 +95,19 @@ Local URLs: UI `http://localhost:3001` · CopilotKit runtime `…/api/copilotkit
 |---|---|---:|
 | [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) | Full app architecture onboarding. | 1 |
 | [`docs/README.md`](./docs/README.md) | Docs entry point. | 1 |
-| [`docs/tasks/`](./docs/tasks/) | **Execution backlog** — [`INDEX.md`](./docs/tasks/INDEX.md), `CONVENTIONS.md`, `MVP-REQUIRED.md`; domains: `events` (301), `partners` (160), `design`, `maps`, `real-estate`, `payments`, `mastra`, `copilotkit`, `testing/evidence`, … | ~1,400+ |
+| [`docs/tasks/`](./docs/tasks/) | **Execution backlog** — [`INDEX.md`](./docs/tasks/INDEX.md); compat [`tasks/`](./tasks/) @ repo root → same tree. Domains: `events` (301), `partners` (160), … | ~1,400+ |
 | [`docs/prd/`](./docs/prd/) | App PRDs (canonical PRD v6.0 still at outer `plan/prd.md`). | varies |
 | [`docs/strategy/`](./docs/strategy/) · `strategic-audit.md` · `revenue-strategy*.md` | Strategy + revenue planning. | varies |
-| [`docs/wireframes/`](./docs/wireframes/) · [`docs/design/`](./docs/design/) | Wire specs + design system inventory. | 35 + 158 |
+| [`docs/wireframes/`](./docs/wireframes/) | AI-native marketplace wireframes (June 2026 — auth, consumer, events). | 35 |
+| [`docs/wireframes-design/`](./docs/wireframes-design/) · [`docs/design/wireframes/`](./docs/design/wireframes/) | Legacy D-track SCR/WIRE set (00–06 + mobile + screens). Alias `wireframes-design` → `design/wireframes`. | 75 |
+| [`docs/design/wireframe/`](./docs/design/wireframe/) | HTML lo-fi mockups (cafes, restaurants, nightlife). | 17 |
+| [`docs/design/`](./docs/design/) | Design improvement pack + pages + mockups. | 158 |
 | [`docs/screenshots/`](./docs/screenshots/) | Captured screens — **local symlink** → `/home/sk/mdeai/screenshots` (gitignored). | 0 in git |
 | [`docs/copilotkit-mastra/`](./docs/copilotkit-mastra/) | CopilotKit + Mastra integration research. | 6 |
 | [`docs/ecommerce/`](./docs/ecommerce/) | Medusa commerce tasks + evidence (`ECOM-C-*`). | 70 |
 | [`docs/partners/`](./docs/partners/) | Partner stack (ptr001–014). | 160 |
 | [`docs/restaurant/`](./docs/restaurant/) | Restaurant booking research (`04`–`08` mastra/openclaw). | 8 |
-| [`docs/events/`](./docs/events/) | Events notes + archives (plus [`docs/tasks/events/`](./docs/tasks/events/) as execution SoT). | local notes |
+| [`docs/events/`](./docs/events/) | **Events platform SoT** — symlink → [`docs/tasks/events/`](./docs/tasks/events/) (`todo.md`, `plans/`, `tasks/`, `specs/`, `index-events.md`, 301 files). | 301 |
 | [`docs/research/`](./docs/research/) | Deep audits; `**/repos/` vendored clones gitignored. | markdown only |
 | [`docs/linear/`](./docs/linear/) · [`docs/audits/`](./docs/audits/) · [`docs/notes/`](./docs/notes/) | Linear exports, audits, session notes. | varies |
 | [`docs/docs-vault/`](./docs/docs-vault/) | Obsidian reference vault (gitignored bulk). | 0 in git |
@@ -123,6 +126,7 @@ Local URLs: UI `http://localhost:3001` · CopilotKit runtime `…/api/copilotkit
 | Broken symlinks under `docs/` | **0** |
 | `docs/tasks/INDEX.md` relative links | ✅ spot-checked |
 | Intentionally **not** in git | `docs/screenshots/`, `docs/docs-vault/`, `docs/research/**/repos/`, `.obsidian/` caches |
+| Compat symlinks (untracked until next PR) | `docs/events` → `tasks/events`, `tasks/` → `docs/tasks`, `docs/plan.md` → root nav, `MVP-EXECUTION` alias |
 
 ---
 
