@@ -1,0 +1,19 @@
+src/hooks/use-event-venue-offerings.ts
+  s_833826747c954b::t_06deec0e0fc5f8 30-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "fb476d41c8fe10ed1de1414cf6c244d2a26ba36e",
+  "prompts": {},
+  "sessions": {
+    "s_833826747c954b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "08e1e140-66b5-4c6a-8866-b25943278e96",
+        "model": "claude-fable-5"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
