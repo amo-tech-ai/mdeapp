@@ -1,0 +1,1066 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>mdeai · Explore + Concierge — luxury Medellín OS mockup</title>
+<!--
+  mdeai Explore + Concierge mockup — DESIGN TARGET, not production code.
+  3-column "luxury Medellín OS": left nav rail · center AI-concierge-led discovery
+  (scroll storytelling) · right sticky interactive map synced to the cards.
+  Light luxury direction + restrained palette (user-confirmed 2026-06-04):
+    Teal  = every interactive / nav / status-confirmed / map-pin / "why"
+    Gold  = AI-concierge signature only (search ✦, concierge orb, Ask CTAs, FAB) + rating stars
+    Neutrals = pills, tags, icons, badges, skeletons
+    Warm stone = one photo-placeholder tint (real Places photos carry color in prod)
+  Tokens are the REAL shipped LIGHT values from mdeapp/src/app/globals.css :root.
+  Self-contained / offline-safe. Playfair Display is progressive enhancement over Georgia.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ---- shipped LIGHT tokens (globals.css :root) ---- */
+    --background: oklch(0.985 0.002 247);
+    --foreground: oklch(0.208 0.042 265);
+    --card: oklch(1 0 0);
+    --primary: oklch(0.508 0.118 175);        /* teal */
+    --primary-foreground: oklch(0.985 0.002 247);
+    --secondary: oklch(0.968 0.007 247);
+    --muted: oklch(0.968 0.007 247);
+    --muted-foreground: oklch(0.554 0.046 257);
+    --accent: oklch(0.795 0.184 86);           /* warm gold */
+    --accent-foreground: oklch(0.208 0.042 265);
+    --border: oklch(0.929 0.013 255);
+    --border-strong: oklch(0.882 0.02 256);
+    --radius: 0.625rem;
+    --shadow-sm: 0 1px 2px oklch(0.2 0.04 265 / 0.06);
+    --shadow-md: 0 6px 20px oklch(0.2 0.04 265 / 0.08);
+    --shadow-lg: 0 18px 48px oklch(0.2 0.04 265 / 0.14);
+    --rail-w: 236px;
+    --map-w: clamp(360px, 34vw, 560px);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; background: var(--background); color: var(--foreground);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, "Geist", sans-serif;
+    -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.5;
+  }
+  a { color: inherit; text-decoration: none; }
+  .serif { font-family: "Playfair Display", Georgia, "Times New Roman", serif; }
+  ::selection { background: oklch(0.508 0.118 175 / 0.18); }
+
+  /* ============ APP SHELL (3 columns) ============ */
+  .app { display: grid; grid-template-columns: var(--rail-w) minmax(0, 1fr) var(--map-w); min-height: 100vh; }
+
+  /* ============ LEFT NAV RAIL ============ */
+  .rail {
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    border-right: 1px solid var(--border); background: var(--card);
+    padding: 20px 16px; display: flex; flex-direction: column; gap: 4px;
+  }
+  .wordmark { font-weight: 700; letter-spacing: -0.03em; font-size: 20px; padding: 4px 10px 14px; display: flex; align-items: center; gap: 8px; }
+  .wordmark b { color: var(--primary); }
+  .wordmark .sp { width: 22px; height: 22px; border-radius: 7px; background: radial-gradient(circle at 32% 30%, var(--accent), oklch(0.7 0.16 80)); box-shadow: var(--shadow-sm); display: inline-block; }
+  .navitem {
+    display: flex; align-items: center; gap: 11px; padding: 9px 11px; border-radius: 10px;
+    color: var(--muted-foreground); font-weight: 500; cursor: pointer; transition: background .14s, color .14s;
+  }
+  .navitem .gi { font-size: 16px; width: 20px; text-align: center; }
+  .navitem:hover { background: var(--secondary); color: var(--foreground); }
+  .navitem.on { background: oklch(0.508 0.118 175 / 0.10); color: var(--primary); font-weight: 600; }
+  .navitem .badge { margin-left: auto; font-size: 10.5px; font-weight: 700; background: var(--secondary); color: var(--muted-foreground); border-radius: 999px; padding: 1px 7px; }
+  .navitem.on .badge { background: var(--primary); color: var(--primary-foreground); }
+  .rail-sep { height: 1px; background: var(--border); margin: 12px 6px; }
+  .rail-label { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-foreground); font-weight: 700; padding: 4px 11px 6px; }
+  .rail-foot { margin-top: auto; }
+  .userchip {
+    display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 12px; margin-top: 8px;
+    border: 1px solid var(--border); background: var(--background); cursor: pointer; transition: box-shadow .14s;
+  }
+  .userchip:hover { box-shadow: var(--shadow-sm); }
+  .userchip .av { width: 34px; height: 34px; border-radius: 50%; flex: none; display: grid; place-items: center; color: #fff; font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), oklch(0.42 0.10 200)); }
+  .userchip .nm { font-weight: 600; font-size: 13px; line-height: 1.2; }
+  .userchip .hd { color: var(--muted-foreground); font-size: 11.5px; }
+
+  /* ============ BUTTONS ============ */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    border: 1px solid var(--border-strong); background: var(--card); color: var(--foreground);
+    border-radius: 999px; padding: 9px 16px; font: inherit; font-weight: 600; cursor: pointer;
+    transition: background .15s, border-color .15s, transform .1s, box-shadow .15s; box-shadow: var(--shadow-sm);
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .btn-primary { background: var(--primary); color: var(--primary-foreground); border-color: transparent; }
+  .btn-accent { background: var(--accent); color: var(--accent-foreground); border-color: transparent; }
+  .btn-accent:hover { filter: brightness(1.04); }
+  .btn-ghost { border-color: transparent; background: transparent; color: var(--muted-foreground); box-shadow: none; }
+  .btn-ghost:hover { color: var(--foreground); background: var(--secondary); box-shadow: none; }
+  .btn-sm { padding: 7px 13px; font-size: 12.5px; }
+
+  /* ============ CENTER COLUMN ============ */
+  .center { min-width: 0; }
+  .center-inner { max-width: 880px; margin: 0 auto; padding: 26px 30px 120px; }
+
+  .locrow { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .loc { display: inline-flex; align-items: center; gap: 8px; font-family: "Playfair Display", Georgia, serif; font-size: 30px; font-weight: 600; letter-spacing: -0.02em; background: none; border: 0; padding: 0; cursor: pointer; color: var(--foreground); }
+  .loc .chev { font-size: 17px; color: var(--muted-foreground); }
+  .loc-meta { color: var(--muted-foreground); font-size: 13px; padding-bottom: 6px; }
+
+  /* sticky search + tabs */
+  .topstick { position: sticky; top: 0; z-index: 30; padding: 14px 0 8px; margin-top: 14px;
+    background: linear-gradient(180deg, var(--background) 72%, transparent); }
+  .search {
+    display: flex; align-items: center; gap: 11px; height: 52px; padding: 0 8px 0 18px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 999px; box-shadow: var(--shadow-md);
+  }
+  .search:focus-within { border-color: var(--border-strong); box-shadow: var(--shadow-lg); }
+  .search .ai { color: var(--accent); font-size: 17px; }
+  .search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 15px; color: var(--foreground); }
+  .search input::placeholder { color: var(--muted-foreground); }
+  .tabs { display: flex; gap: 6px; overflow-x: auto; margin-top: 12px; padding-bottom: 4px; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { flex: none; border: 1px solid transparent; background: transparent; color: var(--muted-foreground);
+    border-radius: 999px; padding: 7px 14px; font: inherit; font-weight: 600; font-size: 13px; cursor: pointer; white-space: nowrap; transition: background .14s, color .14s; }
+  .tab:hover { background: var(--secondary); color: var(--foreground); }
+  .tab.on { background: var(--primary); color: var(--primary-foreground); }
+
+  /* ============ AI CONCIERGE PANEL ============ */
+  .concierge {
+    position: relative; margin-top: 18px; border-radius: calc(var(--radius) * 1.5); overflow: hidden;
+    border: 1px solid var(--border); box-shadow: var(--shadow-md); padding: 22px 24px;
+    background:
+      radial-gradient(120% 140% at 92% 6%, oklch(0.95 0.075 86 / 0.7), transparent 56%),
+      linear-gradient(180deg, var(--card), var(--card));
+    display: grid; grid-template-columns: 46px 1fr; gap: 16px;
+  }
+  .orb { width: 46px; height: 46px; border-radius: 50%; box-shadow: var(--shadow-md), 0 0 0 5px oklch(1 0 0 / 0.6);
+    background: radial-gradient(circle at 30% 28%, #fff, var(--accent) 62%, oklch(0.7 0.16 78)); }
+  .cx-greet { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .cx-sub { color: var(--muted-foreground); font-size: 14px; margin-top: 3px; max-width: 60ch; }
+  .cx-prompts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .prompt {
+    display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--border); background: var(--card);
+    color: var(--foreground); border-radius: 999px; padding: 7px 13px; font: inherit; font-weight: 600; font-size: 12.5px;
+    cursor: pointer; box-shadow: var(--shadow-sm); transition: transform .1s, box-shadow .14s, border-color .14s;
+  }
+  .prompt:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); border-color: var(--border-strong); }
+  .prompt .ai { color: var(--accent); }
+
+  /* ============ SECTIONS ============ */
+  section { margin-top: 40px; }
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .5s ease, transform .5s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  .sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+  .sec-head h2 { margin: 0; font-size: 23px; letter-spacing: -0.01em; font-weight: 600; }
+  .sec-head .sub { color: var(--muted-foreground); font-size: 13px; margin-top: 2px; }
+  .sec-head a.see { color: var(--primary); font-weight: 600; font-size: 13px; white-space: nowrap; }
+  .sec-head a.see:hover { text-decoration: underline; }
+
+  .scroller { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(248px, 1fr); gap: 16px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x proximity; scrollbar-width: thin; }
+  .scroller > * { scroll-snap-align: start; }
+  .scroller::-webkit-scrollbar { height: 8px; }
+  .scroller::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 8px; }
+
+  /* ============ CARDS ============ */
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+    display: flex; flex-direction: column; transition: border-color .15s, transform .14s, box-shadow .18s; box-shadow: var(--shadow-sm);
+  }
+  .card:hover, .card.active { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+  .thumb { position: relative; aspect-ratio: 16/10; }
+  .thumb .badges { position: absolute; left: 10px; top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .thumb .heart { position: absolute; right: 10px; top: 10px; width: 32px; height: 32px; border-radius: 50%;
+    background: oklch(1 0 0 / 0.88); display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow-sm);
+    transition: transform .12s; border: 0; color: var(--foreground); font-size: 15px; }
+  .thumb .heart:hover { transform: scale(1.08); }
+  .thumb .heart.sv { color: var(--primary); }
+  .pill { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: oklch(1 0 0 / 0.9); color: var(--foreground); box-shadow: var(--shadow-sm); }
+  .pill.dark { background: oklch(0.18 0.03 265 / 0.66); color: #fff; backdrop-filter: blur(4px); box-shadow: none; }
+  /* faux premium photography — ONE pale-teal placeholder (#E1F6F2) */
+  .ph { background-size: cover; background-position: center;
+    background-image: linear-gradient(150deg, oklch(0.970 0.015 180), oklch(0.926 0.030 184)); }
+  .ph-vig::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 58%, oklch(0.48 0.03 195 / 0.07)); }
+  .card-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .card-body .name { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; }
+  .row { display: flex; align-items: center; gap: 7px; color: var(--muted-foreground); font-size: 12.5px; flex-wrap: wrap; }
+  .star { color: var(--accent); font-weight: 700; }
+  .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-strong); display: inline-block; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--secondary); color: var(--muted-foreground); border: 1px solid var(--border); }
+  .why { display: flex; align-items: flex-start; gap: 6px; font-size: 11.5px; color: var(--primary); background: oklch(0.508 0.118 175 / 0.10); border-radius: 8px; padding: 6px 9px; line-height: 1.35; }
+  .why b { font-weight: 700; }
+  .actions { display: flex; gap: 8px; margin-top: auto; padding-top: 4px; }
+  .actions .btn { flex: 1; }
+
+  /* ============ NEIGHBORHOOD INTELLIGENCE ============ */
+  .hood-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(252px, 1fr)); gap: 16px; }
+  .hood { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); transition: transform .14s, box-shadow .18s, border-color .15s; }
+  .hood:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--border-strong); }
+  .hood .head { position: relative; aspect-ratio: 16/8; }
+  .hood .head .overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, oklch(1 0 0 / 0.92)); }
+  .hood .head .nm { position: absolute; left: 14px; bottom: 10px; font-family: "Playfair Display", Georgia, serif; font-size: 20px; font-weight: 700; color: var(--foreground); }
+  .hood .head .score { position: absolute; right: 12px; top: 12px; font-size: 11px; font-weight: 700; background: oklch(1 0 0 / 0.92); border: 1px solid var(--border); border-radius: 999px; padding: 3px 9px; box-shadow: var(--shadow-sm); }
+  .hood .head .score b { color: var(--primary); }
+  .hood-body { padding: 13px 15px 15px; }
+  .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 16px; }
+  .m { font-size: 11.5px; color: var(--muted-foreground); }
+  .m i { display: block; height: 6px; border-radius: 4px; margin-top: 4px;
+    background: linear-gradient(90deg, var(--primary) 0, var(--primary) var(--v, 70%), var(--border) var(--v, 70%)); }
+  .insight { font-size: 12.5px; color: var(--muted-foreground); margin-top: 12px; line-height: 1.45; }
+  .insight b { color: var(--foreground); }
+  .hood .actions { margin-top: 13px; }
+
+  /* ============ COLLECTIONS ============ */
+  .coll-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .coll { position: relative; border-radius: var(--radius); overflow: hidden; aspect-ratio: 3/2; box-shadow: var(--shadow-sm); cursor: pointer; transition: transform .14s, box-shadow .18s; }
+  .coll:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .coll .overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 42%, oklch(1 0 0 / 0.94)); }
+  .coll .label { position: absolute; left: 14px; right: 14px; bottom: 12px; }
+  .coll .label .t { font-weight: 700; font-size: 16px; letter-spacing: -0.01em; }
+  .coll .label .c { font-size: 12px; color: var(--muted-foreground); margin-top: 1px; }
+  .coll .ic { position: absolute; right: 12px; top: 12px; width: 30px; height: 30px; border-radius: 50%; background: oklch(1 0 0 / 0.92); border: 1px solid var(--border); box-shadow: var(--shadow-sm); display: grid; place-items: center; font-size: 14px; }
+
+  /* ============ RESERVATIONS ============ */
+  .resv-list { display: flex; flex-direction: column; gap: 10px; }
+  .resv { display: grid; grid-template-columns: 40px 1fr auto auto; gap: 14px; align-items: center;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; box-shadow: var(--shadow-sm); }
+  .resv .ic { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 16px; background: var(--secondary); border: 1px solid var(--border); }
+  .resv .name { font-weight: 600; }
+  .resv .meta { color: var(--muted-foreground); font-size: 12.5px; }
+  .resv .when { text-align: right; font-size: 12.5px; color: var(--muted-foreground); }
+  .badge-conf { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: oklch(0.508 0.118 175 / 0.14); color: var(--primary); }
+  .badge-pending { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--secondary); color: var(--muted-foreground); border: 1px solid var(--border); }
+
+  /* ============ SKELETON + EMPTY ============ */
+  .sk { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .sk .b { background: linear-gradient(90deg, var(--secondary) 25%, oklch(0.94 0.01 247) 37%, var(--secondary) 63%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; }
+  .sk .b.img { aspect-ratio: 16/10; }
+  .sk .b.line { height: 12px; border-radius: 6px; margin: 12px 14px 0; }
+  .sk .b.line.short { width: 55%; margin-bottom: 14px; }
+  @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+  .empty { text-align: center; border: 1px dashed var(--border-strong); border-radius: var(--radius); padding: 48px 24px; color: var(--muted-foreground); background: var(--card); }
+  .empty .ic { font-size: 28px; margin-bottom: 8px; color: var(--accent); }
+  .empty .t { color: var(--foreground); font-weight: 600; font-size: 16px; }
+  .empty p { margin: 6px auto 16px; max-width: 380px; }
+
+  .center-foot { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted-foreground); font-size: 12.5px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .center-foot a:hover { color: var(--foreground); }
+
+  /* ============ CATEGORY VIEW (tab-swapped card sets) ============ */
+  [hidden] { display: none !important; }
+  .card, .hood, .coll { cursor: pointer; }
+  .cat-head { margin-top: 18px; }
+  .cat-head h1 { margin: 0; font-size: 30px; font-weight: 600; letter-spacing: -0.02em; }
+  .cat-head .sub { color: var(--muted-foreground); font-size: 13.5px; margin-top: 3px; }
+  .cat-filter { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 2px; }
+  .chip { border: 1px solid var(--border); background: var(--card); color: var(--muted-foreground); border-radius: 999px; padding: 6px 13px; font: inherit; font-weight: 600; font-size: 12.5px; cursor: pointer; box-shadow: var(--shadow-sm); transition: color .14s, border-color .14s, background .14s; }
+  .chip:hover { color: var(--foreground); border-color: var(--border-strong); }
+  .chip.on { background: var(--primary); color: var(--primary-foreground); border-color: transparent; }
+  .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(216px, 1fr)); gap: 16px; margin-top: 18px; }
+  #catView { opacity: 0; transform: translateY(10px); }
+  #catView.in { opacity: 1; transform: none; transition: opacity .32s ease, transform .32s ease; }
+  @media (prefers-reduced-motion: reduce) { #catView, #catView.in { opacity: 1; transform: none; transition: none; } }
+
+  /* ============ RIGHT MAP COLUMN ============ */
+  .mapcol { position: sticky; top: 0; height: 100vh; border-left: 1px solid var(--border); }
+  .map { position: relative; height: 100%; overflow: hidden;
+    background:
+      linear-gradient(0deg, oklch(0.93 0.02 160 / 0.45), transparent 36%),
+      linear-gradient(90deg, oklch(0.90 0.015 247), oklch(0.945 0.01 200)); }
+  .map .road { position: absolute; background: oklch(1 0 0 / 0.85); }
+  .map .road.thin { background: oklch(1 0 0 / 0.6); }
+  .map .river { position: absolute; top: 0; bottom: 0; left: 47%; width: 22px; background: linear-gradient(90deg, transparent, oklch(0.78 0.07 220 / 0.5) 30% 70%, transparent); }
+  .map .green { position: absolute; border-radius: 46%; background: oklch(0.84 0.09 150 / 0.5); }
+  .map .hood-tag { position: absolute; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: oklch(0.45 0.03 257 / 0.75); }
+  .mpin { position: absolute; width: 30px; height: 30px; border-radius: 50% 50% 50% 0; transform: translate(-50%, -100%) rotate(-45deg);
+    background: var(--primary); box-shadow: var(--shadow-md); border: 2px solid #fff; display: grid; place-items: center; cursor: pointer; transition: transform .14s; }
+  .mpin span { transform: rotate(45deg); color: #fff; font-size: 13px; }
+  .mpin:hover { transform: translate(-50%, -104%) rotate(-45deg) scale(1.06); }
+  .mpin.hl { z-index: 5; outline: 5px solid oklch(0.508 0.118 175 / 0.24); }
+  .mpin.hl::after { content: attr(data-name); position: absolute; left: 50%; top: -10px; transform: translate(-50%, -100%) rotate(45deg);
+    background: var(--foreground); color: #fff; font-size: 11px; font-weight: 600; white-space: nowrap; padding: 4px 8px; border-radius: 7px; box-shadow: var(--shadow-md); }
+  .map-top { position: absolute; left: 14px; right: 14px; top: 14px; display: flex; gap: 8px; align-items: center; }
+  .map-chip { display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 14px; border-radius: 999px;
+    background: oklch(1 0 0 / 0.82); backdrop-filter: blur(8px); border: 1px solid var(--border); box-shadow: var(--shadow-sm); font-weight: 600; font-size: 12.5px; cursor: pointer; }
+  .map-ctrl { position: absolute; right: 14px; bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+  .map-ctrl button { width: 38px; height: 38px; border-radius: 11px; background: oklch(1 0 0 / 0.9); backdrop-filter: blur(8px);
+    border: 1px solid var(--border); box-shadow: var(--shadow-sm); font: inherit; font-size: 16px; font-weight: 700; color: var(--foreground); cursor: pointer; }
+  .map-ctrl button:hover { background: #fff; }
+  .map-attr { position: absolute; left: 12px; bottom: 12px; font-size: 10px; color: oklch(0.45 0.03 257 / 0.7); }
+
+  /* ============ FLOATING AI CONCIERGE ============ */
+  .fab { position: fixed; right: 26px; bottom: 26px; z-index: 60; display: flex; align-items: center; gap: 10px;
+    padding: 12px 18px 12px 14px; background: var(--accent); color: var(--accent-foreground); border: 0; border-radius: 999px;
+    font: inherit; font-weight: 700; cursor: pointer; box-shadow: var(--shadow-lg); transition: transform .14s, filter .15s; }
+  .fab:hover { transform: translateY(-2px); filter: brightness(1.04); }
+  .fab .orb { width: 24px; height: 24px; box-shadow: 0 0 0 4px oklch(1 0 0 / 0.35); }
+
+  /* ============ MOBILE BOTTOM NAV ============ */
+  .botnav { display: none; }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 1180px) {
+    .app { grid-template-columns: var(--rail-w) minmax(0, 1fr); }
+    .mapcol { display: none; }
+  }
+  @media (max-width: 860px) {
+    .coll-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 760px) {
+    .app { grid-template-columns: 1fr; }
+    .rail { display: none; }
+    .center-inner { padding: 18px 16px 104px; }
+    .loc { font-size: 26px; }
+    .botnav {
+      display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 55; height: 62px;
+      background: color-mix(in oklab, var(--background) 92%, transparent); backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border); justify-content: space-around; align-items: center; padding-bottom: env(safe-area-inset-bottom);
+    }
+    .botnav a { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--muted-foreground); font-size: 10.5px; font-weight: 600; }
+    .botnav a.on { color: var(--primary); }
+    .botnav .gi { font-size: 19px; }
+    .fab { bottom: 78px; }
+  }
+
+  /* ============ MOTION SAFETY ============ */
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+    .reveal { opacity: 1; transform: none; }
+    .sk .b { background: var(--secondary); }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============ LEFT NAV RAIL ============ -->
+  <aside class="rail">
+    <div class="wordmark"><span class="sp" aria-hidden="true"></span>mde<b>·</b>ai</div>
+    <div class="navitem"><span class="gi">⌂</span> Home</div>
+    <div class="navitem on"><span class="gi">✦</span> Explore</div>
+    <div class="navitem"><span class="gi">🗺</span> Trips</div>
+    <div class="navitem"><span class="gi">♥</span> Saved <span class="badge">14</span></div>
+    <div class="navitem"><span class="gi">🎟</span> Events</div>
+    <div class="navitem"><span class="gi">🎫</span> Tickets <span class="badge">3</span></div>
+    <div class="navitem"><span class="gi">▤</span> Collections</div>
+    <div class="navitem"><span class="gi">◔</span> Profile</div>
+
+    <div class="rail-sep"></div>
+    <div class="rail-label">Concierge</div>
+    <div class="navitem"><span class="gi">✧</span> AI Memory</div>
+    <div class="navitem"><span class="gi">⚙</span> Preferences</div>
+    <div class="navitem"><span class="gi">⋯</span> Settings</div>
+
+    <div class="rail-foot">
+      <div class="userchip">
+        <div class="av">S</div>
+        <div><div class="nm">Sanjiv K</div><div class="hd">Concierge · Plus</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ CENTER: CONCIERGE + DISCOVERY ============ -->
+  <main class="center">
+    <div class="center-inner">
+
+      <!-- location -->
+      <div class="locrow">
+        <button class="loc">📍 Medellín <span class="chev">⌄</span></button>
+        <div class="loc-meta">El Poblado · 24°C, clear skies · 6:40 PM</div>
+      </div>
+
+      <!-- sticky search + tabs -->
+      <div class="topstick">
+        <div class="search">
+          <span class="ai" aria-hidden="true">✦</span>
+          <input id="ask" placeholder="Ask anything — “rooftop restaurants in Provenza with a sunset view”" />
+          <button class="btn btn-primary btn-sm">Ask</button>
+        </div>
+        <div class="tabs" role="tablist">
+          <button class="tab on" data-cat="foryou">For you</button>
+          <button class="tab" data-cat="restaurants">Restaurants</button>
+          <button class="tab" data-cat="todo">Things to do</button>
+          <button class="tab" data-cat="events">Events</button>
+          <button class="tab" data-cat="nightlife">Nightlife</button>
+          <button class="tab" data-cat="stays">Stays</button>
+          <button class="tab" data-cat="rentals">Rentals</button>
+          <button class="tab" data-cat="locations">Locations</button>
+          <button class="tab" data-cat="guides">Guides</button>
+          <button class="tab" data-cat="collections">Collections</button>
+        </div>
+      </div>
+
+      <!-- persistent AI concierge -->
+      <div class="concierge">
+        <div class="orb" aria-hidden="true"></div>
+        <div class="cx-body">
+          <div class="cx-greet serif">Good evening, Sanjiv</div>
+          <div class="cx-sub">Based on your saved <b>Nightlife</b> collection and your Guatapé day trip on Jun 9, here's what I'd line up for tonight in El Poblado — three of your saved spots have tables after 8&nbsp;PM.</div>
+          <div class="cx-prompts">
+            <button class="prompt"><span class="ai">✦</span> Build my perfect Friday night</button>
+            <button class="prompt"><span class="ai">✦</span> Romantic restaurants near Provenza</button>
+            <button class="prompt"><span class="ai">✦</span> Rooftop bars open now</button>
+            <button class="prompt"><span class="ai">✦</span> Plan my weekend itinerary</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- empty state shown only for tabs without curated content -->
+      <div id="tabEmpty" class="empty" style="display:none; margin-top:34px">
+        <div class="ic">✦</div>
+        <div class="t">Nothing curated here yet</div>
+        <p>Tell your concierge what you're after — “graffiti tour in Comuna 13” or “a coffee-region guide” — and it'll build this view for you.</p>
+        <button class="btn btn-accent btn-sm">Ask AI Concierge</button>
+      </div>
+
+      <!-- ============ FOR-YOU EDITORIAL SCROLL (signature concierge view) ============ -->
+      <div id="forYouView">
+
+      <!-- 1 · CURATED FOR YOU -->
+      <section data-cat="foryou">
+        <div class="sec-head">
+          <div><h2 class="serif">Curated for you</h2><div class="sub">Tuned to your taste and tonight's context</div></div>
+          <a class="see" href="#">View all →</a>
+        </div>
+        <div class="scroller">
+          <article class="card" data-pin="p-carmen">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Restaurant</span></div><button class="heart" aria-label="Save">♡</button></div>
+            <div class="card-body">
+              <div class="name">Carmen</div>
+              <div class="row"><span class="star">★ 4.7</span><span class="dot"></span><span>$$$</span><span class="dot"></span><span>El Poblado · 1.2 km</span></div>
+              <div class="tags"><span class="tag">Tasting menu</span><span class="tag">Date night</span></div>
+              <div class="why"><span aria-hidden="true">✦</span><span><b>Why:</b> matches your Luxury Dining list · terrace open 8 PM</span></div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Reserve</button><button class="btn btn-sm">Details</button></div>
+            </div>
+          </article>
+          <article class="card" data-pin="p-salon">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Nightlife</span></div><button class="heart sv" aria-label="Saved">♥</button></div>
+            <div class="card-body">
+              <div class="name">Salón Amador</div>
+              <div class="row"><span class="star">★ 4.5</span><span class="dot"></span><span>$$</span><span class="dot"></span><span>Provenza · 0.6 km</span></div>
+              <div class="tags"><span class="tag">Electronic</span><span class="tag">Late</span></div>
+              <div class="why"><span aria-hidden="true">✦</span><span><b>Why:</b> on your Nightlife list · open till 3 AM</span></div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Details</button><button class="btn btn-sm">Ask</button></div>
+            </div>
+          </article>
+          <article class="card" data-pin="p-pergamino">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Café</span></div><button class="heart" aria-label="Save">♡</button></div>
+            <div class="card-body">
+              <div class="name">Pergamino Café</div>
+              <div class="row"><span class="star">★ 4.6</span><span class="dot"></span><span>$$</span><span class="dot"></span><span>Provenza · 0.4 km</span></div>
+              <div class="tags"><span class="tag">Remote work</span><span class="tag">Fast wifi</span></div>
+              <div class="why"><span aria-hidden="true">✦</span><span><b>Why:</b> outlets + quiet AM · 2 min from your loft</span></div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Details</button><button class="btn btn-sm">Ask</button></div>
+            </div>
+          </article>
+          <!-- skeleton: concierge still pulling one more pick -->
+          <div class="sk" aria-hidden="true"><div class="b img"></div><div class="b line"></div><div class="b line short"></div></div>
+        </div>
+      </section>
+
+      <!-- 2 · TRENDING RESTAURANTS -->
+      <section data-cat="restaurants">
+        <div class="sec-head">
+          <div><h2 class="serif">Trending restaurants &amp; cafés</h2><div class="sub">Where Medellín is eating this week</div></div>
+          <a class="see" href="#">View all →</a>
+        </div>
+        <div class="scroller">
+          <article class="card" data-pin="p-oci">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Restaurant</span></div><button class="heart" aria-label="Save">♡</button></div>
+            <div class="card-body">
+              <div class="name">Oci.Mde</div>
+              <div class="row"><span class="star">★ 4.8</span><span class="dot"></span><span>$$$</span><span class="dot"></span><span>El Poblado</span></div>
+              <div class="tags"><span class="tag">Fine dining</span><span class="tag">Wine</span></div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Reserve</button><button class="btn btn-sm">Details</button></div>
+            </div>
+          </article>
+          <article class="card" data-pin="p-carmen">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Restaurant</span></div><button class="heart" aria-label="Save">♡</button></div>
+            <div class="card-body">
+              <div class="name">Carmen</div>
+              <div class="row"><span class="star">★ 4.7</span><span class="dot"></span><span>$$$</span><span class="dot"></span><span>El Poblado</span></div>
+              <div class="tags"><span class="tag">Tasting menu</span><span class="tag">Terrace</span></div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Reserve</button><button class="btn btn-sm">Details</button></div>
+            </div>
+          </article>
+          <article class="card" data-pin="p-pergamino">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Café</span></div><button class="heart" aria-label="Save">♡</button></div>
+            <div class="card-body">
+              <div class="name">Pergamino Café</div>
+              <div class="row"><span class="star">★ 4.6</span><span class="dot"></span><span>$$</span><span class="dot"></span><span>Provenza</span></div>
+              <div class="tags"><span class="tag">Specialty coffee</span></div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Details</button><button class="btn btn-sm">Ask</button></div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Restaurant</span></div><button class="heart" aria-label="Save">♡</button></div>
+            <div class="card-body">
+              <div class="name">El Cielo</div>
+              <div class="row"><span class="star">★ 4.9</span><span class="dot"></span><span>$$$$</span><span class="dot"></span><span>El Poblado</span></div>
+              <div class="tags"><span class="tag">Tasting</span><span class="tag">Special occasion</span></div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Reserve</button><button class="btn btn-sm">Details</button></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 3 · TONIGHT IN MEDELLÍN (events) -->
+      <section data-cat="events">
+        <div class="sec-head">
+          <div><h2 class="serif">Tonight in Medellín</h2><div class="sub">Live music, rooftops and pop-ups near you</div></div>
+          <a class="see" href="#">All events →</a>
+        </div>
+        <div class="scroller">
+          <article class="card" data-pin="p-sonhavana">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill dark">Tonight · 10:30 PM</span></div><button class="heart" aria-label="Save">♡</button></div>
+            <div class="card-body">
+              <div class="name">Salsa Night · Live Orchestra</div>
+              <div class="row"><span>Son Havana</span><span class="dot"></span><span>Laureles</span></div>
+              <div class="tags"><span class="tag">Salsa</span><span class="tag">From $18</span></div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Get tickets</button><button class="btn btn-sm">Details</button></div>
+            </div>
+          </article>
+          <article class="card" data-pin="p-envy">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill dark">Sat · 9:00 PM</span></div><button class="heart" aria-label="Save">♡</button></div>
+            <div class="card-body">
+              <div class="name">Rooftop Sessions w/ DJ Camilo</div>
+              <div class="row"><span>Envy Rooftop</span><span class="dot"></span><span>El Poblado</span></div>
+              <div class="tags"><span class="tag">House</span><span class="tag">VIP</span></div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Get tickets</button><button class="btn btn-sm">Details</button></div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill dark">Sun · 2:00 PM</span></div><button class="heart" aria-label="Save">♡</button></div>
+            <div class="card-body">
+              <div class="name">Comuna 13 Graffiti &amp; Food Tour</div>
+              <div class="row"><span>San Javier</span><span class="dot"></span><span>meets at Metro</span></div>
+              <div class="tags"><span class="tag">Walking tour</span><span class="tag">3 hrs</span></div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Get tickets</button><button class="btn btn-sm">Details</button></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 4 · NIGHTLIFE PICKS -->
+      <section data-cat="nightlife">
+        <div class="sec-head">
+          <div><h2 class="serif">Nightlife picks</h2><div class="sub">Cocktail bars, rooftops and dance floors</div></div>
+          <a class="see" href="#">View all →</a>
+        </div>
+        <div class="scroller">
+          <article class="card" data-pin="p-salon">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Club</span></div><button class="heart sv" aria-label="Saved">♥</button></div>
+            <div class="card-body">
+              <div class="name">Salón Amador</div>
+              <div class="row"><span class="star">★ 4.5</span><span class="dot"></span><span>$$</span><span class="dot"></span><span>Provenza</span></div>
+              <div class="tags"><span class="tag">Electronic</span><span class="tag">Till 3 AM</span></div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Details</button><button class="btn btn-sm">Ask</button></div>
+            </div>
+          </article>
+          <article class="card" data-pin="p-envy">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Rooftop</span></div><button class="heart" aria-label="Save">♡</button></div>
+            <div class="card-body">
+              <div class="name">Envy Rooftop</div>
+              <div class="row"><span class="star">★ 4.2</span><span class="dot"></span><span>$$$</span><span class="dot"></span><span>El Poblado</span></div>
+              <div class="tags"><span class="tag">Cocktails</span><span class="tag">Skyline</span></div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Details</button><button class="btn btn-sm">Ask</button></div>
+            </div>
+          </article>
+          <article class="card" data-pin="p-noir">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Cocktail bar</span></div><button class="heart" aria-label="Save">♡</button></div>
+            <div class="card-body">
+              <div class="name">Café Noir Bar &amp; Lounge</div>
+              <div class="row"><span class="star">★ 4.8</span><span class="dot"></span><span>$$</span><span class="dot"></span><span>Laureles</span></div>
+              <div class="tags"><span class="tag">Mixology</span><span class="tag">Intimate</span></div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Details</button><button class="btn btn-sm">Ask</button></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 5 · LUXURY STAYS & RENTALS -->
+      <section data-cat="stays">
+        <div class="sec-head">
+          <div><h2 class="serif">Luxury stays &amp; rentals</h2><div class="sub">Boutique hotels and apartments tuned to your trip</div></div>
+          <a class="see" href="#">View all →</a>
+        </div>
+        <div class="scroller">
+          <article class="card" data-pin="p-loft">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Rental</span></div><button class="heart" aria-label="Save">♡</button></div>
+            <div class="card-body">
+              <div class="name">Provenza Loft · 2BR</div>
+              <div class="row"><span class="star">★ 4.8</span><span class="dot"></span><span>$140/nt</span><span class="dot"></span><span>Provenza</span></div>
+              <div class="why"><span aria-hidden="true">✦</span><span><b>Why:</b> walkable to cafés you saved · quiet street</span></div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Check dates</button><button class="btn btn-sm">Details</button></div>
+            </div>
+          </article>
+          <article class="card" data-pin="p-astra">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Studio</span></div><button class="heart" aria-label="Save">♡</button></div>
+            <div class="card-body">
+              <div class="name">Astra · Studio w/ balcony</div>
+              <div class="row"><span class="star">★ 4.8</span><span class="dot"></span><span>$98/nt</span><span class="dot"></span><span>Manila</span></div>
+              <div class="why"><span aria-hidden="true">✦</span><span><b>Why:</b> near nightlife you like · sunset balcony</span></div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Check dates</button><button class="btn btn-sm">Details</button></div>
+            </div>
+          </article>
+          <article class="card">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Boutique hotel</span></div><button class="heart" aria-label="Save">♡</button></div>
+            <div class="card-body">
+              <div class="name">The Charlee</div>
+              <div class="row"><span class="star">★ 4.7</span><span class="dot"></span><span>$210/nt</span><span class="dot"></span><span>Lleras</span></div>
+              <div class="why"><span aria-hidden="true">✦</span><span><b>Why:</b> rooftop pool · steps from dining + bars</span></div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Check dates</button><button class="btn btn-sm">Details</button></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 6 · NEIGHBORHOOD INTELLIGENCE -->
+      <section data-cat="locations">
+        <div class="sec-head">
+          <div><h2 class="serif">Neighborhood intelligence</h2><div class="sub">Where to stay, eat and go out — scored for you</div></div>
+          <a class="see" href="#">All areas →</a>
+        </div>
+        <div class="hood-grid">
+          <article class="hood">
+            <div class="head ph ph-vig"><div class="overlay"></div><div class="score">Match <b>94</b></div><div class="nm">Laureles</div></div>
+            <div class="hood-body">
+              <div class="metrics">
+                <div class="m">Safety<i style="--v:86%"></i></div>
+                <div class="m">Walkability<i style="--v:92%"></i></div>
+                <div class="m">Nightlife<i style="--v:74%"></i></div>
+                <div class="m">Dining<i style="--v:88%"></i></div>
+              </div>
+              <div class="insight"><b>Local insight:</b> Leafy grid streets, relaxed and residential — best for remote work and unhurried dinners. Quieter than Poblado.</div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Explore Laureles</button><button class="btn btn-sm">Saved spots</button></div>
+            </div>
+          </article>
+          <article class="hood">
+            <div class="head ph ph-vig"><div class="overlay"></div><div class="score">Match <b>97</b></div><div class="nm">El Poblado</div></div>
+            <div class="hood-body">
+              <div class="metrics">
+                <div class="m">Safety<i style="--v:82%"></i></div>
+                <div class="m">Walkability<i style="--v:90%"></i></div>
+                <div class="m">Nightlife<i style="--v:95%"></i></div>
+                <div class="m">Dining<i style="--v:96%"></i></div>
+              </div>
+              <div class="insight"><b>Local insight:</b> The polished heart — Provenza &amp; Lleras pack the best dining and rooftops. Lively at night; book ahead.</div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Explore Poblado</button><button class="btn btn-sm">Saved spots</button></div>
+            </div>
+          </article>
+          <article class="hood">
+            <div class="head ph ph-vig"><div class="overlay"></div><div class="score">Match <b>88</b></div><div class="nm">Envigado</div></div>
+            <div class="hood-body">
+              <div class="metrics">
+                <div class="m">Safety<i style="--v:90%"></i></div>
+                <div class="m">Walkability<i style="--v:78%"></i></div>
+                <div class="m">Nightlife<i style="--v:60%"></i></div>
+                <div class="m">Dining<i style="--v:80%"></i></div>
+              </div>
+              <div class="insight"><b>Local insight:</b> Local, authentic and calm — traditional bakeries and parque life. A genuine paisa feel just south of the buzz.</div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Explore Envigado</button><button class="btn btn-sm">Saved spots</button></div>
+            </div>
+          </article>
+          <article class="hood">
+            <div class="head ph ph-vig"><div class="overlay"></div><div class="score">Match <b>79</b></div><div class="nm">Guatapé</div></div>
+            <div class="hood-body">
+              <div class="metrics">
+                <div class="m">Scenery<i style="--v:98%"></i></div>
+                <div class="m">Day trip<i style="--v:95%"></i></div>
+                <div class="m">Nightlife<i style="--v:40%"></i></div>
+                <div class="m">Dining<i style="--v:70%"></i></div>
+              </div>
+              <div class="insight"><b>Local insight:</b> Two hours out — climb El Peñol, boat the reservoir, lunch in the painted pueblo. Best as a full-day escape.</div>
+              <div class="actions"><button class="btn btn-sm btn-primary">Plan day trip</button><button class="btn btn-sm">Saved spots</button></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 7 · CURATED COLLECTIONS -->
+      <section data-cat="collections">
+        <div class="sec-head">
+          <div><h2 class="serif">Your collections</h2><div class="sub">Curated lists you're building</div></div>
+          <a class="see" href="#">All collections →</a>
+        </div>
+        <div class="coll-grid">
+          <div class="coll ph ph-vig"><div class="overlay"></div><div class="ic">♥</div><div class="label"><div class="t">Date Night</div><div class="c">8 places</div></div></div>
+          <div class="coll ph ph-vig"><div class="overlay"></div><div class="ic">☕</div><div class="label"><div class="t">Remote Work Cafés</div><div class="c">12 places</div></div></div>
+          <div class="coll ph ph-vig"><div class="overlay"></div><div class="ic">🍽</div><div class="label"><div class="t">Luxury Dining</div><div class="c">6 places</div></div></div>
+          <div class="coll ph ph-vig"><div class="overlay"></div><div class="ic">🎶</div><div class="label"><div class="t">Nightlife</div><div class="c">15 places</div></div></div>
+          <div class="coll ph ph-vig"><div class="overlay"></div><div class="ic">🏠</div><div class="label"><div class="t">Apartments</div><div class="c">9 saved</div></div></div>
+          <div class="coll ph ph-vig"><div class="overlay"></div><div class="ic">⛰</div><div class="label"><div class="t">Weekend Escapes</div><div class="c">5 ideas</div></div></div>
+        </div>
+      </section>
+
+      <!-- 8 · SAVED PLACES -->
+      <section data-cat="foryou">
+        <div class="sec-head">
+          <div><h2 class="serif">Recently saved</h2><div class="sub">Picked up from your chats and browsing</div></div>
+          <a class="see" href="#">All saved →</a>
+        </div>
+        <div class="scroller">
+          <article class="card" data-pin="p-salon">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Nightlife</span></div><button class="heart sv" aria-label="Saved">♥</button></div>
+            <div class="card-body"><div class="name">Salón Amador</div><div class="row"><span class="star">★ 4.5</span><span class="dot"></span><span>Provenza</span></div><div class="actions"><button class="btn btn-sm btn-primary">Details</button></div></div>
+          </article>
+          <article class="card" data-pin="p-loft">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Rental</span></div><button class="heart sv" aria-label="Saved">♥</button></div>
+            <div class="card-body"><div class="name">Provenza Loft · 2BR</div><div class="row"><span class="star">★ 4.8</span><span class="dot"></span><span>$140/nt</span></div><div class="actions"><button class="btn btn-sm btn-primary">Check dates</button></div></div>
+          </article>
+          <article class="card" data-pin="p-noir">
+            <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Cocktail bar</span></div><button class="heart sv" aria-label="Saved">♥</button></div>
+            <div class="card-body"><div class="name">Café Noir Bar</div><div class="row"><span class="star">★ 4.8</span><span class="dot"></span><span>Laureles</span></div><div class="actions"><button class="btn btn-sm btn-primary">Details</button></div></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 9 · UPCOMING RESERVATIONS -->
+      <section data-cat="foryou">
+        <div class="sec-head">
+          <div><h2 class="serif">Upcoming reservations</h2><div class="sub">Tables, stays and experiences</div></div>
+          <a class="see" href="#">Manage →</a>
+        </div>
+        <div class="resv-list">
+          <div class="resv">
+            <div class="ic">🍽</div>
+            <div><div class="name">Carmen</div><div class="meta">Tasting menu · El Poblado</div></div>
+            <div class="when">Sat Jun 7<br/>8:30 PM · 2</div>
+            <span class="badge-conf">Confirmed</span>
+          </div>
+          <div class="resv">
+            <div class="ic">🍽</div>
+            <div><div class="name">Al Alma</div><div class="meta">Brunch · El Poblado</div></div>
+            <div class="when">Sun Jun 8<br/>11:00 AM · 2</div>
+            <span class="badge-pending">Pending</span>
+          </div>
+          <div class="resv">
+            <div class="ic">🏠</div>
+            <div><div class="name">Provenza Loft · 2BR</div><div class="meta">Short stay · Provenza</div></div>
+            <div class="when">Jun 12 – 16<br/>4 nights · 2</div>
+            <span class="badge-conf">Confirmed</span>
+          </div>
+        </div>
+      </section>
+
+      </div><!-- /#forYouView -->
+
+      <!-- ============ CATEGORY VIEW (swapped in per non-For-you tab) ============ -->
+      <div id="catView" hidden></div>
+
+      <div class="center-foot">
+        <div>© 2026 mdeai · Your AI concierge for Medellín</div>
+        <div style="display:flex; gap:18px"><a href="#">About</a><a href="#">Hosts</a><a href="#">Privacy</a><a href="#">Contact</a></div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ============ RIGHT: INTERACTIVE MAP ============ -->
+  <aside class="mapcol">
+    <div class="map">
+      <!-- faux Medellín street grid + Aburrá valley -->
+      <div class="green" style="left:-4%; top:6%; width:150px; height:220px"></div>
+      <div class="green" style="right:-6%; top:30%; width:170px; height:260px"></div>
+      <div class="road" style="left:0; right:0; top:30%; height:5px"></div>
+      <div class="road" style="left:0; right:0; top:54%; height:6px"></div>
+      <div class="road thin" style="left:0; right:0; top:70%; height:3px"></div>
+      <div class="road" style="top:0; bottom:0; left:30%; width:4px"></div>
+      <div class="road thin" style="top:0; bottom:0; left:62%; width:3px"></div>
+      <div class="river"></div>
+      <div class="hood-tag" style="left:14%; top:22%">Laureles</div>
+      <div class="hood-tag" style="left:55%; top:62%">El Poblado</div>
+      <div class="hood-tag" style="left:60%; top:40%">Provenza</div>
+
+      <div class="map-top">
+        <button class="map-chip">⟲ Search this area</button>
+        <button class="map-chip" style="margin-left:auto">◇ Saved only</button>
+      </div>
+
+      <!-- pins render here per active category (uniform teal; category by glyph) -->
+      <div id="pins"></div>
+
+      <div class="map-ctrl"><button aria-label="Zoom in">+</button><button aria-label="Zoom out">−</button><button aria-label="Layers">▦</button></div>
+      <div class="map-attr">Map placeholder · Google Maps in production</div>
+    </div>
+  </aside>
+
+</div>
+
+<!-- ============ FLOATING AI CONCIERGE ============ -->
+<button class="fab" aria-label="Open AI concierge"><span class="orb"></span> Ask AI Concierge</button>
+
+<!-- ============ MOBILE BOTTOM NAV ============ -->
+<nav class="botnav">
+  <a href="#"><span class="gi">⌂</span>Home</a>
+  <a href="#" class="on"><span class="gi">✦</span>Explore</a>
+  <a href="#"><span class="gi">🗺</span>Trips</a>
+  <a href="#"><span class="gi">♥</span>Saved</a>
+  <a href="#"><span class="gi">◔</span>Profile</a>
+</nav>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ============ DATA (mock — real data comes from Places + Supabase in prod) ============ */
+  var PLACES = [
+    // --- restaurants & cafés ---
+    { id:'p-carmen', cat:'restaurants', name:'Carmen', glyph:'🍽', kind:'Restaurant', rating:'4.7', price:'$$$', area:'El Poblado', dist:'1.2 km', tags:['Tasting menu','Date night'], why:'matches your Luxury Dining list · terrace open 8 PM', x:33, y:58 },
+    { id:'p-oci', cat:'restaurants', name:'Oci.Mde', glyph:'🍽', kind:'Restaurant', rating:'4.8', price:'$$$', area:'El Poblado', dist:'1.0 km', tags:['Fine dining','Wine'], why:"12-course chef's counter · sommelier pairing", x:42, y:64 },
+    { id:'p-pergamino', cat:'restaurants', name:'Pergamino Café', glyph:'☕', kind:'Café', rating:'4.6', price:'$$', area:'Provenza', dist:'0.4 km', tags:['Specialty coffee','Remote work'], why:'outlets + quiet AM · 2 min from your loft', x:52, y:40 },
+    { id:'p-cielo', cat:'restaurants', name:'El Cielo', glyph:'🍽', kind:'Restaurant', rating:'4.9', price:'$$$$', area:'El Poblado', dist:'1.8 km', tags:['Tasting','Special occasion'], why:'molecular tasting menu · book 2 weeks ahead', x:46, y:70 },
+    { id:'p-alma', cat:'restaurants', name:'Al Alma', glyph:'☕', kind:'Café', rating:'4.5', price:'$$', area:'El Poblado', dist:'1.1 km', tags:['Brunch','Garden'], why:'leafy patio brunch · you have a Sun table here', x:38, y:52 },
+    { id:'p-mondongos', cat:'restaurants', name:'Mondongos', glyph:'🍽', kind:'Restaurant', rating:'4.4', price:'$$', area:'Laureles', dist:'2.6 km', tags:['Paisa','Traditional'], why:'authentic bandeja paisa · local favorite', x:22, y:42 },
+    // --- things to do ---
+    { id:'p-comuna13', cat:'todo', name:'Comuna 13 Graffiti Tour', glyph:'🎨', kind:'Experience', rating:'4.9', price:'$', area:'San Javier', dist:'7 km', tags:['Street art','Walking'], why:'top-rated experience · guided, 3 hrs', x:12, y:52 },
+    { id:'p-arvi', cat:'todo', name:'Parque Arví', glyph:'🌲', kind:'Nature', rating:'4.6', price:'$', area:'Santa Elena', dist:'12 km', tags:['Nature','Metrocable'], why:'cloud-forest trails · cable-car ride up', x:80, y:14 },
+    { id:'p-pueblito', cat:'todo', name:'Pueblito Paisa', glyph:'🏛', kind:'Viewpoint', rating:'4.2', price:'Free', area:'Nutibara', dist:'4 km', tags:['Viewpoint','Culture'], why:'360° city view — best at sunset', x:30, y:76 },
+    { id:'p-botanical', cat:'todo', name:'Botanical Garden', glyph:'🌿', kind:'Gardens', rating:'4.5', price:'Free', area:'Norte', dist:'6 km', tags:['Gardens','Family'], why:'free · orchids, iguanas & shade', x:40, y:10 },
+    { id:'p-guatape', cat:'todo', name:'Guatapé & El Peñol', glyph:'🏔', kind:'Day trip', rating:'4.9', price:'$$', area:'Guatapé', dist:'70 km', tags:['Day trip','Scenery'], why:'fits your Jun 9 day-trip plan', x:88, y:30 },
+    { id:'p-parapente', cat:'todo', name:'Paragliding · San Félix', glyph:'🪂', kind:'Adventure', rating:'4.8', price:'$$', area:'San Félix', dist:'18 km', tags:['Adventure','Views'], why:'valley flight · best 9–11 AM winds', x:8, y:22 },
+    // --- events (date-stamped) ---
+    { id:'p-sonhavana', cat:'events', name:'Salsa Night · Live Orchestra', glyph:'♪', venue:'Son Havana', area:'Laureles', tags:['Salsa','From $18'], badge:'Tonight · 10:30 PM', badgeDark:true, x:24, y:34 },
+    { id:'p-rooftopsessions', cat:'events', name:'Rooftop Sessions w/ DJ Camilo', glyph:'♪', venue:'Envy Rooftop', area:'El Poblado', tags:['House','VIP'], badge:'Sat · 9:00 PM', badgeDark:true, x:58, y:42 },
+    { id:'p-c13tour', cat:'events', name:'Comuna 13 Food & Graffiti Tour', glyph:'🎟', venue:'Meets at Metro', area:'San Javier', tags:['Walking tour','3 hrs'], badge:'Sun · 2:00 PM', badgeDark:true, x:14, y:56 },
+    { id:'p-jazz', cat:'events', name:'Jazz at the Garden', glyph:'♪', venue:'Jardín Botánico', area:'Norte', tags:['Live jazz','Free'], badge:'Fri · 8:00 PM', badgeDark:true, x:40, y:14 },
+    { id:'p-cumbia', cat:'events', name:'Cumbia & Tropical Night', glyph:'♪', venue:'La Pascasia', area:'Laureles', tags:['Live band','From $12'], badge:'Sat · 11:00 PM', badgeDark:true, x:18, y:38 },
+    // --- nightlife ---
+    { id:'p-salon', cat:'nightlife', name:'Salón Amador', glyph:'♪', kind:'Club', rating:'4.5', price:'$$', area:'Provenza', dist:'0.6 km', tags:['Electronic','Till 3 AM'], why:'on your Nightlife list · open till 3 AM', saved:true, x:48, y:50 },
+    { id:'p-envy', cat:'nightlife', name:'Envy Rooftop', glyph:'🍸', kind:'Rooftop', rating:'4.2', price:'$$$', area:'El Poblado', dist:'1.3 km', tags:['Cocktails','Skyline'], why:'skyline views · sunset at 6:15 PM', x:60, y:44 },
+    { id:'p-noir', cat:'nightlife', name:'Café Noir Bar & Lounge', glyph:'🍸', kind:'Cocktail bar', rating:'4.8', price:'$$', area:'Laureles', dist:'2.4 km', tags:['Mixology','Intimate'], why:'top mixology in Laureles', x:20, y:46 },
+    { id:'p-vintrash', cat:'nightlife', name:'Vintrash Bar', glyph:'♪', kind:'Bar', rating:'4.3', price:'$$', area:'Provenza', dist:'0.5 km', tags:['Live DJ','Eclectic'], why:'your kind of crowd · no cover before 10', x:50, y:48 },
+    { id:'p-octava', cat:'nightlife', name:'La Octava Rooftop', glyph:'🍸', kind:'Rooftop', rating:'4.4', price:'$$$', area:'El Poblado', dist:'1.1 km', tags:['Rooftop','Lounge'], why:'quieter rooftop · good for conversation', x:56, y:46 },
+    // --- stays ---
+    { id:'p-loft', cat:'stays', name:'Provenza Loft · 2BR', glyph:'🏠', kind:'Rental', rating:'4.8', price:'$140/nt', area:'Provenza', tags:['Walkable','Quiet street'], why:'walkable to cafés you saved', x:64, y:56 },
+    { id:'p-astra', cat:'stays', name:'Astra · Studio w/ balcony', glyph:'🏠', kind:'Studio', rating:'4.8', price:'$98/nt', area:'Manila', tags:['Balcony','Sunset'], why:'near nightlife you like · sunset balcony', x:56, y:68 },
+    { id:'p-charlee', cat:'stays', name:'The Charlee', glyph:'🏨', kind:'Boutique hotel', rating:'4.7', price:'$210/nt', area:'Lleras', tags:['Rooftop pool','Central'], why:'rooftop pool · steps from dining + bars', x:58, y:60 },
+    { id:'p-landmark', cat:'stays', name:'Landmark Hotel', glyph:'🏨', kind:'Hotel', rating:'4.5', price:'$120/nt', area:'El Poblado', tags:['Pool','Gym'], why:'business-ready · fast wifi', x:52, y:62 },
+    { id:'p-diez', cat:'stays', name:'Diez Hotel Categoría', glyph:'🏨', kind:'Hotel', rating:'4.6', price:'$160/nt', area:'El Poblado', tags:['Design','Central'], why:'design-forward · central Poblado', x:50, y:64 },
+    // --- rentals (longer stays) ---
+    { id:'p-manila', cat:'rentals', name:'Manila Penthouse · 3BR', glyph:'🏠', kind:'Penthouse', rating:'4.9', price:'$190/nt', area:'Manila', tags:['City views','Terrace'], why:'panoramic terrace · long-stay discount', x:54, y:66 },
+    { id:'p-laurelesflat', cat:'rentals', name:'Laureles Garden Flat', glyph:'🏠', kind:'Apartment', rating:'4.7', price:'$85/nt', area:'Laureles', tags:['Quiet','Garden'], why:'leafy & local · great value', x:22, y:36 },
+    { id:'p-provloft2', cat:'rentals', name:'Provenza Studio Loft', glyph:'🏠', kind:'Studio', rating:'4.6', price:'$110/nt', area:'Provenza', tags:['Central','Modern'], why:'heart of Provenza · walk everywhere', x:50, y:52 },
+    { id:'p-pobladopad', cat:'rentals', name:'El Poblado Smart Pad', glyph:'🏠', kind:'Apartment', rating:'4.5', price:'$95/nt', area:'El Poblado', tags:['Smart home','Gym'], why:'self check-in · gym + pool', x:46, y:60 },
+    { id:'p-envigadohouse', cat:'rentals', name:'Envigado Family House', glyph:'🏠', kind:'House', rating:'4.8', price:'$130/nt', area:'Envigado', tags:['Quiet','Family'], why:'authentic & calm · south of the buzz', x:62, y:82 }
+  ];
+  var FORYOU = ['p-carmen','p-oci','p-pergamino','p-salon','p-envy','p-noir','p-loft','p-astra','p-sonhavana'];
+
+  var HOODS = [
+    { id:'h-laureles', name:'Laureles', glyph:'◎', match:94, x:18, y:30, metrics:{ Safety:86, Walkability:92, Nightlife:74, Dining:88 }, insight:'Leafy grid streets, relaxed and residential — best for remote work and unhurried dinners. Quieter than Poblado.', cta:'Explore Laureles' },
+    { id:'h-poblado', name:'El Poblado', glyph:'◎', match:97, x:55, y:58, metrics:{ Safety:82, Walkability:90, Nightlife:95, Dining:96 }, insight:'The polished heart — Provenza & Lleras pack the best dining and rooftops. Lively at night; book ahead.', cta:'Explore Poblado' },
+    { id:'h-envigado', name:'Envigado', glyph:'◎', match:88, x:62, y:84, metrics:{ Safety:90, Walkability:78, Nightlife:60, Dining:80 }, insight:'Local, authentic and calm — traditional bakeries and parque life. A genuine paisa feel just south of the buzz.', cta:'Explore Envigado' },
+    { id:'h-guatape', name:'Guatapé', glyph:'◎', match:79, x:88, y:28, metrics:{ Scenery:98, 'Day trip':95, Nightlife:40, Dining:70 }, insight:'Two hours out — climb El Peñol, boat the reservoir, lunch in the painted pueblo. Best as a full-day escape.', cta:'Plan day trip' }
+  ];
+
+  var GUIDES = [
+    { id:'g-firsttime', title:"First-timer's Medellín", kicker:'GUIDE · 7 stops', meta:'A 3-day route through Poblado, Laureles & Comuna 13' },
+    { id:'g-coffee', title:'Coffee-region weekend', kicker:'GUIDE · day trip', meta:'Beyond the city — fincas, tastings & green hills' },
+    { id:'g-nightlife', title:'After-dark in El Poblado', kicker:'GUIDE · 9 spots', meta:'Rooftops, salsa floors & speakeasies, paced right' },
+    { id:'g-remote', title:'Remote-work base camp', kicker:'GUIDE · 10 spots', meta:"Fast wifi, long stays & cafés that don't rush you" }
+  ];
+
+  var COLLECTIONS = [
+    { id:'c-datenight', title:'Date Night', count:'8 places', glyph:'♥' },
+    { id:'c-remote', title:'Remote Work Cafés', count:'12 places', glyph:'☕' },
+    { id:'c-luxury', title:'Luxury Dining', count:'6 places', glyph:'🍽' },
+    { id:'c-nightlife', title:'Nightlife', count:'15 places', glyph:'🎶' },
+    { id:'c-apartments', title:'Apartments', count:'9 saved', glyph:'🏠' },
+    { id:'c-escapes', title:'Weekend Escapes', count:'5 ideas', glyph:'⛰' }
+  ];
+
+  var CATMETA = {
+    restaurants: ['Restaurants & cafés', 'Where Medellín is eating this week — tuned to your taste'],
+    todo:        ['Things to do', 'Experiences, viewpoints and day trips near you'],
+    events:      ['Events', 'Live music, rooftops and pop-ups happening soon'],
+    nightlife:   ['Nightlife', 'Cocktail bars, rooftops and dance floors'],
+    stays:       ['Stays', 'Boutique hotels and apartments for your dates'],
+    rentals:     ['Rentals', 'Longer-stay apartments tuned to your trip'],
+    locations:   ['Neighborhood intelligence', 'Where to stay, eat and go out — scored for you'],
+    guides:      ['Guides', 'Editorial routes hand-built by your concierge'],
+    collections: ['Your collections', "Curated lists you're building"]
+  };
+  var CTA = { restaurants:'Reserve', events:'Get tickets', stays:'Check dates', rentals:'Check dates', nightlife:'Details', todo:'Book' };
+
+  /* ============ HELPERS ============ */
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function cap(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
+  function uniq(a){ var seen={}, out=[]; a.forEach(function(x){ if(x && !seen[x]){ seen[x]=1; out.push(x); } }); return out; }
+
+  /* ============ TEMPLATES ============ */
+  function placeCard(p){
+    var kind = p.kind || cap(p.cat);
+    var badge = p.badge
+      ? '<span class="pill'+(p.badgeDark?' dark':'')+'">'+esc(p.badge)+'</span>'
+      : '<span class="pill">'+esc(kind)+'</span>';
+    var heart = '<button class="heart'+(p.saved?' sv':'')+'" aria-label="'+(p.saved?'Saved':'Save')+'">'+(p.saved?'♥':'♡')+'</button>';
+    var row;
+    if (p.rating){
+      var bits = ['<span class="star">★ '+esc(p.rating)+'</span>'];
+      if (p.price) bits.push('<span>'+esc(p.price)+'</span>');
+      bits.push('<span>'+esc(p.area)+(p.dist?' · '+esc(p.dist):'')+'</span>');
+      row = bits.join('<span class="dot"></span>');
+    } else {
+      row = '<span>'+esc(p.venue||'')+'</span>'+(p.area?'<span class="dot"></span><span>'+esc(p.area)+'</span>':'');
+    }
+    var tags = (p.tags||[]).map(function(t){ return '<span class="tag">'+esc(t)+'</span>'; }).join('');
+    var why = p.why ? '<div class="why"><span aria-hidden="true">✦</span><span><b>Why:</b> '+esc(p.why)+'</span></div>' : '';
+    var primary = p.cta || CTA[p.cat] || 'Details';
+    var second = primary === 'Details' ? 'Ask' : 'Details';
+    return '<article class="card" data-pin="'+p.id+'" data-id="'+p.id+'" data-name="'+esc(p.name)+'">'
+      + '<div class="thumb ph ph-vig"><div class="badges">'+badge+'</div>'+heart+'</div>'
+      + '<div class="card-body">'
+      +   '<div class="name">'+esc(p.name)+'</div>'
+      +   '<div class="row">'+row+'</div>'
+      +   (tags ? '<div class="tags">'+tags+'</div>' : '')
+      +   why
+      +   '<div class="actions"><button class="btn btn-sm btn-primary">'+esc(primary)+'</button><button class="btn btn-sm">'+esc(second)+'</button></div>'
+      + '</div></article>';
+  }
+  function hoodCard(h){
+    var metrics = Object.keys(h.metrics).map(function(k){ return '<div class="m">'+esc(k)+'<i style="--v:'+h.metrics[k]+'%"></i></div>'; }).join('');
+    return '<article class="hood" data-pin="'+h.id+'">'
+      + '<div class="head ph ph-vig"><div class="overlay"></div><div class="score">Match <b>'+esc(h.match)+'</b></div><div class="nm">'+esc(h.name)+'</div></div>'
+      + '<div class="hood-body">'
+      +   '<div class="metrics">'+metrics+'</div>'
+      +   '<div class="insight"><b>Local insight:</b> '+esc(h.insight)+'</div>'
+      +   '<div class="actions"><button class="btn btn-sm btn-primary">'+esc(h.cta||('Explore '+h.name))+'</button><button class="btn btn-sm">Saved spots</button></div>'
+      + '</div></article>';
+  }
+  function guideCard(g){
+    return '<article class="card" data-id="'+g.id+'">'
+      + '<div class="thumb ph ph-vig"><div class="badges"><span class="pill">Guide</span></div></div>'
+      + '<div class="card-body">'
+      +   '<div class="row" style="font-weight:700;font-size:10.5px;letter-spacing:.08em">'+esc(g.kicker)+'</div>'
+      +   '<div class="name serif" style="font-size:17px">'+esc(g.title)+'</div>'
+      +   '<div style="color:var(--muted-foreground);font-size:12.5px;line-height:1.4">'+esc(g.meta)+'</div>'
+      +   '<div class="actions"><button class="btn btn-sm btn-primary">Read guide</button><button class="btn btn-sm">Save</button></div>'
+      + '</div></article>';
+  }
+  function collCard(c){
+    return '<div class="coll ph ph-vig" data-id="'+c.id+'"><div class="overlay"></div><div class="ic">'+c.glyph+'</div><div class="label"><div class="t">'+esc(c.title)+'</div><div class="c">'+esc(c.count)+'</div></div></div>';
+  }
+  function catHead(cat){ var m = CATMETA[cat] || [cap(cat), '']; return '<div class="cat-head"><h1 class="serif">'+esc(m[0])+'</h1><div class="sub">'+esc(m[1])+'</div></div>'; }
+  function filterRow(areas, active){
+    var chips = '<button class="chip'+(!active?' on':'')+'" data-area="">All</button>';
+    chips += areas.map(function(a){ return '<button class="chip'+(active===a?' on':'')+'" data-area="'+esc(a)+'">'+esc(a)+'</button>'; }).join('');
+    return '<div class="cat-filter">'+chips+'</div>';
+  }
+
+  /* ============ MAP PINS ============ */
+  var pinsEl = document.getElementById('pins');
+  function pinHtml(p){ return '<div class="mpin" id="'+p.id+'" data-name="'+esc(p.name)+'" style="left:'+p.x+'%; top:'+p.y+'%"><span>'+(p.glyph||'•')+'</span></div>'; }
+  function renderPins(list){ pinsEl.innerHTML = list.map(pinHtml).join(''); }
+
+  /* ============ VIEW RENDER ============ */
+  var forYouView = document.getElementById('forYouView');
+  var catView = document.getElementById('catView');
+  var currentCat = 'foryou', currentArea = null;
+
+  function render(cat, area){
+    currentCat = cat; currentArea = area || null;
+    if (cat === 'foryou'){
+      forYouView.hidden = false; catView.hidden = true; catView.innerHTML = '';
+      renderPins(PLACES.filter(function(p){ return FORYOU.indexOf(p.id) > -1; }));
+    } else {
+      forYouView.hidden = true; catView.hidden = false;
+      var html = catHead(cat);
+      if (cat === 'locations'){
+        html += '<div class="hood-grid" style="margin-top:18px">'+HOODS.map(hoodCard).join('')+'</div>';
+        renderPins(HOODS);
+      } else if (cat === 'collections'){
+        html += '<div class="coll-grid" style="margin-top:18px">'+COLLECTIONS.map(collCard).join('')+'</div>';
+        renderPins([]);
+      } else if (cat === 'guides'){
+        html += '<div class="cat-grid">'+GUIDES.map(guideCard).join('')+'</div>';
+        renderPins([]);
+      } else {
+        var list = PLACES.filter(function(p){ return p.cat === cat; });
+        var areas = uniq(list.map(function(p){ return p.area; }));
+        var shown = currentArea ? list.filter(function(p){ return p.area === currentArea; }) : list;
+        html += filterRow(areas, currentArea) + '<div class="cat-grid">'+shown.map(placeCard).join('')+'</div>';
+        renderPins(shown);
+      }
+      catView.innerHTML = html;
+      catView.classList.remove('in');
+      if (!reduce){ void catView.offsetWidth; }
+      catView.classList.add('in');
+    }
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  }
+  function activeView(){ return catView.hidden ? forYouView : catView; }
+
+  /* ============ TABS ============ */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      tabs.forEach(function(x){ x.classList.remove('on'); });
+      t.classList.add('on');
+      render(t.getAttribute('data-cat'), null);
+    });
+  });
+
+  /* ============ MAP ⇄ CARD HOVER SYNC (delegated; survives re-render) ============ */
+  function bindHover(scope, selector, onEnter, onLeave){
+    scope.addEventListener('mouseover', function(e){
+      var el = e.target.closest(selector); if (!el || !scope.contains(el)) return;
+      if (e.relatedTarget && el.contains(e.relatedTarget)) return;
+      onEnter(el);
+    });
+    scope.addEventListener('mouseout', function(e){
+      var el = e.target.closest(selector); if (!el || !scope.contains(el)) return;
+      if (e.relatedTarget && el.contains(e.relatedTarget)) return;
+      onLeave(el);
+    });
+  }
+  var centerEl = document.querySelector('.center');
+  var mapEl = document.querySelector('.map');
+  bindHover(centerEl, '[data-pin]',
+    function(el){ var pin = document.getElementById(el.getAttribute('data-pin')); if (pin) pin.classList.add('hl'); el.classList.add('active'); },
+    function(el){ var pin = document.getElementById(el.getAttribute('data-pin')); if (pin) pin.classList.remove('hl'); el.classList.remove('active'); });
+  bindHover(mapEl, '.mpin',
+    function(pin){ pin.classList.add('hl'); var card = activeView().querySelector('[data-pin="'+pin.id+'"]'); if (card){ card.classList.add('active'); card.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block:'nearest', inline:'center' }); } },
+    function(pin){ pin.classList.remove('hl'); var card = activeView().querySelector('[data-pin="'+pin.id+'"]'); if (card) card.classList.remove('active'); });
+
+  /* ============ CLICKS: heart toggle · filter chips · open venue ============ */
+  function go(id, name){ window.location.href = 'venue.html?id='+encodeURIComponent(id||'')+(name?'&name='+encodeURIComponent(name):''); }
+  centerEl.addEventListener('click', function(e){
+    var heart = e.target.closest('.heart');
+    if (heart){ e.preventDefault(); var sv = heart.classList.toggle('sv'); heart.textContent = sv ? '♥' : '♡'; heart.setAttribute('aria-label', sv ? 'Saved' : 'Save'); return; }
+    var chip = e.target.closest('.chip');
+    if (chip){ render(currentCat, chip.getAttribute('data-area') || null); return; }
+    var card = e.target.closest('.card');
+    if (card){
+      var id = card.getAttribute('data-id') || card.getAttribute('data-pin') || '';
+      if (id.indexOf('p-') === 0 || (!id && card.closest('#forYouView'))){
+        var nameEl = card.querySelector('.name');
+        go(id, card.getAttribute('data-name') || (nameEl ? nameEl.textContent : ''));
+      }
+    }
+  });
+  mapEl.addEventListener('click', function(e){
+    var pin = e.target.closest('.mpin'); if (!pin) return;
+    if (pin.id.indexOf('p-') === 0) go(pin.id, pin.getAttribute('data-name'));
+  });
+
+  /* ============ SCROLL-REVEAL (For-you editorial scroll) ============ */
+  var secs = Array.prototype.slice.call(forYouView.querySelectorAll('section'));
+  if (!reduce && 'IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -8% 0px' });
+    secs.forEach(function(s){ s.classList.add('reveal'); io.observe(s); });
+  }
+
+  /* ============ INIT ============ */
+  render('foryou', null);
+})();
+</script>
+
+</body>
+</html>

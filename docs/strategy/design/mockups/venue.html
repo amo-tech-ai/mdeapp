@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>mdeai · Venue — luxury detail page mockup</title>
+<!--
+  mdeai Venue detail mockup — DESIGN TARGET, not production code.
+  The page explore.html cards + map pins open into (venue.html?id=…&name=…).
+  Same light-luxury direction + restrained palette as explore.html / dashboard.html:
+    Teal = interactive / nav / status-confirmed / map-pin / "why"
+    Gold = AI-concierge signature only (orb, ✦, Ask CTAs, FAB) + rating stars
+    Neutrals = pills, tags, icons, badges, skeletons
+    Warm stone = one photo-placeholder tint (real Places photos carry color in prod)
+  Tokens are the REAL shipped LIGHT values from mdeapp/src/app/globals.css :root.
+  Self-contained / offline-safe. Playfair Display is progressive enhancement over Georgia.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ---- shipped LIGHT tokens (globals.css :root) ---- */
+    --background: oklch(0.985 0.002 247);
+    --foreground: oklch(0.208 0.042 265);
+    --card: oklch(1 0 0);
+    --primary: oklch(0.508 0.118 175);        /* teal */
+    --primary-foreground: oklch(0.985 0.002 247);
+    --secondary: oklch(0.968 0.007 247);
+    --muted: oklch(0.968 0.007 247);
+    --muted-foreground: oklch(0.554 0.046 257);
+    --accent: oklch(0.795 0.184 86);           /* warm gold */
+    --accent-foreground: oklch(0.208 0.042 265);
+    --border: oklch(0.929 0.013 255);
+    --border-strong: oklch(0.882 0.02 256);
+    --radius: 0.625rem;
+    --shadow-sm: 0 1px 2px oklch(0.2 0.04 265 / 0.06);
+    --shadow-md: 0 6px 20px oklch(0.2 0.04 265 / 0.08);
+    --shadow-lg: 0 18px 48px oklch(0.2 0.04 265 / 0.14);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; background: var(--background); color: var(--foreground);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, "Geist", sans-serif;
+    -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.5;
+  }
+  a { color: inherit; text-decoration: none; }
+  .serif { font-family: "Playfair Display", Georgia, "Times New Roman", serif; }
+  ::selection { background: oklch(0.508 0.118 175 / 0.18); }
+
+  /* ============ BUTTONS ============ */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    border: 1px solid var(--border-strong); background: var(--card); color: var(--foreground);
+    border-radius: 999px; padding: 9px 16px; font: inherit; font-weight: 600; cursor: pointer;
+    transition: background .15s, border-color .15s, transform .1s, box-shadow .15s; box-shadow: var(--shadow-sm);
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .btn-primary { background: var(--primary); color: var(--primary-foreground); border-color: transparent; }
+  .btn-accent { background: var(--accent); color: var(--accent-foreground); border-color: transparent; }
+  .btn-accent:hover { filter: brightness(1.04); }
+  .btn-ghost { border-color: transparent; background: transparent; color: var(--muted-foreground); box-shadow: none; }
+  .btn-ghost:hover { color: var(--foreground); background: var(--secondary); box-shadow: none; }
+  .btn-sm { padding: 7px 13px; font-size: 12.5px; }
+  .btn-lg { padding: 13px 20px; font-size: 15px; width: 100%; }
+
+  .pill { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--secondary); color: var(--muted-foreground); border: 1px solid var(--border); }
+  .star { color: var(--accent); font-weight: 700; }
+  .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-strong); display: inline-block; }
+  .tag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--secondary); color: var(--muted-foreground); border: 1px solid var(--border); }
+  .tags { display: flex; gap: 7px; flex-wrap: wrap; }
+
+  /* faux premium photography — ONE pale-teal placeholder (#E1F6F2) */
+  .ph { position: relative; background-size: cover; background-position: center;
+    background-image: linear-gradient(150deg, oklch(0.970 0.015 180), oklch(0.926 0.030 184)); }
+  .ph-vig::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 58%, oklch(0.48 0.03 195 / 0.07)); }
+
+  /* ============ TOP BAR ============ */
+  .topbar {
+    position: sticky; top: 0; z-index: 40; height: 60px; display: flex; align-items: center; gap: 16px;
+    padding: 0 26px; background: color-mix(in oklab, var(--background) 88%, transparent); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .back { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; color: var(--muted-foreground); padding: 7px 12px; border-radius: 999px; transition: background .14s, color .14s; }
+  .back:hover { background: var(--secondary); color: var(--foreground); }
+  .wordmark { font-weight: 700; letter-spacing: -0.03em; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+  .wordmark b { color: var(--primary); }
+  .wordmark .sp { width: 20px; height: 20px; border-radius: 6px; background: radial-gradient(circle at 32% 30%, var(--accent), oklch(0.7 0.16 80)); box-shadow: var(--shadow-sm); display: inline-block; }
+  .top-actions { margin-left: auto; display: flex; gap: 8px; }
+
+  /* ============ PAGE SHELL ============ */
+  .venue { max-width: 1120px; margin: 0 auto; padding: 22px 26px 120px; }
+
+  /* ============ GALLERY ============ */
+  .gallery { position: relative; display: grid; grid-template-columns: 1.7fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 8px; height: 392px; border-radius: calc(var(--radius) * 1.4); overflow: hidden; box-shadow: var(--shadow-sm); }
+  .gallery .g-main { grid-column: 1; grid-row: 1 / 3; }
+  .gallery > div { min-height: 0; }
+  .g-all { position: absolute; right: 14px; bottom: 14px; display: inline-flex; align-items: center; gap: 8px;
+    height: 38px; padding: 0 16px; border-radius: 999px; background: oklch(1 0 0 / 0.92); backdrop-filter: blur(8px);
+    border: 1px solid var(--border); box-shadow: var(--shadow-sm); font: inherit; font-weight: 600; font-size: 12.5px; cursor: pointer; }
+  .g-all:hover { background: #fff; }
+
+  /* ============ TITLE BLOCK ============ */
+  .vhead { display: flex; align-items: flex-end; justify-content: space-between; gap: 22px; margin-top: 22px; flex-wrap: wrap; }
+  .vhead-main { min-width: 0; }
+  .vhead h1 { margin: 6px 0 0; font-size: 38px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.05; }
+  .vmeta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--muted-foreground); font-size: 13.5px; margin: 9px 0 12px; }
+  .vmeta .link { color: var(--primary); font-weight: 600; }
+  .vhead-cta { display: flex; gap: 9px; flex-wrap: wrap; }
+
+  /* ============ CONCIERGE "WHY" PANEL ============ */
+  .cx-why {
+    position: relative; margin-top: 22px; border-radius: calc(var(--radius) * 1.4); overflow: hidden;
+    border: 1px solid var(--border); box-shadow: var(--shadow-sm); padding: 20px 22px;
+    background: radial-gradient(120% 150% at 94% 4%, oklch(0.95 0.075 86 / 0.65), transparent 54%), var(--card);
+    display: grid; grid-template-columns: 42px 1fr; gap: 15px;
+  }
+  .orb { width: 42px; height: 42px; border-radius: 50%; box-shadow: var(--shadow-md), 0 0 0 5px oklch(1 0 0 / 0.6);
+    background: radial-gradient(circle at 30% 28%, #fff, var(--accent) 62%, oklch(0.7 0.16 78)); }
+  .cx-why-h { font-weight: 700; font-size: 13px; letter-spacing: .02em; }
+  .cx-why p { margin: 5px 0 0; color: var(--foreground); font-size: 14px; max-width: 70ch; }
+  .cx-why .who { color: var(--muted-foreground); }
+  .cx-prompts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 13px; }
+  .prompt {
+    display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--border); background: var(--card);
+    color: var(--foreground); border-radius: 999px; padding: 7px 13px; font: inherit; font-weight: 600; font-size: 12.5px;
+    cursor: pointer; box-shadow: var(--shadow-sm); transition: transform .1s, box-shadow .14s, border-color .14s;
+  }
+  .prompt:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); border-color: var(--border-strong); }
+  .prompt .ai { color: var(--accent); }
+
+  /* ============ BODY TWO-COLUMN ============ */
+  .vbody { display: grid; grid-template-columns: minmax(0, 1fr) 344px; gap: 40px; margin-top: 34px; align-items: start; }
+  .vmain { min-width: 0; }
+  .vmain section { margin-top: 36px; }
+  .vmain section:first-child { margin-top: 0; }
+  .vmain h2 { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 14px; }
+  .vmain p.lead { color: var(--foreground); font-size: 15px; line-height: 1.6; margin: 0; }
+  .vmain p.lead + p.lead { margin-top: 12px; }
+  .sep { height: 1px; background: var(--border); margin: 36px 0 0; }
+
+  /* highlights */
+  .feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 22px; }
+  .feat { display: grid; grid-template-columns: 36px 1fr; gap: 12px; align-items: start; }
+  .feat .fic { width: 36px; height: 36px; border-radius: 10px; background: var(--secondary); border: 1px solid var(--border); display: grid; place-items: center; font-size: 16px; }
+  .feat .ft { font-weight: 600; }
+  .feat .fs { color: var(--muted-foreground); font-size: 12.5px; }
+
+  /* dishes scroller */
+  .scroller { display: grid; grid-auto-flow: column; grid-auto-columns: 180px; gap: 14px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x proximity; scrollbar-width: thin; }
+  .scroller > * { scroll-snap-align: start; }
+  .scroller::-webkit-scrollbar { height: 8px; }
+  .scroller::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 8px; }
+  .dish { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--card); box-shadow: var(--shadow-sm); }
+  .dish .img { aspect-ratio: 4/3; }
+  .dish .db { padding: 10px 12px 12px; }
+  .dish .dn { font-weight: 600; font-size: 13.5px; }
+  .dish .dp { color: var(--muted-foreground); font-size: 12.5px; margin-top: 2px; }
+
+  /* reviews */
+  .ai-summary { display: grid; grid-template-columns: 30px 1fr; gap: 12px; border: 1px solid var(--border); border-radius: var(--radius);
+    background: radial-gradient(120% 160% at 96% 0%, oklch(0.95 0.075 86 / 0.5), transparent 55%), var(--card); padding: 14px 16px; margin-bottom: 18px; }
+  .ai-summary .o2 { width: 26px; height: 26px; border-radius: 50%; background: radial-gradient(circle at 30% 28%, #fff, var(--accent) 62%, oklch(0.7 0.16 78)); box-shadow: var(--shadow-sm); }
+  .ai-summary .sh { font-weight: 700; font-size: 12px; }
+  .ai-summary p { margin: 3px 0 0; font-size: 13.5px; color: var(--foreground); }
+  .review { display: grid; grid-template-columns: 40px 1fr; gap: 13px; padding: 16px 0; border-top: 1px solid var(--border); }
+  .review .av { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), oklch(0.42 0.10 200)); }
+  .review .rn { font-weight: 600; }
+  .review .rm { color: var(--muted-foreground); font-size: 12px; }
+  .review .rstars { color: var(--accent); font-size: 12.5px; margin: 2px 0 4px; }
+  .review p { margin: 0; font-size: 13.5px; line-height: 1.55; }
+
+  /* mentioned-by chips */
+  .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+  .chip-link { display: inline-flex; align-items: center; gap: 9px; border: 1px solid var(--border); background: var(--card); border-radius: 999px; padding: 8px 14px 8px 9px; box-shadow: var(--shadow-sm); cursor: pointer; transition: transform .1s, box-shadow .14s; }
+  .chip-link:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .chip-link .ci { width: 26px; height: 26px; border-radius: 50%; background: var(--secondary); border: 1px solid var(--border); display: grid; place-items: center; font-size: 13px; }
+  .chip-link .ct { font-weight: 600; font-size: 12.5px; }
+  .chip-link .cs { color: var(--muted-foreground); font-size: 11.5px; }
+
+  /* ============ RIGHT STICKY COLUMN ============ */
+  .vside { position: sticky; top: 78px; display: flex; flex-direction: column; gap: 16px; }
+  .panel { border: 1px solid var(--border); border-radius: calc(var(--radius) * 1.2); background: var(--card); box-shadow: var(--shadow-md); padding: 18px; }
+  .res-h { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .res-h .pr { font-size: 20px; font-weight: 700; }
+  .res-h .pr small { font-size: 12.5px; font-weight: 500; color: var(--muted-foreground); }
+  .res-h .rt { font-size: 12.5px; color: var(--muted-foreground); }
+  .res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin: 14px 0; }
+  .field { border: 1px solid var(--border); border-radius: 10px; padding: 8px 11px; cursor: pointer; transition: border-color .14s; }
+  .field:hover { border-color: var(--border-strong); }
+  .field.full { grid-column: 1 / 3; }
+  .field .fl { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted-foreground); }
+  .field .fv { font-size: 13.5px; font-weight: 600; margin-top: 2px; }
+  .res-note { text-align: center; color: var(--muted-foreground); font-size: 12px; margin-top: 10px; }
+  .slots { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 12px; }
+  .slot { border: 1px solid var(--border); background: var(--card); border-radius: 8px; padding: 6px 11px; font: inherit; font-weight: 600; font-size: 12.5px; cursor: pointer; transition: border-color .14s, color .14s; }
+  .slot:hover { border-color: var(--border-strong); }
+  .slot.on { background: var(--primary); color: var(--primary-foreground); border-color: transparent; }
+
+  .info-row { display: flex; align-items: flex-start; gap: 11px; padding: 11px 0; border-top: 1px solid var(--border); font-size: 13px; }
+  .info-row:first-of-type { border-top: 0; padding-top: 4px; }
+  .info-row .ic { width: 22px; text-align: center; color: var(--muted-foreground); }
+  .info-row .open { color: var(--primary); font-weight: 600; }
+  .mini-map { height: 130px; border-radius: var(--radius); overflow: hidden; position: relative; margin-top: 12px;
+    background: linear-gradient(0deg, oklch(0.93 0.02 160 / 0.45), transparent 40%), linear-gradient(90deg, oklch(0.90 0.015 247), oklch(0.945 0.01 200)); }
+  .mini-map .road { position: absolute; background: oklch(1 0 0 / 0.8); }
+  .mini-map .mpin { position: absolute; left: 50%; top: 52%; width: 26px; height: 26px; border-radius: 50% 50% 50% 0;
+    transform: translate(-50%, -100%) rotate(-45deg); background: var(--primary); border: 2px solid #fff; box-shadow: var(--shadow-md); display: grid; place-items: center; }
+  .mini-map .mpin span { transform: rotate(45deg); color: #fff; font-size: 12px; }
+
+  /* ============ PAIRS WELL WITH (cards) ============ */
+  .pairs { margin-top: 44px; }
+  .pairs h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 4px; }
+  .pairs .sub { color: var(--muted-foreground); font-size: 13px; margin-bottom: 16px; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(228px, 1fr)); gap: 16px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-sm); cursor: pointer; transition: border-color .15s, transform .14s, box-shadow .18s; }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+  .card .thumb { aspect-ratio: 16/10; position: relative; }
+  .card .thumb .badges { position: absolute; left: 10px; top: 10px; }
+  .card .thumb .badges .pill { background: oklch(1 0 0 / 0.9); color: var(--foreground); box-shadow: var(--shadow-sm); border: 0; }
+  .card-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
+  .card-body .name { font-weight: 600; font-size: 15px; letter-spacing: -0.01em; }
+  .row { display: flex; align-items: center; gap: 7px; color: var(--muted-foreground); font-size: 12.5px; flex-wrap: wrap; }
+  .why { display: flex; align-items: flex-start; gap: 6px; font-size: 11.5px; color: var(--primary); background: oklch(0.508 0.118 175 / 0.10); border-radius: 8px; padding: 6px 9px; line-height: 1.35; }
+
+  /* ============ MOBILE RESERVE BAR ============ */
+  .mobile-reserve { display: none; }
+
+  /* ============ FLOATING AI CONCIERGE ============ */
+  .fab { position: fixed; right: 26px; bottom: 26px; z-index: 60; display: flex; align-items: center; gap: 10px;
+    padding: 12px 18px 12px 14px; background: var(--accent); color: var(--accent-foreground); border: 0; border-radius: 999px;
+    font: inherit; font-weight: 700; cursor: pointer; box-shadow: var(--shadow-lg); transition: transform .14s, filter .15s; }
+  .fab:hover { transform: translateY(-2px); filter: brightness(1.04); }
+  .fab .orb { width: 24px; height: 24px; box-shadow: 0 0 0 4px oklch(1 0 0 / 0.35); }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 980px) {
+    .vbody { grid-template-columns: 1fr; }
+    .vside { position: static; flex-direction: row; flex-wrap: wrap; }
+    .vside .panel { flex: 1; min-width: 280px; }
+  }
+  @media (max-width: 720px) {
+    .gallery { grid-template-columns: 1fr 1fr; grid-template-rows: 160px 110px; height: auto; }
+    .gallery .g-main { grid-column: 1 / 3; grid-row: 1; }
+    .gallery > div:nth-child(4), .gallery > div:nth-child(5) { display: none; }
+    .vhead h1 { font-size: 30px; }
+    .vhead-cta { width: 100%; }
+    .vhead-cta .btn { flex: 1; }
+    .feat-grid { grid-template-columns: 1fr; }
+    .vside { flex-direction: column; }
+    .topbar .wordmark { display: none; }
+    .venue { padding-bottom: 92px; }
+    .mobile-reserve {
+      display: flex; align-items: center; gap: 14px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 55;
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: color-mix(in oklab, var(--background) 94%, transparent);
+      backdrop-filter: blur(12px); border-top: 1px solid var(--border);
+    }
+    .mobile-reserve .mr-pr { font-weight: 700; }
+    .mobile-reserve .mr-pr small { font-weight: 500; color: var(--muted-foreground); font-size: 12px; }
+    .mobile-reserve .btn { margin-left: auto; width: auto; flex: none; padding: 11px 22px; }
+    .fab { bottom: 84px; }
+  }
+
+  /* ============ MOTION SAFETY ============ */
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ============ TOP BAR ============ -->
+  <header class="topbar">
+    <a class="back" href="explore.html">← Explore</a>
+    <div class="wordmark"><span class="sp" aria-hidden="true"></span>mde<b>·</b>ai</div>
+    <div class="top-actions">
+      <button class="btn btn-sm" id="saveTop">♡ Save</button>
+      <button class="btn btn-sm">↗ Share</button>
+    </div>
+  </header>
+
+  <main class="venue">
+
+    <!-- ============ GALLERY ============ -->
+    <section class="gallery" aria-label="Photos">
+      <div class="g-main ph ph-vig"></div>
+      <div class="ph ph-vig"></div>
+      <div class="ph ph-vig"></div>
+      <div class="ph ph-vig"></div>
+      <div class="ph ph-vig"></div>
+      <button class="g-all">▦ All 42 photos</button>
+    </section>
+
+    <!-- ============ TITLE BLOCK ============ -->
+    <div class="vhead">
+      <div class="vhead-main">
+        <span class="pill" id="vkind">Restaurant · Fine dining</span>
+        <h1 class="serif" id="vname">Carmen</h1>
+        <div class="vmeta">
+          <span class="star">★ 4.7</span>
+          <span class="link">320 reviews</span>
+          <span class="dot"></span><span>$$$</span>
+          <span class="dot"></span><span>Contemporary Colombian</span>
+          <span class="dot"></span><span id="varea">El Poblado · Provenza</span>
+          <span class="dot"></span><span class="open" style="color:var(--primary);font-weight:600">Open till 11 PM</span>
+        </div>
+        <div class="tags">
+          <span class="tag">Tasting menu</span>
+          <span class="tag">Date night</span>
+          <span class="tag">Terrace</span>
+          <span class="tag">Wine list</span>
+          <span class="tag">Reservations</span>
+        </div>
+      </div>
+      <div class="vhead-cta">
+        <button class="btn btn-primary">Reserve a table</button>
+        <button class="btn" id="saveHead">♡ Save</button>
+        <button class="btn">↗ Share</button>
+      </div>
+    </div>
+
+    <!-- ============ CONCIERGE "WHY" ============ -->
+    <div class="cx-why">
+      <div class="orb" aria-hidden="true"></div>
+      <div>
+        <div class="cx-why-h">Why your concierge picked this</div>
+        <p><span id="whyname">Carmen</span> matches your <b>Luxury Dining</b> collection and your taste for tasting menus. The terrace opens at 8 PM — ideal for the warm evening you have free on <b>Sat Jun 7</b>. <span class="who">It's a 4-minute walk from cafés you've saved in Provenza.</span></p>
+        <div class="cx-prompts">
+          <button class="prompt"><span class="ai">✦</span> Is the tasting menu worth it?</button>
+          <button class="prompt"><span class="ai">✦</span> Book a terrace table for 2</button>
+          <button class="prompt"><span class="ai">✦</span> What should I wear?</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ BODY ============ -->
+    <div class="vbody">
+
+      <!-- LEFT: main content -->
+      <div class="vmain">
+        <section>
+          <h2>About</h2>
+          <p class="lead">Carmen is one of Medellín's defining fine-dining rooms — a quietly luxurious space in El Poblado where chefs Rob Pevitts and Carmen Angel cook a contemporary Colombian menu built on coastal seafood, Antioquian produce and a serious wine cellar.</p>
+          <p class="lead">Come for the multi-course tasting menu on the candlelit terrace, or order à la carte at the bar. Service is polished but unhurried, and the kitchen is happy to walk you through pairings. Book ahead for weekends — tables after 8 PM go fast.</p>
+        </section>
+
+        <div class="sep"></div>
+
+        <section>
+          <h2>Highlights</h2>
+          <div class="feat-grid">
+            <div class="feat"><div class="fic">🍷</div><div><div class="ft">Sommelier-led pairings</div><div class="fs">350-label cellar, strong on South American wines</div></div></div>
+            <div class="feat"><div class="fic">🌿</div><div><div class="ft">Candlelit terrace</div><div class="fs">Open-air garden seating, opens 8 PM</div></div></div>
+            <div class="feat"><div class="fic">🐟</div><div><div class="ft">Coastal seafood</div><div class="fs">Flown in daily from the Pacific & Caribbean</div></div></div>
+            <div class="feat"><div class="fic">👔</div><div><div class="ft">Smart-casual</div><div class="fs">No shorts in the evening; jacket optional</div></div></div>
+            <div class="feat"><div class="fic">🅿️</div><div><div class="ft">Valet parking</div><div class="fs">Available from 6 PM nightly</div></div></div>
+            <div class="feat"><div class="fic">♿</div><div><div class="ft">Step-free access</div><div class="fs">Ground-floor dining room &amp; restrooms</div></div></div>
+          </div>
+        </section>
+
+        <div class="sep"></div>
+
+        <section>
+          <h2>Popular dishes</h2>
+          <div class="scroller">
+            <div class="dish"><div class="img ph ph-vig"></div><div class="db"><div class="dn">Octopus, ají &amp; corn</div><div class="dp">Signature · $26</div></div></div>
+            <div class="dish"><div class="img ph ph-vig"></div><div class="db"><div class="dn">Short-rib, cacao mole</div><div class="dp">$32</div></div></div>
+            <div class="dish"><div class="img ph ph-vig"></div><div class="db"><div class="dn">Sea bass, coconut</div><div class="dp">$29</div></div></div>
+            <div class="dish"><div class="img ph ph-vig"></div><div class="db"><div class="dn">Passion-fruit soufflé</div><div class="dp">Dessert · $14</div></div></div>
+            <div class="dish"><div class="img ph ph-vig"></div><div class="db"><div class="dn">7-course tasting</div><div class="dp">Chef's menu · $78</div></div></div>
+          </div>
+        </section>
+
+        <div class="sep"></div>
+
+        <section>
+          <h2>Reviews</h2>
+          <div class="ai-summary">
+            <div class="o2" aria-hidden="true"></div>
+            <div>
+              <div class="sh">Concierge summary of 320 reviews</div>
+              <p>Guests consistently praise the <b>tasting menu</b>, <b>terrace ambiance</b> and <b>attentive service</b>. A few note it's a splurge and that weekend tables need booking a week out. Best for special occasions and date nights.</p>
+            </div>
+          </div>
+          <div class="review">
+            <div class="av">M</div>
+            <div>
+              <div class="rn">María L. <span class="rm">· Local Guide · 2 weeks ago</span></div>
+              <div class="rstars">★★★★★</div>
+              <p>Easily the best meal I've had in Medellín. The octopus starter and the wine pairing were unforgettable, and the terrace at night is magical. Worth every peso.</p>
+            </div>
+          </div>
+          <div class="review">
+            <div class="av">J</div>
+            <div>
+              <div class="rn">James W. <span class="rm">· 1 month ago</span></div>
+              <div class="rstars">★★★★☆</div>
+              <p>Beautiful room and impeccable service. The short rib was a highlight. It is on the pricey side, but for a special night it delivers. Book ahead for the terrace.</p>
+            </div>
+          </div>
+          <button class="btn btn-sm" style="margin-top:16px">Read all 320 reviews</button>
+        </section>
+
+        <div class="sep"></div>
+
+        <section>
+          <h2>Mentioned in</h2>
+          <div class="chips">
+            <a class="chip-link"><span class="ci">🍽</span><span><span class="ct" style="display:block">Luxury Dining</span><span class="cs">Your collection · 6 places</span></span></a>
+            <a class="chip-link"><span class="ci">🧭</span><span><span class="ct" style="display:block">First-timer's Medellín</span><span class="cs">Concierge guide · 7 stops</span></span></a>
+            <a class="chip-link"><span class="ci">♥</span><span><span class="ct" style="display:block">Date Night</span><span class="cs">Your collection · 8 places</span></span></a>
+          </div>
+        </section>
+      </div>
+
+      <!-- RIGHT: sticky reserve + info -->
+      <aside class="vside">
+        <div class="panel">
+          <div class="res-h">
+            <div class="pr">Tasting from $78 <small>/ person</small></div>
+            <div class="rt"><span class="star">★ 4.7</span></div>
+          </div>
+          <div class="res-grid">
+            <div class="field"><div class="fl">Date</div><div class="fv">Sat, Jun 7</div></div>
+            <div class="field"><div class="fl">Party</div><div class="fv">2 guests</div></div>
+            <div class="field full"><div class="fl">Time</div><div class="fv">Pick a slot below</div></div>
+          </div>
+          <div class="slots">
+            <button class="slot">7:00 PM</button>
+            <button class="slot on">8:30 PM</button>
+            <button class="slot">9:00 PM</button>
+            <button class="slot">9:30 PM</button>
+          </div>
+          <button class="btn btn-primary btn-lg" style="margin-top:14px">Reserve · 8:30 PM</button>
+          <div class="res-note">Free cancellation up to 24h · You won't be charged yet</div>
+        </div>
+
+        <div class="panel">
+          <div class="info-row"><span class="ic">🕑</span><div><b>Hours</b> · <span class="open">Open now</span> till 11 PM<br/><span style="color:var(--muted-foreground)">Tue–Sun 12–11 PM · Mon closed</span></div></div>
+          <div class="info-row"><span class="ic">📍</span><div>Carrera 36 #10A-27<br/><span style="color:var(--muted-foreground)">Provenza, El Poblado · Medellín</span></div></div>
+          <div class="info-row"><span class="ic">📞</span><div>+57 4 311 9625</div></div>
+          <div class="mini-map" aria-label="Map preview">
+            <div class="road" style="left:0;right:0;top:46%;height:4px"></div>
+            <div class="road" style="top:0;bottom:0;left:40%;width:3px"></div>
+            <div class="mpin"><span>🍽</span></div>
+          </div>
+          <button class="btn btn-sm" style="width:100%;margin-top:12px">Open in map</button>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ============ PAIRS WELL WITH ============ -->
+    <section class="pairs">
+      <h2 class="serif">Pairs well with</h2>
+      <div class="sub">Nearby spots your concierge would line up for the same night</div>
+      <div class="card-grid">
+        <article class="card">
+          <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Café</span></div></div>
+          <div class="card-body">
+            <div class="name">Pergamino Café</div>
+            <div class="row"><span class="star">★ 4.6</span><span class="dot"></span><span>$$</span><span class="dot"></span><span>Provenza · 0.4 km</span></div>
+            <div class="why"><span aria-hidden="true">✦</span><span><b>Why:</b> a coffee nightcap, 4 min away</span></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Cocktail bar</span></div></div>
+          <div class="card-body">
+            <div class="name">Salón Amador</div>
+            <div class="row"><span class="star">★ 4.5</span><span class="dot"></span><span>$$</span><span class="dot"></span><span>Provenza · 0.6 km</span></div>
+            <div class="why"><span aria-hidden="true">✦</span><span><b>Why:</b> on your Nightlife list · open till 3 AM</span></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="thumb ph ph-vig"><div class="badges"><span class="pill">Rooftop</span></div></div>
+          <div class="card-body">
+            <div class="name">Envy Rooftop</div>
+            <div class="row"><span class="star">★ 4.2</span><span class="dot"></span><span>$$$</span><span class="dot"></span><span>El Poblado · 1.3 km</span></div>
+            <div class="why"><span aria-hidden="true">✦</span><span><b>Why:</b> skyline drinks before dinner</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ MOBILE RESERVE BAR ============ -->
+  <div class="mobile-reserve">
+    <div class="mr-pr">From $78 <small>/ person</small><br/><span class="star" style="font-size:12px">★ 4.7</span> <small style="color:var(--muted-foreground)">· 320 reviews</small></div>
+    <button class="btn btn-primary">Reserve</button>
+  </div>
+
+  <!-- ============ FLOATING AI CONCIERGE ============ -->
+  <button class="fab" aria-label="Open AI concierge"><span class="orb"></span> Ask about Carmen</button>
+
+<script>
+(function () {
+  // ---- patch venue identity from ?name= (cards/pins pass it from explore.html) ----
+  var params = new URLSearchParams(window.location.search);
+  var name = params.get('name');
+  if (name) {
+    name = name.slice(0, 80);
+    document.getElementById('vname').textContent = name;
+    document.getElementById('whyname').textContent = name;
+    document.title = 'mdeai · ' + name;
+    var fab = document.querySelector('.fab');
+    if (fab) fab.lastChild.textContent = ' Ask about ' + name;
+  }
+
+  // ---- save toggles ----
+  document.querySelectorAll('#saveTop, #saveHead').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var on = b.getAttribute('data-on') === '1';
+      b.setAttribute('data-on', on ? '0' : '1');
+      b.textContent = on ? '♡ Save' : '♥ Saved';
+      b.style.color = on ? '' : 'var(--primary)';
+    });
+  });
+
+  // ---- reserve time slots ----
+  var slots = document.querySelectorAll('.slot');
+  var reserveBtn = document.querySelector('.btn-lg');
+  slots.forEach(function (s) {
+    s.addEventListener('click', function () {
+      slots.forEach(function (x) { x.classList.remove('on'); });
+      s.classList.add('on');
+      if (reserveBtn) reserveBtn.textContent = 'Reserve · ' + s.textContent;
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

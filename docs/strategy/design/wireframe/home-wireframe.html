@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MDE — Home Page Wireframe + Component Spec</title>
+<style>
+  /* ============ tokens (light, from globals.css :root) ============ */
+  :root{
+    --bg: oklch(0.985 0.002 247);
+    --surface: oklch(1 0 0);
+    --ink: oklch(0.28 0.03 257);
+    --muted: oklch(0.55 0.02 257);
+    --line: oklch(0.90 0.006 257);
+    --line-2: oklch(0.84 0.008 257);
+    --primary: oklch(0.508 0.118 175);      /* teal — interactive/nav */
+    --primary-soft: oklch(0.95 0.03 178);
+    --accent: oklch(0.795 0.184 86);        /* gold — AI concierge + stars */
+    --accent-soft: oklch(0.96 0.05 90);
+    --map: oklch(0.62 0.10 235);            /* cartography blue */
+    --ph: linear-gradient(150deg, oklch(0.970 0.015 180), oklch(0.926 0.030 184)); /* pale-teal #E1F6F2 */
+    --radius: 14px;
+    --shadow: 0 1px 2px oklch(0.4 0.03 257 / 0.05), 0 8px 24px oklch(0.4 0.03 257 / 0.06);
+  }
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior: auto; } }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .serif{ font-family: "Playfair Display", Georgia, "Times New Roman", serif; }
+  a{ color:var(--primary); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+
+  /* ============ page shell ============ */
+  .wrap{ max-width: 1200px; margin:0 auto; padding: 0 20px 80px; }
+
+  /* ============ hero / legend ============ */
+  header.top{
+    position:sticky; top:0; z-index:20; background:oklch(0.985 0.002 247 / 0.86);
+    backdrop-filter: blur(10px); border-bottom:1px solid var(--line);
+  }
+  .top-inner{ max-width:1200px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .brand{ display:flex; align-items:center; gap:9px; font-weight:700; letter-spacing:-0.02em; }
+  .brand .dot{ width:22px; height:22px; border-radius:7px; background:linear-gradient(135deg, var(--accent), oklch(0.74 0.16 70)); }
+  .brand small{ font-weight:500; color:var(--muted); }
+  .top-spacer{ flex:1; }
+  .legend{ display:flex; gap:6px; flex-wrap:wrap; }
+
+  .titleblock{ padding:34px 0 14px; }
+  .titleblock h1{ margin:0 0 6px; font-size:30px; letter-spacing:-0.02em; font-weight:600; }
+  .titleblock p{ margin:0; color:var(--muted); max-width:60ch; }
+  .meta-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+
+  /* ============ chips ============ */
+  .chip{ display:inline-flex; align-items:center; gap:6px; padding:3px 9px; border-radius:999px;
+    font-size:11.5px; font-weight:600; border:1px solid var(--line-2); background:var(--surface); color:var(--muted); white-space:nowrap; }
+  .chip b{ font-weight:800; }
+  .chip.t21{ background:var(--primary-soft); border-color:transparent; color:oklch(0.40 0.10 175); }
+  .chip.shad{ background:oklch(0.95 0.005 257); border-color:transparent; color:oklch(0.40 0.02 257); }
+  .chip.ai{ background:var(--accent-soft); border-color:transparent; color:oklch(0.48 0.12 80); }
+  .chip.map{ background:oklch(0.95 0.03 235); border-color:transparent; color:oklch(0.42 0.10 235); }
+  .chip.custom{ background:repeating-linear-gradient(45deg, oklch(0.97 0.004 257), oklch(0.97 0.004 257) 5px, oklch(0.94 0.006 257) 5px, oklch(0.94 0.006 257) 10px); border:1px dashed var(--line-2); color:var(--muted); }
+  .chip .sc{ background:oklch(1 0 0 / 0.6); border-radius:999px; padding:0 5px; font-size:10.5px; }
+
+  /* ============ info card ============ */
+  .info{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); margin:8px 0 4px; }
+  .info h4{ margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .rules li{ margin:3px 0; }
+  .rules b{ color:var(--ink); }
+
+  /* ============ spec rows ============ */
+  .row{ display:grid; grid-template-columns: 30px minmax(0,1fr) 360px; gap:18px; align-items:start;
+    padding:22px 0; border-top:1px solid var(--line); scroll-margin-top:70px; }
+  .row:first-of-type{ border-top:none; }
+  .rail .n{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:13px; font-weight:700;
+    color:var(--primary); background:var(--primary-soft); border-radius:8px; width:30px; height:30px;
+    display:flex; align-items:center; justify-content:center; position:sticky; top:64px; }
+
+  /* ---- wireframe blocks ---- */
+  .wire{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
+  .wire .lbl{ font-size:10.5px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:10px; }
+  .g{ height:9px; border-radius:5px; background:oklch(0.92 0.006 257); }
+  .g.dk{ background:oklch(0.86 0.01 257); }
+  .g.w70{ width:70%; } .g.w55{ width:55%; } .g.w40{ width:40%; } .g.w85{ width:85%; } .g.w25{ width:25%; }
+  .g.tall{ height:15px; }
+  .stack > *{ margin-bottom:7px; } .stack > *:last-child{ margin-bottom:0; }
+  .img{ background:var(--ph); border-radius:9px; position:relative; }
+  .img::after{ content:"IMG"; position:absolute; top:6px; left:7px; font-size:9px; font-weight:700; letter-spacing:0.1em; color:oklch(0.45 0.04 190 / 0.55); }
+  .bar{ display:flex; align-items:center; gap:10px; }
+  .pl{ display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:999px; background:oklch(0.95 0.005 257); font-size:11px; color:var(--muted); border:1px solid var(--line); }
+  .pl.solid{ background:var(--primary); color:#fff; border-color:transparent; font-weight:600; }
+  .pl.gold{ background:var(--accent); color:oklch(0.30 0.06 80); border-color:transparent; font-weight:700; }
+  .pl.ghost{ background:transparent; }
+  .searchbar{ display:flex; align-items:center; gap:10px; border:1.5px solid var(--line-2); border-radius:999px; padding:10px 12px; background:var(--surface); }
+  .searchbar .ph-txt{ flex:1; color:var(--muted); font-size:12.5px; }
+  .navrow{ display:flex; align-items:center; gap:14px; }
+  .navrow .g{ width:54px; }
+  .cards{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .cards.c3{ grid-template-columns:repeat(3,1fr); }
+  .mini-card{ border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  .mini-card .img{ height:64px; border-radius:0; }
+  .mini-card .mc-b{ padding:8px; }
+  .mapbox{ height:150px; border-radius:11px; position:relative; overflow:hidden;
+    background:
+      radial-gradient(circle at 30% 40%, oklch(0.93 0.02 160 / 0.5), transparent 36%),
+      linear-gradient(90deg, oklch(0.90 0.015 247), oklch(0.945 0.01 200)); border:1px solid var(--line); }
+  .pin{ position:absolute; width:13px; height:13px; border-radius:50% 50% 50% 2px; background:var(--primary); transform:rotate(45deg); box-shadow:0 1px 3px oklch(0.3 0.05 175 / 0.4); }
+  .pin.g{ background:var(--map); }
+  .vstrip{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .vtile{ border:1px solid var(--line); border-radius:11px; padding:14px 10px; text-align:center; background:var(--surface); }
+  .vtile .ic{ width:26px; height:26px; border-radius:8px; background:var(--primary-soft); margin:0 auto 8px; }
+  .band{ border:1px dashed var(--line-2); border-radius:11px; padding:14px 16px; display:flex; align-items:center; gap:12px; background:oklch(0.985 0.003 90); }
+  .band.gold{ background:var(--accent-soft); border-color:transparent; }
+  .wordmark{ font-size:46px; font-weight:800; letter-spacing:-0.04em; color:oklch(0.90 0.01 257); line-height:1; }
+  .foot-cols{ display:flex; gap:22px; margin-top:10px; }
+  .foot-cols > div{ flex:1; }
+
+  /* ---- spec card ---- */
+  .spec{ background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--primary); border-radius:12px; padding:14px 15px; box-shadow:var(--shadow); position:sticky; top:64px; }
+  .spec.ai-led{ border-left-color:var(--accent); }
+  .spec.map-led{ border-left-color:var(--map); }
+  .spec h3{ margin:0 0 9px; font-size:15px; letter-spacing:-0.01em; }
+  .spec .picks{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:9px; }
+  .spec .links{ display:flex; flex-direction:column; gap:3px; margin-bottom:10px; }
+  .spec .links a{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:11px; color:var(--primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .spec .links a::before{ content:"↗ "; opacity:0.6; }
+  .spec ul.notes{ margin:0; padding-left:16px; color:var(--muted); font-size:12.5px; }
+  .spec ul.notes li{ margin:3px 0; }
+  .spec ul.notes b{ color:var(--ink); font-weight:600; }
+  .tag-keep{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--primary); }
+
+  /* ============ responsive ============ */
+  @media (max-width: 900px){
+    .row{ grid-template-columns: 24px 1fr; }
+    .spec{ grid-column: 1 / -1; position:static; }
+    .rail .n{ position:static; }
+    .grid2{ grid-template-columns:1fr; }
+    .cards{ grid-template-columns:repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><span class="dot"></span>mde<span style="color:var(--muted)">·</span>ai&nbsp;<small>home wireframe</small></div>
+    <div class="top-spacer"></div>
+    <div class="legend">
+      <span class="chip t21">21st.dev</span>
+      <span class="chip shad">shadcn/ui</span>
+      <span class="chip ai">CopilotKit · AI</span>
+      <span class="chip map">Google Maps</span>
+      <span class="chip custom">custom</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="titleblock">
+    <h1 class="serif">Home page — wireframe &amp; component spec</h1>
+    <p>Build-ready blueprint for <code>/</code>. Visual companion to <a href="01-marketing.md">01-marketing.md</a>. Each band = one section: low-fi layout on the left, the component to use + score + link + UX/layout notes on the right. Scores are MDE-fit judgment (fit 50 · production-ready 30 · low restyle effort 20), not scraped ratings.</p>
+    <div class="meta-row">
+      <span class="chip">14 sections</span>
+      <span class="chip">light mode · pale-teal placeholders</span>
+      <span class="chip">teal = interactive · gold = AI + stars</span>
+      <span class="chip">EN only · Phase 1</span>
+    </div>
+  </div>
+
+  <div class="info">
+    <h4>Global layout rules</h4>
+    <div class="grid2">
+      <ul class="rules" style="margin:0; padding-left:18px;">
+        <li><b>Container:</b> <code>max-w-7xl mx-auto px-4 sm:px-6 lg:px-8</code></li>
+        <li><b>Section rhythm:</b> <code>py-16 md:py-20 lg:py-24</code>, alternate <code>bg-background</code> / <code>bg-muted/40</code></li>
+        <li><b>Card grid:</b> <code>grid gap-4 sm:grid-cols-2 lg:grid-cols-3/4</code>; mobile → horizontal scroll-snap</li>
+        <li><b>Images:</b> one pale-teal placeholder (#E1F6F2); real Places photos fill in prod</li>
+      </ul>
+      <ul class="rules" style="margin:0; padding-left:18px;">
+        <li><b>Palette discipline:</b> teal everywhere interactive; gold only for AI concierge + rating stars; category = glyph + label, not color</li>
+        <li><b>Don't replace:</b> the concierge = CopilotKit (restyle only); the map = @vis.gl ChatMap (<code>mapId</code> + <code>X-Goog-FieldMask</code>)</li>
+        <li><b>A11y/perf:</b> <code>prefers-reduced-motion</code> on hero + marquee; skeletons on every async row</li>
+        <li><b>Build order:</b> P0 primitives → hero + search → map teaser → discovery rows → host/CTA/footer</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ============ 01 TOP NAV ============ -->
+  <section class="row" id="s1">
+    <div class="rail"><span class="n">01</span></div>
+    <div class="wire">
+      <div class="lbl">Sticky top nav</div>
+      <div class="navrow">
+        <div class="bar" style="gap:7px;"><span class="pl ghost" style="font-weight:700;color:var(--ink)">mde·ai</span></div>
+        <div class="g w55" style="height:8px;"></div>
+        <div class="navrow" style="margin-left:auto;">
+          <div class="g"></div><div class="g"></div><div class="g"></div>
+          <span class="pl solid">Host</span>
+        </div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>01 · Top navigation</h3>
+      <div class="picks">
+        <span class="chip shad">shadcn primitives</span>
+        <span class="chip custom">custom navbar</span>
+      </div>
+      <div class="links">
+        <a href="https://ui.shadcn.com/docs/components/navigation-menu">ui.shadcn.com/.../navigation-menu</a>
+        <a href="https://ui.shadcn.com/docs/components/sheet">ui.shadcn.com/.../sheet (mobile)</a>
+      </div>
+      <ul class="notes">
+        <li><b>Sticky + blur</b> (<code>backdrop-filter</code>), 1px bottom border on scroll</li>
+        <li>Logo left · verticals center · Saved + <b>Host</b> CTA right</li>
+        <li>Mobile → hamburger opens <code>Sheet</code>; no language switcher (EN Phase 1)</li>
+        <li>Host button = teal solid (primary conversion for Roberto)</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 02 HERO + CONCIERGE INPUT ============ -->
+  <section class="row" id="s2">
+    <div class="rail"><span class="n">02</span></div>
+    <div class="wire">
+      <div class="lbl">Hero — the search IS the product</div>
+      <div class="stack">
+        <span class="pl gold" style="font-size:10px;">✦ AI concierge</span>
+        <div class="g tall w70 dk"></div>
+        <div class="g tall w55 dk"></div>
+        <div class="searchbar">
+          <span class="pl gold" style="width:18px;height:18px;padding:0;justify-content:center;">✦</span>
+          <span class="ph-txt">Ask anything about Medellín — "rooftop bars in Provenza tonight"</span>
+          <span class="pl solid">Ask</span>
+        </div>
+        <div class="bar" style="gap:7px; flex-wrap:wrap;">
+          <span class="pl">Rentals in Laureles</span><span class="pl">What's on this weekend?</span><span class="pl">Best cafés to work from</span>
+        </div>
+      </div>
+    </div>
+    <aside class="spec ai-led">
+      <h3>02 · Hero + concierge input</h3>
+      <div class="picks">
+        <span class="chip ai">CopilotKit input · reuse</span>
+        <span class="chip t21">animated-hero-section-1 <b>88</b></span>
+        <span class="chip t21">hero-badge <b>84</b></span>
+      </div>
+      <div class="links">
+        <a href="https://21st.dev/community/components/ravikatiyar/animated-hero-section-1/default">21st/ravikatiyar/animated-hero-section-1</a>
+        <a href="https://21st.dev/community/components/Codehagen/hero-badge/default">21st/Codehagen/hero-badge</a>
+      </div>
+      <ul class="notes">
+        <li><b>Input = CopilotKit</b>, not a 21st field — submitting seeds <code>/chat?q=…</code> (autofocus desktop)</li>
+        <li>Use the 21st hero as the <b>shell</b> (headline + layout); drop our input + chips inside</li>
+        <li><b>Strip the Sparkles cliché</b> from the 21st block — our gold ✦ mark is the one allowed accent</li>
+        <li>Swap any <code>oklch()</code> gradient → <code>rgba()</code>; solid <code>text-foreground</code> headline (no faint gradient text)</li>
+        <li>Cold-start chips below input (neutral pills) → seed prompts</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 03 LIVE MAP TEASER ============ -->
+  <section class="row" id="s3">
+    <div class="rail"><span class="n">03</span></div>
+    <div class="wire">
+      <div class="lbl">Live mini-map · real pins · read-only</div>
+      <div class="mapbox">
+        <span class="pin" style="left:22%; top:38%;"></span>
+        <span class="pin" style="left:46%; top:55%;"></span>
+        <span class="pin g" style="left:63%; top:30%;"></span>
+        <span class="pin" style="left:72%; top:62%;"></span>
+        <span class="pin" style="left:38%; top:72%;"></span>
+        <span class="pl ghost" style="position:absolute; right:8px; bottom:8px; font-size:10px;">▣ Google Maps</span>
+      </div>
+    </div>
+    <aside class="spec map-led">
+      <h3>03 · Live map teaser</h3>
+      <div class="picks">
+        <span class="chip map">@vis.gl ChatMap · reuse</span>
+      </div>
+      <div class="links">
+        <a href="https://visgl.github.io/react-google-maps/">visgl.github.io/react-google-maps</a>
+      </div>
+      <ul class="notes">
+        <li><b>Reuse the existing ChatMap</b> — do not rebuild with a UI-kit "map container"</li>
+        <li>Hard rules: <code>mapId</code> on <code>&lt;Map&gt;</code> + <code>X-Goog-FieldMask</code> on every Places call</li>
+        <li>Read-only here; 5 real pins; tap a pin → <code>/chat</code> with that vertical</li>
+        <li>Pins uniform teal (cartography blue allowed for water/parks); skeleton while tiles load</li>
+        <li>The anti-GuideGeek payoff: "see it on the map, not a list of links"</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 04 VERTICALS STRIP ============ -->
+  <section class="row" id="s4">
+    <div class="rail"><span class="n">04</span></div>
+    <div class="wire">
+      <div class="lbl">Verticals strip → discovery pages</div>
+      <div class="vstrip">
+        <div class="vtile"><div class="ic"></div><div class="g w70" style="margin:0 auto;"></div></div>
+        <div class="vtile"><div class="ic"></div><div class="g w70" style="margin:0 auto;"></div></div>
+        <div class="vtile"><div class="ic"></div><div class="g w70" style="margin:0 auto;"></div></div>
+        <div class="vtile"><div class="ic"></div><div class="g w70" style="margin:0 auto;"></div></div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>04 · Verticals strip</h3>
+      <div class="picks">
+        <span class="chip shad">button / card</span>
+        <span class="chip custom">custom tiles</span>
+      </div>
+      <div class="links">
+        <a href="https://ui.shadcn.com/docs/components/card">ui.shadcn.com/.../card</a>
+      </div>
+      <ul class="notes">
+        <li>4 tiles: <b>Rentals · Restaurants · Nightlife · Events</b> → L1 discovery</li>
+        <li><b>Glyph + label</b> identifies category (lucide icon), <b>not</b> color — pins/tiles stay uniform teal</li>
+        <li>Hover: subtle lift (<code>-translate-y-0.5</code>), teal ring focus state</li>
+        <li>Mobile → 2×2 grid</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 05 CONCIERGE SUGGESTIONS ============ -->
+  <section class="row" id="s5">
+    <div class="rail"><span class="n">05</span></div>
+    <div class="wire">
+      <div class="lbl">Concierge suggestions — seeded prompts</div>
+      <div class="cards c3">
+        <div class="mini-card"><div class="mc-b stack"><span class="pl gold" style="font-size:9px;">✦</span><div class="g w85"></div><div class="g w55"></div></div></div>
+        <div class="mini-card"><div class="mc-b stack"><span class="pl gold" style="font-size:9px;">✦</span><div class="g w85"></div><div class="g w55"></div></div></div>
+        <div class="mini-card"><div class="mc-b stack"><span class="pl gold" style="font-size:9px;">✦</span><div class="g w85"></div><div class="g w55"></div></div></div>
+      </div>
+    </div>
+    <aside class="spec ai-led">
+      <h3>05 · Concierge suggestions</h3>
+      <div class="picks">
+        <span class="chip shad">card <b>82</b></span>
+        <span class="chip custom">custom content</span>
+      </div>
+      <div class="links">
+        <a href="https://ui.shadcn.com/docs/components/card">ui.shadcn.com/.../card</a>
+      </div>
+      <ul class="notes">
+        <li>"Build my Friday night" · "Romantic dinner near Provenza" · "Plan my weekend"</li>
+        <li>Each card → seeds <code>/chat</code> with that prompt (personalized from saved + context)</li>
+        <li>Gold ✦ marks AI-authored suggestions; body stays neutral</li>
+        <li>Custom on the shadcn <code>card</code> primitive — no pre-built card kit</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 06 TRENDING EVENTS (CAROUSEL) ============ -->
+  <section class="row" id="s6">
+    <div class="rail"><span class="n">06</span></div>
+    <div class="wire">
+      <div class="lbl">Trending events — carousel</div>
+      <div class="cards">
+        <div class="mini-card"><div class="img"></div><div class="mc-b stack"><div class="g w85"></div><div class="g w40"></div></div></div>
+        <div class="mini-card"><div class="img"></div><div class="mc-b stack"><div class="g w85"></div><div class="g w40"></div></div></div>
+        <div class="mini-card"><div class="img"></div><div class="mc-b stack"><div class="g w85"></div><div class="g w40"></div></div></div>
+        <div class="mini-card"><div class="img"></div><div class="mc-b stack"><div class="g w85"></div><div class="g w40"></div></div></div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>06 · Trending events</h3>
+      <div class="picks">
+        <span class="chip t21">gallery4 <b>86</b></span>
+      </div>
+      <div class="links">
+        <a href="https://21st.dev/community/components/shadcnblockscom/gallery4/default">21st/shadcnblockscom/gallery4</a>
+      </div>
+      <ul class="notes">
+        <li><b>Install once, reuse</b> for every horizontal curated row (events, collections, venue gallery)</li>
+        <li>Scroll-snap; arrows desktop, swipe mobile; pale-teal placeholders</li>
+        <li>Date + venue meta in neutral; Save ♡ top-right of each card</li>
+        <li>Skeleton row while loading; empty → "Nothing trending — ask the concierge"</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 07 DISCOVERY ROWS ============ -->
+  <section class="row" id="s7">
+    <div class="rail"><span class="n">07</span></div>
+    <div class="wire">
+      <div class="lbl">Discovery rows × 4 — Restaurants · Cafés · Nightlife · Rentals</div>
+      <div class="stack">
+        <div class="bar"><div class="g w25 dk"></div><span class="pl ghost" style="margin-left:auto; font-size:10px;">View all →</span></div>
+        <div class="cards">
+          <div class="mini-card"><div class="img"></div><div class="mc-b stack"><div class="g w85"></div><div class="bar" style="gap:5px;"><span class="pl gold" style="font-size:9px;padding:1px 5px;">★4.6</span><div class="g w40"></div></div></div></div>
+          <div class="mini-card"><div class="img"></div><div class="mc-b stack"><div class="g w85"></div><div class="bar" style="gap:5px;"><span class="pl gold" style="font-size:9px;padding:1px 5px;">★4.5</span><div class="g w40"></div></div></div></div>
+          <div class="mini-card"><div class="img"></div><div class="mc-b stack"><div class="g w85"></div><div class="bar" style="gap:5px;"><span class="pl gold" style="font-size:9px;padding:1px 5px;">★4.2</span><div class="g w40"></div></div></div></div>
+          <div class="mini-card"><div class="img"></div><div class="mc-b stack"><div class="g w85"></div><div class="bar" style="gap:5px;"><span class="pl gold" style="font-size:9px;padding:1px 5px;">★4.8</span><div class="g w40"></div></div></div></div>
+        </div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>07 · Discovery card rows</h3>
+      <div class="picks">
+        <span class="chip shad">card <b>82</b></span>
+        <span class="chip custom">bespoke anatomy</span>
+        <span class="chip t21">gallery4 (row)</span>
+      </div>
+      <div class="links">
+        <a href="https://ui.shadcn.com/docs/components/card">ui.shadcn.com/.../card</a>
+        <a href="https://21st.dev/community/components/shadcnblockscom/gallery4/default">21st/shadcnblockscom/gallery4</a>
+      </div>
+      <ul class="notes">
+        <li><b>Keep our custom card</b>: image · kind pill · name · ★ rating · meta · <b>"Why" line</b> · ♡ + CTAs</li>
+        <li>Don't install card-21/card-7/cards-1 — re-skinning a kit &gt; building our anatomy</li>
+        <li>★ rating = gold (idiomatic); kind pill + meta = neutral</li>
+        <li>4 identical rows by vertical; reuse one <code>&lt;PlaceCard&gt;</code> + <code>&lt;CardRow&gt;</code></li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 08 NEIGHBORHOOD INTELLIGENCE ============ -->
+  <section class="row" id="s8">
+    <div class="rail"><span class="n">08</span></div>
+    <div class="wire">
+      <div class="lbl">Neighborhood intelligence — editorial scrollytelling</div>
+      <div class="bar" style="gap:14px; align-items:stretch;">
+        <div class="img" style="flex:1; height:120px;"></div>
+        <div class="stack" style="flex:1;">
+          <div class="g tall w70 dk"></div>
+          <div class="g w85"></div><div class="g w85"></div><div class="g w55"></div>
+          <div class="bar" style="gap:6px;"><span class="pl">Laureles</span><span class="pl">El Poblado</span><span class="pl">Envigado</span></div>
+        </div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>08 · Neighborhood intelligence</h3>
+      <div class="picks">
+        <span class="chip t21">sticky-scroll <b>83</b></span>
+        <span class="chip t21">feature-with-image-comparison <b>80</b></span>
+      </div>
+      <div class="links">
+        <a href="https://21st.dev/community/components/ui-layouts/sticky-scroll/default">21st/ui-layouts/sticky-scroll</a>
+        <a href="https://21st.dev/community/components/tommyjepsen/feature-with-image-comparison/default">21st/tommyjepsen/feature-with-image-comparison</a>
+      </div>
+      <ul class="notes">
+        <li><b>Pick one effect</b> — sticky-scroll for "Laureles vs Poblado" storytelling (recommended)</li>
+        <li>Comparison block only if doing a literal before/after or vibe A-vs-B split</li>
+        <li>Use <b>sparingly</b> — one editorial moment; parallax/scroll-jack fights calm-luxury restraint</li>
+        <li>Guard with <code>prefers-reduced-motion</code>; data-backed insights (walk score, safety, price band)</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 09 TRUST BAND ============ -->
+  <section class="row" id="s9">
+    <div class="rail"><span class="n">09</span></div>
+    <div class="wire">
+      <div class="lbl">Trust band — grounding + verified + live counts</div>
+      <div class="band">
+        <span class="pl">✔ Grounded in Google Maps</span>
+        <span class="pl">✔ Verified listings</span>
+        <span class="pl">✔ No scams</span>
+        <div class="g w40" style="margin-left:auto;"></div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>09 · Trust band</h3>
+      <div class="picks">
+        <span class="chip custom">custom strip</span>
+      </div>
+      <div class="links">
+        <a href="https://ui.shadcn.com/docs/components/badge">ui.shadcn.com/.../badge</a>
+      </div>
+      <ul class="notes">
+        <li><b>Real numbers</b>: "3.2k places · 180 verified rentals · updated daily"</li>
+        <li>Total-price honesty framing (anti-scam, Airbnb-style trust copy)</li>
+        <li>Neutral checkmark pills; freshness signal drives retention</li>
+        <li>States: live counts → "—" placeholder → hide line if empty</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 10 HOST BAND ============ -->
+  <section class="row" id="s10">
+    <div class="rail"><span class="n">10</span></div>
+    <div class="wire">
+      <div class="lbl">Host conversion band — Roberto</div>
+      <div class="band gold">
+        <div class="stack" style="flex:1;"><div class="g tall w55 dk"></div><div class="g w70"></div></div>
+        <span class="pl solid">Get started →</span>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>10 · Host band</h3>
+      <div class="picks">
+        <span class="chip t21">cta-with-marquee <b>84</b></span>
+        <span class="chip custom">or custom band</span>
+      </div>
+      <div class="links">
+        <a href="https://21st.dev/community/components/uimix/cta-with-marquee/default">21st/uimix/cta-with-marquee</a>
+      </div>
+      <ul class="notes">
+        <li>Single Roberto conversion: "Publish your event in 30s with AI" → <code>/host/event/new</code></li>
+        <li>Supply-acquisition CTA (drives the marketplace's other side)</li>
+        <li>If using the marquee, dial back edge-fade (<code>w-1/6</code>) and give cards visible <code>bg-card</code></li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 11 TESTIMONIALS ============ -->
+  <section class="row" id="s11">
+    <div class="rail"><span class="n">11</span></div>
+    <div class="wire">
+      <div class="lbl">Testimonials — social proof</div>
+      <div class="cards c3">
+        <div class="mini-card"><div class="mc-b stack"><div class="g w40"></div><div class="g w85"></div><div class="g w70"></div></div></div>
+        <div class="mini-card"><div class="mc-b stack"><div class="g w40"></div><div class="g w85"></div><div class="g w70"></div></div></div>
+        <div class="mini-card"><div class="mc-b stack"><div class="g w40"></div><div class="g w85"></div><div class="g w70"></div></div></div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>11 · Testimonials</h3>
+      <div class="picks">
+        <span class="chip t21">/s/features browse <b>78</b></span>
+      </div>
+      <div class="links">
+        <a href="https://21st.dev/community/components/s/features">21st.dev/community/components/s/features</a>
+      </div>
+      <ul class="notes">
+        <li><b>Pick live</b> from the category — choose a restrained quote-card layout</li>
+        <li>Fix faint cards: <code>bg-card border border-border/60 shadow-sm</code> (not <code>from-muted/10</code>)</li>
+        <li>Avatar = shadcn <code>avatar</code>; keep to 3 quotes, no auto-rotating carousel</li>
+        <li>Optional this phase — can defer until we have real quotes</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 12 HOW IT WORKS + FINAL CTA ============ -->
+  <section class="row" id="s12">
+    <div class="rail"><span class="n">12</span></div>
+    <div class="wire">
+      <div class="lbl">How it works + final CTA</div>
+      <div class="stack">
+        <div class="bar" style="gap:14px;">
+          <div class="vtile" style="flex:1;"><div class="ic"></div><div class="g w70" style="margin:0 auto;"></div></div>
+          <div class="vtile" style="flex:1;"><div class="ic"></div><div class="g w70" style="margin:0 auto;"></div></div>
+          <div class="vtile" style="flex:1;"><div class="ic"></div><div class="g w70" style="margin:0 auto;"></div></div>
+        </div>
+        <div class="band gold"><div class="g tall w55 dk"></div><span class="pl gold" style="margin-left:auto;">✦ Explore Medellín</span></div>
+      </div>
+    </div>
+    <aside class="spec ai-led">
+      <h3>12 · How it works + CTA</h3>
+      <div class="picks">
+        <span class="chip t21">cta-with-marquee <b>84</b></span>
+        <span class="chip custom">3-step row</span>
+      </div>
+      <div class="links">
+        <a href="https://21st.dev/community/components/uimix/cta-with-marquee/default">21st/uimix/cta-with-marquee</a>
+      </div>
+      <ul class="notes">
+        <li>3 steps: <b>Ask → See it on the map → Save or Book</b> (custom icon row)</li>
+        <li>Final CTA "<b>✦ Explore Medellín</b>" = gold (the one big concierge CTA)</li>
+        <li>Returns the user to the hero intent — closes the loop</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 13 FOOTER ============ -->
+  <section class="row" id="s13">
+    <div class="rail"><span class="n">13</span></div>
+    <div class="wire">
+      <div class="lbl">Footer — large wordmark</div>
+      <div class="wordmark serif">mde·ai</div>
+      <div class="foot-cols">
+        <div class="stack"><div class="g w70"></div><div class="g w55"></div><div class="g w55"></div></div>
+        <div class="stack"><div class="g w70"></div><div class="g w55"></div><div class="g w55"></div></div>
+        <div class="stack"><div class="g w70"></div><div class="g w55"></div><div class="g w55"></div></div>
+        <div class="stack"><div class="g w70"></div><div class="g w55"></div></div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>13 · Footer</h3>
+      <div class="picks">
+        <span class="chip t21">large-name-footer <b>84</b></span>
+      </div>
+      <div class="links">
+        <a href="https://21st.dev/community/components/arihantcodes_1f7b8c4d/large-name-footer/default">21st/arihantcodes/large-name-footer</a>
+      </div>
+      <ul class="notes">
+        <li>Big <b>mde·ai</b> wordmark (Playfair) = editorial luxury closer</li>
+        <li>Cols: About · Verticals · For hosts · Partners · WhatsApp · Legal</li>
+        <li>Swap any oklch gradients for solid fills; keep it calm, no marquee here</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- ============ 14 GLOBAL — FAB ============ -->
+  <section class="row" id="s14">
+    <div class="rail"><span class="n">14</span></div>
+    <div class="wire">
+      <div class="lbl">Persistent — Ask AI Concierge (FAB)</div>
+      <div class="bar"><div class="g w70"></div><span class="pl gold" style="margin-left:auto;">✦ Ask AI Concierge</span></div>
+    </div>
+    <aside class="spec ai-led">
+      <h3>14 · Concierge FAB (global)</h3>
+      <div class="picks">
+        <span class="chip ai">CopilotKit popup · reuse</span>
+        <span class="chip custom">custom FAB</span>
+      </div>
+      <div class="links">
+        <a href="https://docs.copilotkit.ai/">docs.copilotkit.ai</a>
+      </div>
+      <ul class="notes">
+        <li>Fixed bottom-right, gold; opens the CopilotKit popup thread anywhere on the page</li>
+        <li><b>Avoid</b> the radial-social-menu — too playful for the luxury calm; simple FAB</li>
+        <li>Persists across all surfaces; the always-available concierge entry</li>
+      </ul>
+    </aside>
+  </section>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MDE — Partner Signup (multi-step + AI co-pilot) Wireframe</title>
+<style>
+  :root{
+    --bg: oklch(0.985 0.002 247); --surface: oklch(1 0 0); --ink: oklch(0.28 0.03 257);
+    --muted: oklch(0.55 0.02 257); --line: oklch(0.90 0.006 257); --line-2: oklch(0.84 0.008 257);
+    --primary: oklch(0.508 0.118 175); --primary-soft: oklch(0.95 0.03 178);
+    --accent: oklch(0.795 0.184 86); --accent-soft: oklch(0.96 0.05 90); --map: oklch(0.62 0.10 235);
+    --ph: linear-gradient(150deg, oklch(0.970 0.015 180), oklch(0.926 0.030 184));
+    --gold-band: linear-gradient(135deg, oklch(0.90 0.10 92), oklch(0.83 0.16 80));
+    --radius: 14px; --shadow: 0 1px 2px oklch(0.4 0.03 257 / 0.05), 0 8px 24px oklch(0.4 0.03 257 / 0.06);
+  }
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; } @media (prefers-reduced-motion: reduce){ html{ scroll-behavior: auto; } .marquee-track{ animation:none !important; } }
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+  .serif{ font-family: "Playfair Display", Georgia, "Times New Roman", serif; }
+  a{ color:var(--primary); text-decoration:none; } code{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:0.92em; }
+  .wrap{ max-width: 1200px; margin:0 auto; padding: 0 20px 80px; }
+  header.top{ position:sticky; top:0; z-index:20; background:oklch(0.985 0.002 247 / 0.86); backdrop-filter: blur(10px); border-bottom:1px solid var(--line); }
+  .top-inner{ max-width:1200px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .brand{ display:flex; align-items:center; gap:9px; font-weight:700; letter-spacing:-0.02em; }
+  .brand .dot{ width:22px; height:22px; border-radius:7px; background:linear-gradient(135deg, var(--accent), oklch(0.74 0.16 70)); }
+  .brand small{ font-weight:500; color:var(--muted); } .top-spacer{ flex:1; } .legend{ display:flex; gap:6px; flex-wrap:wrap; }
+  .titleblock{ padding:34px 0 14px; }
+  .titleblock h1{ margin:0 0 6px; font-size:30px; letter-spacing:-0.02em; font-weight:600; }
+  .titleblock p{ margin:0; color:var(--muted); max-width:66ch; }
+  .meta-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .chip{ display:inline-flex; align-items:center; gap:6px; padding:3px 9px; border-radius:999px; font-size:11.5px; font-weight:600; border:1px solid var(--line-2); background:var(--surface); color:var(--muted); white-space:nowrap; }
+  .chip b{ font-weight:800; }
+  .chip.ai{ background:var(--accent-soft); border-color:transparent; color:oklch(0.48 0.12 80); }
+  .chip.shad{ background:oklch(0.95 0.005 257); border-color:transparent; color:oklch(0.40 0.02 257); }
+  .chip.t21{ background:var(--primary-soft); border-color:transparent; color:oklch(0.40 0.10 175); }
+  .chip.custom{ background:repeating-linear-gradient(45deg, oklch(0.97 0.004 257), oklch(0.97 0.004 257) 5px, oklch(0.94 0.006 257) 5px, oklch(0.94 0.006 257) 10px); border:1px dashed var(--line-2); color:var(--muted); }
+  .info{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); margin:8px 0 4px; }
+  .info h4{ margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:18px; } .rules li{ margin:3px 0; } .rules b{ color:var(--ink); }
+  .row{ display:grid; grid-template-columns: 30px minmax(0,1fr) 360px; gap:18px; align-items:start; padding:22px 0; border-top:1px solid var(--line); scroll-margin-top:70px; }
+  .row:first-of-type{ border-top:none; }
+  .rail .n{ font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-size:13px; font-weight:700; color:var(--primary); background:var(--primary-soft); border-radius:8px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; position:sticky; top:64px; }
+  .wire{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
+  .wire .lbl{ font-size:10.5px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:10px; }
+  .g{ height:9px; border-radius:5px; background:oklch(0.92 0.006 257); }
+  .g.dk{ background:oklch(0.86 0.01 257); }
+  .g.w70{ width:70%; } .g.w55{ width:55%; } .g.w40{ width:40%; } .g.w85{ width:85%; } .g.w25{ width:25%; } .g.w30{ width:30%; }
+  .g.tall{ height:15px; }
+  .stack > *{ margin-bottom:7px; } .stack > *:last-child{ margin-bottom:0; }
+  .bar{ display:flex; align-items:center; gap:10px; }
+  .pl{ display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:999px; background:oklch(0.95 0.005 257); font-size:11px; color:var(--muted); border:1px solid var(--line); }
+  .pl.solid{ background:var(--primary); color:#fff; border-color:transparent; font-weight:600; }
+  .pl.gold{ background:var(--accent); color:oklch(0.30 0.06 80); border-color:transparent; font-weight:700; }
+  .pl.ghost{ background:transparent; } .pl.out{ background:transparent; border:1.5px solid var(--primary); color:var(--primary); font-weight:600; }
+  /* stepper */
+  .stepper{ display:flex; align-items:center; gap:6px; margin-bottom:12px; }
+  .stp{ display:flex; align-items:center; gap:6px; }
+  .stp .dot{ width:22px; height:22px; border-radius:50%; background:oklch(0.93 0.006 257); color:var(--muted); font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .stp.done .dot{ background:var(--primary); color:#fff; } .stp.now .dot{ background:var(--accent); color:oklch(0.3 0.06 80); }
+  .stp .ln{ width:18px; height:2px; background:var(--line-2); }
+  .stp small{ font-size:10px; color:var(--muted); }
+  /* split signup */
+  .split{ display:grid; grid-template-columns: 1.55fr 1fr; gap:12px; }
+  .formcard{ border:1px solid var(--line); border-radius:12px; padding:14px; background:var(--surface); }
+  .fld{ height:30px; border:1px solid var(--line-2); border-radius:8px; background:oklch(0.985 0.003 257); margin-top:4px; }
+  .lab{ font-size:10.5px; color:var(--muted); font-weight:600; }
+  .typegrid{ display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
+  .typ{ border:1px solid var(--line); border-radius:10px; padding:10px 8px; text-align:center; font-size:11px; }
+  .typ.sel{ border-color:var(--primary); background:var(--primary-soft); color:oklch(0.4 0.1 175); font-weight:700; }
+  .svc{ display:grid; grid-template-columns:repeat(2,1fr); gap:7px; }
+  .svcitem{ border:1px solid var(--line); border-radius:9px; padding:8px; display:flex; gap:8px; align-items:flex-start; font-size:11px; }
+  .svcitem.on{ border-color:var(--primary); background:var(--primary-soft); }
+  .ck{ width:16px; height:16px; border-radius:5px; border:1.5px solid var(--line-2); flex:none; }
+  .ck.on{ background:var(--primary); border-color:transparent; }
+  /* chat panel */
+  .chat{ border:1px solid var(--line); border-radius:12px; background:var(--surface); display:flex; flex-direction:column; overflow:hidden; min-height:260px; }
+  .chat .hd{ padding:9px 11px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:7px; font-size:11.5px; font-weight:700; }
+  .chat .body{ padding:11px; display:flex; flex-direction:column; gap:8px; flex:1; }
+  .msg{ max-width:85%; padding:8px 10px; border-radius:11px; font-size:11px; }
+  .msg.ai{ background:var(--accent-soft); color:oklch(0.36 0.06 80); align-self:flex-start; border-bottom-left-radius:3px; }
+  .msg.u{ background:var(--primary-soft); color:oklch(0.36 0.08 175); align-self:flex-end; border-bottom-right-radius:3px; }
+  .msg .act{ margin-top:6px; font-size:10px; background:oklch(1 0 0 / 0.6); border-radius:6px; padding:4px 6px; color:var(--ink); }
+  .chat .inp{ border-top:1px solid var(--line); padding:8px; display:flex; gap:7px; align-items:center; }
+  .chat .inp .box{ flex:1; height:28px; border:1px solid var(--line-2); border-radius:999px; background:oklch(0.985 0.003 257); }
+  /* marquee */
+  .marquee{ overflow:hidden; border:1px dashed var(--line-2); border-radius:12px; padding:12px; background:oklch(0.985 0.003 90); }
+  .marquee-track{ display:flex; gap:10px; animation:scroll 18s linear infinite; width:max-content; }
+  @keyframes scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  .stepcard{ width:150px; border:1px solid var(--line); border-radius:11px; padding:11px; background:var(--surface); flex:none; }
+  .stepcard .num{ width:22px; height:22px; border-radius:50%; background:var(--primary); color:#fff; font-weight:800; font-size:11px; display:flex; align-items:center; justify-content:center; margin-bottom:7px; }
+  /* dashboard preview */
+  .dash{ display:grid; grid-template-columns: 130px 1fr; gap:10px; border:1px solid var(--line); border-radius:12px; padding:10px; background:var(--surface); }
+  .side{ display:flex; flex-direction:column; gap:6px; } .side .it{ font-size:10.5px; color:var(--muted); padding:5px 7px; border-radius:7px; } .side .it.on{ background:var(--primary-soft); color:oklch(0.4 0.1 175); font-weight:700; }
+  .kpis{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:8px; }
+  .kpi{ border:1px solid var(--line); border-radius:9px; padding:9px; } .kpi .big{ font-size:18px; font-weight:800; }
+  .state-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .statebox{ border:1px solid var(--line); border-radius:11px; padding:12px; background:var(--surface); }
+  .statebox .lbl2{ font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:8px; }
+  .skel{ background:linear-gradient(90deg, oklch(0.94 0.005 257) 25%, oklch(0.97 0.004 257) 50%, oklch(0.94 0.005 257) 75%); }
+  .spec{ background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--primary); border-radius:12px; padding:14px 15px; box-shadow:var(--shadow); position:sticky; top:64px; }
+  .spec.ai-led{ border-left-color:var(--accent); }
+  .spec h3{ margin:0 0 9px; font-size:15px; }
+  .spec .picks{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:9px; }
+  .spec ul.notes{ margin:0; padding-left:16px; color:var(--muted); font-size:12.5px; } .spec ul.notes li{ margin:3px 0; } .spec ul.notes b{ color:var(--ink); font-weight:600; }
+  .handoff{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); margin-top:24px; }
+  .handoff h4{ margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); }
+  .handoff ul{ margin:0; padding-left:18px; } .handoff li{ margin:4px 0; }
+  @media (max-width: 900px){
+    .row{ grid-template-columns: 24px 1fr; } .spec{ grid-column: 1 / -1; position:static; } .rail .n{ position:static; }
+    .grid2, .split, .typegrid, .svc, .state-grid, .dash{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><span class="dot"></span>mde<span style="color:var(--muted)">·</span>ai&nbsp;<small>Partner signup — multi-step + AI co-pilot</small></div>
+    <div class="top-spacer"></div>
+    <div class="legend"><span class="chip ai">CopilotKit co-pilot</span><span class="chip shad">shadcn/ui</span><span class="chip t21">21st.dev</span><span class="chip custom">custom</span></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="titleblock">
+    <h1 class="serif">Partner signup — wireframe &amp; component spec</h1>
+    <p>One professional multi-step form for <b>every partner type</b> (host · venue · broker · sponsor · agency), with an <b>AI co-pilot that reads &amp; writes the form</b> — partners can fill fields or just talk. Route <code>/partners/signup?type=…</code>. Ends in the partner dashboard. Full journeys + stakeholders: <code>tasks/design/docs/partner-journeys.md</code>.</p>
+    <div class="meta-row">
+      <span class="chip">audience: all partners (supply + B2B)</span>
+      <span class="chip">stepper + form │ AI chat</span>
+      <span class="chip">AI prefills · explains · acts</span>
+      <span class="chip">EN only · Phase 2</span>
+    </div>
+  </div>
+
+  <div class="info">
+    <h4>The big idea</h4>
+    <div class="grid2">
+      <ul class="rules" style="margin:0; padding-left:18px;">
+        <li><b>One typed wizard</b> — <code>?type=host|venue|broker|sponsor|agency</code> adapts the steps; far less to build than 5 flows.</li>
+        <li><b>AI co-pilot acts on the form</b> (generative UI): "I run a rooftop bar in Provenza" → sets type=venue·category=nightclub·barrio=Provenza.</li>
+      </ul>
+      <ul class="rules" style="margin:0; padding-left:18px;">
+        <li><b>Autosave + resume</b> between steps; verify (Google Business/socials/payout) gates "go live".</li>
+        <li><b>Same co-pilot continues in the dashboard</b> ("draft a Friday post", "reply to this lead").</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 01 SIGNUP MARQUEE -->
+  <section class="row" id="s1">
+    <div class="rail"><span class="n">01</span></div>
+    <div class="wire">
+      <div class="lbl">Signup process — scrolling marquee of step-cards (on landings)</div>
+      <div class="marquee">
+        <div class="marquee-track">
+          <div class="stepcard"><div class="num">1</div><div class="stack"><div class="g w70 dk"></div><div class="g w85"></div></div></div>
+          <div class="stepcard"><div class="num">2</div><div class="stack"><div class="g w70 dk"></div><div class="g w85"></div></div></div>
+          <div class="stepcard"><div class="num">3</div><div class="stack"><div class="g w70 dk"></div><div class="g w85"></div></div></div>
+          <div class="stepcard"><div class="num">4</div><div class="stack"><div class="g w70 dk"></div><div class="g w85"></div></div></div>
+          <div class="stepcard"><div class="num">1</div><div class="stack"><div class="g w70 dk"></div><div class="g w85"></div></div></div>
+          <div class="stepcard"><div class="num">2</div><div class="stack"><div class="g w70 dk"></div><div class="g w85"></div></div></div>
+          <div class="stepcard"><div class="num">3</div><div class="stack"><div class="g w70 dk"></div><div class="g w85"></div></div></div>
+          <div class="stepcard"><div class="num">4</div><div class="stack"><div class="g w70 dk"></div><div class="g w85"></div></div></div>
+        </div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>01 · Signup marquee</h3>
+      <div class="picks"><span class="chip t21">cta-with-marquee <b>84</b></span><span class="chip custom">card marquee</span></div>
+      <ul class="notes">
+        <li>"Tell us about you → Pick services → Connect → Go live" as cards</li>
+        <li>Slow auto-scroll; <b>pause on hover</b>; <code>prefers-reduced-motion</code> → static grid</li>
+        <li>Lives on <code>/host</code> · <code>/venues</code> · <code>/sponsors</code> → CTA into the wizard</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- 02 STEPPER + FORM | CHAT (CORE) -->
+  <section class="row" id="s2">
+    <div class="rail"><span class="n">02</span></div>
+    <div class="wire">
+      <div class="lbl">Core — stepper + form │ AI co-pilot (step 2 shown)</div>
+      <div class="stepper">
+        <div class="stp done"><span class="dot">✓</span></div><div class="ln"></div>
+        <div class="stp now"><span class="dot">2</span><small>Business</small></div><div class="ln"></div>
+        <div class="stp"><span class="dot">3</span></div><div class="ln"></div>
+        <div class="stp"><span class="dot">4</span></div><div class="ln"></div>
+        <div class="stp"><span class="dot">5</span></div><div class="ln"></div>
+        <div class="stp"><span class="dot">6</span></div>
+      </div>
+      <div class="split">
+        <div class="formcard">
+          <div class="stack">
+            <div><div class="lab">Business name</div><div class="fld"></div></div>
+            <div class="bar" style="gap:8px;"><div style="flex:1;"><div class="lab">Category</div><div class="fld"></div></div><div style="flex:1;"><div class="lab">Neighborhood</div><div class="fld"></div></div></div>
+            <div class="bar" style="gap:8px;"><div style="flex:1;"><div class="lab">Email</div><div class="fld"></div></div><div style="flex:1;"><div class="lab">Phone</div><div class="fld"></div></div></div>
+            <div class="bar" style="margin-top:6px;"><span class="pl ghost">← Back</span><span class="pl solid" style="margin-left:auto;">Continue →</span></div>
+          </div>
+        </div>
+        <div class="chat">
+          <div class="hd"><span class="pl gold" style="padding:1px 7px;">✦</span> Co-pilot</div>
+          <div class="body">
+            <div class="msg u">I run a rooftop bar in Provenza</div>
+            <div class="msg ai">Got it — I set <b>type: Venue</b>, <b>category: Nightclub</b>, <b>neighborhood: Provenza</b>.<div class="act">↳ filled 3 fields · review on the left</div></div>
+            <div class="msg ai">What's the best email for booking requests?</div>
+          </div>
+          <div class="inp"><span class="pl gold" style="width:18px;height:18px;padding:0;justify-content:center;">✦</span><div class="box"></div><span class="pl solid">Send</span></div>
+        </div>
+      </div>
+    </div>
+    <aside class="spec ai-led">
+      <h3>02 · Stepper + form │ chat</h3>
+      <div class="picks"><span class="chip ai">CopilotKit · generative UI</span><span class="chip shad">form · input · select</span></div>
+      <ul class="notes">
+        <li><b>6-step progress</b> top; form left (~62%), co-pilot right (~38%)</li>
+        <li>Co-pilot <b>writes the form</b> via tool calls (prefill type/category/barrio from NL) + explains/validates</li>
+        <li>Autosave per step; "Continue" disabled until required fields valid</li>
+        <li>Reuse the CopilotKit input — restyle only</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- 03 STEP 1 TYPE + STEP 4 SERVICES -->
+  <section class="row" id="s3">
+    <div class="rail"><span class="n">03</span></div>
+    <div class="wire">
+      <div class="lbl">Step 1 — partner type · Step 4 — services (multi-select)</div>
+      <div class="split">
+        <div class="formcard">
+          <div class="lab" style="margin-bottom:6px;">1 · Who are you?</div>
+          <div class="typegrid">
+            <div class="typ sel">Venue</div><div class="typ">Event host</div><div class="typ">Broker</div>
+            <div class="typ">Sponsor</div><div class="typ">Agency</div><div class="typ">Partner</div>
+          </div>
+        </div>
+        <div class="formcard">
+          <div class="lab" style="margin-bottom:6px;">4 · Services</div>
+          <div class="svc">
+            <div class="svcitem on"><span class="ck on"></span><div><b>AI event booking</b><br/>requests → HITL reply</div></div>
+            <div class="svcitem on"><span class="ck on"></span><div><b>Postiz</b><br/>auto social posts</div></div>
+            <div class="svcitem"><span class="ck"></span><div><b>OpenClaw</b><br/>auto event ingest</div></div>
+            <div class="svcitem"><span class="ck"></span><div><b>Listing</b><br/>concierge + map</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>03 · Type &amp; services</h3>
+      <div class="picks"><span class="chip shad">toggle-group · checkbox · card</span></div>
+      <ul class="notes">
+        <li>Type tiles set <code>?type=</code> + adapt later steps</li>
+        <li>Services = multi-select; AI recommends a bundle per type</li>
+        <li>Postiz/OpenClaw = our tools, named so partners recognise value</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- 04 REVIEW + LAUNCH -->
+  <section class="row" id="s4">
+    <div class="rail"><span class="n">04</span></div>
+    <div class="wire">
+      <div class="lbl">Step 6 — review &amp; launch</div>
+      <div class="formcard">
+        <div class="stack">
+          <div class="bar"><span class="pl">Venue · Nightclub · Provenza</span><span class="pl">AI booking</span><span class="pl">Postiz</span><span class="pl ghost" style="margin-left:auto;">Edit</span></div>
+          <div class="g w85"></div><div class="g w55"></div>
+          <div class="bar"><span class="pl ghost">← Back</span><span class="pl solid" style="margin-left:auto;">Launch &amp; go to dashboard</span></div>
+        </div>
+      </div>
+    </div>
+    <aside class="spec ai-led">
+      <h3>04 · Review &amp; launch</h3>
+      <div class="picks"><span class="chip shad">card · button</span><span class="chip ai">recap</span></div>
+      <ul class="notes"><li>Co-pilot recaps the summary in plain words + confirms</li><li>Submit → <code>/api/partners</code> → role-aware dashboard</li><li>States: submitting · success · error (retry)</li></ul>
+    </aside>
+  </section>
+
+  <!-- 05 DASHBOARD PREVIEW -->
+  <section class="row" id="s5">
+    <div class="rail"><span class="n">05</span></div>
+    <div class="wire">
+      <div class="lbl">Lands in → partner dashboard (same co-pilot continues)</div>
+      <div class="dash">
+        <div class="side">
+          <div class="it on">Overview</div><div class="it">Listings / Events</div><div class="it">Leads &amp; bookings</div><div class="it">Marketing (Postiz)</div><div class="it">Analytics</div><div class="it">✦ AI assistant</div>
+        </div>
+        <div>
+          <div class="kpis"><div class="kpi"><div class="big">12</div><div style="font-size:10px;color:var(--muted);">leads</div></div><div class="kpi"><div class="big">3</div><div style="font-size:10px;color:var(--muted);">events live</div></div><div class="kpi"><div class="big">1.4k</div><div style="font-size:10px;color:var(--muted);">views</div></div></div>
+          <div class="stack"><div class="g w85"></div><div class="g w70"></div><div class="g w55"></div></div>
+        </div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>05 · Partner dashboard</h3>
+      <div class="picks"><span class="chip shad">sidebar · tabs · table</span></div>
+      <ul class="notes">
+        <li>Role-aware (<code>/dashboard</code> or extend <code>/broker/*</code>)</li>
+        <li>Tabs: Overview · Listings/Events · Leads (HITL) · Marketing (Postiz) · Analytics · AI assistant</li>
+        <li>Same co-pilot: "draft a post", "reply to this lead"</li>
+      </ul>
+    </aside>
+  </section>
+
+  <!-- 06 STATES + MOBILE -->
+  <section class="row" id="s6">
+    <div class="rail"><span class="n">06</span></div>
+    <div class="wire">
+      <div class="lbl">States + mobile</div>
+      <div class="state-grid">
+        <div class="statebox"><div class="lbl2">Autosaving</div><div class="stack"><div class="skel g"></div><div class="g w40"></div></div></div>
+        <div class="statebox"><div class="lbl2">Validation</div><div class="stack"><div class="g w70"></div><div style="font-size:10px;color:oklch(0.55 0.15 25);">Enter a valid email</div></div></div>
+        <div class="statebox"><div class="lbl2">Mobile</div><div class="stack" style="text-align:center;"><div style="font-size:10px;color:var(--muted);">form full-width;<br/>co-pilot = bottom sheet</div><span class="pl gold" style="margin:0 auto;">✦ Ask</span></div></div>
+      </div>
+    </div>
+    <aside class="spec">
+      <h3>06 · States &amp; mobile</h3>
+      <div class="picks"><span class="chip shad">skeleton · sheet</span></div>
+      <ul class="notes">
+        <li>Per-step: empty · autosave · validation error; submit: loading/success/error</li>
+        <li>Mobile: single-column form; co-pilot collapses to a bottom <b>Sheet/Drawer</b></li>
+        <li>A11y: each step a labeled fieldset; chat announces on update; keyboard nav</li>
+      </ul>
+    </aside>
+  </section>
+
+  <div class="handoff">
+    <h4>Handoff</h4>
+    <ul>
+      <li><b>What this is:</b> <code>/partners/signup</code> — one typed multi-step wizard + AI co-pilot → partner dashboard. Journeys/stakeholders: <code>partner-journeys.md</code>.</li>
+      <li><b>New shadcn:</b> <code>progress</code> (or custom stepper) · <code>checkbox</code> · plus already-planned <code>select</code>/<code>toggle-group</code>/<code>drawer</code>. Reuse CopilotKit for the co-pilot (generative UI acting on the form).</li>
+      <li><b>Data:</b> <code>/api/partners</code> (create) + draft autosave; verify Google Business/socials/payout before "go live".</li>
+      <li><b>Open questions:</b> (1) one wizard vs per-type flows? (recommend one). (2) co-pilot writes the form (generative UI) vs advises only? (recommend writes). (3) new <code>/dashboard</code> vs extend <code>/broker/*</code>? (4) how much verify gates go-live?</li>
+      <li><b>Next:</b> file Linear issues for <code>/partners/signup</code> + <code>/dashboard</code> (labels UX + MKT), relate to SAN-660/661/663/664.</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

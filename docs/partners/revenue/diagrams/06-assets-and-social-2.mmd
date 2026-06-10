@@ -1,0 +1,8 @@
+flowchart LR
+  TRIG["Trigger<br/>new event · promo · schedule"] --> GEN["AI content creation<br/>(assets + brand voice)"]
+  GEN --> APP{"Partner approves"}
+  APP -- edit --> GEN
+  APP -- yes --> SCHED["Schedule (Postiz)"]
+  SCHED --> PUB["Publish to channels"]
+  PUB --> REP["Report<br/>reach · engagement · clicks"]
+  REP --> OPP["Dashboard → next post suggestion"]

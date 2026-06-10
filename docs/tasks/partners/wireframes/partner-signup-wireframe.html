@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>/partners/signup — complete page wireframe · mdeai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* Light page mock — DESIGN.MD light mode tokens */
+    --bg: oklch(0.99 0.004 264);
+    --bg-elevated: oklch(0.96 0.006 264);
+    --bg-overlay: oklch(0.92 0.008 264);
+    --ink: oklch(0.12 0.008 264);
+    --muted: oklch(0.45 0.008 264);
+    --subtle: oklch(0.55 0.006 264);
+    --border: oklch(0.88 0.009 264);
+    --primary: oklch(0.508 0.118 175);
+    --primary-soft: oklch(0.95 0.04 160);
+    --accent: oklch(0.78 0.18 65);
+    --accent-soft: oklch(0.96 0.06 65);
+    --destructive: oklch(0.55 0.22 25);
+    --radius: 12px;
+    --radius-lg: 18px;
+    --shadow: 0 1px 2px oklch(0 0 0 / 0.06), 0 12px 40px oklch(0 0 0 / 0.08);
+    --spec-bg: oklch(0.985 0.002 247);
+    --spec-ink: oklch(0.28 0.03 257);
+    --spec-muted: oklch(0.55 0.02 257);
+    --spec-line: oklch(0.90 0.006 257);
+    --spec-primary: oklch(0.508 0.118 175);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .marquee-track { animation: none !important; }
+  }
+
+  body {
+    margin: 0;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    background: var(--spec-bg);
+    color: var(--spec-ink);
+  }
+
+  .serif { font-family: "Playfair Display", Georgia, serif; }
+  code { font-family: ui-monospace, Menlo, monospace; font-size: 0.92em; }
+
+  /* ── Spec chrome ── */
+  .spec-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: oklch(0.985 0.002 247 / 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--spec-line);
+  }
+  .spec-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+  .spec-brand { font-weight: 700; letter-spacing: -0.02em; }
+  .spec-brand small { font-weight: 500; color: var(--spec-muted); }
+  .spec-spacer { flex: 1; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid var(--spec-line);
+    background: #fff;
+    color: var(--spec-muted);
+  }
+  .chip.live { background: oklch(0.95 0.04 160); border-color: transparent; color: oklch(0.35 0.1 160); }
+  .chip.gap { background: oklch(0.96 0.05 80); border-color: transparent; color: oklch(0.45 0.12 80); }
+
+  .state-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .state-tabs button {
+    border: 1px solid var(--spec-line);
+    background: #fff;
+    color: var(--spec-ink);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .state-tabs button[aria-selected="true"] {
+    background: var(--spec-primary);
+    color: #fff;
+    border-color: transparent;
+  }
+
+  .spec-intro {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 20px 8px;
+  }
+  .spec-intro h1 { margin: 0 0 8px; font-size: 26px; font-weight: 600; }
+  .spec-intro p { margin: 0; color: var(--spec-muted); max-width: 72ch; }
+
+  /* ── Page mock frame ── */
+  .mock-wrap {
+    max-width: 1200px;
+    margin: 16px auto 48px;
+    padding: 0 20px;
+  }
+  .mock-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--spec-muted);
+    margin-bottom: 8px;
+  }
+  .mock-frame {
+    border: 2px solid var(--spec-line);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 640px;
+  }
+  .mock-view { display: none; }
+  .mock-view.active { display: block; }
+
+  /* ── In-app page chrome (light) ── */
+  .page-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    background: oklch(0.99 0.004 264 / 0.95);
+  }
+  .page-nav .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .page-nav .logo-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--accent), oklch(0.65 0.16 55));
+  }
+  .page-nav .links {
+    display: flex;
+    gap: 18px;
+    margin-left: 24px;
+    font-size: 13px;
+  }
+  .page-nav .links a { color: var(--muted); text-decoration: none; }
+  .page-nav .links a:hover { color: var(--ink); }
+  .page-nav .right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+  .btn:hover { opacity: 0.92; }
+  .btn-ghost { background: transparent; border-color: var(--border); color: var(--ink); }
+  .btn-accent { background: var(--accent); color: oklch(0.12 0.008 264); }
+  .btn-primary { background: var(--primary); color: oklch(0.12 0.008 264); }
+  .btn-lg { padding: 12px 22px; font-size: 14px; border-radius: 12px; }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 48px 24px 32px;
+    text-align: center;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% -20%, oklch(0.95 0.04 160 / 0.7), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 20%, oklch(0.96 0.06 65 / 0.5), transparent),
+      var(--bg);
+  }
+  .hero .eyebrow {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--accent-soft);
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    margin: 0 auto 12px;
+    max-width: 16ch;
+    font-size: clamp(28px, 5vw, 42px);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+  .hero .lead {
+    margin: 0 auto 24px;
+    max-width: 46ch;
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .hero-stats div { text-align: center; }
+  .hero-stats strong { display: block; font-size: 20px; font-weight: 700; color: var(--accent); }
+  .hero-stats span { font-size: 11px; color: var(--subtle); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* ── Type grid ── */
+  .section { padding: 32px 24px 40px; }
+  .section-head { text-align: center; margin-bottom: 28px; }
+  .section-head h2 { margin: 0 0 6px; font-size: 22px; font-weight: 600; }
+  .section-head p { margin: 0; color: var(--muted); font-size: 14px; }
+
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .type-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: #fff;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+  }
+  .type-card:hover {
+    border-color: oklch(0.78 0.18 65 / 0.65);
+    box-shadow: 0 4px 16px oklch(0 0 0 / 0.06);
+    transform: translateY(-2px);
+  }
+  .type-card .icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    background: var(--primary-soft);
+  }
+  .type-card .icon.gold { background: var(--accent-soft); }
+  .type-card h3 { margin: 0; font-size: 15px; font-weight: 600; }
+  .type-card p { margin: 0; font-size: 12px; color: var(--muted); line-height: 1.45; flex: 1; }
+  .type-card .arrow {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  /* ── Steps band ── */
+  .steps-band {
+    padding: 28px 24px;
+    background: var(--bg-elevated);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .steps-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .step-item {
+    text-align: center;
+    padding: 16px 12px;
+  }
+  .step-item .num {
+    width: 28px;
+    height: 28px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: oklch(0.12 0.008 264);
+    font-size: 13px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .step-item h4 { margin: 0 0 4px; font-size: 14px; }
+  .step-item p { margin: 0; font-size: 12px; color: var(--muted); }
+
+  /* ── Trust + FAQ ── */
+  .trust {
+    padding: 36px 24px;
+    text-align: center;
+  }
+  .trust q {
+    display: block;
+    max-width: 42ch;
+    margin: 0 auto 12px;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--muted);
+  }
+  .trust cite { font-size: 12px; color: var(--subtle); font-style: normal; }
+  .faq {
+    max-width: 560px;
+    margin: 32px auto 0;
+    text-align: left;
+  }
+  .faq details {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    background: var(--bg-elevated);
+  }
+  .faq summary { font-weight: 600; cursor: pointer; font-size: 13px; }
+  .faq p { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
+
+  .page-footer {
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--subtle);
+  }
+  .page-footer a { color: var(--muted); text-decoration: none; }
+
+  /* ── Auth + wizard centered panels ── */
+  .panel-center {
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 0%, oklch(0.95 0.04 160 / 0.5), transparent),
+      var(--bg);
+  }
+  .panel-card {
+    width: 100%;
+    max-width: 440px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    padding: 28px 24px;
+    box-shadow: var(--shadow);
+  }
+  .panel-card .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  .panel-card h2 { margin: 0 0 8px; font-size: 22px; font-weight: 600; }
+  .panel-card .desc { margin: 0 0 20px; color: var(--muted); font-size: 14px; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: var(--muted); }
+  .field input {
+    width: 100%;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--ink);
+    padding: 0 12px;
+    font-size: 14px;
+  }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .error-banner {
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: oklch(0.97 0.03 25);
+    border: 1px solid oklch(0.85 0.08 25);
+    color: oklch(0.45 0.18 25);
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  .success-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--primary-soft);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  .muted-box {
+    padding: 12px;
+    border-radius: 10px;
+    background: var(--bg);
+    border: 1px dashed var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 16px;
+  }
+
+  /* ── Spec appendix ── */
+  .spec-appendix {
+    max-width: 1200px;
+    margin: 0 auto 80px;
+    padding: 0 20px;
+  }
+  .spec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .spec-box {
+    background: #fff;
+    border: 1px solid var(--spec-line);
+    border-left: 3px solid var(--spec-primary);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .spec-box h3 { margin: 0 0 10px; font-size: 15px; }
+  .spec-box ul { margin: 0; padding-left: 18px; color: var(--spec-muted); font-size: 13px; }
+  .spec-box li { margin: 4px 0; }
+  .spec-box b { color: var(--spec-ink); }
+
+  @media (max-width: 900px) {
+    .type-grid { grid-template-columns: repeat(2, 1fr); }
+    .steps-row { grid-template-columns: 1fr; }
+    .page-nav .links { display: none; }
+    .spec-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .type-grid { grid-template-columns: 1fr; }
+    .field-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="spec-bar">
+  <div class="spec-inner">
+    <div class="spec-brand">mde·ai wireframe <small>/partners/signup</small></div>
+    <div class="spec-spacer"></div>
+    <span class="chip live">SAN-723 shipped (MVP)</span>
+    <span class="chip gap">this doc = Phase 1.5 UI</span>
+  </div>
+</header>
+
+<div class="spec-intro">
+  <h1 class="serif">Partner signup — complete page</h1>
+  <p>
+    Replaces the current centered card on
+    <a href="https://www.mdeai.co/partners/signup">mdeai.co/partners/signup</a>
+    with a full marketing page + typed wizard states. Toggle views below. Tokens from
+    <code>DESIGN.MD</code> (light mode, amber accent, Geist/Playfair).
+  </p>
+  <div class="state-tabs" role="tablist" style="margin-top:16px;">
+    <button type="button" role="tab" aria-selected="true" data-view="picker">① Type picker (landing)</button>
+    <button type="button" role="tab" aria-selected="false" data-view="auth">② Auth gate</button>
+    <button type="button" role="tab" aria-selected="false" data-view="wizard">③ Step 1 form</button>
+    <button type="button" role="tab" aria-selected="false" data-view="success">④ Success</button>
+  </div>
+</div>
+
+<div class="mock-wrap">
+  <div class="mock-label">Interactive page mock — light theme</div>
+  <div class="mock-frame" id="mock-frame">
+
+    <!-- VIEW 1: TYPE PICKER (full page) -->
+    <div class="mock-view active" id="view-picker" role="tabpanel">
+      <nav class="page-nav">
+        <a class="logo" href="#"><span class="logo-dot"></span>mdeai</a>
+        <div class="links">
+          <a href="#">For business</a>
+          <a href="#">Pricing</a>
+          <a href="#">Help</a>
+        </div>
+        <div class="right">
+          <a class="btn btn-ghost" href="#">Sign in</a>
+          <a class="btn btn-accent" href="#">Explore Medellín</a>
+        </div>
+      </nav>
+
+      <header class="hero">
+        <span class="eyebrow">Partner program · Medellín</span>
+        <h1 class="serif">Turn local demand into bookings</h1>
+        <p class="lead">
+          List on mdeai's AI concierge — events, venues, rentals, and more.
+          One signup flow, typed to your business.
+        </p>
+      </header>
+
+      <section class="section" aria-labelledby="choose-type">
+        <div class="section-head">
+          <h2 id="choose-type">Choose your partner type</h2>
+          <p>We'll tailor onboarding to how you operate. You can change details later.</p>
+        </div>
+        <div class="type-grid">
+          <a class="type-card" href="?type=host">
+            <span class="icon gold">🎟</span>
+            <h3>Event host</h3>
+            <p>Publish salsa nights, workshops, and ticketed experiences.</p>
+            <span class="arrow">Start as host →</span>
+          </a>
+          <a class="type-card" href="?type=venue">
+            <span class="icon">📍</span>
+            <h3>Venue</h3>
+            <p>Rooftops, clubs, and spaces — get discovered in chat + map.</p>
+            <span class="arrow">Start as venue →</span>
+          </a>
+          <a class="type-card" href="?type=broker">
+            <span class="icon">🏠</span>
+            <h3>Rental broker</h3>
+            <p>List units and receive qualified viewing requests from Camila.</p>
+            <span class="arrow">Start as broker →</span>
+          </a>
+          <a class="type-card" href="?type=sponsor">
+            <span class="icon gold">✦</span>
+            <h3>Sponsor</h3>
+            <p>Reach tourists and locals through events and curated placements.</p>
+            <span class="arrow">Start as sponsor →</span>
+          </a>
+          <a class="type-card" href="?type=agency">
+            <span class="icon">◈</span>
+            <h3>Agency</h3>
+            <p>Manage multiple clients — events, listings, and campaigns.</p>
+            <span class="arrow">Start as agency →</span>
+          </a>
+          <a class="type-card" href="?type=vendor">
+            <span class="icon">🛍</span>
+            <h3>Vendor</h3>
+            <p>Sell products and services surfaced in concierge recommendations.</p>
+            <span class="arrow">Start as vendor →</span>
+          </a>
+          <a class="type-card" href="?type=tour">
+            <span class="icon">🗺</span>
+            <h3>Tour operator</h3>
+            <p>City tours, experiences, and activity bookings.</p>
+            <span class="arrow">Start as tour →</span>
+          </a>
+          <a class="type-card" href="?type=creator">
+            <span class="icon gold">📱</span>
+            <h3>Creator</h3>
+            <p>Affiliate listings, content partnerships, and audience monetization.</p>
+            <span class="arrow">Start as creator →</span>
+          </a>
+        </div>
+      </section>
+
+      <div class="steps-band">
+        <div class="steps-row">
+          <div class="step-item">
+            <div class="num">1</div>
+            <h4>Pick your type</h4>
+            <p>Host, venue, broker, or six other programs.</p>
+          </div>
+          <div class="step-item">
+            <div class="num">2</div>
+            <h4>Sign in &amp; activate</h4>
+            <p>Business profile → draft partner account (SAN-723).</p>
+          </div>
+          <div class="step-item">
+            <div class="num">3</div>
+            <h4>Go live on concierge</h4>
+            <p>Cards + map pins when dashboard ships (SAN-690).</p>
+          </div>
+        </div>
+      </div>
+
+      <section class="trust">
+        <q>We went from WhatsApp chaos to qualified leads in the concierge — same night we activated.</q>
+        <cite>— Venue partner, Provenza (placeholder)</cite>
+        <div class="faq">
+          <details>
+            <summary>Is signup free?</summary>
+            <p>Phase 1 activation is free; partner plans and lead fees are defined in SAN-668.</p>
+          </details>
+          <details>
+            <summary>Do I need a Google Business Profile?</summary>
+            <p>Not for draft activation. Verification gates "go live" in the full wizard (Phase 2).</p>
+          </details>
+          <details>
+            <summary>Which types are live today?</summary>
+            <p>All eight types activate via <code>POST /api/partners/activate</code>; dashboard redirect is deferred.</p>
+          </details>
+        </div>
+      </section>
+
+      <footer class="page-footer">
+        <span>© mdeai · Medellín AI</span>
+        <span>
+          <a href="#">/partners/rentals</a> ·
+          <a href="#">/host</a> ·
+          <a href="#">Privacy</a>
+        </span>
+      </footer>
+    </div>
+
+    <!-- VIEW 2: AUTH GATE -->
+    <div class="mock-view" id="view-auth" role="tabpanel" hidden>
+      <nav class="page-nav">
+        <a class="logo" href="#"><span class="logo-dot"></span>mdeai</a>
+        <div class="right">
+          <span style="font-size:12px;color:var(--muted);">Event host signup</span>
+        </div>
+      </nav>
+      <div class="panel-center">
+        <div class="panel-card" data-testid="partner-signup-auth-gate">
+          <span class="badge">Event host</span>
+          <h2>Sign in to continue</h2>
+          <p class="desc">Create your event host partner profile after you sign in. We'll bring you back here.</p>
+          <a class="btn btn-accent btn-lg" style="width:100%;" href="/login?next=%2Fpartners%2Fsignup%3Ftype%3Dhost">Sign in</a>
+          <p style="margin:16px 0 0;font-size:12px;color:var(--subtle);text-align:center;">
+            No account? <a href="/signup" style="color:var(--accent);">Create one</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: WIZARD STEP 1 -->
+    <div class="mock-view" id="view-wizard" role="tabpanel" hidden>
+      <nav class="page-nav">
+        <a class="logo" href="#"><span class="logo-dot"></span>mdeai</a>
+        <div class="right">
+          <span style="font-size:12px;color:var(--muted);">Step 1 of 1 · MVP</span>
+        </div>
+      </nav>
+      <div class="panel-center">
+        <div class="panel-card" data-testid="partner-signup-wizard">
+          <span class="badge">Event host</span>
+          <h2>Partner signup</h2>
+          <p class="desc">Step 1 — business profile. Submit to activate your partner account.</p>
+          <div class="field">
+            <label for="bn">Business name *</label>
+            <input id="bn" type="text" placeholder="Roof Events Medellín" value="" />
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="cat">Category</label>
+              <input id="cat" type="text" placeholder="Nightlife" />
+            </div>
+            <div class="field">
+              <label for="hood">Neighborhood</label>
+              <input id="hood" type="text" placeholder="Provenza" />
+            </div>
+          </div>
+          <button type="button" class="btn btn-accent btn-lg" style="width:100%;margin-top:8px;" data-testid="partner-signup-submit">
+            Activate partner account
+          </button>
+          <div class="muted-box">
+            Phase 2: 6-step stepper + AI co-pilot panel (see appendix). MVP = this single step only.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 4: SUCCESS -->
+    <div class="mock-view" id="view-success" role="tabpanel" hidden>
+      <nav class="page-nav">
+        <a class="logo" href="#"><span class="logo-dot"></span>mdeai</a>
+      </nav>
+      <div class="panel-center">
+        <div class="panel-card" data-testid="partner-signup-success">
+          <div class="success-icon">✓</div>
+          <h2>Partner profile created</h2>
+          <p class="desc">Your event host account is saved as a draft while you finish setup.</p>
+          <div class="muted-box">
+            Partner ID: 22222222-2222-4222-a222-222222222222
+          </div>
+          <p style="margin:16px 0 0;font-size:13px;color:var(--muted);" data-testid="partner-signup-dashboard-next">
+            Dashboard coming next — we'll take you there as soon as it launches (SAN-690).
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="spec-appendix">
+  <h2 style="font-size:18px;margin:0 0 8px;">Implementation map</h2>
+  <p style="margin:0 0 16px;color:var(--spec-muted);font-size:13px;">
+    Gap vs live prod: replace <code>page.tsx</code> type-picker branch (centered Card + outline buttons) with View ① layout.
+    Keep existing wizard component for views ②–④.
+  </p>
+  <div class="spec-grid">
+    <div class="spec-box">
+      <h3>View ① — Type picker (this PR scope)</h3>
+      <ul>
+        <li><b>File:</b> <code>src/app/partners/signup/page.tsx</code></li>
+        <li><b>Layout:</b> full-width light page, not <code>min-h-screen flex center</code> + lone Card</li>
+        <li><b>Components:</b> shadcn <code>Card</code> per type tile OR custom link cards + <code>buttonVariants</code></li>
+        <li><b>Links:</b> <code>/partners/signup?type={type}</code> (preserve draft query)</li>
+        <li><b>a11y:</b> keyboard grid nav; <code>prefers-reduced-motion</code> on hover lift</li>
+      </ul>
+    </div>
+    <div class="spec-box">
+      <h3>Views ②–④ — Already shipped (SAN-723)</h3>
+      <ul>
+        <li><b>Component:</b> <code>PartnerSignupWizard</code></li>
+        <li><b>Auth:</b> <code>/login?next=</code> gate + 401 redirect on submit</li>
+        <li><b>API:</b> <code>POST /api/partners/activate</code></li>
+        <li><b>Polish:</b> match panel-card styling to type-picker chrome (shared shell)</li>
+      </ul>
+    </div>
+    <div class="spec-box">
+      <h3>Phase 2 (future — old wireframe §02)</h3>
+      <ul>
+        <li>6-step stepper + CopilotKit co-pilot (generative UI)</li>
+        <li>Services, photos, location pin, Postiz prefs</li>
+        <li>See <code>tasks/partners/audit/05-signup-wizard.md</code></li>
+      </ul>
+    </div>
+    <div class="spec-box">
+      <h3>Do not</h3>
+      <ul>
+        <li><b>Button asChild</b> — use Link + <code>buttonVariants</code></li>
+        <li>Hardcoded <code>gray-*</code> — use semantic tokens from <code>globals.css</code></li>
+        <li>Spanish copy — Phase 1 English only</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const tabs = document.querySelectorAll(".state-tabs button");
+    const views = {
+      picker: document.getElementById("view-picker"),
+      auth: document.getElementById("view-auth"),
+      wizard: document.getElementById("view-wizard"),
+      success: document.getElementById("view-success"),
+    };
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        const id = tab.getAttribute("data-view");
+        tabs.forEach(function (t) { t.setAttribute("aria-selected", t === tab ? "true" : "false"); });
+        Object.keys(views).forEach(function (key) {
+          const el = views[key];
+          const on = key === id;
+          el.classList.toggle("active", on);
+          el.hidden = !on;
+        });
+      });
+    });
+  })();
+</script>
+</body>
+</html>

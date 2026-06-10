@@ -1,0 +1,1994 @@
+{
+  "generated": "2026-05-30T10:11:16.362Z",
+  "dryRun": false,
+  "total": 275,
+  "updated": [
+    {
+      "id": "SAN-369",
+      "add": [
+        "stack:maps",
+        "stack:gemini",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-368",
+      "add": [
+        "stack:maps",
+        "stack:gemini",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-367",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-366",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-363",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:copilotkit",
+        "stack:mastra"
+      ]
+    },
+    {
+      "id": "SAN-361",
+      "add": [
+        "stack:mastra",
+        "stack:copilotkit",
+        "stack:gemini"
+      ]
+    },
+    {
+      "id": "SAN-362",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:copilotkit",
+        "stack:mastra"
+      ]
+    },
+    {
+      "id": "SAN-365",
+      "add": [
+        "stack:mastra",
+        "stack:copilotkit",
+        "stack:gemini"
+      ]
+    },
+    {
+      "id": "SAN-364",
+      "add": [
+        "stack:mastra",
+        "stack:copilotkit",
+        "stack:gemini"
+      ]
+    },
+    {
+      "id": "SAN-360",
+      "add": [
+        "stack:mastra",
+        "stack:copilotkit",
+        "stack:gemini"
+      ]
+    },
+    {
+      "id": "SAN-359",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-358",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-357",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-356",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-355",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-354",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-353",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-352",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-351",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-350",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-349",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-348",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-347",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-346",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-345",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-344",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-343",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-342",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-341",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-340",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-339",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-338",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-337",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-336",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-335",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-334",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-333",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-332",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-331",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-330",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-329",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-328",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-327",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-326",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-325",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-324",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright",
+        "stack:copilotkit",
+        "stack:mastra"
+      ]
+    },
+    {
+      "id": "SAN-323",
+      "add": [
+        "stack:maps",
+        "stack:gemini",
+        "stack:nextjs",
+        "stack:copilotkit",
+        "stack:mastra"
+      ]
+    },
+    {
+      "id": "SAN-322",
+      "add": [
+        "stack:nextjs",
+        "stack:copilotkit",
+        "stack:mastra"
+      ]
+    },
+    {
+      "id": "SAN-321",
+      "add": [
+        "stack:mastra",
+        "stack:copilotkit",
+        "stack:gemini"
+      ]
+    },
+    {
+      "id": "SAN-320",
+      "add": [
+        "stack:mastra",
+        "stack:copilotkit",
+        "stack:gemini"
+      ]
+    },
+    {
+      "id": "SAN-319",
+      "add": [
+        "stack:mastra",
+        "stack:copilotkit",
+        "stack:gemini"
+      ]
+    },
+    {
+      "id": "SAN-318",
+      "add": [
+        "stack:mastra",
+        "stack:copilotkit",
+        "stack:gemini"
+      ]
+    },
+    {
+      "id": "SAN-317",
+      "add": [
+        "stack:mastra",
+        "stack:copilotkit",
+        "stack:gemini"
+      ]
+    },
+    {
+      "id": "SAN-316",
+      "add": [
+        "stack:nextjs",
+        "stack:mastra",
+        "stack:copilotkit"
+      ]
+    },
+    {
+      "id": "SAN-315",
+      "add": [
+        "stack:mastra",
+        "stack:copilotkit",
+        "stack:gemini"
+      ]
+    },
+    {
+      "id": "SAN-314",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-313",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-312",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-311",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-310",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-309",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-308",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-307",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-306",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-305",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-304",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-303",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-302",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-301",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-300",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-299",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-298",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-297",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-296",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-295",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-294",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-293",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-292",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-291",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-290",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-289",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-288",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-287",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-286",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-285",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-284",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-283",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-282",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-281",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-280",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-279",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-278",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-277",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-276",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-275",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-274",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-273",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-271",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-270",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-269",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-268",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-267",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-266",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-265",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-264",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-263",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-262",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-261",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-260",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-259",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-258",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-257",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-256",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-255",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-254",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-253",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-252",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-251",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-250",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-249",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-248",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-247",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-246",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-245",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-244",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-243",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-242",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-241",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-240",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-239",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-238",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-237",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-236",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-235",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-234",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-233",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-232",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-231",
+      "add": [
+        "stack:maps",
+        "stack:gemini",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-230",
+      "add": [
+        "stack:maps",
+        "stack:gemini",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-229",
+      "add": [
+        "stack:maps",
+        "stack:gemini",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-228",
+      "add": [
+        "stack:maps",
+        "stack:gemini",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-227",
+      "add": [
+        "stack:maps",
+        "stack:gemini",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-226",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-225",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-224",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-223",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-222",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-221",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-220",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-219",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-218",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-217",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-216",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-215",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-214",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-213",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-212",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-211",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-210",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-209",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-208",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-207",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-206",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-205",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-204",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-203",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-202",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-201",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-200",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-199",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-198",
+      "add": [
+        "stack:openclaw",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-197",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-196",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-195",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-194",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-193",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-192",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-191",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-190",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-189",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-188",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-187",
+      "add": [
+        "stack:openclaw"
+      ]
+    },
+    {
+      "id": "SAN-186",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-185",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-184",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-183",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-182",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-181",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-180",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-179",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-178",
+      "add": [
+        "stack:stripe",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-177",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-176",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-175",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-174",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-173",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-172",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-171",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-170",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-169",
+      "add": [
+        "stack:supabase",
+        "stack:maps",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-168",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-167",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-166",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-165",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-164",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-163",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-162",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-161",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-160",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-159",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-158",
+      "add": [
+        "stack:supabase",
+        "stack:maps"
+      ]
+    },
+    {
+      "id": "SAN-157",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-156",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-155",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-154",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-153",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-152",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-151",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-150",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-149",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-148",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-147",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-146",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-145",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-144",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-143",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-142",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-141",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-140",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-139",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-138",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-137",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-136",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-135",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-134",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-133",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-132",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-131",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-130",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-129",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-128",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-127",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-126",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-125",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-124",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-123",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-122",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-121",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-120",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-119",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-118",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-117",
+      "add": [
+        "stack:stripe",
+        "stack:mastra",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-116",
+      "add": [
+        "stack:stripe",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-115",
+      "add": [
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-114",
+      "add": [
+        "stack:maps",
+        "stack:copilotkit",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-113",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-112",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-111",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-110",
+      "add": [
+        "stack:nextjs",
+        "stack:playwright"
+      ]
+    },
+    {
+      "id": "SAN-109",
+      "add": [
+        "stack:maps",
+        "stack:copilotkit",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-108",
+      "add": [
+        "stack:maps",
+        "stack:gemini",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-107",
+      "add": [
+        "stack:maps",
+        "stack:gemini",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-106",
+      "add": [
+        "stack:maps",
+        "stack:gemini",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-105",
+      "add": [
+        "stack:maps",
+        "stack:gemini",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-104",
+      "add": [
+        "stack:maps",
+        "stack:gemini",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-103",
+      "add": [
+        "stack:maps",
+        "stack:gemini",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-102",
+      "add": [
+        "stack:maps",
+        "stack:gemini",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-101",
+      "add": [
+        "stack:maps",
+        "stack:gemini",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-100",
+      "add": [
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-99",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-98",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-97",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-96",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    },
+    {
+      "id": "SAN-95",
+      "add": [
+        "stack:supabase",
+        "stack:nextjs"
+      ]
+    }
+  ],
+  "unchanged": [],
+  "skipped": [
+    "SAN-272"
+  ]
+}

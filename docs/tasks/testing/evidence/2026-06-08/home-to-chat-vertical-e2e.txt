@@ -1,0 +1,14 @@
+
+Running 5 tests using 1 worker
+
+(node:2534029) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2534029) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/home-to-chat.spec.ts:127:9 › Home → Chat vertical handoffs › rentals: hero → /chat?q= → cards + pins → /chat (37.8s)
+  ✓  2 [chromium] › e2e/home-to-chat.spec.ts:127:9 › Home → Chat vertical handoffs › events: hero → /chat?q= → cards + pins → /chat (33.7s)
+  ✓  3 [chromium] › e2e/home-to-chat.spec.ts:127:9 › Home → Chat vertical handoffs › restaurants: hero → /chat?q= → cards + pins → /chat (45.8s)
+  ✓  4 [chromium] › e2e/home-to-chat.spec.ts:127:9 › Home → Chat vertical handoffs › cafes: hero → /chat?q= → cards + pins → /chat (45.5s)
+  ✓  5 [chromium] › e2e/home-to-chat.spec.ts:127:9 › Home → Chat vertical handoffs › nightlife: hero → /chat?q= → cards + pins → /chat (41.0s)
+
+  5 passed (3.4m)

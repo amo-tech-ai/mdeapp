@@ -1,0 +1,250 @@
+{
+  "main": {
+    "id": "bb8d4668032ac83f",
+    "type": "split",
+    "children": [
+      {
+        "id": "82eb0f358a746a6f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1df4ddcae54a6e30",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "prompts/06a-copilotkit-events.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "06a-copilotkit-events"
+            }
+          },
+          {
+            "id": "e46fbf5d42032a08",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "prompts/12-wireframes.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "12-wireframes"
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "03612b5a8963cd5e",
+    "type": "split",
+    "children": [
+      {
+        "id": "0efd8c7f4b751a70",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "dbed182e1b3a8541",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "67b84a64d86053be",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "7892441d46b1ab9f",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "ccd2cf2bd1a483ef",
+    "type": "split",
+    "children": [
+      {
+        "id": "1136490eba784769",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bc3c46fd9b3dbbee",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "prompts/12-wireframes.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for 12-wireframes"
+            }
+          },
+          {
+            "id": "c01f7055caf72468",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "prompts/12-wireframes.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from 12-wireframes"
+            }
+          },
+          {
+            "id": "dba0480e1fb7884d",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "204636817ae4e956",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "c5c8028e7b07d59c",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "prompts/12-wireframes.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of 12-wireframes"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "e46fbf5d42032a08",
+  "lastOpenFiles": [
+    "tasks/AI-native-system/Advanced/AIE-032-advanced-whatsapp-reminders.md",
+    "tasks/AI-native-system/Advanced/AIE-031-advanced-campaign-center.md",
+    "tasks/AI-native-system/Advanced/AIE-030-advanced-exception-center.md",
+    "tasks/AI-native-system/Advanced/AIE-029-advanced-sponsor-roi.md",
+    "tasks/AI-native-system/Advanced/AIE-028-advanced-marketing-agents-split.md",
+    "tasks/AI-native-system/Advanced/AIE-027-advanced-booking-agent.md",
+    "tasks/AI-native-system/Advanced",
+    "tasks/AI-native-system/MVP/AIE-026-mvp-admin-ai-runs-observability.md",
+    "tasks/AI-native-system/MVP/AIE-025-mvp-admin-dashboard-moderation.md",
+    "tasks/AI-native-system/MVP/AIE-024-mvp-luma-event-detail.md",
+    "tasks/AI-native-system/MVP/AIE-023-mvp-attendee-inbox.md",
+    "tasks/AI-native-system/MVP/AIE-022-mvp-global-ux-patterns.md",
+    "tasks/AI-native-system/MVP/AIE-021-mvp-event-health-dashboard.md",
+    "tasks/AI-native-system/MVP/AIE-020-mvp-host-bookings.md",
+    "tasks/AI-native-system/MVP/AIE-019-mvp-approval-notifications-inbox.md",
+    "tasks/AI-native-system/MVP/AIE-018-mvp-crm-lead-score-workflow.md",
+    "tasks/AI-native-system/MVP/AIE-017-mvp-sponsor-pipeline-screens.md",
+    "tasks/AI-native-system/MVP/AIE-016-mvp-sponsor-match-workflow.md",
+    "tasks/AI-native-system/MVP/AIE-015-mvp-recommendations-hub.md",
+    "tasks/AI-native-system/MVP/AIE-014-mvp-attendee-agent.md",
+    "tasks/AI-native-system/MVP/AIE-013-mvp-revenue-forecast-workflow.md",
+    "tasks/AI-native-system/MVP",
+    "tasks/AI-native-system/Core/AIE-012-core-venue-details.md",
+    "tasks/AI-native-system/Core/AIE-011-core-venue-explorer.md",
+    "tasks/AI-native-system/Core/AIE-010-core-event-analytics-funnel.md",
+    "tasks/AI-native-system/Core/AIE-009-core-generative-kpi-cards.md",
+    "tasks/AI-native-system/Core/AIE-008-core-host-analytics-page.md",
+    "tasks/AI-native-system/Core/AIE-007-core-sales-insight-workflow.md",
+    "tasks/AI-native-system/Core",
+    "tasks/AI-native-system",
+    "wireframes/journeys",
+    "wireframes/events",
+    "diagrams",
+    "docs",
+    "plans/docs",
+    "plans",
+    "screenshots/eventbrite/17-payouts.png",
+    "screenshots/eventbrite/16-reporting-analytics.png",
+    "screenshots/eventbrite/16-reporting.png",
+    "screenshots/eventbrite/15-reporting.png",
+    "screenshots/eventbrite/14-instagram-growth.png",
+    "screenshots/eventbrite/14-instagram.png",
+    "screenshots/eventbrite/13b-paid-social-ads.png",
+    "screenshots/eventbrite/13a-paid-social-ads.png",
+    "screenshots/eventbrite/13-paid-social-ads.png",
+    "screenshots/eventbrite/12-marketing.png"
+  ]
+}

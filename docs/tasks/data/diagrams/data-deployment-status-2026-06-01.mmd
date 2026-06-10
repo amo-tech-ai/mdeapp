@@ -1,0 +1,61 @@
+%% mdeai — data layer live deployment status (2026-06-01)
+%% Render: https://mermaid.live · Companion: audit/DATA-FORENSIC-AUDIT-2026-06-01.md
+%% Legend: green = deployed & correct · yellow = partial · grey = not started · red = absent/blocked
+
+flowchart TB
+  subgraph CATALOG["Catalogs (seeded)"]
+    AP["apartments 44"]
+    EV["events 49"]
+    RE["restaurants 44"]
+    VA["venue_anchors 30"]
+    NB["neighborhoods 13"]
+  end
+
+  subgraph SIGNALS["Signals DATA-041..044"]
+    VS["venue_signals 30"]
+    ES["event_signals 49"]
+    RS["rental_signals 44"]
+    NP["neighborhood_profiles 8 of 13"]
+  end
+
+  subgraph EMBED["Embeddings + queue VEC-001, DATA-040"]
+    LE["listing_embeddings 44 · 100pct"]
+    EE["event_embeddings 43 · 88pct"]
+    REE["restaurant_embeddings 43 · 98pct"]
+    EJ["embedding_jobs 1 · idle loop"]
+  end
+
+  subgraph EVID["Evidence / grounding DATA-045"]
+    VSE["venue_source_evidence 20"]
+    EG["event_grounding 0 EMPTY"]
+    RG["rental_grounding 0 EMPTY"]
+    MISS["venue_grounding + event/rental_source_evidence ABSENT"]
+  end
+
+  subgraph SEARCHRPC["Search RPCs live + hardened"]
+    HS["hybrid_search_* x3"]
+    SSF["semantic_search_* x3"]
+  end
+
+  subgraph APP["App wiring"]
+    S3["SEARCH-003 restaurants"]
+    S1["SEARCH-001 rentals"]
+    S2["SEARCH-002 events"]
+  end
+
+  CATALOG --> SIGNALS
+  CATALOG --> EMBED
+  CATALOG --> EVID
+  EMBED --> SEARCHRPC
+  SIGNALS --> SEARCHRPC
+  SEARCHRPC --> APP
+
+  classDef done fill:#1f7a33,stroke:#0d3d18,color:#fff
+  classDef wip fill:#b07d00,stroke:#5c4100,color:#fff
+  classDef todo fill:#6b6b6b,stroke:#333333,color:#fff
+  classDef blocked fill:#a01b1b,stroke:#5c0f0f,color:#fff
+
+  class AP,EV,RE,VA,NB,VS,ES,RS,LE,EE,REE,VSE,HS,SSF,S3 done
+  class NP,EJ,EG,RG wip
+  class S1,S2 todo
+  class MISS blocked

@@ -1,0 +1,9 @@
+flowchart TD
+  TKT["Ticket/booking fees"] --> LEDGER["Revenue ledger"]
+  LEAD["Lead fees"] --> LEDGER
+  SUBS["Subscriptions + AI packages"] --> LEDGER
+  SPON["Sponsorships"] --> LEDGER
+  MKT["Marketplace fees (P3)"] --> LEDGER
+  LEDGER --> PAYOUT["Partner payouts (Stripe Connect)"]
+  LEDGER --> REPORT["Revenue dashboard + invoices"]
+  LEDGER --> REINVEST["Reinvest → demand"]

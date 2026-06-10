@@ -1,0 +1,6 @@
+flowchart LR
+  D["Discovery<br/>Camila demand · referral"] --> M["/partners/rentals"]
+  M --> S["signup?type=broker"] --> AO["AI onboarding<br/>AI listing draft from photos"]
+  AO --> DASH["/broker dashboard"] --> LEAD["Leads<br/>schedule-viewing (HITL)"]
+  LEAD --> REV["Revenue<br/>lead fee · booking commission"]
+  REV --> AU["Automation<br/>AI lead-qual · auto-reply · scheduling"] --> RET["Retention<br/>portfolio insights"]

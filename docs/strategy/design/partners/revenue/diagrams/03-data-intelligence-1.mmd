@@ -1,0 +1,9 @@
+flowchart LR
+  SRC["Sources<br/>Places · grounding · OpenClaw · public"] --> ING["Ingest job"]
+  ING --> NORM["Normalize + dedupe"]
+  NORM --> SIG["Signals (Data project)<br/>venue/event/rental_signals"]
+  SIG --> HITL{"Human QA / approval"}
+  HITL -- approved --> STORE["Supabase (RLS)"]
+  HITL -- rejected --> DROP["Drop / flag"]
+  STORE --> AICON["Concierge + AI services"]
+  STORE --> RANK["Ranking / scorers"]

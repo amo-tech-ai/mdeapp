@@ -5,8 +5,9 @@ audited: mdeapp/docs/tasks/events/data/VENUE-DATA-MODEL.md
 linear: SAN-492 · EVT-033 — Event venue + offerings schema
 date: 2026-06-09
 verified_via: Supabase MCP live probes (project zkwcbyxiwklihegjhuql) · get_advisors(security) (100 findings digested) · PR #146 branch diff (02a7531 + 1b10550) · mde-supabase skill rules
-verdict: 94/100 audit analysis (A) · authored SQL 90/100 (A-) post-E0 · NO-GO prod apply until human ERD sign-off
-reverified: 2026-06-09 post-E0 (partner_is_active + REVOKE/GRANT + RLS smoke ALL PASS)
+verdict: 85% correct · B · NO-GO for prod apply until human ERD sign-off · E0 fixed on disk · E1 spec written
+prior_audit: ../audit/04-data-model-audit.md
+reverified: 2026-06-09 (Supabase MCP + migration on disk + RLS smoke ALL PASS)
 ---
 
 # Data model audit — VENUE-DATA-MODEL.md (SAN-492 · EVT-033)
@@ -29,10 +30,10 @@ reverified: 2026-06-09 post-E0 (partner_is_active + REVOKE/GRANT + RLS smoke ALL
 | Published events / orphans | **49 / 31** | ✅ unchanged |
 | `get_advisors(security)` prod | **100** (1 ERROR `spatial_ref_sys`, 99 WARN pre-existing) | ✅ E8 |
 | PR #146 / disk migration SQL | **`partner_is_active()`** + 3 public policies use helper | ✅ E0 **fixed on disk** (pending commit to PR branch) |
-| Local smoke (`san492-rls-smoke.sql`) | **ALL PASS** (12 checks) on disposable `:54322` | ✅ |
+| Local smoke (`san492-rls-smoke.sql`) | **ALL PASS** (11 checks) on disposable `:54322` | ✅ |
 | EVT-034 seed spec | [`EVT-034-seed.md`](../specs/venue-booking/EVT-034-seed.md) documents `status='active'` | ✅ E1 spec written — implementation still blocked until 492 apply |
 
-**Re-check verdict:** audit analysis **94/100 (A)** · authored SQL **90/100 (A-)** — **GO PR review** · **NO-GO prod apply** until human ERD sign-off + staging apply.
+**Re-check verdict:** audit **85% (B)** — **NO-GO for prod apply** until human ERD sign-off + migration committed on PR #146 + staging apply. **GO for migration branch review** once PR updated.
 
 ## Plain-English summary
 
@@ -64,7 +65,7 @@ Both failures are silent if unfixed: the migration applies cleanly, tests pass, 
 
 | # | Finding | Dot | Real-world effect |
 |---|---------|:---:|-------------------|
-| E0 | **Anon-RLS trap** | 🟢 | **Fixed** — `partner_is_active()` + REVOKE/GRANT; smoke ALL PASS |
+| E0 | **Anon-RLS trap** — fixed via `partner_is_active()` SECURITY DEFINER in migration + Appendix A.0; smoke **ALL PASS** on disposable DB. | 🟢 | **Fixed on disk** — commit to PR #146 before sign-off counts. |
 | E1 | **Seed gap — `partners.status` must be `'active'`.** Spec: [`EVT-034-seed.md`](../specs/venue-booking/EVT-034-seed.md). Implementation SAN-493 still blocked until 492 apply. | 🟡 | Spec closed; seed script not written yet. |
 | E2 | **Doc ↔ migration sync** — Appendix A matches migration (partner_is_active, strengthened trigger, rollback drops helper). Stale duplicate `events/VENUE-DATA-MODEL.md` removed. | 🟢 | Synced 2026-06-09. |
 | E3 | **Readiness self-contradiction** — unified to **85** everywhere in canonical doc. | 🟢 | Fixed. |
@@ -96,14 +97,17 @@ Both failures are silent if unfixed: the migration applies cleanly, tests pass, 
 | Domain split | 🟢 | 100 | all table claims live-verified |
 | Decision matrix | 🟢 | 95 | criteria factual |
 | Tables create/extend/reuse | 🟢 | 100 | — |
-| RLS plan | 🟢 | 95 | E0 fixed + smoke green |
-| **Overall** | 🟢 | **90 — A-** | **GO PR review · NO-GO prod until sign-off** |
+| RLS plan | 🟢 | 90 | E0 fixed — smoke green |
+| Migration order | 🟢 | 85 | E1 spec in EVT-034 |
+| Approval gate / readiness | 🟢 | 85 | E3 unified |
+| Appendix A SQL | 🟢 | 90 | Synced with migration |
+| **Overall** | 🟡 | **85 — B** | **GO branch review · NO-GO prod until sign-off** |
 
 ## Task impact
 
 | Task | Dot | % ready | Change required |
 |------|:---:|:---:|-----------------|
-| SAN-492 · EVT-033 | 🟢 | 90 | human ERD sign-off → merge → staging apply |
+| SAN-492 · EVT-033 — Event venue + offerings schema | 🟡 | 88 | commit patched migration + docs to PR #146 → human ERD sign-off |
 | SAN-493 · EVT-034 — Seed Mamacita + 5 event partners | 🟡 | 75 | spec [`EVT-034-seed.md`](../specs/venue-booking/EVT-034-seed.md) ready; blocked until 492 apply |
 | SAN-496 · EVT-037 — Request proposal modal (HITL) | 🟡 | 85 | edge-fn validation mirrors the STRENGTHENED guard (verified + active + partner match) |
 | SAN-502 — admin event booking queue | 🟢 | 90 | `is_admin()` path verified workable for Patricia |

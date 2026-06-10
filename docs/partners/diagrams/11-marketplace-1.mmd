@@ -1,0 +1,9 @@
+flowchart TD
+  U["User / Event host needs a service"] --> AI["AI concierge"]
+  AI --> CAT["Marketplace catalog (Supabase + Medusa)"]
+  CAT --> MATCH["Match vendors by type · date · budget · area"]
+  MATCH --> QUOTE["Request quote / instant book"]
+  QUOTE --> PAY["Stripe (escrow optional)"]
+  PAY --> DELIV["Service delivered"]
+  DELIV --> REV["Review + payout split"]
+  REV --> VDASH["Vendor dashboard"]

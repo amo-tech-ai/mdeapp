@@ -1,0 +1,8 @@
+flowchart LR
+  B["Buyer (Andrés)"] --> CO["Checkout (Stripe)"]
+  CO --> PAY["Payment captured"]
+  PAY --> WH["Webhook → finalize order"]
+  WH --> SPLIT{"Split"}
+  SPLIT -- "host payout" --> HOST["Event host"]
+  SPLIT -- "platform fee" --> MDE["mdeai revenue"]
+  WH --> TIX["Buyer gets ticket + QR"]

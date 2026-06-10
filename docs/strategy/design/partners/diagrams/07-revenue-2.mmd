@@ -1,0 +1,8 @@
+flowchart LR
+  C["Seeker (Camila)"] --> SV["Schedule viewing (HITL)"]
+  SV --> LEAD["Lead created /api/leads"]
+  LEAD --> QUAL{"AI qualifies"}
+  QUAL -- qualified --> BRK["Broker notified"]
+  BRK --> FEE["Lead fee → mdeai"]
+  BRK --> CLOSE{"Rental closed?"}
+  CLOSE -- yes --> COMM["Booking commission → mdeai"]

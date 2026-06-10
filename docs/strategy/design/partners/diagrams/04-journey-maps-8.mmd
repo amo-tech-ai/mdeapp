@@ -1,0 +1,6 @@
+flowchart LR
+  D["Discovery<br/>event-service demand"] --> M["/partners/vendor (service)"]
+  M --> S["signup?type=vendor"] --> AO["AI onboarding<br/>service · pricing · availability"]
+  AO --> DASH["Dashboard"] --> BOOK["Bookings<br/>requests → confirm"]
+  BOOK --> REV["Revenue<br/>booking commission"]
+  REV --> AU["Automation<br/>AI quote · calendar sync"] --> RET["Retention<br/>repeat bookings · reviews"]

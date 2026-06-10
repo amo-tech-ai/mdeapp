@@ -1,0 +1,33 @@
+{
+  "at": "2026-06-08T14:18:39.244Z",
+  "baseURL": "https://www.mdeai.co",
+  "queries": {
+    "rentals": "1BR apartment in Laureles under 80 dollars per night",
+    "events": "salsa events this weekend in Medellín",
+    "restaurants": "suggest restaurants medellin",
+    "cafes": "good specialty coffee in Laureles"
+  },
+  "copilotkitPostsByQuery": [
+    {
+      "query": "rentals",
+      "count": 8
+    },
+    {
+      "query": "events",
+      "count": 0
+    },
+    {
+      "query": "restaurants",
+      "count": 0
+    },
+    {
+      "query": "cafes",
+      "count": 0
+    }
+  ],
+  "restaurantCards": 5,
+  "restaurantPhotoPlaceholders": 0,
+  "cafeGroundedCards": 5,
+  "note": "idleCk is approximate; prefer ckPosts after last waitForCopilotIdle",
+  "idleWindowResourceHits": 0
+}

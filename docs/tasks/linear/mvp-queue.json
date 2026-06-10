@@ -1,0 +1,63 @@
+{
+  "generated": "2026-05-31",
+  "frozen": true,
+  "schema": "module-based — labels only for views",
+  "naming": "Linear title = {SPEC-ID} — {title}. See mvp-canonical-titles.json",
+  "canonical_titles": "./mvp-canonical-titles.json",
+  "tiers": {
+    "p0_blockers": "label:phase:launch + milestone 🚨 Launch Critical",
+    "mvp_active": "label:phase:post-mvp",
+    "post_mvp": "label:phase:post-mvp + 🔮 milestones",
+    "advanced": "label:phase:advanced"
+  },
+  "dependency_chains": {
+    "commerce_mvp_exit": {
+      "order": ["PAY-001", "PAY-003", "EVT-013", "EVT-002", "EVT-001"],
+      "note": "Paid ticket → webhooks → event cards → host publish → ledger sign-off"
+    },
+    "maps_post_mvp": {
+      "order": ["MAP-005", "MAP-006", "MAP-010"],
+      "note": "Places proxy blocks nearby search + venue autocomplete"
+    },
+    "ux_parallel": {
+      "order": ["UX-003", "UX-002", "UX-005"],
+      "parallel_with": ["OPS-002", "MAP-002B", "MAP-008B"],
+      "note": "UX pack ‖ prod smoke + maps prod after EVT-001 for AUTH"
+    },
+    "auth_after_mvp_proof": {
+      "AUTH-011": ["EVT-001"],
+      "OPS-002": ["EVT-001"]
+    }
+  },
+  "p0_queue": [
+    { "order": 1, "spec_id": "PAY-001", "module": "payments", "linear": "SAN-178", "title": "Live ticket purchase on production", "depends_on": [], "blocks": ["EVT-001"] },
+    { "order": 2, "spec_id": "PAY-003", "module": "payments", "linear": "SAN-116", "title": "Stripe webhook secret isolation", "depends_on": ["PAY-001"], "blocks": ["EVT-001"] },
+    { "order": 3, "spec_id": "EVT-013", "module": "events", "linear": "SAN-117", "title": "Event cards in AI chat", "depends_on": [], "blocks": ["EVT-001"], "blocker": "TEST-006 event-card e2e red" },
+    { "order": 4, "spec_id": "EVT-002", "module": "events", "linear": "SAN-366", "title": "Host publish production proof", "depends_on": [], "blocks": ["EVT-001"] },
+    { "order": 5, "spec_id": "EVT-001", "module": "events", "linear": "SAN-115", "title": "MVP launch proof ledger", "depends_on": ["PAY-001", "PAY-003", "EVT-013", "EVT-002"], "blocks": ["AUTH-011", "OPS-002"] },
+    { "order": 6, "spec_id": "UX-003", "module": "ux", "linear": "SAN-316", "title": "Rental price parser", "parallel": true, "depends_on": [] },
+    { "order": 7, "spec_id": "UX-002", "module": "ux", "linear": "SAN-320", "title": "Chat error bubble", "parallel": true, "depends_on": ["UX-003"], "same_pr_as": "UX-005" },
+    { "order": 7, "spec_id": "UX-005", "module": "ux", "linear": "SAN-319", "title": "Chat thinking indicator", "parallel": true, "depends_on": ["UX-003"] },
+    { "order": 8, "spec_id": "OPS-002", "module": "platform", "linear": "SAN-100", "title": "Production smoke matrix", "parallel": true, "depends_on": ["EVT-001"] },
+    { "order": 9, "spec_id": "AUTH-011", "module": "auth", "linear": "SAN-367", "title": "Production auth checklist", "parallel": true, "depends_on": ["EVT-001"] },
+    { "order": 10, "spec_id": "MAP-002B", "module": "maps", "linear": "SAN-368", "title": "ADK grounding on production", "parallel": true, "depends_on": [] },
+    { "order": 10, "spec_id": "MAP-008B", "module": "maps", "linear": "SAN-369", "title": "Map ID on production", "parallel": true, "depends_on": [] }
+  ],
+  "p1_after_p0": [
+    { "spec_id": "EVT-014", "module": "events", "linear": "SAN-118", "title": "Host events list page", "depends_on": ["EVT-013"] },
+    { "spec_id": "UX-012", "module": "ux", "linear": "SAN-112", "title": "Login and signup polish" },
+    { "spec_id": "UX-011", "module": "ux", "linear": "SAN-111", "title": "Map exploration panel" },
+    { "spec_id": "MAP-010", "module": "maps", "linear": "SAN-104", "title": "Place autocomplete for venue", "depends_on": ["MAP-005"] },
+    { "spec_id": "AUTH-005", "module": "auth", "linear": null, "title": "Playwright auth e2e" }
+  ],
+  "post_mvp_maps": [
+    { "spec_id": "MAP-005", "blocks": ["MAP-006", "MAP-010", "DATA-007"] },
+    { "spec_id": "MAP-006", "depends_on": ["MAP-005"] },
+    { "spec_id": "MAP-010", "depends_on": ["MAP-005"] }
+  ],
+  "duplicates": [
+    { "linear": "SAN-272", "action": "close_duplicate", "canonical": "SAN-114" },
+    { "linear": "SAN-317", "action": "canceled", "reason": "UX-001 shipped" },
+    { "linear": "SAN-248", "action": "polish_only", "note": "PAY-001 proof is separate" }
+  ]
+}

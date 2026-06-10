@@ -12,6 +12,8 @@ const config = [
       "github/**",
       "CopilotKit/**",
       "commerce/**",
+      "docs/**",
+      "graphify-out/**",
     ],
   },
   ...nextCoreWebVitals,

@@ -1,0 +1,256 @@
+"ID","Team","Title","Description","Status","Estimate","Priority","Project ID","Project","Creator","Assignee","Labels","Cycle Number","Cycle Name","Cycle Start","Cycle End","Created","Updated","Started","Triaged","Completed","Canceled","Archived","Due Date","Parent issue","Initiatives","Project Milestone ID","Project Milestone","SLA Status","UUID","Time in status (minutes)","Related to","Blocked by","Duplicate of"
+"SAN-617","Sanjiovani","CHAT-006 — Mastra → Chatwoot reply service","**Objective:** Send the agent reply back into the conversation — as the single sender.
+
+**Scope:** `POST …/conversations/{cid}/messages` (`message_type=outgoing`); message splitting/formatting; mark bot-handled; retries.
+
+**Dependencies:** CHAT-005.
+
+**Acceptance criteria:** Agent reply appears in the WhatsApp thread via Chatwoot; **no direct Meta Graph send** anywhere (one sender only).
+
+**Technical notes:** Chatwoot is the only egress to Meta. Reuse a WA-003-style formatter (split long answers, strip markdown). Backoff on 429.
+
+**Estimated effort:** S–M (1–2d).
+
+**Risks:** **Double-send → WhatsApp ban** if any code also calls Graph directly — forbid it; rate limits.
+
+**Definition of Done:** Round-trip reply delivered to the test number; single-sender invariant asserted in tests.
+
+Plan: `tasks/chatwoot/chatwoot-mvp-plan.md` §4.","Backlog",,"Urgent","e73ec820-f87c-4064-82fb-4a073d477761","chatwoot","ai@socialmediaville.ca",,"CHATW",,,,,"2026-06-06T04:02:39.317Z","2026-06-06T04:03:41.727Z",,,,,,"2026-06-07T04:02:39.958Z",,"",,,"Breached","c250d826-6ecd-4343-93d0-daf05214d85a",3590,"","SAN-616",
+"SAN-616","Sanjiovani","CHAT-005 — Chatwoot → Mastra bridge","**Objective:** Turn an inbound message into a grounded agent reply.
+
+**Scope:** Map Chatwoot conversation → Mastra thread/resource; invoke `routerAgent` (intent) → domain agent; collect reply; apply grounding guard before returning.
+
+**Dependencies:** CHAT-004.
+
+**Acceptance criteria:** ""Find apartments in Laureles"" → rental intent → grounded draft reply (no fabricated listings) in logs.
+
+**Technical notes:** Reuse `getLocalAgents`/Mastra core; `threadId = chatwoot:{conversation_id}`, `resourceId = contact`. Call `agent.generate`. Gate output on grounding ([SAN-588](https://linear.app/sanjiovani/issue/SAN-588/agt-00-mastra-agent-feature-adoption-epic) AGT-00A/B); low confidence → handoff (CHAT-009). Gemini-only.
+
+**Estimated effort:** M (2–3d).
+
+**Risks:** Latency UX; **0 scorers today** → hallucination risk under mdeai's name; thread-mapping correctness.
+
+**Definition of Done:** End-to-end inbound→agent→grounded draft demonstrated; thread persists across turns.
+
+Plan: `tasks/chatwoot/chatwoot-mvp-plan.md` §4.","Backlog",,"Urgent","e73ec820-f87c-4064-82fb-4a073d477761","chatwoot","ai@socialmediaville.ca",,"CHATW",,,,,"2026-06-06T04:02:37.757Z","2026-06-06T04:03:39.266Z",,,,,,"2026-06-07T04:02:39.408Z",,"",,,"Breached","7b439740-96da-4789-83f0-0299ff7a7bd3",3590,"SAN-588","SAN-615",
+"SAN-615","Sanjiovani","CHAT-004 — Webhook endpoint setup in mdeapp","**Objective:** Receive + verify Chatwoot events in Next.js.
+
+**Scope:** `src/app/api/chatwoot/webhook/route.ts`; signature/secret verify; parse `message_created`/`conversation_created`; fast 200 ack; filter bot/self echoes; dedupe by message id.
+
+**Dependencies:** CHAT-003 (buildable in parallel against a test inbox — does NOT wait on Meta).
+
+**Acceptance criteria:** Live Chatwoot event received + verified + 200 within budget; outgoing/bot echoes ignored; duplicate ids dropped; floor green.
+
+**Technical notes:** Server-only route; per F13 carve-out may use service-role for `mastra_*`/`leads` (machine-to-machine webhook). Verify shared secret; respond 200 fast, process async.
+
+**Estimated effort:** S–M (1–2d).
+
+**Risks:** Signature scheme (HMAC vs bot token); Chatwoot retries → idempotency; don't block the 200 on the model.
+
+**Definition of Done:** Real test event logged + verified; unit tests for parse+verify+dedupe; floor green.
+
+Plan: `tasks/chatwoot/chatwoot-mvp-plan.md` §4.","Backlog",,"Urgent","e73ec820-f87c-4064-82fb-4a073d477761","chatwoot","ai@socialmediaville.ca",,"CHATW",,,,,"2026-06-06T04:02:36.085Z","2026-06-06T04:03:38.040Z",,,,,,"2026-06-07T04:02:37.629Z",,"",,,"Breached","9a6dbb1f-78eb-445c-ba6b-426054c05584",3590,"","SAN-612",
+"SAN-614","Sanjiovani","CHAT-003 — Chatwoot inbox configuration","**Objective:** Configure the WhatsApp inbox + an Agent Bot + routing primitives so messages hit the bot first.
+
+**Scope:** Inbox settings (greeting, working hours, auto-assignment); create Agent Bot → mdeapp webhook URL; teams + labels (rentals, events, handoff).
+
+**Dependencies:** CHAT-002.
+
+**Acceptance criteria:** Agent Bot assigned to the WhatsApp inbox; a test message reaches the bot webhook (not a human); labels exist; a scoped bot/HMAC token issued.
+
+**Technical notes:** Agent Bot via Platform API `POST /platform/api/v1/agent_bots` then `…/inboxes/{id}/set_agent_bot`, or dashboard. Capture the bot's webhook signing token → `CHATWOOT_WEBHOOK_SECRET`.
+
+**Estimated effort:** S (\~1d).
+
+**Risks:** Agent-Bot creation on **Cloud** may be Platform/superadmin- or plan-gated — verify early; fallback to inbox webhooks + Application API.
+
+**Definition of Done:** Bot connected; test message routed to bot; tokens in Infisical.
+
+Plan: `tasks/chatwoot/chatwoot-mvp-plan.md` §4.","Backlog",,"Urgent","e73ec820-f87c-4064-82fb-4a073d477761","chatwoot","ai@socialmediaville.ca",,"CHATW",,,,,"2026-06-06T04:02:33.203Z","2026-06-06T04:03:35.887Z",,,,,,"2026-06-07T04:02:36.088Z",,"",,,"Breached","10ddf2f6-f82d-459e-9d6b-8f0450911ba9",3590,"","SAN-613",
+"SAN-625","Sanjiovani","CHAT-014 — Production deployment","**Objective:** Ship webhook + bridge to prod and point Chatwoot at it.
+
+**Scope:** Prod env (Vercel/Infisical), deploy, set Chatwoot Agent-Bot/webhook URL to prod, verify round-trip; rollback plan.
+
+**Dependencies:** CHAT-013.
+
+**Acceptance criteria:** Prod webhook receives a real WhatsApp message + replies; monitoring/alerts on.
+
+**Technical notes:** Infisical prod path supplies secrets (build/start stay raw per repo convention); watch cold-start latency; document rollback (revert bot URL to test).
+
+**Estimated effort:** S–M (1–2d).
+
+**Risks:** Secret management; cold starts; no rollback path.
+
+**Definition of Done:** Prod round-trip verified; alerting live.
+
+Plan: `tasks/chatwoot/chatwoot-mvp-plan.md` §4.","Backlog",,"High","e73ec820-f87c-4064-82fb-4a073d477761","chatwoot","ai@socialmediaville.ca",,"CHATW",,,,,"2026-06-06T04:03:09.042Z","2026-06-06T04:03:57.661Z",,,,,,"2026-06-13T04:03:10.680Z",,"",,,"MediumRisk","239705e6-326d-4bf5-9ec4-a9ac019e5b1f",3590,"","SAN-624",
+"SAN-624","Sanjiovani","CHAT-013 — Testing & verification","**Objective:** Prove the loop + guard against regressions.
+
+**Scope:** Unit (webhook parse/verify/dedupe, bridge mapping, single-sender), integration (mocked Chatwoot), one **live** smoke on the test number; floor green.
+
+**Dependencies:** CHAT-011, CHAT-012, CHAT-008.
+
+**Acceptance criteria:** Vitest + Playwright green; localhost runtime proof; a recorded inbound→reply→lead→handoff demo.
+
+**Technical notes:** Mock external (Meta/Chatwoot) for CI; 1 gated live smoke. Use `mastra-smoke-test` + `/verify-floor`.
+
+**Estimated effort:** M (2–3d).
+
+**Risks:** External flakiness → mock + single live smoke; secrets in CI.
+
+**Definition of Done:** Floor + smoke + demo evidence attached.
+
+Plan: `tasks/chatwoot/chatwoot-mvp-plan.md` §4.","Backlog",,"High","e73ec820-f87c-4064-82fb-4a073d477761","chatwoot","ai@socialmediaville.ca",,"CHATW",,,,,"2026-06-06T04:03:04.390Z","2026-06-06T04:03:55.613Z",,,,,,"2026-06-13T04:03:05.282Z",,"",,,"MediumRisk","edfe8ed8-71f7-4212-95c6-dde9468ed3b0",3590,"","SAN-623, SAN-619, SAN-622",
+"SAN-622","Sanjiovani","CHAT-011 — Rentals concierge flow","**Objective:** First revenue vertical, end-to-end on WhatsApp.
+
+**Scope:** Rental intent → `routerAgent` → `rentalAgent` + `search_rentals` → grounded results → offer viewing / handoff / lead.
+
+**Dependencies:** CHAT-006, CHAT-009, CHAT-010.
+
+**Acceptance criteria:** ""Find apartments in Laureles"" → real grounded listings + next step (viewing or human).
+
+**Technical notes:** Reuse `rentalAgent` + `search_rentals`; **no new agent**. Grounding guard mandatory.
+
+**Estimated effort:** M (2–3d).
+
+**Risks:** Grounding; live inventory availability; response-time expectations.
+
+**Definition of Done:** Full rental conversation demoed on the test WhatsApp number.
+
+Plan: `tasks/chatwoot/chatwoot-mvp-plan.md` §4.","Backlog",,"High","e73ec820-f87c-4064-82fb-4a073d477761","chatwoot","ai@socialmediaville.ca",,"CHATW",,,,,"2026-06-06T04:02:54.876Z","2026-06-06T04:03:51.755Z",,,,,,"2026-06-13T04:02:55.601Z",,"",,,"MediumRisk","8a5d38b1-3878-4f42-b7e6-fa7bd32901b2",3590,"","SAN-620, SAN-617, SAN-621",
+"SAN-621","Sanjiovani","CHAT-010 — Lead capture workflow","**Objective:** Qualify + capture a structured lead from the conversation.
+
+**Scope:** Extract intent/budget/neighborhood/contact → update `leads`; notify ops.
+
+**Dependencies:** CHAT-005, CHAT-007.
+
+**Acceptance criteria:** A rental inquiry yields a qualified `leads` row (intent, budget, area) visible to Patricia.
+
+**Technical notes:** Reuse the G2 `chat-lead-capture` edge-fn pattern; a Mastra tool writes structured fields. Capture consent.
+
+**Estimated effort:** S–M (1–2d).
+
+**Risks:** Extraction accuracy; consent/PII; over-qualification friction.
+
+**Definition of Done:** Qualified lead persisted + visible in ops view.
+
+Plan: `tasks/chatwoot/chatwoot-mvp-plan.md` §4.","Backlog",,"High","e73ec820-f87c-4064-82fb-4a073d477761","chatwoot","ai@socialmediaville.ca",,"CHATW",,,,,"2026-06-06T04:02:50.749Z","2026-06-06T04:03:49.211Z",,,,,,"2026-06-13T04:02:53.823Z",,"",,,"MediumRisk","658103cf-3035-4b73-80ec-4a9e22485c68",3590,"","SAN-616, SAN-618",
+"SAN-620","Sanjiovani","CHAT-009 — Human handoff workflow","**Objective:** Escalate bot → human inside Chatwoot, cleanly.
+
+**Scope:** Handoff triggers (explicit ""talk to a person"", low confidence, money/trust, grounding-fail); set conversation `open`, unassign bot, assign team/agent, label `handoff`; **bot goes silent**.
+
+**Dependencies:** CHAT-005, CHAT-003.
+
+**Acceptance criteria:** Trigger → conversation leaves bot, enters human queue, agent notified; bot sends nothing further.
+
+**Technical notes:** `toggle_status` (open) + assignment API + label. Gate bot replies on `assignee_type`/status so a human-owned convo never gets a bot message.
+
+**Estimated effort:** S–M (1–2d).
+
+**Risks:** **Only 1 agent, offline today** → define staffed hours + fallback (""we'll reply soon""); race where bot replies after handoff.
+
+**Definition of Done:** Live handoff demo; post-handoff bot-silence asserted.
+
+Plan: `tasks/chatwoot/chatwoot-mvp-plan.md` §4.","Backlog",,"High","e73ec820-f87c-4064-82fb-4a073d477761","chatwoot","ai@socialmediaville.ca",,"CHATW",,,,,"2026-06-06T04:02:46.406Z","2026-06-06T04:03:47.647Z",,,,,,"2026-06-13T04:02:47.070Z",,"",,,"MediumRisk","f72ca42d-d7a0-41ec-aa83-a0e931dff164",3590,"","SAN-616, SAN-614",
+"SAN-618","Sanjiovani","CHAT-007 — Contact sync to Supabase","**Objective:** Upsert each Chatwoot contact into `leads` (system of record).
+
+**Scope:** On contact/conversation created → upsert `leads` with phone, name, `source='whatsapp'`, `chatwoot_contact_id`, `chatwoot_conversation_id`.
+
+**Dependencies:** CHAT-004.
+
+**Acceptance criteria:** New WhatsApp contact → exactly one `leads` row (idempotent by phone) with `source='whatsapp'` + Chatwoot ids.
+
+**Technical notes:** `leads.source` is **free-text → no migration** for the value. New `chatwoot_*` columns must keep RLS coverage (re-confirm policy).
+
+**Estimated effort:** S (\~1d).
+
+**Risks:** Dedupe by phone; PII/consent; RLS regressions.
+
+**Definition of Done:** Upsert verified idempotent; lead visible to ops.
+
+Plan: `tasks/chatwoot/chatwoot-mvp-plan.md` §4.","Backlog",,"High","e73ec820-f87c-4064-82fb-4a073d477761","chatwoot","ai@socialmediaville.ca",,"CHATW",,,,,"2026-06-06T04:02:40.359Z","2026-06-06T04:03:43.931Z",,,,,,"2026-06-13T04:02:41.304Z",,"",,,"MediumRisk","5664bec8-b95d-455e-aba0-82bbbf524d4f",3590,"","SAN-615",
+"SAN-626","Sanjiovani","CHAT-015 — MVP acceptance & launch checklist","**Objective:** Go/no-go gate for first real users.
+
+**Scope:** Acceptance checklist (receive / answer-grounded / capture-lead / handoff), readiness re-score, runbook + on-call, staffed-hours plan.
+
+**Dependencies:** CHAT-014.
+
+**Acceptance criteria:** All 4 MVP capabilities demoed **in prod**; handoff queue staffed; runbook signed; first real user conversation logged.
+
+**Technical notes:** Lightweight CSAT/SLA defaults in Chatwoot; define escalation owner.
+
+**Estimated effort:** S (\~1d).
+
+**Risks:** Unstaffed handoff queue at launch; Meta policy/quality rating.
+
+**Definition of Done:** Signed launch checklist; first real conversation handled end-to-end.
+
+Plan: `tasks/chatwoot/chatwoot-mvp-plan.md` §0/§4.","Backlog",,"Medium","e73ec820-f87c-4064-82fb-4a073d477761","chatwoot","ai@socialmediaville.ca",,"CHATW",,,,,"2026-06-06T04:03:12.951Z","2026-06-06T04:03:59.040Z",,,,,,,,"",,,,"0c7e402c-05df-4b50-b16d-8829e37dafe5",3590,"","SAN-625",
+"SAN-623","Sanjiovani","CHAT-012 — Events concierge flow","**Objective:** Second vertical — event discovery + ticket support.
+
+**Scope:** Events intent → `eventAgent`/`conciergeAgent` + `search_events`; ticket resend/support; handoff for edge cases.
+
+**Dependencies:** CHAT-006, CHAT-009.
+
+**Acceptance criteria:** ""What's on this weekend?"" answered grounded; ""resend my ticket"" handled after identity check.
+
+**Technical notes:** Reuse `eventAgent` + `search_events`; ticket lookup must **verify identity before resend**.
+
+**Estimated effort:** M (2–3d).
+
+**Risks:** Ticket-resend auth (impersonation); event data freshness.
+
+**Definition of Done:** Events conversation demoed; resend gated on identity.
+
+Plan: `tasks/chatwoot/chatwoot-mvp-plan.md` §4.","Backlog",,"Medium","e73ec820-f87c-4064-82fb-4a073d477761","chatwoot","ai@socialmediaville.ca",,"CHATW",,,,,"2026-06-06T04:02:59.657Z","2026-06-06T04:03:54.143Z",,,,,,,,"",,,,"f715a4d4-9bcc-443e-8780-c6308056d725",3590,"","SAN-617, SAN-620",
+"SAN-619","Sanjiovani","CHAT-008 — Conversation persistence","**Objective:** Persist message history for analytics + Supabase-as-SoR (without re-storing what Chatwoot already keeps).
+
+**Scope:** Write inbound+outbound to dormant `whatsapp_conversations` + `whatsapp_messages` with direction, ts, conversation link.
+
+**Dependencies:** CHAT-004 (inbound), CHAT-006 (outbound).
+
+**Acceptance criteria:** Every message persisted with direction + conversation FK; queryable in Supabase.
+
+**Technical notes:** Repurpose the dormant tables (already RLS service-role). **Don't duplicate** Chatwoot's transcript — persist only fields analytics/lead-scoring need. `mastra_threads` covers agent memory.
+
+**Estimated effort:** S (\~1d).
+
+**Risks:** Over-persistence/duplication; RLS; storage growth.
+
+**Definition of Done:** Messages queryable; single-source-of-truth boundary documented.
+
+Plan: `tasks/chatwoot/chatwoot-mvp-plan.md` §4.","Backlog",,"Medium","e73ec820-f87c-4064-82fb-4a073d477761","chatwoot","ai@socialmediaville.ca",,"CHATW",,,,,"2026-06-06T04:02:42.168Z","2026-06-06T04:03:46.067Z",,,,,,,,"",,,,"eaf855e8-a31b-44a4-bbe0-65dc51e66496",3590,"","SAN-615, SAN-617",
+"SAN-613","Sanjiovani","CHAT-002 — WhatsApp Cloud API connection","**Objective:** Connect a live WhatsApp number to Chatwoot via Meta WhatsApp Cloud API.
+
+**Scope:** Meta Business verification, WABA, phone number, system-user permanent token; create the Chatwoot WhatsApp (Cloud) inbox.
+
+**Dependencies:** CHAT-001.
+
+**Acceptance criteria:** Inbound test message lands in Chatwoot; outbound session reply delivered; inbox id captured to `CHATWOOT_INBOX_ID`.
+
+**Technical notes:** Chatwoot → Inboxes → Add → WhatsApp → *WhatsApp Cloud*. Needs Phone Number ID, WABA ID, permanent token, verify token. Pre-register ≥1 utility template for outside-24h replies. **This is the critical-path, externally-gated blocker — start first.**
+
+**Estimated effort:** M (2–3d work; multi-day Meta approval wait).
+
+**Risks:** Meta Business verification latency; template approval; 24h customer-care window; number provisioning.
+
+**Definition of Done:** WhatsApp inbox live in acct 168430 with a verified number; inbound+outbound smoke pass.
+
+Plan: `tasks/chatwoot/chatwoot-mvp-plan.md` §4.","Todo",,"Urgent","e73ec820-f87c-4064-82fb-4a073d477761","chatwoot","ai@socialmediaville.ca",,"CHATW",,,,,"2026-06-06T04:02:29.289Z","2026-06-06T04:14:29.595Z",,,,,,"2026-06-07T04:02:31.514Z",,"",,,"Breached","93b2ee19-aa77-4543-aaef-d9713f7455b0",3578,"","SAN-612",
+"SAN-612","Sanjiovani","CHAT-001 — Chatwoot account audit & credential verification","**Objective:** Confirm the Chatwoot Cloud account, token, and access are usable; enumerate missing credentials.
+
+**Scope:** Validate CHATWOOT\_\* creds; record account/role/inbox/agent state; list Meta/webhook creds still needed. No self-host.
+
+**Dependencies:** none.
+
+**Acceptance criteria:** `/profile` 200; account 168430 admin confirmed; inbox count recorded; missing-creds list produced; creds in Infisical.
+
+**Technical notes:** DONE 2026-06-05 via live API. Account 168430 ""socialmediaville"", role administrator, Chatwoot **Cloud** ([app.chatwoot.com](<http://app.chatwoot.com>)). Found **0 inboxes, 1 offline agent, 0 conversations**. Keep token server-side only.
+
+**Estimated effort:** XS (≤0.5d) — largely complete.
+
+**Risks:** Token is a personal admin token → rotate and issue a scoped bot token in CHAT-003.
+
+**Definition of Done:** Connectivity table signed off; Meta-creds gap handed to CHAT-002.
+
+Plan: `tasks/chatwoot/chatwoot-mvp-plan.md` §1.","Todo",,"Urgent","e73ec820-f87c-4064-82fb-4a073d477761","chatwoot","ai@socialmediaville.ca",,"CHATW",,,,,"2026-06-06T04:02:23.886Z","2026-06-06T04:14:18.987Z",,,,,,"2026-06-07T04:02:26.696Z",,"",,,"Breached","de8e9999-8f36-427f-8c55-957754937d5c",3579,"","",

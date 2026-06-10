@@ -1,0 +1,31 @@
+[config]
+git_provider = "github"
+
+[pr_reviewer]
+require_tests_review = true
+require_security_review = true
+require_focused_review = true
+num_code_suggestions = 4
+inline_code_comments = true
+automatic_review = true
+
+[pr_code_suggestions]
+num_code_suggestions = 4
+rank_suggestions = true
+
+[pr_description]
+publish_labels = true
+generate_ai_title = true
+
+[ignore]
+glob_patterns = [
+  "docs/**",
+  "graphify-out/**",
+  "*.db",
+  "*.db-shm",
+  "*.db-wal",
+  "package-lock.json",
+  "commerce/mercur/node_modules/**",
+  ".claude/skills/**",
+  ".agents/**"
+]

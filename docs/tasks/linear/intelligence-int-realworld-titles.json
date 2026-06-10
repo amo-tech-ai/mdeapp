@@ -1,0 +1,28 @@
+{
+  "updated": "2026-05-30",
+  "rule": "Linear title = {INT-ID} — {real_world_title}. Canonical spec: tasks/intelligence/tasks/",
+  "titles": {
+    "INT-001": "Turn-1 chat routing — one intent schema for rentals, events, cafés",
+    "INT-002": "Parse Camila's monthly rental budget + June dates + Medellín city",
+    "INT-003": "Neighborhood clarify — not generic budget/dates re-ask",
+    "INT-004": "Remove canned rental clarify bypass before concierge agent",
+    "INT-005": "Regression suite — hero queries never hit wrong path",
+    "INT-006": "SQL date filters for rental availability search",
+    "INT-007": "Roberto finds salsa events this weekend near Provenza",
+    "INT-008": "Tourist finds quiet Laureles café for remote work",
+    "INT-009": "CopilotKit mirrors map + slot state to agent",
+    "INT-010": "Working memory syncs intent across chat turns",
+    "INT-011": "Durable user preferences schema + RLS",
+    "INT-012": "User interactions log for ranking feedback",
+    "INT-013": "Retrieve preferences before every search",
+    "INT-014": "Ranking boost from remembered preferences",
+    "INT-015": "Memory evidence tests — prefs affect results",
+    "INT-016": "pgvector semantic memory for cross-session recall",
+    "INT-017": "Gemini embeddings for preference memory",
+    "INT-018": "Cross-domain personalization (rentals ↔ events ↔ venues)",
+    "INT-019": "Memory settings UI — user controls what we remember",
+    "INT-020": "Observational memory learning from chat behavior",
+    "INT-021": "Restaurant + venue search with cuisine/capacity clarify",
+    "INT-022": "Routing confidence telemetry (0.85 / 0.50 bands)"
+  }
+}

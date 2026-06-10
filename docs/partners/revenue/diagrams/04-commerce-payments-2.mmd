@@ -1,0 +1,8 @@
+flowchart LR
+  P["Partner"] --> PICK["Pick plan / AI package (signup or dashboard)"]
+  PICK --> SUB["Stripe subscription"]
+  SUB --> ENT["Entitlements unlock<br/>services · automations · featured"]
+  ENT --> USE["Partner uses services"]
+  USE --> RENEW{"Renew?"}
+  RENEW -- yes --> SUB
+  RENEW -- churn --> WINBACK["Win-back automation"]

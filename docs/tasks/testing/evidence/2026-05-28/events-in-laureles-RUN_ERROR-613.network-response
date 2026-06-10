@@ -1,0 +1,4 @@
+data: {"type":"RUN_STARTED","threadId":"5b322d4c-52e0-47b9-9e97-95c91fdbc577","runId":"ab1d8c49-d265-40ad-afdd-8ecee6c2b283","input":{"threadId":"5b322d4c-52e0-47b9-9e97-95c91fdbc577","runId":"ab1d8c49-d265-40ad-afdd-8ecee6c2b283","state":{},"messages":[{"id":"0d6f113c-66f8-456a-92fb-d00762e22014","role":"user","content":"events in Laureles"}],"tools":[{"name":"focusMapPin","description":"Pan the map to highlight a listing or place pin by pinId. Use when the user asks to show a result on the map.","parameters":{"type":"object","properties":{"pinId":{"type":"string","description":"Map pin id (often matches rental listing id)"}},"required":["pinId"]}}],"context":[],"forwardedProps":{}}}
+
+data: {"type":"RUN_ERROR","message":"(EAUTHTIMEOUT) timeout while waiting for message","code":"INCOMPLETE_STREAM"}
+

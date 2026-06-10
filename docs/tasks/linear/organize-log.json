@@ -1,0 +1,2001 @@
+{
+  "milestones": [],
+  "assigned": [
+    {
+      "taskId": "GS-009",
+      "identifier": "SAN-231",
+      "milestone": "Deferred — Grounding search",
+      "priority": 4
+    },
+    {
+      "taskId": "GS-008",
+      "identifier": "SAN-230",
+      "milestone": "Deferred — Grounding search",
+      "priority": 4
+    },
+    {
+      "taskId": "GS-007",
+      "identifier": "SAN-229",
+      "milestone": "Deferred — Grounding search",
+      "priority": 4
+    },
+    {
+      "taskId": "GS-006",
+      "identifier": "SAN-228",
+      "milestone": "Deferred — Grounding search",
+      "priority": 4
+    },
+    {
+      "taskId": "GS-005",
+      "identifier": "SAN-227",
+      "milestone": "Deferred — Grounding search",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-042-mvp",
+      "identifier": "SAN-226",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-041-advanced",
+      "identifier": "SAN-225",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-040-postmvp",
+      "identifier": "SAN-224",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-039-postmvp",
+      "identifier": "SAN-223",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-038-postmvp",
+      "identifier": "SAN-222",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-037-postmvp",
+      "identifier": "SAN-221",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-036-postmvp",
+      "identifier": "SAN-220",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-035-advanced",
+      "identifier": "SAN-219",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-034-postmvp",
+      "identifier": "SAN-218",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-033-postmvp",
+      "identifier": "SAN-217",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-032-postmvp",
+      "identifier": "SAN-216",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-031-postmvp",
+      "identifier": "SAN-215",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-030-postmvp",
+      "identifier": "SAN-214",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-027-advanced",
+      "identifier": "SAN-213",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-026-advanced",
+      "identifier": "SAN-212",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-025-advanced",
+      "identifier": "SAN-211",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-024-advanced",
+      "identifier": "SAN-210",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-023-advanced",
+      "identifier": "SAN-209",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-022-advanced",
+      "identifier": "SAN-208",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-021-postmvp",
+      "identifier": "SAN-207",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-020-postmvp",
+      "identifier": "SAN-206",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-019-postmvp",
+      "identifier": "SAN-205",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-018-postmvp",
+      "identifier": "SAN-204",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-017-postmvp",
+      "identifier": "SAN-203",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-016-postmvp",
+      "identifier": "SAN-202",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-015-postmvp",
+      "identifier": "SAN-201",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-014-postmvp",
+      "identifier": "SAN-200",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-013-mvp",
+      "identifier": "SAN-199",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-012-mvp",
+      "identifier": "SAN-198",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-011-mvp",
+      "identifier": "SAN-197",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-010-mvp",
+      "identifier": "SAN-196",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-009-mvp",
+      "identifier": "SAN-195",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-008-mvp",
+      "identifier": "SAN-194",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-007-core",
+      "identifier": "SAN-193",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-006-core",
+      "identifier": "SAN-192",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-005-core",
+      "identifier": "SAN-191",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-004-core",
+      "identifier": "SAN-190",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-003-core",
+      "identifier": "SAN-189",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-002-core",
+      "identifier": "SAN-188",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "OCL-001-core",
+      "identifier": "SAN-187",
+      "milestone": "Deferred — OpenClaw",
+      "priority": 4
+    },
+    {
+      "taskId": "CTEST-007",
+      "identifier": "SAN-186",
+      "milestone": "Deferred — Contest",
+      "priority": 4
+    },
+    {
+      "taskId": "CTEST-006",
+      "identifier": "SAN-185",
+      "milestone": "Deferred — Contest",
+      "priority": 4
+    },
+    {
+      "taskId": "CTEST-005",
+      "identifier": "SAN-184",
+      "milestone": "Deferred — Contest",
+      "priority": 4
+    },
+    {
+      "taskId": "CTEST-004",
+      "identifier": "SAN-183",
+      "milestone": "Deferred — Contest",
+      "priority": 4
+    },
+    {
+      "taskId": "CTEST-003",
+      "identifier": "SAN-182",
+      "milestone": "Deferred — Contest",
+      "priority": 4
+    },
+    {
+      "taskId": "CTEST-002",
+      "identifier": "SAN-181",
+      "milestone": "Deferred — Contest",
+      "priority": 4
+    },
+    {
+      "taskId": "CTEST-001",
+      "identifier": "SAN-180",
+      "milestone": "Deferred — Contest",
+      "priority": 4
+    },
+    {
+      "taskId": "CTEST-000",
+      "identifier": "SAN-179",
+      "milestone": "Deferred — Contest",
+      "priority": 4
+    },
+    {
+      "taskId": "OPS-ANDRES-G1",
+      "identifier": "SAN-178",
+      "milestone": "P0 — MVP gates",
+      "priority": 1
+    },
+    {
+      "taskId": "CTI-020",
+      "identifier": "SAN-177",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-018",
+      "identifier": "SAN-176",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-017",
+      "identifier": "SAN-175",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-016",
+      "identifier": "SAN-174",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-015",
+      "identifier": "SAN-173",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-014",
+      "identifier": "SAN-172",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-013",
+      "identifier": "SAN-171",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-012",
+      "identifier": "SAN-170",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-011",
+      "identifier": "SAN-169",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-010",
+      "identifier": "SAN-168",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-009",
+      "identifier": "SAN-167",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-008",
+      "identifier": "SAN-166",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-007",
+      "identifier": "SAN-165",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-006",
+      "identifier": "SAN-164",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-005",
+      "identifier": "SAN-163",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-004",
+      "identifier": "SAN-162",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-003",
+      "identifier": "SAN-161",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-002",
+      "identifier": "SAN-160",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-001B",
+      "identifier": "SAN-159",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "CTI-001A",
+      "identifier": "SAN-158",
+      "milestone": "Phase 2 — Coffee tours (CTI)",
+      "priority": 3
+    },
+    {
+      "taskId": "VEC-007",
+      "identifier": "SAN-157",
+      "milestone": "Phase 2 — Vector",
+      "priority": 3
+    },
+    {
+      "taskId": "VEC-006",
+      "identifier": "SAN-156",
+      "milestone": "Phase 2 — Vector",
+      "priority": 3
+    },
+    {
+      "taskId": "VEC-005",
+      "identifier": "SAN-155",
+      "milestone": "Phase 2 — Vector",
+      "priority": 3
+    },
+    {
+      "taskId": "VEC-004",
+      "identifier": "SAN-154",
+      "milestone": "Phase 2 — Vector",
+      "priority": 3
+    },
+    {
+      "taskId": "VEC-003",
+      "identifier": "SAN-153",
+      "milestone": "Phase 2 — Vector",
+      "priority": 3
+    },
+    {
+      "taskId": "VEC-002",
+      "identifier": "SAN-152",
+      "milestone": "Phase 2 — Vector",
+      "priority": 3
+    },
+    {
+      "taskId": "VEC-001",
+      "identifier": "SAN-151",
+      "milestone": "Phase 2 — Vector",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-047-postmvp",
+      "identifier": "SAN-150",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-046-mvp",
+      "identifier": "SAN-149",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-045-mvp",
+      "identifier": "SAN-148",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-044-mvp",
+      "identifier": "SAN-147",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-043-mvp",
+      "identifier": "SAN-146",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-042-mvp",
+      "identifier": "SAN-145",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-041-advanced",
+      "identifier": "SAN-144",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-040-postmvp",
+      "identifier": "SAN-143",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-039-postmvp",
+      "identifier": "SAN-142",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-038-postmvp",
+      "identifier": "SAN-141",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-037-mvp",
+      "identifier": "SAN-140",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-036-mvp",
+      "identifier": "SAN-139",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-035-mvp",
+      "identifier": "SAN-138",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-034-mvp",
+      "identifier": "SAN-137",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-033-mvp",
+      "identifier": "SAN-136",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-032-mvp",
+      "identifier": "SAN-135",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-031-advanced",
+      "identifier": "SAN-134",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-030-advanced",
+      "identifier": "SAN-133",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-029-advanced",
+      "identifier": "SAN-132",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-028-mvp",
+      "identifier": "SAN-131",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-027-mvp",
+      "identifier": "SAN-130",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-026-mvp",
+      "identifier": "SAN-129",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-025-mvp",
+      "identifier": "SAN-128",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-024-mvp",
+      "identifier": "SAN-127",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-023-mvp",
+      "identifier": "SAN-126",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-022-mvp",
+      "identifier": "SAN-125",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-021-mvp",
+      "identifier": "SAN-124",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-020-mvp",
+      "identifier": "SAN-123",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-019-mvp",
+      "identifier": "SAN-122",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-018-mvp",
+      "identifier": "SAN-121",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-016-mvp",
+      "identifier": "SAN-120",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-015-mvp",
+      "identifier": "SAN-119",
+      "milestone": "Phase 2 — Events discovery",
+      "priority": 3
+    },
+    {
+      "taskId": "EVP-014-core",
+      "identifier": "SAN-118",
+      "milestone": "P1 — Events polish",
+      "priority": 2
+    },
+    {
+      "taskId": "EVP-013-core",
+      "identifier": "SAN-117",
+      "milestone": "P1 — Events polish",
+      "priority": 2
+    },
+    {
+      "taskId": "EVP-003-core",
+      "identifier": "SAN-116",
+      "milestone": "P0 — MVP gates",
+      "priority": 1
+    },
+    {
+      "taskId": "EVP-001-core",
+      "identifier": "SAN-115",
+      "milestone": "P0 — MVP gates",
+      "priority": 1
+    },
+    {
+      "taskId": "SCREEN-021",
+      "identifier": "SAN-114",
+      "milestone": "P0 — MVP gates",
+      "priority": 1
+    },
+    {
+      "taskId": "SCREEN-018",
+      "identifier": "SAN-113",
+      "milestone": "P1 — Screens & café",
+      "priority": 2
+    },
+    {
+      "taskId": "SCREEN-017",
+      "identifier": "SAN-112",
+      "milestone": "P1 — Screens & café",
+      "priority": 2
+    },
+    {
+      "taskId": "SCREEN-010",
+      "identifier": "SAN-111",
+      "milestone": "P1 — Screens & café",
+      "priority": 2
+    },
+    {
+      "taskId": "SCREEN-002",
+      "identifier": "SAN-110",
+      "milestone": "P1 — Screens & café",
+      "priority": 2
+    },
+    {
+      "taskId": "CAFE-001",
+      "identifier": "SAN-109",
+      "milestone": "P1 — Screens & café",
+      "priority": 2
+    },
+    {
+      "taskId": "MAP-023",
+      "identifier": "SAN-108",
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "taskId": "MAP-012A",
+      "identifier": "SAN-107",
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "taskId": "MAP-012",
+      "identifier": "SAN-106",
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "taskId": "MAP-011",
+      "identifier": "SAN-105",
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "taskId": "MAP-010",
+      "identifier": "SAN-104",
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "taskId": "MAP-006",
+      "identifier": "SAN-103",
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "taskId": "MAP-005",
+      "identifier": "SAN-102",
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "taskId": "MAP-002A-ADK",
+      "identifier": "SAN-101",
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "taskId": "F32",
+      "identifier": "SAN-100",
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "taskId": "F30",
+      "identifier": "SAN-99",
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "taskId": "F26",
+      "identifier": "SAN-98",
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "taskId": "F22",
+      "identifier": "SAN-97",
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "taskId": "F21A",
+      "identifier": "SAN-96",
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    },
+    {
+      "taskId": "F20",
+      "identifier": "SAN-95",
+      "milestone": "P1 — Maps & core",
+      "priority": 2
+    }
+  ],
+  "priorities": [],
+  "relations": [
+    {
+      "blocked": "F26",
+      "blockedBy": "F22",
+      "blocker": "SAN-97",
+      "blockedIssue": "SAN-98"
+    },
+    {
+      "blocked": "MAP-006",
+      "blockedBy": "MAP-005",
+      "blocker": "SAN-102",
+      "blockedIssue": "SAN-103"
+    },
+    {
+      "blocked": "MAP-010",
+      "blockedBy": "MAP-005",
+      "blocker": "SAN-102",
+      "blockedIssue": "SAN-104"
+    },
+    {
+      "blocked": "MAP-012",
+      "blockedBy": "MAP-006",
+      "blocker": "SAN-103",
+      "blockedIssue": "SAN-106"
+    },
+    {
+      "blocked": "MAP-012",
+      "blockedBy": "MAP-012A",
+      "blocker": "SAN-107",
+      "blockedIssue": "SAN-106"
+    },
+    {
+      "blocked": "CAFE-001",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152",
+      "blockedIssue": "SAN-109"
+    },
+    {
+      "blocked": "SCREEN-010",
+      "blockedBy": "SCREEN-018",
+      "blocker": "SAN-113",
+      "blockedIssue": "SAN-111"
+    },
+    {
+      "blocked": "EVP-013-core",
+      "blockedBy": "F22",
+      "blocker": "SAN-97",
+      "blockedIssue": "SAN-117"
+    },
+    {
+      "blocked": "EVP-014-core",
+      "blockedBy": "F22",
+      "blocker": "SAN-97",
+      "blockedIssue": "SAN-118"
+    },
+    {
+      "blocked": "EVP-014-core",
+      "blockedBy": "EVP-013-core",
+      "blocker": "SAN-117",
+      "blockedIssue": "SAN-118"
+    },
+    {
+      "blocked": "EVP-015-mvp",
+      "blockedBy": "EVP-001-core",
+      "blocker": "SAN-115",
+      "blockedIssue": "SAN-119"
+    },
+    {
+      "blocked": "EVP-015-mvp",
+      "blockedBy": "EVP-013-core",
+      "blocker": "SAN-117",
+      "blockedIssue": "SAN-119"
+    },
+    {
+      "blocked": "EVP-016-mvp",
+      "blockedBy": "EVP-015-mvp",
+      "blocker": "SAN-119",
+      "blockedIssue": "SAN-120"
+    },
+    {
+      "blocked": "EVP-016-mvp",
+      "blockedBy": "MAP-010",
+      "blocker": "SAN-104",
+      "blockedIssue": "SAN-120"
+    },
+    {
+      "blocked": "EVP-020-mvp",
+      "blockedBy": "EVP-019-mvp",
+      "blocker": "SAN-122",
+      "blockedIssue": "SAN-123"
+    },
+    {
+      "blocked": "EVP-021-mvp",
+      "blockedBy": "EVP-023-mvp",
+      "blocker": "SAN-126",
+      "blockedIssue": "SAN-124"
+    },
+    {
+      "blocked": "EVP-022-mvp",
+      "blockedBy": "EVP-020-mvp",
+      "blocker": "SAN-123",
+      "blockedIssue": "SAN-125"
+    },
+    {
+      "blocked": "EVP-023-mvp",
+      "blockedBy": "EVP-019-mvp",
+      "blocker": "SAN-122",
+      "blockedIssue": "SAN-126"
+    },
+    {
+      "blocked": "EVP-024-mvp",
+      "blockedBy": "EVP-022-mvp",
+      "blocker": "SAN-125",
+      "blockedIssue": "SAN-127"
+    },
+    {
+      "blocked": "EVP-025-mvp",
+      "blockedBy": "EVP-022-mvp",
+      "blocker": "SAN-125",
+      "blockedIssue": "SAN-128"
+    },
+    {
+      "blocked": "EVP-026-mvp",
+      "blockedBy": "EVP-020-mvp",
+      "blocker": "SAN-123",
+      "blockedIssue": "SAN-129"
+    },
+    {
+      "blocked": "EVP-027-mvp",
+      "blockedBy": "EVP-025-mvp",
+      "blocker": "SAN-128",
+      "blockedIssue": "SAN-130"
+    },
+    {
+      "blocked": "EVP-028-mvp",
+      "blockedBy": "EVP-027-mvp",
+      "blocker": "SAN-130",
+      "blockedIssue": "SAN-131"
+    },
+    {
+      "blocked": "EVP-029-advanced",
+      "blockedBy": "EVP-001-core",
+      "blocker": "SAN-115",
+      "blockedIssue": "SAN-132"
+    },
+    {
+      "blocked": "EVP-029-advanced",
+      "blockedBy": "EVP-003-core",
+      "blocker": "SAN-116",
+      "blockedIssue": "SAN-132"
+    },
+    {
+      "blocked": "EVP-030-advanced",
+      "blockedBy": "EVP-029-advanced",
+      "blocker": "SAN-132",
+      "blockedIssue": "SAN-133"
+    },
+    {
+      "blocked": "EVP-031-advanced",
+      "blockedBy": "EVP-025-mvp",
+      "blocker": "SAN-128",
+      "blockedIssue": "SAN-134"
+    },
+    {
+      "blocked": "EVP-032-mvp",
+      "blockedBy": "EVP-013-core",
+      "blocker": "SAN-117",
+      "blockedIssue": "SAN-135"
+    },
+    {
+      "blocked": "EVP-032-mvp",
+      "blockedBy": "EVP-016-mvp",
+      "blocker": "SAN-120",
+      "blockedIssue": "SAN-135"
+    },
+    {
+      "blocked": "EVP-033-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135",
+      "blockedIssue": "SAN-136"
+    },
+    {
+      "blocked": "EVP-034-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135",
+      "blockedIssue": "SAN-137"
+    },
+    {
+      "blocked": "EVP-035-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135",
+      "blockedIssue": "SAN-138"
+    },
+    {
+      "blocked": "EVP-036-mvp",
+      "blockedBy": "EVP-016-mvp",
+      "blocker": "SAN-120",
+      "blockedIssue": "SAN-139"
+    },
+    {
+      "blocked": "EVP-036-mvp",
+      "blockedBy": "EVP-024-mvp",
+      "blocker": "SAN-127",
+      "blockedIssue": "SAN-139"
+    },
+    {
+      "blocked": "EVP-036-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135",
+      "blockedIssue": "SAN-139"
+    },
+    {
+      "blocked": "EVP-037-mvp",
+      "blockedBy": "EVP-033-mvp",
+      "blocker": "SAN-136",
+      "blockedIssue": "SAN-140"
+    },
+    {
+      "blocked": "EVP-037-mvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138",
+      "blockedIssue": "SAN-140"
+    },
+    {
+      "blocked": "EVP-038-postmvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138",
+      "blockedIssue": "SAN-141"
+    },
+    {
+      "blocked": "EVP-038-postmvp",
+      "blockedBy": "EVP-037-mvp",
+      "blocker": "SAN-140",
+      "blockedIssue": "SAN-141"
+    },
+    {
+      "blocked": "EVP-039-postmvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138",
+      "blockedIssue": "SAN-142"
+    },
+    {
+      "blocked": "EVP-039-postmvp",
+      "blockedBy": "EVP-038-postmvp",
+      "blocker": "SAN-141",
+      "blockedIssue": "SAN-142"
+    },
+    {
+      "blocked": "EVP-040-postmvp",
+      "blockedBy": "EVP-038-postmvp",
+      "blocker": "SAN-141",
+      "blockedIssue": "SAN-143"
+    },
+    {
+      "blocked": "EVP-041-advanced",
+      "blockedBy": "EVP-038-postmvp",
+      "blocker": "SAN-141",
+      "blockedIssue": "SAN-144"
+    },
+    {
+      "blocked": "EVP-041-advanced",
+      "blockedBy": "EVP-039-postmvp",
+      "blocker": "SAN-142",
+      "blockedIssue": "SAN-144"
+    },
+    {
+      "blocked": "EVP-041-advanced",
+      "blockedBy": "EVP-040-postmvp",
+      "blocker": "SAN-143",
+      "blockedIssue": "SAN-144"
+    },
+    {
+      "blocked": "EVP-042-mvp",
+      "blockedBy": "EVP-033-mvp",
+      "blocker": "SAN-136",
+      "blockedIssue": "SAN-145"
+    },
+    {
+      "blocked": "EVP-042-mvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138",
+      "blockedIssue": "SAN-145"
+    },
+    {
+      "blocked": "EVP-042-mvp",
+      "blockedBy": "EVP-037-mvp",
+      "blocker": "SAN-140",
+      "blockedIssue": "SAN-145"
+    },
+    {
+      "blocked": "EVP-043-mvp",
+      "blockedBy": "EVP-016-mvp",
+      "blocker": "SAN-120",
+      "blockedIssue": "SAN-146"
+    },
+    {
+      "blocked": "EVP-043-mvp",
+      "blockedBy": "EVP-024-mvp",
+      "blocker": "SAN-127",
+      "blockedIssue": "SAN-146"
+    },
+    {
+      "blocked": "EVP-043-mvp",
+      "blockedBy": "EVP-036-mvp",
+      "blocker": "SAN-139",
+      "blockedIssue": "SAN-146"
+    },
+    {
+      "blocked": "EVP-044-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135",
+      "blockedIssue": "SAN-147"
+    },
+    {
+      "blocked": "EVP-044-mvp",
+      "blockedBy": "EVP-034-mvp",
+      "blocker": "SAN-137",
+      "blockedIssue": "SAN-147"
+    },
+    {
+      "blocked": "EVP-045-mvp",
+      "blockedBy": "EVP-034-mvp",
+      "blocker": "SAN-137",
+      "blockedIssue": "SAN-148"
+    },
+    {
+      "blocked": "EVP-046-mvp",
+      "blockedBy": "EVP-032-mvp",
+      "blocker": "SAN-135",
+      "blockedIssue": "SAN-149"
+    },
+    {
+      "blocked": "EVP-046-mvp",
+      "blockedBy": "EVP-035-mvp",
+      "blocker": "SAN-138",
+      "blockedIssue": "SAN-149"
+    },
+    {
+      "blocked": "EVP-046-mvp",
+      "blockedBy": "EVP-044-mvp",
+      "blocker": "SAN-147",
+      "blockedIssue": "SAN-149"
+    },
+    {
+      "blocked": "EVP-047-postmvp",
+      "blockedBy": "EVP-036-mvp",
+      "blocker": "SAN-139",
+      "blockedIssue": "SAN-150"
+    },
+    {
+      "blocked": "EVP-047-postmvp",
+      "blockedBy": "EVP-037-mvp",
+      "blocker": "SAN-140",
+      "blockedIssue": "SAN-150"
+    },
+    {
+      "blocked": "EVP-047-postmvp",
+      "blockedBy": "EVP-043-mvp",
+      "blocker": "SAN-146",
+      "blockedIssue": "SAN-150"
+    },
+    {
+      "blocked": "VEC-002",
+      "blockedBy": "VEC-001",
+      "blocker": "SAN-151",
+      "blockedIssue": "SAN-152"
+    },
+    {
+      "blocked": "VEC-002",
+      "blockedBy": "VEC-003",
+      "blocker": "SAN-153",
+      "blockedIssue": "SAN-152"
+    },
+    {
+      "blocked": "VEC-003",
+      "blockedBy": "VEC-001",
+      "blocker": "SAN-151",
+      "blockedIssue": "SAN-153"
+    },
+    {
+      "blocked": "VEC-004",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152",
+      "blockedIssue": "SAN-154"
+    },
+    {
+      "blocked": "VEC-004",
+      "blockedBy": "VEC-003",
+      "blocker": "SAN-153",
+      "blockedIssue": "SAN-154"
+    },
+    {
+      "blocked": "VEC-005",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152",
+      "blockedIssue": "SAN-155"
+    },
+    {
+      "blocked": "VEC-005",
+      "blockedBy": "VEC-003",
+      "blocker": "SAN-153",
+      "blockedIssue": "SAN-155"
+    },
+    {
+      "blocked": "VEC-005",
+      "blockedBy": "VEC-004",
+      "blocker": "SAN-154",
+      "blockedIssue": "SAN-155"
+    },
+    {
+      "blocked": "VEC-006",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152",
+      "blockedIssue": "SAN-156"
+    },
+    {
+      "blocked": "VEC-006",
+      "blockedBy": "VEC-005",
+      "blocker": "SAN-155",
+      "blockedIssue": "SAN-156"
+    },
+    {
+      "blocked": "VEC-007",
+      "blockedBy": "VEC-002",
+      "blocker": "SAN-152",
+      "blockedIssue": "SAN-157"
+    },
+    {
+      "blocked": "VEC-007",
+      "blockedBy": "VEC-004",
+      "blocker": "SAN-154",
+      "blockedIssue": "SAN-157"
+    },
+    {
+      "blocked": "VEC-007",
+      "blockedBy": "VEC-005",
+      "blocker": "SAN-155",
+      "blockedIssue": "SAN-157"
+    },
+    {
+      "blocked": "VEC-007",
+      "blockedBy": "VEC-006",
+      "blocker": "SAN-156",
+      "blockedIssue": "SAN-157"
+    },
+    {
+      "blocked": "VEC-007",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158",
+      "blockedIssue": "SAN-157"
+    },
+    {
+      "blocked": "VEC-007",
+      "blockedBy": "CTI-010",
+      "blocker": "SAN-168",
+      "blockedIssue": "SAN-157"
+    },
+    {
+      "blocked": "CTI-001B",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158",
+      "blockedIssue": "SAN-159"
+    },
+    {
+      "blocked": "CTI-002",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158",
+      "blockedIssue": "SAN-160"
+    },
+    {
+      "blocked": "CTI-003",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158",
+      "blockedIssue": "SAN-161"
+    },
+    {
+      "blocked": "CTI-004",
+      "blockedBy": "CTI-002",
+      "blocker": "SAN-160",
+      "blockedIssue": "SAN-162"
+    },
+    {
+      "blocked": "CTI-004",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161",
+      "blockedIssue": "SAN-162"
+    },
+    {
+      "blocked": "CTI-004",
+      "blockedBy": "CTI-006",
+      "blocker": "SAN-164",
+      "blockedIssue": "SAN-162"
+    },
+    {
+      "blocked": "CTI-005",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161",
+      "blockedIssue": "SAN-163"
+    },
+    {
+      "blocked": "CTI-006",
+      "blockedBy": "CTI-002",
+      "blocker": "SAN-160",
+      "blockedIssue": "SAN-164"
+    },
+    {
+      "blocked": "CTI-006",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161",
+      "blockedIssue": "SAN-164"
+    },
+    {
+      "blocked": "CTI-007",
+      "blockedBy": "CTI-004",
+      "blocker": "SAN-162",
+      "blockedIssue": "SAN-165"
+    },
+    {
+      "blocked": "CTI-007",
+      "blockedBy": "CTI-006",
+      "blocker": "SAN-164",
+      "blockedIssue": "SAN-165"
+    },
+    {
+      "blocked": "CTI-007",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161",
+      "blockedIssue": "SAN-165"
+    },
+    {
+      "blocked": "CTI-008",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165",
+      "blockedIssue": "SAN-166"
+    },
+    {
+      "blocked": "CTI-009",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165",
+      "blockedIssue": "SAN-167"
+    },
+    {
+      "blocked": "CTI-009",
+      "blockedBy": "CTI-008",
+      "blocker": "SAN-166",
+      "blockedIssue": "SAN-167"
+    },
+    {
+      "blocked": "CTI-010",
+      "blockedBy": "CTI-009",
+      "blocker": "SAN-167",
+      "blockedIssue": "SAN-168"
+    },
+    {
+      "blocked": "CTI-011",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158",
+      "blockedIssue": "SAN-169"
+    },
+    {
+      "blocked": "CTI-011",
+      "blockedBy": "CTI-010",
+      "blocker": "SAN-168",
+      "blockedIssue": "SAN-169"
+    },
+    {
+      "blocked": "CTI-012",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158",
+      "blockedIssue": "SAN-170"
+    },
+    {
+      "blocked": "CTI-013",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158",
+      "blockedIssue": "SAN-171"
+    },
+    {
+      "blocked": "CTI-013",
+      "blockedBy": "CTI-004",
+      "blocker": "SAN-162",
+      "blockedIssue": "SAN-171"
+    },
+    {
+      "blocked": "CTI-014",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158",
+      "blockedIssue": "SAN-172"
+    },
+    {
+      "blocked": "CTI-014",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165",
+      "blockedIssue": "SAN-172"
+    },
+    {
+      "blocked": "CTI-015",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165",
+      "blockedIssue": "SAN-173"
+    },
+    {
+      "blocked": "CTI-016",
+      "blockedBy": "CTI-004",
+      "blocker": "SAN-162",
+      "blockedIssue": "SAN-174"
+    },
+    {
+      "blocked": "CTI-017",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158",
+      "blockedIssue": "SAN-175"
+    },
+    {
+      "blocked": "CTI-017",
+      "blockedBy": "CTI-007",
+      "blocker": "SAN-165",
+      "blockedIssue": "SAN-175"
+    },
+    {
+      "blocked": "CTI-018",
+      "blockedBy": "CTI-004",
+      "blocker": "SAN-162",
+      "blockedIssue": "SAN-176"
+    },
+    {
+      "blocked": "CTI-018",
+      "blockedBy": "CTI-010",
+      "blocker": "SAN-168",
+      "blockedIssue": "SAN-176"
+    },
+    {
+      "blocked": "CTI-020",
+      "blockedBy": "CTI-014",
+      "blocker": "SAN-172",
+      "blockedIssue": "SAN-177"
+    },
+    {
+      "blocked": "CTI-020",
+      "blockedBy": "CTI-005",
+      "blocker": "SAN-163",
+      "blockedIssue": "SAN-177"
+    },
+    {
+      "blocked": "CTEST-001",
+      "blockedBy": "CTEST-000",
+      "blocker": "SAN-179",
+      "blockedIssue": "SAN-180"
+    },
+    {
+      "blocked": "CTEST-002",
+      "blockedBy": "CTEST-001",
+      "blocker": "SAN-180",
+      "blockedIssue": "SAN-181"
+    },
+    {
+      "blocked": "CTEST-003",
+      "blockedBy": "CTEST-001",
+      "blocker": "SAN-180",
+      "blockedIssue": "SAN-182"
+    },
+    {
+      "blocked": "CTEST-003",
+      "blockedBy": "CTEST-002",
+      "blocker": "SAN-181",
+      "blockedIssue": "SAN-182"
+    },
+    {
+      "blocked": "CTEST-004",
+      "blockedBy": "CTEST-001",
+      "blocker": "SAN-180",
+      "blockedIssue": "SAN-183"
+    },
+    {
+      "blocked": "CTEST-005",
+      "blockedBy": "CTEST-002",
+      "blocker": "SAN-181",
+      "blockedIssue": "SAN-184"
+    },
+    {
+      "blocked": "CTEST-005",
+      "blockedBy": "CTEST-004",
+      "blocker": "SAN-183",
+      "blockedIssue": "SAN-184"
+    },
+    {
+      "blocked": "CTEST-006",
+      "blockedBy": "CTEST-001",
+      "blocker": "SAN-180",
+      "blockedIssue": "SAN-185"
+    },
+    {
+      "blocked": "CTEST-006",
+      "blockedBy": "CTEST-004",
+      "blocker": "SAN-183",
+      "blockedIssue": "SAN-185"
+    },
+    {
+      "blocked": "CTEST-007",
+      "blockedBy": "CTEST-002",
+      "blocker": "SAN-181",
+      "blockedIssue": "SAN-186"
+    },
+    {
+      "blocked": "CTEST-007",
+      "blockedBy": "CTEST-003",
+      "blocker": "SAN-182",
+      "blockedIssue": "SAN-186"
+    },
+    {
+      "blocked": "CTEST-007",
+      "blockedBy": "CTEST-006",
+      "blocker": "SAN-185",
+      "blockedIssue": "SAN-186"
+    },
+    {
+      "blocked": "OCL-003-core",
+      "blockedBy": "OCL-002-core",
+      "blocker": "SAN-188",
+      "blockedIssue": "SAN-189"
+    },
+    {
+      "blocked": "OCL-005-core",
+      "blockedBy": "OCL-001-core",
+      "blocker": "SAN-187",
+      "blockedIssue": "SAN-191"
+    },
+    {
+      "blocked": "OCL-006-core",
+      "blockedBy": "OCL-001-core",
+      "blocker": "SAN-187",
+      "blockedIssue": "SAN-192"
+    },
+    {
+      "blocked": "OCL-007-core",
+      "blockedBy": "OCL-001-core",
+      "blocker": "SAN-187",
+      "blockedIssue": "SAN-193"
+    },
+    {
+      "blocked": "OCL-008-mvp",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189",
+      "blockedIssue": "SAN-194"
+    },
+    {
+      "blocked": "OCL-009-mvp",
+      "blockedBy": "OCL-006-core",
+      "blocker": "SAN-192",
+      "blockedIssue": "SAN-195"
+    },
+    {
+      "blocked": "OCL-010-mvp",
+      "blockedBy": "OCL-004-core",
+      "blocker": "SAN-190",
+      "blockedIssue": "SAN-196"
+    },
+    {
+      "blocked": "OCL-010-mvp",
+      "blockedBy": "OCL-006-core",
+      "blocker": "SAN-192",
+      "blockedIssue": "SAN-196"
+    },
+    {
+      "blocked": "OCL-011-mvp",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189",
+      "blockedIssue": "SAN-197"
+    },
+    {
+      "blocked": "OCL-012-mvp",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189",
+      "blockedIssue": "SAN-198"
+    },
+    {
+      "blocked": "OCL-013-mvp",
+      "blockedBy": "CTI-001A",
+      "blocker": "SAN-158",
+      "blockedIssue": "SAN-199"
+    },
+    {
+      "blocked": "OCL-013-mvp",
+      "blockedBy": "CTI-003",
+      "blocker": "SAN-161",
+      "blockedIssue": "SAN-199"
+    },
+    {
+      "blocked": "OCL-013-mvp",
+      "blockedBy": "OCL-009-mvp",
+      "blocker": "SAN-195",
+      "blockedIssue": "SAN-199"
+    },
+    {
+      "blocked": "OCL-013-mvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196",
+      "blockedIssue": "SAN-199"
+    },
+    {
+      "blocked": "OCL-014-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196",
+      "blockedIssue": "SAN-200"
+    },
+    {
+      "blocked": "OCL-014-postmvp",
+      "blockedBy": "OCL-009-mvp",
+      "blocker": "SAN-195",
+      "blockedIssue": "SAN-200"
+    },
+    {
+      "blocked": "OCL-015-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196",
+      "blockedIssue": "SAN-201"
+    },
+    {
+      "blocked": "OCL-016-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196",
+      "blockedIssue": "SAN-202"
+    },
+    {
+      "blocked": "OCL-016-postmvp",
+      "blockedBy": "OCL-017-postmvp",
+      "blocker": "SAN-203",
+      "blockedIssue": "SAN-202"
+    },
+    {
+      "blocked": "OCL-016-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214",
+      "blockedIssue": "SAN-202"
+    },
+    {
+      "blocked": "OCL-017-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196",
+      "blockedIssue": "SAN-203"
+    },
+    {
+      "blocked": "OCL-018-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196",
+      "blockedIssue": "SAN-204"
+    },
+    {
+      "blocked": "OCL-018-postmvp",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189",
+      "blockedIssue": "SAN-204"
+    },
+    {
+      "blocked": "OCL-019-postmvp",
+      "blockedBy": "OCL-009-mvp",
+      "blocker": "SAN-195",
+      "blockedIssue": "SAN-205"
+    },
+    {
+      "blocked": "OCL-019-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214",
+      "blockedIssue": "SAN-205"
+    },
+    {
+      "blocked": "OCL-020-postmvp",
+      "blockedBy": "OCL-009-mvp",
+      "blocker": "SAN-195",
+      "blockedIssue": "SAN-206"
+    },
+    {
+      "blocked": "OCL-020-postmvp",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196",
+      "blockedIssue": "SAN-206"
+    },
+    {
+      "blocked": "OCL-021-postmvp",
+      "blockedBy": "OCL-011-mvp",
+      "blocker": "SAN-197",
+      "blockedIssue": "SAN-207"
+    },
+    {
+      "blocked": "OCL-023-advanced",
+      "blockedBy": "OCL-017-postmvp",
+      "blocker": "SAN-203",
+      "blockedIssue": "SAN-209"
+    },
+    {
+      "blocked": "OCL-023-advanced",
+      "blockedBy": "OCL-022-advanced",
+      "blocker": "SAN-208",
+      "blockedIssue": "SAN-209"
+    },
+    {
+      "blocked": "OCL-024-advanced",
+      "blockedBy": "OCL-010-mvp",
+      "blocker": "SAN-196",
+      "blockedIssue": "SAN-210"
+    },
+    {
+      "blocked": "OCL-025-advanced",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189",
+      "blockedIssue": "SAN-211"
+    },
+    {
+      "blocked": "OCL-025-advanced",
+      "blockedBy": "OCL-017-postmvp",
+      "blocker": "SAN-203",
+      "blockedIssue": "SAN-211"
+    },
+    {
+      "blocked": "OCL-026-advanced",
+      "blockedBy": "OCL-022-advanced",
+      "blocker": "SAN-208",
+      "blockedIssue": "SAN-212"
+    },
+    {
+      "blocked": "OCL-027-advanced",
+      "blockedBy": "OCL-003-core",
+      "blocker": "SAN-189",
+      "blockedIssue": "SAN-213"
+    },
+    {
+      "blocked": "OCL-027-advanced",
+      "blockedBy": "OCL-032-postmvp",
+      "blocker": "SAN-216",
+      "blockedIssue": "SAN-213"
+    },
+    {
+      "blocked": "OCL-027-advanced",
+      "blockedBy": "OCL-034-postmvp",
+      "blocker": "SAN-218",
+      "blockedIssue": "SAN-213"
+    },
+    {
+      "blocked": "OCL-030-postmvp",
+      "blockedBy": "OCL-004-core",
+      "blocker": "SAN-190",
+      "blockedIssue": "SAN-214"
+    },
+    {
+      "blocked": "OCL-030-postmvp",
+      "blockedBy": "OCL-005-core",
+      "blocker": "SAN-191",
+      "blockedIssue": "SAN-214"
+    },
+    {
+      "blocked": "OCL-030-postmvp",
+      "blockedBy": "OCL-007-core",
+      "blocker": "SAN-193",
+      "blockedIssue": "SAN-214"
+    },
+    {
+      "blocked": "OCL-030-postmvp",
+      "blockedBy": "OCL-008-mvp",
+      "blocker": "SAN-194",
+      "blockedIssue": "SAN-214"
+    },
+    {
+      "blocked": "OCL-030-postmvp",
+      "blockedBy": "OCL-012-mvp",
+      "blocker": "SAN-198",
+      "blockedIssue": "SAN-214"
+    },
+    {
+      "blocked": "OCL-031-postmvp",
+      "blockedBy": "OCL-019-postmvp",
+      "blocker": "SAN-205",
+      "blockedIssue": "SAN-215"
+    },
+    {
+      "blocked": "OCL-031-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214",
+      "blockedIssue": "SAN-215"
+    },
+    {
+      "blocked": "OCL-032-postmvp",
+      "blockedBy": "EVP-029-advanced",
+      "blocker": "SAN-132",
+      "blockedIssue": "SAN-216"
+    },
+    {
+      "blocked": "OCL-032-postmvp",
+      "blockedBy": "OCL-019-postmvp",
+      "blocker": "SAN-205",
+      "blockedIssue": "SAN-216"
+    },
+    {
+      "blocked": "OCL-032-postmvp",
+      "blockedBy": "OCL-031-postmvp",
+      "blocker": "SAN-215",
+      "blockedIssue": "SAN-216"
+    },
+    {
+      "blocked": "OCL-033-postmvp",
+      "blockedBy": "OCL-016-postmvp",
+      "blocker": "SAN-202",
+      "blockedIssue": "SAN-217"
+    },
+    {
+      "blocked": "OCL-033-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214",
+      "blockedIssue": "SAN-217"
+    },
+    {
+      "blocked": "OCL-034-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214",
+      "blockedIssue": "SAN-218"
+    },
+    {
+      "blocked": "OCL-034-postmvp",
+      "blockedBy": "EVP-015-mvp",
+      "blocker": "SAN-119",
+      "blockedIssue": "SAN-218"
+    },
+    {
+      "blocked": "OCL-035-advanced",
+      "blockedBy": "OCL-022-advanced",
+      "blocker": "SAN-208",
+      "blockedIssue": "SAN-219"
+    },
+    {
+      "blocked": "OCL-035-advanced",
+      "blockedBy": "OCL-027-advanced",
+      "blocker": "SAN-213",
+      "blockedIssue": "SAN-219"
+    },
+    {
+      "blocked": "OCL-035-advanced",
+      "blockedBy": "OCL-032-postmvp",
+      "blocker": "SAN-216",
+      "blockedIssue": "SAN-219"
+    },
+    {
+      "blocked": "OCL-035-advanced",
+      "blockedBy": "OCL-034-postmvp",
+      "blocker": "SAN-218",
+      "blockedIssue": "SAN-219"
+    },
+    {
+      "blocked": "OCL-036-postmvp",
+      "blockedBy": "OCL-004-core",
+      "blocker": "SAN-190",
+      "blockedIssue": "SAN-220"
+    },
+    {
+      "blocked": "OCL-036-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214",
+      "blockedIssue": "SAN-220"
+    },
+    {
+      "blocked": "OCL-037-postmvp",
+      "blockedBy": "OCL-036-postmvp",
+      "blocker": "SAN-220",
+      "blockedIssue": "SAN-221"
+    },
+    {
+      "blocked": "OCL-037-postmvp",
+      "blockedBy": "OCL-016-postmvp",
+      "blocker": "SAN-202",
+      "blockedIssue": "SAN-221"
+    },
+    {
+      "blocked": "OCL-037-postmvp",
+      "blockedBy": "OCL-033-postmvp",
+      "blocker": "SAN-217",
+      "blockedIssue": "SAN-221"
+    },
+    {
+      "blocked": "OCL-038-postmvp",
+      "blockedBy": "OCL-017-postmvp",
+      "blocker": "SAN-203",
+      "blockedIssue": "SAN-222"
+    },
+    {
+      "blocked": "OCL-038-postmvp",
+      "blockedBy": "OCL-030-postmvp",
+      "blocker": "SAN-214",
+      "blockedIssue": "SAN-222"
+    },
+    {
+      "blocked": "OCL-038-postmvp",
+      "blockedBy": "OCL-036-postmvp",
+      "blocker": "SAN-220",
+      "blockedIssue": "SAN-222"
+    },
+    {
+      "blocked": "OCL-039-postmvp",
+      "blockedBy": "OCL-021-postmvp",
+      "blocker": "SAN-207",
+      "blockedIssue": "SAN-223"
+    },
+    {
+      "blocked": "OCL-039-postmvp",
+      "blockedBy": "OCL-038-postmvp",
+      "blocker": "SAN-222",
+      "blockedIssue": "SAN-223"
+    },
+    {
+      "blocked": "OCL-040-postmvp",
+      "blockedBy": "OCL-012-mvp",
+      "blocker": "SAN-198",
+      "blockedIssue": "SAN-224"
+    },
+    {
+      "blocked": "OCL-040-postmvp",
+      "blockedBy": "OCL-016-postmvp",
+      "blocker": "SAN-202",
+      "blockedIssue": "SAN-224"
+    },
+    {
+      "blocked": "OCL-040-postmvp",
+      "blockedBy": "OCL-017-postmvp",
+      "blocker": "SAN-203",
+      "blockedIssue": "SAN-224"
+    },
+    {
+      "blocked": "OCL-041-advanced",
+      "blockedBy": "OCL-022-advanced",
+      "blocker": "SAN-208",
+      "blockedIssue": "SAN-225"
+    },
+    {
+      "blocked": "OCL-041-advanced",
+      "blockedBy": "OCL-023-advanced",
+      "blocker": "SAN-209",
+      "blockedIssue": "SAN-225"
+    },
+    {
+      "blocked": "OCL-041-advanced",
+      "blockedBy": "OCL-035-advanced",
+      "blocker": "SAN-219",
+      "blockedIssue": "SAN-225"
+    },
+    {
+      "blocked": "OCL-041-advanced",
+      "blockedBy": "OCL-040-postmvp",
+      "blocker": "SAN-224",
+      "blockedIssue": "SAN-225"
+    },
+    {
+      "blocked": "OCL-042-mvp",
+      "blockedBy": "EVP-020-mvp",
+      "blocker": "SAN-123",
+      "blockedIssue": "SAN-226"
+    },
+    {
+      "blocked": "OCL-042-mvp",
+      "blockedBy": "EVP-022-mvp",
+      "blocker": "SAN-125",
+      "blockedIssue": "SAN-226"
+    },
+    {
+      "blocked": "GS-007",
+      "blockedBy": "MAP-006",
+      "blocker": "SAN-103",
+      "blockedIssue": "SAN-229"
+    },
+    {
+      "blocked": "GS-008",
+      "blockedBy": "MAP-012A",
+      "blocker": "SAN-107",
+      "blockedIssue": "SAN-230"
+    }
+  ],
+  "errors": []
+}

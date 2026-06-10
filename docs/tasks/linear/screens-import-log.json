@@ -1,0 +1,204 @@
+{
+  "created": [
+    {
+      "id": "SCREEN-006",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-014",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-019",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-003",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-016",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-022",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-015",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-020",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-010",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-008",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-005",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-002",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-015",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-001",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-001",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-002",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-003",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-014",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-016",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-017",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-008",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-004",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-018",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-019",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-011",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-020",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-013",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-023",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-024",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-025",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-009",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-006",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-021",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-012",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-018",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-017",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-013",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-005",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-011",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-007",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-007",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-004",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-022",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-010",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-023",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-027",
+      "dryRun": true
+    },
+    {
+      "id": "SCREEN-021",
+      "dryRun": true
+    },
+    {
+      "id": "WIRE-026",
+      "dryRun": true
+    },
+    {
+      "id": "CAFE-001",
+      "dryRun": true
+    }
+  ],
+  "skipped": [],
+  "updated": [],
+  "errors": [],
+  "importedAt": "2026-05-27T10:03:31.365Z"
+}

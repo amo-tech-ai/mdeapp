@@ -1,0 +1,392 @@
+{
+  "updated": "2026-06-01",
+  "linear_view": "https://linear.app/sanjiovani/view/intelligence-7bbdb829ba23",
+  "disk_map": "tasks/intelligence/LINEAR.md",
+  "rule": "Linear title = {SPEC-ID} — {real-world title}. INT specs: tasks/intelligence/tasks/.",
+  "count": 56,
+  "tasks": [
+    {
+      "linear": "SAN-370",
+      "spec_id": "VEC-001",
+      "phase": "intel-0",
+      "url": "https://linear.app/sanjiovani/issue/SAN-370/vec-001-pgvector-inventory-duplicate-hnsw-cleanup"
+    },
+    {
+      "linear": "SAN-371",
+      "spec_id": "VEC-002",
+      "phase": "intel-deferred",
+      "url": "https://linear.app/sanjiovani/issue/SAN-371/vec-002-semantic-v1-schema-rls-plan"
+    },
+    {
+      "linear": "SAN-372",
+      "spec_id": "VEC-003",
+      "phase": "intel-1b",
+      "intel_order": 11,
+      "url": "https://linear.app/sanjiovani/issue/SAN-372/vec-003-model-registry-embedding-contract"
+    },
+    {
+      "linear": "SAN-373",
+      "spec_id": "VEC-004",
+      "phase": "intel-1b",
+      "url": "https://linear.app/sanjiovani/issue/SAN-373/vec-004-embedding-text-builders-worker"
+    },
+    {
+      "linear": "SAN-374",
+      "spec_id": "VEC-005",
+      "phase": "intel-1b",
+      "url": "https://linear.app/sanjiovani/issue/SAN-374/vec-005-golden-semantic-eval-harness"
+    },
+    {
+      "linear": "SAN-375",
+      "spec_id": "VEC-006",
+      "phase": "intel-deferred",
+      "url": "https://linear.app/sanjiovani/issue/SAN-375/vec-006-semantic-search-logs-observability-phase-2"
+    },
+    {
+      "linear": "SAN-376",
+      "spec_id": "VEC-007",
+      "phase": "intel-deferred",
+      "url": "https://linear.app/sanjiovani/issue/SAN-376/vec-007-coffee-tour-vector-compatibility"
+    },
+    {
+      "linear": "SAN-377",
+      "spec_id": "DATA-039",
+      "phase": "intel-0",
+      "url": "https://linear.app/sanjiovani/issue/SAN-377/data-039-restaurants-schema-patch-neighborhood-nullable-pricehours"
+    },
+    {
+      "linear": "SAN-378",
+      "spec_id": "DATA-040",
+      "phase": "intel-1",
+      "url": "https://linear.app/sanjiovani/issue/SAN-378/data-040-embedding-jobs-queue"
+    },
+    {
+      "linear": "SAN-379",
+      "spec_id": "DATA-041",
+      "phase": "intel-1",
+      "url": "https://linear.app/sanjiovani/issue/SAN-379/data-041-venue-signals-polymorphic-seed-human-qa-top-30"
+    },
+    {
+      "linear": "SAN-380",
+      "spec_id": "DATA-042",
+      "phase": "intel-1",
+      "url": "https://linear.app/sanjiovani/issue/SAN-380/data-042-event-signals-seed-published-events"
+    },
+    {
+      "linear": "SAN-381",
+      "spec_id": "DATA-043",
+      "phase": "intel-1",
+      "url": "https://linear.app/sanjiovani/issue/SAN-381/data-043-rental-signals-seed-44-apartments"
+    },
+    {
+      "linear": "SAN-382",
+      "spec_id": "DATA-044",
+      "phase": "intel-1",
+      "url": "https://linear.app/sanjiovani/issue/SAN-382/data-044-neighborhood-profiles-astorga-seed"
+    },
+    {
+      "linear": "SAN-383",
+      "spec_id": "DATA-045",
+      "phase": "intel-1",
+      "url": "https://linear.app/sanjiovani/issue/SAN-383/data-045-evidence-grounding-tables"
+    },
+    {
+      "linear": "SAN-384",
+      "spec_id": "DATA-046",
+      "phase": "intel-1b",
+      "url": "https://linear.app/sanjiovani/issue/SAN-384/data-046-golden-queries-v2-signal-backed"
+    },
+    {
+      "linear": "SAN-385",
+      "spec_id": "DATA-047",
+      "phase": "intel-1",
+      "url": "https://linear.app/sanjiovani/issue/SAN-385/data-047-search-logs-rank-explanation-observability"
+    },
+    {
+      "linear": "SAN-386",
+      "spec_id": "SEARCH-001",
+      "phase": "intel-1b",
+      "url": "https://linear.app/sanjiovani/issue/SAN-386/search-001-wire-hybrid-search-listings-rental-signals"
+    },
+    {
+      "linear": "SAN-387",
+      "spec_id": "SEARCH-002",
+      "phase": "intel-1b",
+      "url": "https://linear.app/sanjiovani/issue/SAN-387/search-002-wire-hybrid-search-events-event-signals"
+    },
+    {
+      "linear": "SAN-388",
+      "spec_id": "SEARCH-003",
+      "phase": "intel-1",
+      "url": "https://linear.app/sanjiovani/issue/SAN-388/search-003-wire-hybrid-search-restaurants-venue-signals"
+    },
+    {
+      "linear": "SAN-389",
+      "spec_id": "SEARCH-004",
+      "phase": "intel-deferred",
+      "url": "https://linear.app/sanjiovani/issue/SAN-389/search-004-cross-domain-retrieval-workflow"
+    },
+    {
+      "linear": "SAN-390",
+      "spec_id": "SEARCH-005",
+      "phase": "intel-deferred",
+      "url": "https://linear.app/sanjiovani/issue/SAN-390/search-005-like-this-place-similarity-search"
+    },
+    {
+      "linear": "SAN-391",
+      "spec_id": "SEARCH-006",
+      "phase": "intel-deferred",
+      "url": "https://linear.app/sanjiovani/issue/SAN-391/search-006-conversational-query-planner"
+    },
+    {
+      "linear": "SAN-392",
+      "spec_id": "SEARCH-007",
+      "phase": "intel-deferred",
+      "url": "https://linear.app/sanjiovani/issue/SAN-392/search-007-signal-fusion-ranker"
+    },
+    {
+      "linear": "SAN-393",
+      "spec_id": "AI-001",
+      "phase": "intel-deferred",
+      "url": "https://linear.app/sanjiovani/issue/SAN-393/ai-001-cross-domain-discovery-workflow"
+    },
+    {
+      "linear": "SAN-394",
+      "spec_id": "AI-002",
+      "phase": "intel-deferred",
+      "url": "https://linear.app/sanjiovani/issue/SAN-394/ai-002-itinerary-planning-workflow"
+    },
+    {
+      "linear": "SAN-395",
+      "spec_id": "AI-003",
+      "phase": "intel-1b",
+      "url": "https://linear.app/sanjiovani/issue/SAN-395/ai-003-signal-enrichment-batch-job"
+    },
+    {
+      "linear": "SAN-396",
+      "spec_id": "AI-004",
+      "phase": "intel-1b",
+      "url": "https://linear.app/sanjiovani/issue/SAN-396/ai-004-grounding-verification-pipeline"
+    },
+    {
+      "linear": "SAN-397",
+      "spec_id": "AI-010",
+      "phase": "intel-deferred",
+      "url": "https://linear.app/sanjiovani/issue/SAN-397/ai-010-hidden-gem-detection-job"
+    },
+    {
+      "linear": "SAN-398",
+      "spec_id": "AI-011",
+      "phase": "intel-deferred",
+      "url": "https://linear.app/sanjiovani/issue/SAN-398/ai-011-local-vs-tourist-classifier"
+    },
+    {
+      "linear": "SAN-399",
+      "spec_id": "AI-012",
+      "phase": "intel-deferred",
+      "url": "https://linear.app/sanjiovani/issue/SAN-399/ai-012-vibe-extraction-refresh-on-catalog-change"
+    },
+    {
+      "linear": "SAN-400",
+      "spec_id": "AI-013",
+      "phase": "intel-deferred",
+      "url": "https://linear.app/sanjiovani/issue/SAN-400/ai-013-nightlife-timing-engine"
+    },
+    {
+      "linear": "SAN-401",
+      "spec_id": "AI-014",
+      "phase": "intel-deferred",
+      "url": "https://linear.app/sanjiovani/issue/SAN-401/ai-014-recommendation-graph-builder"
+    },
+    {
+      "linear": "SAN-402",
+      "spec_id": "AI-015",
+      "phase": "intel-deferred",
+      "url": "https://linear.app/sanjiovani/issue/SAN-402/ai-015-user-taste-vector-opt-in"
+    },
+    {
+      "linear": "SAN-403",
+      "spec_id": "AI-020",
+      "phase": "intel-deferred",
+      "url": "https://linear.app/sanjiovani/issue/SAN-403/ai-020-multi-agent-concierge-router"
+    }
+  ],
+  "int_tasks": [
+    {
+      "linear": "SAN-404",
+      "spec_id": "INT-001",
+      "phase": "intel-conv",
+      "int_seq": 1,
+      "title": "Turn-1 chat routing — one intent schema for rentals, events, cafés",
+      "url": "https://linear.app/sanjiovani/issue/SAN-404/int-001-turn-1-chat-routing-one-intent-schema-for-rentals-events-cafes"
+    },
+    {
+      "linear": "SAN-405",
+      "spec_id": "INT-002",
+      "phase": "intel-conv",
+      "int_seq": 2,
+      "title": "Parse Camila's monthly rental budget + June dates + Medellín city",
+      "url": "https://linear.app/sanjiovani/issue/SAN-405/int-002-parse-camilas-monthly-rental-budget-june-dates-medellin-city"
+    },
+    {
+      "linear": "SAN-406",
+      "spec_id": "INT-003",
+      "phase": "intel-conv",
+      "int_seq": 3,
+      "title": "Neighborhood clarify — not generic budget/dates re-ask",
+      "url": "https://linear.app/sanjiovani/issue/SAN-406/int-003-neighborhood-clarify-not-generic-budgetdates-re-ask"
+    },
+    {
+      "linear": "SAN-407",
+      "spec_id": "INT-004",
+      "phase": "intel-conv",
+      "int_seq": 4,
+      "title": "Remove canned rental clarify bypass before concierge agent",
+      "url": "https://linear.app/sanjiovani/issue/SAN-407/int-004-remove-canned-rental-clarify-bypass-before-concierge-agent"
+    },
+    {
+      "linear": "SAN-408",
+      "spec_id": "INT-005",
+      "phase": "intel-conv",
+      "int_seq": 5,
+      "title": "Regression suite — hero queries never hit wrong path",
+      "url": "https://linear.app/sanjiovani/issue/SAN-408/int-005-regression-suite-hero-queries-never-hit-wrong-path"
+    },
+    {
+      "linear": "SAN-409",
+      "spec_id": "INT-006",
+      "phase": "intel-conv",
+      "int_seq": 6,
+      "title": "SQL date filters for rental availability search",
+      "url": "https://linear.app/sanjiovani/issue/SAN-409/int-006-sql-date-filters-for-rental-availability-search"
+    },
+    {
+      "linear": "SAN-410",
+      "spec_id": "INT-007",
+      "phase": "intel-conv",
+      "int_seq": 7,
+      "title": "Roberto finds salsa events this weekend near Provenza",
+      "url": "https://linear.app/sanjiovani/issue/SAN-410/int-007-roberto-finds-salsa-events-this-weekend-near-provenza"
+    },
+    {
+      "linear": "SAN-411",
+      "spec_id": "INT-008",
+      "phase": "intel-conv",
+      "int_seq": 8,
+      "title": "Tourist finds quiet Laureles café for remote work",
+      "url": "https://linear.app/sanjiovani/issue/SAN-411/int-008-tourist-finds-quiet-laureles-cafe-for-remote-work"
+    },
+    {
+      "linear": "SAN-412",
+      "spec_id": "INT-009",
+      "phase": "intel-conv",
+      "int_seq": 9,
+      "title": "CopilotKit mirrors map + slot state to agent",
+      "url": "https://linear.app/sanjiovani/issue/SAN-412/int-009-copilotkit-mirrors-map-slot-state-to-agent"
+    },
+    {
+      "linear": "SAN-413",
+      "spec_id": "INT-010",
+      "phase": "intel-conv",
+      "int_seq": 10,
+      "title": "Working memory syncs intent across chat turns",
+      "url": "https://linear.app/sanjiovani/issue/SAN-413/int-010-working-memory-syncs-intent-across-chat-turns"
+    },
+    {
+      "linear": "SAN-414",
+      "spec_id": "INT-011",
+      "phase": "intel-memory",
+      "int_seq": 11,
+      "title": "Durable user preferences schema + RLS",
+      "url": "https://linear.app/sanjiovani/issue/SAN-414/int-011-durable-user-preferences-schema-rls"
+    },
+    {
+      "linear": "SAN-415",
+      "spec_id": "INT-012",
+      "phase": "intel-memory",
+      "int_seq": 12,
+      "title": "User interactions log for ranking feedback",
+      "url": "https://linear.app/sanjiovani/issue/SAN-415/int-012-user-interactions-log-for-ranking-feedback"
+    },
+    {
+      "linear": "SAN-416",
+      "spec_id": "INT-013",
+      "phase": "intel-memory",
+      "int_seq": 13,
+      "title": "Retrieve preferences before every search",
+      "url": "https://linear.app/sanjiovani/issue/SAN-416/int-013-retrieve-preferences-before-every-search"
+    },
+    {
+      "linear": "SAN-417",
+      "spec_id": "INT-014",
+      "phase": "intel-memory",
+      "int_seq": 14,
+      "title": "Ranking boost from remembered preferences",
+      "url": "https://linear.app/sanjiovani/issue/SAN-417/int-014-ranking-boost-from-remembered-preferences"
+    },
+    {
+      "linear": "SAN-418",
+      "spec_id": "INT-015",
+      "phase": "intel-memory",
+      "int_seq": 15,
+      "title": "Memory evidence tests — prefs affect results",
+      "url": "https://linear.app/sanjiovani/issue/SAN-418/int-015-memory-evidence-tests-prefs-affect-results"
+    },
+    {
+      "linear": "SAN-419",
+      "spec_id": "INT-016",
+      "phase": "intel-memory",
+      "int_seq": 16,
+      "title": "pgvector semantic memory for cross-session recall",
+      "url": "https://linear.app/sanjiovani/issue/SAN-419/int-016-pgvector-semantic-memory-for-cross-session-recall"
+    },
+    {
+      "linear": "SAN-420",
+      "spec_id": "INT-017",
+      "phase": "intel-memory",
+      "int_seq": 17,
+      "title": "Gemini embeddings for preference memory",
+      "url": "https://linear.app/sanjiovani/issue/SAN-420/int-017-gemini-embeddings-for-preference-memory"
+    },
+    {
+      "linear": "SAN-421",
+      "spec_id": "INT-018",
+      "phase": "intel-memory",
+      "int_seq": 18,
+      "title": "Cross-domain personalization (rentals ↔ events ↔ venues)",
+      "url": "https://linear.app/sanjiovani/issue/SAN-421/int-018-cross-domain-personalization-rentals-events-venues"
+    },
+    {
+      "linear": "SAN-422",
+      "spec_id": "INT-019",
+      "phase": "intel-memory",
+      "int_seq": 19,
+      "title": "Memory settings UI — user controls what we remember",
+      "url": "https://linear.app/sanjiovani/issue/SAN-422/int-019-memory-settings-ui-user-controls-what-we-remember"
+    },
+    {
+      "linear": "SAN-423",
+      "spec_id": "INT-020",
+      "phase": "intel-memory",
+      "int_seq": 20,
+      "title": "Observational memory learning from chat behavior",
+      "url": "https://linear.app/sanjiovani/issue/SAN-423/int-020-observational-memory-learning-from-chat-behavior"
+    },
+    {
+      "linear": "SAN-424",
+      "spec_id": "INT-021",
+      "phase": "intel-conv",
+      "int_seq": 21,
+      "title": "Restaurant + venue search with cuisine/capacity clarify",
+      "url": "https://linear.app/sanjiovani/issue/SAN-424/int-021-restaurant-venue-search-with-cuisinecapacity-clarify"
+    },
+    {
+      "linear": "SAN-425",
+      "spec_id": "INT-022",
+      "phase": "intel-conv",
+      "int_seq": 22,
+      "title": "Routing confidence telemetry (0.85 / 0.50 bands)",
+      "url": "https://linear.app/sanjiovani/issue/SAN-425/int-022-routing-confidence-telemetry-085-050-bands"
+    }
+  ]
+}

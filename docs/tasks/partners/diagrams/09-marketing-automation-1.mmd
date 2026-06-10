@@ -1,0 +1,12 @@
+flowchart TD
+  EV["Event: signup · booking · inactivity · expiry"] --> ROUTE{"Mastra workflow router"}
+  ROUTE --> WELCOME["Welcome series"]
+  ROUTE --> REENG["Re-engagement"]
+  ROUTE --> UPSELL["Upsell"]
+  ROUTE --> REVIEW["Review collection"]
+  ROUTE --> RENEW["Renewal / win-back"]
+  WELCOME & REENG & UPSELL & REVIEW & RENEW --> GATE{"Money / public?"}
+  GATE -- yes --> HITL["HITL approve"]
+  GATE -- no --> SEND["Send (email · WhatsApp · Postiz)"]
+  HITL --> SEND
+  SEND --> LOG["Log → analytics → next-best-action"]

@@ -1,0 +1,1735 @@
+"ID","Team","Title","Description","Status","Estimate","Priority","Project ID","Project","Creator","Assignee","Labels","Cycle Number","Cycle Name","Cycle Start","Cycle End","Created","Updated","Started","Triaged","Completed","Canceled","Archived","Due Date","Parent issue","Initiatives","Project Milestone ID","Project Milestone","SLA Status","UUID","Time in status (minutes)","Related to","Blocked by","Duplicate of"
+"SAN-721","Sanjiovani","ECOM-C-020 — Production readiness checklist","## ECOM-C-020 — Commerce production readiness checklist
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-020-production-readiness.md`
+**Phase:** 3 · **Priority:** P0 · **Estimate:** 0.5-1 day
+
+### Goal
+
+Decide if Core can ship without breaking the existing mdeai MVP.
+
+### Depends on
+
+* ECOM-C-018
+* ECOM-C-017
+* ECOM-C-019
+
+### Blocks
+
+* ECOM-M-001
+* ECOM-M-002
+* ECOM-M-009
+* ECOM-M-010
+* ECOM-M-011
+* ECOM-M-012
+
+### Scope / features
+
+* Add `docs/ecommerce/docs/commerce-production-readiness.md`.
+* Add `mdeapp/scripts/verify-commerce-readiness.mjs`.
+* Include env, health, Store API, Stripe webhook, product hydration, Supabase RLS, logs, rollback, and feature flag.
+* **Infrastructure modules** (see [05-medusa-recipes-map.md](<../docs/05-medusa-recipes-map.md>)): Redis event/workflow/cache reachable; File module (S3 or local) for product images; Notification provider stub or SendGrid; optional Promotion module smoke.
+* **Commerce modules:** confirm Product/Pricing/Inventory/Region/Cart/Payment/Order paths green; document unsupported fields (e.g. `*seller.reviews` until C-022 Done).
+
+### Acceptance criteria
+
+- [ ] Readiness checklist exists.
+- [ ] Verify script checks required env and smoke endpoints.
+- [ ] Commerce UI can be disabled by feature flag.
+- [ ] Existing mdeai MVP passes with commerce disabled.
+- [ ] Gate says marketplace tasks are blocked until Core proof exists.
+
+### Proof commands
+
+```bash
+cd mdeapp && node --env-file=.env.local scripts/verify-commerce-readiness.mjs
+cd mdeapp && npm run lint && npm run typecheck && npm test
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-07T20:51:29.255Z","2026-06-08T01:02:00.237Z",,,,,,"2026-06-08T20:51:29.985Z",,"Phase 1 — mdeai MVP launch","b43c74a8-3b9a-4cd9-ad11-fcc02cc0bf92","M3 - Checkout proof and readiness","HighRisk","a4a77505-a6f9-46b6-b9bc-53440e53f926",1141,"SAN-646","SAN-720, SAN-645",
+"SAN-720","Sanjiovani","ECOM-C-019 — AI E2E checkout proof","## ECOM-C-019 — AI end-to-end checkout proof
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-019-ai-checkout-proof.md`
+**Phase:** 3 · **Priority:** P0 · **Estimate:** 1-2 days
+
+### Goal
+
+Run the full proof: user asks AI, sees product card, adds to cart, pays Stripe, and creates a Medusa order.
+
+### Depends on
+
+* ECOM-C-013
+* ECOM-C-015
+* ECOM-C-016
+
+### Blocks
+
+* ECOM-C-017
+* ECOM-C-020
+* ECOM-M-001
+
+### Scope / features
+
+* Add Playwright checkout spec.
+* Add `scripts/smoke-commerce-paid-proof.mjs`.
+* Record evidence file with test order id.
+* Keep proof independent from event ticket smoke scripts.
+
+### Acceptance criteria
+
+- [ ] User can ask/search for a product.
+- [ ] ProductCard renders.
+- [ ] Add-to-cart works.
+- [ ] Stripe test payment completes.
+- [ ] Medusa order exists.
+- [ ] Evidence doc records order id, date, env, and commands.
+
+### Proof commands
+
+```bash
+cd mdeapp && npm run test:e2e -- e2e/commerce-checkout.spec.ts --project=chromium --workers=1
+cd mdeapp && node --env-file=.env.local scripts/smoke-commerce-paid-proof.mjs
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-07T20:51:27.932Z","2026-06-08T01:01:58.209Z",,,,,,"2026-06-08T20:51:29.028Z",,"Phase 1 — mdeai MVP launch","b43c74a8-3b9a-4cd9-ad11-fcc02cc0bf92","M3 - Checkout proof and readiness","HighRisk","cc97b251-619b-43b2-b96c-fe088bb6e4f1",1141,"SAN-644","SAN-641, SAN-643",
+"SAN-645","Sanjiovani","ECOM-C-017 — Manual ops & refund playbook","## ECOM-C-017 — Manual ops and refund playbook
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-017-manual-ops-refund-playbook.md`
+**Phase:** 3 · **Priority:** P0 · **Estimate:** 0.5-1 day
+
+### Goal
+
+Document manual support, refund, fulfillment, and failure handling before real users buy.
+
+### Depends on
+
+* ECOM-C-016
+
+### Blocks
+
+* ECOM-C-020
+
+### Scope / features
+
+* Add `docs/ecommerce/docs/commerce-ops-playbook.md`.
+* Add `docs/ecommerce/docs/commerce-refund-playbook.md`.
+* Include order lookup, refund, webhook failure, stock correction, support handoff, and test/live mode separation.
+
+### Acceptance criteria
+
+- [ ] Operator can find a Medusa order.
+- [ ] Operator can refund a test order.
+- [ ] Operator can identify webhook failure symptoms.
+- [ ] Support path is documented for CopilotKit and manual handoff.
+
+### Proof commands
+
+```bash
+rg -n ""refund|webhook|order lookup|test mode|live mode|support"" docs/ecommerce/docs/commerce-*playbook.md
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE",,,,,"2026-06-06T10:37:13.518Z","2026-06-08T01:01:26.699Z",,,,,,"2026-06-07T10:37:14.064Z",,"Phase 1 — mdeai MVP launch","b43c74a8-3b9a-4cd9-ad11-fcc02cc0bf92","M3 - Checkout proof and readiness","Breached","65a8960b-bb55-4366-be90-3a4504ecf033",3196,"SAN-646, SAN-644","",
+"SAN-643","Sanjiovani","ECOM-C-015 — Cart state UI","## ECOM-C-015 — Minimal cart state UI
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-015-cart-state-ui.md`
+**Phase:** 3 · **Priority:** P0 · **Estimate:** 1-2 days
+
+### Goal
+
+Show a minimal cart state UI that reflects Medusa cart totals and line items.
+
+### Depends on
+
+* ECOM-C-012
+* ECOM-C-014
+
+### Blocks
+
+* ECOM-C-019
+
+### Scope / features
+
+* Add minimal cart summary component/hook.
+* Show item count, selected variants, subtotal, and checkout CTA.
+* Add accessible cart count update announcement.
+* Keep checkout button tied to `checkout_link`.
+
+### Acceptance criteria
+
+- [ ] Cart updates after add-to-cart.
+- [ ] Variant details are visible for each item.
+- [ ] Checkout button calls the checkout tool.
+- [ ] Cart count updates include `aria-live=""polite""`.
+- [ ] Mobile sticky elements account for safe-area inset if used.
+
+### Proof commands
+
+```bash
+cd mdeapp && npm test -- src/components/commerce
+npm run test:e2e -- e2e/commerce-cart-state.spec.ts --project=chromium --workers=1
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, FROZEN",,,,,"2026-06-06T10:36:31.356Z","2026-06-08T01:01:17.953Z",,,,,,"2026-06-07T10:36:32.634Z",,"Phase 1 — mdeai MVP launch","4a272d83-4890-4db1-95e3-3fb9e67f675f","M2 - AI product cards and cart","Breached","fbdff7cd-839e-453b-a8d7-e271bbd339b6",3196,"","SAN-640, SAN-642",
+"SAN-642","Sanjiovani","ECOM-C-014 — CopilotKit ProductCard","## ECOM-C-014 — CopilotKit ProductCard render
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-014-copilotkit-product-card.md`
+**Phase:** 3 · **Priority:** P0 · **Estimate:** 1-2 days
+
+### Goal
+
+Render AI product results as compact CopilotKit product cards inside the existing mdeai UI.
+
+### Depends on
+
+* ECOM-C-010
+* ECOM-C-011
+* ECOM-C-006
+
+### Blocks
+
+* ECOM-C-015
+* ECOM-C-019
+
+### Scope / features
+
+* Add `mdeapp/src/components/commerce/ProductCard.tsx`.
+* Register product search render path in existing CopilotKit/Mastra render system.
+* Card supports image, title, price, availability, variant strategy, view detail, and add to cart.
+* Keep UI compact and mobile safe.
+
+### Acceptance criteria
+
+- [ ] ProductCard renders from `product_search` DTO.
+- [ ] Price/stock are Medusa-hydrated.
+- [ ] Add-to-cart action is visible and has loading/error states.
+- [ ] Mobile touch targets are at least 44px.
+- [ ] No new storefront route is created.
+
+### Proof commands
+
+```bash
+cd mdeapp && npm test -- src/components/commerce
+npm run test:e2e -- e2e/commerce-product-card.spec.ts --project=chromium --workers=1
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:36:28.291Z","2026-06-08T01:01:17.326Z",,,,,,"2026-06-07T10:36:28.859Z",,"Phase 1 — mdeai MVP launch","4a272d83-4890-4db1-95e3-3fb9e67f675f","M2 - AI product cards and cart","Breached","1030558e-2c7f-4b57-968e-38e72b015ad8",3196,"","SAN-638, SAN-639",
+"SAN-641","Sanjiovani","ECOM-C-013 — Mastra checkout_link","## ECOM-C-013 — Mastra checkout_link tool
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-013-mastra-checkout-link.md`
+**Phase:** 3 · **Priority:** P0 · **Estimate:** 1-2 days
+
+### Goal
+
+Let Mastra return a safe web checkout link for a Medusa cart.
+
+### Depends on
+
+* ECOM-C-004
+* ECOM-C-012
+
+### Blocks
+
+* ECOM-C-019
+
+### Scope / features
+
+* Add `checkout_link` Mastra tool.
+* Keep checkout creation server-side.
+* Return URL and cart/order context only.
+* Use commerce-specific Stripe/Medusa env.
+
+### Acceptance criteria
+
+- [ ] Valid cart returns a test checkout URL.
+- [ ] Invalid/empty cart fails safely.
+- [ ] Existing event ticket checkout code is not modified.
+- [ ] Tool output is safe for CopilotKit and WhatsApp later.
+
+### Proof commands
+
+```bash
+cd mdeapp && npm test -- src/mastra/tools/__tests__/commerce-checkout-link.test.ts
+node --env-file=.env.local scripts/smoke-commerce-checkout-link.mjs
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, FROZEN",,,,,"2026-06-06T10:36:26.157Z","2026-06-08T05:25:15.843Z",,,,,,"2026-06-07T10:36:27.748Z",,"Phase 1 — mdeai MVP launch","4a272d83-4890-4db1-95e3-3fb9e67f675f","M2 - AI product cards and cart","Breached","d5682025-68ff-4030-a4fb-576fe200bded",3196,"SAN-632, SAN-727","SAN-640",
+"SAN-640","Sanjiovani","ECOM-C-012 — Mastra cart tools","## ECOM-C-012 — Mastra cart tools
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-012-mastra-cart-tools.md`
+**Phase:** 3 · **Priority:** P0 · **Estimate:** 1-2 days
+
+### Goal
+
+Let Mastra create Medusa carts and add variants to cart.
+
+### Depends on
+
+* ECOM-C-008
+
+### Blocks
+
+* ECOM-C-013
+* ECOM-C-015
+
+### Scope / features
+
+* Create cart with region/currency context after SDK method verification.
+* Add variant to cart.
+* Return cart id, line items, variants, totals, and availability.
+* Persist/reuse cart id through existing session state pattern.
+
+### Acceptance criteria
+
+- [ ] Cart can be created.
+- [ ] Variant can be added.
+- [ ] Totals come from Medusa.
+- [ ] Quantity and out-of-stock errors are handled.
+
+### Proof commands
+
+```bash
+cd mdeapp && npm test -- src/mastra/tools/__tests__/commerce-cart.test.ts
+node --env-file=.env.local scripts/smoke-commerce-cart.mjs
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, FROZEN",,,,,"2026-06-06T10:36:23.977Z","2026-06-08T01:01:14.807Z",,,,,,"2026-06-07T10:36:24.639Z",,"Phase 1 — mdeai MVP launch","4a272d83-4890-4db1-95e3-3fb9e67f675f","M2 - AI product cards and cart","Breached","b1bbe30d-3cf7-4a87-a6d9-f57c30d61334",3196,"","SAN-636",
+"SAN-639","Sanjiovani","ECOM-C-011 — Mastra product_detail","## ECOM-C-011 — Mastra product_detail tool
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-011-mastra-product-detail.md`
+**Phase:** 3 · **Priority:** P0 · **Estimate:** 1-2 days
+
+### Goal
+
+Let Mastra fetch one live product detail safely from Medusa.
+
+### Depends on
+
+* ECOM-C-008
+
+### Blocks
+
+* ECOM-C-014
+
+### Scope / features
+
+* Add `mdeapp/src/mastra/tools/commerce/product-detail.ts`.
+* Validate product id.
+* Fetch live Medusa detail.
+* Normalize detail DTO.
+
+### Acceptance criteria
+
+- [ ] Product detail includes title, image, description, variant choices, price, and availability.
+- [ ] Price is displayed as Medusa display amount.
+- [ ] Invalid or missing product id fails safely.
+
+### Proof commands
+
+```bash
+cd mdeapp && npm test -- src/mastra/tools/__tests__/commerce-product-detail.test.ts
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, FROZEN",,,,,"2026-06-06T10:36:21.022Z","2026-06-08T01:01:10.446Z",,,,,,"2026-06-07T10:36:23.337Z",,"Phase 1 — mdeai MVP launch","4a272d83-4890-4db1-95e3-3fb9e67f675f","M2 - AI product cards and cart","Breached","dd6b1d0f-a6a7-40e3-a402-19a18f6cd2db",3196,"","SAN-636",
+"SAN-638","Sanjiovani","ECOM-C-010 — Mastra product_search","## ECOM-C-010 — Mastra product_search tool
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-010-mastra-product-search.md`
+**Phase:** 3 · **Priority:** P0 · **Estimate:** 1-2 days
+
+**Phase 3 priority 5** — after SAN-636 (C-008).
+
+### Goal
+
+Let Mastra search product embeddings and then hydrate current product cards from Medusa.
+
+### Depends on
+
+* ECOM-C-008
+* ECOM-C-009
+
+### Blocks
+
+* ECOM-C-014
+
+### Scope / features
+
+* Add `mdeapp/src/mastra/tools/commerce/product-search.ts`.
+* Query Supabase for candidate product ids only.
+* Hydrate current price, stock, title, image, and variants from Medusa.
+* Return ProductCard DTOs.
+
+### Acceptance criteria
+
+- [ ] Tool returns live Medusa price and stock.
+- [ ] Tool never returns price/stock from Supabase.
+- [ ] Unavailable products are excluded or marked unavailable using Medusa data.
+- [ ] Tool has deterministic fallback if vector search is unavailable.
+
+### Proof commands
+
+```bash
+cd mdeapp && npm test -- src/mastra/tools/__tests__/commerce-product-search.test.ts
+cd mdeapp && npm run dev:agent
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, FROZEN",,,,,"2026-06-06T10:36:16.339Z","2026-06-08T01:01:09.970Z",,,,,,"2026-06-07T10:36:18.454Z",,"Phase 1 — mdeai MVP launch","4a272d83-4890-4db1-95e3-3fb9e67f675f","M2 - AI product cards and cart","Breached","42a6eb2d-d3ad-427f-8bf6-abbc43bf88ba",3197,"","SAN-637, SAN-636",
+"SAN-637","Sanjiovani","ECOM-C-009 — Supabase links + embedding sync","## ECOM-C-009 — Product embedding sync
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-009-product-embedding-sync.md`
+**Phase:** 3 · **Priority:** P0 · **Estimate:** 1-2 days
+
+### Goal
+
+Sync searchable product text into pgvector while hydrating live price and stock from Medusa later.
+
+### Depends on
+
+* ECOM-C-006
+* ECOM-C-018
+
+### Blocks
+
+* ECOM-C-010
+
+### Scope / features
+
+### Step A — Supabase link tables (formerly misnumbered C-008)
+
+* Add `commerce_product_embeddings` migration under `mdeapp/supabase/migrations/`
+* RLS enabled; **no** price, stock, cart, or order columns
+* Optional sync log table
+
+### Step B — Embedding sync
+
+* Build embedding text from Mercur product title, description, tags, and non-price attributes.
+* Generate Gemini embeddings.
+* Upsert into `commerce_product_embeddings`.
+* Store checksum and `synced_at`.
+* Add stale-data detector.
+
+### Acceptance criteria
+
+- [ ] Product sync writes product id and vector.
+- [ ] Sync does not write authoritative price, stock, cart, or order data.
+- [ ] Failed sync is logged and retryable.
+- [ ] Stale products are detectable.
+
+### Proof commands
+
+```bash
+cd mdeapp && node --env-file=.env.local scripts/sync-commerce-embeddings.mjs --dry-run
+cd mdeapp && npm test -- src/lib/commerce/embedding-text.test.ts
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:36:14.214Z","2026-06-08T01:01:08.951Z",,,,,,"2026-06-07T10:36:19.480Z",,"Phase 1 — mdeai MVP launch","4a272d83-4890-4db1-95e3-3fb9e67f675f","M2 - AI product cards and cart","Breached","0c2b734b-d8b4-4935-8321-97b9e3eb2b7a",3197,"SAN-646","SAN-636",
+"SAN-628","Sanjiovani","ECOM-C-000 — mdeapp verification floor (optional)","## ECOM-C-000 — Repair mdeapp verification floor before commerce
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-000-verification-floor.md`
+**Phase:** 0 · **Priority:** P0 · **Estimate:** 0.5 day
+
+### Goal
+
+Fix the mdeapp lint/typecheck verification floor so every later commerce PR has trustworthy proof.
+
+### Scope / features
+
+* Patch `mdeapp/eslint.config.*` so lint ignores generated nested worktree/build artifacts such as `workspace/**`, `.worktrees/**`, and `**/.next/**`.
+* Patch `mdeapp/tsconfig.json` or scoped TypeScript config so typecheck does not traverse generated nested worktree artifacts.
+* Keep source lint/typecheck coverage for `mdeapp/src/**`, tests, scripts, and config.
+* Re-run `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`, and `npm run audit`.
+* Do not add commerce features in this task.
+
+### Acceptance criteria
+
+- [ ] `npm run lint` no longer scans generated nested worktree artifacts.
+- [ ] `npm run typecheck` completes without Node heap OOM.
+- [ ] `npm test` remains green.
+- [ ] `npm run build` remains green.
+- [ ] Any remaining `npm run audit` findings are documented with severity and owner.
+
+### Proof commands
+
+```bash
+cd mdeapp && infisical run --silent --env=dev --path=/ -- npm run lint
+cd mdeapp && infisical run --silent --env=dev --path=/ -- npm run typecheck
+cd mdeapp && infisical run --silent --env=dev --path=/ -- npm test
+cd mdeapp && infisical run --silent --env=dev --path=/ -- npm run build
+cd mdeapp && infisical run --silent --env=dev --path=/ -- npm run audit
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM",,,,,"2026-06-06T10:35:17.062Z","2026-06-08T01:01:01.324Z",,,,,,"2026-06-07T10:35:17.846Z",,"Phase 1 — mdeai MVP launch","9e52e0d2-d80c-4d66-b65a-d1c53467c6b6","M0 - Verification floor","Breached","a7caffbb-077d-43c1-b14e-73ec411da3f7",1165,"","",
+"SAN-653","Sanjiovani","ECOM-M-007 — Vendor payout visibility","## ECOM-M-007 — Vendor payout visibility
+
+**Spec:** `docs/ecommerce/tasks/ECOM-M-007-vendor-payout-visibility.md`
+**Phase:** mvp · **Priority:** P1 · **Estimate:** 1-3 days
+
+### Goal
+
+Ship vendor payout visibility as one small commerce PR after its dependencies are green.
+
+### Depends on
+
+* ECOM-M-005
+* ECOM-M-006
+
+### Scope / features
+
+* Show order amount, platform fee, transfer/payout status.
+* Read payment/transfer state from Stripe/Medusa, not a custom ledger.
+* Use Medusa admin UI patterns and SDK.
+
+### Acceptance criteria
+
+- [ ] Vendor sees payout status for own orders only.
+- [ ] Amount formatting is correct.
+- [ ] Stripe/Medusa remains source of payment truth.
+- [ ] Loading and error states exist.
+
+### Proof commands
+
+```bash
+cd commerce/mercur && npm test -- vendor-payout
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"High","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:38:06.137Z","2026-06-08T01:01:51.654Z",,,,,,"2026-06-13T10:38:06.739Z",,"Phase 1 — mdeai MVP launch","f2afaf2e-d4cf-4f59-92db-f42c258c9820","M4 - Marketplace vendors and Connect","MediumRisk","f64ba036-2cd4-4aec-a898-9174a6aec74b",3195,"","SAN-651, SAN-652",
+"SAN-652","Sanjiovani","ECOM-M-006 — Multi-vendor order split","## ECOM-M-006 — Multi-vendor cart and order split
+
+**Spec:** `docs/ecommerce/tasks/ECOM-M-006-multi-vendor-order-split.md`
+**Phase:** mvp · **Priority:** P1 · **Estimate:** 1-3 days
+
+### Goal
+
+Ship multi-vendor cart and order split as one small commerce PR after its dependencies are green.
+
+### Depends on
+
+* ECOM-M-001
+* ECOM-M-005
+
+### Blocks
+
+* ECOM-M-007
+
+### Scope / features
+
+* Follow the official marketplace recipe order-split approach.
+* Resolve vendor per line item using module links.
+* Use workflows for split mutations and compensation.
+* Preserve platform order traceability.
+
+### Acceptance criteria
+
+- [ ] One cart can contain products from two vendors.
+- [ ] Paid checkout creates vendor-scoped order records or equivalent vendor fulfillment records.
+- [ ] Platform fee/payout path is compatible with Stripe Connect.
+- [ ] If split fails, workflow compensation leaves no partial visible vendor order.
+
+### Proof commands
+
+```bash
+cd commerce/mercur && npm run build
+cd commerce/mercur && npm test -- multi-vendor-order-split
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"High","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:38:04.049Z","2026-06-08T01:01:46.316Z",,,,,,"2026-06-13T10:38:04.662Z",,"Phase 1 — mdeai MVP launch","f2afaf2e-d4cf-4f59-92db-f42c258c9820","M4 - Marketplace vendors and Connect","MediumRisk","3f0a5920-3ed1-4ae6-a10f-38888c7c9ea0",3195,"","SAN-651, SAN-647",
+"SAN-651","Sanjiovani","ECOM-M-005 — Stripe Connect Express","## ECOM-M-005 — Stripe Connect Express onboarding
+
+**Spec:** `docs/ecommerce/tasks/ECOM-M-005-stripe-connect-express.md`
+**Phase:** mvp · **Priority:** P1 · **Estimate:** 1-3 days
+
+### Goal
+
+Ship stripe connect express onboarding as one small commerce PR after its dependencies are green.
+
+### Depends on
+
+* ECOM-M-001
+* ECOM-M-003
+
+### Blocks
+
+* ECOM-M-006
+* ECOM-M-007
+
+### Scope / features
+
+* Create connected account for approved vendor.
+* Store Stripe account id against Medusa vendor.
+* Do not store KYC data.
+* Show onboarding status.
+
+### Acceptance criteria
+
+- [ ] Vendor can start Express onboarding in test mode.
+- [ ] Connected account id is linked to vendor.
+- [ ] Onboarding status can be refreshed.
+- [ ] Core checkout still works without Connect enabled.
+
+### Proof commands
+
+```bash
+cd commerce/mercur && npm run build
+cd mdeapp && npm test -- src/lib/commerce/connect
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"High","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:37:29.304Z","2026-06-08T01:01:42.920Z",,,,,,"2026-06-13T10:37:29.991Z",,"Phase 1 — mdeai MVP launch","f2afaf2e-d4cf-4f59-92db-f42c258c9820","M4 - Marketplace vendors and Connect","MediumRisk","b3a6a7b1-bf57-4ed3-af81-c88a7380b831",3195,"SAN-644","SAN-647, SAN-649",
+"SAN-650","Sanjiovani","ECOM-M-004 — Vendor dashboard (mercur apps/vendor)","## ECOM-M-004 — Vendor dashboard v1
+
+**Spec:** `docs/ecommerce/tasks/ECOM-M-004-vendor-dashboard-v1.md`
+**Phase:** mvp · **Priority:** P1 · **Estimate:** 1-3 days
+
+### Goal
+
+Ship vendor dashboard v1 as one small commerce PR after its dependencies are green.
+
+### Depends on
+
+* ECOM-M-001
+* ECOM-M-003
+
+### Blocks
+
+* ECOM-M-007
+
+### Scope / features
+
+* Build read-heavy dashboard first.
+* Use Medusa JS SDK for admin calls.
+* Use Medusa UI components.
+* Display data loads on mount.
+* Separate display queries from modal/form queries.
+* Vendor can only see own products/orders.
+
+### Acceptance criteria
+
+- [ ] Vendor sees own products.
+- [ ] Vendor sees own orders.
+- [ ] Loading states are shown.
+- [ ] Vendor isolation is tested.
+- [ ] No raw `fetch()` is used for Medusa admin API calls.
+
+### Proof commands
+
+```bash
+cd commerce/mercur && npm run build
+cd commerce/mercur && npm test -- vendor-dashboard
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"High","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:37:27.081Z","2026-06-08T01:01:42.450Z",,,,,,"2026-06-13T10:37:27.978Z",,"Phase 1 — mdeai MVP launch","f2afaf2e-d4cf-4f59-92db-f42c258c9820","M4 - Marketplace vendors and Connect","MediumRisk","468b1934-282c-418c-ac7b-18d18da352d0",3195,"","SAN-647, SAN-649",
+"SAN-649","Sanjiovani","ECOM-M-003 — Vendor admin invite","## ECOM-M-003 — Vendor admin invite
+
+**Spec:** `docs/ecommerce/tasks/ECOM-M-003-vendor-admin-invite.md`
+**Phase:** mvp · **Priority:** P1 · **Estimate:** 1-3 days
+
+### Goal
+
+Ship vendor admin invite as one small commerce PR after its dependencies are green.
+
+### Depends on
+
+* ECOM-M-001
+* ECOM-M-002
+
+### Blocks
+
+* ECOM-M-004
+* ECOM-M-005
+
+### Scope / features
+
+* Add protected admin route/workflow for vendor admin invite.
+* Validate ownership/permissions in workflow, not route.
+* Use
+
+### Acceptance criteria
+
+- [ ] Internal admin can invite vendor admin.
+- [ ] Vendor admin is linked to one vendor.
+- [ ] Unauthorized users cannot invite admins.
+- [ ] Mutations happen through workflow steps with rollback.
+
+### Proof commands
+
+```bash
+cd commerce/mercur && npm run build
+cd commerce/mercur && npm test -- vendor-admin
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"High","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:37:24.504Z","2026-06-08T01:01:41.765Z",,,,,,"2026-06-13T10:37:25.118Z",,"Phase 1 — mdeai MVP launch","f2afaf2e-d4cf-4f59-92db-f42c258c9820","M4 - Marketplace vendors and Connect","MediumRisk","f24d3925-fb23-43a4-8e6f-b92b1c8e94f2",3195,"","SAN-647, SAN-648",
+"SAN-648","Sanjiovani","ECOM-M-002 — Vendor application flow","## ECOM-M-002 — Vendor application flow
+
+**Spec:** `docs/ecommerce/tasks/ECOM-M-002-vendor-application.md`
+**Phase:** mvp · **Priority:** P1 · **Estimate:** 1-3 days
+
+### Goal
+
+Ship vendor application flow as one small commerce PR after its dependencies are green.
+
+### Depends on
+
+* ECOM-C-020
+
+### Blocks
+
+* ECOM-M-003
+
+### Scope / features
+
+* Store vendor applications in Supabase as pre-commerce leads.
+* Add application form and review state.
+* Do not create Medusa vendor until manual approval.
+
+### Acceptance criteria
+
+- [ ] Vendor can submit application.
+- [ ] Application has pending/approved/rejected states.
+- [ ] RLS protects application records.
+- [ ] Approval does not automatically enable Connect.
+
+### Proof commands
+
+```bash
+cd mdeapp && npm test -- src/lib/commerce/vendor-applications.test.ts
+cd mdeapp && npm run test:e2e -- e2e/commerce-vendor-application.spec.ts --project=chromium --workers=1
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"High","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:37:22.215Z","2026-06-08T01:01:41.321Z",,,,,,"2026-06-13T10:37:23.970Z",,"Phase 1 — mdeai MVP launch","f2afaf2e-d4cf-4f59-92db-f42c258c9820","M4 - Marketplace vendors and Connect","MediumRisk","d108cfba-b38c-4d18-ae48-f82a16d867a0",3195,"SAN-646","SAN-721",
+"SAN-647","Sanjiovani","ECOM-M-001 — Mercur marketplace foundation verify","## ECOM-M-001 — Mercur marketplace foundation verification
+
+**Spec:** `docs/ecommerce/tasks/ECOM-M-001-mercur-marketplace-foundation.md`
+**Phase:** 4 · **Priority:** P1 · **Estimate:** 0.5-1 day
+
+### Goal
+
+Verify @mercurjs/core seller/commission/payout modules in commerce/mercur — do NOT add custom Medusa marketplace recipe.
+
+### Depends on
+
+* ECOM-C-020
+
+### Blocks
+
+* ECOM-M-003
+* ECOM-M-004
+* ECOM-M-005
+* ECOM-M-006
+
+### Acceptance criteria
+
+- [ ] No custom marketplace recipe code added to repo
+- [ ] Mercur seller module responds in admin API
+- [ ] `commerce/mercur` monorepo `apps/vendor` documented as vendor UI path
+- [ ] ECOM-C-020 production readiness green
+
+### Proof commands
+
+```bash
+curl -s -o /dev/null -w 'health=%{http_code}\n' http://localhost:9000/health
+# Admin UI: Sellers module visible
+rg '@mercurjs/' commerce/mercur/packages/api/medusa-config.ts
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"High","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:37:19.071Z","2026-06-08T01:01:40.919Z",,,,,,"2026-06-13T10:37:19.898Z",,"Phase 1 — mdeai MVP launch","f2afaf2e-d4cf-4f59-92db-f42c258c9820","M4 - Marketplace vendors and Connect","MediumRisk","eb2e7ac7-0156-41a6-af82-45f3ca03d503",3195,"SAN-646, SAN-644","SAN-721",
+"SAN-659","Sanjiovani","ECOM-M-013 — Featured listings pilot","## ECOM-M-013 — Featured listings pilot
+
+**Spec:** `docs/ecommerce/tasks/ECOM-M-013-featured-listings-pilot.md`
+**Phase:** mvp · **Priority:** P2 · **Estimate:** 0.5-1 day
+
+### Goal
+
+Ship featured listings pilot as one small commerce PR after its dependencies are green.
+
+### Depends on
+
+* ECOM-M-012
+
+### Scope / features
+
+* Add featured placement metadata table or admin-managed config.
+* Store product/vendor id, placement, label, start/end, and status.
+* Clearly label featured results.
+* No ad auction, no autonomous bidding.
+
+### Acceptance criteria
+
+- [ ] Admin can mark a product/vendor as featured.
+- [ ] Featured placement can boost ranking with explicit label.
+- [ ] User can distinguish featured from organic results.
+- [ ] Analytics tracks featured impressions/clicks.
+
+### Proof commands
+
+```bash
+cd mdeapp && npm test -- src/lib/commerce/featured-listings.test.ts
+cd mdeapp && npm run test:e2e -- e2e/commerce-featured-listings.spec.ts --project=chromium --workers=1
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Medium","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:38:27.282Z","2026-06-08T01:01:54.083Z",,,,,,,,"Phase 1 — mdeai MVP launch","e2070fa9-205d-4c9a-aafb-ce140d135475","M5 - Lifestyle commerce integrations",,"3a5feecb-a14f-451c-97af-835038070f09",3194,"","SAN-658",
+"SAN-658","Sanjiovani","ECOM-M-012 — Basic commerce analytics","## ECOM-M-012 — Basic commerce analytics
+
+**Spec:** `docs/ecommerce/tasks/ECOM-M-012-basic-commerce-analytics.md`
+**Phase:** mvp · **Priority:** P2 · **Estimate:** 0.5-1 day
+
+### Goal
+
+Ship basic commerce analytics as one small commerce PR after its dependencies are green.
+
+### Depends on
+
+* ECOM-C-020
+
+### Blocks
+
+* ECOM-M-013
+
+### Scope / features
+
+* Track search, product card click, add-to-cart, checkout-start, checkout-complete.
+* Store product id and event metadata only.
+* Respect existing analytics/privacy patterns.
+
+### Acceptance criteria
+
+- [ ] Funnel events are recorded.
+- [ ] Analytics table has RLS.
+- [ ] No order/cart/product truth is stored.
+- [ ] Events can be used for conversion reporting.
+
+### Proof commands
+
+```bash
+cd mdeapp && npm test -- src/lib/commerce/analytics.test.ts
+rg -n ""commerce_analytics"" mdeapp/supabase/migrations mdeapp/src
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Medium","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:38:23.595Z","2026-06-08T01:01:53.696Z",,,,,,,,"Phase 1 — mdeai MVP launch","e2070fa9-205d-4c9a-aafb-ce140d135475","M5 - Lifestyle commerce integrations",,"c201729a-2911-4934-8ec6-9cdcef6d5110",3194,"SAN-646","SAN-721",
+"SAN-657","Sanjiovani","ECOM-M-011 — Venue product links","## ECOM-M-011 — Venue product links
+
+**Spec:** `docs/ecommerce/tasks/ECOM-M-011-venue-product-links.md`
+**Phase:** mvp · **Priority:** P2 · **Estimate:** 0.5-1 day
+
+### Goal
+
+Ship venue product links as one small commerce PR after its dependencies are green.
+
+### Depends on
+
+* ECOM-C-020
+
+### Scope / features
+
+* Add `commerce_venue_products` link table if needed.
+* Store venue id and Medusa product id only.
+* Use Maps/Places as context, not commerce source of truth.
+
+### Acceptance criteria
+
+- [ ] Venue context can show linked product cards.
+- [ ] Product card hydrates from Medusa.
+- [ ] Maps data is not required for Core checkout.
+- [ ] No price/stock copied to Supabase.
+
+### Proof commands
+
+```bash
+rg -n ""commerce_venue_products"" mdeapp/supabase/migrations mdeapp/src
+cd mdeapp && npm run test:e2e -- e2e/commerce-venue-products.spec.ts --project=chromium --workers=1
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Medium","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:38:20.938Z","2026-06-08T01:01:53.277Z",,,,,,,,"Phase 1 — mdeai MVP launch","e2070fa9-205d-4c9a-aafb-ce140d135475","M5 - Lifestyle commerce integrations",,"bd1cfee7-f4cb-46f9-99e4-33638c916ec1",3194,"SAN-646","SAN-721",
+"SAN-656","Sanjiovani","ECOM-M-010 — Trip product links","## ECOM-M-010 — Trip product links
+
+**Spec:** `docs/ecommerce/tasks/ECOM-M-010-trip-product-links.md`
+**Phase:** mvp · **Priority:** P2 · **Estimate:** 0.5-1 day
+
+### Goal
+
+Ship trip product links as one small commerce PR after its dependencies are green.
+
+### Depends on
+
+* ECOM-C-020
+
+### Scope / features
+
+* Add `commerce_trip_products` link table if needed.
+* Store trip/item references and Medusa `product_id` only.
+* Render live product cards inside trip context.
+
+### Acceptance criteria
+
+- [ ] Trip page can show linked product cards.
+- [ ] No product price/stock is copied into Supabase.
+- [ ] Product card hydrates from Medusa before display.
+
+### Proof commands
+
+```bash
+rg -n ""commerce_trip_products"" mdeapp/supabase/migrations mdeapp/src
+cd mdeapp && npm run test:e2e -- e2e/commerce-trip-products.spec.ts --project=chromium --workers=1
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Medium","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:38:17.233Z","2026-06-08T01:01:52.921Z",,,,,,,,"Phase 1 — mdeai MVP launch","e2070fa9-205d-4c9a-aafb-ce140d135475","M5 - Lifestyle commerce integrations",,"fab09681-2fd7-4856-be53-6821a7b69fa9",3195,"SAN-646","SAN-721",
+"SAN-655","Sanjiovani","ECOM-M-009 — Event product links","## ECOM-M-009 — Event product links
+
+**Spec:** `docs/ecommerce/tasks/ECOM-M-009-event-product-links.md`
+**Phase:** mvp · **Priority:** P2 · **Estimate:** 0.5-1 day
+
+### Goal
+
+Ship event product links as one small commerce PR after its dependencies are green.
+
+### Depends on
+
+* ECOM-C-020
+
+### Scope / features
+
+* Add `commerce_event_products` link table if not already added.
+* Store `event_id`, `product_id`, label, and sort order only.
+* Render linked ProductCards on event surfaces by hydrating products from Medusa.
+* Use migration path `mdeapp/supabase/migrations`, not the root-level migration directory.
+
+### Acceptance criteria
+
+- [ ] Event page can show linked products.
+- [ ] Link table stores product id only, not price/stock.
+- [ ] Product card displays current Medusa price/stock.
+
+### Proof commands
+
+```bash
+rg -n ""commerce_event_products"" mdeapp/supabase/migrations mdeapp/src
+cd mdeapp && npm run test:e2e -- e2e/commerce-event-products.spec.ts --project=chromium --workers=1
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Medium","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:38:13.641Z","2026-06-08T01:01:52.508Z",,,,,,,,"Phase 1 — mdeai MVP launch","e2070fa9-205d-4c9a-aafb-ce140d135475","M5 - Lifestyle commerce integrations",,"e5c2b9f6-acf9-4c8b-bedb-7b4218a35769",3195,"SAN-646","SAN-721",
+"SAN-654","Sanjiovani","ECOM-M-008 — WhatsApp payment link","## ECOM-M-008 — WhatsApp payment link
+
+**Spec:** `docs/ecommerce/tasks/ECOM-M-008-whatsapp-payment-link.md`
+**Phase:** mvp · **Priority:** P2 · **Estimate:** 0.5-1 day
+
+### Goal
+
+Ship whatsapp payment link as one small commerce PR after its dependencies are green.
+
+### Depends on
+
+* ECOM-C-020
+
+### Scope / features
+
+* Reuse `checkout_link`.
+* Add human/user-requested WhatsApp send path.
+* No autonomous campaigns.
+* No new checkout surface.
+
+### Acceptance criteria
+
+- [ ] User can receive payment link in WhatsApp/Chatwoot.
+- [ ] Payment still happens through web/Stripe checkout.
+- [ ] Message is sent only after user request or human action.
+- [ ] Failure falls back to showing link in web chat.
+
+### Proof commands
+
+```bash
+cd mdeapp && npm test -- src/mastra/tools/__tests__/commerce-whatsapp-payment-link.test.ts
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Backlog",,"Medium","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:38:10.221Z","2026-06-08T01:01:52.133Z",,,,,,,,"Phase 1 — mdeai MVP launch","e2070fa9-205d-4c9a-aafb-ce140d135475","M5 - Lifestyle commerce integrations",,"93638774-7ad5-4681-9cc4-1e2b75c75a75",3195,"SAN-644","SAN-721",
+"SAN-727","Sanjiovani","ECOM-C-023 — B2C full Stripe checkout re-proof (standalone)","## ECOM-C-023 — B2C full Stripe checkout re-proof
+
+**Phase:** 2 (standalone) · **Priority:** P1 optional · **Estimate:** 0.5 day
+
+### Goal
+
+Re-prove end-to-end paid checkout on B2C reference storefront (`:3000`) against Mercur (`:9000`) — standalone only, no mdeapp.
+
+### Depends on
+
+* ECOM-C-018 (exit gate)
+* ECOM-C-021 (B2C reference)
+* ECOM-C-022 (field-mask policy)
+
+### Scope
+
+* Start `stripe listen` forwarding to Mercur webhook
+* B2C `:3000` → add to cart → checkout → test card `4242 4242 4242 4242`
+* Order visible in Mercur admin with `payment_captured`
+* Evidence: `docs/ecommerce/evidence/YYYY-MM-DD/b2c-full-checkout-proof.md`
+
+### Out of scope
+
+* mdeapp `/api/commerce/*` proxy ([SAN-636](https://linear.app/sanjiovani/issue/SAN-636/ecom-c-008-commerce-api-proxy-routes))
+* AI/Mastra checkout ([SAN-641](https://linear.app/sanjiovani/issue/SAN-641/ecom-c-013-mastra-checkout-link)+)
+
+### Acceptance
+
+- [ ] Stripe webhook received during checkout
+- [ ] Medusa order `status` paid / payment captured
+- [ ] Screenshot + order id in evidence bundle","Todo",,"High","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca","ai@socialmediaville.ca","COMM",,,,,"2026-06-08T05:25:15.843Z","2026-06-08T05:25:20.771Z",,,,,,"2026-06-15T05:25:16.894Z",,"Phase 1 — mdeai MVP launch","b43c74a8-3b9a-4cd9-ad11-fcc02cc0bf92","M3 - Checkout proof and readiness","MediumRisk","fc6db3fb-c4b5-4451-9e35-331154919771",628,"SAN-641, SAN-636","",
+"SAN-636","Sanjiovani","ECOM-C-008 — Commerce API proxy routes","## ECOM-C-008 — Commerce API proxy routes
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-008-commerce-api-proxy.md`
+**Phase:** 2 · **Priority:** P0 · **Estimate:** None
+
+**Phase 2 priority 3** — after SAN-635 + SAN-725.
+
+### Goal
+
+Server-only /api/commerce/\* proxy to Mercur Store API — publishable key never in browser.
+
+### Depends on
+
+* ECOM-C-007
+* ECOM-C-022
+* ECOM-C-018
+
+### Blocks
+
+* ECOM-C-010
+* ECOM-C-011
+* ECOM-C-012
+* ECOM-C-013
+
+### Acceptance criteria
+
+- [ ] `curl localhost:3001/api/commerce/products` returns Mercur JSON (≥1 product after C-006)
+- [ ] No admin secret in client bundle (`rg MEDUSA_ mdeapp/src/components` empty)
+- [ ] Routes use `@medusajs/js-sdk` via C-007 wrapper — no raw `fetch` to Store API
+
+### Proof commands
+
+```bash
+cd mdeapp && npm run dev
+curl -s http://localhost:3001/api/commerce/products | jq 'length // .products | length'
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Todo",,"High","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:36:11.802Z","2026-06-08T05:25:15.843Z",,,,,,"2026-06-15T00:57:17.747Z",,"Phase 1 — mdeai MVP launch","4a272d83-4890-4db1-95e3-3fb9e67f675f","M2 - AI product cards and cart","MediumRisk","deeb6576-b4e4-446b-a71d-b1d768f9f04d",909,"SAN-725, SAN-635, SAN-646, SAN-727, SAN-724","",
+"SAN-646","Sanjiovani","ECOM-C-018 — Core commerce exit gate","## ECOM-C-018 — Core Commerce Exit Gate
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-018-core-commerce-exit-gate.md`
+**Phase:** 1 · **Priority:** P0 · **Estimate:** S
+
+### Goal
+
+Formal sign-off that Phase 1 commerce standalone proof is complete. No Phase 2 work starts until this gate passes.
+
+### Scope / features
+
+**In scope**
+
+* Evidence bundle under `tasks/testing/evidence/YYYY-MM-DD/`
+* `commerce-phase-1-RESULTS.md` checklist
+* All C-001 through C-016 acceptance criteria ticked
+* Explicit deferrals documented for Phase 2+
+* Update task INDEX statuses to Done
+
+**Out of scope**
+
+* mdeapp integration smoke
+* Production deploy
+* Linear bulk update (optional)
+
+### Acceptance criteria
+
+- [ ] Mercur `/health` → 200 (evidence: curl output)
+- [ ] Store API `count >= 20` (evidence: jq output)
+- [ ] One paid order id recorded (evidence: C-016 file)
+- [ ] Stripe webhook verified (evidence: stripe listen log snippet)
+- [ ] No secrets in git (`git grep` clean)
+- [ ] ADR merged (C-001)
+- [ ] No Supabase product/price/inventory tables added
+- [ ] No CopilotKit/Mastra commerce code in mdeapp
+- [ ] No Stripe Connect in `medusa-config.ts`
+- [ ] `commerce-phase-1-RESULTS.md` signed with date + task ids
+
+### Proof commands
+
+```bash
+# Gate script (run all) — use Infisical for secrets:
+DATE=$(date +%Y-%m-%d)
+EVID=""tasks/testing/evidence/$DATE""
+mkdir -p ""$EVID""
+
+curl -s -o /dev/null -w 'health=%{http_code}\n' http://localhost:9000/health | tee ""$EVID/health.txt""
+
+PK=""${MEDUSA_PUBLISHABLE_KEY}""
+curl -s -H ""x-publishable-api-key: $PK"" http://localhost:9000/store/products | jq '.count' | tee ""$EVID/product-count.txt""
+
+test -f ""$EVID/commerce-paid-order.md"" && echo 'paid order evidence OK'
+
+git grep -E 'sk_live|sk_test' -- commerce/ docs/ || echo 'no leaked keys OK'
+
+grep -r 'stripe-connect' commerce/mercur/packages/api/medusa-config.ts && echo 'FAIL connect present' || echo 'no connect OK'
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Done",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca","ai@socialmediaville.ca","COMM, CORE-GATE",,,,,"2026-06-06T10:37:16.572Z","2026-06-08T01:01:40.274Z","2026-06-07T22:29:55.748Z",,"2026-06-07T23:45:17.978Z",,,"2026-06-07T10:37:17.527Z",,"Phase 1 — mdeai MVP launch","1b534a9d-f12f-4987-8571-6f8a43fd5e1a","M1 - Core commerce foundation","Failed","62c7c852-4a5e-4724-a7c2-0ce7c7e0396d",968,"SAN-721, SAN-637, SAN-636, SAN-635, SAN-658, SAN-657, SAN-656, SAN-655, SAN-648, SAN-647, SAN-645, SAN-644, SAN-725","",
+"SAN-644","Sanjiovani","ECOM-C-016 — Paid order proof (Phase 1)","## ECOM-C-016 — Paid Order Proof
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-016-paid-order-proof.md`
+**Phase:** 1 · **Priority:** P0 · **Estimate:** M
+
+### Goal
+
+Complete one real checkout in Mercur using Stripe test mode: cart → payment → order with captured payment.
+
+### Scope / features
+
+**In scope**
+
+* Full Store API checkout sequence OR documented admin-assisted flow with Stripe
+* Test card `4242 4242 4242 4242`
+* Order visible in Mercur admin with payment status captured/paid
+* Evidence file: `tasks/testing/evidence/YYYY-MM-DD/commerce-paid-order.md` (Store API flow — **not** CopilotKit/AI)
+* Stripe Dashboard screenshot or payment intent id recorded
+* Webhook delivery confirmed
+
+**Out of scope**
+
+* mdeapp UI checkout
+* CopilotKit cart actions
+* Multi-item multi-seller carts
+* Stripe Connect transfers
+* Refunds / disputes
+* Email notifications (Resend optional)
+
+### Acceptance criteria
+
+- [ ] One order created via checkout flow (not manual admin order without payment)
+- [ ] Order payment status = captured or equivalent paid state in admin
+- [ ] Stripe test mode shows matching PaymentIntent succeeded
+- [ ] Webhook `payment_intent.succeeded` (or Medusa equivalent) logged/verified
+- [ ] Evidence file contains: `order_id`, `cart_id`, `payment_intent_id`, timestamp
+- [ ] Single seller on order (no split-order complexity)
+- [ ] No mdeapp code changed for this proof
+
+### Proof commands
+
+```bash
+# Automated smoke (if script added):
+node scripts/commerce/paid-order-smoke.mjs --base http://localhost:9000
+
+# Manual Store API sequence (document variant_id, region_id):
+PK=""${MEDUSA_PUBLISHABLE_KEY}""
+# 1. POST /store/carts
+# 2. POST /store/carts/:id/line-items
+# 3. POST /store/carts/:id/payment-collections
+# 4. POST /store/payment-collections/:id/payment-sessions (provider: stripe)
+# 5. Confirm payment with Stripe test card (client-side or stripe CLI)
+# 6. POST /store/carts/:id/complete
+
+# Verify order in admin:
+curl -s ""http://localhost:9000/admin/orders/$ORDER_ID"" \
+  -H ""Authorization: Bearer $ADMIN_TOKEN"" | jq '{id, payment_status, total}'
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Done",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca","ai@socialmediaville.ca","COMM, CORE-GATE",,,,,"2026-06-06T10:37:10.197Z","2026-06-08T01:01:20.646Z","2026-06-07T22:29:55.747Z",,"2026-06-07T23:45:17.977Z",,,"2026-06-07T10:37:10.778Z",,"Phase 1 — mdeai MVP launch","1b534a9d-f12f-4987-8571-6f8a43fd5e1a","M1 - Core commerce foundation","Failed","6bb0f37e-1031-4243-b7a6-d2033f5de439",997,"SAN-651, SAN-645, SAN-720, SAN-654, SAN-647, SAN-646, SAN-632, SAN-634","",
+"SAN-635","Sanjiovani","ECOM-C-007 — Medusa JS SDK wrapper","## ECOM-C-007 — Medusa client wrapper in mdeapp
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-007-medusa-client-wrapper.md`
+**Phase:** 2 · **Priority:** P0 · **Estimate:** 1-2 days
+
+**Phase 2 priority 1** — execute first.
+
+### Goal
+
+Install and wrap the Medusa JS SDK in mdeapp so all product/cart calls use the official client.
+
+### Depends on
+
+* ECOM-C-018
+* ECOM-C-006
+
+### Blocks
+
+* ECOM-C-022
+* ECOM-C-008
+* ECOM-C-010
+* ECOM-C-011
+* ECOM-C-012
+
+### Scope / features
+
+* Add `mdeapp/src/lib/commerce/medusa-client.ts` (Mercur Store API via `@medusajs/js-sdk`).
+* Add commerce DTO/types.
+* Verify exact JS SDK methods against official docs before implementation.
+* Include timeout and error normalization.
+* Never expose admin secrets to the browser.
+* Install or add workspace dependency for `@medusajs/js-sdk` and `@medusajs/types` before implementing wrapper calls.
+* Add a smoke script that fails if the SDK is missing or if raw `fetch()` is used for Medusa API calls.
+
+### Acceptance criteria
+
+- [ ] Wrapper lists products.
+- [ ] Wrapper fetches product detail.
+- [ ] Wrapper creates cart and adds line item.
+- [ ] Wrapper can create checkout link/session when downstream checkout task is ready.
+- [ ] TypeScript does not use guessed SDK methods.
+
+### Proof commands
+
+```bash
+cd mdeapp && npm test -- src/lib/commerce
+node --env-file=.env.local scripts/smoke-commerce-client.mjs
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`
+
+---
+
+## PR (In Review)
+
+* [https://github.com/amo-tech-ai/mdeapp/pull/117](<https://github.com/amo-tech-ai/mdeapp/pull/117>)
+* Evidence: `docs/ecommerce/evidence/2026-06-08/ecom-c-007-medusa-client-wrapper.md`","Done",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca","ai@socialmediaville.ca","COMM, CORE-GATE, FROZEN",,,,,"2026-06-06T10:35:36.483Z","2026-06-08T02:45:55.349Z","2026-06-08T01:21:34.673Z",,"2026-06-08T02:45:55.339Z",,,"2026-06-07T10:35:37.114Z",,"Phase 1 — mdeai MVP launch","4a272d83-4890-4db1-95e3-3fb9e67f675f","M2 - AI product cards and cart","Failed","0a186a8d-016f-43f8-95fa-78ba72d935e8",787,"SAN-725, SAN-636, SAN-646, SAN-724","",
+"SAN-634","Sanjiovani","ECOM-C-006 — Product catalog seed (20 SKUs)","## ECOM-C-006 — Product Catalog Seed
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-006-product-catalog-seed.md`
+**Phase:** 1 · **Priority:** P0 · **Estimate:** M
+
+### Goal
+
+Seed ≥20 published products owned by demo seller, visible via Store API with publishable key.
+
+### Scope / features
+
+**In scope**
+
+* Idempotent seed script: 20 SKUs — Medellín lifestyle (designer shirts, coffee, souvenirs, event merch, local goods)
+* Prices as Medusa **display amounts** (not cents)
+* Each product: title, description, ≥1 variant, price, inventory, images (placeholder OK)
+* Products linked to **mdeai seller** (C-005)
+* Products assigned to **default sales channel**
+* Publishable API key linked to sales channel
+* `bun run seed:catalog` or extend existing `seed`
+* Document publishable key in `BOOT.md`
+
+**Out of scope**
+
+* Supabase `product_embeddings` (Phase 3)
+* Algolia index
+* mdeapp ProductCard rendering
+* Multi-seller catalog split
+
+### Acceptance criteria
+
+- [ ] `bun run seed:catalog` (or `bun run seed`) exits 0, idempotent on re-run
+- [ ] `GET /store/products` with `x-publishable-api-key` returns `count >= 20`
+- [ ] Each product has ≥1 variant with `calculated_price` or price in region
+- [ ] Products linked to `mdeai` seller
+- [ ] Sales channel ↔ publishable key linkage verified in admin
+- [ ] No product rows inserted into Supabase
+
+### Proof commands
+
+```bash
+cd commerce/mercur
+bun run seed:catalog
+
+PK=""pk_42c83cc5daa68b27dcd0e98ea5e3f70bd380acbbab514879d71d57a0d2cf3cb5""  # dev key from BOOT.md
+curl -s -H ""x-publishable-api-key: $PK"" \
+  ""http://localhost:9000/store/products?limit=25"" | jq '{count, titles: [.products[].title]}'
+
+# Must show count >= 20
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Done",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM",,,,,"2026-06-06T10:35:32.729Z","2026-06-08T01:01:07.017Z",,,"2026-06-07T21:29:55.051Z",,,"2026-06-07T10:35:33.447Z",,"Phase 1 — mdeai MVP launch","1b534a9d-f12f-4987-8571-6f8a43fd5e1a","M1 - Core commerce foundation","Failed","a7f72ea2-38e0-4b10-a40d-c1b611acc021",1103,"SAN-644, SAN-632, SAN-633","",
+"SAN-633","Sanjiovani","ECOM-C-005 — Demo seller (mdeai)","## ECOM-C-005 — Demo Seller
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-005-demo-seller.md`
+**Phase:** 1 · **Priority:** P0 · **Estimate:** S
+
+### Goal
+
+One seller account exists in Mercur, approved and active, ready to own catalog products for checkout proof.
+
+### Scope / features
+
+**In scope**
+
+* Seller: name `mdeai` (canonical — not `mdeai-demo`), store status **ACTIVE**, approved by admin
+* Operator-created seller via **admin dashboard** (preferred for Phase 1)
+* Document seller id for seed scripts
+* Optional: seed script hook in `commerce/mercur` for idempotent seller create
+
+**Out of scope**
+
+* Vendor panel self-registration flow
+* Stripe Connect payout account / onboarding link
+* Team members / invites
+* Seller approval workflow automation
+* Multiple sellers
+
+### Acceptance criteria
+
+- [ ] Exactly one demo seller `mdeai` visible in Mercur admin
+- [ ] Seller status = ACTIVE (not `pending_approval`)
+- [ ] Seller id documented in `BOOT.md` or seed output
+- [ ] No Stripe Connect payout account required for Phase 1
+- [ ] Seller can be linked to products (verified in C-006)
+
+### Proof commands
+
+```bash
+# Admin API or UI verification
+curl -s http://localhost:9000/admin/sellers \
+  -H ""Authorization: Bearer $ADMIN_TOKEN"" | jq '.sellers[] | {id, name, store_status}'
+
+# Or after seed script:
+cd commerce/mercur/packages/api && bun run seed:seller
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Done",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM",,,,,"2026-06-06T10:35:30.202Z","2026-06-08T01:01:05.827Z",,,"2026-06-07T21:29:54.634Z",,,"2026-06-07T10:35:31.043Z",,"Phase 1 — mdeai MVP launch","1b534a9d-f12f-4987-8571-6f8a43fd5e1a","M1 - Core commerce foundation","Failed","03f0d121-16ce-498d-93ba-33fae1c718e5",1103,"SAN-634, SAN-630","",
+"SAN-632","Sanjiovani","ECOM-C-004 — Stripe test checkout (no Connect)","## ECOM-C-004 — Stripe Test Checkout
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-004-stripe-test-checkout.md`
+**Phase:** 1 · **Priority:** P0 · **Estimate:** M
+
+### Goal
+
+Configure Stripe as Medusa payment provider in Mercur so a test cart can initialize a payment session and accept card `4242…`.
+
+### Scope / features
+
+**In scope**
+
+* Stripe **test** API key in Infisical `/commerce`
+* Medusa payment provider in `medusa-config.ts` — **standard Stripe**, not `@mercurjs/payment-stripe-connect`
+* Region (Colombia or US) has Stripe enabled in admin
+* Webhook endpoint for Mercur only (e.g. `http://localhost:9000/hooks/payment/stripe` or Medusa default)
+* `stripe listen --forward-to` documented for local dev
+* `STRIPE_WEBHOOK_SECRET` in env
+
+**Out of scope**
+
+* Stripe Connect / seller payouts
+* `STRIPE_PAYOUT_WEBHOOK_SECRET`
+* mdeapp checkout UI
+* Production live keys
+* Affiliates / split payments
+
+### Acceptance criteria
+
+- [ ] `STRIPE_API_KEY` (test) loads from env; server starts without payment config error
+- [ ] Admin → Region → payment providers includes Stripe
+- [ ] Store API: create cart → add variant → create payment collection → initialize Stripe session → returns client secret or session id
+- [ ] Webhook signature verified locally via `stripe listen`
+- [ ] **No** Stripe Connect provider in `medusa-config.ts` for Phase 1
+- [ ] Webhook path documented as separate from mdeai events webhooks
+- [ ] Region has default shipping option for cart complete
+- [ ] `rg` confirms commerce webhook secrets isolated from events Stripe
+
+### Proof commands
+
+```bash
+cd commerce/mercur/packages/api
+# With API running and PK from admin:
+PK=""${MEDUSA_PUBLISHABLE_KEY:-pk_...}""
+
+# List products (need C-006)
+curl -s -H ""x-publishable-api-key: $PK"" http://localhost:9000/store/products | jq '.products[0].id'
+
+# Create cart
+CART=$(curl -s -X POST -H ""x-publishable-api-key: $PK"" \
+  -H ""Content-Type: application/json"" \
+  http://localhost:9000/store/carts -d '{""region_id"":""reg_...""}' | jq -r '.cart.id')
+
+# Stripe CLI (separate terminal)
+stripe listen --forward-to localhost:9000/hooks/payment/stripe_stripe
+
+# Complete checkout per Medusa Store API docs — document in evidence file
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Done",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca","ai@socialmediaville.ca","COMM",,,,,"2026-06-06T10:35:27.863Z","2026-06-08T01:01:05.149Z","2026-06-07T22:29:55.746Z",,"2026-06-07T23:45:17.976Z",,,"2026-06-07T10:35:28.718Z",,"Phase 1 — mdeai MVP launch","1b534a9d-f12f-4987-8571-6f8a43fd5e1a","M1 - Core commerce foundation","Failed","21937bf2-ba3e-4f75-969f-1a26e067cb44",997,"SAN-641, SAN-644, SAN-631, SAN-634","",
+"SAN-631","Sanjiovani","ECOM-C-003 — Commerce env & secrets (Infisical /commerce)","## ECOM-C-003 — Commerce Environment & Secrets
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-003-commerce-env-secrets.md`
+**Phase:** 1 · **Priority:** P0 · **Estimate:** S
+
+### Goal
+
+All Mercur secrets documented, injectable via Infisical, never committed. mdeapp and Mercur secret namespaces separated.
+
+### Scope / features
+
+**In scope**
+
+* `commerce/mercur/packages/api/.env.template` (all required vars, no values)
+* Infisical path `/commerce` documented (project `md-eapp-hn-nz`, env `dev`)
+* CORS vars for mdeapp `:3000` / `:3001` (future bridge)
+* `DATABASE_URL`, `REDIS_URL`, `JWT_SECRET`, `COOKIE_SECRET`
+* Stripe placeholders (`STRIPE_API_KEY`, `STRIPE_WEBHOOK_SECRET`) — values in C-004
+* `BOOT.md` section: `infisical run --path=/commerce -- ...`
+* `docs/ecommerce/docs/env-commerce.md` — commerce vs events Stripe namespace
+* `mdeapp/scripts/verify-commerce-env.mjs` — fails if ticket/sponsor webhook names reused
+* Gitignore verification
+
+**Out of scope**
+
+* Stripe provider wiring (ECOM-C-004)
+* Vercel env sync
+* mdeapp `MEDUSA_*` vars (Phase 2 ECOM-C-007)
+
+### Acceptance criteria
+
+- [ ] `.env.template` lists every var required for `packages/api` boot
+- [ ] `.env` and `.env.local` gitignored under `commerce/mercur`
+- [ ] `infisical run --silent --env=dev --path=/commerce -- bun run dev` boots API (or documented blocker)
+- [ ] CORS includes `http://localhost:3000,http://localhost:3001`
+- [ ] No plaintext secrets in git history for this PR
+- [ ] Separate namespace documented: `/` = mdeapp, `/commerce` = Mercur
+- [ ] Commerce Stripe vars use `COMMERCE_STRIPE_*` or isolated Mercur `STRIPE_*` — not events webhook secrets
+- [ ] `verify-commerce-env.mjs` exits 1 on missing required vars
+
+### Proof commands
+
+```bash
+test -f commerce/mercur/packages/api/.env.template
+grep -q DATABASE_URL commerce/mercur/packages/api/.env.template
+grep -q REDIS_URL commerce/mercur/packages/api/.env.template
+git check-ignore -v commerce/mercur/packages/api/.env
+git grep -l 'sk_live\|sk_test' -- commerce/ || echo 'no stripe keys in tree OK'
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Done",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca","ai@socialmediaville.ca","COMM",,,,,"2026-06-06T10:35:25.401Z","2026-06-08T01:01:04.523Z","2026-06-07T22:29:55.745Z",,"2026-06-07T23:45:17.975Z",,,"2026-06-07T10:35:26.216Z",,"Phase 1 — mdeai MVP launch","1b534a9d-f12f-4987-8571-6f8a43fd5e1a","M1 - Core commerce foundation","Failed","b2567e9e-8893-4193-9248-f04daed54ad5",968,"SAN-632, SAN-630","",
+"SAN-630","Sanjiovani","ECOM-C-002 — Mercur backend spike","## ECOM-C-002 — Mercur Backend Spike
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-002-mercur-backend-spike.md`
+**Phase:** 1 · **Priority:** P0 · **Estimate:** M
+
+### Goal
+
+`commerce/mercur` runs locally: dependencies installed, DB migrated, API health 200, admin login works.
+
+### Scope / features
+
+**In scope**
+
+* `commerce/mercur/` from Mercur `basic` template (or CLI create)
+* `bun install` / lockfile committed
+* Postgres DB `mercur` + Redis for dev
+* `medusa db:migrate` success
+* Admin user created
+* `redisUrl` in `medusa-config.ts` if required
+* Root `dev` script → `packages/api` only
+* `commerce/mercur/BOOT.md` boot reference
+
+**Out of scope**
+
+* Stripe configuration
+* Custom seller seed
+* 20-product catalog
+* Vendor panel deploy
+* mdeapp env vars
+
+### Acceptance criteria
+
+- [ ] `cd commerce/mercur && bun install` exits 0
+- [ ] `bunx medusa db:migrate` (from `packages/api`) exits 0
+- [ ] `curl http://localhost:9000/health` → 200 while dev server running
+- [ ] Admin panel loads at configured URL; login with documented credentials
+- [ ] `BOOT.md` documents: Postgres, Redis, migrate, dev, admin creds
+- [ ] **Not Done** until ECOM-C-006 Store API returns `count >= 1` (cross-gate)
+- [ ] No secrets committed to git
+
+### Proof commands
+
+```bash
+cd commerce/mercur
+bun install
+docker start mercur-dev-redis 2>/dev/null || docker run -d --name mercur-dev-redis -p 6379:6379 redis:7-alpine
+cd packages/api && bunx medusa db:migrate
+bun run dev &
+sleep 15
+curl -s -o /dev/null -w 'health=%{http_code}\n' http://localhost:9000/health
+git status -- commerce/mercur/packages/api/.env  # must not be staged
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Done",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"COMM",,,,,"2026-06-06T10:35:22.310Z","2026-06-08T01:01:03.948Z","2026-06-07T20:50:53.410Z",,"2026-06-07T21:29:54.796Z",,,"2026-06-07T10:35:23.107Z",,"Phase 1 — mdeai MVP launch","1b534a9d-f12f-4987-8571-6f8a43fd5e1a","M1 - Core commerce foundation","Failed","14bfa851-2d89-4b58-a960-ea7f50e90465",1103,"SAN-633, SAN-631, SAN-629","",
+"SAN-629","Sanjiovani","ECOM-C-001 — Commerce ADR (Mercur standalone)","## ECOM-C-001 — Commerce ADR
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-001-commerce-adr.md`
+**Phase:** 1 · **Priority:** P0 · **Estimate:** XS
+
+### Goal
+
+Document and lock the commerce architecture decision so all Phase 1 work stays inside `commerce/mercur` with zero mdeapp coupling.
+
+### Scope / features
+
+**In scope**
+
+* ADR file: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Diagrams: system boundary, data ownership table
+* Explicit non-goals for Phase 1
+* Link from `docs/ecommerce/tasks/INDEX.md`
+
+**Out of scope**
+
+* Code changes to Mercur or mdeapp
+* Infisical setup
+* Linear issue creation (optional follow-up)
+
+### Acceptance criteria
+
+- [ ] ADR states: `commerce/mercur` = marketplace backend; `mdeapp` = AI buyer (Phase 2+)
+- [ ] ADR states: communication = HTTP / `@medusajs/js-sdk` only
+- [ ] Data table: Mercur owns products, inventory, carts, orders, sellers
+- [ ] Data table: Supabase owns embeddings, events, trips, venues + `medusa_product_id` link only
+- [ ] Phase 1 non-goals listed: CopilotKit, embeddings, Stripe Connect, vendor onboarding, second storefront
+- [ ] Stripe owns payment state; Supabase stores embeddings/links only — no vendor applications table with mutable commerce fields
+- [ ] Evidence stub: `tasks/testing/evidence/YYYY-MM-DD/commerce-adr.md`
+- [ ] ADR reviewed and linked from INDEX
+
+### Proof commands
+
+```bash
+test -f docs/ecommerce/adr/001-standalone-mercur.md
+grep -q ""commerce/mercur"" docs/ecommerce/adr/001-standalone-mercur.md
+grep -q ""medusa_product_id"" docs/ecommerce/adr/001-standalone-mercur.md
+grep -q ""non-goal"" docs/ecommerce/adr/001-standalone-mercur.md
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Done",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca","ai@socialmediaville.ca","COMM",,,,,"2026-06-06T10:35:19.681Z","2026-06-08T01:01:03.305Z","2026-06-07T20:50:51.932Z",,"2026-06-07T23:45:17.974Z",,,"2026-06-07T10:35:20.495Z",,"Phase 1 — mdeai MVP launch","1b534a9d-f12f-4987-8571-6f8a43fd5e1a","M1 - Core commerce foundation","Failed","77894818-9953-4ecf-9827-6b4232e2c723",968,"SAN-630","",
+"SAN-724","Sanjiovani","ECOM-C-021 — B2C reference storefront (local UX study)","## ECOM-C-021 — B2C reference storefront (local UX study)
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-021-b2c-reference-storefront.md`
+**Phase:** 2 · **Priority:** P4 · **Estimate:** 0.5 day
+
+**Phase 2 priority 4** — B2C reference evidence closeout (parallel OK).
+
+### Goal
+
+Reference-only B2C UX study on :3000 — patterns for mdeapp ProductCards.
+
+### Depends on
+
+* ECOM-C-018
+
+### Scope / features
+
+Clone b2c-storefront; env from commerce/.env; field-mask patch; evidence doc.
+
+### Acceptance criteria
+
+- [ ] Categories + PDP + cart + checkout verified locally
+- [ ] Evidence doc written
+- [ ] Not merged into mdeapp/src
+
+### Proof commands
+
+```bash
+cd commerce/b2c-storefront && yarn dev
+curl -s -o /dev/null -w ""%{http_code}"" http://localhost:3000/fr/categories
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`
+
+---
+
+## Evidence (Done 2026-06-07)
+
+* [`docs/ecommerce/evidence/2026-06-07/b2c-reference-storefront.md`](<https://github.com/sanjiovani/mdeapp/blob/main/docs/ecommerce/evidence/2026-06-07/b2c-reference-storefront.md>)
+* Screenshots: `docs/ecommerce/evidence/2026-06-07/screenshots/`
+* Field-mask documented → unblocks **SAN-725** (C-022)","Done",,"High","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca","ai@socialmediaville.ca","COMM",,,,,"2026-06-08T00:43:45.831Z","2026-06-08T03:37:25.519Z","2026-06-08T00:43:45.870Z",,"2026-06-08T03:37:25.500Z",,,"2026-06-15T00:43:46.733Z",,"Phase 1 — mdeai MVP launch","4a272d83-4890-4db1-95e3-3fb9e67f675f","M2 - AI product cards and cart","Completed","f88c0109-7df0-4297-8a05-3b158793ad8e",736,"SAN-636, SAN-635, SAN-725","",
+"SAN-725","Sanjiovani","ECOM-C-022 — Seller reviews seed or Store API field-mask policy","## ECOM-C-022 — Seller reviews seed or Store API field-mask policy
+
+**Spec:** `docs/ecommerce/tasks/ECOM-C-022-seller-reviews-field-mask.md`
+**Phase:** 2 · **Priority:** P1 · **Estimate:** 0.5 day
+
+**Phase 2 priority 2** — after SAN-635. Field-mask before API proxy.
+
+### Goal
+
+Fix Store API 500 on *seller.reviews* — seed reviews in Mercur OR document slim field-mask policy for mdeapp and B2C reference.
+
+### Depends on
+
+* ECOM-C-007
+* ECOM-C-018
+* ECOM-C-006
+
+### Blocks
+
+* ECOM-C-008
+
+### Scope / features
+
+- [ ] `GET /store/products?fields=…*seller.reviews…` either returns **200** (Option A) or is documented as **unsupported** (Option B)
+- [ ] mdeapp `medusa-client.ts` (C-007) uses approved field list — no 500 on list/get product
+- [ ] B2C reference patch documented in evidence (not lost on `yarn upgrade`)
+- [ ] Entry in [`05-medusa-recipes-map.md`](<../docs/05-medusa-recipes-map.md>) updated
+
+### Acceptance criteria
+
+- [ ] `GET /store/products?fields=…*seller.reviews…` either returns **200** (Option A) or is documented as **unsupported** (Option B)
+- [ ] mdeapp `medusa-client.ts` (C-007) uses approved field list — no 500 on list/get product
+- [ ] B2C reference patch documented in evidence (not lost on `yarn upgrade`)
+- [ ] Entry in [`05-medusa-recipes-map.md`](<../docs/05-medusa-recipes-map.md>) updated
+
+### Proof commands
+
+```bash
+# Option B — slim mask must 200
+PK=""<MEDUSA_PUBLISHABLE_KEY>""
+REG=""<region_id>""
+curl -s -o /dev/null -w ""%{http_code}\n"" \
+  -H ""x-publishable-api-key: $PK"" \
+  ""http://localhost:9000/store/products?country_code=fr&limit=1&region_id=$REG&fields=*seller,*variants.calculated_price""
+
+# Option A — full B2C mask must 200
+curl -s -o /dev/null -w ""%{http_code}\n"" \
+  -H ""x-publishable-api-key: $PK"" \
+  ""http://localhost:9000/store/products?country_code=fr&limit=1&region_id=$REG&fields=*seller.reviews,*seller""
+```
+
+### References
+
+* ADR: `docs/ecommerce/adr/001-standalone-mercur.md`
+* Recipe map: `docs/ecommerce/docs/05-medusa-recipes-map.md`
+* Index: `docs/ecommerce/tasks/INDEX.md`","Done",,"High","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca","ai@socialmediaville.ca","COMM",,,,,"2026-06-08T00:54:00.705Z","2026-06-08T04:45:29.607Z","2026-06-08T04:43:14.150Z",,"2026-06-08T04:45:29.588Z",,,"2026-06-15T00:57:17.218Z",,"Phase 1 — mdeai MVP launch",,,"Completed","fffbcb7e-6a6d-4130-9ba4-064ac3d64016",691,"SAN-636, SAN-646, SAN-724, SAN-635","",
+"SAN-551","Sanjiovani","REV-C2 — create_checkout tool + checkout widget","**CANCELLED** — duplicate of ECOM-C-013 Mastra checkout_link.
+
+Use [SAN-641](https://linear.app/sanjiovani/issue/SAN-641/ecom-c-013-mastra-checkout-link) / `mdeapp/docs/ecommerce/tasks/ECOM-C-013-mastra-checkout-link.md` instead.
+
+Legacy REV-C2 revenue task; superseded by Commerce Platform ECOM-C-\* backlog.","Canceled",,"Urgent","db36b26e-5610-4af0-b387-9eb8c4703a90","Commerce Platform","ai@socialmediaville.ca",,"area:payments, phase:post-mvp, prefix:PAY, stack:mastra, stack:stripe",,,,,"2026-06-05T18:38:33.504Z","2026-06-07T20:51:46.605Z",,,,"2026-06-07T20:51:46.517Z",,,,"Phase 1 — mdeai MVP launch",,,,"4a3265ba-64f0-421a-bd61-0fc4104562a0",1141,"SAN-686, SAN-668, SAN-565, SAN-561, SAN-562, SAN-560, SAN-559, SAN-563, SAN-550, SAN-115, SAN-368, SAN-178, SAN-667","",

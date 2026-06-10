@@ -1,0 +1,7 @@
+flowchart LR
+  D["Discovery<br/>/host ad · referral"] --> M["/host"]
+  M --> S["signup?type=host"] --> AO["AI onboarding<br/>org profile"]
+  AO --> NEW["/host/event/new<br/>AI form-fill"] --> HITL{"Approve?"}
+  HITL -- yes --> REV["Revenue<br/>ticket % · featured"]
+  HITL -- edit --> NEW
+  REV --> AU["Automation<br/>AI promo · audience targeting"] --> RET["Retention<br/>repeat events"]

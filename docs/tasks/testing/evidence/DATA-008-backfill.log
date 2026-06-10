@@ -1,0 +1,299 @@
+# DATA-008 backfill 2026-06-02T16:51:47.838Z
+dryRun=false
+
+FAIL cafe Rituales Compañía de Café (ChIJQ-PPmKEpRI4RhZKQdct4w6Q) — Places getPlace HTTP 403: {
+  "error": {
+    "code": 403,
+    "message": "The caller does not have permission",
+    "status": "PERMISSION_DENIED"
+
+FAIL cafe Pergamino Café Laureles (ChIJzcFcU8spRI4RKdDH5QXv8LU) — Places getPlace HTTP 403: {
+  "error": {
+    "code": 403,
+    "message": "The caller does not have permission",
+    "status": "PERMISSION_DENIED"
+
+FAIL cafe Café Revolución (ChIJY3PNMaEpRI4RI_KC4_QQWd0) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL cafe Semilla Café Coworking (ChIJt22VcKMpRI4RBfxl2xT31yM) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL cafe Café Namazzi (ChIJ13TZTwApRI4R6nj62_0XA4Y) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL cafe Amelier Café Laureles (ChIJp_baYN8pRI4RqTsdj_HJ1W0) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL cafe Naturalia Café (ChIJMRCXA6IpRI4Rm1T8IKltV5w) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL cafe Pausa Café & Brunch (ChIJGwyAX0kpRI4R0MrZuOjjmlo) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL cafe Botswana Café Creativo (ChIJlYRAUE4pRI4RD_kjt-mHSuw) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL cafe Pergamino Calle 10B (ChIJmyfHJngpRI4RLQG7fWFfH_I) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL cafe Urbania Café (ChIJ1QrC3yooRI4RZ18CGQQG63s) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL cafe Café Velvet (ChIJXUCqDNQpRI4RKLeAcaPhClA) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL cafe Café Noir (ChIJ6bs39KgpRI4RqAxz1fHkl38) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL cafe Amelier Café El Poblado (ChIJ7arRSNUpRI4R_yoq0TDSjSs) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL cafe Café Quindío Vía Primavera (ChIJd2TcTAApRI4RG6oHLp0d7Lw) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL cafe Pergamino Vía Primavera (ChIJAwOZ5ikoRI4RWqsKH3Ve1gI) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL nightclub Dulce Jesús Mío (ChIJ3QqIKDcoRI4RiVE5Rr_jonk) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL nightclub Envy Roof Bar (ChIJz33pvSkoRI4Rp3jsj_c-VNw) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL nightclub Salon Amador (ChIJDzB_rikoRI4RK7880NQlw-4) — Places getPlace HTTP 403: {
+  "error": {
+    "code": 403,
+    "message": "The caller does not have permission",
+    "status": "PERMISSION_DENIED"
+
+FAIL nightclub VIVO Medellín (ChIJjSpbHvQpRI4RcOicgNc_pkY) — Places getPlace HTTP 403: {
+  "error": {
+    "code": 403,
+    "message": "The caller does not have permission",
+    "status": "PERMISSION_DENIED"
+
+FAIL nightclub Red Bar Medellín (ChIJcd1i5paDRo4R_43xXyY06js) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL nightclub Bendito Seas (ChIJCTe8u8ApRI4ReA6E6ke922A) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL nightclub Palma Pitón Manila (ChIJ5YybASEpRI4RMQVFxi9kfcE) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL nightclub 818 DISTRICT (ChIJcw-7qt0pRI4Ree7F6X1eGuo) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL nightclub La Octava Bar (ChIJebEL-SkoRI4RcXaj3HEEDJU) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL nightclub Son Havana (ChIJT6rIGAopRI4RnmT4NpkaFco) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL nightclub La Ruana de Juana (ChIJM1ouySsoRI4RSQ0PWE7IcW8) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL nightclub Bar Chupitos Provenza (ChIJAa567CkoRI4RKt8qX61DqOM) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Carolina (ChIJWzzQVG6DRo4RlEikt-1_kA0) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Moshi (ChIJk7GmeespRI4RvXCvEtUarSM) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Cuzco Cocina Peruana (ChIJDYMXLjAoRI4RFlBunvDUovk) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant El Botánico (ChIJ_zRtl4KCRo4RcgzllYybHec) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Verdeo (ChIJqWx0yikoRI4R62vONfeQ86M) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Click Clack Kitchen (ChIJcavbtHIpRI4Res-ZJmk-lgE) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant El Bosque Era Rosado (ChIJ7QzOqECDRo4RiQfSwxV7fbo) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Mamba Negra (ChIJDQuvZsKDRo4RBDDVrOXelg4) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant El Callejón del Gato (ChIJH_tCfI-DRo4RsrMioqvO3K0) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant La Sere by Juanma (ChIJNzTxZSkoRI4RnVwOZVYvmPE) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant X.O (ChIJYbI3K7kpRI4Rnugvn8-3wEU) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant REBELION Sabores Salvajes (ChIJS5sGBACDRo4RchUMNWUKMl4) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Bárbaro Cocina Primitiva - Sede Laureles (ChIJx3bu-qEpRI4Rg_hkQIAltXU) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Narcobollo (ChIJ7fBJUgApRI4REwgd1Vw4sCI) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Dos Santos Cantina (ChIJ1YsThxGDRo4Ra1mfGc_6Bpc) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Panka (ChIJf0XZlYKCRo4RkIGoc60_TgQ) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Rocoto (ChIJYaqNo-opRI4RVOF3Bkieaqc) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Carmen (ChIJNwlQASkoRI4RLE2RqbGpVP0) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant El Cielo (ChIJ9dyLhikoRI4R1IEZoWSmNOo) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Alambique (ChIJBcZy1CsoRI4Rk0E8r_NYkYA) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant La Provincia (ChIJ-bKp832CRo4RvY-77_5PkOY) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Ginger Cocina (ChIJt3E2jEApRI4Ry9MMHAVOQ6w) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Mal De Ojo (ChIJg0_sawApRI4RXD9Mzz82GqI) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Mamasita Medallo (ChIJIZa426ApRI4RI64OTsQSOEg) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Gabo.mde (ChIJqcCJbreDRo4RtfeNgXNd-oo) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant La Rufina (ChIJCwd5gfqdRo4R8p7hfnAxczE) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Relato (ChIJG7u6K-eDRo4RH3KH6ucxnfA) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Mombasa Restaurante (ChIJJ4Wc_3UpRI4RStX8jIKzpc4) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant El Colombiano (ChIJ6Z6glysoRI4RI1q640G2lJ4) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant In Situ (ChIJX7HT29woRI4R7HRJ0tCVnN0) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Simah (ChIJR7hGsTYpRI4RklXPAEQgGhI) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Capítulo Restaurante (ChIJqc-HnqSdRo4R9rOwVcanFW0) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Sambombi Bistró Local (ChIJbZpAW1EpRI4R_GZuEliKnQk) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant La Pampa Parrilla Argentina - Laureles Segundo Parque (ChIJR6jHAAApRI4RwNiaoq9mXNc) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant El Cielo (ChIJr0z5xCooRI4Ra4Xl8WYtmk4) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Cucayito (ChIJT6VrbOyDRo4Rx112mBkBwdQ) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant San Carbón Parrilla - Bar (ChIJU50sCyUoRI4RXRFASyqT-fs) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Test Lab Kitchen (ChIJvRHAGS4pRI4RHkZo2NXtFAc) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Mondongos Laureles (ChIJY0yT5hcpRI4RvHERtGIVVYE) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Mondongos Poblado (ChIJJTEMeCkoRI4RUrz-xjhNnxw) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Idílico Restaurante (ChIJK-z5FS0pRI4RUpXCrbUXfsE) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Ammazza Reservado - Indiana, Envigado (ChIJz387_DGDRo4RLNTiP-KeQfs) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant O.C.I. (ChIJH417loKCRo4R3cTdcNNgJVw) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq
+FAIL restaurant Hacienda Junín (ChIJw67M_fgoRI4RMiM53OU6lnQ) — Places getPlace HTTP 429: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'GetPlaceRequest' and limit 'GetPlaceReq

@@ -1,0 +1,9 @@
+flowchart LR
+  PUI["Partner (dashboard / signup)"] --> CK["CopilotKit"]
+  CK --> MAS["Mastra agent (role + plan scoped)"]
+  MAS --> TOOLS["Tools (capability set)"]
+  TOOLS --> GATE{"Money / public?"}
+  GATE -- yes --> HITL["Partner approves"]
+  GATE -- no --> RUN["Execute"]
+  HITL --> RUN
+  RUN --> SB["Supabase"] --> PUI

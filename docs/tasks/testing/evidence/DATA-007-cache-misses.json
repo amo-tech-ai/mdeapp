@@ -1,0 +1,391 @@
+{
+  "generatedAt": "2026-06-02T17:08:36.370Z",
+  "fieldMaskVersion": "details-v3-links-2026-05-26",
+  "summary": [
+    {
+      "kind": "cafe",
+      "place_ids": 17,
+      "cached": 1,
+      "hit_pct": 5.9
+    },
+    {
+      "kind": "nightclub",
+      "place_ids": 13,
+      "cached": 1,
+      "hit_pct": 7.7
+    },
+    {
+      "kind": "restaurant",
+      "place_ids": 44,
+      "cached": 0,
+      "hit_pct": 0
+    }
+  ],
+  "overall": {
+    "place_ids": 74,
+    "cached": 2,
+    "hit_pct": 2.7
+  },
+  "misses": [
+    {
+      "kind": "cafe",
+      "placeId": "ChIJQ-PPmKEpRI4RhZKQdct4w6Q",
+      "name": "Rituales Compañía de Café"
+    },
+    {
+      "kind": "cafe",
+      "placeId": "ChIJzcFcU8spRI4RKdDH5QXv8LU",
+      "name": "Pergamino Café Laureles"
+    },
+    {
+      "kind": "cafe",
+      "placeId": "ChIJY3PNMaEpRI4RI_KC4_QQWd0",
+      "name": "Café Revolución"
+    },
+    {
+      "kind": "cafe",
+      "placeId": "ChIJt22VcKMpRI4RBfxl2xT31yM",
+      "name": "Semilla Café Coworking"
+    },
+    {
+      "kind": "cafe",
+      "placeId": "ChIJ13TZTwApRI4R6nj62_0XA4Y",
+      "name": "Café Namazzi"
+    },
+    {
+      "kind": "cafe",
+      "placeId": "ChIJp_baYN8pRI4RqTsdj_HJ1W0",
+      "name": "Amelier Café Laureles"
+    },
+    {
+      "kind": "cafe",
+      "placeId": "ChIJMRCXA6IpRI4Rm1T8IKltV5w",
+      "name": "Naturalia Café"
+    },
+    {
+      "kind": "cafe",
+      "placeId": "ChIJGwyAX0kpRI4R0MrZuOjjmlo",
+      "name": "Pausa Café & Brunch"
+    },
+    {
+      "kind": "cafe",
+      "placeId": "ChIJlYRAUE4pRI4RD_kjt-mHSuw",
+      "name": "Botswana Café Creativo"
+    },
+    {
+      "kind": "cafe",
+      "placeId": "ChIJmyfHJngpRI4RLQG7fWFfH_I",
+      "name": "Pergamino Calle 10B"
+    },
+    {
+      "kind": "cafe",
+      "placeId": "ChIJ1QrC3yooRI4RZ18CGQQG63s",
+      "name": "Urbania Café"
+    },
+    {
+      "kind": "cafe",
+      "placeId": "ChIJXUCqDNQpRI4RKLeAcaPhClA",
+      "name": "Café Velvet"
+    },
+    {
+      "kind": "cafe",
+      "placeId": "ChIJ6bs39KgpRI4RqAxz1fHkl38",
+      "name": "Café Noir"
+    },
+    {
+      "kind": "cafe",
+      "placeId": "ChIJ7arRSNUpRI4R_yoq0TDSjSs",
+      "name": "Amelier Café El Poblado"
+    },
+    {
+      "kind": "cafe",
+      "placeId": "ChIJd2TcTAApRI4RG6oHLp0d7Lw",
+      "name": "Café Quindío Vía Primavera"
+    },
+    {
+      "kind": "cafe",
+      "placeId": "ChIJAwOZ5ikoRI4RWqsKH3Ve1gI",
+      "name": "Pergamino Vía Primavera"
+    },
+    {
+      "kind": "nightclub",
+      "placeId": "ChIJ3QqIKDcoRI4RiVE5Rr_jonk",
+      "name": "Dulce Jesús Mío"
+    },
+    {
+      "kind": "nightclub",
+      "placeId": "ChIJz33pvSkoRI4Rp3jsj_c-VNw",
+      "name": "Envy Roof Bar"
+    },
+    {
+      "kind": "nightclub",
+      "placeId": "ChIJDzB_rikoRI4RK7880NQlw-4",
+      "name": "Salon Amador"
+    },
+    {
+      "kind": "nightclub",
+      "placeId": "ChIJjSpbHvQpRI4RcOicgNc_pkY",
+      "name": "VIVO Medellín"
+    },
+    {
+      "kind": "nightclub",
+      "placeId": "ChIJcd1i5paDRo4R_43xXyY06js",
+      "name": "Red Bar Medellín"
+    },
+    {
+      "kind": "nightclub",
+      "placeId": "ChIJCTe8u8ApRI4ReA6E6ke922A",
+      "name": "Bendito Seas"
+    },
+    {
+      "kind": "nightclub",
+      "placeId": "ChIJ5YybASEpRI4RMQVFxi9kfcE",
+      "name": "Palma Pitón Manila"
+    },
+    {
+      "kind": "nightclub",
+      "placeId": "ChIJcw-7qt0pRI4Ree7F6X1eGuo",
+      "name": "818 DISTRICT"
+    },
+    {
+      "kind": "nightclub",
+      "placeId": "ChIJebEL-SkoRI4RcXaj3HEEDJU",
+      "name": "La Octava Bar"
+    },
+    {
+      "kind": "nightclub",
+      "placeId": "ChIJT6rIGAopRI4RnmT4NpkaFco",
+      "name": "Son Havana"
+    },
+    {
+      "kind": "nightclub",
+      "placeId": "ChIJM1ouySsoRI4RSQ0PWE7IcW8",
+      "name": "La Ruana de Juana"
+    },
+    {
+      "kind": "nightclub",
+      "placeId": "ChIJAa567CkoRI4RKt8qX61DqOM",
+      "name": "Bar Chupitos Provenza"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJWzzQVG6DRo4RlEikt-1_kA0",
+      "name": "Carolina"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJk7GmeespRI4RvXCvEtUarSM",
+      "name": "Moshi"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJDYMXLjAoRI4RFlBunvDUovk",
+      "name": "Cuzco Cocina Peruana"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJ_zRtl4KCRo4RcgzllYybHec",
+      "name": "El Botánico"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJqWx0yikoRI4R62vONfeQ86M",
+      "name": "Verdeo"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJcavbtHIpRI4Res-ZJmk-lgE",
+      "name": "Click Clack Kitchen"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJ7QzOqECDRo4RiQfSwxV7fbo",
+      "name": "El Bosque Era Rosado"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJDQuvZsKDRo4RBDDVrOXelg4",
+      "name": "Mamba Negra"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJH_tCfI-DRo4RsrMioqvO3K0",
+      "name": "El Callejón del Gato"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJNzTxZSkoRI4RnVwOZVYvmPE",
+      "name": "La Sere by Juanma"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJYbI3K7kpRI4Rnugvn8-3wEU",
+      "name": "X.O"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJS5sGBACDRo4RchUMNWUKMl4",
+      "name": "REBELION Sabores Salvajes"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJx3bu-qEpRI4Rg_hkQIAltXU",
+      "name": "Bárbaro Cocina Primitiva - Sede Laureles"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJ7fBJUgApRI4REwgd1Vw4sCI",
+      "name": "Narcobollo"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJ1YsThxGDRo4Ra1mfGc_6Bpc",
+      "name": "Dos Santos Cantina"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJf0XZlYKCRo4RkIGoc60_TgQ",
+      "name": "Panka"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJYaqNo-opRI4RVOF3Bkieaqc",
+      "name": "Rocoto"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJNwlQASkoRI4RLE2RqbGpVP0",
+      "name": "Carmen"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJ9dyLhikoRI4R1IEZoWSmNOo",
+      "name": "El Cielo"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJBcZy1CsoRI4Rk0E8r_NYkYA",
+      "name": "Alambique"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJ-bKp832CRo4RvY-77_5PkOY",
+      "name": "La Provincia"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJt3E2jEApRI4Ry9MMHAVOQ6w",
+      "name": "Ginger Cocina"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJg0_sawApRI4RXD9Mzz82GqI",
+      "name": "Mal De Ojo"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJIZa426ApRI4RI64OTsQSOEg",
+      "name": "Mamasita Medallo"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJqcCJbreDRo4RtfeNgXNd-oo",
+      "name": "Gabo.mde"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJCwd5gfqdRo4R8p7hfnAxczE",
+      "name": "La Rufina"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJG7u6K-eDRo4RH3KH6ucxnfA",
+      "name": "Relato"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJJ4Wc_3UpRI4RStX8jIKzpc4",
+      "name": "Mombasa Restaurante"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJ6Z6glysoRI4RI1q640G2lJ4",
+      "name": "El Colombiano"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJX7HT29woRI4R7HRJ0tCVnN0",
+      "name": "In Situ"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJR7hGsTYpRI4RklXPAEQgGhI",
+      "name": "Simah"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJqc-HnqSdRo4R9rOwVcanFW0",
+      "name": "Capítulo Restaurante"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJbZpAW1EpRI4R_GZuEliKnQk",
+      "name": "Sambombi Bistró Local"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJR6jHAAApRI4RwNiaoq9mXNc",
+      "name": "La Pampa Parrilla Argentina - Laureles Segundo Parque"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJr0z5xCooRI4Ra4Xl8WYtmk4",
+      "name": "El Cielo"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJT6VrbOyDRo4Rx112mBkBwdQ",
+      "name": "Cucayito"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJU50sCyUoRI4RXRFASyqT-fs",
+      "name": "San Carbón Parrilla - Bar"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJvRHAGS4pRI4RHkZo2NXtFAc",
+      "name": "Test Lab Kitchen"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJY0yT5hcpRI4RvHERtGIVVYE",
+      "name": "Mondongos Laureles"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJJTEMeCkoRI4RUrz-xjhNnxw",
+      "name": "Mondongos Poblado"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJK-z5FS0pRI4RUpXCrbUXfsE",
+      "name": "Idílico Restaurante"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJz387_DGDRo4RLNTiP-KeQfs",
+      "name": "Ammazza Reservado - Indiana, Envigado"
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJH417loKCRo4R3cTdcNNgJVw",
+      "name": "O.C.I."
+    },
+    {
+      "kind": "restaurant",
+      "placeId": "ChIJw67M_fgoRI4RMiM53OU6lnQ",
+      "name": "Hacienda Junín"
+    }
+  ]
+}

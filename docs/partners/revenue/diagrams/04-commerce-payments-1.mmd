@@ -1,0 +1,8 @@
+flowchart LR
+  C["Consumer"] --> CO["Checkout (Stripe)"]
+  CO --> CAP["Capture"]
+  CAP --> WH["Webhook → finalize order"]
+  WH --> SPLIT{"Split"}
+  SPLIT -- payout --> P["Partner"]
+  SPLIT -- fee --> M["mdeai"]
+  WH --> FUL["Fulfill: ticket+QR / booking confirm"]
