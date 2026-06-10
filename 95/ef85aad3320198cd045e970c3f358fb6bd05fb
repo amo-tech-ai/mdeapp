@@ -1,0 +1,70 @@
+src/lib/venues/event-venue-offerings-types.ts
+  s_d1b7a3779fe462::t_77aa428e12af5d 1-26
+src/components/sheets/event-venue-offerings-sheet.tsx
+  s_d1b7a3779fe462::t_f67ba5c52982fa 35-118
+  s_d1b7a3779fe462::t_19fbb355444a38 1-4,12-34,119-146,148-153
+  s_d1b7a3779fe462::t_490089362bdceb 5-11
+  s_d1b7a3779fe462::t_a534da42739cd5 147
+src/lib/venues/fetch-event-venue-offerings.test.ts
+  s_d1b7a3779fe462::t_990d1e84974dda 88-89,91-99,103-104,106-112,114-119
+  s_d1b7a3779fe462::t_cd0d201d8f846c 77
+  s_d1b7a3779fe462::t_f45c96d10c94bf 1-76,78-87,90,100-102,105,113,120-175
+src/components/copilot/restaurant-card-with-event-venue.tsx
+  s_d1b7a3779fe462::t_24e4191639e3a9 1-44
+src/lib/venues/fetch-event-venue-offerings.ts
+  s_d1b7a3779fe462::t_72cdf5cd0ad847 1-123
+src/components/copilot/restaurant-card.tsx
+  s_d1b7a3779fe462::t_4a90ed1c41d1bd 189
+  s_d1b7a3779fe462::t_844e96eb6905ef 152-153
+  s_d1b7a3779fe462::t_b97ae548426441 29-31
+  s_d1b7a3779fe462::t_eee5b84b88e93a 9
+  s_d1b7a3779fe462::t_f6894708198afc 177-178,184-188,190-199
+  s_d1b7a3779fe462::t_a4e7ed9a865f19 302-309
+src/lib/venues/is-schema-unavailable-error.test.ts
+  s_d1b7a3779fe462::t_965bcf3ba5f3c8 1-25
+src/components/chat/rental-ui-context.tsx
+  s_d1b7a3779fe462::t_b1b71bb9dcc7ed 12
+  s_d1b7a3779fe462::t_7cb2ca2b88ecd2 314-315
+  s_d1b7a3779fe462::t_2b4151974a5d4c 89-95
+  s_d1b7a3779fe462::t_a3714d9c91a12e 297-298,332-333
+  s_d1b7a3779fe462::t_0742ac406fc7ef 181-183
+  s_d1b7a3779fe462::t_186ea25aa13d4f 349-350
+  s_d1b7a3779fe462::t_e9089dc027918b 128-129
+  s_d1b7a3779fe462::t_0cc6f3a30ff4c7 264-276
+  s_d1b7a3779fe462::t_6065af0509e44f 148-149
+src/lib/venues/is-schema-unavailable-error.ts
+  s_d1b7a3779fe462::t_063e83fe0eab1b 1-20
+src/components/chat/concierge-session-context.tsx
+  s_d1b7a3779fe462::t_2b9687ce0d3033 50,72,94
+src/hooks/use-event-venue-offerings.ts
+  s_d1b7a3779fe462::t_ecdfa88122fa98 1-61
+src/components/chat/geo-chat-shell.tsx
+  s_d1b7a3779fe462::t_577f9c4505f0c0 26
+  s_d1b7a3779fe462::t_6120068bcfbea4 120
+  s_d1b7a3779fe462::t_dbfa3ac94bea4c 44-60
+src/components/copilot/__tests__/restaurant-card.test.tsx
+  s_d1b7a3779fe462::t_c06012c8142624 74-97,99-102
+  s_d1b7a3779fe462::t_322925453fa40b 98
+src/components/copilot/domain-results.tsx
+  s_d1b7a3779fe462::t_915e0acd23a6e8 6
+  s_d1b7a3779fe462::t_98b5bcd6ca2e54 149,162
+src/components/sheets/__tests__/event-venue-offerings-sheet.test.tsx
+  s_d1b7a3779fe462::t_251074f7006cf4 1-2,4,6-7,9-47
+  s_d1b7a3779fe462::t_9eaf88a5cccaee 3,5,8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "95ef85aad3320198cd045e970c3f358fb6bd05fb",
+  "prompts": {},
+  "sessions": {
+    "s_d1b7a3779fe462": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "26292875-287f-4fbd-bce0-3bd9e158b377",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
