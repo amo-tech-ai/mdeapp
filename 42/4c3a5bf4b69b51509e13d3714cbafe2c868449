@@ -1,0 +1,47 @@
+.claude/skills/mde-events
+  s_0baec5608e2475::t_05fe2cb0071db1 1
+.claude/skills/mermaid-diagrams
+  s_0baec5608e2475::t_05fe2cb0071db1 1
+.claude/skills/copilotkit-debug
+  s_0baec5608e2475::t_05fe2cb0071db1 1
+.claude/skills/copilotkit-setup
+  s_0baec5608e2475::t_05fe2cb0071db1 1
+.claude/skills/mastra-smoke-test
+  s_0baec5608e2475::t_05fe2cb0071db1 1
+.gitignore
+  s_0baec5608e2475::t_0a1164db1fe71b 86-87
+.claude/skills/karpathy-guidelines
+  s_0baec5608e2475::t_05fe2cb0071db1 1
+.claude/skills/coderabbit
+  s_0baec5608e2475::t_05fe2cb0071db1 1
+.claude/skills/copilotkit-agui
+  s_0baec5608e2475::t_05fe2cb0071db1 1
+.claude/skills/copilotkit-integrations
+  s_0baec5608e2475::t_05fe2cb0071db1 1
+.claude/skills/copilotkit
+  s_0baec5608e2475::t_05fe2cb0071db1 1
+.claude/skills/supabase-edge-functions
+  s_0baec5608e2475::t_05fe2cb0071db1 1
+.claude/skills/tailwind-best-practices
+  s_0baec5608e2475::t_05fe2cb0071db1 1
+.claude/skills/mde-stripe
+  s_0baec5608e2475::t_05fe2cb0071db1 1
+.claude/skills/responsive-design
+  s_0baec5608e2475::t_05fe2cb0071db1 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "424c3a5bf4b69b51509e13d3714cbafe2c868449",
+  "prompts": {},
+  "sessions": {
+    "s_0baec5608e2475": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3bd5f9d7-109c-4dce-8633-a9bc1d0da6e5",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
