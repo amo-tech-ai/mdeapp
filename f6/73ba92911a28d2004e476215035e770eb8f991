@@ -1,0 +1,70 @@
+docs/partners/tasks/design/D-PTR-04-business-ai.md
+  s_64c3b1958bd65c::t_8fd375198d1ddb 26,28-34
+docs/partners/tasks/design/INDEX.md
+  s_64c3b1958bd65c::t_5068c4b9e3bdaa 46,48-49
+docs/partners/tasks/design/D-PTR-09-business-hub.md
+  s_64c3b1958bd65c::t_e811556fdba40f 24-36
+  s_64c3b1958bd65c::t_84e211a902e28c 7
+docs/partners/wireframes/partner-signup-wireframe.html
+  s_1f0f569465d6d8::t_cf400452764ee4 6-9,11-478,484-489,493-505,507,509-511,513-520,522-524,526-609,613-640,642-648,650-659,663-696,700-716,720-738,741-747,749-765,768-791
+docs/partners/tasks/design/D-PTR-10-about.md
+  s_64c3b1958bd65c::t_cfb7fe7d6fb498 25,27-35
+docs/partners/tasks/design/D-PTR-02-venues-landing.md
+  s_64c3b1958bd65c::t_6d7ca6a6f3e6cc 34,36-50
+docs/partners/tasks/design/D-PTR-01-partners-hub.md
+  s_64c3b1958bd65c::t_be87a5f5740f21 7
+  s_64c3b1958bd65c::t_2cb33699689a58 28,30-41
+docs/partners/tasks/design/D-PTR-08-vertical-landings.md
+  s_64c3b1958bd65c::t_b8eb6af4416c38 28-31
+docs/partners/tasks/design/D-PTR-05-sponsors.md
+  s_64c3b1958bd65c::t_951fd5c93b4b5f 26,28-34
+docs/partners/tasks/design/D-PTR-07-contact.md
+  s_64c3b1958bd65c::t_ed2e2dba81ce38 24,26-34
+  s_64c3b1958bd65c::t_d6f89aad0b608c 7
+docs/partners/notes/03-design.md
+  h_712413820f8934 1-263
+  s_64c3b1958bd65c::t_73bbb9aba401d6 264-293
+docs/partners/tasks/design/D-PTR-03-rentals-brokers.md
+  s_64c3b1958bd65c::t_bee9547ab03fb8 28,30-37
+docs/partners/wireframes/contact-wireframe.html
+  s_64c3b1958bd65c::t_e843597e285e73 1-330
+docs/partners/wireframes/partners-hub-wireframe.html
+  s_64c3b1958bd65c::t_b641aeb68d2a6a 1-363
+docs/partners/wireframes/business-hub-wireframe.html
+  s_64c3b1958bd65c::t_2f82103fc5e47f 1-282,284-349
+  s_64c3b1958bd65c::t_faa50dcab355d8 283
+docs/partners/tasks/design/D-PTR-06-pricing.md
+  s_64c3b1958bd65c::t_4cb79c872744a1 7
+  s_64c3b1958bd65c::t_ce2a365bd9b172 25,27-37
+docs/partners/wireframes/pricing-wireframe.html
+  s_64c3b1958bd65c::t_8698a440ae9d69 1-350
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "f673ba92911a28d2004e476215035e770eb8f991",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_64c3b1958bd65c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e5e476f8-ba89-48b1-8472-b94aa879cd8c",
+        "model": "claude-fable-5"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
