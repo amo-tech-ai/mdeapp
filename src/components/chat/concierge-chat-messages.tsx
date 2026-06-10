@@ -15,6 +15,7 @@ import { ConciergeAssistantMessage, shouldSkipCopilotMessage } from "@/component
 import { ConciergeErrorNotice } from "@/components/chat/concierge-error-notice";
 import { sanitizeAssistantChatContent } from "@/lib/sanitize-assistant-chat-content";
 import { useEventLocalChat } from "@/components/chat/event-local-chat-context";
+import { RestaurantFilterChips } from "@/components/chat/restaurant-filter-chips";
 import {
   clearConciergeError,
   getConciergeErrorVersion,
@@ -55,7 +56,7 @@ export function ConciergeChatMessages(props: MessagesProps) {
   const UserMessageProp = ConciergeUserMessage;
   const { labels } = useChatContext();
   const { messages: visibleMessages, interrupt } = useCopilotChatInternal();
-  const { messages: localMessages } = useEventLocalChat();
+  const { messages: localMessages, clarifyKind } = useEventLocalChat();
   const { appendMessage } = useCopilotChat();
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -144,9 +145,16 @@ export function ConciergeChatMessages(props: MessagesProps) {
                 </div>
               );
               if (local.isClarify) {
+                const testId =
+                  clarifyKind === "restaurant"
+                    ? "restaurant-clarify"
+                    : "event-clarify";
                 return (
-                  <div key={local.id} data-testid="event-clarify">
+                  <div key={local.id} data-testid={testId}>
                     {assistant}
+                    {clarifyKind === "restaurant" ? (
+                      <RestaurantFilterChips />
+                    ) : null}
                   </div>
                 );
               }

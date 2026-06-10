@@ -14,6 +14,8 @@ const cuisineEnum = z.enum([
   'vegetarian',
   'cafe',
   'international',
+  'italian',
+  'pizza',
   'street-food',
 ]);
 
@@ -126,6 +128,9 @@ export type RestaurantQuery = {
   maxPricePerPerson?: number;
   minRating?: number;
   limit?: number;
+  priceTier?: '$' | '$$' | '$$$' | '$$$$';
+  userLatitude?: number;
+  userLongitude?: number;
   /** Natural-language query — enables hybrid + venue_signals (SEARCH-003). */
   queryText?: string;
 };
@@ -177,6 +182,8 @@ export function mapCuisineFromTypes(types: string[] | null): Cuisine {
   if (blob.includes('coffee') || blob.includes('café') || blob.includes('cafe')) return 'cafe';
   if (blob.includes('street') || blob.includes('food hall') || blob.includes('mercado')) return 'street-food';
   if (blob.includes('colombian') || blob.includes('traditional')) return 'colombian';
+  if (blob.includes('pizza')) return 'pizza';
+  if (blob.includes('italian')) return 'italian';
   return 'international';
 }
 
@@ -223,6 +230,21 @@ function rowToRestaurant(row: RestaurantRow): Restaurant {
   };
 }
 
+function haversineKm(
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number,
+): number {
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
 function applyRestaurantFilters(rows: Restaurant[], query: RestaurantQuery): Restaurant[] {
   let results = rows.slice();
   if (query.cuisine) {
@@ -232,11 +254,34 @@ function applyRestaurantFilters(rows: Restaurant[], query: RestaurantQuery): Res
     const q = query.neighborhood.toLowerCase();
     results = results.filter((r) => r.neighborhood.toLowerCase().includes(q));
   }
+  if (query.priceTier) {
+    results = results.filter((r) => r.priceTier === query.priceTier);
+  }
   if (typeof query.maxPricePerPerson === 'number') {
     results = results.filter((r) => r.avgPricePerPerson <= query.maxPricePerPerson!);
   }
   if (typeof query.minRating === 'number') {
     results = results.filter((r) => r.rating >= query.minRating!);
+  }
+  if (
+    typeof query.userLatitude === 'number' &&
+    typeof query.userLongitude === 'number'
+  ) {
+    results = results
+      .map((r) => ({
+        r,
+        dist:
+          r.latitude != null && r.longitude != null
+            ? haversineKm(
+                query.userLatitude!,
+                query.userLongitude!,
+                r.latitude,
+                r.longitude,
+              )
+            : Number.POSITIVE_INFINITY,
+      }))
+      .sort((a, b) => a.dist - b.dist)
+      .map(({ r }) => r);
   }
   return results;
 }

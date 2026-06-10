@@ -38,6 +38,13 @@ export type ConciergeWorkingMemory = {
     date?: string;
   }>;
   selectedEventId?: string;
+  lastRestaurantQuery?: {
+    neighborhood?: string;
+    cuisine?: string;
+    vibe?: string;
+    priceTier?: "$" | "$$" | "$$$" | "$$$$";
+    genericAskPending?: boolean;
+  };
   mapUi?: import("@/platform/contracts/map-ui-state").MapUiState;
 };
 

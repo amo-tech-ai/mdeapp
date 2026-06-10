@@ -21,6 +21,9 @@ test.describe("Restaurant card fast path", () => {
     await page.waitForTimeout(8_000);
 
     await sendConciergeMessage(page, RESTAURANT_FAST_PATH_QUERY);
+    await page.locator('[data-testid="restaurant-filter-c-colombian"]').click({
+      timeout: 30_000,
+    });
     await waitForRestaurantCards(page);
     await waitForAssistantReply(page, 60_000);
 

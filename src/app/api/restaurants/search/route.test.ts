@@ -54,6 +54,19 @@ describe("POST /api/restaurants/search", () => {
     );
   });
 
+  it("rejects one-sided user coordinates", async () => {
+    const res = await POST(
+      new Request("http://localhost/api/restaurants/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userLatitude: 6.25 }),
+      }),
+    );
+
+    expect(res.status).toBe(400);
+    expect(searchRestaurants).not.toHaveBeenCalled();
+  });
+
   it("rejects invalid cuisine", async () => {
     const res = await POST(
       new Request("http://localhost/api/restaurants/search", {
