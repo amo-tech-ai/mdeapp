@@ -1,1 +1,1 @@
-../venues/005-wire-cafe-listings-map-booking.md
+../../archive/005-wire-cafe-listings-map-booking.md

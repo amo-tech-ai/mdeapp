@@ -1,1 +1,1 @@
-../../venues/tasks/mvp/wireframes/007-scr-nightlife-listings-map.md
+../../../venues/tasks/mvp/007-scr-nightlife-listings-map.md
