@@ -83,9 +83,25 @@ export type CafeVenueDetail = {
   fieldMaskVersion?: string;
   factsCheckedAt?: string;
   rank?: number;
+  /** Reused detail panel for restaurant rows — routes booking to RestaurantBookingSheet. */
+  bookingAsRestaurant?: boolean;
 };
 
-/** Grounded nightlife card + detail panel (SCREEN-022). */
+/** Restaurant card + table booking sheet (chat / browse). */
+export type RestaurantVenueDetail = {
+  kind: "restaurant";
+  pinId: string;
+  title: string;
+  placeId?: string;
+  mapsUrl?: string | null;
+  neighborhood?: string;
+  cuisine?: string;
+  rating?: number;
+  summary?: string;
+  rank?: number;
+};
+
+/** SAN-494 event venue offerings sheet target. */
 export type EventVenueOfferingsTarget = {
   placeId: string;
   title: string;
@@ -127,6 +143,8 @@ type RentalUiContextValue = {
   nightlifeBookingOpen: boolean;
   eventVenueOfferingsTarget: EventVenueOfferingsTarget | null;
   eventVenueOfferingsOpen: boolean;
+  restaurantBookingTarget: RestaurantVenueDetail | null;
+  restaurantBookingOpen: boolean;
   leadConfirmation: LeadConfirmation | null;
   venueBookingConfirmation: VenueBookingConfirmation | null;
   openScheduleViewing: (target: ScheduleViewingTarget) => void;
@@ -147,6 +165,8 @@ type RentalUiContextValue = {
   closeNightlifeBooking: () => void;
   openEventVenueOfferings: (target: EventVenueOfferingsTarget) => void;
   closeEventVenueOfferings: () => void;
+  openRestaurantBooking: (target: RestaurantVenueDetail) => void;
+  closeRestaurantBooking: () => void;
   setLeadConfirmation: (value: LeadConfirmation | null) => void;
   clearLeadConfirmation: () => void;
   setVenueBookingConfirmation: (value: VenueBookingConfirmation | null) => void;
@@ -181,6 +201,9 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
   const [eventVenueOfferingsTarget, setEventVenueOfferingsTarget] =
     useState<EventVenueOfferingsTarget | null>(null);
   const [eventVenueOfferingsOpen, setEventVenueOfferingsOpen] = useState(false);
+  const [restaurantBookingTarget, setRestaurantBookingTarget] =
+    useState<RestaurantVenueDetail | null>(null);
+  const [restaurantBookingOpen, setRestaurantBookingOpen] = useState(false);
 
   const openScheduleViewing = useCallback((target: ScheduleViewingTarget) => {
     setScheduleTarget(target);
@@ -274,6 +297,16 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
     setEventVenueOfferingsTarget(null);
   }, []);
 
+  const openRestaurantBooking = useCallback((target: RestaurantVenueDetail) => {
+    setRestaurantBookingTarget(target);
+    setRestaurantBookingOpen(true);
+  }, []);
+
+  const closeRestaurantBooking = useCallback(() => {
+    setRestaurantBookingOpen(false);
+    setRestaurantBookingTarget(null);
+  }, []);
+
   const clearLeadConfirmation = useCallback(() => {
     setLeadConfirmation(null);
   }, []);
@@ -296,6 +329,8 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       nightlifeBookingOpen,
       eventVenueOfferingsTarget,
       eventVenueOfferingsOpen,
+      restaurantBookingTarget,
+      restaurantBookingOpen,
       leadConfirmation,
       venueBookingConfirmation,
       openScheduleViewing,
@@ -313,6 +348,8 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       closeNightlifeBooking,
       openEventVenueOfferings,
       closeEventVenueOfferings,
+      openRestaurantBooking,
+      closeRestaurantBooking,
       setLeadConfirmation,
       clearLeadConfirmation,
       setVenueBookingConfirmation,
@@ -331,6 +368,8 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       nightlifeBookingOpen,
       eventVenueOfferingsTarget,
       eventVenueOfferingsOpen,
+      restaurantBookingTarget,
+      restaurantBookingOpen,
       leadConfirmation,
       venueBookingConfirmation,
       openScheduleViewing,
@@ -348,6 +387,8 @@ export function RentalUiProvider({ children }: { children: ReactNode }) {
       closeNightlifeBooking,
       openEventVenueOfferings,
       closeEventVenueOfferings,
+      openRestaurantBooking,
+      closeRestaurantBooking,
       clearLeadConfirmation,
       setVenueBookingConfirmation,
       clearVenueBookingConfirmation,

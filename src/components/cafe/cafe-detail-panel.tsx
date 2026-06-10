@@ -28,6 +28,7 @@ import { placesPhotoProxyUrl } from "@/lib/places-photo-proxy";
 import { useMapContext } from "@/platform/maps/map-context";
 import { cn } from "@/lib/utils";
 import { VenueBookingStatusChip } from "@/components/venues/venue-booking-status-chip";
+import { toRestaurantVenueDetail } from "@/lib/venues/to-restaurant-venue-detail";
 
 type DetailTab = "overview" | "reviews" | "location";
 
@@ -205,6 +206,7 @@ export function CafeDetailPanel({
     closeCafeDetail,
     openCafeDetail,
     openCafeBooking,
+    openRestaurantBooking,
   } = useRentalUi();
   const { panToPin } = useMapContext();
   const [tab, setTab] = useState<DetailTab>("overview");
@@ -216,7 +218,9 @@ export function CafeDetailPanel({
     merged.userRatingCount,
   );
   const priceLabel = priceLevelToLabel(merged.priceLevel);
-  const typeLabel = primaryTypeToLabel(merged.primaryType) ?? "Cafe";
+  const typeLabel = detail.bookingAsRestaurant
+    ? "Restaurant"
+    : (primaryTypeToLabel(merged.primaryType) ?? "Cafe");
   const hoursLabel = openNowLabel(merged.openNow);
   const heroPhoto = merged.photoNames[0]
     ? placesPhotoProxyUrl(merged.photoNames[0], 640)
@@ -261,16 +265,36 @@ export function CafeDetailPanel({
               size="sm"
               variant="outline"
               data-testid="cafe-detail-booking-cta"
-              onClick={() => openCafeBooking(detail)}
+              onClick={() => {
+                if (detail.bookingAsRestaurant) {
+                  openRestaurantBooking(
+                    toRestaurantVenueDetail({
+                      pinId: detail.pinId,
+                      title: detail.title,
+                      placeId: detail.placeId,
+                      mapsUrl: detail.mapsUrl,
+                      neighborhood: detail.formattedAddress,
+                      rating: detail.rating,
+                      aiSummary: detail.summary,
+                      rank: detail.rank,
+                    }),
+                  );
+                  return;
+                }
+                openCafeBooking(detail);
+              }}
             >
               <CalendarCheck className="size-3.5" aria-hidden />
-              Request visit
+              {detail.bookingAsRestaurant ? "Request table" : "Request visit"}
             </Button>
           </div>
         </div>
         <h2 className="mt-2 text-lg font-semibold leading-snug">{detail.title}</h2>
         <div className="mt-2">
-          <VenueBookingStatusChip placeId={detail.placeId} uiKind="cafe" />
+          <VenueBookingStatusChip
+            placeId={detail.placeId}
+            uiKind={detail.bookingAsRestaurant ? "restaurant" : "cafe"}
+          />
         </div>
         <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
           {ratingText ? (
