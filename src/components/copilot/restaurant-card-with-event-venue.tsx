@@ -10,12 +10,14 @@ type RestaurantCardWithEventVenueProps = Omit<
   "hostsEvents" | "onOpenEventVenue"
 > & {
   placeId?: string | null;
+  onBookRequest?: () => void;
 };
 
 export function RestaurantCardWithEventVenue({
   placeId,
   title,
   pinId,
+  onBookRequest,
   ...cardProps
 }: RestaurantCardWithEventVenueProps) {
   const { openEventVenueOfferings } = useRentalUi();
@@ -39,6 +41,7 @@ export function RestaurantCardWithEventVenue({
       pinId={pinId}
       hostsEvents={hasOfferings}
       onOpenEventVenue={openEventVenue}
+      onBookRequest={onBookRequest}
     />
   );
 }

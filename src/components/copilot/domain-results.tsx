@@ -8,6 +8,7 @@ import { ToolPinsSync } from "@/components/copilot/tool-pins-sync";
 import { EmptyState } from "@/components/empty/empty-state";
 import { RichCardResultsRegistrar } from "@/components/chat/rich-card-results-context";
 import { useRentalUi } from "@/components/chat/rental-ui-context";
+import { toRestaurantVenueDetail } from "@/lib/venues/to-restaurant-venue-detail";
 import { useMapContext } from "@/platform/maps/map-context";
 import type { MapPinCategory } from "@/platform/contracts";
 
@@ -85,7 +86,7 @@ export function DomainResults({
   testId: string;
 }) {
   const { selectedPinId, panToPin } = useMapContext();
-  const { openCafeDetail } = useRentalUi();
+  const { openCafeDetail, openRestaurantBooking } = useRentalUi();
   const listRef = useRef<HTMLDivElement>(null);
   const envelope = result as {
     results?: PlaceRow[];
@@ -131,10 +132,22 @@ export function DomainResults({
             const title = r.title ?? r.name ?? "Result";
 
             if (category === "restaurant") {
+              const bookingTarget = toRestaurantVenueDetail({
+                pinId,
+                title,
+                placeId: r.placeId,
+                mapsUrl: r.mapsUrl,
+                neighborhood: r.neighborhood,
+                cuisine: r.cuisine,
+                rating: r.rating,
+                aiSummary: r.aiSummary,
+                rank: index + 1,
+              });
               const openDetail = () => {
                 panToPin(pinId);
                 openCafeDetail({
                   kind: "cafe",
+                  bookingAsRestaurant: true,
                   pinId,
                   title,
                   placeId: r.placeId ?? undefined,
@@ -164,6 +177,7 @@ export function DomainResults({
                   selected={selectedPinId === pinId}
                   onSelect={() => panToPin(pinId)}
                   onOpenDetails={openDetail}
+                  onBookRequest={() => openRestaurantBooking(bookingTarget)}
                 />
               );
             }

@@ -84,6 +84,19 @@ describe("RestaurantCard", () => {
     expect(html).not.toContain('data-testid="restaurant-hosts-events-badge"');
   });
 
+  it("renders Request booking CTA when onBookRequest is provided", () => {
+    const html = renderToStaticMarkup(
+      <RestaurantCard
+        title="Rocoto"
+        pinId="restaurant-rocoto"
+        testId="restaurant-card"
+        onBookRequest={() => undefined}
+      />,
+    );
+    expect(html).toContain('data-testid="restaurant-booking-cta"');
+    expect(html).toContain("Request");
+  });
+
   it("shows event venue CTA with 44px touch target when offerings exist", () => {
     const html = renderToStaticMarkup(
       <RestaurantCard

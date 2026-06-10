@@ -6,7 +6,7 @@ import { VenueCardShell } from "@/components/browse/venue-card-shell";
 import { formatGroundedRating } from "@/lib/places-display";
 import { mapsDeepLinksEnabled } from "@/lib/maps-deep-links";
 import { cn } from "@/lib/utils";
-import { ExternalLink, Info, MapPin, PartyPopper } from "lucide-react";
+import { CalendarCheck, ExternalLink, Info, MapPin, PartyPopper } from "lucide-react";
 import type { CardInteractionProps, ResultKind } from "@/components/cards/card-interaction-props";
 
 export type RestaurantCardProps = {
@@ -29,6 +29,8 @@ export type RestaurantCardProps = {
   /** True when SAN-492 offerings exist for this place (SAN-494). */
   hostsEvents?: boolean;
   onOpenEventVenue?: () => void;
+  onBookRequest?: () => void;
+  bookingTestId?: string;
 };
 
 function cuisineLabel(cuisine?: string): string | null {
@@ -151,6 +153,8 @@ export function RestaurantCard({
   onOpenDetails,
   hostsEvents = false,
   onOpenEventVenue,
+  onBookRequest,
+  bookingTestId = "restaurant-booking-cta",
 }: RestaurantCardProps) {
   const ratingText = formatGroundedRating(rating);
   const typeLabel = cuisineLabel(cuisine) ?? "Restaurant";
@@ -175,7 +179,10 @@ export function RestaurantCard({
   const summaryText =
     blurb && blurb !== neighborhood ? blurb : null;
   const showFooter =
-    Boolean(mapsUrl) || Boolean(onOpenDetails) || Boolean(onOpenEventVenue);
+    Boolean(mapsUrl) ||
+    Boolean(onOpenDetails) ||
+    Boolean(onOpenEventVenue) ||
+    Boolean(onBookRequest);
 
   const footerContent = (
     <>
@@ -210,6 +217,22 @@ export function RestaurantCard({
           >
             <Info data-icon="inline-start" aria-hidden />
             Details
+          </Button>
+        ) : null}
+        {onBookRequest ? (
+          <Button
+            type="button"
+            size="sm"
+            className="h-11 min-w-11 px-3"
+            data-testid={bookingTestId}
+            onClick={(e) => {
+              e.stopPropagation();
+              preview();
+              onBookRequest();
+            }}
+          >
+            <CalendarCheck className="size-3.5" aria-hidden />
+            Request
           </Button>
         ) : null}
       </div>
