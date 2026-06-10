@@ -1,0 +1,21 @@
+docs/tasks/testing/evidence/2026-06-09/SAN-493-staging-RESULTS.md
+  s_d1b7a3779fe462::t_3b9f91895ba240 1-82
+docs/tasks/testing/evidence/2026-06-09/SAN-493-staging-verify.log
+  s_d1b7a3779fe462::t_8d3f2243815d40 1-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "d336612ab8e861b7a1de5b395f704d3eda7469ab",
+  "prompts": {},
+  "sessions": {
+    "s_d1b7a3779fe462": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "26292875-287f-4fbd-bce0-3bd9e158b377",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
