@@ -22,6 +22,15 @@
 
 # vendored reference clones (local only)
 /github/
+commerce/b2c-storefront/
+graphify-out/
+/.worktrees/
+
+# research audit vendored clones (local reference only)
+docs/research/**/repos/
+
+# editor cache (per-vertical)
+docs/restaurant/.obsidian/
 
 # misc
 .DS_Store
