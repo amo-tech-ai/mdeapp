@@ -1,0 +1,23 @@
+docs/tasks/testing/evidence/2026-06-09/SAN-494-prod-RESULTS.md
+  s_833826747c954b::t_62e639bb9023b6 1-54
+e2e/san-494-event-venue-cta.spec.ts
+  s_833826747c954b::t_b83498abdbb70b 13-15,47-48,53-54,71,73-85,87-99,101-105,111,116-134
+  s_833826747c954b::t_25ee51f52bf088 10,12,16-25
+  s_833826747c954b::t_6c34a83f0ddbad 49-52,55-70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "ce131c1cab94b8a839cfbc05c54214c5252150d3",
+  "prompts": {},
+  "sessions": {
+    "s_833826747c954b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "08e1e140-66b5-4c6a-8866-b25943278e96",
+        "model": "claude-fable-5"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
