@@ -1,0 +1,49 @@
+docs/partners/tasks/design/D-PTR-01-partners-hub.md
+  s_64c3b1958bd65c::t_1431958a98e315 1-39
+docs/partners/tasks/design/D-PTR-03-rentals-brokers.md
+  s_64c3b1958bd65c::t_510e6ba3245ecb 1-38
+docs/partners/tasks/design/D-PTR-09-business-hub.md
+  s_64c3b1958bd65c::t_72bfc977220018 1-31
+docs/partners/tasks/design/D-PTR-08-vertical-landings.md
+  s_64c3b1958bd65c::t_4887485e3bdd13 1-32
+sitemap.md
+  s_64c3b1958bd65c::t_5d74033a0ba021 63
+  s_64c3b1958bd65c::t_2990007a4465fa 69
+  s_64c3b1958bd65c::t_7fc0cf05cf6d49 65
+  s_64c3b1958bd65c::t_8c7e20dafed13c 68
+docs/partners/tasks/design/D-PTR-04-business-ai.md
+  s_64c3b1958bd65c::t_9134e6e03323f5 1-35
+docs/partners/tasks/design/D-PTR-02-venues-landing.md
+  s_64c3b1958bd65c::t_0a46037887e1ce 1-44
+docs/partners/tasks/design/D-PTR-10-about.md
+  s_64c3b1958bd65c::t_a54e7418ad06d8 1-32
+docs/partners/tasks/design/D-PTR-06-pricing.md
+  s_64c3b1958bd65c::t_61cc9c39463d83 1-34
+docs/partners/tasks/design/D-PTR-07-contact.md
+  s_64c3b1958bd65c::t_4afecbbcb119d4 1-34
+docs/partners/tasks/design/D-PTR-05-sponsors.md
+  s_64c3b1958bd65c::t_22e5907792c9cc 1-35
+docs/partners/tasks/design/INDEX.md
+  s_64c3b1958bd65c::t_e249e0b3b1b99e 1-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "b0919ee84f90f81fc43f51d8d2b4db1d550b6b0f",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_64c3b1958bd65c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e5e476f8-ba89-48b1-8472-b94aa879cd8c",
+        "model": "claude-fable-5"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
