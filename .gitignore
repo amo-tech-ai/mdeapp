@@ -83,6 +83,8 @@ config/
 # Track the markdown knowledge; exclude nested repo clones, editor cache,
 # and heavy binary/scraped vaults (recoverable, not source of truth).
 docs/*/design/mdeapp/
+docs/design/mdeapp/
+docs/tasks/design/mdeapp/
 docs/.obsidian/
 docs/screenshots/
 docs/docs-vault/
