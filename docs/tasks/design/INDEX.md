@@ -8,7 +8,8 @@ verified: disk + Linear + vitest 2026-06-10
 
 # Design track — INDEX (canonical)
 
-**Epic:** [SAN-566 · Design Track — light-luxury re-skin + Concierge OS (D-01–D-14)](https://linear.app/sanjiovani/issue/SAN-566)  
+**Epic:** [SAN-566 · D-TRACK — Design Track — light-luxury re-skin + Concierge OS (D-01–D-14)](https://linear.app/sanjiovani/issue/SAN-566)  
+**Linear project:** [UX](https://linear.app/sanjiovani/project/ux-0ad555e403b4/issues) — titles use `SAN-### · SPEC-ID — <name>` (bulk-renamed 2026-06-10)  
 **Specs:** [`tasks/D-*.md`](tasks/) · **Process:** [`docs/design-process.md`](docs/design-process.md) · **Legacy map:** [`tasks/_legacy-map.md`](tasks/_legacy-map.md)  
 **Wireframes:** [`../../wireframes/index-wire.md`](../../wireframes/index-wire.md)
 
