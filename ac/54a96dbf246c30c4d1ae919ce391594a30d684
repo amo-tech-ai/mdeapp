@@ -1,0 +1,24 @@
+.pr_agent.toml
+  s_e5791ab83b9bb7::t_956e90b0ca2d05 1-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "ac54a96dbf246c30c4d1ae919ce391594a30d684",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_e5791ab83b9bb7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b3e8d093-b1e2-4331-ac75-ef7af26a36e0",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
