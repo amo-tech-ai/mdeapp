@@ -1,0 +1,28 @@
+docs/partners/tasks/design/D-PTR-02-venues-landing.md
+  s_64c3b1958bd65c::t_ee3cfb82055d50 38
+docs/partners/tasks/design/INDEX.md
+  s_64c3b1958bd65c::t_4a25d673c94e31 51-67
+docs/partners/tasks/design/D-PTR-01-partners-hub.md
+  s_64c3b1958bd65c::t_ee3cfb82055d50 32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "8981bb738241451427f90950f98b6bb9d22d1801",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_64c3b1958bd65c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e5e476f8-ba89-48b1-8472-b94aa879cd8c",
+        "model": "claude-fable-5"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
