@@ -1,0 +1,32 @@
+docs/tasks/design/tasks/INDEX.md
+  s_0baec5608e2475::t_ff8fe54bc89459 2-3,6,8,10
+docs/tasks/design/tasks/D-08-venue-card.md
+  s_0baec5608e2475::t_e92d2f109505aa 5
+docs/tasks/design/INDEX.md
+  s_0baec5608e2475::t_31657e30a0ef4b 3-35,38-59,61-123
+  s_0baec5608e2475::t_fe408562e68d47 36-37
+  s_0baec5608e2475::t_6920f201a8cf60 60
+docs/tasks/design/index-design.md
+  s_0baec5608e2475::t_48daf4991233d5 2-4,7,9,11,13-15,19,21,25,27,29,31,35,37,43-52,54,58,60,62,64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "e7f5b5fa32d80e309da86e1e539de237e5e6dc63",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_0baec5608e2475": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3bd5f9d7-109c-4dce-8633-a9bc1d0da6e5",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
