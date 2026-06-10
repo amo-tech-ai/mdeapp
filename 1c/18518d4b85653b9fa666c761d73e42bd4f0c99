@@ -1,0 +1,64 @@
+src/lib/venues/fetch-event-venue-offerings.test.ts
+  s_1f0f569465d6d8::t_adfeab9946a174 33
+  s_1f0f569465d6d8::t_4e358fb6061dff 135
+  s_1f0f569465d6d8::t_cb990cea1dcf2d 173-174,176
+  s_1f0f569465d6d8::t_bbacfe9870403f 8
+src/components/chat/geo-chat-shell.tsx
+  s_1f0f569465d6d8::t_3137db58011ee4 165
+  s_1f0f569465d6d8::t_a97932fe6e2059 128
+  s_1f0f569465d6d8::t_3b6bebfa0c7171 20
+  s_1f0f569465d6d8::t_0b5d4ffd6b021d 162
+  s_1f0f569465d6d8::t_f819a2f48969d4 65-81
+  s_1f0f569465d6d8::t_9802acc3ab2f46 29
+src/lib/venues/event-venue-offerings-types.ts
+  s_1f0f569465d6d8::t_a9a97217c7979d 20
+src/lib/venues/fetch-event-venue-offerings.ts
+  s_1f0f569465d6d8::t_d18dda884880be 102
+  s_1f0f569465d6d8::t_7ff872d6df877f 65
+  s_1f0f569465d6d8::t_cc5b729997f5d5 54
+src/components/sheets/event-proposal-shell.tsx
+  s_1f0f569465d6d8::t_6bde8cff54dfdb 1-80
+src/components/chat/rental-ui-context.tsx
+  s_1f0f569465d6d8::t_da96f8f2e39777 112-119
+  s_1f0f569465d6d8::t_8145e0e0727272 154-155
+  s_1f0f569465d6d8::t_cb96ea224f8288 178-179
+  s_1f0f569465d6d8::t_9208e1ac4433a1 216-218
+  s_1f0f569465d6d8::t_989f1eddedec93 315-327
+  s_1f0f569465d6d8::t_2a646dbfcce61f 360-361,403-404
+  s_1f0f569465d6d8::t_3d85ab5344c216 381-382,424-425
+src/components/sheets/event-venue-offerings-sheet.tsx
+  s_1f0f569465d6d8::t_29292e008ca87d 4,16,21,40,43,48-49,67-73,126-138,152-164,184-187
+src/components/chat/concierge-session-context.tsx
+  s_1f0f569465d6d8::t_4e248db5248341 51
+  s_1f0f569465d6d8::t_84010a8d848e92 74
+  s_1f0f569465d6d8::t_6c1eba6474000b 97
+e2e/san-494-event-venue-cta.spec.ts
+  s_1f0f569465d6d8::t_02cf715d6ac849 97-107
+docs/tasks/testing/evidence/2026-06-10/SAN-495-evt-036-RESULTS.md
+  s_1f0f569465d6d8::t_c2c48f5a190b12 1-5,8,10,22,27-28,30-33,44,49,51,53,179
+  s_1f0f569465d6d8::t_a7f8be41da2ade 6-7,9,11-21,23-26,29,34-43,45-48,50,52,54-178,180-225
+src/components/sheets/__tests__/event-venue-offerings-sheet.test.tsx
+  s_1f0f569465d6d8::t_be7e508095639f 1,5-36,40,47-56,58-72
+  s_1f0f569465d6d8::t_749e205690fecd 57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "1c18518d4b85653b9fa666c761d73e42bd4f0c99",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
