@@ -143,12 +143,8 @@ describe("insertEventProposal", () => {
       { data: { id: "booking-uuid-1" }, error: null },
     );
 
-    const { partnerId: _omit, ...bodyWithoutPartner } = validBody;
-    const result = await insertEventProposal(
-      supabase,
-      "user-abc",
-      bodyWithoutPartner,
-    );
+    // validBody intentionally omits partnerId so the lookup path runs.
+    const result = await insertEventProposal(supabase, "user-abc", validBody);
 
     expect(result.ok).toBe(true);
     if (result.ok) {
