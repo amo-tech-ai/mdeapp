@@ -1,0 +1,61 @@
+src/components/chat/rental-ui-context.tsx
+  s_d1b7a3779fe462::t_d599c29e2b23c8 146-147
+  s_d1b7a3779fe462::t_e2f28ea4292884 86-87
+  s_d1b7a3779fe462::t_8d20c315a35dd4 371-372
+  s_d1b7a3779fe462::t_8d3cbd27aaecfb 390-391
+  s_d1b7a3779fe462::t_8e7b087c502bf0 168-169
+  s_d1b7a3779fe462::t_699e699b87009e 90-104
+  s_d1b7a3779fe462::t_2dd918b122a888 204-206
+  s_d1b7a3779fe462::t_92d9a6c8c3c03a 351-352
+  s_d1b7a3779fe462::t_eeafbff026a00a 300-309
+  s_d1b7a3779fe462::t_c3deced5e782b6 332-333
+src/lib/venues/to-restaurant-venue-detail.test.ts
+  s_d1b7a3779fe462::t_ee1a3e5826bcfe 1-31
+src/components/copilot/restaurant-card.tsx
+  s_d1b7a3779fe462::t_27aafab00f06ea 156-157
+  s_d1b7a3779fe462::t_4c53b2a8745a68 9
+  s_d1b7a3779fe462::t_7a8fdf9cea33cb 222-236
+  s_d1b7a3779fe462::t_99ccaaa5a0792a 182-185
+  s_d1b7a3779fe462::t_5bbfe28d5bfab2 32-33
+src/components/sheets/restaurant-booking-sheet.tsx
+  s_d1b7a3779fe462::t_233578b598c558 16
+  s_d1b7a3779fe462::t_07ab1c1b434ff6 1-15,17-101
+src/components/cafe/cafe-detail-panel.tsx
+  s_d1b7a3779fe462::t_4c702f61a0b5dc 209
+  s_d1b7a3779fe462::t_45cd0d4676476b 31
+  s_d1b7a3779fe462::t_dcc2af83d4dfea 221-223
+  s_d1b7a3779fe462::t_f4fa3a1fc73ff4 268-285,288
+  s_d1b7a3779fe462::t_364cf967d367d9 294-297
+src/components/chat/geo-chat-shell.tsx
+  s_d1b7a3779fe462::t_1ab2be0eeb5f75 62-78
+  s_d1b7a3779fe462::t_2dd9bd5e7a7c2b 28
+  s_d1b7a3779fe462::t_5efc770d56ab78 137
+src/components/copilot/__tests__/restaurant-card.test.tsx
+  s_d1b7a3779fe462::t_4e88bb858575e7 87-99
+src/lib/venues/to-restaurant-venue-detail.ts
+  s_d1b7a3779fe462::t_e67760584596be 1-26
+src/components/copilot/domain-results.tsx
+  s_d1b7a3779fe462::t_f26eef021f30cf 11
+  s_d1b7a3779fe462::t_6fbe6eaafa12d6 135-145,150,180
+  s_d1b7a3779fe462::t_1d81f35c026ba6 89
+src/components/copilot/restaurant-card-with-event-venue.tsx
+  s_d1b7a3779fe462::t_512f08f84f5811 20
+  s_d1b7a3779fe462::t_aae0987dbb2f41 44
+  s_d1b7a3779fe462::t_9b45103ab488fe 13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "caeb8fd160b4cc67ad149ba712fb4e3f40795857",
+  "prompts": {},
+  "sessions": {
+    "s_d1b7a3779fe462": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "26292875-287f-4fbd-bce0-3bd9e158b377",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
