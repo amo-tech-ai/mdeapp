@@ -1,0 +1,24 @@
+docs/tasks/design/INDEX.md
+  s_0baec5608e2475::t_25328011e75e29 11-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "3e40ceb56a62f54f381ad7cddd729b3183b83985",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_0baec5608e2475": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3bd5f9d7-109c-4dce-8633-a9bc1d0da6e5",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
