@@ -118,6 +118,77 @@ describe("resolvePartnerIdForLocation", () => {
     );
     expect(result).toEqual({ ok: true, partnerId: MAMACITA_PARTNER_ID });
   });
+
+  it("returns 500 when the lookup query errors", async () => {
+    const maybeSingle = vi.fn(async () => ({
+      data: null,
+      error: { code: "PGRST000", message: "Database connection failed" },
+    }));
+    const eq = vi.fn(() => ({ maybeSingle }));
+    const select = vi.fn(() => ({ eq }));
+    const from = vi.fn(() => ({ select }));
+    const supabase = { from } as unknown as SupabaseClient<Database>;
+
+    const result = await resolvePartnerIdForLocation(
+      supabase,
+      MAMACITA_LOCATION_ID,
+    );
+    expect(result).toEqual({
+      ok: false,
+      status: 500,
+      message: "Could not resolve event venue",
+    });
+  });
+
+  it("returns 400 when the location is not verified", async () => {
+    const maybeSingle = vi.fn(async () => ({
+      data: {
+        partner_id: MAMACITA_PARTNER_ID,
+        accepts_event_bookings: true,
+        is_verified: false,
+      },
+      error: null,
+    }));
+    const eq = vi.fn(() => ({ maybeSingle }));
+    const select = vi.fn(() => ({ eq }));
+    const from = vi.fn(() => ({ select }));
+    const supabase = { from } as unknown as SupabaseClient<Database>;
+
+    const result = await resolvePartnerIdForLocation(
+      supabase,
+      MAMACITA_LOCATION_ID,
+    );
+    expect(result).toEqual({
+      ok: false,
+      status: 400,
+      message: "This venue is not available for event proposals.",
+    });
+  });
+
+  it("returns 400 when the location does not accept event bookings", async () => {
+    const maybeSingle = vi.fn(async () => ({
+      data: {
+        partner_id: MAMACITA_PARTNER_ID,
+        accepts_event_bookings: false,
+        is_verified: true,
+      },
+      error: null,
+    }));
+    const eq = vi.fn(() => ({ maybeSingle }));
+    const select = vi.fn(() => ({ eq }));
+    const from = vi.fn(() => ({ select }));
+    const supabase = { from } as unknown as SupabaseClient<Database>;
+
+    const result = await resolvePartnerIdForLocation(
+      supabase,
+      MAMACITA_LOCATION_ID,
+    );
+    expect(result).toEqual({
+      ok: false,
+      status: 400,
+      message: "This venue is not available for event proposals.",
+    });
+  });
 });
 
 describe("insertEventProposal", () => {
@@ -161,6 +232,27 @@ describe("insertEventProposal", () => {
         party_size: 25,
       }),
     );
+  });
+
+  it("propagates the resolution error and never inserts when the venue is ineligible", async () => {
+    const supabase = mockSupabaseWithLookup(
+      {
+        partner_id: MAMACITA_PARTNER_ID,
+        accepts_event_bookings: false,
+        is_verified: true,
+      },
+      { data: { id: "should-not-be-called" }, error: null },
+    );
+
+    // partnerId omitted → resolver runs, fails eligibility, short-circuits.
+    const result = await insertEventProposal(supabase, "user-abc", validBody);
+
+    expect(result).toEqual({
+      ok: false,
+      status: 400,
+      message: "This venue is not available for event proposals.",
+    });
+    expect(supabase.insert).not.toHaveBeenCalled();
   });
 
   it("uses provided partnerId without lookup", async () => {
