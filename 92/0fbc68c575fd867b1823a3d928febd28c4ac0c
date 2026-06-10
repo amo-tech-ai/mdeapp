@@ -1,0 +1,24 @@
+package.json
+  s_833826747c954b::t_57a98496219be5 66-72,142
+.claude/skills/lean-dev-flow/SKILL.md
+  s_833826747c954b::t_43f7ebbfb6b7af 114-130
+  s_833826747c954b::t_fb8f2c47033b1f 169-180
+tsconfig.json
+  s_833826747c954b::t_a6a4877cb864eb 27-31,35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "920fbc68c575fd867b1823a3d928febd28c4ac0c",
+  "prompts": {},
+  "sessions": {
+    "s_833826747c954b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "08e1e140-66b5-4c6a-8866-b25943278e96",
+        "model": "claude-fable-5"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
