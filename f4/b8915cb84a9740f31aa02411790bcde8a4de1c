@@ -1,0 +1,26 @@
+index.md
+  s_0baec5608e2475::t_11318ba1f1f9c6 7
+  s_0baec5608e2475::t_940a776c240d44 151-152
+  s_0baec5608e2475::t_35a7965ada60f9 38-40,42
+  s_0baec5608e2475::t_1f1f924d21ae4e 91-116,118-125
+  s_0baec5608e2475::t_9d3adc53543158 54-56,58
+docs/index-docs.md
+  s_0baec5608e2475::t_4d06ca09c385a5 64,66,68
+  s_0baec5608e2475::t_e5d6ca63a13658 3-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "f4b8915cb84a9740f31aa02411790bcde8a4de1c",
+  "prompts": {},
+  "sessions": {
+    "s_0baec5608e2475": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3bd5f9d7-109c-4dce-8633-a9bc1d0da6e5",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
