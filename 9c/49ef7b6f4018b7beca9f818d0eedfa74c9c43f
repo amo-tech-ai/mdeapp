@@ -1,0 +1,23 @@
+scripts/san-869-duplicate-proposal-proof.mjs
+  s_1f0f569465d6d8::t_9fb24008a69458 1-112
+docs/tasks/testing/evidence/2026-06-11/SAN-869-bookings-idempotency-RESULTS.md
+  s_1f0f569465d6d8::t_3bacd5a743489a 1-81
+src/lib/events/event-venue-booking-core.test.ts
+  s_1f0f569465d6d8::t_d868d0c680463e 207-221
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "9c49ef7b6f4018b7beca9f818d0eedfa74c9c43f",
+  "prompts": {},
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
