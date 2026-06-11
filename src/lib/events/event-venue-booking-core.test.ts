@@ -204,6 +204,21 @@ describe("insertEventProposal", () => {
     });
   });
 
+  it("returns 400 on malformed idempotencyKey (too short)", async () => {
+    const supabase = mockSupabaseInsert({ data: null, error: null });
+    const result = await insertEventProposal(supabase, "user-1", {
+      ...validBody,
+      partnerId: MAMACITA_PARTNER_ID,
+      idempotencyKey: "short",
+    });
+    expect(result).toEqual({
+      ok: false,
+      status: 400,
+      message: "Validation failed",
+    });
+    expect(supabase.insert).not.toHaveBeenCalled();
+  });
+
   it("returns 400 on malformed partnerLocationId (not 500)", async () => {
     const supabase = mockSupabaseInsert({ data: null, error: null });
     const result = await insertEventProposal(supabase, "user-1", {

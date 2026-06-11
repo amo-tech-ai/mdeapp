@@ -1,0 +1,31 @@
+{
+  "task": "SAN-869 · VEB-MVP-004 — Bookings Idempotency Migration",
+  "at": "2026-06-11T22:26:31.361Z",
+  "firstSubmit": {
+    "status": 200,
+    "body": {
+      "success": true,
+      "bookingId": "21126f62-a6b6-47f9-b6a1-234fc1b85446",
+      "message": "Proposal sent — Patricia will review with the venue. This is not a confirmed booking yet."
+    }
+  },
+  "secondSubmit": {
+    "status": 409,
+    "body": {
+      "success": false,
+      "error": {
+        "message": "You already submitted this event proposal."
+      }
+    }
+  },
+  "idempotencyKey": "ep-6f142d911f73097d1e69f52358c4c54f",
+  "rowCount": 1,
+  "bookingRow": {
+    "id": "21126f62-a6b6-47f9-b6a1-234fc1b85446",
+    "idempotency_key": "ep-6f142d911f73097d1e69f52358c4c54f",
+    "partner_status": "pending",
+    "booking_type": "event",
+    "user_id": "a5f6adc5-5e86-4730-8ade-3617893a4f68"
+  },
+  "pass": true
+}
