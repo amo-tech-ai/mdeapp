@@ -92,26 +92,36 @@ export async function POST(req: Request) {
   if (decision === "approve" || decision === "decline") {
     const runId = await getEventBookingWorkflowRunId(gate.supabase, bookingId);
     if (runId) {
-      const resumed = await resumeEventVenueBookingWorkflow(runId, {
-        decision: decision === "approve" ? "approved" : "declined",
-        actorId: gate.userId,
-        declineReason: note,
-      });
-      if (resumed?.status === "success") {
-        const { data, error } = await gate.supabase
-          .from("bookings")
-          .select("id, partner_status")
-          .eq("id", bookingId)
-          .eq("booking_type", "event")
-          .maybeSingle();
-        if (!error && data) {
-          return NextResponse.json({
-            success: true,
-            bookingId: data.id,
-            partnerStatus: data.partner_status,
-            workflowRunId: runId,
-          });
+      try {
+        const resumed = await resumeEventVenueBookingWorkflow(runId, {
+          decision: decision === "approve" ? "approved" : "declined",
+          actorId: gate.userId,
+          declineReason: note,
+        });
+        if (resumed.status === "success") {
+          const { data, error } = await gate.supabase
+            .from("bookings")
+            .select("id, partner_status")
+            .eq("id", bookingId)
+            .eq("booking_type", "event")
+            .maybeSingle();
+          if (!error && data) {
+            return NextResponse.json({
+              success: true,
+              bookingId: data.id,
+              partnerStatus: data.partner_status,
+              workflowRunId: runId,
+            });
+          }
         }
+      } catch {
+        return NextResponse.json(
+          {
+            success: false,
+            error: { message: "Workflow resume failed for this proposal." },
+          },
+          { status: 502 },
+        );
       }
     }
   }

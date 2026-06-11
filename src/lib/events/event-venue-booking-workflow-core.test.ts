@@ -148,14 +148,17 @@ describe("applyEventBookingAdminDecision", () => {
     });
 
     expect(result.ok).toBe(true);
-    const updatePayload = update.mock.calls[0]?.[0] as Record<string, unknown>;
-    expect(updatePayload.partner_status).toBe("declined");
-    expect(updatePayload.approved_at).toBeUndefined();
-    expect(updatePayload.metadata).toEqual(
+    expect(update).toHaveBeenCalledWith(
       expect.objectContaining({
-        decline_reason: "Venue fully booked",
-        declined_by: ACTOR_ID,
+        partner_status: "declined",
+        metadata: expect.objectContaining({
+          decline_reason: "Venue fully booked",
+          declined_by: ACTOR_ID,
+        }),
       }),
+    );
+    expect(update).not.toHaveBeenCalledWith(
+      expect.objectContaining({ approved_at: expect.anything() }),
     );
   });
 

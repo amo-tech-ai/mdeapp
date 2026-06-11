@@ -41,7 +41,7 @@ export async function startAdminReviewWorkflow(
 export async function resumeEventVenueBookingWorkflow(
   runId: string,
   resumeData: AdminReviewResumeData,
-): Promise<{ status: string } | null> {
+): Promise<{ status: string }> {
   try {
     const workflow = mastra.getWorkflow("eventVenueBookingWorkflow");
     const run = await workflow.createRun({ runId });
