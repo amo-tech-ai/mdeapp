@@ -1,0 +1,24 @@
+.claude/hooks/stop-plain-language-gate.mjs
+  s_a2b7148eca5a27::t_31d42ec89e9b29 70-74,76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "8f63302897cc8ae52108fa9410d21e2ff04df950",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_a2b7148eca5a27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "008c6fc3-bdd1-49a9-bab8-41bc2cbd97ff",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
