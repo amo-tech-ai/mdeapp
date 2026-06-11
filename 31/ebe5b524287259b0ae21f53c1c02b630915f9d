@@ -1,0 +1,25 @@
+src/lib/events/admin-event-bookings-core.ts
+  s_1f0f569465d6d8::t_41c77b6bb053fb 171-188
+src/app/api/admin/event-bookings/route.test.ts
+  s_1f0f569465d6d8::t_21bf7f098a1d4d 28-29
+src/app/api/admin/event-bookings/route.ts
+  s_1f0f569465d6d8::t_57dc29736c0e74 24,92-100,108-109,112-118
+  s_1f0f569465d6d8::t_ba49abeb3f1c5c 6,9
+  s_1f0f569465d6d8::t_ed947c8646546a 101-107,110-111
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "31ebe5b524287259b0ae21f53c1c02b630915f9d",
+  "prompts": {},
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
