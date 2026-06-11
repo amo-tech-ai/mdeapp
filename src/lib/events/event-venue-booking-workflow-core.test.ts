@@ -92,7 +92,8 @@ describe("applyEventBookingAdminDecision", () => {
       error: null,
     }));
     const selectAfterUpdate = vi.fn(() => ({ maybeSingle: single }));
-    const eqBookingType = vi.fn(() => ({ select: selectAfterUpdate }));
+    const eqPending = vi.fn(() => ({ select: selectAfterUpdate }));
+    const eqBookingType = vi.fn(() => ({ eq: eqPending }));
     const eqId = vi.fn(() => ({ eq: eqBookingType }));
     const update = vi.fn(() => ({ eq: eqId }));
     const from = vi.fn(() => ({ update }));
@@ -127,7 +128,8 @@ describe("applyEventBookingAdminDecision", () => {
       error: null,
     }));
     const writeSelect = vi.fn(() => ({ maybeSingle: writeSingle }));
-    const writeEqType = vi.fn(() => ({ select: writeSelect }));
+    const writeEqPending = vi.fn(() => ({ select: writeSelect }));
+    const writeEqType = vi.fn(() => ({ eq: writeEqPending }));
     const writeEqId = vi.fn(() => ({ eq: writeEqType }));
     const update = vi.fn(() => ({ eq: writeEqId }));
 
@@ -146,12 +148,37 @@ describe("applyEventBookingAdminDecision", () => {
     });
 
     expect(result.ok).toBe(true);
-    expect(update).toHaveBeenCalledWith(
+    const updatePayload = update.mock.calls[0]?.[0] as Record<string, unknown>;
+    expect(updatePayload.partner_status).toBe("declined");
+    expect(updatePayload.approved_at).toBeUndefined();
+    expect(updatePayload.metadata).toEqual(
       expect.objectContaining({
-        partner_status: "declined",
-        metadata: expect.objectContaining({ decline_reason: "Venue fully booked" }),
+        decline_reason: "Venue fully booked",
+        declined_by: ACTOR_ID,
       }),
     );
+  });
+
+  it("rejects approve when proposal is no longer pending", async () => {
+    const single = vi.fn(async () => ({ data: null, error: null }));
+    const selectAfterUpdate = vi.fn(() => ({ maybeSingle: single }));
+    const eqPending = vi.fn(() => ({ select: selectAfterUpdate }));
+    const eqBookingType = vi.fn(() => ({ eq: eqPending }));
+    const eqId = vi.fn(() => ({ eq: eqBookingType }));
+    const update = vi.fn(() => ({ eq: eqId }));
+    const from = vi.fn(() => ({ update }));
+    const supabase = { from } as unknown as SupabaseClient<Database>;
+
+    const result = await applyEventBookingAdminDecision(supabase, BOOKING_ID, {
+      decision: "approved",
+      actorId: ACTOR_ID,
+    });
+
+    expect(result).toEqual({
+      ok: false,
+      status: 409,
+      message: "Proposal is no longer pending admin review",
+    });
   });
 });
 

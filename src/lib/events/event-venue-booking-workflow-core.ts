@@ -168,6 +168,7 @@ export async function applyEventBookingAdminDecision(
       })
       .eq("id", bookingId)
       .eq("booking_type", "event")
+      .eq("partner_status", "pending")
       .select("id, partner_status")
       .maybeSingle();
 
@@ -175,7 +176,11 @@ export async function applyEventBookingAdminDecision(
       return { ok: false, status: 500, message: "Could not approve proposal" };
     }
     if (!data) {
-      return { ok: false, status: 404, message: "Event proposal not found" };
+      return {
+        ok: false,
+        status: 409,
+        message: "Proposal is no longer pending admin review",
+      };
     }
     return {
       ok: true,
@@ -199,6 +204,8 @@ export async function applyEventBookingAdminDecision(
 
   const metadata = {
     ...asRecord(current.metadata as Json | null),
+    declined_at: now,
+    declined_by: resume.actorId,
     ...(resume.declineReason ? { decline_reason: resume.declineReason } : {}),
   } as Json;
 
@@ -206,12 +213,11 @@ export async function applyEventBookingAdminDecision(
     .from("bookings")
     .update({
       partner_status: "declined",
-      approved_at: now,
-      approved_by: resume.actorId,
       metadata,
     })
     .eq("id", bookingId)
     .eq("booking_type", "event")
+    .eq("partner_status", "pending")
     .select("id, partner_status")
     .maybeSingle();
 
@@ -219,7 +225,11 @@ export async function applyEventBookingAdminDecision(
     return { ok: false, status: 500, message: "Could not decline proposal" };
   }
   if (!data) {
-    return { ok: false, status: 404, message: "Event proposal not found" };
+    return {
+      ok: false,
+      status: 409,
+      message: "Proposal is no longer pending admin review",
+    };
   }
 
   return {

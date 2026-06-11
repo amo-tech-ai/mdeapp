@@ -29,7 +29,7 @@ export async function startAdminReviewWorkflow(
         result.status === "suspended" ? "suspend-for-admin-review" : undefined,
     };
   } catch (error) {
-    console.warn(
+    console.error(
       "[startAdminReviewWorkflow] skipped:",
       error instanceof Error ? error.message : String(error),
     );
@@ -51,10 +51,10 @@ export async function resumeEventVenueBookingWorkflow(
     });
     return { status: result.status };
   } catch (error) {
-    console.warn(
+    console.error(
       "[resumeEventVenueBookingWorkflow] failed:",
       error instanceof Error ? error.message : String(error),
     );
-    return null;
+    throw error;
   }
 }
