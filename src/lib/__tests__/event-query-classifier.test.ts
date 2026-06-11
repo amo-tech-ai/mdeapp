@@ -84,4 +84,18 @@ describe("event-query-classifier", () => {
     // "dinner events" still reaches event path (contains "events")
     expect(looksLikeNonEventSearch("dinner events this weekend")).toBe(false);
   });
+
+  it("day-trip planning is non-event (SAN-867)", () => {
+    expect(looksLikeNonEventSearch("plan my weekend")).toBe(true);
+    expect(looksLikeNonEventSearch("what can I do tonight")).toBe(true);
+    expect(
+      hasEventFastPathSignals("what can I do tonight", scoreEventQuery("what can I do tonight")),
+    ).toBe(false);
+  });
+
+  it("private event venue hire bypasses event fast-path (SAN-494 · EVT-035)", () => {
+    const q = "I need a venue for a birthday party for 30 people";
+    expect(looksLikeNonEventSearch(q)).toBe(true);
+    expect(hasEventFastPathSignals(q, scoreEventQuery(q))).toBe(false);
+  });
 });
