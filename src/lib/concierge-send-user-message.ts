@@ -7,7 +7,8 @@ import {
 
 export type ConciergeSendHandlers = {
   handleRentalMessage: (text: string) => Promise<boolean>;
-  handleEventVenueBookingMessage: (text: string) => Promise<boolean>;
+  /** Wired when SAN-494 venue fast-path hook lands on main; optional until then. */
+  handleEventVenueBookingMessage?: (text: string) => Promise<boolean>;
   handleEventMessage: (text: string) => Promise<boolean>;
   handleGroundedMessage: (text: string) => Promise<boolean>;
   handleRestaurantMessage: (text: string) => Promise<boolean>;
@@ -23,7 +24,7 @@ async function invokeConciergeHandler(
     case "rental":
       return handlers.handleRentalMessage(text);
     case "event_venue_booking":
-      return handlers.handleEventVenueBookingMessage(text);
+      return (await handlers.handleEventVenueBookingMessage?.(text)) ?? false;
     case "event":
       return handlers.handleEventMessage(text);
     case "grounded":
