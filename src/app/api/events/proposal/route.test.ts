@@ -34,8 +34,6 @@ describe("POST /api/events/proposal", () => {
   });
 
   it("returns 400 on invalid JSON", async () => {
-    getUser.mockResolvedValue({ data: { user: { id: "user-1" } } });
-
     const res = await POST(
       new Request("http://localhost/api/events/proposal", {
         method: "POST",
@@ -45,6 +43,8 @@ describe("POST /api/events/proposal", () => {
     );
 
     expect(res.status).toBe(400);
+    // JSON is parsed before auth — the gate must not run on a malformed body.
+    expect(getUser).not.toHaveBeenCalled();
     expect(insertEventProposal).not.toHaveBeenCalled();
   });
 
