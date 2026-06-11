@@ -22,15 +22,11 @@ export async function startAdminReviewWorkflow(
     const run = await workflow.createRun();
     const result = await run.start({ inputData: input });
 
-    const suspended =
-      result.status === "suspended" && "suspended" in result
-        ? (result.suspended as string[] | undefined)?.[0]
-        : undefined;
-
     return {
       runId: run.runId,
       status: result.status,
-      suspendedStepId: suspended,
+      suspendedStepId:
+        result.status === "suspended" ? "suspend-for-admin-review" : undefined,
     };
   } catch (error) {
     console.warn(
