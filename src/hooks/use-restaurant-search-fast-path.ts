@@ -84,7 +84,7 @@ export function useRestaurantSearchFastPath() {
       }
       setState({
         ...(state ?? {}),
-        lastIntent: "restaurant_search",
+        lastIntent: "restaurant_discovery",
         lastRestaurantQuery: buildRestaurantMemoryPatch(params, chip),
       });
     },
@@ -177,7 +177,7 @@ export function useRestaurantSearchFastPath() {
           showClarify(trimmed, RESTAURANT_CLARIFY_MESSAGE, "restaurant");
           setState({
             ...memory,
-            lastIntent: "restaurant_search",
+            lastIntent: "restaurant_discovery",
             lastRestaurantQuery: { genericAskPending: true },
           });
           return true;

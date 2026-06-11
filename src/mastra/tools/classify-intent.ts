@@ -1,7 +1,8 @@
 import { createTool } from '@mastra/core/tools';
 import { z } from 'zod';
+import { routerIntentSchema } from '../../lib/router-intent';
 
-export const intentSchema = z.enum(['rental_search', 'event_discovery', 'chitchat', 'unknown']);
+export const intentSchema = routerIntentSchema;
 
 export const classifyIntentTool = createTool({
   id: 'classify-intent',

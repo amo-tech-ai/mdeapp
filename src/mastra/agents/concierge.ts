@@ -17,7 +17,16 @@ import { RESTAURANT_CLARIFY_MESSAGE } from "@/lib/restaurant-clarify-copy";
 
 export const conciergeWorkingMemorySchema = z.object({
   lastIntent: z
-    .enum(['rental_search', 'event_discovery', 'restaurant_search', 'cafe_search', 'chitchat', 'unknown'])
+    .enum([
+      'rental_search',
+      'event_discovery',
+      'venue_booking',
+      'restaurant_discovery',
+      'day_trip_planning',
+      'general_concierge',
+      'chitchat',
+      'unknown',
+    ])
     .optional()
     .describe('Most recent classified user intent in this thread'),
   lastRentalQuery: z
