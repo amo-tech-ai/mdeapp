@@ -1,0 +1,29 @@
+src/lib/event-venue-booking-intent.ts
+  s_1f0f569465d6d8::t_5cc7509d52c033 4
+src/lib/router-intent.ts
+  s_1f0f569465d6d8::t_214e9bffc16118 2
+src/lib/__tests__/router-intent.test.ts
+  s_1f0f569465d6d8::t_56d3d609300c02 65
+  s_1f0f569465d6d8::t_7d7ba00317575a 27
+src/lib/__tests__/event-query-classifier.test.ts
+  s_1f0f569465d6d8::t_ddc1d3b14ffcc0 88
+  s_1f0f569465d6d8::t_e11171a464a24d 96
+src/lib/__tests__/concierge-send-user-message.test.ts
+  s_1f0f569465d6d8::t_41f15d88463191 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "b401950485c40372707af3b01decf8837909198a",
+  "prompts": {},
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
