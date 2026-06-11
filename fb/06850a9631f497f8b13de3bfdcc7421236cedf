@@ -1,0 +1,22 @@
+src/lib/events/hostops-read-core.ts
+  s_a2b7148eca5a27::t_14e99d6bc1fef9 124-126
+  s_a2b7148eca5a27::t_ac790f1d1d2058 93
+src/lib/events/__tests__/hostops-read-core.test.ts
+  s_a2b7148eca5a27::t_da9843e2eea3f7 123-133,136
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "fb06850a9631f497f8b13de3bfdcc7421236cedf",
+  "prompts": {},
+  "sessions": {
+    "s_a2b7148eca5a27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "008c6fc3-bdd1-49a9-bab8-41bc2cbd97ff",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
