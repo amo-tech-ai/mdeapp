@@ -1,0 +1,41 @@
+src/mastra/index.ts
+  s_1f0f569465d6d8::t_77357123e1d6d4 16
+  s_1f0f569465d6d8::t_9b5331cfef9f07 36
+src/mastra/workflows/event-venue-booking-workflow.test.ts
+  s_1f0f569465d6d8::t_89099eef96d054 1-2,4-35,37-132
+  s_1f0f569465d6d8::t_4b26fd34165880 3
+  s_1f0f569465d6d8::t_becb6b56eba524 36
+src/lib/events/start-admin-review-workflow.ts
+  s_1f0f569465d6d8::t_aeb63727ea3b8c 1-64
+src/lib/events/event-venue-booking-workflow-core.test.ts
+  s_1f0f569465d6d8::t_d0c1a7ec3d2c69 1-120,124-163,167-193
+  s_1f0f569465d6d8::t_0f69015c6889d0 121-123
+  s_1f0f569465d6d8::t_8a62dd3f85c91e 164-166
+src/lib/events/event-venue-booking-workflow-core.ts
+  s_1f0f569465d6d8::t_ef7469aec9aa12 1-229
+src/mastra/workflows/index.ts
+  s_1f0f569465d6d8::t_d391732c8134a9 2-3
+src/app/api/events/proposal/route.test.ts
+  s_1f0f569465d6d8::t_081add08e47fbf 19-22
+src/mastra/workflows/event-venue-booking-workflow.ts
+  s_1f0f569465d6d8::t_90b26284f8195a 1-164
+src/app/api/events/proposal/route.ts
+  s_1f0f569465d6d8::t_34eaf985bb3a94 63-67
+  s_1f0f569465d6d8::t_31a0d48b523eae 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "5cc5c9df859e4c31bc51d6609d09b41cce92cecc",
+  "prompts": {},
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
