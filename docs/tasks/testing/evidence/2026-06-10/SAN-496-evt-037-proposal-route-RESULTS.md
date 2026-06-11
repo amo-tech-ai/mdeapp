@@ -29,7 +29,7 @@ its result to the HTTP response.
 | Gate | Result |
 | --- | --- |
 | `npm run floor` (lint → typecheck → build → test → audit) | ✅ **PASS** (exit 0) |
-| Vitest — route | ✅ 4/4 (invalid JSON → 400, signed-out → 401, success → bookingId, core error status passthrough e.g. 409) |
+| Vitest — route | ✅ 5/5 (invalid JSON → 400 + auth-not-called guard, signed-out → 401, success → bookingId, core error passthrough e.g. 409, unexpected throw → structured 500) |
 | Full suite | ✅ 801 passed / 11 skipped |
 | `next build` | ✅ compiled (route registered) |
 
