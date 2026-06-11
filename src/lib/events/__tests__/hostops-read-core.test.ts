@@ -120,9 +120,20 @@ describe("getSalesSummary — ownership + revenue", () => {
     }
   });
 
+  it("uses the event's own currency for a zero-revenue event (no COP fallback) [Greptile P2]", async () => {
+    const { client } = makeClient({
+      eventsSingle: { data: { id: EID, name: "USD Launch", currency: "USD" }, error: null },
+      orders: { data: [], error: null },
+      tickets: { data: [], error: null },
+    });
+    const r = await getSalesSummary(client, UID, EID);
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.data.currency).toBe("USD"); // would have been "COP" before the fix
+  });
+
   it("handles an owned event with no sales (empty state) → zeros", async () => {
     const { client } = makeClient({
-      eventsSingle: { data: { id: EID, name: "Quiet Event" }, error: null },
+      eventsSingle: { data: { id: EID, name: "Quiet Event", currency: "COP" }, error: null },
       orders: { data: [], error: null },
       tickets: { data: [], error: null },
     });

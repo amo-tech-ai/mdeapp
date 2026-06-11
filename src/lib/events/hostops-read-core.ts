@@ -90,7 +90,7 @@ export async function getSalesSummary(
   // 1. Ownership: 404 if the event is not the host's (RLS would also hide it).
   const { data: ev, error: evErr } = await supabase
     .from("events")
-    .select("id, name")
+    .select("id, name, currency")
     .eq("id", eventId)
     .eq("organizer_id", userId)
     .maybeSingle();
@@ -121,7 +121,9 @@ export async function getSalesSummary(
     data: {
       eventId,
       eventName: ev.name ?? "",
-      currency: paid[0]?.currency ?? tickets?.[0]?.currency ?? "COP",
+      // Event's own declared currency is authoritative — a zero-revenue USD event
+      // must not fall back to "COP" (COP/USD mix is a ~4000x value misread). [Greptile P2]
+      currency: ev.currency ?? paid[0]?.currency ?? tickets?.[0]?.currency ?? "COP",
       paidOrders: paid.length,
       cancelledOrders: cancelled.length,
       ticketsSold: paid.reduce((n, o) => n + (o.quantity ?? 0), 0),
