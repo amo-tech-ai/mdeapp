@@ -1,0 +1,26 @@
+src/lib/events/event-venue-booking-core.ts
+  s_1f0f569465d6d8::t_18441300c926a4 147
+  s_1f0f569465d6d8::t_e188c16ed582ff 92
+src/lib/supabase/database.types.ts
+  s_1f0f569465d6d8::t_03e475cbf565c6 444
+  s_1f0f569465d6d8::t_9f8021b2d9eea9 514
+  s_1f0f569465d6d8::t_aea5c683ffb2a2 479
+src/lib/events/event-venue-booking-core.test.ts
+  s_1f0f569465d6d8::t_d8057a267d8ea2 233
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "0ed93936ec79f59ff660b12a410c141960ac8cfc",
+  "prompts": {},
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
