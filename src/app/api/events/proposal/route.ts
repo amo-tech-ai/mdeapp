@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { insertEventProposal } from "@/lib/events/event-venue-booking-core";
+import { startAdminReviewWorkflow } from "@/lib/events/start-admin-review-workflow";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -58,6 +59,11 @@ export async function POST(req: Request) {
       { status: result.status },
     );
   }
+
+  void startAdminReviewWorkflow({
+    bookingId: result.data.bookingId,
+    userId: user.id,
+  });
 
   return NextResponse.json({
     success: true,

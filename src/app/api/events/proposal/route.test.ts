@@ -16,6 +16,10 @@ vi.mock("@/lib/events/event-venue-booking-core", () => ({
   insertEventProposal,
 }));
 
+vi.mock("@/lib/events/start-admin-review-workflow", () => ({
+  startAdminReviewWorkflow: vi.fn(async () => null),
+}));
+
 import { POST } from "./route";
 
 const validBody = {
