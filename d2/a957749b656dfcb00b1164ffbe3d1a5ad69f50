@@ -1,0 +1,19 @@
+docs/tasks/testing/evidence/2026-06-11/SAN-496-evt-037-MERGE-PROOF-RESULTS.md
+  s_1f0f569465d6d8::t_928420930f2de2 1-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "d2a957749b656dfcb00b1164ffbe3d1a5ad69f50",
+  "prompts": {},
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
