@@ -1,0 +1,24 @@
+src/app/api/admin/event-bookings/route.ts
+  s_1f0f569465d6d8::t_1d5987c1f59b22 95-115,117-124
+src/lib/events/start-admin-review-workflow.ts
+  s_1f0f569465d6d8::t_aeb49c7fca8e69 44
+src/lib/events/event-venue-booking-workflow-core.test.ts
+  s_1f0f569465d6d8::t_19b1b67a1aada0 151,153-157
+  s_1f0f569465d6d8::t_082a9ea49853fa 160-162
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "5aa90e61aa5e81e35fab4d6df179088fd93e46c8",
+  "prompts": {},
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
