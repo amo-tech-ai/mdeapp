@@ -17,7 +17,7 @@
 | `insertEventProposal` writes column + metadata | PASS | `src/lib/events/event-venue-booking-core.ts` |
 | `database.types.ts` includes column | PASS | `bookings.Row.idempotency_key` |
 | Vitest `event-venue-booking-core` | PASS | 16/16 (incl. malformed `idempotencyKey`) |
-| Vitest `events/proposal` route | PASS | 7/7 |
+| Vitest `events/proposal` route | PASS | 6/6 |
 | First submit | PASS | **200** |
 | Second identical submit | PASS | **409** |
 | Row count for idempotency key | PASS | **1** |

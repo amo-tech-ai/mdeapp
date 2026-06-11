@@ -1,9 +1,10 @@
 /**
  * SAN-869 · VEB-MVP-004 — duplicate proposal dev validation.
+ * DEV-ONLY harness: uses SUPABASE_SERVICE_ROLE_KEY for magic-link session + row verify.
+ * Do not run against production casually.
  * Usage: infisical run --silent --env=dev --path=/ -- node scripts/san-869-duplicate-proposal-proof.mjs
  */
 import { createClient } from "@supabase/supabase-js";
-import { createHash } from "crypto";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -70,20 +71,24 @@ async function main() {
 
   const first = await post();
   const second = await post();
-  const raw = `${body.partnerLocationId}|${body.startDate}|${body.partySize}`;
-  const idempotencyKey = `ep-${createHash("sha256").update(raw).digest("hex").slice(0, 32)}`;
 
   const db = createClient(url, serviceKey);
+  const bookingId = first.body?.bookingId;
+  if (!bookingId) throw new Error("first submit missing bookingId");
+
+  const { data: row } = await db
+    .from("bookings")
+    .select("id, idempotency_key, partner_status, booking_type, user_id")
+    .eq("id", bookingId)
+    .maybeSingle();
+  const idempotencyKey = row?.idempotency_key;
+  if (!idempotencyKey) throw new Error("booking row missing idempotency_key");
+
   const { count } = await db
     .from("bookings")
     .select("id", { count: "exact", head: true })
     .eq("idempotency_key", idempotencyKey)
     .eq("booking_type", "event");
-  const { data: row } = await db
-    .from("bookings")
-    .select("id, idempotency_key, partner_status, booking_type, user_id")
-    .eq("idempotency_key", idempotencyKey)
-    .maybeSingle();
 
   const result = {
     task: "SAN-869 · VEB-MVP-004 — Bookings Idempotency Migration",
