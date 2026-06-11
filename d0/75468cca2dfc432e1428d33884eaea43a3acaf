@@ -1,0 +1,22 @@
+scripts/san-869-duplicate-proposal-proof.mjs
+  s_1f0f569465d6d8::t_81429476a4cb9c 3-4
+  s_1f0f569465d6d8::t_f0161894e75c1d 76-86
+docs/tasks/testing/evidence/2026-06-11/SAN-869-bookings-idempotency-RESULTS.md
+  s_1f0f569465d6d8::t_6b74983371b10f 20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "d075468cca2dfc432e1428d33884eaea43a3acaf",
+  "prompts": {},
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
