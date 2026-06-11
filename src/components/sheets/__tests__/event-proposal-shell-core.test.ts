@@ -92,4 +92,36 @@ describe("validateEventProposal", () => {
     const result = validateEventProposal(emptyEventProposalForm, target);
     expect(result.ok).toBe(false);
   });
+
+  it("rejects missing date", () => {
+    const result = validateEventProposal({ ...validForm, startDate: "" }, target);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.message).toContain("Date");
+  });
+
+  it("rejects missing email", () => {
+    const result = validateEventProposal({ ...validForm, contactEmail: "" }, target);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.message).toMatch(/email/i);
+  });
+
+  it("rejects missing guest count", () => {
+    const result = validateEventProposal({ ...validForm, partySize: "" }, target);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.message).toContain("Guest count");
+  });
+
+  it("rejects guest count above business max (500)", () => {
+    const result = validateEventProposal({ ...validForm, partySize: "5000" }, target);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.message).toContain("Guest count");
+  });
+
+  it("rejects malformed partnerLocationId", () => {
+    const result = validateEventProposal(validForm, {
+      ...target,
+      partnerLocationId: "not-a-uuid",
+    });
+    expect(result.ok).toBe(false);
+  });
 });

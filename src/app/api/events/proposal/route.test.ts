@@ -91,6 +91,24 @@ describe("POST /api/events/proposal", () => {
     );
   });
 
+  it("returns 400 when core rejects validation (malformed body)", async () => {
+    getUser.mockResolvedValue({ data: { user: { id: "user-1" } } });
+    insertEventProposal.mockResolvedValue({
+      ok: false,
+      status: 400,
+      message: "Validation failed",
+    });
+
+    const res = await POST(
+      postReq({ ...validBody, partnerLocationId: "bad-id" }),
+    );
+
+    expect(res.status).toBe(400);
+    const json = await res.json();
+    expect(json.success).toBe(false);
+    expect(json.error.message).toBe("Validation failed");
+  });
+
   it("passes through the core's error status (e.g. 409 idempotency conflict)", async () => {
     getUser.mockResolvedValue({ data: { user: { id: "user-1" } } });
     insertEventProposal.mockResolvedValue({
