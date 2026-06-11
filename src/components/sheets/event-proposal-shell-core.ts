@@ -8,7 +8,10 @@ import type { EventProposalShellTarget } from "@/components/chat/rental-ui-conte
 export type EventProposalFormState = {
   eventType: string;
   startDate: string;
+  startTime: string;
   partySize: string;
+  budget: string;
+  requirements: string;
   contactName: string;
   contactEmail: string;
   contactPhone: string;
@@ -18,7 +21,10 @@ export type EventProposalFormState = {
 export const emptyEventProposalForm: EventProposalFormState = {
   eventType: "",
   startDate: "",
+  startTime: "",
   partySize: "",
+  budget: "",
+  requirements: "",
   contactName: "",
   contactEmail: "",
   contactPhone: "",
@@ -30,12 +36,25 @@ export function buildEventProposalRequest(
   form: EventProposalFormState,
   target: EventProposalShellTarget,
 ): EventProposalInput {
+  const budget = Number(form.budget);
+  const requirements = form.requirements
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
   return {
     partnerLocationId: target.partnerLocationId,
     partnerId: target.partnerId,
     eventType: form.eventType.trim(),
     startDate: form.startDate,
+    startTime: form.startTime || undefined,
     partySize: Number(form.partySize),
+    // budget is entered in whole COP; the schema stores cents.
+    budgetCents:
+      form.budget.trim() && Number.isFinite(budget)
+        ? Math.round(budget * 100)
+        : undefined,
+    requirements: requirements.length > 0 ? requirements : undefined,
     contactName: form.contactName.trim(),
     contactEmail: form.contactEmail.trim(),
     contactPhone: form.contactPhone.trim() || undefined,

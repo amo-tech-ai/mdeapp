@@ -17,7 +17,10 @@ const target: EventProposalShellTarget = {
 const validForm: EventProposalFormState = {
   eventType: "  Birthday  ",
   startDate: "2026-06-14",
+  startTime: "19:00",
   partySize: "25",
+  budget: "5000000",
+  requirements: "AV, catering , ",
   contactName: "  Tourist  ",
   contactEmail: " tourist@example.com ",
   contactPhone: "  ",
@@ -36,10 +39,24 @@ describe("buildEventProposalRequest", () => {
       contactName: "Tourist",
       contactEmail: "tourist@example.com",
       venueTitle: target.venueTitle,
+      startTime: "19:00",
+      budgetCents: 500000000, // 5,000,000 COP → cents
     });
+    // requirements split, trimmed, blanks dropped
+    expect(body.requirements).toEqual(["AV", "catering"]);
     // blank optionals become undefined, not empty strings
     expect(body.contactPhone).toBeUndefined();
     expect(body.notes).toBeUndefined();
+  });
+
+  it("omits optional time/budget/requirements when blank", () => {
+    const body = buildEventProposalRequest(
+      { ...validForm, startTime: "", budget: "", requirements: " , " },
+      target,
+    );
+    expect(body.startTime).toBeUndefined();
+    expect(body.budgetCents).toBeUndefined();
+    expect(body.requirements).toBeUndefined();
   });
 });
 

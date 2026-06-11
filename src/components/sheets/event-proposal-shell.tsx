@@ -82,6 +82,28 @@ export function EventProposalForm({
             />
           </div>
         </div>
+        <div className="flex gap-3">
+          <div className="flex flex-1 flex-col gap-1.5">
+            <Label htmlFor="ep-start-time">Start time (optional)</Label>
+            <Input
+              id="ep-start-time"
+              type="time"
+              value={form.startTime}
+              onChange={onField("startTime")}
+            />
+          </div>
+          <div className="flex flex-1 flex-col gap-1.5">
+            <Label htmlFor="ep-budget">Budget COP (optional)</Label>
+            <Input
+              id="ep-budget"
+              type="number"
+              min={0}
+              value={form.budget}
+              onChange={onField("budget")}
+              placeholder="e.g. 5000000"
+            />
+          </div>
+        </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="ep-name">Your name</Label>
           <Input
@@ -105,6 +127,17 @@ export function EventProposalForm({
             id="ep-phone"
             value={form.contactPhone}
             onChange={onField("contactPhone")}
+          />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="ep-requirements">
+            Requirements (optional, comma-separated)
+          </Label>
+          <Input
+            id="ep-requirements"
+            value={form.requirements}
+            onChange={onField("requirements")}
+            placeholder="AV, catering, parking…"
           />
         </div>
         <div className="flex flex-col gap-1.5">
