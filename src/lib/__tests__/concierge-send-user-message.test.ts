@@ -12,7 +12,7 @@ function makeHandlers() {
   };
 }
 
-describe("sendConciergeUserMessage — SAN-867 pipeline", () => {
+describe("SAN-867 · VEB-MVP-001 — Router hijack fix — sendConciergeUserMessage pipeline", () => {
   it("plan my weekend reaches agent without event fast-path", async () => {
     const handlers = makeHandlers();
     await sendConciergeUserMessage("plan my weekend", handlers);

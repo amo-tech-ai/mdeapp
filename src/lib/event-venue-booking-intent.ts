@@ -1,7 +1,7 @@
 /**
  * Private event venue hire — birthday, wedding, corporate, etc.
  * Must bypass ticketed event discovery (searchEvents) and route to restaurant cards
- * with Event Venue CTA (SAN-494 · EVT-035 → SAN-495 · EVT-036).
+ * with Event Venue CTA ([SAN-494 · Canonical router intent schema + deterministic classifier](https://linear.app/sanjiovani/issue/SAN-494/evt-035-restaurant-card-event-venue-cta) → [SAN-495 · EVT-036 — Event offerings detail panel](https://linear.app/sanjiovani/issue/SAN-495/evt-036-event-offerings-detail-panel)).
  */
 
 const PRIVATE_EVENT_TYPE_RE =

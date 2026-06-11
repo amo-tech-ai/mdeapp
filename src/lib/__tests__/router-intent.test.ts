@@ -24,7 +24,7 @@ describe("routerIntentSchema", () => {
   });
 });
 
-describe("classifyRouterIntent — SAN-494 routing matrix", () => {
+describe("SAN-494 · Canonical router intent schema + deterministic classifier — routing matrix", () => {
   it.each([
     ["I need a venue for a birthday party", "venue_booking"],
     ["Restaurant for 20 people", "venue_booking"],
@@ -62,7 +62,7 @@ describe("classifyRouterIntent — SAN-494 routing matrix", () => {
   });
 });
 
-describe("routerHandlerOrderFor — SAN-867 agent intents skip fast-path", () => {
+describe("SAN-867 · VEB-MVP-001 — Router hijack fix — agent intents skip fast-path", () => {
   it.each([
     "plan my weekend",
     "what can I do tonight",

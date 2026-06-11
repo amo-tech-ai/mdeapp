@@ -1,5 +1,5 @@
 /**
- * SAN-494 · EVT-035 — Canonical router intent schema + deterministic classifier.
+ * [SAN-494 · Canonical router intent schema + deterministic classifier](https://linear.app/sanjiovani/issue/SAN-494/evt-035-restaurant-card-event-venue-cta)
  * Classify user goal first, then route to fast-path or conciergeAgent.
  */
 import { z } from "zod";

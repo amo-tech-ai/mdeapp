@@ -85,7 +85,7 @@ describe("event-query-classifier", () => {
     expect(looksLikeNonEventSearch("dinner events this weekend")).toBe(false);
   });
 
-  it("day-trip planning is non-event (SAN-867)", () => {
+  it("SAN-867 · VEB-MVP-001 — Router hijack fix — day-trip planning is non-event", () => {
     expect(looksLikeNonEventSearch("plan my weekend")).toBe(true);
     expect(looksLikeNonEventSearch("what can I do tonight")).toBe(true);
     expect(
@@ -93,7 +93,7 @@ describe("event-query-classifier", () => {
     ).toBe(false);
   });
 
-  it("private event venue hire bypasses event fast-path (SAN-494 · EVT-035)", () => {
+  it("SAN-494 · Canonical router intent schema + deterministic classifier — private venue hire bypasses event fast-path", () => {
     const q = "I need a venue for a birthday party for 30 people";
     expect(looksLikeNonEventSearch(q)).toBe(true);
     expect(hasEventFastPathSignals(q, scoreEventQuery(q))).toBe(false);
