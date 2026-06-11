@@ -15,7 +15,11 @@ import {
  */
 
 type Gate =
-  | { ok: true; supabase: Awaited<ReturnType<typeof createClient>> }
+  | {
+      ok: true;
+      supabase: Awaited<ReturnType<typeof createClient>>;
+      userId: string;
+    }
   | { ok: false; status: number; message: string };
 
 async function requireAdmin(): Promise<Gate> {
@@ -30,7 +34,7 @@ async function requireAdmin(): Promise<Gate> {
   if (error || !isAdmin) {
     return { ok: false, status: 403, message: "Admin access required." };
   }
-  return { ok: true, supabase };
+  return { ok: true, supabase, userId: user.id };
 }
 
 export async function GET() {
@@ -87,6 +91,7 @@ export async function POST(req: Request) {
     gate.supabase,
     bookingId,
     decision,
+    gate.userId,
     note,
   );
   if (!result.ok) {

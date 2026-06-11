@@ -113,21 +113,33 @@ describe("decideEventBooking", () => {
       data: { id: BOOKING_ID, partner_status: "approved" },
       error: null,
     });
-    const result = await decideEventBooking(client, BOOKING_ID, "approve");
+    const result = await decideEventBooking(client, BOOKING_ID, "approve", "admin-1");
     expect(result).toEqual({
       ok: true,
       data: { bookingId: BOOKING_ID, partnerStatus: "approved" },
     });
-    expect(update).toHaveBeenCalledWith({ partner_status: "approved" });
+    // audit trail: who + when recorded
+    expect(update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        partner_status: "approved",
+        approved_by: "admin-1",
+        approved_at: expect.any(String),
+      }),
+    );
   });
 
-  it("decline sets partner_status='declined'", async () => {
+  it("decline sets partner_status='declined' with audit trail", async () => {
     const { client, update } = mockUpdate({
       data: { id: BOOKING_ID, partner_status: "declined" },
       error: null,
     });
-    await decideEventBooking(client, BOOKING_ID, "decline");
-    expect(update).toHaveBeenCalledWith({ partner_status: "declined" });
+    await decideEventBooking(client, BOOKING_ID, "decline", "admin-1");
+    expect(update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        partner_status: "declined",
+        approved_by: "admin-1",
+      }),
+    );
   });
 
   it("needs_info keeps pending, flags metadata.needs_info and records the note", async () => {
@@ -139,6 +151,7 @@ describe("decideEventBooking", () => {
       client,
       BOOKING_ID,
       "needs_info",
+      "admin-1",
       "Please confirm the date.",
     );
     expect(result.ok).toBe(true);
@@ -153,7 +166,7 @@ describe("decideEventBooking", () => {
 
   it("returns 404 when the booking does not exist", async () => {
     const { client } = mockUpdate({ data: null, error: null });
-    const result = await decideEventBooking(client, BOOKING_ID, "approve");
+    const result = await decideEventBooking(client, BOOKING_ID, "approve", "admin-1");
     expect(result).toEqual({
       ok: false,
       status: 404,
@@ -163,7 +176,7 @@ describe("decideEventBooking", () => {
 
   it("returns 400 when bookingId is missing", async () => {
     const { client } = mockUpdate({ data: null, error: null });
-    const result = await decideEventBooking(client, "", "approve");
+    const result = await decideEventBooking(client, "", "approve", "admin-1");
     expect(result).toEqual({
       ok: false,
       status: 400,

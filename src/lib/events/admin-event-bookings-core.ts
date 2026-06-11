@@ -98,6 +98,7 @@ export async function decideEventBooking(
   supabase: SupabaseClient<Database>,
   bookingId: string,
   decision: EventBookingDecision,
+  decidedBy: string,
   note?: string,
 ): Promise<
   { ok: true; data: { bookingId: string; partnerStatus: string } } | CoreError
@@ -108,9 +109,18 @@ export async function decideEventBooking(
 
   let patch: Database["public"]["Tables"]["bookings"]["Update"];
   if (decision === "approve") {
-    patch = { partner_status: "approved" };
+    // Audit trail: record who decided and when (SAN-502 EVT-043).
+    patch = {
+      partner_status: "approved",
+      approved_at: new Date().toISOString(),
+      approved_by: decidedBy,
+    };
   } else if (decision === "decline") {
-    patch = { partner_status: "declined" };
+    patch = {
+      partner_status: "declined",
+      approved_at: new Date().toISOString(),
+      approved_by: decidedBy,
+    };
   } else if (decision === "needs_info") {
     // Keep partner_status 'pending' (no invalid CHECK value) and merge
     // needs_info into metadata — read current metadata first since the JS

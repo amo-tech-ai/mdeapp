@@ -104,6 +104,7 @@ describe("POST /api/admin/event-bookings", () => {
       expect.anything(),
       "b1",
       "approve",
+      "admin",
       undefined,
     );
   });
