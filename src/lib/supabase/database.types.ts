@@ -441,6 +441,7 @@ export type Database = {
           end_date: string | null
           end_time: string | null
           id: string
+          idempotency_key: string | null
           metadata: Json | null
           notes: string | null
           partner_id: string | null
@@ -475,6 +476,7 @@ export type Database = {
           end_date?: string | null
           end_time?: string | null
           id?: string
+          idempotency_key?: string | null
           metadata?: Json | null
           notes?: string | null
           partner_id?: string | null
@@ -509,6 +511,7 @@ export type Database = {
           end_date?: string | null
           end_time?: string | null
           id?: string
+          idempotency_key?: string | null
           metadata?: Json | null
           notes?: string | null
           partner_id?: string | null

@@ -89,7 +89,7 @@ export async function resolvePartnerIdForLocation(
 /**
  * SAN-865 — insert event proposal into bookings (booking_type='event').
  * Callers: SAN-496 · createEventProposal tool only (no UI in this task).
- * TODO SAN-496: add bookings.idempotency_key column + unique index before relying on 23505.
+ * SAN-869: idempotency_key column + idx_bookings_idempotency_user enforce dedupe at DB level.
  */
 export async function insertEventProposal(
   supabase: SupabaseClient<Database>,
@@ -144,6 +144,7 @@ export async function insertEventProposal(
     .from("bookings")
     .insert({
       user_id: userId,
+      idempotency_key: idempotencyKey,
       booking_type: "event",
       resource_id: input.partnerLocationId,
       resource_title: input.venueTitle ?? "Event venue proposal",
