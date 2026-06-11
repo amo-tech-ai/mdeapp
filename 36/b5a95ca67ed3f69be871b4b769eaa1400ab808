@@ -1,0 +1,25 @@
+src/components/sheets/__tests__/event-proposal-shell-core.test.ts
+  s_1f0f569465d6d8::t_47f30f21c8ad57 95-126
+e2e/san-496-event-proposal-submit.spec.ts
+  s_1f0f569465d6d8::t_3d3fb4af5cc02a 1-147
+src/app/api/events/proposal/route.test.ts
+  s_1f0f569465d6d8::t_aa182943888789 94-111
+src/lib/events/event-venue-booking-core.test.ts
+  s_1f0f569465d6d8::t_4d1465b24766cd 207-270
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "36b5a95ca67ed3f69be871b4b769eaa1400ab808",
+  "prompts": {},
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
