@@ -230,6 +230,7 @@ describe("insertEventProposal", () => {
         status: "pending",
         user_id: "user-abc",
         party_size: 25,
+        idempotency_key: expect.stringMatching(/^ep-[a-f0-9]{32}$/),
       }),
     );
   });
