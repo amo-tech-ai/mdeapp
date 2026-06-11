@@ -1,0 +1,28 @@
+src/lib/events/event-venue-booking-workflow-core.test.ts
+  s_1f0f569465d6d8::t_1fa0f394e9d5ca 95-96
+  s_1f0f569465d6d8::t_6bbfbbe4127d83 131-132
+  s_1f0f569465d6d8::t_c17c2f678721b5 151-154,156-157
+  s_1f0f569465d6d8::t_2b087fb2ac9cb1 161-181
+src/lib/events/event-venue-booking-workflow-core.ts
+  s_1f0f569465d6d8::t_4d94b1ac9b5cb3 171,179-183
+  s_1f0f569465d6d8::t_3c3caf297bed25 207-208,220,228-232
+src/lib/events/start-admin-review-workflow.ts
+  s_1f0f569465d6d8::t_070910793e36db 32
+  s_1f0f569465d6d8::t_d34cbda9e35224 54,58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "348684393b7376c62a39309c168e59a7d261079d",
+  "prompts": {},
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
