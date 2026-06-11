@@ -35,7 +35,22 @@ export async function POST(req: Request) {
     );
   }
 
-  const result = await insertEventProposal(supabase, user.id, body);
+  let result: Awaited<ReturnType<typeof insertEventProposal>>;
+  try {
+    result = await insertEventProposal(supabase, user.id, body);
+  } catch (error) {
+    // The core is designed to return { ok: false } rather than throw, but guard
+    // an unexpected rejection so callers get the structured JSON 500, not an
+    // HTML error page.
+    console.error("[POST /api/events/proposal] unexpected error", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: { message: "An unexpected error occurred. Please try again." },
+      },
+      { status: 500 },
+    );
+  }
 
   if (!result.ok) {
     return NextResponse.json(

@@ -112,4 +112,28 @@ describe("POST /api/events/proposal", () => {
     expect(json.success).toBe(false);
     expect(json.error.message).toContain("already submitted");
   });
+
+  it("returns a structured 500 when the core unexpectedly throws", async () => {
+    getUser.mockResolvedValue({ data: { user: { id: "user-1" } } });
+    insertEventProposal.mockRejectedValue(new Error("supabase down"));
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      const res = await POST(postReq(validBody));
+      expect(res.status).toBe(500);
+      const json = await res.json();
+      expect(json.success).toBe(false);
+      expect(json.error.message).toContain("unexpected");
+    } finally {
+      errorSpy.mockRestore();
+    }
+  });
 });
+
+function postReq(body: unknown) {
+  return new Request("http://localhost/api/events/proposal", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: typeof body === "string" ? body : JSON.stringify(body),
+  });
+}
