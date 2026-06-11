@@ -149,7 +149,7 @@ export function classifyRouterIntent(text: string): RouterIntentClassification {
       intent: "chitchat",
       confidence: 0.95,
       reason: "greeting or thanks",
-      action: "search_now",
+      action: "agent",
       routingTarget: "agent",
     };
   }
