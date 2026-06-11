@@ -1,0 +1,27 @@
+src/components/partners/partner-landing-shell.tsx
+  s_66609616688420::t_f23b8e628d45cd 1-327
+src/components/partners/venues-landing.tsx
+  s_66609616688420::t_6c58c34dc8f6c8 1-136,138-240
+  s_66609616688420::t_5d0b239c19a21a 137
+src/app/venues/page.tsx
+  s_66609616688420::t_5d0b239c19a21a 20
+  s_66609616688420::t_c0bf3ff66f6352 1-19,21-50
+e2e/san-661-venues-landing.spec.ts
+  s_66609616688420::t_71ccd577c0dbfb 1-97
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "a9e932a6e71992afcd8d2c7f31853853d9ba6523",
+  "prompts": {},
+  "sessions": {
+    "s_66609616688420": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "70d04f1c-4873-4be6-9254-9e6b6dd632a7",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
