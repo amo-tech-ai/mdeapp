@@ -1,22 +1,17 @@
 /**
  * INT-001 — shared intent + slot contract for turn-1 routing.
- * Confidence bands: ≥0.85 fast-path · 0.50–0.84 Gemini clarify · <0.50 full agent.
+ * Intent labels: classifyRouterIntent() in router-intent.ts (SAN-868 single source).
  */
 import { z } from "zod";
+import { scoreRentalQuery } from "@/lib/rental-query-parser";
 import {
-  looksLikeRentalSearch,
-  scoreRentalQuery,
-  looksLikeNonRentalSearch,
-} from "@/lib/rental-query-parser";
+  classifyRouterIntent,
+  routerIntentSchema,
+  type RouterIntent,
+} from "@/lib/router-intent";
+import { looksLikeCafeSearch } from "@/lib/restaurant-query-classifier";
 
-export const intentSchema = z.enum([
-  "rental_search",
-  "event_discovery",
-  "cafe_search",
-  "restaurant_search",
-  "chitchat",
-  "unknown",
-]);
+export const intentSchema = routerIntentSchema;
 
 export const routingActionSchema = z.enum(["search_now", "clarify", "agent"]);
 
@@ -46,7 +41,6 @@ export const sharedSlotsSchema = z.object({
   vibes: z.array(z.string()).optional(),
   needs: z.array(z.string()).optional(),
   queryText: z.string().optional(),
-  // Restaurant-specific slots (INT-001 extension)
   timeOfDay: z.enum(["lunch", "dinner", "brunch", "late-night"]).optional(),
   groupSize: z.number().int().min(1).optional(),
   occasion: z.enum(["date-night", "business", "family", "friends"]).optional(),
@@ -88,7 +82,7 @@ export function canDeterministicSearch(extraction: IntentSlotExtraction): boolea
     return (hasBudget && hasLocation) || (hasBudget && hasBedrooms && hasLocation);
   }
 
-  if (intent === "restaurant_search" || intent === "cafe_search") {
+  if (intent === "restaurant_discovery" || intent === "venue_booking") {
     return Boolean(slots.queryText?.trim() || slots.neighborhood);
   }
 
@@ -99,18 +93,10 @@ export function canDeterministicSearch(extraction: IntentSlotExtraction): boolea
   return false;
 }
 
-const CAFE_RE =
-  /\b(caf[eé]|coffee|quiet spot|remote work|laptop|cowork|wifi)\b/i;
-const RESTAURANT_RE =
-  /\b(restaurant|dinner|lunch|rooftop|brunch|food|cuisine|eat)\b/i;
-const EVENT_RE =
-  /\b(events?|concert|salsa|nightlife|festival|ticket|what'?s on)\b/i;
 const MEDELLIN_CITY_RE = /\bmedell[ií]n\b/i;
 
 function parseDateRange(text: string): SharedSlots["dateRange"] {
-  const june = text.match(
-    /\bjune\s+(\d{1,2})\s*(?:to|-)\s*(\d{1,2})\b/i,
-  );
+  const june = text.match(/\bjune\s+(\d{1,2})\s*(?:to|-)\s*(\d{1,2})\b/i);
   if (june) {
     return {
       start: `2026-06-${june[1].padStart(2, "0")}`,
@@ -127,90 +113,62 @@ function parseDateRange(text: string): SharedSlots["dateRange"] {
   return undefined;
 }
 
-/** Deterministic heuristic extractor — used in tests and as fast-path fallback (no live Gemini). */
-export function extractIntentSlotsHeuristic(text: string): IntentSlotExtraction {
+function extractSlotsForIntent(text: string, intent: RouterIntent): SharedSlots {
   const normalized = text.trim();
-  if (!normalized) {
-    return {
-      intent: "unknown",
-      confidence: 0,
-      action: "agent",
-      reason: "empty message",
-      slots: {},
-    };
-  }
 
-  if (looksLikeRentalSearch(normalized) && !looksLikeNonRentalSearch(normalized)) {
+  if (intent === "rental_search") {
     const rental = scoreRentalQuery(normalized);
     const dateRange = parseDateRange(normalized);
     const cityWide = MEDELLIN_CITY_RE.test(normalized) && !rental.neighborhood;
-    let confidence = rental.confidence;
-    if (cityWide && rental.hasBudget && dateRange) {
-      confidence = Math.max(confidence, 0.75);
-    }
-    const action = confidenceToAction(confidence);
     return {
-      intent: "rental_search",
-      confidence,
-      action,
-      reason: "rental signals from parser",
-      slots: {
-        neighborhood: rental.neighborhood,
-        cityWide: cityWide || undefined,
-        bedrooms: rental.minBedrooms,
-        budget:
-          rental.maxPricePerNight != null
-            ? {
-                maxPricePerNight: rental.maxPricePerNight,
-                budgetType: rental.budgetType,
-                currency: "USD",
-              }
-            : undefined,
-        dateRange,
-      },
+      neighborhood: rental.neighborhood,
+      cityWide: cityWide || undefined,
+      bedrooms: rental.minBedrooms,
+      budget:
+        rental.maxPricePerNight != null
+          ? {
+              maxPricePerNight: rental.maxPricePerNight,
+              budgetType: rental.budgetType,
+              currency: "USD",
+            }
+          : undefined,
+      dateRange,
     };
   }
 
-  if (EVENT_RE.test(normalized) && !CAFE_RE.test(normalized)) {
+  if (intent === "venue_booking") {
+    const guestMatch = normalized.match(
+      /\b(?:for\s+)?(\d+)\s+(?:people|guests)\b/i,
+    );
+    return {
+      queryText: normalized,
+      groupSize: guestMatch ? Number.parseInt(guestMatch[1], 10) : undefined,
+      occasion: "friends",
+    };
+  }
+
+  if (intent === "event_discovery") {
     let neighborhood: string | undefined;
     if (/provenza|poblado/i.test(normalized)) neighborhood = "Provenza";
     else if (/laureles/i.test(normalized)) neighborhood = "Laureles";
-    const dateRange = parseDateRange(normalized);
     const vibes = /\bsalsa\b/i.test(normalized) ? ["salsa"] : undefined;
-    const confidence =
-      neighborhood && dateRange ? 0.8 : neighborhood || dateRange ? 0.65 : 0.45;
-    return {
-      intent: "event_discovery",
-      confidence,
-      action: confidenceToAction(confidence),
-      reason: "event keywords",
-      slots: { neighborhood, dateRange, vibes },
-    };
+    return { neighborhood, dateRange: parseDateRange(normalized), vibes };
   }
 
-  if (CAFE_RE.test(normalized)) {
-    let neighborhood: string | undefined;
-    if (/laureles/i.test(normalized)) neighborhood = "Laureles";
-    else if (/poblado|provenza/i.test(normalized)) neighborhood = "El Poblado";
-    const needs = /\bremote work|laptop|quiet\b/i.test(normalized)
-      ? ["remote_work", "quiet"]
-      : undefined;
-    const confidence = neighborhood && needs ? 0.88 : neighborhood ? 0.72 : 0.55;
-    return {
-      intent: "cafe_search",
-      confidence,
-      action: confidenceToAction(confidence),
-      reason: "café / remote-work keywords",
-      slots: { neighborhood, needs, queryText: normalized },
-    };
-  }
-
-  if (RESTAURANT_RE.test(normalized)) {
+  if (intent === "restaurant_discovery") {
     let neighborhood: string | undefined;
     if (/provenza/i.test(normalized)) neighborhood = "Provenza";
     else if (/poblado/i.test(normalized)) neighborhood = "El Poblado";
+    else if (/laureles/i.test(normalized)) neighborhood = "Laureles";
 
-    let timeOfDay: "lunch" | "dinner" | "brunch" | "late-night" | undefined;
+    if (looksLikeCafeSearch(normalized)) {
+      const needs = /\bremote work|laptop|quiet\b/i.test(normalized)
+        ? ["remote_work", "quiet"]
+        : undefined;
+      return { neighborhood, needs, queryText: normalized };
+    }
+
+    let timeOfDay: SharedSlots["timeOfDay"];
     if (/\blunch\b/i.test(normalized)) timeOfDay = "lunch";
     else if (/\bbrunch\b/i.test(normalized)) timeOfDay = "brunch";
     else if (/\blate.?night\b/i.test(normalized)) timeOfDay = "late-night";
@@ -219,29 +177,28 @@ export function extractIntentSlotsHeuristic(text: string): IntentSlotExtraction 
     const groupMatch =
       normalized.match(/\bfor\s+(\d+)\s+(?:people|persons|guests)\b/i) ||
       normalized.match(/\bparty\s+of\s+(\d+)\b/i);
-    const groupSize = groupMatch ? parseInt(groupMatch[1], 10) : undefined;
+    const groupSize = groupMatch ? Number.parseInt(groupMatch[1], 10) : undefined;
 
-    let occasion: "date-night" | "business" | "family" | "friends" | undefined;
+    let occasion: SharedSlots["occasion"];
     if (/\bdate.?night\b/i.test(normalized)) occasion = "date-night";
     else if (/\bbusiness\b/i.test(normalized)) occasion = "business";
     else if (/\bfamily\b/i.test(normalized)) occasion = "family";
     else if (/\bfriends\b/i.test(normalized)) occasion = "friends";
 
-    const confidence = neighborhood ? 0.82 : 0.6;
-    return {
-      intent: "restaurant_search",
-      confidence,
-      action: confidenceToAction(confidence),
-      reason: "restaurant / food keywords",
-      slots: { neighborhood, queryText: normalized, timeOfDay, groupSize, occasion },
-    };
+    return { neighborhood, queryText: normalized, timeOfDay, groupSize, occasion };
   }
 
+  return {};
+}
+
+/** Deterministic extractor — intent from classifyRouterIntent(); slots from extractSlotsForIntent(). */
+export function extractIntentSlotsHeuristic(text: string): IntentSlotExtraction {
+  const classified = classifyRouterIntent(text);
   return {
-    intent: "chitchat",
-    confidence: 0.3,
-    action: "agent",
-    reason: "no vertical signals",
-    slots: {},
+    intent: classified.intent,
+    confidence: classified.confidence,
+    action: classified.action,
+    reason: classified.reason,
+    slots: extractSlotsForIntent(text, classified.intent),
   };
 }

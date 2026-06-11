@@ -117,12 +117,14 @@ describe("conciergeAgent", () => {
     expect(toolIds).toContain("extract-intent-slots");
   });
 
-  it("working memory accepts restaurant_search and cafe_search intents", () => {
-    const restaurant = conciergeWorkingMemorySchema.parse({ lastIntent: "restaurant_search" });
-    expect(restaurant.lastIntent).toBe("restaurant_search");
+  it("working memory accepts router intents including restaurant_discovery", () => {
+    const restaurant = conciergeWorkingMemorySchema.parse({
+      lastIntent: "restaurant_discovery",
+    });
+    expect(restaurant.lastIntent).toBe("restaurant_discovery");
 
-    const cafe = conciergeWorkingMemorySchema.parse({ lastIntent: "cafe_search" });
-    expect(cafe.lastIntent).toBe("cafe_search");
+    const venue = conciergeWorkingMemorySchema.parse({ lastIntent: "venue_booking" });
+    expect(venue.lastIntent).toBe("venue_booking");
   });
 
   it("working memory rental genericAskPending defaults to undefined when omitted", () => {

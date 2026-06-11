@@ -53,11 +53,11 @@ describe("extractIntentSlotsHeuristic — rental hero", () => {
 });
 
 describe("extractIntentSlotsHeuristic — café", () => {
-  it("quiet café Laureles remote work → cafe_search", () => {
+  it("quiet specialty coffee Laureles → restaurant_discovery (grounded)", () => {
     const out = extractIntentSlotsHeuristic(
-      "quiet café in Laureles for remote work tomorrow",
+      "quiet specialty coffee in Laureles",
     );
-    expect(out.intent).toBe("cafe_search");
+    expect(out.intent).toBe("restaurant_discovery");
     expect(out.slots.neighborhood).toBe("Laureles");
     expect(out.slots.needs).toContain("remote_work");
     expect(out.confidence).toBeGreaterThanOrEqual(CONFIDENCE_FAST_PATH);
@@ -77,9 +77,9 @@ describe("extractIntentSlotsHeuristic — events", () => {
 });
 
 describe("extractIntentSlotsHeuristic — restaurant", () => {
-  it("quiet rooftop Provenza → restaurant_search with queryText", () => {
-    const out = extractIntentSlotsHeuristic("quiet rooftop Provenza");
-    expect(out.intent).toBe("restaurant_search");
+  it("quiet rooftop dinner Provenza → restaurant_discovery with queryText", () => {
+    const out = extractIntentSlotsHeuristic("quiet rooftop dinner in Provenza");
+    expect(out.intent).toBe("restaurant_discovery");
     expect(out.slots.neighborhood).toBe("Provenza");
     expect(out.slots.queryText).toContain("rooftop");
   });
@@ -88,7 +88,7 @@ describe("extractIntentSlotsHeuristic — restaurant", () => {
     const out = extractIntentSlotsHeuristic(
       "dinner for 4 people date night restaurant El Poblado",
     );
-    expect(out.intent).toBe("restaurant_search");
+    expect(out.intent).toBe("restaurant_discovery");
     expect(out.slots.timeOfDay).toBe("dinner");
     expect(out.slots.groupSize).toBe(4);
     expect(out.slots.occasion).toBe("date-night");
@@ -99,7 +99,7 @@ describe("extractIntentSlotsHeuristic — restaurant", () => {
     const out = extractIntentSlotsHeuristic(
       "brunch restaurant with friends in Laureles",
     );
-    expect(out.intent).toBe("restaurant_search");
+    expect(out.intent).toBe("restaurant_discovery");
     expect(out.slots.timeOfDay).toBe("brunch");
     expect(out.slots.occasion).toBe("friends");
   });

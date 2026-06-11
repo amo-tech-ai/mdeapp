@@ -59,7 +59,7 @@ export function useGroundedSearchFastPath() {
           : 0;
       setState({
         ...(state ?? {}),
-        lastIntent: "cafe_search",
+        lastIntent: "restaurant_discovery",
       });
       return count;
     },
