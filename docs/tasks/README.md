@@ -1,6 +1,15 @@
 # mdeai tasks — router
 
-> **Operator:** sanjiovani · **Next work:** [`plan.md`](../plan.md) · **MVP queue:** [`MVP-REQUIRED.md`](MVP-REQUIRED.md)
+> **Operator:** sanjiovani · **Next work:** [`plan.md`](../../plan.md) or [`docs/plan.md`](../plan.md) · **MVP queue:** [`MVP-REQUIRED.md`](MVP-REQUIRED.md)
+
+**Compat paths (2026-06-10):**
+
+| Alias | Target |
+|-------|--------|
+| [`docs/events/`](../events/) | this tree's [`events/`](events/) (301 files) |
+| [`tasks/`](../../tasks/) @ repo root | this directory (`docs/tasks/`) |
+| [`docs/plan.md`](../plan.md) etc. | repo-root nav (`plan.md`, `prd.md`, `lean.md`, …) |
+| [`MVP-EXECUTION.md`](MVP-EXECUTION.md) | alias → [`MVP-REQUIRED.md`](MVP-REQUIRED.md) |
 
 ## Where to go
 

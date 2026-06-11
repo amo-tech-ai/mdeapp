@@ -12,6 +12,9 @@ companions:
 
 # mdeai Wireframe Set
 
+> **Compat alias:** [`../../wireframes-design/`](../../wireframes-design/) → this folder (for `@docs/wireframes-design`).  
+> **Separate tree:** [`../../wireframes/`](../../wireframes/) = newer AI-marketplace wireframe pack (June 2026).
+
 > **Design track tasks moved:** canonical execution specs are [`../tasks/INDEX.md`](../tasks/INDEX.md) (D-01…D-14). This folder remains the **legacy SCR/WIRE archive** + platform-shell route-build index — see [`../tasks/_legacy-map.md`](../tasks/_legacy-map.md).
 
 Low-fidelity, structural wireframes for **mdeai.co** — the AI-powered Medellín concierge & intelligence platform (rentals · restaurants · nightlife · events · local discovery), web-`/chat`-first now, WhatsApp-native in Phase 2.

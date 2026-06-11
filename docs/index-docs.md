@@ -25,7 +25,8 @@ rule: when a root-level file and a subdir file share a name, the subdir copy win
 
 | Doc | Owns | Fresh |
 |-----|------|:-----:|
-| [`tasks/events/todo.md`](tasks/events/todo.md) | Execution order; cites main `2835cf2`, draft PR #146, SAN-135/510/511 Done, 512–514 In Review | 🟢 |
+| [`tasks/events/`](tasks/events/) · compat [`docs/events/`](../events/) → same tree | Platform router — 301 files (`plans/`, `tasks/`, `specs/`) | 🟢 |
+| [`tasks/events/todo.md`](tasks/events/todo.md) | Execution order; cites main, PR #146, SAN-135/510/511 Done, 512–514 In Review | 🟢 |
 | [`tasks/events/index-events.md`](tasks/events/index-events.md) | Platform state (~46%), per-journey readiness, live counts | 🟢 |
 | [`tasks/events/changelog.md`](tasks/events/changelog.md) | Graded shipped-task history (grade + % correct per task) | 🟢 |
 | [`tasks/events/data/VENUE-DATA-MODEL.md`](tasks/events/data/VENUE-DATA-MODEL.md) | SAN-492 · EVT-033 schema SoT + Appendix A SQL | 🟢 |
@@ -52,7 +53,9 @@ rule: when a root-level file and a subdir file share a name, the subdir copy win
 | [`ecommerce/`](ecommerce/) | Medusa commerce direction (kept; single `medusa` skill) | 🟡 |
 | [`partners/`](partners/) | Partner stack (ptr001–014) docs | 🟡 |
 | [`linear/`](linear/) | Linear sync plans + queues | 🟡 |
-| [`wireframes/`](wireframes/) | Wire specs by screen | 🟡 |
+| [`wireframes/`](wireframes/) · [`wireframes/index-wire.md`](wireframes/index-wire.md) | Wireframe master index — domain packs, mobile, HTML, audits | 🟢 |
+| [`wireframes-design/`](wireframes-design/) · [`design/wireframes/`](design/wireframes/) | Legacy D-track SCR/WIRE specs (`04-detail-booking` → `mobile/events/`) | 🟢 |
+| [`design/wireframe/`](design/wireframe/) | HTML lo-fi mockups (cafes · restaurants · nightlife) | 🟢 |
 | [`prd/`](prd/) | PRD chunks (canonical PRD lives at outer `plan/prd.md`) | 🟡 |
 | [`audits/`](audits/) | `concierge-audit.md` · `launch-readiness.md` | 🟡 Jun 8 |
 | [`strategy/`](strategy/) + [`docs-vault/`](docs-vault/) | Bulk research vaults (≈9K files) — reference only, never SoT | ⚪ |

@@ -2,7 +2,7 @@
 
 **SoT path:** `mdeapp/docs/tasks/events/` (this directory)
 
-**Compat symlink:** `tasks/events/` at repo root → here (legacy paths keep working).
+**Compat symlink:** `docs/events/` → this directory (same files as `tasks/events/` at repo root).
 
 | Doc | Purpose |
 |-----|---------|
