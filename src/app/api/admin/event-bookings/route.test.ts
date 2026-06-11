@@ -1,11 +1,12 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
-const { getUser, rpc, listEventBookingRequests, decideEventBooking } =
+const { getUser, rpc, listEventBookingRequests, decideEventBooking, getEventBookingWorkflowRunId } =
   vi.hoisted(() => ({
     getUser: vi.fn(),
     rpc: vi.fn(),
     listEventBookingRequests: vi.fn(),
     decideEventBooking: vi.fn(),
+    getEventBookingWorkflowRunId: vi.fn(async () => null),
   }));
 
 vi.mock("@/lib/supabase/server", () => ({
@@ -19,6 +20,11 @@ vi.mock("@/lib/supabase/server", () => ({
 vi.mock("@/lib/events/admin-event-bookings-core", () => ({
   listEventBookingRequests,
   decideEventBooking,
+  getEventBookingWorkflowRunId,
+}));
+
+vi.mock("@/lib/events/start-admin-review-workflow", () => ({
+  resumeEventVenueBookingWorkflow: vi.fn(async () => ({ status: "success" })),
 }));
 
 import { GET, POST } from "./route";

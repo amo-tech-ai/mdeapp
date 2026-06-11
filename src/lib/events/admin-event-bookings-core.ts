@@ -169,3 +169,20 @@ export async function decideEventBooking(
     data: { bookingId: data.id, partnerStatus: data.partner_status },
   };
 }
+
+export async function getEventBookingWorkflowRunId(
+  supabase: SupabaseClient<Database>,
+  bookingId: string,
+): Promise<string | null> {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("metadata")
+    .eq("id", bookingId)
+    .eq("booking_type", "event")
+    .maybeSingle();
+
+  if (error || !data) return null;
+  const meta = asRecord(data.metadata as Json | null);
+  const runId = meta.mastra_workflow_run_id;
+  return typeof runId === "string" && runId.length > 0 ? runId : null;
+}

@@ -3,8 +3,10 @@ import { createClient } from "@/lib/supabase/server";
 import {
   listEventBookingRequests,
   decideEventBooking,
+  getEventBookingWorkflowRunId,
   type EventBookingDecision,
 } from "@/lib/events/admin-event-bookings-core";
+import { resumeEventVenueBookingWorkflow } from "@/lib/events/start-admin-review-workflow";
 
 /**
  * SAN-502 · EVT-043 — Patricia admin queue (event requests).
@@ -85,6 +87,33 @@ export async function POST(req: Request) {
       { success: false, error: { message: "Missing bookingId or decision" } },
       { status: 400 },
     );
+  }
+
+  if (decision === "approve" || decision === "decline") {
+    const runId = await getEventBookingWorkflowRunId(gate.supabase, bookingId);
+    if (runId) {
+      const resumed = await resumeEventVenueBookingWorkflow(runId, {
+        decision: decision === "approve" ? "approved" : "declined",
+        actorId: gate.userId,
+        declineReason: note,
+      });
+      if (resumed?.status === "success") {
+        const { data, error } = await gate.supabase
+          .from("bookings")
+          .select("id, partner_status")
+          .eq("id", bookingId)
+          .eq("booking_type", "event")
+          .maybeSingle();
+        if (!error && data) {
+          return NextResponse.json({
+            success: true,
+            bookingId: data.id,
+            partnerStatus: data.partner_status,
+            workflowRunId: runId,
+          });
+        }
+      }
+    }
   }
 
   const result = await decideEventBooking(
