@@ -1,14 +1,34 @@
 ---
-title: SAN-888 · CK-V2-002 — host-analytics-prototype — localhost runtime proof
+title: SAN-888 · CK-V2-002 — Host Analytics prototype — localhost runtime proof
 date: 2026-06-12
-branch: ai/san-888-ck-v2-002-host-analytics-prototype
-flag: COPILOTKIT_V2_ANALYTICS=1
-verdict: PASS (flag on) · v1 rollback path verified by file gate
+main_sha: b9a4f70
+pr: "#208 merged"
+verdict: PASS (flag off + flag on)
 ---
 
 # SAN-888 · CK-V2-002 — v2 /host/analytics prototype
 
 Roberto's sales dashboard on `/host/analytics` behind `COPILOTKIT_V2_ANALYTICS`. Camila's `/chat` and the event wizard stay on v1.
+
+## Flag off (`COPILOTKIT_V2_ANALYTICS` unset or `0`)
+
+Command:
+
+```bash
+COPILOTKIT_V2_ANALYTICS=0 infisical run --silent --env=dev --path=/ -- npm run dev
+SAN888_V2=0 infisical run --silent --env=dev --path=/ -- \
+  node docs/tasks/testing/evidence/SAN-888/san-888-localhost-proof.mjs
+```
+
+| Gate | Result |
+|---|---|
+| `/host/analytics` HTTP 200 (qa-landlord session) | ✅ |
+| v1 shell `data-testid="host-analytics"` | ✅ |
+| Ask **"How are my sales?"** → `Sales loaded ✓` | ✅ |
+| KPI cards show revenue (COP / ticket counts) | ✅ |
+| Console errors (excl. Lit dev / Maps vector fallback) | ✅ none |
+
+Artifacts: `SAN-888-v2-flag-off-results.json` · `SAN-888-v2-flag-off-localhost.png`
 
 ## Flag on (`COPILOTKIT_V2_ANALYTICS=1`)
 
@@ -16,8 +36,8 @@ Command:
 
 ```bash
 COPILOTKIT_V2_ANALYTICS=1 infisical run --silent --env=dev --path=/ -- npm run dev
-COPILOTKIT_V2_ANALYTICS=1 infisical run --silent --env=dev --path=/ -- \
-  node docs/tasks/testing/evidence/SAN-888/san-888-v2-localhost-proof.mjs
+SAN888_V2=1 COPILOTKIT_V2_ANALYTICS=1 infisical run --silent --env=dev --path=/ -- \
+  node docs/tasks/testing/evidence/SAN-888/san-888-localhost-proof.mjs
 ```
 
 | Gate | Result |
@@ -25,24 +45,12 @@ COPILOTKIT_V2_ANALYTICS=1 infisical run --silent --env=dev --path=/ -- \
 | `/host/analytics` HTTP 200 (qa-landlord session) | ✅ |
 | v2 shell `data-testid="host-analytics"` | ✅ |
 | `CopilotChat` bound to `agentId="hostOpsAgent"` | ✅ (code) |
-| Ask "how are my sales?" → `Sales loaded ✓` | ✅ |
-| KPI cards from tool result (COP 23,640,000 / 326 / 163) | ✅ deterministic |
+| Ask **"How are my sales?"** → `Sales loaded ✓` | ✅ |
+| KPI cards from tool result | ✅ |
 | Console errors (excl. Lit dev / Maps vector fallback) | ✅ none |
-| `/api/copilotkit` POST | ✅ 200 |
+| `/api/copilotkit` POST | ✅ 200 (runtime connected during chat) |
 
-Artifacts:
-
-- `SAN-888-v2-flag-on-results.json`
-- `SAN-888-v2-flag-on-localhost.png`
-- `san-888-v2-localhost-proof.mjs`
-
-## Flag off (`COPILOTKIT_V2_ANALYTICS` unset or `0`)
-
-| Gate | Result |
-|---|---|
-| Layout gates to `HostAnalyticsProviderV1` + `HostAnalyticsShell` | ✅ code path |
-| v1 bridge `host-ops-copilot-bridge.tsx` untouched | ✅ |
-| Prod v1 parity baseline | ✅ [SAN-729 · AIE-008 prod proof](../2026-06-12/SAN-729-AIE-008-CHROME-MCP-prod-report.md) |
+Artifacts: `SAN-888-v2-flag-on-results.json` · `SAN-888-v2-flag-on-localhost.png`
 
 ## Infisical / Vercel
 
@@ -53,12 +61,11 @@ Artifacts:
 
 Documented in `.env.example` (server-only, no `NEXT_PUBLIC_` prefix).
 
-## Fixes landed during proof
+## Scripts
 
-1. `CopilotChat agentId="hostOpsAgent"` — v2 chat was defaulting off hostOpsAgent without this.
-2. `enableInspector={false}` on v2 provider — web inspector blocked Playwright send clicks on localhost.
-3. Proof script uses `copilot-chat-textarea` + `copilot-send-button` selectors.
+- `san-888-localhost-proof.mjs` — unified flag on/off proof (replaces branch-only script)
+- `san-888-v2-localhost-proof.mjs` — legacy flag-on only (kept for reference)
 
-## Linear branch note
+## Linear
 
-Canonical git branch: `ai/san-888-ck-v2-002-host-analytics-prototype` (GitHub attachment on SAN-888). Linear auto `gitBranchName` may differ — use the attachment link.
+Merged to `main` @ `b9a4f70` via [PR #208](https://github.com/amo-tech-ai/mdeapp/pull/208). Status: **Done**.
