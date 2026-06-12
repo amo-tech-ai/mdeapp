@@ -1,0 +1,19 @@
+.claude/skills/mde-worktree-pr-flow/SKILL.md
+  s_a2b7148eca5a27::t_92e0477a3e8a6b 125-133,136
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "304ba3fe2033f2871548b5205fa1669c1af1b10d",
+  "prompts": {},
+  "sessions": {
+    "s_a2b7148eca5a27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "008c6fc3-bdd1-49a9-bab8-41bc2cbd97ff",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
