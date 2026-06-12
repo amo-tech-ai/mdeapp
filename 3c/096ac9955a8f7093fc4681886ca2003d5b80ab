@@ -1,0 +1,37 @@
+docs/intelligence/diagrams/13-patricia-workflow-hitl.mmd
+  s_04428b6f460d5c::t_89f4f1292af038 1-20
+docs/intelligence/diagrams/14-san-881-ops-persist.mmd
+  s_04428b6f460d5c::t_a438a0ea635b23 1-18
+package.json
+  s_04428b6f460d5c::t_3bbdce9593e762 45
+docs/events/tasks/MVP/VEB-MVP-010-mastra-postgres-durability.md
+  s_04428b6f460d5c::t_f67da15c793701 6,15,28-32,42-43,50-52,59-60
+src/mastra/lib/storage-durability.integration.test.ts
+  s_04428b6f460d5c::t_3f351eeb6d18aa 130-131
+  s_04428b6f460d5c::t_c37fcb4011b8cc 10,12,21,53-67,73-74,76,100-103,105,110,115-119,128,136,139
+  s_04428b6f460d5c::t_4e91f9b34cdc0e 104
+.github/workflows/veb-mvp-010-integration.yml
+  s_04428b6f460d5c::t_01b406dffe218d 1-52
+docs/tasks/testing/evidence/2026-06-12/SAN-881-VEB-MVP-010-persist-RESULTS.md
+  s_04428b6f460d5c::t_75bdc5bdc3469d 4,9,14-19,25,30,38,43,45,47,49,51-52,57-59
+scripts/verify-veb-mvp-010-integration.mjs
+  s_04428b6f460d5c::t_e7bed74ec600f2 1-28
+src/mastra/lib/storage.ts
+  s_04428b6f460d5c::t_be08701c895e18 98-106
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "3c096ac9955a8f7093fc4681886ca2003d5b80ab",
+  "prompts": {},
+  "sessions": {
+    "s_04428b6f460d5c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f8bd5ea9-d3a3-41c8-84b2-7cd42a076bf6",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
