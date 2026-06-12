@@ -248,6 +248,37 @@ The Event OS **vision** is sound and differentiated, but today it's ~30% built: 
 
 ---
 
+## 8b. v2 × Linear Backlog — Build-on-v2 Mapping
+
+> Added 2026-06-12 after reviewing the live **AI & Intelligence** (Backlog, 60 issues) and **Events Platform** (In Progress, Urgent, 60 issues) projects. The point of this section: most CopilotKit work isn't built yet, so the highest-ROI decision is to **build the unbuilt surfaces on v2 from day one** and never pay the migration twice.
+
+### The key insight
+This is not primarily a *migration* problem — it's a *sequencing* problem. ~12 CopilotKit tasks (`CK-001`→`CK-008`, `CONCIERGE-001/002`, `AIE-022`, `INT-009`) are still in backlog. Build them on v1 and they need re-migrating later; build them on v2 and they're done once. **Tag every unbuilt `CK-*` task "build on v2."**
+
+### v2 benefits mapped to real backlog tasks
+
+| v2 benefit | Backlog task(s) | Persona impact | Score /100 |
+|---|---|---|---|
+| Build-once, not build-then-migrate | `CK-001` sidebar · `CK-002` popup FAB · `CK-003` theming · `AIE-022` ⌘K/FAB/pills | Saves weeks of rework across ~12 surfaces | 🟢 94 |
+| One context hook across every route | `CK-004` useCopilotReadable on every route | `useAgentContext` replaces 2 hooks on ~10 routes | 🟢 86 |
+| Cleaner multi-agent switching | `CONCIERGE-001` CoAgentsProvider + AvailableAgents enum | Camila bounces rentals↔events↔venues without a custom provider | 🟢 88 |
+| Native agent run-status | `CONCIERGE-002` running-status badge | Camila sees a live "thinking…" state without wiring internals | 🟡 75 |
+| Slot theming to DESIGN.MD tokens | `CK-003` CopilotKit CSS theming | Chat matches the oklch brand tokens cleanly | 🟡 80 |
+| Generative cards as first-class tools | `CK-006` rental card · `AIE-009` KPI cards · `AIE-013` forecast card | `useFrontendTool` unifies all generative cards | 🟢 84 |
+| HITL unchanged | `CK-005` publish HITL · `CK-007` booking confirm | Roberto's publish + Camila's booking migrate with zero behavior risk | 🟢 82 |
+| Map/slot state sync survives | `CK-008` / `INT-009` map pin sync | Camila's pins keep syncing, less boilerplate | 🟡 78 |
+
+### Two backlog facts that reinforce the audit
+1. **The router problem is already ticketed.** `VEB-MVP-001 · Router hijack fix` and `VEB-MVP-002 · Classifier consolidation` (Events Platform) + the `INT-023` family are the "three overlapping routers" risk from §1/§7. **v2 does not fix this — it's backend — so resolve it independently and first.**
+2. **Event OS revenue tasks gain nothing from v2 directly.** `AIE-013 revenueForecastWorkflow`, `AIE-010 event funnel`, `AIE-016 sponsorMatchWorkflow`, `AIE-014 attendeeAgent` are backend workflows; v2 only makes their *cards* prettier. Their value lives entirely in the Mastra/Gemini layer (§8).
+
+### Recommendation
+- Add a **"build on v2"** label/tag to every unbuilt `CK-*` and `CONCIERGE-*` issue in **AI & Intelligence**, so they're authored against `@copilotkit/react-core/v2` from the start.
+- Keep `AIE-*` workflow tasks on the backend track — unaffected by v2.
+- Sequence router consolidation (`VEB-MVP-001/002`, `INT-023*`) ahead of any v2 work; it's the real correctness lever.
+
+---
+
 ## 9. Competitive Analysis
 
 | Dimension | mdeai vs the field | Where mdeai stands |
@@ -341,6 +372,7 @@ The Event OS **vision** is sound and differentiated, but today it's ~30% built: 
 8. `LIFE-001 — attendee post-purchase lifecycle stub (reminder + rebook)`
 9. `GROUND-001 — spike: native Gemini Maps + Search grounding vs ADK sidecar`
 10. `CK-V2-002 — schema single-source-of-truth + drift test (Zod ↔ TS ↔ packages/types)`
+11. `CK-V2-003 — tag all unbuilt CK-* / CONCIERGE-* issues "build on v2" (author against @copilotkit/react-core/v2 from the start; avoid double-migration)`
 
 ---
 
