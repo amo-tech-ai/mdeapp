@@ -1,4 +1,4 @@
-# SAN-885 · PLATFORM-002 — CopilotKit v2 Host Analytics Prototype (Plan)
+# SAN-888 · CK-V2-002 — v2 prototype on /host/analytics — CopilotKit v2 Host Analytics Prototype (Plan)
 
 **Plain-language plan. Read the top 6 lines and you know the decision.**
 
@@ -120,10 +120,10 @@ flowchart TD
 - Camila's `/chat` still works
 - Roberto's `/host/event/new` wizard still works
 - Lint, type-check, and tests pass (`npm run floor`)
-- Playwright evidence saved under `docs/tasks/testing/evidence/SAN-885/`
+- Playwright evidence saved under `docs/tasks/testing/evidence/SAN-888/`
 
 ---
 
 ## Recommendation
 
-**Build it — on its own branch and PR, not on the audit PR.** This is its own piece of work (`SAN-885 · PLATFORM-002`) and deserves a focused, easy-to-review PR. The audit PR (#206) stays a docs-only review; this prototype is the first real v2 code.
+**Build it — on its own branch and PR, not on the audit PR.** This is its own piece of work (`SAN-888 · CK-V2-002 — v2 prototype on /host/analytics`) and deserves a focused, easy-to-review PR. The audit PR (#206) stays a docs-only review; this prototype is the first real v2 code.

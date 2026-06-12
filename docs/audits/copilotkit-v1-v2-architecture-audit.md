@@ -12,7 +12,7 @@
 
 **The headline: the v1→v2 migration is a frontend-only swap, not a rewrite — and that single fact changes the entire risk picture.** The official guide is explicit: backend packages (`@copilotkit/runtime`, `CopilotRuntime` config, agent definitions) do **not** change. Everything mdeai invested in — the 8 Mastra agents, 12 tools, 4 workflows, `ai_runs` telemetry, RLS-scoped tools, the per-request runtime bridge — survives untouched. v2 only moves React hooks and UI components from `@copilotkit/react-core` + `@copilotkit/react-ui` into one package, `@copilotkit/react-core/v2`, with renamed hooks.
 
-**What this means in the real world.** Roberto's event wizard, Camila's concierge chat, and Patricia's host analytics keep working exactly as they do now during a migration. The risk is contained to ~10 frontend files (the provider mount + the bridge components), not the agent brain. mdeai does **not** need to choose between "ship Phase 1" and "prepare for v2" — the smart move is to finish Phase 1 on v1 and run a single v2 prototype on the lowest-risk page.
+**What this means in the real world.** Roberto's event wizard, Camila's concierge chat, and Patricia's host analytics keep working exactly as they do now during a migration. The risk is contained to **~28 frontend touchpoints** on `origin/main` (~20 `@copilotkit/react-core` + ~9 `@copilotkit/react-ui` import sites, some files import both), not the agent brain. mdeai does **not** need to choose between "ship Phase 1" and "prepare for v2" — the smart move is to finish Phase 1 on v1 and run a single v2 prototype on the lowest-risk page (`SAN-888 · CK-V2-002`).
 
 **Where mdeai is genuinely strong (rare for a Phase-1 app):**
 - **Deterministic numbers, LLM only narrates.** `salesInsightWorkflow` computes revenue/sell-through in code; Gemini only relays. Host analytics can't hallucinate Roberto's sales. This is a senior pattern most teams skip.
@@ -161,10 +161,10 @@ flowchart TD
 | Frontend tools | `useCopilotAction` | `useFrontendTool` (clearer) | **v2** |
 | Agent context | `useCopilotReadable` + `useCopilotAdditionalInstructions` | `useAgentContext` (one hook) | **v2** |
 | Chat UI customization | Component-override props | Slot system | **v2** |
-| Headless chat | `useCopilotChat` (+ internal `_c`) | `useAgent` / `useCopilotChatHeadless_c` | **v2** (cleaner) but migration touches internals |
-| HITL | `renderAndWaitForResponse` | Same pattern, v2 imports | **Tie** |
-| Maturity / battle-tested | High (1.55.2, Mastra-blessed) | Newer surface | **v1** (today) |
-| Migration cost | — | ~10 frontend files | **v1** wins on "do nothing now" |
+| Headless chat | `useCopilotChat` (+ internal `_c`) | `useAgent` + stock `CopilotChat` + v2 slots (`assistantMessage`) — **`useCopilotChatHeadless_c` is v1-only**, not `/v2` on 1.55.2 | **v2** (slots) but chat migrates last (SAN-890) |
+| HITL | `renderAndWaitForResponse` | **`useHumanInTheLoop`** | **v2** (explicit hook) |
+| Maturity / battle-tested | High (1.55.2, Mastra-blessed) | Newer `/v2` subpath on same pin | **v1** (today) |
+| Migration cost | — | **~28 import sites** (~20 react-core + ~9 react-ui on `origin/main`) | **v1** wins on "do nothing now" |
 
 **Verdict:** v2 is the better frontend, but the win is incremental and the backend is neutral. There is no architectural forcing function to rush. Migrate when v2 + Mastra are jointly stable (CLAUDE.md already pins this to Phase 2), and prototype now to de-risk.
 
@@ -358,21 +358,29 @@ This is not primarily a *migration* problem — it's a *sequencing* problem. ~12
 
 ---
 
-## 12. Recommended Linear Tasks (new)
+## 12. Recommended Linear Tasks — **historical (superseded 2026-06-12)**
 
-> Proposed — not yet created in Linear. Titles follow the `SAN-NNN · SPEC-ID — Title` convention; numbers are placeholders.
+> **Do not create these from §12.** The refined v2 migration program is live in Linear as **SAN-886–892** ([v2-upgrade view](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd)). Spike + audit: PR #207 · `docs/upgradeV2/03-copilotkitv2-upgrade-audit.md`.
 
-1. `INT-025 — Router consolidation: single Flash structured router (retire routerAgent + regex duplication)`
-2. `AIE-005C — hostEventAgent backend tools (set_event_basics / set_venue / set_pricing / preview_and_publish as Mastra tools)`
-3. `INT-026 — conciergeAgent decomposition into domain sub-agents (rental/event/restaurant/venue)`
-4. `CK-V2-001 — v2 frontend prototype on /host/analytics (hostOpsAgent), A/B vs v1`
-5. `AIE-010A — eventFunnel workflow + funnel event instrumentation (views/cart/paid)`
-6. `AIE-013A — salesForecast workflow on Gemini Pro (projection + levers)`
-7. `MEM-001 — resource-scoped host memory (goals, promo history, cross-thread)`
-8. `LIFE-001 — attendee post-purchase lifecycle stub (reminder + rebook)`
-9. `GROUND-001 — spike: native Gemini Maps + Search grounding vs ADK sidecar`
-10. `CK-V2-002 — schema single-source-of-truth + drift test (Zod ↔ TS ↔ packages/types)`
-11. `CK-V2-003 — tag all unbuilt CK-* / CONCIERGE-* issues "build on v2" (author against @copilotkit/react-core/v2 from the start; avoid double-migration)`
+| §12 draft | Superseded by |
+|---|---|
+| CK-V2-001 prototype on `/host/analytics` | **SAN-887** spike + **SAN-888 · CK-V2-002** prototype (`COPILOTKIT_V2_ANALYTICS`) |
+| CK-V2-002 schema drift test | Track under platform hygiene / separate issue if still needed |
+| CK-V2-003 tag `build-on-v2` | **SAN-892 · CK-V2-006** |
+| Router / god-agent / Event OS items | Separate INT/AIE issues (not part of CK-V2 epic) |
+
+*Original proposals preserved for audit history only:*
+1. `INT-025 — Router consolidation`
+2. `AIE-005C — hostEventAgent backend tools`
+3. `INT-026 — conciergeAgent decomposition`
+4. `CK-V2-001 — v2 prototype /host/analytics` → **SAN-888**
+5. `AIE-010A — eventFunnel workflow`
+6. `AIE-013A — salesForecast workflow`
+7. `MEM-001 — resource-scoped host memory`
+8. `LIFE-001 — attendee lifecycle stub`
+9. `GROUND-001 — native Gemini grounding spike`
+10. `CK-V2-002 — schema single-source-of-truth`
+11. `CK-V2-003 — tag build-on-v2` → **SAN-892**
 
 ---
 
@@ -380,7 +388,7 @@ This is not primarily a *migration* problem — it's a *sequencing* problem. ~12
 
 **Do not rewrite. Do not rush v2. Fix the brain before you reskin the face.**
 
-The migration everyone is anxious about is the *least* of the real work — it's a frontend hook rename across ~10 files, with the entire backend (Mastra, runtime, tools, workflows, telemetry, RLS) sitting untouched. CLAUDE.md's instinct to hold v2 for Phase 2 is correct; the only addition is to run **one** v2 prototype on `/host/analytics` now so Phase 2 is a known quantity.
+The migration everyone is anxious about is the *least* of the real work — it's a frontend hook rename across **~28 import sites**, with the entire backend (Mastra, runtime, tools, workflows, telemetry, RLS) sitting untouched. CLAUDE.md's instinct to hold v2 for Phase 2 is correct; the only addition is to run **one** v2 prototype on `/host/analytics` now so Phase 2 is a known quantity.
 
 The genuine risk and the genuine opportunity are both in the agent layer, not CopilotKit:
 - **Risk:** three routers and one god-agent. Consolidate the routers and split the concierge *before* anything else. These are what will make or break Camila's experience.
@@ -392,4 +400,4 @@ The genuine risk and the genuine opportunity are both in the agent layer, not Co
 
 ---
 
-*Sources: CopilotKit v1→v2 migration guide (official); direct source inventory of this branch. Competitive figures are directional. Linear task numbers in §12 are proposals, not created issues.*
+*Sources: CopilotKit v1→v2 migration guide (official); direct source inventory of `origin/main`. Competitive figures are directional. §12 proposals superseded by SAN-886–892 (2026-06-12).*

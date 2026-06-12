@@ -1,6 +1,16 @@
 # CopilotKit v1 to v2 Migration Guide
 
-## Package Migration
+> **⚠️ mdeai Phase 1 — READ `SKILL.md` FIRST (pinned `@copilotkit/*@1.55.2`)**
+>
+> **Do NOT run the generic steps below during Phase 1.** They uninstall `@copilotkit/react-core` / `@copilotkit/react-ui`, install `@copilotkit/react` + `@copilotkit/agent`, and rewrite the backend (`BuiltInAgent`, `createCopilotEndpoint`). That **breaks** the pinned-1.55.2 hard rule and contradicts the CK-V2 program (SAN-886–892).
+>
+> **mdeai path (now):** frontend-only subpath — `@copilotkit/react-core/v2` + `/v2/styles.css`; backend (`/api/copilotkit`, Mastra, Gemini) **unchanged**. Sequencing: SAN-887 spike → SAN-888 `/host/analytics` → host event → chat → SAN-891 retire `react-ui`.
+>
+> Use this file as **Phase 2 reference** after a deliberate package bump — not for launch-prep migration.
+
+---
+
+## Package Migration (generic CopilotKit — Phase 2 / non-mdeai only)
 
 ### Step 1: Replace Dependencies
 
