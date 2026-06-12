@@ -29,6 +29,8 @@
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
+  --color-success: var(--success);
+  --color-background-elevated: var(--background-elevated);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -74,6 +76,8 @@ html {
   --muted-foreground: oklch(0.554 0.046 257);
   --accent: oklch(0.795 0.184 86);
   --accent-foreground: oklch(0.208 0.042 265);
+  --success: oklch(0.72 0.18 160);
+  --background-elevated: oklch(0.96 0.006 264);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.929 0.013 255);
   --input: oklch(0.929 0.013 255);
@@ -104,6 +108,9 @@ html {
     --primary-foreground: oklch(0.208 0.042 265);
     --accent: oklch(0.795 0.184 86);
     --accent-foreground: oklch(0.208 0.042 265);
+    --success: oklch(0.72 0.18 160);
+    /* Elevated = card (lighter than bg) — matches this app's dark elevation. */
+    --background-elevated: oklch(0.279 0.041 260);
     --muted: oklch(0.279 0.041 260);
     --muted-foreground: oklch(0.704 0.04 256);
     --border: oklch(1 0 0 / 12%);
@@ -126,6 +133,9 @@ html {
   --muted-foreground: oklch(0.704 0.04 256);
   --accent: oklch(0.795 0.184 86);
   --accent-foreground: oklch(0.208 0.042 265);
+  --success: oklch(0.72 0.18 160);
+  /* Elevated = card (lighter than bg) — matches this app's dark elevation. */
+  --background-elevated: oklch(0.279 0.041 260);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
