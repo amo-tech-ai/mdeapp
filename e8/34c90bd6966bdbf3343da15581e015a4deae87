@@ -1,0 +1,28 @@
+src/components/host/host-event-copilot-bridge-v2.tsx
+  s_25b0cb0b37161d::t_0b8a9995dec7f2 174-175
+  s_25b0cb0b37161d::t_a1333394cec76f 5-19,22-23,28-48,56-100,102-103,136-173,176-186
+docs/tasks/testing/evidence/SAN-889/RESULTS.md
+  s_25b0cb0b37161d::t_879761e0924457 1-36
+docs/tasks/testing/evidence/SAN-889/san-889-localhost-proof.mjs
+  s_25b0cb0b37161d::t_2a2e6bdaf67dd1 1-210
+src/lib/events/host-event-wizard-tool-handlers.ts
+  s_25b0cb0b37161d::t_3821eda1843d16 1-74
+src/lib/events/__tests__/host-event-wizard-tool-handlers.test.ts
+  s_25b0cb0b37161d::t_09005a3f81963b 1-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "e834c90bd6966bdbf3343da15581e015a4deae87",
+  "prompts": {},
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
