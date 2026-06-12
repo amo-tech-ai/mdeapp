@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { HostAnalyticsShell } from "@/components/host/host-analytics-shell";
+import { HostAnalyticsShellV2 } from "@/components/host/host-analytics-shell-v2";
+import { isCopilotKitV2AnalyticsEnabled } from "@/lib/copilotkit-v2-analytics-flag";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata = {
   title: "Sales insights · mdeai",
@@ -8,9 +10,7 @@ export const metadata = {
 
 /**
  * SAN-729 · AIE-008 — Host Analytics Page.
- * Auth gate only — NO sales fetch here. The dashboard renders from
- * HostDashboardState, filled by hostOpsAgent via get_sales_insights. `/host` is a
- * protected middleware prefix; this guards the bypass path.
+ * SAN-888 · CK-V2-002 — shell v1/v2 gated by COPILOTKIT_V2_ANALYTICS.
  */
 export default async function HostAnalyticsPage() {
   const supabase = await createClient();
@@ -20,5 +20,9 @@ export default async function HostAnalyticsPage() {
 
   if (!user) redirect("/login?next=/host/analytics");
 
+  const v2 = isCopilotKitV2AnalyticsEnabled();
+  if (v2) {
+    return <HostAnalyticsShellV2 userEmail={user.email} />;
+  }
   return <HostAnalyticsShell userEmail={user.email} />;
 }
