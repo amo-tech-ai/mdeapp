@@ -13,7 +13,7 @@ export type SetEventBasicsArgs = {
 
 export type SetVenueArgs = {
   venue: string;
-  capacity: number;
+  capacity: number | string;
 };
 
 export type SetPricingArgs = {
