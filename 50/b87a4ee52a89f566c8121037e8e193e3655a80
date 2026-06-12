@@ -1,0 +1,27 @@
+src/lib/events/__tests__/sales-insights-core.test.ts
+  s_a2b7148eca5a27::t_08c8e0f655f96e 212
+  s_a2b7148eca5a27::t_0a7b0f0fdae7d9 213-215
+src/lib/events/host-dashboard-kpis.ts
+  s_a2b7148eca5a27::t_03942c0e287e44 3,10,12-14,17-18
+src/lib/events/format-money.ts
+  s_a2b7148eca5a27::t_c795db2fef3f7d 1-26
+src/lib/events/sales-insights-core.ts
+  s_a2b7148eca5a27::t_13989419c807d5 9
+  s_a2b7148eca5a27::t_e378aeeef11110 153-160,163,166,170
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "50b87a4ee52a89f566c8121037e8e193e3655a80",
+  "prompts": {},
+  "sessions": {
+    "s_a2b7148eca5a27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "008c6fc3-bdd1-49a9-bab8-41bc2cbd97ff",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
