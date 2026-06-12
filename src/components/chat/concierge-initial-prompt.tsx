@@ -8,6 +8,7 @@ import { useRentalSearchFastPath } from "@/hooks/use-rental-search-fast-path";
 import { useEventSearchFastPath } from "@/hooks/use-event-search-fast-path";
 import { useRestaurantSearchFastPath } from "@/hooks/use-restaurant-search-fast-path";
 import { useGroundedSearchFastPath } from "@/hooks/use-grounded-search-fast-path";
+import { useEventVenueBookingFastPath } from "@/hooks/use-event-venue-booking-fast-path";
 import { sendConciergeUserMessage } from "@/lib/concierge-send-user-message";
 
 /**
@@ -24,6 +25,8 @@ export function ConciergeInitialPrompt() {
     useRestaurantSearchFastPath();
   const { handleUserMessage: handleGroundedMessage } =
     useGroundedSearchFastPath();
+  const { handleUserMessage: handleEventVenueBookingMessage } =
+    useEventVenueBookingFastPath();
   const sentRef = useRef(false);
 
   const onAgentSend = useCallback(
@@ -49,6 +52,7 @@ export function ConciergeInitialPrompt() {
 
     void sendConciergeUserMessage(trimmedQ, {
       handleRentalMessage,
+      handleEventVenueBookingMessage,
       handleEventMessage,
       handleGroundedMessage,
       handleRestaurantMessage,
@@ -67,6 +71,7 @@ export function ConciergeInitialPrompt() {
     isLoading,
     router,
     handleRentalMessage,
+    handleEventVenueBookingMessage,
     handleEventMessage,
     handleGroundedMessage,
     handleRestaurantMessage,

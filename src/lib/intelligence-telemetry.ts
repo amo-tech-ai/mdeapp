@@ -8,6 +8,7 @@ export type RoutingDecision = {
   intent:
     | "rental_search"
     | "event_discovery"
+    | "venue_booking"
     | "restaurant_search"
     | "cafe_search"
     | "venue_search"
