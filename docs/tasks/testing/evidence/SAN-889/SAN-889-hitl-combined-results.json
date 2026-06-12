@@ -1,0 +1,19 @@
+{
+  "task": "SAN-889 · CK-V2-003 — v2 HITL publish proof (combined)",
+  "mode": "v2-flag-on-hitl",
+  "flag": "1",
+  "baseUrl": "http://localhost:3001",
+  "commitSha": "072d8e5ef0e1aa929e2879c014048df87027d072",
+  "at": "2026-06-12T23:10:56.749Z",
+  "matrix": {
+    "wizardLoads": true,
+    "hitlPanelVisible": true,
+    "rejectNoPublishedLink": true,
+    "rejectClicked": true,
+    "approvePublishedLink": true,
+    "approveNoPendingApprovalRace": true,
+    "zeroConsoleErrorsOnApprove": true
+  },
+  "verdict": "PASS",
+  "notes": "Reject path: san-889-hitl-proof.mjs (retry 2). Approve path: san-889-hitl-approve-proof.mjs. First HITL attempt hit Gemini 429 — environmental, not SAN-889 regression."
+}
