@@ -2,8 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "functions": {
     "src/app/api/copilotkit/**": {
-      "maxDuration": 30,
-      "memory": 1024
+      "maxDuration": 30
     },
     "src/app/api/grounding/**": {
       "maxDuration": 15
@@ -25,6 +24,15 @@
     },
     "src/app/api/scorers/**": {
       "maxDuration": 5
+    },
+    "src/app/api/threads/**": {
+      "maxDuration": 10
+    },
+    "src/app/api/venue-booking/**": {
+      "maxDuration": 15
+    },
+    "src/app/api/events/proposal/**": {
+      "maxDuration": 20
     }
   }
 }

@@ -6,7 +6,10 @@ import {
 import { MASTRA_RESOURCE_ID_KEY, RequestContext } from "@mastra/core/request-context";
 import { NextRequest, after } from "next/server";
 import { assertCopilotKitAuthorized } from "@/lib/copilotkit-auth";
-import { checkCopilotKitRateLimit } from "@/lib/api-ip-rate-limit";
+import {
+  checkCopilotKitIpGate,
+  checkCopilotKitRateLimit,
+} from "@/lib/api-ip-rate-limit";
 import { createClient } from "@/lib/supabase/server";
 import { mastra } from "@/mastra";
 import { getLocalAgentsWithLogging } from "@/mastra/copilotkit/logging-mastra-agent";
@@ -68,6 +71,9 @@ function buildHandler(options: {
 async function handleCopilotKit(req: NextRequest) {
   const unauthorized = assertCopilotKitAuthorized(req);
   if (unauthorized) return unauthorized;
+
+  const ipGate = checkCopilotKitIpGate(req);
+  if (ipGate) return ipGate;
 
   try {
     const supabase = await createClient();

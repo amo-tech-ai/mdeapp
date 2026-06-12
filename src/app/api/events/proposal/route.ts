@@ -3,6 +3,10 @@ import { insertEventProposal } from "@/lib/events/event-venue-booking-core";
 import { startAdminReviewWorkflow } from "@/lib/events/start-admin-review-workflow";
 import { createClient } from "@/lib/supabase/server";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const maxDuration = 20;
+
 /**
  * SAN-496 · EVT-037 — Request proposal modal (HITL).
  * Server target for the proposal modal's submit: persists an event proposal
