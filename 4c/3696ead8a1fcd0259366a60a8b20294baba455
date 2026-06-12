@@ -1,0 +1,26 @@
+docs/tasks/testing/evidence/SAN-889/san-889-hitl-proof.mjs
+  s_25b0cb0b37161d::t_cc72f2568599ad 1-253
+docs/tasks/testing/evidence/SAN-889/RESULTS.md
+  s_25b0cb0b37161d::t_e078ef919663f4 5-49
+docs/tasks/testing/evidence/SAN-889/SAN-889-hitl-combined-results.json
+  s_25b0cb0b37161d::t_6ffc3181ca50ad 1-19
+docs/tasks/testing/evidence/SAN-889/san-889-hitl-approve-proof.mjs
+  s_25b0cb0b37161d::t_90b803d9850639 1-142,146-147,159-198
+  s_25b0cb0b37161d::t_fff71af7a05fa9 143-145,148-158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "4c3696ead8a1fcd0259366a60a8b20294baba455",
+  "prompts": {},
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
