@@ -12,6 +12,7 @@ const AGENT_MAP_KEY_TO_LOGGING: Record<string, AgentLoggingMeta> = {
   rentalAgent: { agentName: "rental-agent", agentType: "local_scout" },
   routerAgent: { agentName: "router-agent", agentType: "concierge" },
   conciergeAgent: { agentName: "concierge-agent", agentType: "general_concierge" },
+  hostOpsAgent: { agentName: "host-ops-agent", agentType: "general_concierge" },
 };
 
 export type TurnLogInput = {

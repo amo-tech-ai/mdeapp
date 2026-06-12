@@ -10,6 +10,7 @@ import { createClient } from "@/lib/supabase/server";
 import { mastra } from "@/mastra";
 import { getLocalAgentsWithLogging } from "@/mastra/copilotkit/logging-mastra-agent";
 import { setAuditUserId } from "@/mastra/lib/tool-audit-context";
+import { HOST_SUPABASE_KEY } from "@/mastra/tools/hostops-read-tools";
 import { logAgentRunForTurn } from "@/mastra/lib/log-agent-run";
 import type { PersistTurnLog } from "@/mastra/copilotkit/logging-mastra-agent";
 
@@ -78,6 +79,10 @@ async function handleCopilotKit(req: NextRequest) {
     if (userId) {
       requestContext.set(MASTRA_RESOURCE_ID_KEY, userId);
       setAuditUserId(requestContext, userId);
+      // SAN-760 · AIE-005 — hostOpsAgent + HostDashboardState — hand the agent's
+      // tools the SAME user-scoped client (RLS-governed; never service-role).
+      // getHostContext reads it back.
+      requestContext.set(HOST_SUPABASE_KEY, supabase);
     }
 
     return await buildHandler({ userId, requestContext })(req);
