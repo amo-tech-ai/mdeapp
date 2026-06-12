@@ -1,0 +1,31 @@
+src/lib/events/__tests__/host-dashboard-result.test.ts
+  s_a2b7148eca5a27::t_8893630aba9b95 42
+  s_a2b7148eca5a27::t_f76fcbd4afab95 18
+  s_a2b7148eca5a27::t_235101d1e4c132 100
+  s_a2b7148eca5a27::t_97edcd877a4d6d 101-102,104,106-107
+  s_a2b7148eca5a27::t_9b676f0fa64916 1-6,8-17,19-41,43-99,103,105,108-136
+  s_a2b7148eca5a27::t_322b3ed42d51ed 7
+src/components/host/__tests__/host-analytics-panels.test.tsx
+  s_a2b7148eca5a27::t_330dae284b8206 1-85
+src/components/host/host-ops-copilot-bridge.tsx
+  s_a2b7148eca5a27::t_7bdb98ddbd040b 6-9,24-25,46-47,51,68-69,85-86,92
+src/lib/events/host-dashboard-result.ts
+  s_a2b7148eca5a27::t_bd0a4864bf9272 43-49
+  s_a2b7148eca5a27::t_c1f86921e7d8ed 1-42,50-101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "aa3b6290017e45b88e16bcafc5429a9218a4eab1",
+  "prompts": {},
+  "sessions": {
+    "s_a2b7148eca5a27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "008c6fc3-bdd1-49a9-bab8-41bc2cbd97ff",
+        "model": "claude-fable-5"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
