@@ -39,6 +39,26 @@ function coerceObject(result: unknown): unknown {
   return result;
 }
 
+/**
+ * Stable value-signature for a (status, result) pair. CopilotKit hands the render a
+ * NEW `result` object reference every parent render; the bridge effect dedupes on
+ * this signature so a re-render with the SAME data is a no-op — preventing the
+ * "Maximum update depth exceeded" loop. Same data → same string, regardless of ref.
+ */
+export function toolRenderSignature(status: string, result: unknown): string {
+  let body: string;
+  if (typeof result === "string") {
+    body = result;
+  } else {
+    try {
+      body = JSON.stringify(result ?? null);
+    } catch {
+      body = "[unserializable]";
+    }
+  }
+  return `${status}|${body}`;
+}
+
 /** The deterministic patch the insight tool produces (no timestamp — the caller stamps it). */
 export type InsightPatch = {
   insights: SalesInsights; // always present on ok
