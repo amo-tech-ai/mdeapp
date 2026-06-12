@@ -12,6 +12,7 @@ import {
   MdeState,
 } from "@/mastra/agents";
 import { hostEventAgent } from "@/mastra/agents/host-event";
+import { hostOpsAgent } from "@/mastra/agents/host-ops";
 
 const root = resolve(import.meta.dirname, "../..");
 
@@ -27,9 +28,10 @@ describe("mdeapp smoke", () => {
         "eventAgent",
         "evaluationAgent",
         "hostEventAgent",
+        "hostOpsAgent",
       ]),
     );
-    expect(keys).toHaveLength(7);
+    expect(keys).toHaveLength(8);
   });
 
   it("hostEventAgent is registered", () => {
@@ -59,6 +61,7 @@ describe("mdeapp smoke", () => {
       conciergeAgent,
       eventAgent,
       evaluationAgent,
+      hostOpsAgent,
     ];
     for (const agent of agents) {
       expect(JSON.stringify(agent.model)).toMatch(/gemini-3\.5-flash/);

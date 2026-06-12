@@ -58,3 +58,13 @@ export {
   isDraftReadyForPublish,
   type EventDraftState,
 } from "./types/event-draft";
+
+export {
+  hostDashboardStateSchema,
+  kpiCardSchema,
+  hostOpsMemorySchema,
+  EMPTY_HOST_DASHBOARD,
+  type HostDashboardState,
+  type KpiCard,
+  type HostOpsMemory,
+} from "./types/host-dashboard";
