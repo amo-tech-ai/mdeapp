@@ -95,3 +95,12 @@ export function resetMastraStorageForTests() {
   storageModeLogged = false;
   setStorageGlobal(undefined);
 }
+
+/** Close Postgres pool then reset — use in integration tests to avoid pooler EMAXCONN. */
+export async function closeMastraStorageForTests(): Promise<void> {
+  const store = getStorageGlobal()?.store ?? sharedStorage;
+  if (store?.constructor.name === "PostgresStore" && "close" in store) {
+    await (store as PostgresStore).close();
+  }
+  resetMastraStorageForTests();
+}

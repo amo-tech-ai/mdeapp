@@ -42,6 +42,7 @@
     "test:coverage": "vitest run --coverage",
     "audit": "npm audit --audit-level=high",
     "floor": "npm run lint && npm run typecheck && npm run build && npm test && npm run audit",
+    "test:veb-mvp-010-integration": "node scripts/verify-veb-mvp-010-integration.mjs",
     "test:e2e": "playwright test",
     "test:e2e:desktop": "playwright test e2e/maps-layout-desktop.spec.ts",
     "test:e2e:mobile": "playwright test e2e/maps-layout-mobile.spec.ts",
