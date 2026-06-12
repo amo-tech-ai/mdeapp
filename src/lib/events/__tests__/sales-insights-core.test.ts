@@ -167,6 +167,38 @@ describe("gatherSalesSummaries — RLS fail-safe", () => {
     await expect(gatherSalesSummaries(fakeClient, "user-1")).rejects.toThrow(/could not load/i);
     vi.restoreAllMocks();
   });
+
+  it("THROWS on a non-404 getSalesSummary failure — single-event outage must not read as 'no sales' (Greptile P1 follow-up)", async () => {
+    vi.spyOn(reads, "getSalesSummary").mockResolvedValue({
+      ok: false,
+      status: 500,
+      message: "read timeout",
+    });
+    // single-eventId path: exactly one read, and it errored — must throw, not return []
+    await expect(
+      gatherSalesSummaries(fakeClient, "user-1", { eventId: uuid() }),
+    ).rejects.toThrow(/could not load sales/i);
+    vi.restoreAllMocks();
+  });
+
+  it("still SKIPS a 404 (not owned) without throwing — RLS fail-safe preserved", async () => {
+    const owned = summary({ eventName: "Mine" });
+    vi.spyOn(reads, "listHostEvents").mockResolvedValue({
+      ok: true,
+      data: [
+        { id: owned.eventId, name: "Mine", slug: null, status: "published", eventStartTime: null },
+        { id: uuid(), name: "Theirs", slug: null, status: "published", eventStartTime: null },
+      ],
+    });
+    vi.spyOn(reads, "getSalesSummary").mockImplementation(async (_c, _u, id) =>
+      id === owned.eventId
+        ? { ok: true, data: owned }
+        : { ok: false, status: 404, message: "Not found" },
+    );
+    const out = await gatherSalesSummaries(fakeClient, "user-1");
+    expect(out).toHaveLength(1); // 404 skipped, owned kept — no throw
+    vi.restoreAllMocks();
+  });
 });
 
 // ── buildNarrationPrompt — the guardrail ─────────────────────────────────────
