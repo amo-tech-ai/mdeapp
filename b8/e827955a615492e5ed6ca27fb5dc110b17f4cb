@@ -1,0 +1,22 @@
+src/lib/events/__tests__/sales-insights-core.test.ts
+  s_a2b7148eca5a27::t_3564cd288958d5 160-169
+src/lib/events/sales-insights-core.ts
+  s_a2b7148eca5a27::t_d0ed93e4092fb4 103-106,118-121,124-128
+  s_a2b7148eca5a27::t_19778e09ae231d 152-154
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "b8e827955a615492e5ed6ca27fb5dc110b17f4cb",
+  "prompts": {},
+  "sessions": {
+    "s_a2b7148eca5a27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "008c6fc3-bdd1-49a9-bab8-41bc2cbd97ff",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
