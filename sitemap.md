@@ -86,7 +86,8 @@ prod: https://www.mdeai.co
 /host
 ├── /host/event/new                  ✅ LIVE    Roberto's AI publish wizard (HITL, CopilotKit)
 │   └── [overlay] approval-panel    ✅ LIVE    Roberto approves AI-drafted event before publish
-└── /host/events                     ✅ LIVE    Host event list — Roberto sees published events (**SAN-118**, **SAN-366**)
+├── /host/events                     ✅ LIVE    Host event list — Roberto sees published events (**SAN-118**, **SAN-366**)
+└── /host/analytics                  ✅ LIVE    AI-native sales dashboard — hostOpsAgent fills KPI cards from chat (**SAN-729 · AIE-008**)
 
 /broker                              ⚫ POST    Broker / venue operator dashboard
 ├── /broker/leads                    ⚫ POST    Lead inbox (AI-drafted replies, HITL approve/send)

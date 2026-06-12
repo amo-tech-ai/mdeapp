@@ -58,9 +58,10 @@ describeAuthed(`${SCREEN_ID} host navigation rail`, () => {
         "href",
         "/host/events",
       );
-      await expect(page.getByTestId("host-nav-analytics-soon")).toHaveAttribute(
-        "aria-disabled",
-        "true",
+      // SAN-729 · AIE-008 — Analytics is now a live link (was "Coming soon").
+      await expect(page.getByTestId("host-nav-link-analytics")).toHaveAttribute(
+        "href",
+        "/host/analytics",
       );
 
       await page.getByTestId("host-nav-link-events").click();
