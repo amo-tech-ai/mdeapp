@@ -1,0 +1,38 @@
+src/mastra/lib/search-grounding-quota.test.ts
+  s_04428b6f460d5c::t_9445ce0058fc8e 8
+  s_04428b6f460d5c::t_95447e7f38d347 16-25
+vercel.json
+  s_04428b6f460d5c::t_66e9393299147b 1-30
+src/app/api/admin/event-bookings/route.ts
+  s_04428b6f460d5c::t_3199c437928284 11-13
+src/app/api/grounding/event-web/route.ts
+  s_04428b6f460d5c::t_a57b6025c96978 2-3,11,21-24
+src/app/api/grounded/search/route.ts
+  s_04428b6f460d5c::t_bdfae86a9cd477 3,8
+  s_04428b6f460d5c::t_2f9186d6c9eb4c 19-21
+src/lib/is-search-grounding-enabled.ts
+  s_04428b6f460d5c::t_7193c14a97d04e 1-9
+src/app/api/restaurants/search/route.ts
+  s_04428b6f460d5c::t_c317880876a8f3 45-47
+  s_04428b6f460d5c::t_bf49877eeaa0cf 3,9
+src/lib/__tests__/is-search-grounding-enabled.test.ts
+  s_04428b6f460d5c::t_2fa78b64de53bc 1-28
+src/lib/api-ip-rate-limit.ts
+  s_04428b6f460d5c::t_790aa4a07b83e6 1-55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "fdf906a10bc5641c6065141390c8abaf73abdf78",
+  "prompts": {},
+  "sessions": {
+    "s_04428b6f460d5c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f8bd5ea9-d3a3-41c8-84b2-7cd42a076bf6",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}

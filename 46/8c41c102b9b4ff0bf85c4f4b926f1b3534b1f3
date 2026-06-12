@@ -1,0 +1,20 @@
+src/lib/__tests__/api-ip-rate-limit.test.ts
+  s_04428b6f460d5c::t_4c0228d118254a 1-38,40-48
+  s_04428b6f460d5c::t_945410548499a1 39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "468c41c102b9b4ff0bf85c4f4b926f1b3534b1f3",
+  "prompts": {},
+  "sessions": {
+    "s_04428b6f460d5c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f8bd5ea9-d3a3-41c8-84b2-7cd42a076bf6",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
