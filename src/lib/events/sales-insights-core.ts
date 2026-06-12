@@ -103,7 +103,8 @@ export function computeSalesInsights(summaries: SalesSummary[]): SalesInsights {
  *
  * A HARD failure of `listHostEvents` (DB outage / auth error) THROWS — it must not
  * be confused with "you have no events", or Gemini would narrate "no sales" to a
- * host whose database simply hiccupped (Greptile P1).
+ * host whose database simply hiccupped (Greptile P1). The same applies per-event:
+ * only a 404 (not owned) is skipped; any other getSalesSummary failure THROWS.
  */
 export async function gatherSalesSummaries(
   supabase: SupabaseClient<Database>,
@@ -121,11 +122,26 @@ export async function gatherSalesSummaries(
     eventIds = events.data.map((e) => e.id);
   }
 
-  // Concurrent — independent per-event reads; 404 (not owned) / errors skipped (fail-safe).
+  // Concurrent — independent per-event reads. Only a 404 (event not owned / missing)
+  // is a legitimate skip (RLS fail-safe). Any OTHER failure (500 / outage / rate-limit)
+  // THROWS — it must not be swallowed into an empty list and narrated as "no sales"
+  // (Greptile P1, follow-up to the listHostEvents fail-loud above; critical on the
+  // single-eventId path where exactly one read is made).
   const results = await Promise.all(
     eventIds.map((id) => getSalesSummary(supabase, userId, id)),
   );
-  return results.flatMap((r) => (r.ok ? [r.data] : []));
+  const summaries: SalesSummary[] = [];
+  for (const r of results) {
+    if (r.ok) {
+      summaries.push(r.data);
+    } else if (r.status !== 404) {
+      throw new Error(
+        `Could not load sales for one of your events (${r.status}). Please try again.`,
+      );
+    }
+    // r.status === 404 → not owned / missing — skip (fail-safe)
+  }
+  return summaries;
 }
 
 /**
