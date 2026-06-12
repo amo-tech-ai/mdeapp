@@ -2,35 +2,48 @@
 
 **Task:** [SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2](https://linear.app/sanjiovani/issue/SAN-889/ck-v2-003-migrate-hostevent-hosteventagent-to-v2)  
 **Flag:** `COPILOTKIT_V2_HOST_EVENT=1` (default off)  
-**Script:** [`san-889-localhost-proof.mjs`](./san-889-localhost-proof.mjs)
+**Branch:** `ai/san-889-ck-v2-003-migrate-hostevent-hosteventagent-to-v2`
 
-## How to run
+## Scripts
 
-Restart dev with matching flag, then:
+| Script | Purpose |
+|--------|---------|
+| [`san-889-localhost-proof.mjs`](./san-889-localhost-proof.mjs) | Flag on/off wizard smoke |
+| [`san-889-hitl-proof.mjs`](./san-889-hitl-proof.mjs) | v2 HITL reject path + panel |
+| [`san-889-hitl-approve-proof.mjs`](./san-889-hitl-approve-proof.mjs) | v2 HITL approve + published link |
 
-```bash
-# Flag off (v1 path)
-infisical run --silent --env=dev --path=/ -- node docs/tasks/testing/evidence/SAN-889/san-889-localhost-proof.mjs
+**Server:** `COPILOTKIT_V2_HOST_EVENT=1 infisical run --silent --env=dev --path=/ -- npm run dev`
 
-# Flag on (v2 path) — server must also have COPILOTKIT_V2_HOST_EVENT=1
-COPILOTKIT_V2_HOST_EVENT=1 infisical run --silent --env=dev --path=/ -- node docs/tasks/testing/evidence/SAN-889/san-889-localhost-proof.mjs
-```
+## Pass/fail matrix
 
-## Gates
+| Gate | Flag off | Flag on | HITL reject | HITL approve |
+|------|----------|---------|-------------|--------------|
+| Wizard HTTP 200 | PASS | PASS | PASS | PASS |
+| Form + manual edit | PASS | PASS | PASS | PASS |
+| Agent form-fill | PASS | PASS | — | — |
+| `host-event-approval-panel` | — | — | **PASS** | **PASS** |
+| Reject → no Published link | — | — | **PASS** | — |
+| Approve → Published link | — | — | — | **PASS** |
+| No `pending_approval` race | — | — | PASS | **PASS** |
+| Critical console errors | PASS | PASS | hydration noise only | **PASS** |
 
-| Gate | Flag off | Flag on |
-|------|----------|---------|
-| `/host/event/new` HTTP 200 | required | required |
-| `host-event-wizard` + form visible | required | required |
-| Manual title edit | required | required |
-| Agent neighborhood fill OR HITL panel | soft | soft |
-| Zero critical console errors | required | required |
+**Combined HITL verdict:** **PASS** · [`SAN-889-hitl-combined-results.json`](./SAN-889-hitl-combined-results.json)
 
-## Results
+## Screenshots
 
-| Mode | Verdict | JSON | Screenshot |
-|------|---------|------|------------|
-| v1 flag-off | **PASS** | [`SAN-889-v2-flag-off-results.json`](./SAN-889-v2-flag-off-results.json) | [`SAN-889-v2-flag-off-localhost.png`](./SAN-889-v2-flag-off-localhost.png) |
-| v2 flag-on | **PASS** | [`SAN-889-v2-flag-on-results.json`](./SAN-889-v2-flag-on-results.json) | [`SAN-889-v2-flag-on-localhost.png`](./SAN-889-v2-flag-on-localhost.png) |
+| File | What |
+|------|------|
+| [`SAN-889-v2-flag-off-localhost.png`](./SAN-889-v2-flag-off-localhost.png) | v1 wizard |
+| [`SAN-889-v2-flag-on-localhost.png`](./SAN-889-v2-flag-on-localhost.png) | v2 wizard |
+| [`SAN-889-hitl-wizard-filled.png`](./SAN-889-hitl-wizard-filled.png) | v2 wizard loaded |
+| [`SAN-889-hitl-draft-complete.png`](./SAN-889-hitl-draft-complete.png) | Complete draft |
+| [`SAN-889-hitl-panel-visible.png`](./SAN-889-hitl-panel-visible.png) | HITL panel |
+| [`SAN-889-hitl-reject.png`](./SAN-889-hitl-reject.png) | After reject |
+| [`SAN-889-hitl-approve-panel.png`](./SAN-889-hitl-approve-panel.png) | Approve panel |
+| [`SAN-889-hitl-approve.png`](./SAN-889-hitl-approve.png) | Published state |
 
-**Proof run:** 2026-06-12 · branch `e834c90` · `:3001` · Roberto prompt filled neighborhood via agent on both modes · zero critical console errors · HITL panel not triggered in this run (draft incomplete for `preview_and_publish`).
+## Notes
+
+- SCREEN-016 Playwright first failed without Infisical (middleware env) — **not SAN-889**; re-run **2/2 PASS**.
+- First HITL run hit Gemini **429** (rate limit) — retry succeeded.
+- Approve proof commit SHA: `072d8e5` (pre-evidence commit; evidence commit follows).

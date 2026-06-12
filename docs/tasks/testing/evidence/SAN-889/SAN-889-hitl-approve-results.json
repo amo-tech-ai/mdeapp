@@ -1,0 +1,13 @@
+{
+  "task": "SAN-889 · CK-V2-003 — v2 HITL approve proof",
+  "commitSha": "072d8e5ef0e1aa929e2879c014048df87027d072",
+  "at": "2026-06-12T23:10:56.749Z",
+  "matrix": {
+    "hitlPanelVisible": true,
+    "approvePublishedLink": true,
+    "approveNoPendingApprovalRace": true,
+    "zeroConsoleErrors": true
+  },
+  "consoleErrors": [],
+  "verdict": "PASS"
+}
