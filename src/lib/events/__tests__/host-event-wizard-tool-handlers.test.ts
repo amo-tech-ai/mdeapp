@@ -22,7 +22,7 @@ describe("host-event-wizard-tool-handlers", () => {
   it("applySetVenue coerces capacity to number", () => {
     const next = applySetVenue(EMPTY_EVENT_DRAFT, {
       venue: "Hotel Intercontinental",
-      capacity: 200,
+      capacity: "200",
     });
     expect(next.venue).toBe("Hotel Intercontinental");
     expect(next.capacity).toBe(200);

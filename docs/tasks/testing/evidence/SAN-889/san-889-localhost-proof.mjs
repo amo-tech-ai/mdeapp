@@ -160,10 +160,15 @@ try {
 
   // Agent form-fill — allow up to 2 min for hostEventAgent tool round-trip
   try {
-    await page
-      .getByTestId("host-event-field-neighborhood")
-      .filter({ hasNotText: "" })
-      .waitFor({ timeout: 120_000 });
+    const neighborhoodField = page.getByTestId("host-event-field-neighborhood");
+    await neighborhoodField.waitFor({ timeout: 120_000 });
+    await page.waitForFunction(
+      () => {
+        const el = document.querySelector('[data-testid="host-event-field-neighborhood"]');
+        return el instanceof HTMLInputElement && el.value.trim() !== "";
+      },
+      { timeout: 120_000 },
+    );
     results.gates.agentFilledNeighborhood = true;
   } catch {
     results.gates.agentFilledNeighborhood = false;
@@ -183,6 +188,7 @@ try {
   results.gates.screenshot = path.basename(shot);
 
   const hardPass =
+    results.gates.copilotkitPost === true &&
     results.gates.wizardHttp === 200 &&
     results.gates.hostEventWizard &&
     results.gates.hostEventForm &&
