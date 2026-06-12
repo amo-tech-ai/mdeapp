@@ -1,0 +1,31 @@
+src/lib/events/__tests__/sales-insights-core.test.ts
+  s_a2b7148eca5a27::t_a34dc443a10155 145
+  s_a2b7148eca5a27::t_7807294a621447 1-144,146-181
+src/mastra/workflows/sales-insight-workflow.ts
+  s_a2b7148eca5a27::t_565c2d4285e1bd 1-59
+src/mastra/index.ts
+  s_a2b7148eca5a27::t_14e577d515819c 38
+  s_a2b7148eca5a27::t_67c6fb2e5a0b84 17
+src/lib/events/sales-insights-core.ts
+  s_a2b7148eca5a27::t_79bf799b5e5f4a 1-44,46-75,77-149
+  s_a2b7148eca5a27::t_dc149a8cfcbfec 76
+  s_a2b7148eca5a27::t_b54d0cd73c19bc 45
+src/mastra/workflows/index.ts
+  s_a2b7148eca5a27::t_3f86086e4396d8 3-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "c6d3833b475694f79d911c0f640094e65385a002",
+  "prompts": {},
+  "sessions": {
+    "s_a2b7148eca5a27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "008c6fc3-bdd1-49a9-bab8-41bc2cbd97ff",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
