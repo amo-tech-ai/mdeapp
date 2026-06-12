@@ -1,0 +1,25 @@
+src/lib/events/host-dashboard-result.ts
+  s_a2b7148eca5a27::t_c37f2c121f11d3 42-61
+src/components/host/host-ops-copilot-bridge.tsx
+  s_a2b7148eca5a27::t_1337a25447da1f 3,9
+  s_a2b7148eca5a27::t_277b85562e1bb0 27-32,36,42-43,46-48,50-52,67-70,75-106,121-122,125-126
+src/lib/events/__tests__/host-dashboard-result.test.ts
+  s_a2b7148eca5a27::t_f81f3ee314eeab 81-104
+  s_a2b7148eca5a27::t_0780bb94bb9cce 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "820d28385790e49195a7ea67e6070be914a99415",
+  "prompts": {},
+  "sessions": {
+    "s_a2b7148eca5a27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "008c6fc3-bdd1-49a9-bab8-41bc2cbd97ff",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
