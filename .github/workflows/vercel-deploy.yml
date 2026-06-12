@@ -1,0 +1,70 @@
+# Vercel deploy via CI (replaces the dashboard GitHub integration).
+# Org/project IDs below are non-secret identifiers; the only secret you must add is VERCEL_TOKEN.
+#   GitHub → repo Settings → Secrets and variables → Actions → New repository secret → VERCEL_TOKEN
+#   (create the token at https://vercel.com/account/tokens, scoped to the team below)
+#
+# Env vars (Supabase, Gemini, Maps, etc.) come from the Vercel PROJECT settings via `vercel pull`,
+# so they are configured once in the Vercel dashboard for this project — not duplicated here.
+#
+# NOTE: To avoid double deploys, disconnect the OLD account's Vercel↔GitHub dashboard integration
+# once this workflow is live. Until VERCEL_TOKEN is set, the job no-ops and reports green.
+
+name: Vercel Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  VERCEL_ORG_ID: team_AbpVUyPsah0J7VcB82IqsWgC
+  VERCEL_PROJECT_ID: prj_4oOjWQXME3RSI5i14wo58T504peg
+
+jobs:
+  deploy:
+    name: vercel (${{ github.event_name == 'push' && 'production' || 'preview' }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check VERCEL_TOKEN presence
+        id: guard
+        run: |
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "::warning::VERCEL_TOKEN not set — skipping deploy. Add it in repo Settings → Secrets and variables → Actions."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.guard.outputs.skip == 'false'
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        if: steps.guard.outputs.skip == 'false'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install Vercel CLI
+        if: steps.guard.outputs.skip == 'false'
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel environment
+        if: steps.guard.outputs.skip == 'false'
+        run: vercel pull --yes --environment=${{ github.event_name == 'push' && 'production' || 'preview' }} --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build project
+        if: steps.guard.outputs.skip == 'false'
+        run: vercel build ${{ github.event_name == 'push' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy to Vercel
+        if: steps.guard.outputs.skip == 'false'
+        run: vercel deploy --prebuilt ${{ github.event_name == 'push' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
