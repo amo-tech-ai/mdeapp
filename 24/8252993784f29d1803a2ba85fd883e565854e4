@@ -1,0 +1,22 @@
+docs/tasks/testing/evidence/SAN-889/san-889-localhost-proof.mjs
+  s_25b0cb0b37161d::t_88b157b5f1ae8b 163-171
+  s_25b0cb0b37161d::t_f013740e7c59fa 191
+src/lib/events/__tests__/host-event-wizard-tool-handlers.test.ts
+  s_25b0cb0b37161d::t_ae770682449a4f 25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "248252993784f29d1803a2ba85fd883e565854e4",
+  "prompts": {},
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
