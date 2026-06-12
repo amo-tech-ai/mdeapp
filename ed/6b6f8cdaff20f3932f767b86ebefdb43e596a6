@@ -1,0 +1,25 @@
+src/components/partners/partner-landing-shell.tsx
+  s_86d71c3aceef7c::t_a12d35f94f1afc 152
+  s_86d71c3aceef7c::t_c68264d99fd721 103-104
+  s_86d71c3aceef7c::t_6e1157e9131d42 116-127
+  s_86d71c3aceef7c::t_43c80082679cf4 99
+  s_86d71c3aceef7c::t_f2d5fcb5782e47 188,190-195
+  s_86d71c3aceef7c::t_534acde46c21ed 136
+  s_86d71c3aceef7c::t_f4657d432d47f9 110
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "ed6b6f8cdaff20f3932f767b86ebefdb43e596a6",
+  "prompts": {},
+  "sessions": {
+    "s_86d71c3aceef7c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b206cb4b-a2a0-4def-a8c0-ad2d5b398f78",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
