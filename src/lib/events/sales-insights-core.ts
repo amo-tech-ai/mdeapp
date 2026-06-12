@@ -100,6 +100,10 @@ export function computeSalesInsights(summaries: SalesSummary[]): SalesInsights {
  * Gather sales summaries for the host's own events using the AIE-006 reads.
  * Non-owned / missing events come back 404 from getSalesSummary and are SKIPPED
  * (fail-safe) — a host's insight never includes another host's data.
+ *
+ * A HARD failure of `listHostEvents` (DB outage / auth error) THROWS — it must not
+ * be confused with "you have no events", or Gemini would narrate "no sales" to a
+ * host whose database simply hiccupped (Greptile P1).
  */
 export async function gatherSalesSummaries(
   supabase: SupabaseClient<Database>,
@@ -111,15 +115,17 @@ export async function gatherSalesSummaries(
     eventIds = [opts.eventId];
   } else {
     const events = await listHostEvents(supabase, userId);
-    eventIds = events.ok ? events.data.map((e) => e.id) : [];
+    if (!events.ok) {
+      throw new Error(`Could not load your events (${events.status}). Please try again.`);
+    }
+    eventIds = events.data.map((e) => e.id);
   }
 
-  const summaries: SalesSummary[] = [];
-  for (const id of eventIds) {
-    const r = await getSalesSummary(supabase, userId, id);
-    if (r.ok) summaries.push(r.data); // 404 (not owned) / errors skipped — fail safe
-  }
-  return summaries;
+  // Concurrent — independent per-event reads; 404 (not owned) / errors skipped (fail-safe).
+  const results = await Promise.all(
+    eventIds.map((id) => getSalesSummary(supabase, userId, id)),
+  );
+  return results.flatMap((r) => (r.ok ? [r.data] : []));
 }
 
 /**
@@ -143,7 +149,9 @@ export function buildNarrationPrompt(insights: SalesInsights): string {
       : "Weakest event: none",
   ];
   if (insights.recommendedActions.length > 0) {
-    lines.push(`Suggested actions to relay: ${insights.recommendedActions.map((a) => a.action).join(" ")}`);
+    lines.push(
+      `Suggested actions to relay:\n${insights.recommendedActions.map((a) => `- ${a.action}`).join("\n")}`,
+    );
   }
   return lines.join("\n");
 }

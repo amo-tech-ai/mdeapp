@@ -157,6 +157,16 @@ describe("gatherSalesSummaries — RLS fail-safe", () => {
     expect(out).toEqual([]);
     vi.restoreAllMocks();
   });
+
+  it("THROWS on a hard listHostEvents failure — a DB error must not look like 'no sales' (Greptile P1)", async () => {
+    vi.spyOn(reads, "listHostEvents").mockResolvedValue({
+      ok: false,
+      status: 500,
+      message: "db down",
+    });
+    await expect(gatherSalesSummaries(fakeClient, "user-1")).rejects.toThrow(/could not load/i);
+    vi.restoreAllMocks();
+  });
 });
 
 // ── buildNarrationPrompt — the guardrail ─────────────────────────────────────
