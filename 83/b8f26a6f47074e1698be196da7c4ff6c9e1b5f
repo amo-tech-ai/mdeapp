@@ -1,0 +1,20 @@
+package.json
+  s_25b0cb0b37161d::t_0cb65b2af95f85 70
+  s_25b0cb0b37161d::t_22dcbc7d540900 44-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "83b8f26a6f47074e1698be196da7c4ff6c9e1b5f",
+  "prompts": {},
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
