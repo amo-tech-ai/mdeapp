@@ -5,7 +5,7 @@
 // Exit 2 = block; print reason to stderr — never the secret value.
 
 import { readFileSync, existsSync, statSync, readdirSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { basename, join, resolve } from "node:path";
 
 let payload;
 try {
@@ -95,6 +95,10 @@ function* walk(dir, depth = 0) {
       // Build caches (turbopack/webpack) are never deployed and store binary
       // intermediate data that over-captures key shapes — skip the whole subtree.
       if (e.name === "cache") continue;
+      // `.next/dev/` is the LOCAL dev build (`next dev`) — it never deploys (Vercel
+      // builds prod fresh) and inlines dev env, so NEXT_PUBLIC_* keys there are
+      // false positives. Skip it; prod artifacts (.next/static, .next/server) still scan.
+      if (e.name === "dev" && basename(dir) === ".next") continue;
       yield* walk(p, depth + 1);
       continue;
     }
