@@ -3,6 +3,7 @@ import {
   parseInsightResult,
   parseEventsResult,
   applyAgentState,
+  toolRenderSignature,
 } from "@/lib/events/host-dashboard-result";
 import { EMPTY_HOST_DASHBOARD, type HostDashboardState } from "@/lib/types/host-dashboard";
 
@@ -74,6 +75,30 @@ describe("parseInsightResult — tool-result parsing (every payload shape)", () 
     expect(parseInsightResult(null)).toEqual({ ok: false });
     expect(parseInsightResult(undefined)).toEqual({ ok: false });
     expect(parseInsightResult(42)).toEqual({ ok: false });
+  });
+});
+
+describe("toolRenderSignature — dedupe key (prevents the render loop)", () => {
+  it("same data via a DIFFERENT object ref → same signature", () => {
+    const a = { eventCount: 2, currency: "COP" };
+    const b = { eventCount: 2, currency: "COP" }; // new ref, same value
+    expect(a).not.toBe(b);
+    expect(toolRenderSignature("complete", a)).toBe(toolRenderSignature("complete", b));
+  });
+  it("object and its JSON string form share a signature", () => {
+    const o = { eventCount: 2 };
+    expect(toolRenderSignature("complete", o)).toBe(toolRenderSignature("complete", JSON.stringify(o)));
+  });
+  it("different status or different data → different signature", () => {
+    expect(toolRenderSignature("complete", { a: 1 })).not.toBe(toolRenderSignature("executing", { a: 1 }));
+    expect(toolRenderSignature("complete", { a: 1 })).not.toBe(toolRenderSignature("complete", { a: 2 }));
+  });
+  it("never throws on null/undefined/unserializable", () => {
+    expect(() => toolRenderSignature("complete", null)).not.toThrow();
+    expect(() => toolRenderSignature("complete", undefined)).not.toThrow();
+    const cyclic: Record<string, unknown> = {};
+    cyclic.self = cyclic;
+    expect(() => toolRenderSignature("complete", cyclic)).not.toThrow();
   });
 });
 
