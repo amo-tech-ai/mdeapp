@@ -24,6 +24,16 @@ const EVENT_VENUE_NOUN_RE =
 
 const GUEST_COUNT_EVENT_RE = /\b(?:for\s+)?\d+\s+(?:people|guests)\b/i;
 
+const SUGGEST_VENUES_RE = /\bsuggest\s+venues?\b/i;
+
+const PRIVATE_EVENT_SPACE_RE = /\bprivate\s+event\s+space\b/i;
+
+const SOMEWHERE_BIRTHDAY_RE = /\bsomewhere\s+for\s+(?:a\s+)?birthday\b/i;
+
+/** Named venue hire — e.g. "book Mamacita for 30" (not ticket purchases). */
+const BOOK_NAMED_VENUE_FOR_GUESTS_RE =
+  /\bbook\s+(?!tickets?\b)(?:[A-Za-zÀ-ÿ][\wÀ-ÿ'-]*(?:\s+[A-Za-zÀ-ÿ][\wÀ-ÿ'-]*)*)\s+for\s+(\d+)\b/i;
+
 const NEIGHBORHOOD_PATTERNS: Array<{ neighborhood: string; re: RegExp }> = [
   { neighborhood: "El Poblado", re: /\b(el poblad[oa]|poblado|provenza)\b/i },
   { neighborhood: "Laureles", re: /\blaureles\b/i },
@@ -58,6 +68,11 @@ function hasPrivateEventVenueSignals(text: string): boolean {
   if (EVENT_VENUE_NOUN_RE.test(t)) return true;
   if (VENUE_SEEKING_RE.test(t) && GUEST_COUNT_EVENT_RE.test(t)) return true;
   if (PRIVATE_EVENT_TYPE_RE.test(t) && /\bvenue\b/i.test(t)) return true;
+  if (SUGGEST_VENUES_RE.test(t) && (/\bparty\b/i.test(t) || GUEST_COUNT_EVENT_RE.test(t)))
+    return true;
+  if (PRIVATE_EVENT_SPACE_RE.test(t)) return true;
+  if (SOMEWHERE_BIRTHDAY_RE.test(t)) return true;
+  if (BOOK_NAMED_VENUE_FOR_GUESTS_RE.test(t)) return true;
   return false;
 }
 
@@ -77,7 +92,9 @@ export function parseEventVenueBookingIntent(text: string): EventVenueBookingInt
   const t = text.trim();
   const intent: EventVenueBookingIntent = {};
 
-  const guestMatch = t.match(/\b(?:for\s+)?(\d+)\s+(?:people|guests)\b/i);
+  const guestMatch =
+    t.match(/\b(?:for\s+)?(\d+)\s+(?:people|guests)\b/i) ??
+    t.match(BOOK_NAMED_VENUE_FOR_GUESTS_RE);
   if (guestMatch) {
     intent.partySize = Number.parseInt(guestMatch[1], 10);
   }

@@ -248,11 +248,17 @@ export function classifyRouterIntent(text: string): RouterIntentClassification {
   };
 }
 
-/** Primary handler first — venue_booking never falls through to event before its handler runs. */
-export function routerHandlerOrderFor(text: string): RouterRoutingTarget[] {
-  const primary = classifyRouterIntent(text).routingTarget;
+export function routerHandlerOrderFromClassification(
+  classification: Pick<RouterIntentClassification, "routingTarget">,
+): RouterRoutingTarget[] {
+  const primary = classification.routingTarget;
   if (primary === "agent") return [];
   return [primary, ...ROUTER_HANDLER_ORDER.filter((t) => t !== primary)];
+}
+
+/** Primary handler first — venue_booking never falls through to event before its handler runs. */
+export function routerHandlerOrderFor(text: string): RouterRoutingTarget[] {
+  return routerHandlerOrderFromClassification(classifyRouterIntent(text));
 }
 
 export function routerIntentForTarget(target: RouterRoutingTarget): RouterIntent {
