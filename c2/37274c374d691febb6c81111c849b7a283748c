@@ -1,0 +1,72 @@
+docs/upgradeV2/03-copilotkit-nativeai_audit.md
+  s_25b0cb0b37161d::t_fd08254f109aa0 23
+  s_25b0cb0b37161d::t_10897053cfe698 190-192
+  s_25b0cb0b37161d::t_681d96acc1b391 3
+  s_25b0cb0b37161d::t_33a9f9ad266afe 14
+  s_25b0cb0b37161d::t_9df3c50a6112d8 104-105
+  s_25b0cb0b37161d::t_808192cfaf89a4 37
+  s_25b0cb0b37161d::t_c363d604c8a446 164-165
+  s_25b0cb0b37161d::t_499d48024ac158 7
+  s_25b0cb0b37161d::t_19e82ebc3646ea 87,91,93,95
+  s_25b0cb0b37161d::t_878a799f66fbb8 24
+  s_25b0cb0b37161d::t_ab4dd1ad6fd839 169
+  s_25b0cb0b37161d::t_8308c5d8bc3b5a 52
+  s_25b0cb0b37161d::t_383e2207e502ec 175,179-183
+  s_25b0cb0b37161d::t_99363457370213 203
+  s_25b0cb0b37161d::t_824ceb9ccff9c4 106-108,110-121,124-141,143-149,157-163,166-167
+  s_25b0cb0b37161d::t_9874565a73a09a 122-123
+  s_25b0cb0b37161d::t_77e7d52b985744 142
+  s_25b0cb0b37161d::t_c5b8ff1cbdc269 199
+  s_25b0cb0b37161d::t_d2f216ac8595ff 109
+  s_25b0cb0b37161d::t_deb6be1b5679b7 168
+  s_25b0cb0b37161d::t_63341e2d04e247 207
+  s_25b0cb0b37161d::t_8ae960a5387ad8 76
+  s_020ab484285fc8::t_4b311eb903a221 1-2,4-6,8-13,15-22,25-36,38-51,53-75,77-86,88-90,92,94,96-103,170-174,176-178,184-189,193-198,200-202
+  s_25b0cb0b37161d::t_b015b5880091c9 150-156
+  s_25b0cb0b37161d::t_b51bc9ec03551d 204-206
+.claude/launch.json
+  s_1f0f569465d6d8::t_fd3816a5886a44 7,14,21,28,35,42
+.gitignore
+  s_1f0f569465d6d8::t_e5c0dfb852f9b5 49
+.env.infisical.example
+  s_1f0f569465d6d8::t_f8939e5eb06886 1-8
+.infisical.json
+  s_1f0f569465d6d8::t_c5f024bcfd6402 1-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "c237274c374d691febb6c81111c849b7a283748c",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_020ab484285fc8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0da4b8d0-2d5c-49ab-9dbb-892e2a7124af",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
