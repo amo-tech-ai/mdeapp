@@ -1,0 +1,38 @@
+src/lib/flash-route-classifier.ts
+  s_1f0f569465d6d8::t_28e5581c4beac6 1-8,10-199
+  s_1f0f569465d6d8::t_da44e75094080c 9
+src/lib/concierge-send-user-message.ts
+  s_1f0f569465d6d8::t_685de607d4b681 3-9,23-24,59-63
+.env.example
+  s_1f0f569465d6d8::t_6366045e93c347 30-31
+src/lib/event-venue-booking-intent.ts
+  s_1f0f569465d6d8::t_3fe3000bd3fc01 71-75
+  s_1f0f569465d6d8::t_0e68b143066d6b 27-36
+  s_1f0f569465d6d8::t_3d001f4bb4b013 95-97
+src/lib/router-intent.ts
+  s_1f0f569465d6d8::t_42f813f458d1cc 251-254,259-261
+src/lib/__tests__/router-intent.test.ts
+  s_1f0f569465d6d8::t_2e3df225d3c049 87-103
+src/lib/__tests__/flash-route-classifier.test.ts
+  s_1f0f569465d6d8::t_d2f82a6c9b001e 63
+  s_1f0f569465d6d8::t_4dae448bf2855f 1-43,45-50,52-55,57-62,64-114
+  s_1f0f569465d6d8::t_ee076280af831d 44,51,56
+src/lib/__tests__/event-venue-booking-fast-path.test.ts
+  s_1f0f569465d6d8::t_27260217b8b816 9,11-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "076e97b3e4c7acb39924c17561dee0dcaa97a77f",
+  "prompts": {},
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
