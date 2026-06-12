@@ -2,13 +2,11 @@
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { useCoAgent, useCopilotAction } from "@copilotkit/react-core";
-import { z } from "zod";
 import {
-  salesInsightsSchema,
-  type SalesInsights,
-} from "@/lib/events/sales-insights-core";
-import { hostEventSummarySchema } from "@/lib/events/hostops-read-core";
-import { toKpiCards } from "@/lib/events/host-dashboard-kpis";
+  parseInsightResult,
+  parseEventsResult,
+  applyAgentState,
+} from "@/lib/events/host-dashboard-result";
 import {
   EMPTY_HOST_DASHBOARD,
   type HostDashboardState,
@@ -23,18 +21,9 @@ import {
  *
  * GUARDRAIL: numeric fields are lifted from the DETERMINISTIC tool `result`
  * (`get_sales_insights` → SAN-759 · AIE-007 — salesInsightWorkflow), never from
- * LLM-generated text. The agent (LLM) only sets `focusedEventId` / narration.
+ * LLM-generated text. Parsing + state-safety live in pure, unit-tested helpers
+ * (`host-dashboard-result.ts`); the agent path can ONLY set `focusedEventId`.
  */
-
-// narrative is OPTIONAL on purpose: if the deterministic numbers parse but the
-// Gemini narration is missing/drifted, we still show the KPIs — never discard the
-// real numbers over a missing sentence (Greptile).
-const insightWithNarrativeSchema = salesInsightsSchema.extend({
-  narrative: z.string().optional(),
-});
-const listHostEventsResultSchema = z.object({
-  events: z.array(hostEventSummarySchema),
-});
 
 type ToolRenderProps = { status: string; result: unknown };
 
@@ -54,20 +43,12 @@ function InsightResultSync({
       return;
     }
     if (status !== "complete") return;
-    const parsed = insightWithNarrativeSchema.safeParse(result);
-    if (!parsed.success) {
+    const parsed = parseInsightResult(result);
+    if (!parsed.ok) {
       apply({ workflowStatus: "error" });
       return;
     }
-    const { narrative, ...insights } = parsed.data;
-    apply({
-      insights: insights as SalesInsights,
-      kpiCards: toKpiCards(insights as SalesInsights),
-      recommendations: insights.recommendedActions,
-      lastNarrative: narrative,
-      workflowStatus: "ready",
-      lastUpdatedIso: new Date().toISOString(),
-    });
+    apply({ ...parsed.patch, lastUpdatedIso: new Date().toISOString() });
   }, [status, result, apply]);
   return (
     <span data-testid="host-insight-tool-ack" className="text-xs text-muted-foreground">
@@ -84,8 +65,8 @@ function EventsResultSync({
 }: ToolRenderProps & { apply: (patch: Partial<HostDashboardState>) => void }) {
   useEffect(() => {
     if (status !== "complete") return;
-    const parsed = listHostEventsResultSchema.safeParse(result);
-    if (parsed.success) apply({ events: parsed.data.events });
+    const parsed = parseEventsResult(result);
+    if (parsed.ok) apply({ events: parsed.events });
   }, [status, result, apply]);
   return null;
 }
@@ -101,13 +82,14 @@ export function HostOpsCopilotBridge({ children }: HostOpsCopilotBridgeProps) {
     setState((prev) => ({ ...prev, ...patch }));
   }, []);
 
-  // Shared state with hostOpsAgent — the agent may set lean fields (focus/narration).
+  // Shared state with hostOpsAgent. The agent path is CLOBBER-PROOF: applyAgentState
+  // only lets the LLM change `focusedEventId` — never the numeric/render fields.
   useCoAgent<HostDashboardState>({
     name: "hostOpsAgent",
     state,
     setState: (next) =>
       setState((prev) =>
-        typeof next === "function" ? { ...prev, ...(next(prev) ?? {}) } : { ...prev, ...next },
+        applyAgentState(prev, typeof next === "function" ? (next(prev) ?? {}) : (next ?? {})),
       ),
   });
 
