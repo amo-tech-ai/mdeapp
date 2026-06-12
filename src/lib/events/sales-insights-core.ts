@@ -6,6 +6,7 @@ import {
   getSalesSummary,
   type SalesSummary,
 } from "@/lib/events/hostops-read-core";
+import { formatMoney } from "@/lib/events/format-money";
 
 /**
  * SAN-759 · AIE-007 — salesInsightWorkflow (deterministic core).
@@ -149,16 +150,24 @@ export async function gatherSalesSummaries(
  * explicit instruction to restate only. The LLM never calculates. Pure + tested.
  */
 export function buildNarrationPrompt(insights: SalesInsights): string {
+  // Money is pre-formatted HERE (same formatMoney the KPI cards use) so the LLM
+  // restates a ready display string ("COP 23,640,000") — never raw cents. Feeding
+  // cents made Gemini narrate "2364000000 cents"; the guardrail is unchanged (numbers
+  // still come from code, the LLM only restates them).
+  const totalRevenue = formatMoney(insights.totalRevenueCents, insights.currency);
+  const bestRevenue = insights.bestEvent
+    ? formatMoney(insights.bestEvent.revenueCents, insights.currency)
+    : null;
   const lines = [
     "You are summarizing an event host's sales for them in 2-3 short, plain sentences.",
-    "Use ONLY the numbers below. Do NOT calculate, estimate, re-derive, or round beyond whole percent. If a value is null, omit it.",
+    "Use ONLY the numbers below. Restate the money amounts EXACTLY as written (they are already formatted — do not convert, scale, or add the word 'cents'). Do NOT calculate, estimate, re-derive, or round beyond whole percent. If a value is null, omit it.",
     "",
     `Events: ${insights.eventCount}`,
-    `Total revenue (cents, ${insights.currency}): ${insights.totalRevenueCents}`,
+    `Total revenue: ${totalRevenue}`,
     `Total tickets sold: ${insights.totalTicketsSold}`,
     `Paid orders: ${insights.paidOrders}`,
     insights.bestEvent
-      ? `Best event by revenue: ${insights.bestEvent.name} (${insights.bestEvent.revenueCents} cents)`
+      ? `Best event by revenue: ${insights.bestEvent.name} (${bestRevenue})`
       : "Best event: none",
     insights.weakestEvent
       ? `Weakest event by sell-through: ${insights.weakestEvent.name} (${Math.round(insights.weakestEvent.sellThrough * 100)}% sold)`

@@ -209,7 +209,10 @@ describe("buildNarrationPrompt — AI explains, never calculates", () => {
     ]);
     const prompt = buildNarrationPrompt(insights);
     expect(prompt).toContain("Do NOT calculate");
-    expect(prompt).toContain("250000"); // revenue injected, not asked-for
+    // Money is injected pre-formatted (same as the KPI cards) — NOT raw cents.
+    // (Intl currency uses a non-breaking space, so match with \s.)
+    expect(prompt).toMatch(/Total revenue: COP\s2,500/); // 250_000 cents → COP 2,500
+    expect(prompt).not.toContain("250000"); // raw cents must not leak into the data
     expect(prompt).toContain("50"); // tickets injected
     expect(prompt).toContain("Gala");
   });
