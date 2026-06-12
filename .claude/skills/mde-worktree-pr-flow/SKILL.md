@@ -108,12 +108,34 @@ cp /home/sk/mdeai/mdeapp/.env.local .worktrees/wt-san-NNN-slug/
 cp /path/to/main/.env.local <worktree-path>/
 ```
 
+### 1cc. Provision `node_modules` (hardlink — NOT symlink)
+
+**Hard rule (2026-06-11):** give the worktree its OWN `node_modules` via a hardlink copy. **Never `ln -s`** the main checkout's `node_modules`.
+
+```bash
+cp -al /home/sk/mdeai/mdeapp/node_modules <worktree-path>/node_modules
+```
+
+**Why:** Next 16 / Turbopack **rejects a symlinked `node_modules`** that points outside the worktree —
+`next build` dies with *"Symlink [project]/node_modules is invalid, it points out of the filesystem root."*
+`cp -al` makes a real directory of **hardlinks** — instant, no disk duplication (same inodes), and Turbopack
+accepts it. `node_modules` is gitignored, so it never enters the diff. (First hit on SAN-759 · AIE-007 —
+salesInsightWorkflow; the symlink passed lint+test but failed the build gate.)
+
+If a worktree was already created with a symlinked `node_modules`, fix it before building:
+
+```bash
+rm <worktree-path>/node_modules
+cp -al /home/sk/mdeai/mdeapp/node_modules <worktree-path>/node_modules
+```
+
 ### 1d. Post-creation validation
 
 ```bash
 git worktree list                          # shows expected path + branch
 git -C <worktree-path> status --short      # must be clean
 git -C <worktree-path> log --oneline -3    # tip matches origin/main
+ls -ld <worktree-path>/node_modules        # must be a DIRECTORY, not an 'l'/symlink
 ```
 
 ## Step 2 — Verify path convention before staging
