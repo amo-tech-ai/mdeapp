@@ -1,0 +1,24 @@
+docs/upgradeV2/02-upgrade-tasks-linear.md
+  s_25b0cb0b37161d::t_7509c4c9c7ffa2 34-40
+  s_25b0cb0b37161d::t_48fb09a1de9cea 380-386
+docs/upgradeV2/official-docs.md
+  s_25b0cb0b37161d::t_b95112d75040b3 95,101
+  s_25b0cb0b37161d::t_fccc9ab178d919 33,40,52-53
+  s_25b0cb0b37161d::t_2728e478b1c48f 75,83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "6d247261d3ccb8c2573a86993c51afe6c6aef9d7",
+  "prompts": {},
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
