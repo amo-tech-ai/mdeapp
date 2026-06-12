@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { checkGroundingRouteRateLimit } from "@/lib/api-ip-rate-limit";
+import { isSearchGroundingEnabled } from "@/lib/is-search-grounding-enabled";
 import {
   attachWebGroundingForEventSearch,
   shouldChainWebGrounding,
@@ -6,7 +8,7 @@ import {
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+export const maxDuration = 15;
 
 type Body = {
   category?: string;
@@ -16,7 +18,10 @@ type Body = {
 };
 
 export async function POST(req: Request) {
-  if (process.env.ENABLE_SEARCH_GROUNDING?.trim() !== "1") {
+  const rateLimited = checkGroundingRouteRateLimit(req);
+  if (rateLimited) return rateLimited;
+
+  if (!isSearchGroundingEnabled()) {
     return NextResponse.json(
       { webGrounding: { citations: [], metadata: { reason: "disabled" } } },
       { status: 200 },
