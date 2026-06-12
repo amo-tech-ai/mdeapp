@@ -13,6 +13,8 @@ export function HostKpiPanel({ state }: { state: HostDashboardState }) {
     return (
       <div
         data-testid="host-kpi-skeletons"
+        aria-busy="true"
+        aria-label="Loading your sales"
         className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
       >
         {[0, 1, 2].map((i) => (

@@ -26,8 +26,11 @@ import {
  * LLM-generated text. The agent (LLM) only sets `focusedEventId` / narration.
  */
 
+// narrative is OPTIONAL on purpose: if the deterministic numbers parse but the
+// Gemini narration is missing/drifted, we still show the KPIs — never discard the
+// real numbers over a missing sentence (Greptile).
 const insightWithNarrativeSchema = salesInsightsSchema.extend({
-  narrative: z.string(),
+  narrative: z.string().optional(),
 });
 const listHostEventsResultSchema = z.object({
   events: z.array(hostEventSummarySchema),
