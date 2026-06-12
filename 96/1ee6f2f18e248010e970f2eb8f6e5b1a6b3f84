@@ -1,0 +1,42 @@
+src/components/host/host-analytics-provider-v2.tsx
+  s_25b0cb0b37161d::t_4c02ce586f39da 17-19
+docs/tasks/testing/evidence/SAN-888/san-888-v2-localhost-proof.mjs
+  s_25b0cb0b37161d::t_b01ffb70cf5f9c 110,112
+  s_25b0cb0b37161d::t_e3ef51920978be 107,116-117
+  s_020ab484285fc8::t_c1a9d049388c6e 1-106,108-109,113,115,118-143
+  s_25b0cb0b37161d::t_849a46aee7a3e3 111,114
+.env.example
+  s_25b0cb0b37161d::t_2ebd325ccf7fa6 55-57
+docs/tasks/testing/evidence/SAN-888/SAN-888-v2-flag-on-results.json
+  s_020ab484285fc8::t_c1a9d049388c6e 1-4,6-8,13,15
+docs/tasks/testing/evidence/SAN-888/RESULTS.md
+  s_25b0cb0b37161d::t_2439c583a678c7 1-64
+src/components/host/host-analytics-shell-v2.tsx
+  s_25b0cb0b37161d::t_5d042285f06324 66
+src/components/host/host-ops-copilot-bridge-v2.tsx
+  s_25b0cb0b37161d::t_0140f82a6c57dd 106-108,110-112
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "961ee6f2f18e248010e970f2eb8f6e5b1a6b3f84",
+  "prompts": {},
+  "sessions": {
+    "s_020ab484285fc8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0da4b8d0-2d5c-49ab-9dbb-892e2a7124af",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
