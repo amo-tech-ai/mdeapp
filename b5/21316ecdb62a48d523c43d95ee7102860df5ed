@@ -1,0 +1,25 @@
+.claude/skills/copilotkit-upgrade/references/v1-to-v2-migration.md
+  s_25b0cb0b37161d::t_82e8ff29b25ad8 3-13
+docs/audits/copilotkit-v1-v2-architecture-audit.md
+  s_25b0cb0b37161d::t_8242887e264d31 391
+  s_25b0cb0b37161d::t_fc20b6ddebb61e 15
+  s_25b0cb0b37161d::t_a06bd4b433200f 164-167
+  s_25b0cb0b37161d::t_bfacd9d2d484ed 361-383
+  s_25b0cb0b37161d::t_cc777094b2e589 403
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "b521316ecdb62a48d523c43d95ee7102860df5ed",
+  "prompts": {},
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
