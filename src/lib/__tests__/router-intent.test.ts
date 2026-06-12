@@ -84,6 +84,23 @@ describe("SAN-867 · VEB-MVP-001 — Router hijack fix — agent intents skip fa
   });
 });
 
+describe("SAN-494 · EVT-035 — ambiguous venue hire matrix (regex)", () => {
+  const matrix = [
+    "suggest venues for party in Medellín 30 people",
+    "book Mamacita for 30",
+    "private event space Laureles",
+    "somewhere for a birthday",
+    "I need a venue for birthday party 30 people",
+  ] as const;
+
+  it.each(matrix)("«%s» → venue_booking + event_venue_booking first", (query) => {
+    const out = classifyRouterIntent(query);
+    expect(out.intent).toBe("venue_booking");
+    expect(out.routingTarget).toBe("event_venue_booking");
+    expect(routerHandlerOrderFor(query)[0]).toBe("event_venue_booking");
+  });
+});
+
 describe("classifyRouterIntent — confidence actions", () => {
   it("venue_booking always search_now", () => {
     expect(classifyRouterIntent("Restaurant for 20 people").action).toBe(

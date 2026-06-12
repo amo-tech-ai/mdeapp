@@ -6,8 +6,13 @@ import {
 } from "../event-venue-booking-fast-path";
 
 describe("event-venue-booking-fast-path", () => {
-  it("fast paths all SAN-494 test queries", () => {
+  it("fast paths all SAN-494 acceptance matrix queries", () => {
     const queries = [
+      "suggest venues for party in Medellín 30 people",
+      "book Mamacita for 30",
+      "private event space Laureles",
+      "somewhere for a birthday",
+      "I need a venue for birthday party 30 people",
       "I need a venue for a birthday party for 30 people",
       "Looking for a corporate event venue",
       "Need a restaurant for a private event",

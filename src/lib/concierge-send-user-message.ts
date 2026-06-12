@@ -1,5 +1,12 @@
 import { clearConciergeError, reportConciergeError } from "@/lib/concierge-error-store";
-import { routerHandlerOrderFor, type RouterRoutingTarget } from "@/lib/router-intent";
+import {
+  routerHandlerOrderFromClassification,
+  type RouterRoutingTarget,
+} from "@/lib/router-intent";
+import {
+  resolveRouterClassification,
+  type FlashRouteClassification,
+} from "@/lib/flash-route-classifier";
 import {
   clearConciergePendingSend,
   setConciergePendingSend,
@@ -13,6 +20,8 @@ export type ConciergeSendHandlers = {
   handleGroundedMessage: (text: string) => Promise<boolean>;
   handleRestaurantMessage: (text: string) => Promise<boolean>;
   onAgentSend: (text: string) => Promise<void>;
+  /** Working-memory lastIntent — enables Flash topicShift (SAN-873). */
+  lastIntent?: FlashRouteClassification["intent"];
 };
 
 async function invokeConciergeHandler(
@@ -47,7 +56,11 @@ export async function sendConciergeUserMessage(
   clearConciergeError();
 
   try {
-    for (const target of routerHandlerOrderFor(trimmed)) {
+    const classification = await resolveRouterClassification(trimmed, {
+      lastIntent: handlers.lastIntent,
+    });
+
+    for (const target of routerHandlerOrderFromClassification(classification)) {
       if (await invokeConciergeHandler(target, trimmed, handlers)) return;
     }
 
