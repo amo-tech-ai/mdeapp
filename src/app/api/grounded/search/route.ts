@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { checkSearchFastPathRateLimit } from "@/lib/api-ip-rate-limit";
 import { searchGroundedPlacesTool } from "@/mastra/tools/search-grounded-places";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 20;
 
 const bodySchema = z.object({
   query: z.string().min(1),
@@ -14,6 +16,9 @@ const bodySchema = z.object({
 
 /** Fast path — grounded café search without relying on conciergeAgent tool calls. */
 export async function POST(req: Request) {
+  const rateLimited = checkSearchFastPathRateLimit(req);
+  if (rateLimited) return rateLimited;
+
   let json: unknown;
   try {
     json = await req.json();

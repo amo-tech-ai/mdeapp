@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { checkSearchFastPathRateLimit } from "@/lib/api-ip-rate-limit";
 import { searchEvents } from "@/mastra/tools/search-events";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 10;
 
 const bodySchema = z.object({
   category: z.enum(["music", "food", "culture", "sport", "nightlife"]).optional(),
@@ -18,6 +20,9 @@ const bodySchema = z.object({
 
 /** Fast path — Supabase event search without conciergeAgent (EVP-006 perf). */
 export async function POST(req: Request) {
+  const rateLimited = checkSearchFastPathRateLimit(req);
+  if (rateLimited) return rateLimited;
+
   let json: unknown;
   try {
     json = await req.json();

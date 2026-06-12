@@ -1,0 +1,30 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "src/app/api/copilotkit/**": {
+      "maxDuration": 30,
+      "memory": 1024
+    },
+    "src/app/api/grounding/**": {
+      "maxDuration": 15
+    },
+    "src/app/api/grounded/**": {
+      "maxDuration": 20
+    },
+    "src/app/api/restaurants/search/**": {
+      "maxDuration": 10
+    },
+    "src/app/api/events/search/**": {
+      "maxDuration": 10
+    },
+    "src/app/api/rentals/search/**": {
+      "maxDuration": 10
+    },
+    "src/app/api/admin/**": {
+      "maxDuration": 20
+    },
+    "src/app/api/scorers/**": {
+      "maxDuration": 5
+    }
+  }
+}

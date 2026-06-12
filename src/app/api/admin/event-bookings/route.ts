@@ -8,6 +8,10 @@ import {
 } from "@/lib/events/admin-event-bookings-core";
 import { resumeEventVenueBookingWorkflow } from "@/lib/events/start-admin-review-workflow";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const maxDuration = 20;
+
 /**
  * SAN-502 · EVT-043 — Patricia admin queue (event requests).
  * Admin-only API for the /admin/event-bookings page:
