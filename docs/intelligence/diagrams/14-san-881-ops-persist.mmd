@@ -1,0 +1,18 @@
+flowchart TD
+  accTitle: SAN-881 ops persist verification
+  accDescr: Prove Mastra workflow suspend survives redeploy when DATABASE_URL is set on Vercel.
+
+  START["Start SAN-881 proof"] --> ENV{"Vercel production<br/>DATABASE_URL set?"}
+  ENV -->|no| BLOCK["BLOCKER: set Postgres URL<br/>blocks Patricia sign-off"]
+  ENV -->|yes| BOOT["Deploy / boot preview"]
+  BOOT --> LOG{"Log contains<br/>mastra-storage using Postgres?"}
+  LOG -->|no| BLOCK
+  LOG -->|yes| PROP["Camila POST proposal<br/>booking pending"]
+  PROP --> SUSP["eventVenueBookingWorkflow<br/>suspend for admin review"]
+  SUSP --> SNAP["Mastra storage snapshot<br/>PostgresStore"]
+  SNAP --> REDEP["Simulate redeploy<br/>cold start / new instance"]
+  REDEP --> RESUME["Patricia resume approve/decline"]
+  RESUME --> OK{"HTTP 200 + booking<br/>status updated?"}
+  OK -->|yes| EVID["Save VEB-MVP-010 evidence"]
+  OK -->|no| FAIL["FAIL: in-memory LibSQL<br/>or missing runId"]
+  EVID --> DONE["SAN-881 Done candidate"]

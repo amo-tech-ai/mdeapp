@@ -1,0 +1,52 @@
+# SAN-881 · VEB-MVP-010 — Mastra Postgres workflow suspend durability (integration).
+# Gated by repo variable VEB_MVP_010_INTEGRATION_ENABLED=true and secret DATABASE_URL.
+name: VEB-MVP-010 integration
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/mastra/lib/storage.ts"
+      - "src/mastra/lib/storage*.test.ts"
+      - "src/mastra/workflows/event-venue-booking-workflow.ts"
+      - ".github/workflows/veb-mvp-010-integration.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/mastra/lib/storage.ts"
+      - "src/mastra/lib/storage*.test.ts"
+      - "src/mastra/workflows/event-venue-booking-workflow.ts"
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  postgres-durability:
+    name: mastra postgres durability
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: vars.VEB_MVP_010_INTEGRATION_ENABLED == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Postgres cold-start durability
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          VEB_MVP_010_INTEGRATION: "1"
+          NODE_ENV: production
+        run: node scripts/verify-veb-mvp-010-integration.mjs

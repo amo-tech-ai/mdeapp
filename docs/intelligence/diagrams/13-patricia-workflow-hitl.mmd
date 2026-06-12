@@ -1,0 +1,20 @@
+sequenceDiagram
+  autonumber
+  participant C as Camila /chat
+  participant AG as conciergeAgent
+  participant API as Booking API
+  participant WF as eventVenueBookingWorkflow
+  participant ST as Mastra storage
+  participant P as Patricia /admin
+  participant SB as Supabase bookings
+
+  C->>AG: Request venue proposal
+  AG->>API: create proposal HITL
+  API->>WF: start workflow
+  WF->>SB: insert booking + runId
+  WF->>ST: suspend snapshot
+  Note over ST: Requires DATABASE_URL Postgres<br/>else in-memory loss on redeploy
+  WF-->>P: queue item SAN-502
+  P->>WF: resume approve or reject
+  WF->>SB: update booking status
+  WF-->>C: notification realtime Phase 2

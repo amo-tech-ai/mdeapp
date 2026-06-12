@@ -7,7 +7,9 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Mastra } from "@mastra/core/mastra";
+import { PostgresStore } from "@mastra/pg";
 import {
+  closeMastraStorageForTests,
   getMastraStorage,
   resetMastraStorageForTests,
 } from "./storage";
@@ -16,6 +18,7 @@ import { eventVenueBookingWorkflow } from "@/mastra/workflows/event-venue-bookin
 const BOOKING_ID = "11111111-1111-4111-8111-111111111111";
 const USER_ID = "22222222-2222-4222-8222-222222222222";
 const ACTOR_ID = "33333333-3333-4333-8333-333333333333";
+const WORKFLOW_NAME = "eventVenueBookingWorkflow";
 
 vi.mock("@/lib/supabase/service", () => ({
   createServiceRoleClient: vi.fn(),
@@ -47,12 +50,30 @@ function buildMastra() {
   });
 }
 
+async function deleteWorkflowSnapshot(runId: string): Promise<void> {
+  const store = getMastraStorage();
+  if (!(store instanceof PostgresStore)) return;
+  const workflows = await store.getStore("workflows");
+  if (!workflows?.deleteWorkflowRunById) return;
+  try {
+    await workflows.deleteWorkflowRunById({
+      runId,
+      workflowName: WORKFLOW_NAME,
+    });
+  } catch {
+    // Best-effort — snapshot may already be gone after successful resume.
+  }
+}
+
 const runIntegration =
   Boolean(process.env.DATABASE_URL) &&
   process.env.VEB_MVP_010_INTEGRATION === "1";
 
 describe.runIf(runIntegration)("VEB-MVP-010 Postgres cold-start durability", () => {
+  const runIdsToCleanup: string[] = [];
+
   beforeEach(() => {
+    runIdsToCleanup.length = 0;
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("MASTRA_DEV_LIBSQL", "");
     resetMastraStorageForTests();
@@ -76,36 +97,46 @@ describe.runIf(runIntegration)("VEB-MVP-010 Postgres cold-start durability", () 
     });
   });
 
-  afterEach(() => {
-    resetMastraStorageForTests();
+  afterEach(async () => {
+    for (const runId of runIdsToCleanup) {
+      await deleteWorkflowSnapshot(runId);
+    }
+    // Close any open Postgres pool(s) created during the test.
+    await closeMastraStorageForTests();
     vi.unstubAllEnvs();
   });
 
   it(
-    "logs postgres mode and resumes suspended workflow after storage singleton reset",
+    "uses PostgresStore and resumes suspended workflow after storage singleton reset",
     async () => {
       const info = vi.spyOn(console, "info").mockImplementation(() => {});
 
       const mastraBefore = buildMastra();
-      const workflowBefore = mastraBefore.getWorkflow("eventVenueBookingWorkflow");
+      const storageBefore = getMastraStorage();
+      expect(storageBefore).toBeInstanceOf(PostgresStore);
+      expect(info).toHaveBeenCalledWith("[mastra-storage] using Postgres");
+
+      const workflowBefore = mastraBefore.getWorkflow(WORKFLOW_NAME);
       const run = await workflowBefore.createRun();
       const started = await run.start({
         inputData: { bookingId: BOOKING_ID, userId: USER_ID },
       });
 
       expect(started.status).toBe("suspended");
-      expect(info).toHaveBeenCalledWith("[mastra-storage] using Postgres");
       const runId = run.runId;
       expect(runId).toBeTruthy();
+      runIdsToCleanup.push(runId);
 
-      // Simulate Vercel redeploy: new process, fresh storage singleton, same Postgres.
+      // Simulate Vercel redeploy: drop singleton (new pool on next boot). Do not close
+      // the first pool here — Mastra may still hold the store reference until resume.
       resetMastraStorageForTests();
       info.mockClear();
 
       const mastraAfter = buildMastra();
+      expect(getMastraStorage()).toBeInstanceOf(PostgresStore);
       expect(info).toHaveBeenCalledWith("[mastra-storage] using Postgres");
 
-      const workflowAfter = mastraAfter.getWorkflow("eventVenueBookingWorkflow");
+      const workflowAfter = mastraAfter.getWorkflow(WORKFLOW_NAME);
       const reloaded = await workflowAfter.createRun({ runId });
       const resumed = await reloaded.resume({
         step: "suspend-for-admin-review",
