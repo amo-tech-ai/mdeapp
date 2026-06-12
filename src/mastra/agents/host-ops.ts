@@ -1,20 +1,21 @@
 import { Agent } from "@mastra/core/agent";
-import { hostOpsMemorySchema } from "../../lib/types/host-dashboard";
-import { createThreadMemory } from "../lib/agent-memory";
-import { FLASH_MODEL } from "../lib/models";
+import { hostOpsMemorySchema } from "@/lib/types/host-dashboard";
+import { createThreadMemory } from "@/mastra/lib/agent-memory";
+import { FLASH_MODEL } from "@/mastra/lib/models";
 import { HOST_OPS_INSTRUCTIONS } from "./host-ops-prompt";
 import {
   listHostEventsTool,
   getSalesSummaryTool,
-} from "../tools/hostops-read-tools";
-import { getSalesInsightsTool } from "../tools/hostops-insight-tool";
+} from "@/mastra/tools/hostops-read-tools";
+import { getSalesInsightsTool } from "@/mastra/tools/hostops-insight-tool";
 
 /**
- * SAN-760 · AIE-005 — hostOpsAgent.
- * Answers Roberto's "how are my sales?" by running the deterministic read tools +
- * salesInsightWorkflow; it relays numbers, never computes them. Its thread working
- * memory is the lean `hostOpsMemorySchema` (focus + narration only) — the full
- * render-ready `HostDashboardState` is the useCoAgent contract for SAN-729 · AIE-008.
+ * SAN-760 · AIE-005 — hostOpsAgent + HostDashboardState.
+ * Answers an event host's "how are my sales?" by running the deterministic read
+ * tools + SAN-759 · AIE-007 — salesInsightWorkflow; it relays numbers, never computes
+ * them. Its thread working memory is the lean `hostOpsMemorySchema` (focus + narration
+ * only) — the full render-ready `HostDashboardState` is the useCoAgent contract for
+ * SAN-729 · AIE-008 — Host Analytics Page + HostOpsCopilotBridge.
  */
 export const hostOpsAgent = new Agent({
   id: "host-ops-agent",
