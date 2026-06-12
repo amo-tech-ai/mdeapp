@@ -20,7 +20,8 @@ test.describe(`${SCREEN_ID} · AIE-008 — /host/analytics auth guard`, () => {
   test("anonymous /host/analytics redirects to /login with next", async ({ page }) => {
     await page.goto("/host/analytics");
     await expect(page).toHaveURL(/\/login\?/);
-    expect(page.url()).toContain(`next=${encodeURIComponent("/host/analytics")}`);
+    // redirect("/login?next=/host/analytics") keeps literal slashes
+    expect(page.url()).toContain("next=/host/analytics");
   });
 });
 
