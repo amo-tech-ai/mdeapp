@@ -35,7 +35,7 @@ test.describe("SAN-661 · For Venues landing", () => {
     await page.goto(`${BASE}?v=restaurant`, { waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("heading", {
-        name: /be the answer to/i,
+        name: /be the answer when visitors ask where to eat/i,
         level: 1,
       }),
     ).toBeVisible();
@@ -93,5 +93,33 @@ test.describe("SAN-661 · For Venues landing", () => {
     await page.goto(BASE, { waitUntil: "domcontentloaded" });
     const steps = page.getByRole("list", { name: /steps to get started/i }).getByRole("listitem");
     await expect(steps).toHaveCount(5);
+  });
+
+  test("hero secondary CTA anchors to #how-it-works", async ({ page }) => {
+    await page.goto(BASE, { waitUntil: "domcontentloaded" });
+    const secondary = page.getByTestId("venues-landing-secondary-cta");
+    await expect(secondary).toBeVisible();
+    await expect(secondary).toHaveAttribute("href", "#how-it-works");
+  });
+
+  test("inline lead form renders with all fields in the demo band", async ({
+    page,
+  }) => {
+    await page.goto(BASE, { waitUntil: "domcontentloaded" });
+    const form = page.getByTestId("venues-landing-lead-form");
+    await form.scrollIntoViewIfNeeded();
+    await expect(form).toBeVisible();
+    await expect(page.getByTestId("venues-landing-field-name")).toBeVisible();
+    await expect(page.getByTestId("venues-landing-field-email")).toBeVisible();
+    await expect(page.getByTestId("venues-landing-field-venue-name")).toBeVisible();
+    await expect(page.getByTestId("venues-landing-field-venue-type")).toBeVisible();
+    await expect(page.getByTestId("venues-landing-lead-submit")).toBeVisible();
+  });
+
+  test("lead form preselects venue type from ?v= variant", async ({ page }) => {
+    await page.goto(`${BASE}?v=nightclub`, { waitUntil: "domcontentloaded" });
+    const select = page.getByTestId("venues-landing-field-venue-type");
+    await select.scrollIntoViewIfNeeded();
+    await expect(select).toHaveValue("nightclub");
   });
 });

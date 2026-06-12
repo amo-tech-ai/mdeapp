@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -11,12 +12,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 // ─── Slot types ──────────────────────────────────────────────────────────────
 
@@ -28,6 +29,10 @@ export type HeroConfig = {
   primaryHref: string;
   secondaryLabel?: string;
   secondaryHref?: string;
+  /** Product-proof visual rendered beside the copy (desktop) / below (mobile). */
+  visual?: ReactNode;
+  /** Reassurance pills shown under the CTAs at the conversion moment. */
+  trustPills?: string[];
 };
 
 export type ValuePropConfig = {
@@ -60,6 +65,8 @@ export type PartnerLandingShellProps = {
   pricingLine: string;
   /** Signup href, e.g. /partners/signup?type=venue. Used for all CTA buttons. */
   signupHref: string;
+  /** Inline lead-capture form rendered in the demo band (no /contact bounce). */
+  leadForm?: ReactNode;
 };
 
 // ─── Shell ───────────────────────────────────────────────────────────────────
@@ -80,54 +87,102 @@ export function PartnerLandingShell({
   howItWorks,
   pricingLine,
   signupHref,
+  leadForm,
 }: PartnerLandingShellProps) {
+  const hasVisual = Boolean(hero.visual);
   return (
     <div data-testid={testId}>
       {/* ── Hero ── */}
       <section
+        id="hero"
         aria-label={hero.h1}
-        className="relative overflow-hidden border-b border-border px-4 py-16 sm:px-6 sm:py-24 lg:px-8"
+        className="border-b border-border px-4 pb-14 pt-10 sm:px-6 sm:pb-20 sm:pt-14 lg:px-8"
       >
-        <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
-          <Badge variant="secondary" className="w-fit tracking-wide">
-            {hero.kicker}
-          </Badge>
-          <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-            {hero.h1}
-          </h1>
-          <p className="max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-            {hero.sub}
-          </p>
-          <div className="flex flex-col items-center gap-3 sm:flex-row">
-            <Button
-              size="lg"
-              nativeButton={false}
-              render={
-                <Link
-                  href={hero.primaryHref}
-                  data-testid={`${testId}-primary-cta`}
-                />
-              }
-            >
-              {hero.primaryLabel}
-              <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
-            </Button>
-            {hero.secondaryLabel && hero.secondaryHref && (
+        <div
+          className={cn(
+            "mx-auto grid grid-cols-1 items-center gap-10 lg:gap-12",
+            hasVisual ? "max-w-7xl lg:grid-cols-3" : "max-w-3xl",
+          )}
+        >
+          {/* Copy column */}
+          <div
+            className={cn(
+              "flex flex-col gap-5 lg:col-span-2",
+              hasVisual
+                ? "items-center text-center lg:items-start lg:text-left"
+                : "items-center text-center",
+            )}
+          >
+            <Badge variant="secondary" className="tracking-wide">
+              {hero.kicker}
+            </Badge>
+            <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+              {hero.h1}
+            </h1>
+            <p className="max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+              {hero.sub}
+            </p>
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
               <Button
-                variant="outline"
                 size="lg"
+                className="w-full sm:w-auto"
                 nativeButton={false}
                 render={
                   <Link
-                    href={hero.secondaryHref}
-                    data-testid={`${testId}-secondary-cta`}
+                    href={hero.primaryHref}
+                    data-testid={`${testId}-primary-cta`}
                   />
                 }
               >
-                {hero.secondaryLabel}
+                {hero.primaryLabel}
+                <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
               </Button>
+              {hero.secondaryLabel && hero.secondaryHref && (
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                  nativeButton={false}
+                  render={
+                    <Link
+                      href={hero.secondaryHref}
+                      data-testid={`${testId}-secondary-cta`}
+                    />
+                  }
+                >
+                  {hero.secondaryLabel}
+                </Button>
+              )}
+            </div>
+            {hero.trustPills && hero.trustPills.length > 0 && (
+              <ul
+                className={cn(
+                  "flex flex-wrap gap-x-5 gap-y-2",
+                  hasVisual ? "justify-center lg:justify-start" : "justify-center",
+                )}
+              >
+                {hero.trustPills.map((pill) => (
+                  <li
+                    key={pill}
+                    className="flex items-center gap-1.5 text-xs text-muted-foreground"
+                  >
+                    <CheckCircleIcon
+                      className="size-3.5 text-success"
+                      aria-hidden="true"
+                    />
+                    {pill}
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
+
+          {/* Visual column (product proof) */}
+          {hasVisual && (
+            <div className="flex justify-center lg:col-span-1 lg:justify-end">
+              {hero.visual}
+            </div>
+          )}
         </div>
       </section>
 
@@ -196,8 +251,9 @@ export function PartnerLandingShell({
 
       {/* ── How it works (5-step timeline) ── */}
       <section
+        id="how-it-works"
         aria-labelledby="how-it-works-heading"
-        className="border-y border-border bg-background-elevated/50 px-4 py-14 sm:px-6 sm:py-16 lg:px-8"
+        className="scroll-mt-20 border-y border-border bg-background-elevated/50 px-4 py-14 sm:px-6 sm:py-16 lg:px-8"
       >
         <div className="mx-auto max-w-5xl">
           <h2
@@ -263,11 +319,11 @@ export function PartnerLandingShell({
         </div>
       </section>
 
-      {/* ── Demo band (closing dark CTA, Mindtrip pattern) ── */}
+      {/* ── Demo band (closing CTA / inline lead capture) ── */}
       <section
         id="demo"
         aria-labelledby="demo-heading"
-        className="bg-foreground/[0.03] px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
+        className="scroll-mt-20 bg-foreground/[0.03] px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
       >
         <div className="mx-auto max-w-3xl text-center">
           <h2
@@ -277,37 +333,43 @@ export function PartnerLandingShell({
             Ready to grow your venue?
           </h2>
           <p className="mt-3 text-sm text-muted-foreground">
-            Join mdeai and put your venue inside Medellín's AI concierge today.
+            {leadForm
+              ? "Tell us about your venue — we'll set you up inside the concierge."
+              : "Join mdeai and put your venue inside Medellín's AI concierge today."}
           </p>
-          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <Button
-              size="lg"
-              nativeButton={false}
-              render={
-                <Link
-                  href={signupHref}
-                  data-testid={`${testId}-demo-primary-cta`}
-                />
-              }
-            >
-              List your venue free
-              <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="lg"
-              nativeButton={false}
-              render={
-                <Link
-                  href="/contact"
-                  data-testid={`${testId}-demo-secondary-cta`}
-                />
-              }
-            >
-              <PhoneIcon data-icon="inline-start" aria-hidden="true" />
-              Book a demo
-            </Button>
-          </div>
+          {leadForm ? (
+            <div className="mx-auto mt-8 max-w-md">{leadForm}</div>
+          ) : (
+            <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <Button
+                size="lg"
+                nativeButton={false}
+                render={
+                  <Link
+                    href={signupHref}
+                    data-testid={`${testId}-demo-primary-cta`}
+                  />
+                }
+              >
+                List your venue free
+                <ArrowRightIcon data-icon="inline-end" aria-hidden="true" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="lg"
+                nativeButton={false}
+                render={
+                  <Link
+                    href="/contact"
+                    data-testid={`${testId}-demo-secondary-cta`}
+                  />
+                }
+              >
+                <PhoneIcon data-icon="inline-start" aria-hidden="true" />
+                Book a demo
+              </Button>
+            </div>
+          )}
           <Separator className="mx-auto mt-12 max-w-sm" />
           <ul className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2">
             {["Free to list", "No setup fees", "Cancel anytime"].map((item) => (

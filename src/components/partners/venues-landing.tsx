@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 
 import type { MarketingAccent } from "@/components/marketing/marketing-page-shell";
+import { ConciergePreviewMockup } from "@/components/partners/concierge-preview-mockup";
+import { PartnerLeadForm } from "@/components/partners/partner-lead-form";
 import {
   PartnerLandingShell,
   type PartnerLandingShellProps,
@@ -128,7 +130,7 @@ type HeroCopy = {
 
 const HERO_COPY: Record<VenueVariant, HeroCopy> = {
   default: {
-    kicker: "FOR RESTAURANTS · CAFÉS · NIGHTLIFE · SPACES",
+    kicker: "FOR RESTAURANTS · CAFÉS · NIGHTLIFE",
     h1: "Fill your tables. Fill your nights.",
     sub: "mdeai puts your venue inside Medellín's AI concierge — where visitors already ask what to do, where to eat, and where to go out.",
   },
@@ -220,14 +222,23 @@ export function VenuesLanding({ variant }: VenuesLandingProps) {
         sub: hero.sub,
         primaryLabel: "List your venue",
         primaryHref: signupHref,
-        secondaryLabel: "Book a demo",
-        secondaryHref: "#demo",
+        secondaryLabel: "See how it works",
+        secondaryHref: "#how-it-works",
+        visual: <ConciergePreviewMockup variant={variant} />,
+        trustPills: ["Free to list", "No setup fees", "Cancel anytime"],
       }}
       valueProps={SHARED_VALUE_PROPS}
       features={getFeatures(variant)}
       howItWorks={SHARED_HOW_IT_WORKS}
       pricingLine="Free to list. Growth when you grow."
       signupHref={signupHref}
+      leadForm={
+        <PartnerLeadForm
+          testId="venues-landing"
+          variant={variant}
+          signupHref={signupHref}
+        />
+      }
     />
   );
 }
