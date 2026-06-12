@@ -1,0 +1,21 @@
+{
+  "task": "SAN-889 · CK-V2-003 — Host event v2 migration",
+  "mode": "v2-flag-on",
+  "flag": "1",
+  "baseUrl": "http://localhost:3001",
+  "mainSha": "aaff138",
+  "at": "2026-06-12T22:51:01.238Z",
+  "gates": {
+    "copilotkitPost": 400,
+    "wizardHttp": 200,
+    "signedInEmail": true,
+    "hostEventWizard": true,
+    "hostEventForm": true,
+    "manualTitleEdit": true,
+    "agentFilledNeighborhood": true,
+    "approvalPanelVisible": false,
+    "consoleErrors": [],
+    "screenshot": "SAN-889-v2-flag-on-localhost.png"
+  },
+  "verdict": "PASS"
+}

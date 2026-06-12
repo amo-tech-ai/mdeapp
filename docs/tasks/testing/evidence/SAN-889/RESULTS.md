@@ -30,7 +30,7 @@ COPILOTKIT_V2_HOST_EVENT=1 infisical run --silent --env=dev --path=/ -- node doc
 
 | Mode | Verdict | JSON | Screenshot |
 |------|---------|------|------------|
-| v1 flag-off | _pending_ | `SAN-889-v2-flag-off-results.json` | `SAN-889-v2-flag-off-localhost.png` |
-| v2 flag-on | _pending_ | `SAN-889-v2-flag-on-results.json` | `SAN-889-v2-flag-on-localhost.png` |
+| v1 flag-off | **PASS** | [`SAN-889-v2-flag-off-results.json`](./SAN-889-v2-flag-off-results.json) | [`SAN-889-v2-flag-off-localhost.png`](./SAN-889-v2-flag-off-localhost.png) |
+| v2 flag-on | **PASS** | [`SAN-889-v2-flag-on-results.json`](./SAN-889-v2-flag-on-results.json) | [`SAN-889-v2-flag-on-localhost.png`](./SAN-889-v2-flag-on-localhost.png) |
 
-_Update this table after proof runs._
+**Proof run:** 2026-06-12 · branch `e834c90` · `:3001` · Roberto prompt filled neighborhood via agent on both modes · zero critical console errors · HITL panel not triggered in this run (draft incomplete for `preview_and_publish`).
