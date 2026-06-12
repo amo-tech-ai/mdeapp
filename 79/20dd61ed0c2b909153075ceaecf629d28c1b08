@@ -1,0 +1,27 @@
+src/components/chat/concierge-chat-input.tsx
+  s_1f0f569465d6d8::t_e41c7b856aaeba 83-84
+  s_1f0f569465d6d8::t_b5812abab06b22 10
+  s_1f0f569465d6d8::t_1443ed7a8facea 126
+  s_1f0f569465d6d8::t_873efaa8eaf70b 115
+src/components/chat/concierge-initial-prompt.tsx
+  s_1f0f569465d6d8::t_86bc0d018c198f 28-29
+  s_1f0f569465d6d8::t_f29d57bce15468 11
+  s_1f0f569465d6d8::t_5b65ef6fb5383e 55
+  s_1f0f569465d6d8::t_7d7b9a3000087a 74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "7920dd61ed0c2b909153075ceaecf629d28c1b08",
+  "prompts": {},
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
