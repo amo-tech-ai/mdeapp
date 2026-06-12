@@ -1,0 +1,30 @@
+src/lib/__tests__/dist-leak-scan-hook.test.ts
+  s_c1ba9fe1793801::t_b9075613d28212 141-144
+  s_c1ba9fe1793801::t_90d883d5fb6f28 32-33
+  s_c1ba9fe1793801::t_966af41cd619b4 1-31,34-140,145-170
+docs/tasks/testing/evidence/2026-06-12/SAN-883-DEV-SEC-dist-leak-scan-RESULTS.md
+  s_c1ba9fe1793801::t_6ab27464eac027 1-75
+.claude/hooks/maps-key-allowlist.json
+  s_c1ba9fe1793801::t_63f9a06e0931b0 1-9
+docs/security/dist-leak-scan-maps-key-allowlist.md
+  s_c1ba9fe1793801::t_f91d0434ca7779 1-89
+.claude/hooks/dist-leak-scan.mjs
+  s_c1ba9fe1793801::t_293234837cb85c 6-15,18-23,41,43-50,69-71,74-82,84-86,103,106-107,112,114-139,155-156,182,184-188,205-206
+  s_c1ba9fe1793801::t_854f45660bf7db 55-58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "134cdd4b2c1eae0d54e04cb3daf29c5d61006ac4",
+  "prompts": {},
+  "sessions": {
+    "s_c1ba9fe1793801": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e0a28c64-9ed7-49cb-8597-4e0ab18820c7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
