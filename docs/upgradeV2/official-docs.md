@@ -30,14 +30,14 @@ CopilotKit V2 consolidates the frontend into a single package. Both hooks and UI
 Replace v1 hooks from `@copilotkit/react-core` with their v2 equivalents from `@copilotkit/react-core/v2`.
 Keep the `<CopilotKit>` provider name, but import it from `@copilotkit/react-core/v2`.
 
-#### Before
+#### Before — Hook imports
 
 ```tsx
 import { CopilotKit } from "@copilotkit/react-core";
 import { useCopilotReadable, useCopilotAction } from "@copilotkit/react-core";
 ```
 
-#### After
+#### After — Hook imports
 
 ```tsx
 import { CopilotKit, useAgent } from "@copilotkit/react-core/v2";
@@ -49,7 +49,8 @@ Use this table to find the v2 replacement for each v1 hook:
 
 | v1 hook | v2 hook |
 | --- | --- |
-| `useCopilotAction` | `useFrontendTool` |
+| `useCopilotAction` (with **handler**) | `useFrontendTool` |
+| `useCopilotAction` (with `available:"disabled"` + **render only**) | `useRenderTool` |
 | `useCopilotReadable` | `useAgentContext` |
 | `useCopilotAdditionalInstructions` | `useAgentContext` |
 | `useCoAgent` | `useAgent` |
@@ -71,7 +72,7 @@ v1 component-override props.
 
 UI components like `CopilotChat`, `CopilotSidebar`, and `CopilotPopup` are now exported from `@copilotkit/react-core/v2`.
 
-#### Before
+#### Before — UI imports
 
 ```tsx
 import { CopilotPopup } from "@copilotkit/react-ui";
@@ -79,7 +80,7 @@ import { CopilotSidebar } from "@copilotkit/react-ui";
 import { CopilotChat } from "@copilotkit/react-ui";
 ```
 
-#### After
+#### After — UI imports
 
 ```tsx
 import { CopilotPopup } from "@copilotkit/react-core/v2";
@@ -91,13 +92,13 @@ import { CopilotChat } from "@copilotkit/react-core/v2";
 <Step>
 ### Update your styles import
 
-#### Before
+#### Before — Styles import
 
 ```tsx
 import "@copilotkit/react-ui/styles.css";
 ```
 
-#### After
+#### After — Styles import
 
 ```tsx
 import "@copilotkit/react-core/v2/styles.css";

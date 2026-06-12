@@ -31,13 +31,13 @@
 
 | Task | Status | % correct | Dot | Corrections applied |
 |---|---|---|---|---|
-| **SAN-886 · CK-V2-000** — Epic | Backlog | **92%** | 🟢 | Hook table fixed; HITL→`useHumanInTheLoop`; disabled→`useRenderTool`; program mermaid added |
-| **SAN-887 · CK-V2-001** — Spike gate | Backlog | **95%** | 🟢 | `agentId` + `agent.state`/`setState`; sequence diagram; spike doc on disk |
-| **SAN-888 · CK-V2-002** — Analytics prototype | Backlog | **90%** | 🟢 | Bridge spec → `useRenderTool` ×2; flag architecture diagram; AC checklist |
-| **SAN-889 · CK-V2-003** — Host event v2 | Backlog | **88%** | 🟢 | HITL sequence diagram; `useHumanInTheLoop`; gate on SAN-888 proof |
-| **SAN-890 · CK-V2-004** — Chat v2 (last) | Backlog | **92%** | 🟢 | `useAgent` + stock `CopilotChat` + slots; **no** `useCopilotChatHeadless_c` (v1-only); Linear patched 2026-06-12 |
-| **SAN-891 · CK-V2-005** — Retire react-ui | Backlog | **90%** | 🟢 | Cutover flowchart; depends on 890 |
-| **SAN-892 · CK-V2-006** — Tag build-on-v2 | Backlog | **92%** | 🟢 | Labeling flowchart; parallel with 887 |
+| **SAN-886 · CK-V2-000 — CopilotKit v1→v2 Migration (frontend-only, subpath path)** | Backlog | **92%** | 🟢 | Hook table fixed; HITL→`useHumanInTheLoop`; disabled→`useRenderTool`; program mermaid added |
+| **SAN-887 · CK-V2-001 — v2 hook-signature verification spike (gate before any v2 code)** | Backlog | **95%** | 🟢 | `agentId` + `agent.state`/`setState`; sequence diagram; spike doc on disk |
+| **SAN-888 · CK-V2-002 — v2 prototype on /host/analytics behind COPILOTKIT_V2_ANALYTICS flag** | Backlog | **90%** | 🟢 | Bridge spec → `useRenderTool` ×2; flag architecture diagram; AC checklist |
+| **SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2** | Backlog | **88%** | 🟢 | HITL sequence diagram; `useHumanInTheLoop`; gate on SAN-888 proof |
+| **SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2 — last, highest-risk** | Backlog | **92%** | 🟢 | `useAgent` + stock `CopilotChat` + slots; **no** `useCopilotChatHeadless_c` (v1-only); Linear patched 2026-06-12 |
+| **SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui; consolidate frontend to react-core/v2 + remove flags** | Backlog | **90%** | 🟢 | Cutover flowchart; depends on 890 |
+| **SAN-892 · CK-V2-006 — Tag all unbuilt CK-*/CONCIERGE-* issues "build on v2"** | Backlog | **92%** | 🟢 | Labeling flowchart; parallel with 887 |
 
 **Weighted program score: 88%** 🟢 (Linear + skills + spike doc aligned with CopilotKit MCP)
 
@@ -377,13 +377,13 @@ Epic correctly documents “hook table only” — ignore skill’s `@copilotkit
 ## References
 
 - [Linear v2-upgrade view](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd)
-- [SAN-886 · CK-V2-000](https://linear.app/sanjiovani/issue/SAN-886/ck-v2-000-copilotkit-v1v2-migration-frontend-only-subpath-path)
-- [SAN-887 · CK-V2-001](https://linear.app/sanjiovani/issue/SAN-887/ck-v2-001-v2-hook-signature-verification-spike-gate-before-any-v2-code)
-- [SAN-888 · CK-V2-002](https://linear.app/sanjiovani/issue/SAN-888/ck-v2-002-v2-prototype-on-hostanalytics-behind-copilotkit-v2-analytics)
-- [SAN-889 · CK-V2-003](https://linear.app/sanjiovani/issue/SAN-889/ck-v2-003-migrate-hostevent-hosteventagent-to-v2)
-- [SAN-890 · CK-V2-004](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk)
-- [SAN-891 · CK-V2-005](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react)
-- [SAN-892 · CK-V2-006](https://linear.app/sanjiovani/issue/SAN-892/ck-v2-006-tag-all-unbuilt-ck-concierge-issues-build-on-v2)
+- [SAN-886 · CK-V2-000 — CopilotKit v1→v2 Migration (frontend-only, subpath path)](https://linear.app/sanjiovani/issue/SAN-886/ck-v2-000-copilotkit-v1v2-migration-frontend-only-subpath-path)
+- [SAN-887 · CK-V2-001 — v2 hook-signature verification spike (gate before any v2 code)](https://linear.app/sanjiovani/issue/SAN-887/ck-v2-001-v2-hook-signature-verification-spike-gate-before-any-v2-code)
+- [SAN-888 · CK-V2-002 — v2 prototype on /host/analytics behind COPILOTKIT_V2_ANALYTICS flag](https://linear.app/sanjiovani/issue/SAN-888/ck-v2-002-v2-prototype-on-hostanalytics-behind-copilotkit-v2-analytics)
+- [SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2](https://linear.app/sanjiovani/issue/SAN-889/ck-v2-003-migrate-hostevent-hosteventagent-to-v2)
+- [SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2 — last, highest-risk](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk)
+- [SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui; consolidate frontend to react-core/v2 + remove flags](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react)
+- [SAN-892 · CK-V2-006 — Tag all unbuilt CK-*/CONCIERGE-* issues "build on v2"](https://linear.app/sanjiovani/issue/SAN-892/ck-v2-006-tag-all-unbuilt-ck-concierge-issues-build-on-v2)
 - [PR #206](https://github.com/amo-tech-ai/mdeapp/pull/206)
 - [CopilotKit build-with-agents / MCP](https://docs.showcase.copilotkit.ai/build-with-agents)
 - [Mastra shared state (v2)](https://docs.copilotkit.ai/integrations/mastra/shared-state/in-app-agent-write)
