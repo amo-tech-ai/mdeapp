@@ -1,0 +1,20 @@
+.claude/hooks/dist-leak-scan.mjs
+  s_a2b7148eca5a27::t_495f7da4e2d13f 8
+  s_a2b7148eca5a27::t_7984f5084ec6a1 98-101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "6e99a4591f5f3a570bfd0a578fee3511d29f7a0d",
+  "prompts": {},
+  "sessions": {
+    "s_a2b7148eca5a27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "008c6fc3-bdd1-49a9-bab8-41bc2cbd97ff",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
