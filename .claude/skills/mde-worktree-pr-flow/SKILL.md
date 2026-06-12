@@ -122,10 +122,18 @@ cp -al /home/sk/mdeai/mdeapp/node_modules <worktree-path>/node_modules
 accepts it. `node_modules` is gitignored, so it never enters the diff. (First hit on SAN-759 · AIE-007 —
 salesInsightWorkflow; the symlink passed lint+test but failed the build gate.)
 
-If a worktree was already created with a symlinked `node_modules`, fix it before building:
+> ⚠️ **Hardlinks share inodes — do NOT `npm install`/`pnpm install` inside a hardlinked worktree.** A tool that
+> edits a file **in place** would mutate the main checkout's `node_modules` through the shared inode. The worktree
+> is meant to **reuse main's already-installed deps read-only** — that's the whole point. If a worktree genuinely
+> needs different deps, first detach it from the hardlinks: `rm -rf <worktree-path>/node_modules` then run a real
+> `npm ci` there (no `cp -al`). (npm/pnpm normally write-new-then-rename, which breaks the link safely, but don't
+> rely on it — treat hardlinked `node_modules` as install-frozen.)
+
+If a worktree was already created with a symlinked **or** real `node_modules`, replace it before building
+(`rm -rf` handles both a symlink and a directory):
 
 ```bash
-rm <worktree-path>/node_modules
+rm -rf <worktree-path>/node_modules
 cp -al /home/sk/mdeai/mdeapp/node_modules <worktree-path>/node_modules
 ```
 
