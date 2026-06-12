@@ -1,0 +1,38 @@
+src/app/api/copilotkit/[[...path]]/route.ts
+  s_1f0f569465d6d8::t_ff79e410573eb5 75-77
+  s_1f0f569465d6d8::t_bc8fc5752b5205 9-12
+src/lib/__tests__/api-ip-rate-limit.test.ts
+  s_1f0f569465d6d8::t_8df332f688dd69 3
+  s_1f0f569465d6d8::t_993487bfb7eaae 21-28
+src/lib/api-ip-rate-limit.ts
+  s_1f0f569465d6d8::t_37e9af5bf99f57 32-40
+  s_1f0f569465d6d8::t_0745b571d8df54 64
+  s_1f0f569465d6d8::t_33a27c47a180bf 7-8
+src/app/api/events/proposal/route.ts
+  s_1f0f569465d6d8::t_6c361f3b83e2eb 6-9
+src/app/api/threads/route.ts
+  s_1f0f569465d6d8::t_bb7f1329bab170 5,7
+src/app/api/venue-booking/request/route.ts
+  s_1f0f569465d6d8::t_513c4596c331a1 5-8
+vercel.json
+  s_1f0f569465d6d8::t_bc95229cf761f9 5
+  s_1f0f569465d6d8::t_aa5d75481f6664 27-35
+src/components/copilot/event-web-citation-fetch.tsx
+  s_1f0f569465d6d8::t_9c0dbeba98cbe9 36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "b1b8ea76b4ad28c0a08d4f2e024e02f414215c90",
+  "prompts": {},
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
