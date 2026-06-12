@@ -1,0 +1,55 @@
+src/mastra/copilotkit/logging-mastra-agent.test.ts
+  s_a2b7148eca5a27::t_109bee06954194 9,18
+src/lib/types.ts
+  s_a2b7148eca5a27::t_b6e1ec62fd14ec 61-70
+src/mastra/agents/host-ops.ts
+  s_a2b7148eca5a27::t_8d904826d65a7b 1-27
+src/lib/types/__tests__/host-dashboard.test.ts
+  s_a2b7148eca5a27::t_a7fb050e1cce9c 1-46
+src/mastra/copilotkit/logging-mastra-agent.ts
+  s_a2b7148eca5a27::t_83f10649785aaf 111
+src/mastra/index.ts
+  s_a2b7148eca5a27::t_d23e417809b3f1 12
+  s_a2b7148eca5a27::t_67c6fb2e5a0b84 18
+  s_a2b7148eca5a27::t_7c97557e7f76c5 34
+  s_a2b7148eca5a27::t_14e577d515819c 40
+src/app/api/copilotkit/[[...path]]/route.ts
+  s_a2b7148eca5a27::t_f684b14556f6ee 13
+  s_a2b7148eca5a27::t_8ffb4f27ee5fd1 82-84
+src/mastra/lib/log-agent-run.ts
+  s_a2b7148eca5a27::t_b0c4fa95f947ed 15
+src/mastra/tools/__tests__/hostops-insight-tool.test.ts
+  s_a2b7148eca5a27::t_fabb0def32cb1c 1-30,32-40,42,44-64,66,68-76,79-81
+  s_a2b7148eca5a27::t_ed288172801804 31
+  s_a2b7148eca5a27::t_335220d7ee5c62 41,43
+  s_a2b7148eca5a27::t_dea26c72051721 65,67
+  s_a2b7148eca5a27::t_fbe5bace3d3c59 77-78
+src/mastra/agents/host-ops-prompt.ts
+  s_a2b7148eca5a27::t_d2d7fd1881e8f9 1-23
+src/mastra/tools/hostops-insight-tool.ts
+  s_a2b7148eca5a27::t_07f37b4d07bfd1 1-78
+src/__tests__/smoke.test.ts
+  s_a2b7148eca5a27::t_950642fdd06a6b 15
+  s_a2b7148eca5a27::t_bc69aafed01eaa 31,34
+  s_a2b7148eca5a27::t_7fcdec48b02d6a 64
+src/lib/types/host-dashboard.ts
+  s_a2b7148eca5a27::t_e8fe12981d40f6 1-74
+src/mastra/agents/index.ts
+  s_a2b7148eca5a27::t_61f69174bc94c2 13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "bcd003dd7bd7199e5978178ece290e22c13c2f32",
+  "prompts": {},
+  "sessions": {
+    "s_a2b7148eca5a27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "008c6fc3-bdd1-49a9-bab8-41bc2cbd97ff",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
