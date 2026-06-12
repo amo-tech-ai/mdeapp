@@ -1,0 +1,26 @@
+docs/upgradeV2/todo.md
+  s_25b0cb0b37161d::t_573486ac8db2e7 3-4,11-19,25-27,30,32,34,41,52-54,56,58-60,68,70-73,75,79,83-84,86,92-96,103
+docs/upgradeV2/changelog.md
+  s_25b0cb0b37161d::t_7f44da3684d180 4-18
+docs/tasks/testing/evidence/SAN-889/san-889-localhost-proof.mjs
+  s_25b0cb0b37161d::t_f1b14204e70657 104-105
+  s_25b0cb0b37161d::t_2a5e8dce1fcdb2 113
+docs/tasks/testing/evidence/SAN-889/RESULTS.md
+  s_25b0cb0b37161d::t_20299f7d4f282b 5,15-16,18,20-22,25,30,32-37,56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "87c24fc9ee0551abd7451a3d144440027488f8d9",
+  "prompts": {},
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
