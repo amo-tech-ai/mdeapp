@@ -14,6 +14,7 @@ import {
   rentalSearchWorkflow,
   eventDiscoveryWorkflow,
   eventVenueBookingWorkflow,
+  salesInsightWorkflow,
 } from "./workflows";
 import { workspace } from "./workspaces";
 import { scorers } from "./scorers";
@@ -34,6 +35,7 @@ export const mastra = new Mastra({
     rentalSearchWorkflow,
     eventDiscoveryWorkflow,
     eventVenueBookingWorkflow,
+    salesInsightWorkflow,
   },
   workspace,
   scorers,
