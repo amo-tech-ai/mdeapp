@@ -22,22 +22,25 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-// Every hub card routes to the LIVE typed signup (no dead landings) — PR #131
-// prod validation found /venues, /sponsors, /business/ai, /partners/{rentals,
-// restaurants,cafes,nightlife} all 404.
-const SIGNUP_TYPES = ["host", "venue", "broker", "sponsor", "agency"] as const;
+// SAN-692 · D-PTR-01 link strategy: venue verticals route to the LIVE /venues
+// landing (?v= variant, shipped SAN-661 · D-PTR-02); the rest route to the LIVE
+// typed signup wizard until their landings ship. No card points at a 404.
+const SIGNUP_TYPES = ["host", "broker", "sponsor", "agency"] as const;
+
+// Routes with no page.tsx on disk (verified 2026-06-11) — the hub must not link
+// any of them. /venues is now LIVE, so it is intentionally absent here.
 const DEAD_HUB_ROUTES = [
-  "/venues",
   "/sponsors",
   "/business/ai",
   "/partners/rentals",
   "/partners/restaurants",
   "/partners/cafes",
   "/partners/nightlife",
+  "/contact",
 ] as const;
 
-// Hub is now slotted into the reusable MarketingPageShell (SAN-692), which
-// owns the <main data-testid="partner-hub"> + nav + footer chrome.
+// Hub is slotted into the reusable MarketingPageShell (SAN-692), which owns the
+// <main data-testid="partner-hub"> + nav + footer chrome.
 const html = renderToStaticMarkup(
   <MarketingPageShell accent="gold" mainTestId="partner-hub">
     <PartnerHub />
@@ -50,31 +53,34 @@ const FORBIDDEN_COLORS =
 describe("PartnerHub (/partners)", () => {
   it("renders hub marker and hero", () => {
     expect(html).toContain('data-testid="partner-hub"');
-    expect(html).toContain("Grow your business with mdeai");
+    expect(html).toContain("Grow your business with");
   });
 
-  it("routes every program card to the live typed signup", () => {
+  it("routes non-venue program cards to the live typed signup", () => {
     for (const type of SIGNUP_TYPES) {
       expect(html).toContain(`href="/partners/signup?type=${type}`);
     }
   });
 
-  it("links no dead/unbuilt landing route", () => {
+  it("routes the four venue verticals to the live /venues ?v= variants", () => {
+    const hrefOf = (key: string) =>
+      PARTNER_HUB_CARDS.find((c) => c.key === key)?.href;
+    expect(hrefOf("restaurants")).toBe("/venues?v=restaurant");
+    expect(hrefOf("cafes")).toBe("/venues?v=cafe");
+    expect(hrefOf("nightlife")).toBe("/venues?v=nightclub");
+    expect(hrefOf("spaces")).toBe("/venues?v=space");
+    expect(html).toContain('href="/venues?v=restaurant"');
+  });
+
+  it("links no dead/unbuilt route", () => {
     for (const route of DEAD_HUB_ROUTES) {
       expect(html).not.toContain(`href="${route}"`);
     }
   });
 
-  it("venue subtype cards carry the category param", () => {
-    const hrefOf = (key: string) =>
-      PARTNER_HUB_CARDS.find((c) => c.key === key)?.href;
-    expect(hrefOf("restaurants")).toBe(
-      "/partners/signup?type=venue&category=restaurant",
-    );
-    expect(hrefOf("cafes")).toBe("/partners/signup?type=venue&category=cafe");
-    expect(hrefOf("nightlife")).toBe(
-      "/partners/signup?type=venue&category=nightclub",
-    );
+  it("renders the 'AI does the work' differentiator band", () => {
+    expect(html).toContain("The AI does the work");
+    expect(html).toContain("AI surfaces you");
   });
 
   it("routes primary CTA to signup landing (not duplicating wizard)", () => {
@@ -85,9 +91,10 @@ describe("PartnerHub (/partners)", () => {
     expect(html).not.toContain('href=""');
   });
 
-  it("guards the marquee for prefers-reduced-motion", () => {
-    expect(html).toContain("animate-marquee");
-    expect(html).toContain("motion-reduce:animate-none");
+  it("guards motion for prefers-reduced-motion", () => {
+    // Timeline connector + card hover transforms must yield to reduced motion.
+    expect(html).toContain("motion-reduce:hidden");
+    expect(html).toContain("motion-reduce:transition-none");
   });
 
   it("is responsive (uses sm: breakpoint utilities)", () => {
