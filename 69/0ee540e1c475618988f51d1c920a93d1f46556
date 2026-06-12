@@ -1,0 +1,27 @@
+src/mastra/lib/storage-durability.integration.test.ts
+  s_1f0f569465d6d8::t_5b30ef881ffadc 1-83,88,95,100,104,107,114,121,126
+  s_1f0f569465d6d8::t_cde820d4811f7e 84-86
+  s_1f0f569465d6d8::t_4b4c3733ca0d2d 123-125
+  s_1f0f569465d6d8::t_3726558ba13b3f 87,89
+  s_1f0f569465d6d8::t_a195bb6542d24b 90-94,96-99,101-103,105-106,108-113,115-120,122
+docs/events/tasks/MVP/VEB-MVP-010-mastra-postgres-durability.md
+  s_1f0f569465d6d8::t_e6d75f23cd90d7 1-58
+docs/tasks/testing/evidence/2026-06-12/SAN-881-VEB-MVP-010-persist-RESULTS.md
+  s_1f0f569465d6d8::t_68f7eb291dc426 1-55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "690ee540e1c475618988f51d1c920a93d1f46556",
+  "prompts": {},
+  "sessions": {
+    "s_1f0f569465d6d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7015bb66-89da-4b54-9e39-2de19231a5f7",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
