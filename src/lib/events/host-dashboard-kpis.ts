@@ -1,29 +1,21 @@
 import type { SalesInsights } from "@/lib/events/sales-insights-core";
 import type { KpiCard } from "@/lib/types/host-dashboard";
+import { formatMoney } from "@/lib/events/format-money";
 
 /**
  * SAN-729 · AIE-008 — Host Analytics Page + HostOpsCopilotBridge.
  *
  * PURE — turns the deterministic `SalesInsights` (from SAN-759 · AIE-007 —
  * salesInsightWorkflow) into render-ready KPI tiles. Money/percent are formatted
- * ONCE, here in code — the LLM never formats or computes these. The bridge lifts
+ * ONCE, in code — the LLM never formats or computes these. The bridge lifts
  * the tool result through this helper into `HostDashboardState.kpiCards`.
+ *
+ * `formatMoney` lives in `./format-money` so the narration prompt (sales-insights-core)
+ * formats money identically — the cards and the agent's sentence never disagree.
  */
 
-/** Format integer cents as a whole-unit currency string (no fake decimal precision). */
-export function formatMoney(cents: number, currency: string): string {
-  const whole = Math.round(cents / 100);
-  try {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency,
-      maximumFractionDigits: 0,
-    }).format(whole);
-  } catch {
-    // Unknown currency code → plain number + code suffix
-    return `${whole.toLocaleString("en-US")} ${currency}`;
-  }
-}
+// Re-exported for callers/tests that import it from here.
+export { formatMoney };
 
 /** Sell-through % for the weakest event, as a whole number string. */
 function pct(ratio: number): string {
