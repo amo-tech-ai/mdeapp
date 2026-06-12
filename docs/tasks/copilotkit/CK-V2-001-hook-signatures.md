@@ -8,7 +8,27 @@
 
 ## Verdict
 
-**GO for SAN-888** — with the hook mappings below. Backend unchanged.
+**Conditional GO for SAN-888 implementation planning; runtime proof remains deferred to SAN-888 behind `COPILOTKIT_V2_ANALYTICS=1`.** Hook mappings below are verified against installed package types. Backend unchanged.
+
+---
+
+## Installed `/v2` export proof (`@copilotkit/react-core@1.55.2`)
+
+Command (run from repo root after `npm install`):
+
+```bash
+grep -n "useAgent\|useRenderTool\|useHumanInTheLoop\|useAgentContext\|useFrontendTool" \
+  node_modules/@copilotkit/react-core/dist/v2/index.d.cts
+```
+
+Output (2026-06-12):
+
+```
+1:import { ... A as useAgentContext, ... F as useRenderTool, ... L as useFrontendTool, ... M as useAgent, ... N as useHumanInTheLoop, ... } from "../copilotkit-dwDWYpya.cjs";
+6:export { ... useAgent, useAgentContext, ... useFrontendTool, useHumanInTheLoop, ... useRenderTool, ... };
+```
+
+All five spike hooks are present on the pinned `/v2` subpath: `useAgent`, `useRenderTool`, `useHumanInTheLoop`, `useAgentContext`, `useFrontendTool`.
 
 ---
 
