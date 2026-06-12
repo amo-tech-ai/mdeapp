@@ -8,10 +8,24 @@
  *   infisical run --silent --env=dev --path=/ -- node docs/tasks/testing/evidence/SAN-889/san-889-localhost-proof.mjs
  *   SAN889_V2=1 COPILOTKIT_V2_HOST_EVENT=1 infisical run ... (server must also have flag=1)
  */
+import { execSync } from "node:child_process";
 import { chromium } from "playwright";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
+function resolveMainSha() {
+  const fromEnv = process.env.MAIN_SHA?.trim();
+  if (fromEnv) return fromEnv;
+  try {
+    return execSync("git rev-parse --short HEAD", {
+      encoding: "utf8",
+      cwd: process.cwd(),
+    }).trim();
+  } catch {
+    return "unknown";
+  }
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE = process.env.SAN889_BASE_URL ?? "http://localhost:3001";
@@ -101,7 +115,8 @@ async function copilotkitPostOk() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({}),
   });
-  return res.status;
+  // Runtime connected: 200 or 400 (empty/invalid body) — not 5xx or connection refused
+  return res.status === 200 || res.status === 400;
 }
 
 const results = {
@@ -109,7 +124,7 @@ const results = {
   mode: V2 ? "v2-flag-on" : "v1-flag-off",
   flag: process.env.COPILOTKIT_V2_HOST_EVENT ?? "(unset)",
   baseUrl: BASE,
-  mainSha: "aaff138",
+  mainSha: resolveMainSha(),
   at: new Date().toISOString(),
   gates: {},
 };

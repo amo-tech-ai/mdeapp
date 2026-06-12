@@ -1,7 +1,21 @@
 # CK-V2 · CopilotKit v1→v2 migration — Changelog
 
 Reverse-chronological log of verified program events.  
-Tracker: [`todo.md`](./todo.md) · Audit: [`02-upgrade-tasks-linear.md`](./02-upgrade-tasks-linear.md)
+Tracker: [`todo.md`](./todo.md) · Audit: [`notes-3.md`](./notes-3.md) · [`04-copilitkit-audit.md`](./04-copilitkit-audit.md)
+
+---
+
+## 2026-06-12 — [SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2](https://linear.app/sanjiovani/issue/SAN-889/ck-v2-003-migrate-hostevent-hosteventagent-to-v2) post-merge verify + E1 fix + [SAN-893 · CK-V1-001 — Investigate v1 host event wizard Maximum update depth loop](https://linear.app/sanjiovani/issue/SAN-893/ck-v1-001-investigate-v1-host-event-wizard-maximum-update-depth-loop)
+
+| Change | Task | Proof |
+|---|---|---|
+| E1 proof-script fix (`copilotkitPost` boolean 200\|400) | [SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2](https://linear.app/sanjiovani/issue/SAN-889/ck-v2-003-migrate-hostevent-hosteventagent-to-v2) | `san-889-localhost-proof.mjs` on `main` follow-up |
+| Post-merge re-verify @ `0fab08f` | [SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2](https://linear.app/sanjiovani/issue/SAN-889/ck-v2-003-migrate-hostevent-hosteventagent-to-v2) | unit **16/16** + **6/6** · build PASS · v2 flag-on **PASS** |
+| HITL approve **PASS** · reject **PARTIAL** (`thought_signature`) | [SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2](https://linear.app/sanjiovani/issue/SAN-889/ck-v2-003-migrate-hostevent-hosteventagent-to-v2) | `san-889-hitl-*.mjs` · [`RESULTS.md`](../tasks/testing/evidence/SAN-889/RESULTS.md) |
+| v1 flag-off console FAIL → [SAN-893 · CK-V1-001 — Investigate v1 host event wizard Maximum update depth loop](https://linear.app/sanjiovani/issue/SAN-893/ck-v1-001-investigate-v1-host-event-wizard-maximum-update-depth-loop) (v1 bridge 0 diff) | [SAN-893 · CK-V1-001 — Investigate v1 host event wizard Maximum update depth loop](https://linear.app/sanjiovani/issue/SAN-893/ck-v1-001-investigate-v1-host-event-wizard-maximum-update-depth-loop) | `SAN-889-v2-flag-off-results.json` |
+| Tracker grep **19/6** · audits updated | Program | `todo.md` · `notes-3.md` · `05-890audit.md` |
+
+**Program % after this entry:** planning **93%** · shipped **~45%** · composite **67%**
 
 ---
 

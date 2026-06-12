@@ -3,10 +3,10 @@
   "mode": "v1-flag-off",
   "flag": "(unset)",
   "baseUrl": "http://localhost:3001",
-  "mainSha": "aaff138",
-  "at": "2026-06-12T22:49:41.597Z",
+  "mainSha": "0fab08f",
+  "at": "2026-06-12T23:49:06.817Z",
   "gates": {
-    "copilotkitPost": 400,
+    "copilotkitPost": true,
     "wizardHttp": 200,
     "signedInEmail": true,
     "hostEventWizard": true,
@@ -14,8 +14,32 @@
     "manualTitleEdit": true,
     "agentFilledNeighborhood": true,
     "approvalPanelVisible": false,
-    "consoleErrors": [],
+    "consoleErrors": [
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "[CopilotKit] Agent error: AI_APICallError: Function call is missing a thought_signature in functionCall parts. This is required for tools to work correctly, and missing thought_signature may lead to degraded model performance. Additional data, function call `default_api:mastra_workspace_list_files` , position 7. Please refer to https://ai.google.dev/gemini-api/docs/thought-signatures for more details. \n  Code: agent_run_error_event \n  Context: {source: onRunErrorEvent, event: Object, runtimeErrorCode: INCOMPLETE_STREAM, agentId: hostEventAgent} \n  Stack: Error: AI_APICallError: Function call is missing a thought_signature in functionCall parts. This is required for tools to work correctly, and missing thought_signature may lead to degraded model performance. Additional data, function call `default_api:mastra_workspace_list_files` , position 7. Please refer to https://ai.google.dev/gemini-api/docs/thought-signatures for more details.\n    at Object.onRunErrorEvent (webpack-internal:///(app-pages-browser)/./node_modules/@copilotkit/core/dist/index.mjs:2049:36)\n    at eval (webpack-internal:///(app-pages-browser)/./node_modules/@ag-ui/client/dist/index.mjs:138:10220)\n    at j (webpack-internal:///(app-pages-browser)/./node_modules/@ag-ui/client/dist/index.mjs:138:584)\n    at async eval (webpack-internal:///(app-pages-browser)/./node_modules/@ag-ui/client/dist/index.mjs:138:10178)",
+      "[CopilotKit] sendMessage error: AI_APICallError: Function call is missing a thought_signature in functionCall parts. This is required for tools to work correctly, and missing thought_signature may lead to degraded model performance. Additional data, function call `default_api:mastra_workspace_list_files` , position 7. Please refer to https://ai.google.dev/gemini-api/docs/thought-signatures for more details. Error: AI_APICallError: Function call is missing a thought_signature in functionCall parts. This is required for tools to work correctly, and missing thought_signature may lead to degraded model performance. Additional data, function call `default_api:mastra_workspace_list_files` , position 7. Please refer to https://ai.google.dev/gemini-api/docs/thought-signatures for more details.\n    at Object.onRunErrorEvent (webpack-internal:///(app-pages-browser)/./node_modules/@copilotkit/core/dist/index.mjs:2049:36)\n    at eval (webpack-internal:///(app-pages-browser)/./node_modules/@ag-ui/client/dist/index.mjs:138:10220)\n    at j (webpack-internal:///(app-pages-browser)/./node_modules/@ag-ui/client/dist/index.mjs:138:584)\n    at async eval (webpack-internal:///(app-pages-browser)/./node_modules/@ag-ui/client/dist/index.mjs:138:10178)",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.",
+      "Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render."
+    ],
     "screenshot": "SAN-889-v2-flag-off-localhost.png"
   },
-  "verdict": "PASS"
+  "verdict": "FAIL"
 }
