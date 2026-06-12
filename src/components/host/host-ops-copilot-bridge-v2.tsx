@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useAgent, useRenderTool, UseAgentUpdate } from "@copilotkit/react-core/v2";
 import { z } from "zod";
 import {
@@ -49,7 +49,8 @@ type HostOpsCopilotBridgeV2Props = {
 };
 
 export function HostOpsCopilotBridgeV2({ children }: HostOpsCopilotBridgeV2Props) {
-  const [state, setState] = useState<HostDashboardState>(EMPTY_HOST_DASHBOARD);
+  const [dashboardState, setDashboardState] =
+    useState<HostDashboardState>(EMPTY_HOST_DASHBOARD);
   const insightSig = useRef<string>("");
   const eventsSig = useRef<string>("");
 
@@ -58,8 +59,18 @@ export function HostOpsCopilotBridgeV2({ children }: HostOpsCopilotBridgeV2Props
     updates: [UseAgentUpdate.OnStateChanged],
   });
 
+  // Contract 3 — merge agent focusedEventId at render time (no setState-in-effect).
+  const agentState = agent.state;
+  const state = useMemo(() => {
+    if (!agentState || typeof agentState !== "object") return dashboardState;
+    return applyAgentState(
+      dashboardState,
+      agentState as Partial<HostDashboardState>,
+    );
+  }, [dashboardState, agentState]);
+
   const apply = useCallback((patch: Partial<HostDashboardState>) => {
-    setState((prev) => ({ ...prev, ...patch }));
+    setDashboardState((prev) => ({ ...prev, ...patch }));
   }, []);
 
   const syncInsight = useCallback<SyncFn>(
@@ -94,24 +105,14 @@ export function HostOpsCopilotBridgeV2({ children }: HostOpsCopilotBridgeV2Props
     [apply],
   );
 
-  // Contract 3 — agent may only clobber focusedEventId (same guard as v1 useCoAgent).
-  useEffect(() => {
-    const agentState = agent.state;
-    if (!agentState || typeof agentState !== "object") return;
-    setState((prev) =>
-      applyAgentState(prev, agentState as Partial<HostDashboardState>),
-    );
-  }, [agent.state, agent]);
-
-  // Push dashboard context to the agent without echoing every KPI patch back from
-  // OnStateChanged (v1 used useCoAgent's built-in guard; v2 sync is read-biased).
+  // Push dashboard context to the agent without echoing focusedEventId merges back.
   const lastPushedStateRef = useRef<string>("");
   useEffect(() => {
-    const sig = JSON.stringify(state);
+    const sig = JSON.stringify(dashboardState);
     if (sig === lastPushedStateRef.current) return;
     lastPushedStateRef.current = sig;
-    agent.setState(state);
-  }, [agent, state]);
+    agent.setState(dashboardState);
+  }, [agent, dashboardState]);
 
   const insightRender = useCallback(
     (props: { status: string; result?: string }) => (
