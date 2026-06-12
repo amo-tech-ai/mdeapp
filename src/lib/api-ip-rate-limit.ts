@@ -4,6 +4,8 @@ import { createPlacesRateLimiter } from "@/lib/places-rate-limiter";
 
 const searchFastPathLimiter = createPlacesRateLimiter(30);
 const groundingLimiter = createPlacesRateLimiter(15);
+/** Coarse IP gate before Supabase getUser on /api/copilotkit (VERCEL-CPU-001b). */
+const copilotKitIpGateLimiter = createPlacesRateLimiter(60);
 const copilotKitAnonLimiter = createPlacesRateLimiter(15);
 const copilotKitAuthedLimiter = createPlacesRateLimiter(40);
 
@@ -24,6 +26,15 @@ export function checkSearchFastPathRateLimit(req: Request): NextResponse | null 
 export function checkGroundingRouteRateLimit(req: Request): NextResponse | null {
   const key = groundingLimiter.rateLimitKey(req);
   if (groundingLimiter.isRateLimited(key)) return rateLimitedResponse();
+  return null;
+}
+
+/** Runs before auth I/O — blocks IP floods from reaching Supabase getUser. */
+export function checkCopilotKitIpGate(req: Request): Response | null {
+  const key = `gate:${copilotKitIpGateLimiter.rateLimitKey(req)}`;
+  if (copilotKitIpGateLimiter.isRateLimited(key)) {
+    return new Response("Too Many Requests", { status: 429 });
+  }
   return null;
 }
 
@@ -50,6 +61,7 @@ export function checkCopilotKitRateLimit(
 export const resetApiIpRateLimitsForTests = (): void => {
   searchFastPathLimiter.resetForTests();
   groundingLimiter.resetForTests();
+  copilotKitIpGateLimiter.resetForTests();
   copilotKitAnonLimiter.resetForTests();
   copilotKitAuthedLimiter.resetForTests();
 };

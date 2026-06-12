@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { insertVenueBookingRequest } from "@/lib/venues/venue-booking-core";
 import { createClient } from "@/lib/supabase/server";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const maxDuration = 15;
+
 export async function POST(req: Request) {
   let body: unknown;
   try {

@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import {
+  checkCopilotKitIpGate,
   checkCopilotKitRateLimit,
   checkSearchFastPathRateLimit,
   resetApiIpRateLimitsForTests,
@@ -15,6 +16,14 @@ function reqWithIp(ip: string): Request {
 describe("api-ip-rate-limit", () => {
   afterEach(() => {
     resetApiIpRateLimitsForTests();
+  });
+
+  it("returns 429 on the 61st CopilotKit IP gate request", () => {
+    const req = reqWithIp("203.0.113.9");
+    for (let i = 0; i < 60; i += 1) {
+      expect(checkCopilotKitIpGate(req)).toBeNull();
+    }
+    expect(checkCopilotKitIpGate(req)?.status).toBe(429);
   });
 
   it("returns 429 on the 16th anonymous CopilotKit request from one IP", () => {
