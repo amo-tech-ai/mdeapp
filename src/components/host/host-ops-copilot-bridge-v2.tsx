@@ -103,7 +103,13 @@ export function HostOpsCopilotBridgeV2({ children }: HostOpsCopilotBridgeV2Props
     );
   }, [agent.state, agent]);
 
+  // Push dashboard context to the agent without echoing every KPI patch back from
+  // OnStateChanged (v1 used useCoAgent's built-in guard; v2 sync is read-biased).
+  const lastPushedStateRef = useRef<string>("");
   useEffect(() => {
+    const sig = JSON.stringify(state);
+    if (sig === lastPushedStateRef.current) return;
+    lastPushedStateRef.current = sig;
     agent.setState(state);
   }, [agent, state]);
 

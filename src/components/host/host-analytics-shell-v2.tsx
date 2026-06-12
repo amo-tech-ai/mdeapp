@@ -63,6 +63,7 @@ export function HostAnalyticsShellV2({ userEmail }: HostAnalyticsShellV2Props) {
                 className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden border-t border-border px-2 pb-2 pt-1 sm:px-4"
               >
                 <CopilotChat
+                  agentId="hostOpsAgent"
                   className="copilotKitChat--center mde-center-copilot-chat min-h-0 flex-1"
                   labels={{
                     modalHeaderTitle: ANALYTICS_LABELS.title,

@@ -14,6 +14,8 @@ export function HostAnalyticsProviderV2({
   children: React.ReactNode;
 }) {
   return (
-    <CopilotKit {...getCopilotKitClientProps("hostOpsAgent")}>{children}</CopilotKit>
+    <CopilotKit {...getCopilotKitClientProps("hostOpsAgent")} enableInspector={false}>
+      {children}
+    </CopilotKit>
   );
 }
