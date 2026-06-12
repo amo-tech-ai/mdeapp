@@ -1,0 +1,50 @@
+src/lib/events/host-dashboard-kpis.ts
+  s_a2b7148eca5a27::t_4a641964ca7d27 1-75
+src/components/host/host-narrative-banner.tsx
+  s_a2b7148eca5a27::t_4257f8e34a79ad 1-17
+src/app/host/analytics/page.tsx
+  s_a2b7148eca5a27::t_2975b69f7d7979 1-24
+src/components/host/host-ops-copilot-bridge.tsx
+  s_a2b7148eca5a27::t_755d2608337ea5 1-128
+src/components/host/host-kpi-card.tsx
+  s_a2b7148eca5a27::t_44783f54d37e79 1-39
+e2e/host/host-nav-rail.spec.ts
+  s_a2b7148eca5a27::t_b9d500b768c159 61-64
+src/app/host/analytics/layout.tsx
+  s_a2b7148eca5a27::t_fc2382bc34349d 1-19
+src/lib/events/__tests__/host-dashboard-kpis.test.ts
+  s_a2b7148eca5a27::t_b97116331529a0 1-23,28-66
+  s_a2b7148eca5a27::t_34377de7b5c8b8 24-27
+src/components/host/host-kpi-panel.tsx
+  s_a2b7148eca5a27::t_3f91eccb2a316b 1-27,29-37,39-55
+  s_a2b7148eca5a27::t_b0ab2230d2ea7f 28,38
+sitemap.md
+  s_a2b7148eca5a27::t_de187e1864df54 89-90
+src/lib/copilotkit-client-props.ts
+  s_a2b7148eca5a27::t_a876f73b3f2434 1
+src/components/host/host-analytics-shell.tsx
+  s_a2b7148eca5a27::t_70cd23875229c1 1-87
+src/components/host/host-recommendations-panel.tsx
+  s_a2b7148eca5a27::t_b3d0b384c91b99 1-47
+src/components/host/host-nav-rail.tsx
+  s_a2b7148eca5a27::t_1bdc93a0bf11d6 32
+  s_a2b7148eca5a27::t_3298768183c69e 14
+e2e/host/host-analytics.spec.ts
+  s_a2b7148eca5a27::t_a0be0096f7550d 1-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "580b1a8d1734aa783b98fe7f81de5810670138e4",
+  "prompts": {},
+  "sessions": {
+    "s_a2b7148eca5a27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "008c6fc3-bdd1-49a9-bab8-41bc2cbd97ff",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
