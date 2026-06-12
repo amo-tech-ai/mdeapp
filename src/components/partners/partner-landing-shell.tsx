@@ -96,27 +96,35 @@ export function PartnerLandingShell({
       <section
         id="hero"
         aria-label={hero.h1}
-        className="border-b border-border px-4 pb-14 pt-10 sm:px-6 sm:pb-20 sm:pt-14 lg:px-8"
+        className="relative overflow-hidden border-b border-border bg-gradient-to-b from-accent/12 to-background px-4 pb-16 pt-12 sm:px-6 sm:pb-24 sm:pt-16 lg:px-8"
       >
         <div
           className={cn(
-            "mx-auto grid grid-cols-1 items-center gap-10 lg:gap-12",
-            hasVisual ? "max-w-7xl lg:grid-cols-3" : "max-w-3xl",
+            "mx-auto grid grid-cols-1 items-center gap-10 lg:gap-16",
+            hasVisual ? "max-w-7xl lg:grid-cols-5" : "max-w-3xl",
           )}
         >
           {/* Copy column */}
           <div
             className={cn(
-              "flex flex-col gap-5 lg:col-span-2",
+              "flex flex-col gap-6 lg:col-span-3",
               hasVisual
                 ? "items-center text-center lg:items-start lg:text-left"
                 : "items-center text-center",
             )}
           >
-            <Badge variant="secondary" className="tracking-wide">
-              {hero.kicker}
-            </Badge>
-            <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+            <div
+              className={cn(
+                "flex items-center gap-2.5",
+                hasVisual ? "justify-center lg:justify-start" : "justify-center",
+              )}
+            >
+              <span aria-hidden="true" className="h-px w-7 bg-accent" />
+              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+                {hero.kicker}
+              </span>
+            </div>
+            <h1 className="text-balance text-4xl font-bold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
               {hero.h1}
             </h1>
             <p className="max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -125,7 +133,7 @@ export function PartnerLandingShell({
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
               <Button
                 size="lg"
-                className="w-full sm:w-auto"
+                className="w-full rounded-full shadow-lg shadow-accent/25 transition-transform motion-safe:hover:-translate-y-0.5 sm:w-auto"
                 nativeButton={false}
                 render={
                   <Link
@@ -141,7 +149,7 @@ export function PartnerLandingShell({
                 <Button
                   variant="outline"
                   size="lg"
-                  className="w-full sm:w-auto"
+                  className="w-full rounded-full sm:w-auto"
                   nativeButton={false}
                   render={
                     <Link
@@ -177,10 +185,14 @@ export function PartnerLandingShell({
             )}
           </div>
 
-          {/* Visual column (product proof) */}
+          {/* Visual column (product proof) — elevated with an accent halo */}
           {hasVisual && (
-            <div className="flex justify-center lg:col-span-1 lg:justify-end">
-              {hero.visual}
+            <div className="relative flex justify-center lg:col-span-2 lg:justify-end">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute left-1/2 top-1/2 size-[20rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/20 blur-3xl sm:size-[24rem]"
+              />
+              <div className="relative">{hero.visual}</div>
             </div>
           )}
         </div>
