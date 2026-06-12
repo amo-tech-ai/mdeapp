@@ -1,0 +1,21 @@
+src/components/host/host-ops-copilot-bridge.tsx
+  s_a2b7148eca5a27::t_66a24d59d4cf03 29-31,33
+src/components/host/host-kpi-panel.tsx
+  s_a2b7148eca5a27::t_eb6f6c6dc16432 16-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "525cf3523c05af995caa34dafc452d09241c56b5",
+  "prompts": {},
+  "sessions": {
+    "s_a2b7148eca5a27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "008c6fc3-bdd1-49a9-bab8-41bc2cbd97ff",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
