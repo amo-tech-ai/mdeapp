@@ -25,6 +25,7 @@
     "smoke:ticket-paid-proof": "node --env-file=.env.local scripts/smoke-ticket-paid-proof.mjs",
     "verify:console": "node --env-file=.env.local scripts/verify-localhost-console.mjs",
     "verify:console:boot": "node --env-file=.env.local scripts/verify-localhost-console-boot.mjs",
+    "repro:san-902": "npx tsx scripts/san-902-host-event-3turn-repro.ts",
     "verify:grounding": "node --env-file=.env.local scripts/verify-grounding-invoke.mjs",
     "verify:grounding-enrichment": "node --env-file=.env.local scripts/verify-grounding-enrichment.mjs",
     "verify:cloud-run-grounding": "node --env-file=.env.local scripts/verify-cloud-run-grounding.mjs",
