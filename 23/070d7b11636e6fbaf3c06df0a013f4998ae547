@@ -1,0 +1,33 @@
+package.json
+  s_25b0cb0b37161d::t_652751baff6f99 28
+docs/tasks/testing/evidence/SAN-902/SAN-902-3turn-repro-7674986-2026-06-13T23-53-35-675Z.json
+  s_25b0cb0b37161d::t_b03c977ca574e1 1-50
+docs/tasks/testing/evidence/SAN-902/SAN-902-3turn-repro-7674986-2026-06-13T23-53-59-275Z.json
+  s_25b0cb0b37161d::t_57050e3d6d0420 1-50
+docs/tasks/testing/evidence/SAN-902/RESULTS.md
+  s_25b0cb0b37161d::t_eb0f063a71667b 20-30
+  s_25b0cb0b37161d::t_96b86af92d8fbe 1-19,31-39
+scripts/san-902-host-event-3turn-repro.ts
+  s_25b0cb0b37161d::t_0d8cc190c3b276 1-165
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "23070d7b11636e6fbaf3c06df0a013f4998ae547",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
