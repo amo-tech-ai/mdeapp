@@ -1,0 +1,52 @@
+docs/upgradeV2/changelog.md
+  s_25b0cb0b37161d::t_91f75c1fac76e8 5-7
+  s_25b0cb0b37161d::t_8b5be752fff89b 4,8-67,77-79,81
+docs/upgradeV2/07-893-audit.md
+  s_25b0cb0b37161d::t_6d7e95856d7240 108,112-124,126-128
+  s_25b0cb0b37161d::t_d6400a4748a2ed 12
+  s_25b0cb0b37161d::t_fdbdf88fe37dfc 104
+  s_25b0cb0b37161d::t_1291921d8803ff 71,73
+  s_25b0cb0b37161d::t_c7d75cd14650fe 38
+  s_25b0cb0b37161d::t_e78207acd8042e 20
+  s_25b0cb0b37161d::t_d95987a557aab0 24-25
+  s_25b0cb0b37161d::t_922a48deccda04 93
+  s_25b0cb0b37161d::t_c55c35c0b4fc51 59
+  s_fc26d088b7ca74::t_a306c1aa574584 1-11,13-19,21-23,26-37,39-58,60-70,72,74-92,94-103,105-107,109-111,125,129
+docs/upgradeV2/todo.md
+  s_25b0cb0b37161d::t_dfdaaca6b4b008 32,101
+  s_25b0cb0b37161d::t_8b5be752fff89b 3-5,7,11,13-19,23,25-29,31,33,35-43,45,47,51,53-64,68,70-79,83,87-88,90,96-100,102,108-109
+docs/upgradeV2/notes-3.md
+  s_25b0cb0b37161d::t_8b5be752fff89b 1,3-6,10,12,14-20,22,24,26,28-32,34,36-41,43,45-52,56,58-67,71,73,75-86,90,92-101,103,107,109-113,115,119,121-129,131-135,137,139,141-144,146,148,152,154-163,167,169-173,175,179,181,183-184,188,190-199,206
+  s_25b0cb0b37161d::t_f00491946dec95 69
+  s_25b0cb0b37161d::t_1659a7cbf2293f 114,177
+  s_25b0cb0b37161d::t_ef25ce4528cf18 182
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "4ee1bb9e738160d39e2450bbe9de364c96950b43",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_fc26d088b7ca74": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b1ee9ddc-c2b6-4b5f-b8ba-c3d86080e24d",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
