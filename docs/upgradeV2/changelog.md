@@ -1,7 +1,48 @@
 # CK-V2 · CopilotKit v1→v2 migration — Changelog
 
 Reverse-chronological log of verified program events.  
-Tracker: [`todo.md`](./todo.md) · Report: [`notes-3.md`](./notes-3.md) · Audits: [`04-copilitkit-audit.md`](./04-copilitkit-audit.md) · [`05-890audit.md`](./05-890audit.md) · [`06-891-audit.md`](./06-891-audit.md) · [`07-893-audit.md`](./07-893-audit.md)
+Tracker: [`todo.md`](./todo.md) · Audits: [`11-tasks-audit.md`](./11-tasks-audit.md) · [`08-local-hostaudit.md`](./08-local-hostaudit.md) · [`05-890audit.md`](./05-890audit.md)
+
+---
+
+## 2026-06-13 — [SAN-903 · CK-V2-007a — P0 workspace opt-out on hostEventAgent](https://linear.app/sanjiovani/issue/SAN-903/ck-v2-007a-p0-workspace-opt-out-on-hosteventagent) [PR #213](https://github.com/amo-tech-ai/mdeapp/pull/213) @ `3778e91`
+
+**Verdict:** Hypothesis test **shipped in PR** — `Closes SAN-903` only · **does not** close SAN-895.
+
+| Gate | Result |
+|---|---|
+| `workspace: () => undefined` on `hostEventAgent` | ✅ `host-event.ts` |
+| Unit: opt-out + B2a `getWorkspace()` collateral | ✅ 5/5 `host-event-agent` |
+| `npm run build` | ✅ |
+| Live turn1 | ✅ no `mastra_workspace_*` |
+| Live turn2 | ✅ no `thought_signature` |
+| Live turn3 | 🟡 generic stream error → **SAN-902** |
+| SAN-895 parent | ⛔ remains open until 902→904→905 |
+
+**Files:** `host-event.ts` · `host-event-agent.test.ts` · `docs/upgradeV2/{todo,changelog,11-tasks-audit,linear-descriptions/SAN-903}.md`
+
+**Next:** merge PR → SAN-902 repro → parallel 898/910/896 → SAN-901 spike.
+
+
+---
+
+## 2026-06-13 — [SAN-900 · CK-V2-011 — Migration dependency map](https://linear.app/sanjiovani/issue/SAN-900/ck-v2-011-migration-dependency-map-audit-copilotkit-v2-map-script) Done @ `4ee1bb9`
+
+**Verdict:** SAN-900 **100% complete** — living migration map shipped; **SAN-901 unblocked**; SAN-890 still awaits spike + approval.
+
+| Deliverable | Status |
+|---|---|
+| `scripts/audit-copilotkit-v2-map.mjs` | ✅ (prior) |
+| `npm run audit:copilotkit-v2` | ✅ counts @ `4ee1bb9`: v1 **23** · v2 **6** · react-ui **8** · **~52%** |
+| `npm run graphify:update` | ✅ 73014 nodes |
+| Graphify queries (concierge · hostEvent · hostOps) | ✅ summarized in map |
+| [`09-file-map.md`](./09-file-map.md) | ✅ §A–K: routes · clusters · Mermaid · risk · rules |
+| SAN-901 blocker | ✅ cleared |
+| SAN-890 blocker | ⛔ SAN-901 PASS + approval + SAN-895 hygiene |
+
+**Docs updated:** [`09-file-map.md`](./09-file-map.md) · [`todo.md`](./todo.md) · this changelog
+
+**Next:** SAN-903 P0 workspace · SAN-901 chat spike · parallel SAN-898/910/896
 
 ---
 

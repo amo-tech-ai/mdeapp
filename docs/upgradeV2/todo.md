@@ -1,10 +1,11 @@
 # CK-V2 · CopilotKit v1→v2 migration — Progress Task Tracker
 
-**Updated:** 2026-06-13 (audit pass) · **Ground truth:** `origin/main` @ **`2052086`**  
-**Last verified:** 2026-06-13 — localhost proofs · unit **19/19** · build **PASS** · report [`notes-3.md`](./notes-3.md)  
+**Updated:** 2026-06-13 (SAN-903 PR) · **Ground truth:** `origin/main` @ **`4ee1bb9`** + PR branch  
+**Last verified:** 2026-06-13 — `host-event-agent` 5/5 · `npm run build` ✅ · live turn1–2 ✅ · [`11-tasks-audit.md`](./11-tasks-audit.md)  
 **Verdict:** Shipped CK-V2 **working** · **not clean enough to flip flags yet**  
-**Linear view:** [v2-upgrade](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd)  
-**Package pin:** `@copilotkit/react-core@1.55.2` · subpath `/v2` only (no package bump until SAN-891)
+**Linear view:** [v2-upgrade](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd) (label **`V2UP`**) — **17 parent + 8 sub issues**  
+**Package pin:** `@copilotkit/react-core@1.55.2` · subpath `/v2` only (no package bump until SAN-891)  
+**Linear contracts:** [`linear-descriptions/`](./linear-descriptions/)
 
 ---
 
@@ -12,99 +13,208 @@
 
 | Area | Verdict |
 |---|---|
-| **SAN-888 · CK-V2-002 — Host Analytics prototype** | ✅ Fully green (**100%**) |
-| **SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2** | 🟡 Functional **90–95%** · console **60%** · overall **~85%** — **not console-clean** |
-| **SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2** | ⚫ Not started |
-| **SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui** | ⚫ Spec ready · code not started · blocked SAN-890 |
-| **Prod risk** | ✅ None — flags off |
+| **SAN-886 · CK-V2-000 — Epic** | 🟡 ~52% — route migrations partial · hygiene open |
+| **SAN-888 · CK-V2-002 — Host Analytics** | ✅ **100%** console-clean |
+| **SAN-889 · CK-V2-003 — Host Event v2** | 🟡 **~85%** — functional + HITL PASS · console **not clean** |
+| **SAN-900 · CK-V2-011 — File map** | ✅ **100%** — [`09-file-map.md`](./09-file-map.md) @ `4ee1bb9` |
+| **SAN-890 · CK-V2-004 — /chat v2** | ⚫ Not started — await SAN-901 + approval |
+| **SAN-891 · CK-V2-005 — Retire react-ui** | ⚫ Spec 98% · exec 0% · blocked SAN-890 |
+| **SAN-903 · CK-V2-007a — Workspace opt-out** | 🟡 **[PR #213](https://github.com/amo-tech-ai/mdeapp/pull/213)** — hypothesis partial ✅ · SAN-895 open |
+| **Hygiene (895–898)** | 🔴 **blocks flag flip** — SAN-895 open after 903 PR |
+| **Prod risk** | ✅ None — all v2 flags OFF |
+
+---
+
+## Migration dashboard (@ `4ee1bb9`)
+
+| Metric | Value |
+|---|---|
+| v1 hook files | **23** |
+| v2 hook files | **6** |
+| react-ui files | **8** |
+| Hook file v2 share | **21%** |
+| Weighted program | **~52%** |
+
+```bash
+npm run audit:copilotkit-v2          # source of truth for counts
+npm run graphify:update              # supporting architecture graph
+npm run graphify:query -- "…"        # agent/tool path discovery
+```
+
+---
+
+## Implementation order (canonical — copy into every PR)
+
+| # | Issue | SPEC | Linear | Exec % | Phase |
+|---:|---|---|---|---:|---|
+| — | **SAN-886** | CK-V2-000 | In Progress | 52 | Epic |
+| 1 | **SAN-887** | CK-V2-001 | Done | 100 | ✅ Gate spike |
+| 2 | **SAN-888** | CK-V2-002 | Done | 100 | ✅ Analytics v2 |
+| 3 | **SAN-889** | CK-V2-003 | Done | 85 | ✅ Event v2 · console PARTIAL |
+| 4 | **SAN-892** | CK-V2-006 | Done | 100 | ✅ build-on-v2 tags |
+| 5 | **SAN-900** | CK-V2-011 | **Done** | 100 | ✅ File map — blocks 901/890 only |
+| **6** | **[SAN-903](https://linear.app/sanjiovani/issue/SAN-903)** | CK-V2-007a | **[PR #213](https://github.com/amo-tech-ai/mdeapp/pull/213)** · Urgent | 100 | ✅ **`Closes SAN-903` only** |
+| **7** | **[SAN-898](https://linear.app/sanjiovani/issue/SAN-898)** | CK-V2-010 | **Todo** | 0 | **NOW** hydration (parallel 6) |
+| **8** | **[SAN-910](https://linear.app/sanjiovani/issue/SAN-910)** | CK-V2-012 | **Todo** | 35 | **NOW** CI guardrails (parallel 6) |
+| **9** | **[SAN-896](https://linear.app/sanjiovani/issue/SAN-896)** | CK-V2-008 | **Todo** | 25 | **NOW** evidence refresh (parallel 6) |
+| 10 | **[SAN-895](https://linear.app/sanjiovani/issue/SAN-895)** | CK-V2-007 | **Todo** | 0 | After **6** — proofs 902→904→905 · **903 alone does not close parent** |
+| 11 | SAN-902 | CK-V2-007b | Backlog | 0 | Subtask of 10 |
+| 12 | SAN-904 | CK-V2-007c | Backlog | 0 | Subtask of 10 |
+| 13 | SAN-905 | CK-V2-007d | Backlog | 0 | Subtask of 10 |
+| 14 | **[SAN-901](https://linear.app/sanjiovani/issue/SAN-901)** | CK-V2-004A | Backlog | 0 | After **5** ✅ · chat spike |
+| 15 | **[SAN-890](https://linear.app/sanjiovani/issue/SAN-890)** | CK-V2-004 | Backlog | 0 | After **14** PASS + approval |
+| 16 | **[SAN-891](https://linear.app/sanjiovani/issue/SAN-891)** | CK-V2-005 | Backlog | 0 | After **15** — retire react-ui last |
+| 17 | **[SAN-897](https://linear.app/sanjiovani/issue/SAN-897)** | CK-V2-009 | Backlog | 0 | After **9** only |
+| 18 | **[SAN-899](https://linear.app/sanjiovani/issue/SAN-899)** | CK-AI-002 | Backlog | 0 | Fallback if **6** fails |
+| — | SAN-893 → SAN-894 | CK-V1-001/002 | Backlog | 15/0 | Deprioritized |
+
+**Subtasks (898):** SAN-906–909 Backlog — run under **7**.
+
+**Flags:** `COPILOTKIT_V2_ANALYTICS` · `COPILOTKIT_V2_HOST_EVENT` · `COPILOTKIT_V2_CHAT` — all **OFF** on prod.
+
+---
+
+## SAN-903 · proof (PR @ `4ee1bb9+`)
+
+| Step | Gate | Status |
+|---|---|---|
+| Code | `workspace: () => undefined` in `host-event.ts` | ✅ |
+| Unit | `host-event-agent` 5/5 · B2a `getWorkspace()` | ✅ |
+| Build | `npm run build` | ✅ |
+| Live turn1 | No `mastra_workspace_*` | ✅ |
+| Live turn2 | No `thought_signature` | ✅ |
+| Live turn3 | Generic stream error | 🟡 → SAN-902 |
+| Linear | [SAN-903](https://linear.app/sanjiovani/issue/SAN-903) | **[PR #213](https://github.com/amo-tech-ai/mdeapp/pull/213)** |
+| Parent | [SAN-895](https://linear.app/sanjiovani/issue/SAN-895) | ⛔ open until 902–905 |
+
+Audit: [`11-tasks-audit.md`](./11-tasks-audit.md) · Contract: [`linear-descriptions/SAN-903.md`](./linear-descriptions/SAN-903.md)
+
+---
+
+## SAN-900 · proof @ `4ee1bb9` (completed)
+
+| Step | Command / artifact | Status |
+|---|---|---|
+| Audit dashboard | `npm run audit:copilotkit-v2` | ✅ v1 **23** · v2 **6** · react-ui **8** · **~52%** |
+| Graph rebuild | `npm run graphify:update` | ✅ 73014 nodes |
+| Concierge path | `graphify:query -- "conciergeAgent requestVenueBookingTool"` | ✅ 85 nodes — in [`09-file-map.md`](./09-file-map.md) §E |
+| Host event path | `graphify:query -- "hostEventAgent preview_and_publish"` | ✅ 40 nodes — §D |
+| Host ops path | `graphify:query -- "hostOpsAgent get_sales_insights"` | ✅ 44 nodes — §C |
+| Living map | `docs/upgradeV2/09-file-map.md` | ✅ §A–K |
+| Linear | [SAN-900](https://linear.app/sanjiovani/issue/SAN-900) | ✅ **Done** |
+| Unblocks | SAN-901 | ✅ yes · SAN-890 | ⛔ still needs 901 + approval |
 
 ---
 
 ## 🔴 Program blockers
 
-| ID | Blocker | Severity | Status |
+| ID | Issue | Severity | Status |
 |---|---|---|---|
-| **B0** | **[SAN-893 · CK-V1-001 — Investigate v1 host event wizard Maximum update depth loop](https://linear.app/sanjiovani/issue/SAN-893/ck-v1-001-investigate-v1-host-event-wizard-maximum-update-depth-loop)** — `thought_signature` **proven** (every run) · max-depth **intermittent** (21× committed · 0× latest re-run) | 🔴 High | **A1–A4 probes** · audit [`07-893-audit.md`](./07-893-audit.md) ~85% |
-| **B1** | **[SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk)** not started | 🟡 Sequencing | **await explicit approval** |
-| **B2** | **[SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react)** blocked by SAN-890 | 🟡 Sequencing | Spec **98%** · exec **0%** |
+| **B0** | **[SAN-903 · CK-V2-007a](https://linear.app/sanjiovani/issue/SAN-903)** — P0 workspace opt-out | 🔴 Urgent | **[PR #213](https://github.com/amo-tech-ai/mdeapp/pull/213)** · step **6** |
+| **B0** | **[SAN-895 · CK-V2-007](https://linear.app/sanjiovani/issue/SAN-895)** — console hygiene parent | 🔴 High | **Todo** · step **10** |
+| **B0a** | **[SAN-898 · CK-V2-010](https://linear.app/sanjiovani/issue/SAN-898)** — hydration | 🔴 High | **Todo** · step **7** |
+| **B0b** | **[SAN-896 · CK-V2-008](https://linear.app/sanjiovani/issue/SAN-896)** — evidence @ `4ee1bb9+` | 🟡 Medium | **Todo** · step **9** |
+| **B0c** | **[SAN-899 · CK-AI-002](https://linear.app/sanjiovani/issue/SAN-899)** — only if 903 fails | 🟡 Medium | Backlog · step **18** |
+| **B0d** | SAN-893 → SAN-894 — v1 max-depth | 🟡 Medium | Deprioritized |
+| **B1** | **[SAN-890 · CK-V2-004](https://linear.app/sanjiovani/issue/SAN-890)** | 🟡 Sequencing | step **15** |
+| **B2** | **[SAN-891 · CK-V2-005](https://linear.app/sanjiovani/issue/SAN-891)** | 🟡 Sequencing | step **16** |
 
 ---
 
-## Parent completion — SAN-886 · CK-V2-000 — CopilotKit v1→v2 Migration
+## Dependency chain
 
-| Child | Dot | Shipped % | State |
-|---|---|---:|---|
-| **[SAN-887 · CK-V2-001 — v2 hook-signature verification spike](https://linear.app/sanjiovani/issue/SAN-887/ck-v2-001-v2-hook-signature-verification-spike-gate-before-any-v2-code)** | 🟢 | **100%** | Done |
-| **[SAN-888 · CK-V2-002 — Host Analytics prototype](https://linear.app/sanjiovani/issue/SAN-888/ck-v2-002-host-analytics-prototype-v2-hostanalytics-flag)** | 🟢 | **100%** | Done · localhost PASS |
-| **[SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2](https://linear.app/sanjiovani/issue/SAN-889/ck-v2-003-migrate-hostevent-hosteventagent-to-v2)** | 🟡 | **~85%** | Done on `main` · **functionally complete · not console-clean** |
-| **[SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk)** | ⚫ | **0%** | Backlog |
-| **[SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react)** | ⚫ | **0%** exec · **98%** spec | Backlog · blocked SAN-890 |
-| **[SAN-892 · CK-V2-006 — Tag build-on-v2](https://linear.app/sanjiovani/issue/SAN-892/ck-v2-006-tag-all-unbuilt-ck-concierge-issues-build-on-v2)** | 🟢 | **100%** | Done · 12/12 |
-| **[SAN-893 · CK-V1-001 — v1 wizard console loop](https://linear.app/sanjiovani/issue/SAN-893/ck-v1-001-investigate-v1-host-event-wizard-maximum-update-depth-loop)** | 🟡 | **15%** | Backlog · audit done · A1–A4 open |
+```text
+Done: 887 → 888 → 889 → 892 → 900
 
-| **Epic parent complete** | 🟡 | **67%** | 4/6 children Done |
+NOW (parallel — steps 6–9):
+  903 (P0 workspace) ║ 898 (hydration) ║ 910 (CI) ║ 896 (evidence)
 
-> **Persona impact:** None on prod — all v2 flags off.
+Then:
+  895 + subtasks 902→904→905
+  901 (chat spike) → 890 (/chat) → 891 (retire react-ui)
 
----
-
-## Program summary (@ `2052086`)
-
-| Metric | Value |
-|---|---|
-| **Overall shipped CK-V2 scope** | **~85%** |
-| **Full program shipped** | **~45%** |
-| **Planning / spec** | **93%** |
-| **SAN-888 execution** | **100%** |
-| **SAN-889 functional** | **90–95%** |
-| **SAN-889 console hygiene** | **60%** |
-| **`/v2` files** | **6** |
-| **`/chat` v2 files** | **0** |
-| **Backend changes** | **0** |
-| **Prod flags** | **OFF** |
+Later:
+  897 (after 896 only)
+  899 (only if 903 P0 fails)
+  893 → 894 (deprioritized)
+```
 
 ---
 
-## Task tracker
+## Parent — SAN-886 · CK-V2-000
 
-| Task | Dot | Spec % | Exec % | Proof | Next |
-|---|---|---:|---:|---|---|
-| **SAN-886 · CK-V2-000** | 🟡 | 93 | 67 | Parent table | Track children |
-| **SAN-887 · CK-V2-001** | 🟢 | 100 | 100 | spike on `main` | — |
-| **SAN-888 · CK-V2-002** | 🟢 | 100 | **100** | localhost PASS off+on | — |
-| **SAN-889 · CK-V2-003** | 🟡 | 98 | **~85** | functional PASS · console PARTIAL · HITL PASS | SAN-893 triage |
-| **SAN-890 · CK-V2-004** | ⚫ | 96 | 0 | 0 `/chat` v2 files | **Await approval** |
-| **SAN-891 · CK-V2-005** | ⚫ | 98 | 0 | [`06-891-audit.md`](./06-891-audit.md) · [PR #212](https://github.com/amo-tech-ai/mdeapp/pull/212) open | After 890 |
-| **SAN-892 · CK-V2-006** | 🟢 | 100 | 100 | 12/12 `build-on-v2` | — |
-| **SAN-893 · CK-V1-001** | 🟡 | 100 | **15** | [`07-893-audit.md`](./07-893-audit.md) · Linear updated | **A1–A4** → `CK-V1-002` |
+| Child | Order | Dot | Shipped % | Linear |
+|---|---:|---|---:|---|
+| SAN-887 · CK-V2-001 | 1 | 🟢 | 100 | Done |
+| SAN-888 · CK-V2-002 | 2 | 🟢 | 100 | Done |
+| SAN-889 · CK-V2-003 | 3 | 🟡 | 85 | Done · console PARTIAL |
+| SAN-892 · CK-V2-006 | 4 | 🟢 | 100 | Done |
+| SAN-900 · CK-V2-011 | 5 | 🟢 | 100 | **Done** |
+| SAN-903 · CK-V2-007a | 6 | 🟡 | 100 | **PR** |
+| SAN-898 · CK-V2-010 | 7 | ⚫ | 0 | **Todo** |
+| SAN-910 · CK-V2-012 | 8 | 🟡 | 35 | **Todo** |
+| SAN-896 · CK-V2-008 | 9 | 🟡 | 25 | **Todo** |
+| SAN-895 · CK-V2-007 | 10 | ⚫ | 0 | **Todo** |
+| SAN-901 · CK-V2-004A | 14 | 🟡 | 0 | Backlog · unblocked |
+| SAN-890 · CK-V2-004 | 15 | ⚫ | 0 | Backlog |
+| SAN-891 · CK-V2-005 | 16 | ⚫ | 0 | Backlog |
+| SAN-897 · CK-V2-009 | 17 | ⚫ | 0 | Backlog |
+| SAN-899 · CK-AI-002 | 18 | ⚫ | 0 | Backlog |
+
+**Standalone:** SAN-893 · SAN-894 (deprioritized)
+
+| **Epic complete** | 🟡 | **~52%** | weighted dashboard |
+
+> **Persona impact on prod:** None — all v2 flags OFF.
 
 ---
 
-## SAN-889 · step tracker
+## Task tracker (implementation order)
 
-| Step | Dot | Proof |
-|---|---|---|
-| A1–A4 Scaffold + flag | 🟢 | `copilotkit-v2-host-event-flag.ts` |
-| B1–B4 v2 hooks | 🟢 | `useAgent` · `useFrontendTool` · `useHumanInTheLoop` |
-| C1 Shell v2 | 🟢 | `host-event-shell-v2.tsx` |
-| D1–D5 Verify + merge | 🟡 | HITL approve/reject PASS · **console smoke FAIL** (`thought_signature`) |
+| # | Task | Dot | Spec % | Exec % | Proof | Next |
+|---:|---|---|---:|---:|---|---|
+| 5 | **SAN-900 · CK-V2-011** | 🟢 | 100 | 100 | [`09-file-map.md`](./09-file-map.md) | — |
+| 6 | **SAN-903 · CK-V2-007a** | 🟡 | 100 | 100 | [`11-tasks-audit.md`](./11-tasks-audit.md) | PR open → SAN-902 |
+| 7 | **SAN-898 · CK-V2-010** | ⚫ | 100 | 0 | [desc](./linear-descriptions/SAN-898.md) | Parallel |
+| 8 | **SAN-910 · CK-V2-012** | 🟡 | 100 | 35 | audit ✅ · dep-cruiser ❌ | Parallel |
+| 9 | **SAN-896 · CK-V2-008** | 🟡 | 100 | 25 | stale `mainSha` | Parallel |
+| 10 | **SAN-895 · CK-V2-007** | ⚫ | 100 | 0 | [desc](./linear-descriptions/SAN-895.md) | After 903 · not Done until 902–905 |
+| 14 | **SAN-901 · CK-V2-004A** | 🟡 | 100 | 0 | [desc](./linear-descriptions/SAN-901.md) | Unblocked · start spike |
+| 15 | **SAN-890 · CK-V2-004** | ⚫ | 96 | 0 | [desc](./linear-descriptions/SAN-890.md) | After 901 + approval |
+| 3 | **SAN-889 · CK-V2-003** | 🟡 | 98 | 85 | HITL PASS · console FAIL | 903 + 898 |
 
 ---
 
-## Next actions (ordered)
+## Next actions (matches implementation order above)
 
-1. **Merge [PR #212](https://github.com/amo-tech-ai/mdeapp/pull/212)** — docs + [`07-893-audit.md`](./07-893-audit.md) + tracker/changelog/notes.
-2. **Keep all v2 flags OFF** on prod/preview.
-3. **[SAN-893 · CK-V1-001](https://linear.app/sanjiovani/issue/SAN-893/ck-v1-001-investigate-v1-host-event-wizard-maximum-update-depth-loop)** — execute A1–A4 (see Linear) · `thought_signature` blocks flags today.
-4. **Await approval** for **[SAN-890 · CK-V2-004](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk)**.
-5. **Do not start** **[SAN-891 · CK-V2-005](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react)** until SAN-890 merges.
+**NOW — steps 7–9 (parallel) + SAN-903 PR merge:**
+1. ~~**SAN-903**~~ — **PR open** (`Closes SAN-903` only).
+2. **[SAN-898 · CK-V2-010](https://linear.app/sanjiovani/issue/SAN-898)** — hydration fix.
+3. **[SAN-910 · CK-V2-012](https://linear.app/sanjiovani/issue/SAN-910)** — dep-cruiser no-new-v1 gate.
+4. **[SAN-896 · CK-V2-008](https://linear.app/sanjiovani/issue/SAN-896)** — re-run proofs after merge.
 
-**Do not:** flip flags · start SAN-890 · start SAN-891 · open infra PR.
+**Then — steps 10–13:**
+5. **[SAN-895 · CK-V2-007](https://linear.app/sanjiovani/issue/SAN-895)** — proofs SAN-902 → 904 → 905 after 903.
+
+**Chat chain — steps 14–16:**
+6. **[SAN-901 · CK-V2-004A](https://linear.app/sanjiovani/issue/SAN-901)** — vertical slice spike (**unblocked** since step 5 Done).
+7. **[SAN-890 · CK-V2-004](https://linear.app/sanjiovani/issue/SAN-890)** — full `/chat` (after 901 PASS + approval).
+8. **[SAN-891 · CK-V2-005](https://linear.app/sanjiovani/issue/SAN-891)** — retire react-ui (last).
+
+**Later:**
+9. **[SAN-897 · CK-V2-009](https://linear.app/sanjiovani/issue/SAN-897)** — preview analytics (after 896 only).
+10. **[SAN-899 · CK-AI-002](https://linear.app/sanjiovani/issue/SAN-899)** — fallback if 903 insufficient.
+11. SAN-893 → SAN-894 — deprioritized.
+
+**Done:** SAN-900 · SAN-903 PR submitted.
+
+**Do not:** close SAN-895 on SAN-903 merge · prod flag flip · stage unrelated files.
 
 ---
 
 ## References
 
-- Report: [`notes-3.md`](./notes-3.md) · Changelog: [`changelog.md`](./changelog.md)
-- Audits: [`04-copilitkit-audit.md`](./04-copilitkit-audit.md) · [`05-890audit.md`](./05-890audit.md) · [`06-891-audit.md`](./06-891-audit.md) · [`07-893-audit.md`](./07-893-audit.md)
+- **Tasks audit:** [`11-tasks-audit.md`](./11-tasks-audit.md) · **File map:** [`09-file-map.md`](./09-file-map.md)
+- **Linear contracts:** [`linear-descriptions/`](./linear-descriptions/)
+- Audits: [`05-890audit.md`](./05-890audit.md) · [`08-local-hostaudit.md`](./08-local-hostaudit.md)
 - [Linear v2-upgrade view](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd)
