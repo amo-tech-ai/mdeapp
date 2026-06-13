@@ -1,0 +1,29 @@
+docs/upgradeV2/todo.md
+  s_25b0cb0b37161d::t_1ec9b7ca4a0822 113
+  s_25b0cb0b37161d::t_d2819cd36fe7d8 56
+  s_25b0cb0b37161d::t_628e2ee73c936d 22
+  s_25b0cb0b37161d::t_7434b9c4c5c550 87
+docs/upgradeV2/changelog.md
+  s_25b0cb0b37161d::t_3293aa4becd886 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "0ce16b7fb649aa0af4511ceaa5d72828eef7084b",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
