@@ -19,7 +19,7 @@
 | **SAN-900 · CK-V2-011 — File map** | ✅ **100%** — [`09-file-map.md`](./09-file-map.md) @ `4ee1bb9` |
 | **SAN-890 · CK-V2-004 — /chat v2** | ⚫ Not started — await SAN-901 + approval |
 | **SAN-891 · CK-V2-005 — Retire react-ui** | ⚫ Spec 98% · exec 0% · blocked SAN-890 |
-| **SAN-903 · CK-V2-007a — Workspace opt-out** | 🟡 **PR open** — hypothesis partial ✅ · SAN-895 open |
+| **SAN-903 · CK-V2-007a — Workspace opt-out** | 🟡 **[PR #213](https://github.com/amo-tech-ai/mdeapp/pull/213)** — hypothesis partial ✅ · SAN-895 open |
 | **Hygiene (895–898)** | 🔴 **blocks flag flip** — SAN-895 open after 903 PR |
 | **Prod risk** | ✅ None — all v2 flags OFF |
 
@@ -53,7 +53,7 @@ npm run graphify:query -- "…"        # agent/tool path discovery
 | 3 | **SAN-889** | CK-V2-003 | Done | 85 | ✅ Event v2 · console PARTIAL |
 | 4 | **SAN-892** | CK-V2-006 | Done | 100 | ✅ build-on-v2 tags |
 | 5 | **SAN-900** | CK-V2-011 | **Done** | 100 | ✅ File map — blocks 901/890 only |
-| **6** | **[SAN-903](https://linear.app/sanjiovani/issue/SAN-903)** | CK-V2-007a | **PR** · Urgent | 100 | ✅ **PR open** — `Closes SAN-903` only |
+| **6** | **[SAN-903](https://linear.app/sanjiovani/issue/SAN-903)** | CK-V2-007a | **[PR #213](https://github.com/amo-tech-ai/mdeapp/pull/213)** · Urgent | 100 | ✅ **`Closes SAN-903` only** |
 | **7** | **[SAN-898](https://linear.app/sanjiovani/issue/SAN-898)** | CK-V2-010 | **Todo** | 0 | **NOW** hydration (parallel 6) |
 | **8** | **[SAN-910](https://linear.app/sanjiovani/issue/SAN-910)** | CK-V2-012 | **Todo** | 35 | **NOW** CI guardrails (parallel 6) |
 | **9** | **[SAN-896](https://linear.app/sanjiovani/issue/SAN-896)** | CK-V2-008 | **Todo** | 25 | **NOW** evidence refresh (parallel 6) |
@@ -84,7 +84,7 @@ npm run graphify:query -- "…"        # agent/tool path discovery
 | Live turn1 | No `mastra_workspace_*` | ✅ |
 | Live turn2 | No `thought_signature` | ✅ |
 | Live turn3 | Generic stream error | 🟡 → SAN-902 |
-| Linear | [SAN-903](https://linear.app/sanjiovani/issue/SAN-903) | **PR open** |
+| Linear | [SAN-903](https://linear.app/sanjiovani/issue/SAN-903) | **[PR #213](https://github.com/amo-tech-ai/mdeapp/pull/213)** |
 | Parent | [SAN-895](https://linear.app/sanjiovani/issue/SAN-895) | ⛔ open until 902–905 |
 
 Audit: [`11-tasks-audit.md`](./11-tasks-audit.md) · Contract: [`linear-descriptions/SAN-903.md`](./linear-descriptions/SAN-903.md)
@@ -110,7 +110,7 @@ Audit: [`11-tasks-audit.md`](./11-tasks-audit.md) · Contract: [`linear-descript
 
 | ID | Issue | Severity | Status |
 |---|---|---|---|
-| **B0** | **[SAN-903 · CK-V2-007a](https://linear.app/sanjiovani/issue/SAN-903)** — P0 workspace opt-out | 🔴 Urgent | **PR open** · step **6** |
+| **B0** | **[SAN-903 · CK-V2-007a](https://linear.app/sanjiovani/issue/SAN-903)** — P0 workspace opt-out | 🔴 Urgent | **[PR #213](https://github.com/amo-tech-ai/mdeapp/pull/213)** · step **6** |
 | **B0** | **[SAN-895 · CK-V2-007](https://linear.app/sanjiovani/issue/SAN-895)** — console hygiene parent | 🔴 High | **Todo** · step **10** |
 | **B0a** | **[SAN-898 · CK-V2-010](https://linear.app/sanjiovani/issue/SAN-898)** — hydration | 🔴 High | **Todo** · step **7** |
 | **B0b** | **[SAN-896 · CK-V2-008](https://linear.app/sanjiovani/issue/SAN-896)** — evidence @ `4ee1bb9+` | 🟡 Medium | **Todo** · step **9** |

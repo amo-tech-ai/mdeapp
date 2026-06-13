@@ -5,7 +5,7 @@ Tracker: [`todo.md`](./todo.md) · Audits: [`11-tasks-audit.md`](./11-tasks-audi
 
 ---
 
-## 2026-06-13 — [SAN-903 · CK-V2-007a — P0 workspace opt-out on hostEventAgent](https://linear.app/sanjiovani/issue/SAN-903/ck-v2-007a-p0-workspace-opt-out-on-hosteventagent) PR @ `4ee1bb9+`
+## 2026-06-13 — [SAN-903 · CK-V2-007a — P0 workspace opt-out on hostEventAgent](https://linear.app/sanjiovani/issue/SAN-903/ck-v2-007a-p0-workspace-opt-out-on-hosteventagent) [PR #213](https://github.com/amo-tech-ai/mdeapp/pull/213) @ `3778e91`
 
 **Verdict:** Hypothesis test **shipped in PR** — `Closes SAN-903` only · **does not** close SAN-895.
 
