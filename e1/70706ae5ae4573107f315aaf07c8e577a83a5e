@@ -1,0 +1,19 @@
+docs/upgradeV2/notes-3.md
+  s_25b0cb0b37161d::t_87c859a06defd1 3-9,15,17,22-27,40,42-56,58-78,91-95,98,100-106,110,112-119,121-122,126,128,130-137,141,143-151,157-159,161-164,170-177,185-190,211,214,220,222-227,235-236
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "e170706ae5ae4573107f315aaf07c8e577a83a5e",
+  "prompts": {},
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
