@@ -1,7 +1,7 @@
 # CK-V2 · CopilotKit v1→v2 migration — Progress Task Tracker
 
-**Updated:** 2026-06-12 · **Auditor:** `main` @ `0fab08f` (SAN-889 merged + E1 fix) + Linear MCP  
-**Last verified:** 2026-06-12 — unit 16/16 + 6/6 · build PASS · v2 localhost PASS · v1 console → SAN-893  
+**Updated:** 2026-06-13 · **Auditor:** `main` @ `2052086` (PR #211 merged) + Linear MCP  
+**Last verified:** 2026-06-13 — unit 19/19 ×3 · build ×2 · SAN-891 spec audited [`06-891-audit.md`](./06-891-audit.md)  
 **Linear view:** [v2-upgrade](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd)  
 **Package pin:** `@copilotkit/react-core@1.55.2` · subpath `/v2` only (no package bump until SAN-891)  
 **Rule:** Docs first · prototype second · infra later (`vercel-deploy.yml` **not** in CK-V2 scope)
@@ -68,9 +68,9 @@ Canonical command: `git grep -l 'from "@copilotkit/react-core"' -- 'src/*' | gre
 | **SAN-886 · CK-V2-000** — Epic | 🟡 | **67%** | Backlog | Parent table above | Track children |
 | **SAN-887 · CK-V2-001** — Spike gate | 🟢 | **100%** | **Done** | [`CK-V2-001-hook-signatures.md`](../tasks/copilotkit/CK-V2-001-hook-signatures.md) | — |
 | **SAN-888 · CK-V2-002** — Analytics prototype | 🟢 | **100%** | **Done** | `main` · [`evidence/SAN-888`](../tasks/testing/evidence/SAN-888/RESULTS.md) | — |
-| **SAN-889 · CK-V2-003** — Host event v2 | 🟢 | **100%** | **Done** | `0fab08f` · [`evidence/SAN-889`](../tasks/testing/evidence/SAN-889/RESULTS.md) | E1 fix commit |
+| **SAN-889 · CK-V2-003** — Host event v2 | 🟢 | **100%** | **Done** | `2052086` · [`evidence/SAN-889`](../tasks/testing/evidence/SAN-889/RESULTS.md) | — |
 | **SAN-890 · CK-V2-004** — Chat v2 (last) | ⚫ | **0%** | Backlog | [`CK-V2-004-chat-subspike.md`](../tasks/copilotkit/CK-V2-004-chat-subspike.md) | **Await approval** |
-| **SAN-891 · CK-V2-005** — Retire react-ui | ⚫ | **0%** | Backlog | grep-zero AC (19/6 today) | After 890 |
+| **SAN-891 · CK-V2-005** — Retire react-ui | ⚫ | **0%** | Backlog | grep-zero AC (19/6 today) · spec audited [`06-891-audit.md`](./06-891-audit.md) ~98% | After 890 |
 | **SAN-892 · CK-V2-006** — Tag build-on-v2 | 🟢 | **100%** | **Done** | 12/12 `build-on-v2` | — |
 | **SAN-893 · CK-V1-001** — v1 console loop | 🟡 | **0%** | Backlog | flag-off console FAIL · v1 0 diff | Investigate |
 
@@ -89,16 +89,15 @@ Canonical command: `git grep -l 'from "@copilotkit/react-core"' -- 'src/*' | gre
 
 ## Next actions (ordered)
 
-1. ~~SAN-889 merge~~ ✅ `0fab08f`  
-2. **Commit E1 proof-script fix** on `main`  
-3. **[SAN-893 · CK-V1-001 — Investigate v1 host event wizard Maximum update depth loop](https://linear.app/sanjiovani/issue/SAN-893/ck-v1-001-investigate-v1-host-event-wizard-maximum-update-depth-loop)** — v1 flag-off console investigation  
-4. **SAN-890 · CK-V2-004** — `/chat` v2 — **only when approved**  
-5. **SAN-891 · CK-V2-005** — retire `react-ui` · remove flags  
+1. ~~SAN-889 merge + E1 proof fix~~ ✅ `2052086`  
+2. **[SAN-893 · CK-V1-001 — Investigate v1 host event wizard Maximum update depth loop](https://linear.app/sanjiovani/issue/SAN-893/ck-v1-001-investigate-v1-host-event-wizard-maximum-update-depth-loop)** — v1 flag-off console investigation  
+3. **SAN-890 · CK-V2-004** — `/chat` v2 — **only when approved**  
+4. **SAN-891 · CK-V2-005** — retire `react-ui` (spec ~98% — [`06-891-audit.md`](./06-891-audit.md)) · after 890  
 
 ---
 
 ## References
 
 - [Linear v2-upgrade view](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd)
-- Audit: [`04-copilitkit-audit.md`](./04-copilitkit-audit.md) · [`notes-3.md`](./notes-3.md) · [`05-890audit.md`](./05-890audit.md)
+- Audit: [`04-copilitkit-audit.md`](./04-copilitkit-audit.md) · [`notes-3.md`](./notes-3.md) · [`05-890audit.md`](./05-890audit.md) · [`06-891-audit.md`](./06-891-audit.md)
 - Changelog: [`changelog.md`](./changelog.md)

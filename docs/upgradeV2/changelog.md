@@ -1,7 +1,23 @@
 # CK-V2 · CopilotKit v1→v2 migration — Changelog
 
 Reverse-chronological log of verified program events.  
-Tracker: [`todo.md`](./todo.md) · Audit: [`notes-3.md`](./notes-3.md) · [`04-copilitkit-audit.md`](./04-copilitkit-audit.md)
+Tracker: [`todo.md`](./todo.md) · Audit: [`notes-3.md`](./notes-3.md) · [`04-copilitkit-audit.md`](./04-copilitkit-audit.md) · [`06-891-audit.md`](./06-891-audit.md)
+
+---
+
+## 2026-06-13 — [SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui; consolidate frontend to react-core/v2 + remove flags](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react) forensic audit + Linear spec fix (docs only)
+
+**Ground truth:** `main` @ `2052086` · **Status:** Backlog · **Blocked by:** [SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk)
+
+| Change | Task | Proof |
+|---|---|---|
+| Forensic audit [`06-891-audit.md`](./06-891-audit.md) — spec **~98%** | [SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui; consolidate frontend to react-core/v2 + remove flags](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react) | 6 v1/v2 twins · 9 `react-ui` rg matches · A3a/A3b hook gates |
+| Linear description updated (D1 twins, A1 inventory, rollback D0, E0 `npm ls`, C4 Infisical/Vercel, F3 screenshots) | [SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui; consolidate frontend to react-core/v2 + remove flags](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react) | Linear MCP 2026-06-13 |
+| Tracker sync [`notes-3.md`](./notes-3.md) · [`todo.md`](./todo.md) | Program | SAN-891 spec row · refs `06-891-audit` |
+
+**Not included:** implementation · flag removal · `react-ui` dep drop · blocked until [SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk) merges.
+
+**Program % after this entry:** planning **93%** · shipped **~45%** · composite **67%** (unchanged — docs only)
 
 ---
 
