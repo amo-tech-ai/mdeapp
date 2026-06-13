@@ -1,0 +1,38 @@
+docs/upgradeV2/05-890audit.md
+  s_25b0cb0b37161d::t_579fbe7ec39dfc 125
+docs/upgradeV2/changelog.md
+  s_25b0cb0b37161d::t_00c0f045f9b267 8,12-15
+  s_25b0cb0b37161d::t_7f44da3684d180 4-7,9-11,16-18
+docs/upgradeV2/todo.md
+  s_25b0cb0b37161d::t_94789e6552eaa5 94
+  s_25b0cb0b37161d::t_573486ac8db2e7 3-4,11-19,25-27,30,32,34,41,52-54,56,58-60,68,70-73,75,79,83-84,86,92-93,95-96,103
+docs/upgradeV2/notes-3.md
+  s_25b0cb0b37161d::t_9f448d29141614 53
+  s_25b0cb0b37161d::t_311d7f088c0b27 131
+  s_25b0cb0b37161d::t_8aeebded580b88 41-42
+docs/tasks/testing/evidence/SAN-889/RESULTS.md
+  s_25b0cb0b37161d::t_84ded3ed9ee9d9 54
+  s_25b0cb0b37161d::t_20299f7d4f282b 5,15-16,18,20-22,25,30,32,34-37
+  s_25b0cb0b37161d::t_17ba74b6365e27 56
+  s_25b0cb0b37161d::t_a5d154beeb3982 33
+docs/tasks/testing/evidence/SAN-889/san-889-localhost-proof.mjs
+  s_25b0cb0b37161d::t_1d186d1f81708e 11,17-28
+  s_25b0cb0b37161d::t_f1b14204e70657 118-119
+  s_25b0cb0b37161d::t_c6c2711079abf6 127
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "08fa382f06b708ba131a8844f727061257478f7e",
+  "prompts": {},
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": null
+    }
+  }
+}
