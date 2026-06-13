@@ -1,201 +1,207 @@
-# CK-V2 · CopilotKit v1→v2 — Forensic Upgrade Audit (notes-3)
+# CK-V2 Migration Verification Report (notes-3)
 
-**Date:** 2026-06-12 · **Auditor:** senior software specialist + forensic verifier  
-**Ground truth:** `main` @ `0fab08f` · package `@copilotkit/react-core@1.55.2`  
-**Last verified:** 2026-06-12 (post-merge re-run: unit + build + localhost/HITL proofs)  
-**Question:** *Is the upgrade correct, complete, and safe to continue to SAN-890?*  
-**Method:** disk (`git show origin/main`) · unit tests (worktree @ `0fab08f`) · localhost re-verify · Linear MCP · PR #210 merge record · [`todo.md`](./todo.md) cross-check
+**Date:** 2026-06-13 · **Auditor:** disk + localhost execution  
+**Ground truth:** `origin/main` @ **`2052086`** · worktree `.worktrees/san-869`  
+**Method:** disk grep · package exports · Vitest · `npm run build` · Playwright · localhost proof scripts  
+**Tracker:** [`todo.md`](./todo.md) · [`changelog.md`](./changelog.md)
 
 ---
 
-## Executive verdict
+## Current verdict
 
-**The upgrade is real and mostly correct — 4 of 6 epic children shipped on `main`, both host routes migrated behind flags, backend untouched.** Planning and sequencing are strong (🟢 **93%**). Execution on shipped routes is solid (🟢 **~88%**). The program is **not** launch-ready for personas: every v2 path is flag-off on prod, and **SAN-890 · CK-V2-004** (Camila's `/chat`) is untouched — the highest-risk surface.
+**CK-V2 shipped work is working, but not clean enough to flip flags yet.**
 
-**Overall program grade: B+ (85/100)** — honest progress, two critical follow-ups before flipping flags in preview.
-
-| Scorecard | Grade | % correct | Dot |
-|---|---|---:|---|
-| Planning / spec / sequencing | A- | **93%** | 🟢 |
-| Shipped execution (887–889, 892) | B+ | **88%** | 🟢 |
-| Tracker (`todo.md`) accuracy | B | **86%** | 🟡 |
-| Evidence / proof rigor | B | **82%** | 🟡 |
-| Production persona impact | N/A | **0%** (by design) | 🟢 |
-| **Composite** | **B+** | **85%** | 🟢 |
-
-### Legend
-
-| Dot | Meaning |
+| Area | Verdict |
 |---|---|
-| 🟢 | Verified true on disk / tests |
-| 🟡 | Partially correct, stale, or watch |
-| ⚫ | Not started / unverifiable |
-| 🔴 | Error, blocker, or regression risk |
+| **[SAN-888 · CK-V2-002 — Host Analytics prototype](https://linear.app/sanjiovani/issue/SAN-888/ck-v2-002-host-analytics-prototype-v2-hostanalytics-flag)** | ✅ Fully green |
+| **[SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2](https://linear.app/sanjiovani/issue/SAN-889/ck-v2-003-migrate-hostevent-hosteventagent-to-v2)** | 🟡 Functionally works, console issue remains |
+| **[SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk)** | ⚫ Not started |
+| **[SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react)** | ⚫ Spec ready, code not started |
+| **Prod risk** | ✅ None — all flags off |
+
+### SAN-889 wording (important)
+
+Do **not** call SAN-889 "100% clean." Correct statement:
+
+> **SAN-889 is functionally complete but not console-clean.**
+
+| Dimension | % |
+|---|---:|
+| Functional (form, agent fill, HITL, build) | **90–95%** |
+| Console hygiene (smoke chat) | **60%** |
+| **SAN-889 overall** | **~85%** |
+
+Why functional passes but console does not:
+
+- v2 form loads ✅
+- manual edits work ✅
+- agent fill works ✅
+- HITL approve/reject works ✅
+- build passes ✅
+- `thought_signature` errors in chat smoke ❌
+
+### Simple bottom line
+
+| Surface | State |
+|---|---|
+| Analytics v2 | **Done** |
+| Host Event v2 | **Works** — console issue remains |
+| Chat v2 | **Not started** |
+| react-ui removal | **Not started** |
+| Prod | **Safe** — flags off |
+| **Next** | **[SAN-893 · CK-V1-001](https://linear.app/sanjiovani/issue/SAN-893/ck-v1-001-investigate-v1-host-event-wizard-maximum-update-depth-loop)** — audit verified ~85% · triage `thought_signature` (proven) + run A1–A4 for max-depth (intermittent) before any flag flip |
 
 ---
 
-## What shipped on `main` @ `0fab08f` (proof)
+## Executive summary
 
-| Claim | Proof | Dot |
+| Metric | Value |
+|---|---|
+| **SAN-888 execution** | **100%** |
+| **SAN-889 functional** | **90–95%** |
+| **SAN-889 console hygiene** | **60%** |
+| **SAN-889 overall** | **~85%** |
+| **Overall shipped CK-V2 scope** | **~85%** |
+| **Full program shipped** | **~45%** |
+| **Spec / planning** | **93%** |
+| **Production risk** | **None** (flags off) |
+
+---
+
+## Localhost execution (2026-06-13 00:48–00:54 UTC)
+
+Dev: `http://localhost:3001` · server restarted per flag.
+
+| Area | Result |
+|---|---|
+| **SAN-888** flag off + on | **PASS 100%** |
+| **SAN-889** functional | **PASS** |
+| **SAN-889** console smoke | **PARTIAL** (`thought_signature`) |
+| `npm test -- --run host-event copilotkit-v2` | **19/19 PASS** |
+| `npm run build` | **PASS** |
+| Playwright SCREEN-016 | **4/6 PASS** (016c slug drift — not CK-V2) |
+| `/v2` files | **6** |
+| `/chat` v2 files | **0** |
+| Backend touched | **0** |
+| Prod flags | **OFF** |
+
+---
+
+## Scorecard
+
+| Task | Status | Spec % | Exec % | Verdict |
+|---|---|---:|---:|---|
+| **SAN-886 · CK-V2-000 — CopilotKit v1→v2 Migration** | Backlog | 93 | 67 | 🟢 on track |
+| **SAN-887 · CK-V2-001 — v2 hook-signature verification spike** | Done | 100 | 100 | 🟢 |
+| **SAN-888 · CK-V2-002 — Host Analytics prototype** | Done | 100 | **100** | 🟢 fully green |
+| **SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2** | Done | 98 | **~85** | 🟡 functional · not console-clean |
+| **SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2** | Backlog | 96 | 0 | ⚫ not started |
+| **SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui** | Backlog | 98 | 0 | ⚫ spec ready · blocked SAN-890 |
+| **SAN-892 · CK-V2-006 — Tag unbuilt CK/CONCIERGE issues build on v2** | Done | 100 | 100 | 🟢 |
+| **SAN-893 · CK-V1-001 — Investigate v1 host event wizard Maximum update depth loop** | Backlog | 100 | 15 | 🟡 audit ~85% · `thought_signature` proven · max-depth intermittent |
+
+Evidence: [`SAN-888/`](../tasks/testing/evidence/SAN-888/) · [`SAN-889/`](../tasks/testing/evidence/SAN-889/)
+
+---
+
+## SAN-888 · localhost detail
+
+| Check | Flag | Result |
 |---|---|---|
-| [SAN-888 · CK-V2-002 — host-analytics-prototype (v2 /host/analytics flag)](https://linear.app/sanjiovani/issue/SAN-888/ck-v2-002-host-analytics-prototype-v2-hostanalytics-flag) merged `b9a4f70` | `git log origin/main` | 🟢 |
-| [SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2](https://linear.app/sanjiovani/issue/SAN-889/ck-v2-003-migrate-hostevent-hosteventagent-to-v2) merged via PR #210 | `gh pr view 210` → MERGED `0fab08f` | 🟢 |
-| `/v2` import sites | **6 files** (analytics ×3 + host event ×3) | 🟢 |
-| Backend unchanged | No `/api/copilotkit` or `src/mastra/**` diff in #210 | 🟢 |
-| Package pin 1.55.2 | `package.json` | 🟢 |
-| `/v2` hooks exist | `useAgent`, `useAgentContext`, `useFrontendTool`, `useRenderTool`, `useHumanInTheLoop` in `dist/v2/index.d.cts` | 🟢 |
-| `useCopilotChatHeadless_c` absent from `/v2` | grep `dist/v2` → no match | 🟢 |
-| Unit tests (2026-06-12 re-run) | `host-event` **16/16** · `copilotkit-v2` **6/6** | 🟢 |
-| SAN-892 12/12 `build-on-v2` | Linear `list_issues label=build-on-v2` | 🟢 |
+| Page + KPI + chat "Sales loaded ✓" | OFF / ON | **PASS** |
+| Zero console errors | OFF / ON | **PASS** |
+| Rollback (v1 after v2) | OFF restart | **PASS** |
 
-**v2 files on `main`:**
+Screenshots: `SAN-888-v2-flag-off-localhost.png` · `SAN-888-v2-flag-on-localhost.png`
+
+---
+
+## SAN-889 · localhost detail
+
+| Check | Flag | Result |
+|---|---|---|
+| Wizard + form load | OFF / ON | **PASS** |
+| Manual form edit | OFF / ON | **PASS** |
+| Agent form-fill (neighborhood) | OFF / ON | **PASS** |
+| Console clean (smoke chat) | OFF / ON | **FAIL** |
+| HITL reject | ON | **PASS** |
+| HITL approve | ON | **PASS** |
+| Combined HITL script | ON | **FAIL** (approve leg timeout; approve-only PASS) |
 
 ```text
-src/components/host/host-analytics-provider-v2.tsx
-src/components/host/host-analytics-shell-v2.tsx
-src/components/host/host-ops-copilot-bridge-v2.tsx
-src/components/host/host-event-provider-v2.tsx
-src/components/host/host-event-shell-v2.tsx
-src/components/host/host-event-copilot-bridge-v2.tsx
+[CopilotKit] Agent error: AI_APICallError: Function call is missing a thought_signature
+  … function call `default_api:mastra_workspace_list_files`
+  agentId: hostEventAgent
 ```
 
----
+Captured on flag-off and flag-on smoke proofs. **Not** on HITL approve-only run.
 
-## Per-task scorecard (percent correct + proof)
+### SAN-893 · two console issues (do not conflate)
 
-| Task | Tracker % | Audit % | Dot | Proof |
-|---|---:|---:|---|---|
-| **SAN-886 · CK-V2-000** — Epic | 67% | **67%** | 🟡 | 4/6 children Done; 890+891 backlog |
-| **SAN-887 · CK-V2-001** — Spike gate | 100% | **100%** | 🟢 | [`CK-V2-001-hook-signatures.md`](../tasks/copilotkit/CK-V2-001-hook-signatures.md) on `main` |
-| **SAN-888 · CK-V2-002** — Analytics v2 | 100% | **100%** | 🟢 | `b9a4f70` · 9 evidence files · flag `COPILOTKIT_V2_ANALYTICS` |
-| **SAN-889 · CK-V2-003** — Host event v2 | 100% | **95%** | 🟢 | `0fab08f` · v2 proof PASS @ re-verify · E1 fixed · E2 → SAN-893 |
-| **SAN-890A · CK-V2-004A** — Chat spike | 100% (docs) | **100%** | 🟢 | [`CK-V2-004-chat-subspike.md`](../tasks/copilotkit/CK-V2-004-chat-subspike.md) |
-| **SAN-890 · CK-V2-004** — Chat v2 | 0% | **0%** | ⚫ | Zero code; 14-file v1 inventory in spike |
-| **SAN-891 · CK-V2-005** — Retire react-ui | 0% | **0%** | ⚫ | grep baseline only |
-| **SAN-892 · CK-V2-006** — Tag build-on-v2 | 100% | **100%** | 🟢 | Linear 12/12 |
-
----
-
-## Verification ladder (2026-06-12 re-run @ `0fab08f`)
-
-| Layer | Command | Result | Dot | Notes |
-|---|---|---|---|---|
-| Unit — host event | `npm test -- --run host-event` | **16/16 PASS** | 🟢 | worktree @ `0fab08f` |
-| Unit — v2 flags | `npm test -- --run copilotkit-v2` | **6/6 PASS** | 🟢 | analytics + host event flags |
-| Build | `npm run build` | **PASS** | 🟢 | re-run 2026-06-12 @ `0fab08f` |
-| Playwright | `SCREEN-016` chromium | **2/2 PASS** | 🟢 | login redirect only |
-| Localhost flag **ON** | `san-889-localhost-proof.mjs` | **PASS** | 🟢 | v2 wizard + agent fill · E1 fix committed |
-| Localhost flag **OFF** | same script | **FAIL** (console) | 🟡 | max update depth + `thought_signature` → **SAN-893** (v1 bridge 0 diff) |
-| HITL reject | `san-889-hitl-proof.mjs` | **PARTIAL** | 🟡 | panel PASS · `thought_signature` on reject path |
-| HITL approve | `san-889-hitl-approve-proof.mjs` | **PASS** | 🟢 | published link · zero console errors |
-
-**E1 fixed (2026-06-12):** `copilotkitPostOk()` returns `true` when POST returns **200 or 400** — committed on `main` follow-up.
-
----
-
-## 🔴 Red flags & errors
-
-| # | Finding | Severity | CK-V2? | Proof | Fix |
-|---|---|---|---|---|---|
-| **E1** | ~~**`san-889-localhost-proof.mjs` copilotkitPost gate broken on `main`**~~ | ✅ Fixed | Yes | Committed 2026-06-12 · returns `200 \|\| 400` as boolean | — |
-| **E2** | **v1 flag-off wizard console errors (max depth + Gemini)** | 🟡 Med | **No** (pre-889 v1) | `git diff b9a4f70..0fab08f` v1 bridge **0 lines** · re-verify FAIL console only | **SAN-893 · CK-V1-001** |
-| **E3** | **Tracker v1 grep counts stale** | 🟡 Med | No | `todo.md` said **17/8**; `main` has **19** `react-core` · **6** `react-ui` import files (+ layout styles) | Updated in `todo.md` |
-| **E4** | **Dual static v1+v2 provider imports in layouts** | 🟡 Med | Yes | `host/event/layout.tsx` + `host/analytics/layout.tsx` | Accept for Phase 1 (matches SAN-888); optional `next/dynamic` in P2 |
-| **E5** | **HITL / flag-off claims in `RESULTS.md` vs re-verify** | 🟡 Med | Yes | RESULTS says flag-off PASS; re-run FAIL on console | Re-run proofs on `main` after E1 fix; update evidence |
-| **E6** | **SAN-890 chat cliff — `useCopilotChatInternal` has no `/v2` export** | 🔴 High (future) | Yes | spike doc + `concierge-chat-messages.tsx` on `main` | Do not underestimate SAN-890; spike is accurate |
-
----
-
-## Blockers & watch items
-
-| ID | Item | Blocks | Owner | Dot |
-|---|---|---|---|---|
-| **B1** | SAN-890 not started | Camila v2 / full migration | Next PR after approval | ⚫ |
-| **B2** | All flags off on prod | Persona-visible v2 | Ops / preview env | 🟢 by design |
-| **B3** | Gemini `thought_signature` on tool calls | Roberto agent form-fill (v1 + v2) | Platform / Gemini SDK | 🟡 |
-| **B4** | **SAN-893** v1 max update depth on flag-off | Roberto rollback console hygiene | Platform / v1 bridge | 🟡 |
-| **R1** | `npm audit` moderate CVEs | Nothing today (floor passes `--audit-level=high`) | Infra | 🟡 |
-
----
-
-## What's missing
-
-1. ~~**Committed proof-script fix** on `main` (E1).~~ ✅ 2026-06-12
-2. ~~**Post-merge re-verify** of HITL scripts on `main` @ `0fab08f`~~ ✅ 2026-06-12 (approve PASS · reject PARTIAL)
-3. **v1 rollback console hygiene** — **SAN-893 · CK-V1-001** (not SAN-889 regression)
-4. **SAN-890 branch + `COPILOTKIT_V2_CHAT` flag** — 0% code; ~14 v1 files on `/chat`.
-5. **SAN-891 grep-zero** — still **19** v1 `react-core` + **9** `react-ui` files to retire.
-6. **Preview flag flip playbook** — when to set `COPILOTKIT_V2_ANALYTICS=1` / `COPILOTKIT_V2_HOST_EVENT=1` on Vercel preview.
-7. **`notes-3` / tracker sync** — `todo.md` grep row still off by 2–1 files.
-8. **Playwright beyond SCREEN-016** — no authed v2 wizard e2e on `main` yet.
-9. **[SAN-886 · CK-V2-000 — CopilotKit v1→v2 Migration (frontend-only, subpath path)](https://linear.app/sanjiovani/issue/SAN-886/ck-v2-000-copilotkit-v1v2-migration-frontend-only-subpath-path)** epic % — parent still Backlog; children 4/6 Done but epic not updated.
-
----
-
-## Critical fixes (ordered)
-
-| Priority | Fix | Why |
-|---|---|---|
-| **P0** | ~~Commit `copilotkitPost` boolean fix~~ | ✅ Done |
-| **P0** | **SAN-893** — diagnose v1 max update depth on flag-off | Rollback console story for Roberto |
-| **P1** | Re-run HITL proof scripts on `main` with Infisical + flag-on dev | Close evidence drift |
-| **P1** | Update `todo.md` v1 grep to **19/6** (+ hook counts) | ✅ Done 2026-06-12 |
-| **P2** | Open SAN-890 only after explicit approval | Highest-risk route |
-| **P2** | `enableInspector` env toggle on v2 providers | Debug ergonomics (nitpick) |
-
----
-
-## Suggested improvements
-
-| Improvement | Effect |
-|---|---|
-| Add `✅ disk` + `last-verified` date per row in `todo.md` | Stops SAN-889-style drift |
-| One **verification script** wrapping unit + build + proof mjs | Sofía runs one command before flag flip |
-| **Authed Playwright** for v2 host wizard (flag on) | Lucía catches regressions without manual proof |
-| Promote E2/E3 to Linear tickets with persona labels | Patricia can prioritize rollback vs Gemini |
-| Post-SAN-890: single **flag matrix** doc (analytics / event / chat) | Ops knows preview combinations |
-| Re-verify SAN-888 flag-on proof after E1 fix | Parity with SAN-889 evidence quality |
-
----
-
-## Persona impact today
-
-| Persona | Surface | v2 available? | Dot |
+| Issue | Committed `main` `2052086` | Latest re-run @ same SHA | Blocks flag flip? |
 |---|---|---|---|
-| **Roberto** | `/host/analytics` | Only if `COPILOTKIT_V2_ANALYTICS=1` | 🟡 |
-| **Roberto** | `/host/event/new` | Only if `COPILOTKIT_V2_HOST_EVENT=1` | 🟡 |
-| **Camila** | `/chat` | v1 only — SAN-890 not started | ⚫ |
-| **Prod users** | all | flags off | 🟢 (no change) |
+| **`thought_signature`** / `mastra_workspace_list_files` | ✅ 2 errors | ✅ 2 errors | **Yes — proven every run** |
+| **Max update depth** (v1 `useCoAgent` loop) | ✅ 21 errors | ❌ not reproduced | **Investigate** — intermittent |
+
+**Forensic audit:** [`07-893-audit.md`](./07-893-audit.md) — investigation ~**85%** correct · `mergeEventDraft` ref-instability = **prime hypothesis** (A3 unproven) · taxonomy fixed on Linear.
+
+**Evidence rule:** always cite `mainSha` — `SAN-889-v2-flag-off-results.json` is overwritten each proof run.
 
 ---
 
-## Route migration progress
+## Migration inventory (@ `2052086`)
 
-| Route | Flag | On `main` | Hooks migrated | Dot |
-|---|---|---|---|---|
-| `/host/analytics` | `COPILOTKIT_V2_ANALYTICS` | 🟢 | `useAgent` + `useRenderTool` | 🟢 |
-| `/host/event/*` | `COPILOTKIT_V2_HOST_EVENT` | 🟢 | `useAgent` + `useAgentContext` + `useFrontendTool` ×3 + `useHumanInTheLoop` | 🟢 |
-| `/chat` | (planned `COPILOTKIT_V2_CHAT`) | ⚫ | 14 v1 files remain | ⚫ |
-| All other CopilotKit surfaces | — | ⚫ | 19 v1 `react-core` files | ⚫ |
-
-**Routes migrated:** 2 of ~4 Phase-1 targets ≈ **50%** route coverage · **~40%** frontend grep coverage.
+| Metric | Count |
+|---|---:|
+| `/v2` import files | **6** |
+| v1 `react-core` lines (excl `/v2`) | **20** |
+| `react-ui` rg matches | **10** |
+| `useCoAgent` files | **6** |
+| `useCopilotAction` files | **7** |
+| `renderAndWaitForResponse` lines | **2** |
+| `/chat` v2 files | **0** |
+| Backend diff | **0** |
 
 ---
 
-## Bottom line
+## Blockers
 
-**GO to continue the program — DO NOT flip prod flags yet.**
+| Blocker | Owner | Status |
+|---|---|---|
+| **[SAN-893 · CK-V1-001 — Investigate v1 host event wizard Maximum update depth loop](https://linear.app/sanjiovani/issue/SAN-893/ck-v1-001-investigate-v1-host-event-wizard-maximum-update-depth-loop)** | `thought_signature` proven · max-depth intermittent · `mergeEventDraft` hypothesis | SAN-893 | **A1–A4 probes** before flag flip |
+| **[SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk)** | SAN-890 | not started · await approval |
+| **[SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react)** | SAN-891 | blocked by SAN-890 |
 
-- **What's correct:** SAN-887/888/889/892 are forensically real on `main`; v2 subpath pattern works; backend invariant holds; SAN-889 HITL evidence exists; unit tests green.
-- **What's wrong:** v1 flag-off console noise tracked as **SAN-893** (not SAN-889); HITL reject path has intermittent `thought_signature`; SAN-890 is the real cliff ahead.
-- **Next step:** land E1 commit on `main` · triage **SAN-893** · do **not** start **SAN-890 · CK-V2-004** until explicit approval.
+**Do not flip flags** until SAN-893 is triaged.
+
+---
+
+## PR status
+
+| PR | State |
+|---|---|
+| [#211](https://github.com/amo-tech-ai/mdeapp/pull/211) SAN-889 E1 + evidence | **MERGED** @ `2052086` |
+| [#212](https://github.com/amo-tech-ai/mdeapp/pull/212) SAN-891 audit docs | **OPEN** · floor ✅ |
+
+---
+
+## Next steps (ordered)
+
+1. **Merge [PR #212](https://github.com/amo-tech-ai/mdeapp/pull/212)** — include `notes-3.md` · `todo.md` · `changelog.md` · [`07-893-audit.md`](./07-893-audit.md).
+2. **Keep prod flags OFF** (`COPILOTKIT_V2_ANALYTICS` · `COPILOTKIT_V2_HOST_EVENT` · `COPILOTKIT_V2_CHAT`).
+3. **[SAN-893 · CK-V1-001](https://linear.app/sanjiovani/issue/SAN-893/ck-v1-001-investigate-v1-host-event-wizard-maximum-update-depth-loop)** — run A1–A4:
+   - **A1** reproduce with `san-889-localhost-proof.mjs` (cite `mainSha` in evidence)
+   - **A3** bisect `mergeEventDraft` ref-stability vs `useCopilotReadable` vs memoized `useCoAgent` state
+   - **A4** test whether `thought_signature` triggers or amplifies max-depth bursts
+   - **Z1** on close: confirmed root cause → open `CK-V1-002` fix ticket
+4. **Do not flip flags** until SAN-893 A4 clears `thought_signature` blocker (proven today).
+5. **Do not start** **[SAN-890 · CK-V2-004](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk)** until approved.
+6. **Do not start** **[SAN-891 · CK-V2-005](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react)** until SAN-890 merges.
 
 ---
 
 ## References
 
 - Tracker: [`todo.md`](./todo.md) · Changelog: [`changelog.md`](./changelog.md)
-- Prior audit: [`04-copilitkit-audit.md`](./04-copilitkit-audit.md)
-- Evidence: [`SAN-888`](../tasks/testing/evidence/SAN-888/) · [`SAN-889`](../tasks/testing/evidence/SAN-889/) (on `main` @ `0fab08f`)
-- Skill: `.claude/skills/copilotkit-upgrade` (mdeai subpath rules)
+- Audits: [`04-copilitkit-audit.md`](./04-copilitkit-audit.md) · [`05-890audit.md`](./05-890audit.md) · [`06-891-audit.md`](./06-891-audit.md) · [`07-893-audit.md`](./07-893-audit.md)
 - Linear: [v2-upgrade view](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd)
