@@ -2,7 +2,7 @@
 
 **Task:** [SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2](https://linear.app/sanjiovani/issue/SAN-889/ck-v2-003-migrate-hostevent-hosteventagent-to-v2)  
 **Flag:** `COPILOTKIT_V2_HOST_EVENT=1` (default off)  
-**Branch:** `ai/san-889-ck-v2-003-migrate-hostevent-hosteventagent-to-v2`
+**Ground truth:** `main` @ `0fab08f` · **last verified:** 2026-06-12
 
 ## Scripts
 
@@ -12,22 +12,29 @@
 | [`san-889-hitl-proof.mjs`](./san-889-hitl-proof.mjs) | v2 HITL reject path + panel |
 | [`san-889-hitl-approve-proof.mjs`](./san-889-hitl-approve-proof.mjs) | v2 HITL approve + published link |
 
-**Server:** `COPILOTKIT_V2_HOST_EVENT=1 infisical run --silent --env=dev --path=/ -- npm run dev`
+**Server (v2):** `COPILOTKIT_V2_HOST_EVENT=1 infisical run --silent --env=dev --path=/ -- npm run dev`  
+**Server (v1):** `infisical run --silent --env=dev --path=/ -- npm run dev` (flag unset)
 
-## Pass/fail matrix
+## Pass/fail matrix — post-merge re-verify @ `0fab08f`
 
-| Gate | Flag off | Flag on | HITL reject | HITL approve |
-|------|----------|---------|-------------|--------------|
+| Gate | Flag off (v1) | Flag on (v2) | HITL reject | HITL approve |
+|------|---------------|--------------|-------------|--------------|
+| `copilotkitPost` gate | PASS | PASS | — | — |
 | Wizard HTTP 200 | PASS | PASS | PASS | PASS |
 | Form + manual edit | PASS | PASS | PASS | PASS |
-| Agent form-fill | PASS | PASS | — | — |
+| Agent neighborhood fill | PASS | PASS | — | — |
 | `host-event-approval-panel` | — | — | **PASS** | **PASS** |
 | Reject → no Published link | — | — | **PASS** | — |
 | Approve → Published link | — | — | — | **PASS** |
 | No `pending_approval` race | — | — | PASS | **PASS** |
-| Critical console errors | PASS | PASS | hydration noise only | **PASS** |
+| Zero critical console errors | **FAIL** | **PASS** | PARTIAL (`thought_signature`) | **PASS** |
 
-**Combined HITL verdict:** **PASS** · [`SAN-889-hitl-combined-results.json`](./SAN-889-hitl-combined-results.json)
+**v2 localhost verdict:** **PASS** · [`SAN-889-v2-flag-on-results.json`](./SAN-889-v2-flag-on-results.json)  
+**v1 localhost verdict:** **FAIL** (console) · [`SAN-889-v2-flag-off-results.json`](./SAN-889-v2-flag-off-results.json) — tracked separately as [SAN-893 · CK-V1-001 — Investigate v1 host event wizard Maximum update depth loop](https://linear.app/sanjiovani/issue/SAN-893/ck-v1-001-investigate-v1-host-event-wizard-maximum-update-depth-loop) (not [SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2](https://linear.app/sanjiovani/issue/SAN-889/ck-v2-003-migrate-hostevent-hosteventagent-to-v2) regression; v1 bridge 0 diff vs pre-889)
+
+## E1 fix (2026-06-12)
+
+`copilotkitPostOk()` now returns `true` when POST `/api/copilotkit` returns **200 or 400** (runtime connected). Prior `main` compared HTTP status to `=== true` and always failed the gate.
 
 ## Screenshots
 
@@ -44,6 +51,6 @@
 
 ## Notes
 
-- SCREEN-016 Playwright first failed without Infisical (middleware env) — **not SAN-889**; re-run **2/2 PASS**.
+- SCREEN-016 Playwright first failed without Infisical (middleware env) — **not [SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2](https://linear.app/sanjiovani/issue/SAN-889/ck-v2-003-migrate-hostevent-hosteventagent-to-v2)**; re-run **2/2 PASS**.
 - First HITL run hit Gemini **429** (rate limit) — retry succeeded.
-- Approve proof commit SHA: `072d8e5` (pre-evidence commit; evidence commit follows).
+- v1 flag-off console FAIL: `Maximum update depth` + `thought_signature` on `mastra_workspace_list_files` — [SAN-893 · CK-V1-001 — Investigate v1 host event wizard Maximum update depth loop](https://linear.app/sanjiovani/issue/SAN-893/ck-v1-001-investigate-v1-host-event-wizard-maximum-update-depth-loop), not blocker for [SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2](https://linear.app/sanjiovani/issue/SAN-889/ck-v2-003-migrate-hostevent-hosteventagent-to-v2) Done.

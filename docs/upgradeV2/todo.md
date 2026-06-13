@@ -1,9 +1,19 @@
 # CK-V2 · CopilotKit v1→v2 migration — Progress Task Tracker
 
-**Updated:** 2026-06-12 · **Auditor:** `main` @ `b9a4f70` + localhost proof + Linear  
+**Updated:** 2026-06-12 · **Auditor:** `main` @ `0fab08f` (SAN-889 merged + E1 fix) + Linear MCP  
+**Last verified:** 2026-06-12 — unit 16/16 + 6/6 · build PASS · v2 localhost PASS · v1 console → SAN-893  
 **Linear view:** [v2-upgrade](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd)  
 **Package pin:** `@copilotkit/react-core@1.55.2` · subpath `/v2` only (no package bump until SAN-891)  
 **Rule:** Docs first · prototype second · infra later (`vercel-deploy.yml` **not** in CK-V2 scope)
+
+---
+
+## 🔴 Program blockers (watch)
+
+| ID | Blocker | Severity | CK-V2? | Status |
+|---|---|---|---|---|
+| **R1** | **`npm run audit`** (`--audit-level=high`) — transitive moderate CVEs | 🟡 Watch | **No** | Floor **PASS**; gate fails only on **high+** |
+| **R2** | **SAN-893 · CK-V1-001** — v1 wizard console max update depth | 🟡 Watch | **No** | v1 bridge 0 diff vs pre-889; v2 path PASS |
 
 ---
 
@@ -12,22 +22,23 @@
 | Child | Dot | Shipped % | State |
 |---|---|---:|---|
 | **SAN-887 · CK-V2-001** — Spike gate | 🟢 | **100%** | Done · spike on `main` |
-| **SAN-888 · CK-V2-002** — Analytics prototype | 🟢 | **100%** | Done · merged `b9a4f70` · proof PASS |
-| **SAN-889 · CK-V2-003** — Host event v2 | 🟡 | **18%** | In Progress · scaffold on branch |
-| **SAN-890 · CK-V2-004** — Chat v2 | ⚫ | **0%** | Backlog · spike ready |
+| **SAN-888 · CK-V2-002** — Analytics prototype | 🟢 | **100%** | Done · `b9a4f70` + evidence |
+| **SAN-889 · CK-V2-003** — Host event v2 | 🟢 | **100%** | Done · merged `0fab08f` · [PR #210](https://github.com/amo-tech-ai/mdeapp/pull/210) |
+| **SAN-890 · CK-V2-004** — Chat v2 | ⚫ | **0%** | Backlog · **await approval** |
 | **SAN-891 · CK-V2-005** — Retire react-ui | ⚫ | **0%** | Backlog |
 | **SAN-892 · CK-V2-006** — Tag build-on-v2 | 🟢 | **100%** | Done · 12/12 tagged |
+| **SAN-893 · CK-V1-001** — v1 wizard console loop | 🟡 | **0%** | Backlog · watch (not SAN-889) |
 
-| **Epic parent complete** | 🟡 | **48%** | 2/6 children Done · 1 in-flight · 3 backlog |
+| **Epic parent complete** | 🟡 | **67%** | 4/6 children Done · 890+891 backlog |
 
-> **Persona impact:** Roberto can use v2 analytics only when ops sets `COPILOTKIT_V2_ANALYTICS=1`. Default off on prod — no user-visible change yet.
+> **Persona impact:** Roberto v2 wizard when `COPILOTKIT_V2_HOST_EVENT=1`. Prod flags off — no user-visible change.
 
 ### Legend
 
 | Dot | Meaning |
 |---|---|
 | 🟢 | Complete — verified on disk / merged |
-| 🟡 | In progress — partial or blocked on non-CK-V2 gate |
+| 🟡 | In progress — partial or watch |
 | 🔴 | Failed / blocker — must fix before Done |
 | ⚫ | Not started — spec ready, zero code |
 
@@ -38,13 +49,15 @@
 | Metric | Value | Dot |
 |---|---|---|
 | **Planning / spec quality** | **93%** | 🟢 |
-| **Execution shipped on `main`** | **28%** | 🟡 |
-| **Execution in-flight (SAN-889 branch)** | **18%** | 🟡 |
-| **Epic SAN-886 composite** | **48%** | 🟡 |
-| **Frontend migration shipped (`main`)** | **~20%** | 🟡 |
+| **Execution shipped on `main`** | **~45%** | 🟡 |
+| **Epic SAN-886 composite** | **67%** | 🟡 |
+| **Frontend migration shipped (`main`)** | **~40%** | 🟡 |
 | **Production persona impact today** | **None** (flags off on prod) | 🟢 |
-| **`/v2` on `main`** | **3 files** (`/host/analytics` only) | 🟡 |
+| **`/v2` on `main`** | **6 files** (`/host/analytics` + `/host/event`) | 🟡 |
 | **Backend changes required** | **0** | 🟢 |
+| **v1 retirement grep (`main` @ `0fab08f`)** | **19** `react-core` · **6** `react-ui` imports · **7** `useCopilotAction` files · **6** `useCoAgent` files · **2** `renderAndWaitForResponse` | 🟢 |
+
+Canonical command: `git grep -l 'from "@copilotkit/react-core"' -- 'src/*' | grep -v /v2 | grep -v test`
 
 ---
 
@@ -52,78 +65,40 @@
 
 | Task | Dot | % | Linear | Proof / evidence | Next |
 |---|---|---:|---|---|---|
-| **SAN-886 · CK-V2-000** — Epic | 🟡 | **48%** | Backlog | Parent table above | Track children |
+| **SAN-886 · CK-V2-000** — Epic | 🟡 | **67%** | Backlog | Parent table above | Track children |
 | **SAN-887 · CK-V2-001** — Spike gate | 🟢 | **100%** | **Done** | [`CK-V2-001-hook-signatures.md`](../tasks/copilotkit/CK-V2-001-hook-signatures.md) | — |
-| **SAN-888 · CK-V2-002** — Analytics prototype | 🟢 | **100%** | **Done** | `main` `b9a4f70` · [`evidence/SAN-888`](../tasks/testing/evidence/SAN-888/RESULTS.md) | — |
-| **SAN-889 · CK-V2-003** — Host event v2 | 🟡 | **18%** | In Progress | Branch `ai/san-889-ck-v2-003-*` · A2–A4 scaffold | B3–B4 tools + HITL |
-| **SAN-890 · CK-V2-004** — Chat v2 (last) | ⚫ | **0%** | Backlog | [`CK-V2-004-chat-subspike.md`](../tasks/copilotkit/CK-V2-004-chat-subspike.md) | After 889 |
-| **SAN-891 · CK-V2-005** — Retire react-ui | ⚫ | **0%** | Backlog | grep-zero AC | After 890 |
+| **SAN-888 · CK-V2-002** — Analytics prototype | 🟢 | **100%** | **Done** | `main` · [`evidence/SAN-888`](../tasks/testing/evidence/SAN-888/RESULTS.md) | — |
+| **SAN-889 · CK-V2-003** — Host event v2 | 🟢 | **100%** | **Done** | `0fab08f` · [`evidence/SAN-889`](../tasks/testing/evidence/SAN-889/RESULTS.md) | E1 fix commit |
+| **SAN-890 · CK-V2-004** — Chat v2 (last) | ⚫ | **0%** | Backlog | [`CK-V2-004-chat-subspike.md`](../tasks/copilotkit/CK-V2-004-chat-subspike.md) | **Await approval** |
+| **SAN-891 · CK-V2-005** — Retire react-ui | ⚫ | **0%** | Backlog | grep-zero AC (19/6 today) | After 890 |
 | **SAN-892 · CK-V2-006** — Tag build-on-v2 | 🟢 | **100%** | **Done** | 12/12 `build-on-v2` | — |
+| **SAN-893 · CK-V1-001** — v1 console loop | 🟡 | **0%** | Backlog | flag-off console FAIL · v1 0 diff | Investigate |
 
 ---
 
-## SAN-888 · CK-V2-002 — step tracker (merged)
+## SAN-889 · CK-V2-003 — step tracker (merged ✅)
 
 | Step | Dot | Proof |
 |---|---|---|
-| A1–A4 Scaffold + flag gate | 🟢 | `copilotkit-v2-analytics-flag.ts` · providers · layout/page gate |
-| B1–B4 v2 hooks | 🟢 | `host-ops-copilot-bridge-v2.tsx` · `host-analytics-shell-v2.tsx` |
-| C1–C5 Contracts | 🟢 | Flag-off + flag-on localhost proof PASS |
-| D1–D4 floor + merge | 🟢 | `audit:floor` · PR #208 merged `b9a4f70` |
-| D5–D7 Proof on `main` | 🟢 | [`san-888-localhost-proof.mjs`](../tasks/testing/evidence/SAN-888/san-888-localhost-proof.mjs) |
-| D8 Linear Done | 🟢 | SAN-888 · CK-V2-002 marked Done |
-
----
-
-## SAN-889 · CK-V2-003 — step tracker (in flight)
-
-| Step | Dot | Proof |
-|---|---|---|
-| A1 SAN-888 on `main` | 🟢 | `b9a4f70` |
-| A2 Flag `COPILOTKIT_V2_HOST_EVENT` | 🟢 | `copilotkit-v2-host-event-flag.ts` + 3/3 tests |
-| A3 Providers v1/v2 split | 🟢 | `host-event-provider-v1/v2.tsx` |
-| A4 Layout + page gate | 🟢 | `host/event/layout.tsx` · `host/event/new/page.tsx` |
-| B1 `useAgent` state sync | 🟡 | `host-event-copilot-bridge-v2.tsx` scaffold |
-| B2 `useAgentContext` | 🟡 | draft readable wired |
-| B3 `useFrontendTool` ×3 | ⚫ | Not started |
-| B4 `useHumanInTheLoop` publish | ⚫ | Not started |
+| A1–A4 Scaffold + flag | 🟢 | `copilotkit-v2-host-event-flag.ts` · providers · layout/page gate |
+| B1–B4 v2 hooks | 🟢 | `useAgent` · `useAgentContext` · `useFrontendTool` ×3 · `useHumanInTheLoop` |
 | C1 Shell v2 | 🟢 | `host-event-shell-v2.tsx` |
-| D1–D5 Verify + merge | ⚫ | Pending |
-
----
-
-## SAN-890A · CK-V2-004A — Concierge Chat Migration Spike
-
-**Status:** 🟢 Done (docs only) · [`CK-V2-004-chat-subspike.md`](../tasks/copilotkit/CK-V2-004-chat-subspike.md)
-
----
-
-## Official Migrate-to-V2 steps (`official-docs.md`)
-
-| Step | Scope | `main` @ `b9a4f70` | Dot |
-|---|---|---|---|
-| 1. v1 hooks → `/v2` | Per route | ✅ `/host/analytics` (3 files) | 🟡 |
-| 2. `react-ui` → `/v2` | Per route | ✅ analytics shell only | 🟡 |
-| 3. `/v2/styles.css` | Per route | ✅ analytics provider-v2 | 🟡 |
-| 4. Backend unchanged | `/api/copilotkit` + Mastra | ✅ | 🟢 |
-| 5. `@ag-ui/client` bump | Optional | defer | 🟢 |
+| D1–D5 Verify + merge | 🟢 | v2 localhost PASS · HITL approve PASS · [PR #210](https://github.com/amo-tech-ai/mdeapp/pull/210) |
 
 ---
 
 ## Next actions (ordered)
 
-1. ~~Merge SAN-888~~ ✅ `b9a4f70`  
-2. ~~Preview proof flag on/off~~ ✅ [`evidence/SAN-888`](../tasks/testing/evidence/SAN-888/)  
-3. ~~SAN-888 Linear Done~~ ✅  
-4. ~~SAN-892 tagging~~ ✅  
-5. ~~SAN-890A spike~~ ✅  
-6. **SAN-889 · CK-V2-003** — B3 `useFrontendTool` ×3 + B4 `useHumanInTheLoop` publish  
-7. **SAN-890 · CK-V2-004** — `/chat` v2 (last)  
-8. **SAN-891 · CK-V2-005** — retire `react-ui` · remove flags  
+1. ~~SAN-889 merge~~ ✅ `0fab08f`  
+2. **Commit E1 proof-script fix** on `main`  
+3. **[SAN-893 · CK-V1-001 — Investigate v1 host event wizard Maximum update depth loop](https://linear.app/sanjiovani/issue/SAN-893/ck-v1-001-investigate-v1-host-event-wizard-maximum-update-depth-loop)** — v1 flag-off console investigation  
+4. **SAN-890 · CK-V2-004** — `/chat` v2 — **only when approved**  
+5. **SAN-891 · CK-V2-005** — retire `react-ui` · remove flags  
 
 ---
 
 ## References
 
 - [Linear v2-upgrade view](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd)
+- Audit: [`04-copilitkit-audit.md`](./04-copilitkit-audit.md) · [`notes-3.md`](./notes-3.md) · [`05-890audit.md`](./05-890audit.md)
 - Changelog: [`changelog.md`](./changelog.md)

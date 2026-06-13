@@ -3,10 +3,10 @@
   "mode": "v2-flag-on",
   "flag": "1",
   "baseUrl": "http://localhost:3001",
-  "mainSha": "aaff138",
-  "at": "2026-06-12T22:51:01.238Z",
+  "mainSha": "0fab08f",
+  "at": "2026-06-12T23:47:34.751Z",
   "gates": {
-    "copilotkitPost": 400,
+    "copilotkitPost": true,
     "wizardHttp": 200,
     "signedInEmail": true,
     "hostEventWizard": true,
