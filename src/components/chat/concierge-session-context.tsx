@@ -30,9 +30,14 @@ type ConciergeSessionContextValue = {
 const ConciergeSessionContext =
   createContext<ConciergeSessionContextValue | null>(null);
 
-export function ConciergeSessionProvider({ children }: { children: ReactNode }) {
+export function ConciergeSessionProviderInner({
+  children,
+  resetChat,
+}: {
+  children: ReactNode;
+  resetChat: () => void;
+}) {
   const [sessionKey, setSessionKey] = useState(0);
-  const { reset } = useCopilotChat();
   const { setState } = useConciergeCoAgent();
   const { clearPins, setSelectedPinId, clearFocusPinRequest } = useMapContext();
   const { setToolResult: setRentalFp } = useRentalFastPath();
@@ -53,7 +58,7 @@ export function ConciergeSessionProvider({ children }: { children: ReactNode }) 
   } = useRentalUi();
 
   const startNewChat = useCallback(() => {
-    reset();
+    resetChat();
     setState({});
     clearPins();
     setSelectedPinId(null);
@@ -76,7 +81,7 @@ export function ConciergeSessionProvider({ children }: { children: ReactNode }) 
     clearConciergeError();
     setSessionKey((k) => k + 1);
   }, [
-    reset,
+    resetChat,
     setState,
     clearPins,
     setSelectedPinId,
@@ -107,6 +112,19 @@ export function ConciergeSessionProvider({ children }: { children: ReactNode }) 
     <ConciergeSessionContext.Provider value={value}>
       {children}
     </ConciergeSessionContext.Provider>
+  );
+}
+
+/** v1 /chat shell — useCopilotChat reset under root CopilotKit provider. */
+export function ConciergeSessionProvider({ children }: { children: ReactNode }) {
+  const { reset } = useCopilotChat();
+  const resetChat = useCallback(() => {
+    reset();
+  }, [reset]);
+  return (
+    <ConciergeSessionProviderInner resetChat={resetChat}>
+      {children}
+    </ConciergeSessionProviderInner>
   );
 }
 
