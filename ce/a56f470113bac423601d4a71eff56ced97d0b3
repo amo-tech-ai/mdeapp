@@ -1,0 +1,19 @@
+src/components/host/host-event-copilot-bridge.tsx
+  s_a7eb2c95c408ba::t_04643d92e3b4b1 164,166-167
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "cea56f470113bac423601d4a71eff56ced97d0b3",
+  "prompts": {},
+  "sessions": {
+    "s_a7eb2c95c408ba": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "18b281fe-3599-4314-af69-c33116c98c9f",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
