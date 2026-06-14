@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   useAgent,
   useAgentContext,
@@ -60,7 +60,7 @@ type HitlRenderProps = {
 };
 
 function createPublishHitlRender(
-  getDraft: () => EventDraftState,
+  fallbackDraft: EventDraftState,
   setDraft: (patch: Partial<EventDraftState>) => void,
 ) {
   return function HostEventPublishHitlRender({
@@ -68,7 +68,7 @@ function createPublishHitlRender(
     status,
     respond,
   }: HitlRenderProps) {
-    const draftArg = (args.draft as EventDraftState | undefined) ?? getDraft();
+    const draftArg = (args.draft as EventDraftState | undefined) ?? fallbackDraft;
     const panelStatus =
       status === "inProgress"
         ? "inProgress"
@@ -161,11 +161,10 @@ export function HostEventCopilotBridge({ children }: HostEventCopilotBridgeProps
     [],
   );
 
-  const mergedDraftRef = useRef(mergedDraft);
-  mergedDraftRef.current = mergedDraft;
-
+  // Stable HITL render — agent passes draft in args; omit mergedDraft to avoid re-register on edits.
   const PublishHitlRender = useMemo(
-    () => createPublishHitlRender(() => mergedDraftRef.current, setDraft),
+    () => createPublishHitlRender(mergedDraft, setDraft),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional stable render ref
     [setDraft],
   );
 
