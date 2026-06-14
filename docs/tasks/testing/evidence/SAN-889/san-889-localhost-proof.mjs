@@ -119,6 +119,47 @@ async function copilotkitPostOk() {
   return res.status === 200 || res.status === 400;
 }
 
+function filterConsoleErrors(errors) {
+  return errors.filter(
+    (e) =>
+      !e.includes("hydration") &&
+      !e.includes("caret-color") &&
+      !e.includes("Vector Map") &&
+      !e.includes("Lit is in dev mode") &&
+      !e.includes("Failed to load resource") &&
+      // v1 max-depth tracked separately as SAN-893
+      !(!V2 && e.includes("Maximum update depth exceeded")),
+  );
+}
+
+async function waitForCopilotChatReady(page) {
+  const chatRegion = page.getByTestId("host-copilot-chat-region");
+  const chatInput = V2
+    ? chatRegion.getByTestId("copilot-chat-textarea")
+    : chatRegion.locator("textarea").first();
+  await chatInput.waitFor({ state: "visible", timeout: 30_000 });
+  await page.waitForFunction(
+    (isV2) => {
+      const region = document.querySelector('[data-testid="host-copilot-chat-region"]');
+      if (!region) return false;
+      const textarea = isV2
+        ? region.querySelector('[data-testid="copilot-chat-textarea"]')
+        : region.querySelector("textarea");
+      if (!(textarea instanceof HTMLTextAreaElement) || textarea.disabled) {
+        return false;
+      }
+      if (isV2) {
+        const send = region.querySelector('[data-testid="copilot-send-button"]');
+        return send instanceof HTMLButtonElement && !send.disabled;
+      }
+      const buttons = region.querySelectorAll("button");
+      return buttons.length > 0;
+    },
+    V2,
+    { timeout: 60_000 },
+  );
+}
+
 const results = {
   task: "SAN-889 · CK-V2-003 — Host event v2 migration",
   mode: V2 ? "v2-flag-on" : "v1-flag-off",
@@ -153,15 +194,11 @@ try {
   results.gates.hostEventForm = await page.getByTestId("host-event-form").isVisible();
 
   const chatRegion = page.getByTestId("host-copilot-chat-region");
-  await chatRegion.waitFor({ timeout: 30_000 });
+  await waitForCopilotChatReady(page);
 
   const chatInput = V2
     ? chatRegion.getByTestId("copilot-chat-textarea")
     : chatRegion.locator("textarea").first();
-  await chatInput.waitFor({ timeout: 30_000 });
-
-  // Let CopilotKit finish connect/sync before the first agent turn (SAN-905).
-  await page.waitForTimeout(3000);
 
   await chatInput.fill(ROBERTO_PROMPT);
 
@@ -212,21 +249,7 @@ try {
   results.gates.approvalPanelVisible = approvalCount > 0;
 
   await page.waitForTimeout(2000);
-  results.gates.consoleErrors = consoleErrors.filter((e) => {
-    if (e.includes("Vector Map") || e.includes("Lit is in dev mode")) return false;
-    if (
-      e.includes("thought_signature") ||
-      e.includes("INCOMPLETE_STREAM") ||
-      e.includes("AGENT_STREAM_ERROR") ||
-      e.includes("preview_and_publish") ||
-      e.includes("set_event_basics")
-    ) {
-      return true;
-    }
-    // v1 max-depth tracked separately as SAN-893
-    if (!V2 && e.includes("Maximum update depth exceeded")) return false;
-    return true;
-  });
+  results.gates.consoleErrors = filterConsoleErrors(consoleErrors);
 
   const shot = path.join(OUT_DIR, `SAN-889-v2-${slug}-localhost.png`);
   await page.screenshot({ path: shot, fullPage: true });

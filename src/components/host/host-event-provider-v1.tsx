@@ -1,7 +1,7 @@
 "use client";
 
 import { CopilotKit } from "@copilotkit/react-core";
-import { useMemo } from "react";
+import { useState } from "react";
 import { getCopilotKitClientProps } from "@/lib/copilotkit-client-props";
 
 /**
@@ -13,7 +13,7 @@ export function HostEventProviderV1({
 }: {
   children: React.ReactNode;
 }) {
-  const threadId = useMemo(() => crypto.randomUUID(), []);
+  const [threadId] = useState(() => crypto.randomUUID());
 
   return (
     <CopilotKit
