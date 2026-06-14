@@ -9,6 +9,8 @@ export const metadata = {
   title: "Sponsorship · mdeai",
   description:
     "Sponsor Medellín events and contests with mdeai — reach engaged audiences across the concierge. Full sponsorship landing coming soon.",
+  // Placeholder page — keep out of the index until the full SAN-664 landing ships.
+  robots: { index: false, follow: true },
 };
 
 export default function SponsorsPage() {

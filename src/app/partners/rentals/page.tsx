@@ -9,6 +9,8 @@ export const metadata = {
   title: "For Brokers & Rental Hosts · mdeai",
   description:
     "List your Medellín rentals with mdeai and reach renters already searching — qualified leads, AI listing help, booked viewings. Full landing coming soon.",
+  // Placeholder page — keep out of the index until the full SAN-691 landing ships.
+  robots: { index: false, follow: true },
 };
 
 export default function PartnersRentalsPage() {

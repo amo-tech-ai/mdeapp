@@ -75,13 +75,13 @@ describe("partner landing placeholders", () => {
         expect(html).toContain("Coming soon");
       });
 
-      it("links to the typed signup wizard (no dead link)", () => {
+      it("renders the expected signup wizard href", () => {
         expect(html).toContain(
           `href="/partners/signup?type=${testCase.signupType}"`,
         );
       });
 
-      it("links back to the partner hub (no dead link)", () => {
+      it("renders the expected partner hub href", () => {
         expect(html).toContain('href="/partners"');
       });
 

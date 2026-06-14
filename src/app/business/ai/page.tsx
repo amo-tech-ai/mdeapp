@@ -10,6 +10,8 @@ export const metadata = {
   title: "AI Services for Business · mdeai",
   description:
     "AI builds, automation, and social management for Medellín companies and agencies. Full AI services landing coming soon.",
+  // Placeholder page — keep out of the index until the full SAN-663 landing ships.
+  robots: { index: false, follow: true },
 };
 
 export default function BusinessAiPage() {
