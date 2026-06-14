@@ -2,7 +2,6 @@
 
 import { useCallback, useState } from "react";
 import { useConciergeChat } from "@/lib/hooks/use-concierge-chat";
-import { MessageRole, TextMessage } from "@copilotkit/runtime-client-gql";
 import {
   CalendarCheck,
   ExternalLink,
@@ -165,9 +164,7 @@ function AskPrompts({
   const onPrompt = useCallback(
     async (prompt: string) => {
       if (isLoading) return;
-      await appendMessage(
-        new TextMessage({ role: MessageRole.User, content: prompt }),
-      );
+      await appendMessage(prompt);
     },
     [appendMessage, isLoading],
   );

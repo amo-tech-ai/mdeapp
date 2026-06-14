@@ -108,6 +108,7 @@ async function copilotkitPostOk() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({}),
   });
+  // Empty POST returns 400 when runtime is up (no agent payload) — still proves route is live.
   return res.status === 200 || res.status === 400;
 }
 

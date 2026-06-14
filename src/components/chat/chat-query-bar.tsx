@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useConciergeChat } from "@/lib/hooks/use-concierge-chat";
 import { useConciergeCoAgent } from "@/components/chat/concierge-coagent-context";
-import { MessageRole, TextMessage } from "@copilotkit/runtime-client-gql";
 import type { ConciergeWorkingMemory } from "@/lib/types";
 import { eventSubChipPrompt } from "@/lib/event-query-classifier";
 import { useEventSearchFastPath } from "@/hooks/use-event-search-fast-path";
@@ -52,12 +51,7 @@ export function ChatQueryBar() {
     });
     const handled = await handleEventChip(chip, prompt, next);
     if (!handled) {
-      await appendMessage(
-        new TextMessage({
-          role: MessageRole.User,
-          content: prompt,
-        }),
-      );
+      await appendMessage(prompt);
     }
   }
 

@@ -41,11 +41,12 @@ export function ConciergeCoAgentProvider({ children }: { children: ReactNode }) 
         | Partial<ConciergeWorkingMemory>
         | ((prev: ConciergeWorkingMemory) => ConciergeWorkingMemory),
     ) => {
+      const current = (agent.state ?? {}) as ConciergeWorkingMemory;
       const next =
-        typeof patch === "function" ? patch(state) : { ...state, ...patch };
+        typeof patch === "function" ? patch(current) : { ...current, ...patch };
       agent.setState(next);
     },
-    [agent, state],
+    [agent],
   );
 
   return (

@@ -90,7 +90,7 @@ function WebCitationsSync({ citations }: { citations: EventWebCitationRow[] }) {
   const lastKeyRef = useRef("");
 
   useEffect(() => {
-    const key = JSON.stringify(citations).slice(0, 400);
+    const key = JSON.stringify(citations);
     if (key === lastKeyRef.current) return;
     lastKeyRef.current = key;
     setWebCitations(citations);

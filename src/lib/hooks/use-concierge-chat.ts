@@ -6,7 +6,6 @@ import {
   useCopilotKit,
   UseAgentUpdate,
 } from "@copilotkit/react-core/v2";
-import { gqlToAGUI, type TextMessage } from "@copilotkit/runtime-client-gql";
 
 /** Shared concierge chat controller for v2 routes. */
 export function useConciergeChat() {
@@ -27,10 +26,13 @@ export function useConciergeChat() {
   }, [agent]);
 
   const appendMessage = useCallback(
-    async (message: TextMessage) => {
+    async (content: string) => {
       if (!agent) return;
-      const aguiMessage = gqlToAGUI([message])[0];
-      agent.addMessage(aguiMessage);
+      agent.addMessage({
+        id: crypto.randomUUID(),
+        role: "user",
+        content,
+      });
       await copilotkit.runAgent({ agent });
     },
     [agent, copilotkit],

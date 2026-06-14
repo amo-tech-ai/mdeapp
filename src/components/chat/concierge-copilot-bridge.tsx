@@ -1,11 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, type ReactNode } from "react";
-import {
-  useAgent,
-  useHumanInTheLoop,
-  UseAgentUpdate,
-} from "@copilotkit/react-core/v2";
+import { useHumanInTheLoop } from "@copilotkit/react-core/v2";
 import {
   VenueBookingHitlPanel,
   type VenueBookingHitlArgs,
@@ -91,11 +87,6 @@ type ConciergeCopilotBridgeProps = {
 export function ConciergeCopilotBridge({
   children,
 }: ConciergeCopilotBridgeProps) {
-  useAgent({
-    agentId: "conciergeAgent",
-    updates: [UseAgentUpdate.OnStateChanged],
-  });
-
   useSearchToolRenders();
   const VenueBookingHitlRender = useMemo(() => createVenueBookingHitlRender(), []);
 

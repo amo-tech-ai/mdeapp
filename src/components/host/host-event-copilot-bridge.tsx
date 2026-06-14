@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   useAgent,
   useAgentContext,
@@ -161,9 +161,12 @@ export function HostEventCopilotBridge({ children }: HostEventCopilotBridgeProps
     [],
   );
 
+  const mergedDraftRef = useRef(mergedDraft);
+  mergedDraftRef.current = mergedDraft;
+
   const PublishHitlRender = useMemo(
-    () => createPublishHitlRender(() => mergedDraft, setDraft),
-    [mergedDraft, setDraft],
+    () => createPublishHitlRender(() => mergedDraftRef.current, setDraft),
+    [setDraft],
   );
 
   useHumanInTheLoop(

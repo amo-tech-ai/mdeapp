@@ -42,6 +42,14 @@ type HostOpsCopilotBridgeProps = {
   children: (args: { state: HostDashboardState }) => ReactNode;
 };
 
+const salesInsightsParams = z.object({
+  eventId: z.string().uuid().optional(),
+});
+const listHostEventsParams = z.object({
+  status: z.string().optional(),
+  limit: z.number().int().min(1).max(100).optional(),
+});
+
 export function HostOpsCopilotBridge({ children }: HostOpsCopilotBridgeProps) {
   const [dashboardState, setDashboardState] =
     useState<HostDashboardState>(EMPTY_HOST_DASHBOARD);
@@ -101,7 +109,13 @@ export function HostOpsCopilotBridge({ children }: HostOpsCopilotBridgeProps) {
 
   // Push dashboard context to the agent without echoing focusedEventId merges back.
   const lastPushedStateRef = useRef<string>("");
+  const lastAgentRef = useRef(agent);
   useEffect(() => {
+    const agentChanged = lastAgentRef.current !== agent;
+    if (agentChanged) {
+      lastAgentRef.current = agent;
+      lastPushedStateRef.current = "";
+    }
     const sig = JSON.stringify(dashboardState);
     if (sig === lastPushedStateRef.current) return;
     lastPushedStateRef.current = sig;
@@ -126,14 +140,6 @@ export function HostOpsCopilotBridge({ children }: HostOpsCopilotBridgeProps) {
     ),
     [syncEvents],
   );
-
-  const salesInsightsParams = z.object({
-    eventId: z.string().uuid().optional(),
-  });
-  const listHostEventsParams = z.object({
-    status: z.string().optional(),
-    limit: z.number().int().min(1).max(100).optional(),
-  });
 
   useRenderTool(
     { name: "getSalesInsightsTool", parameters: salesInsightsParams, render: insightRender },
