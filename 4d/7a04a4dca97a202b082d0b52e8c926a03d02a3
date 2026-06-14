@@ -1,0 +1,28 @@
+docs/upgradeV2/todo.md
+  s_a7eb2c95c408ba::t_256b19577eb29e 3-5,15-18,23-26,28,30,38-40,42-46,96-101,103-106,116,118-119,127,131,134,139,143-147,149-152,165
+  s_a7eb2c95c408ba::t_21da8604026031 102
+  s_a7eb2c95c408ba::t_019b2969563e01 120
+  s_a7eb2c95c408ba::t_170700d91f1363 148
+  s_a7eb2c95c408ba::t_86a678bc66190a 166
+  s_a7eb2c95c408ba::t_1a8fa72d03c071 41
+docs/upgradeV2/changelog.md
+  s_a7eb2c95c408ba::t_75466e599282a6 19
+docs/upgradeV2/notes-6-219.md
+  s_a7eb2c95c408ba::t_814a257c47f2a0 40-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "4d7a04a4dca97a202b082d0b52e8c926a03d02a3",
+  "prompts": {},
+  "sessions": {
+    "s_a7eb2c95c408ba": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "18b281fe-3599-4314-af69-c33116c98c9f",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
