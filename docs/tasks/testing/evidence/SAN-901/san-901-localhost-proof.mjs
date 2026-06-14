@@ -234,18 +234,14 @@ try {
   const hardPass =
     results.gates.copilotkitPost === true &&
     results.gates.chatHttp === 200 &&
+    results.gates.signedInEmail === true &&
     results.gates.consoleErrors.length === 0 &&
     (V2
-      ? results.gates.spikeShell === true
+      ? results.gates.spikeShell === true &&
+        results.gates.rentalToolRender === true
       : results.gates.centerPanel === true && results.gates.spikeShell === true);
 
-  results.verdict = hardPass
-    ? V2
-      ? results.gates.rentalToolRender
-        ? "PASS"
-        : "PARTIAL"
-      : "PASS"
-    : "FAIL";
+  results.verdict = hardPass ? "PASS" : "FAIL";
 } catch (err) {
   results.error = err instanceof Error ? err.message : String(err);
   results.verdict = "FAIL";
@@ -263,4 +259,4 @@ try {
 const outJson = path.join(OUT_DIR, `SAN-901-v2-${slug}-results.json`);
 fs.writeFileSync(outJson, JSON.stringify(results, null, 2));
 console.log(JSON.stringify(results, null, 2));
-process.exit(results.verdict === "PASS" || results.verdict === "PARTIAL" ? 0 : 1);
+process.exit(results.verdict === "PASS" ? 0 : 1);

@@ -11,6 +11,7 @@ import { isCopilotKitV2ChatClientEnabled } from "@/lib/copilotkit-v2-chat-flag";
 
 function CopilotKitWithThread({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const { activeThreadId } = useThreadNav();
   const skipV1Concierge =
     isCopilotKitV2ChatClientEnabled() && pathname === "/chat";
 
@@ -18,7 +19,6 @@ function CopilotKitWithThread({ children }: { children: ReactNode }) {
     return <>{children}</>;
   }
 
-  const { activeThreadId } = useThreadNav();
   return (
     <CopilotKit
       {...getCopilotKitClientProps("conciergeAgent")}

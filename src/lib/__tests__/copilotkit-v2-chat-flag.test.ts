@@ -9,23 +9,28 @@ describe("copilotkit-v2-chat-flag", () => {
     vi.unstubAllEnvs();
   });
 
-  it("returns false when unset", () => {
+  it("returns false when both unset", () => {
     vi.stubEnv("COPILOTKIT_V2_CHAT", "");
+    vi.stubEnv("NEXT_PUBLIC_COPILOTKIT_V2_CHAT", "");
     expect(isCopilotKitV2ChatEnabled()).toBe(false);
   });
 
-  it("returns false when off", () => {
-    vi.stubEnv("COPILOTKIT_V2_CHAT", "0");
-    expect(isCopilotKitV2ChatEnabled()).toBe(false);
-  });
-
-  it("returns true only when COPILOTKIT_V2_CHAT=1", () => {
+  it("returns false when only server flag is on", () => {
     vi.stubEnv("COPILOTKIT_V2_CHAT", "1");
-    expect(isCopilotKitV2ChatEnabled()).toBe(true);
+    vi.stubEnv("NEXT_PUBLIC_COPILOTKIT_V2_CHAT", "");
+    expect(isCopilotKitV2ChatEnabled()).toBe(false);
   });
 
-  it("client flag reads NEXT_PUBLIC_COPILOTKIT_V2_CHAT only", () => {
+  it("returns false when only client flag is on", () => {
+    vi.stubEnv("COPILOTKIT_V2_CHAT", "");
     vi.stubEnv("NEXT_PUBLIC_COPILOTKIT_V2_CHAT", "1");
+    expect(isCopilotKitV2ChatEnabled()).toBe(false);
+  });
+
+  it("returns true only when both flags are 1", () => {
+    vi.stubEnv("COPILOTKIT_V2_CHAT", "1");
+    vi.stubEnv("NEXT_PUBLIC_COPILOTKIT_V2_CHAT", "1");
+    expect(isCopilotKitV2ChatEnabled()).toBe(true);
     expect(isCopilotKitV2ChatClientEnabled()).toBe(true);
   });
 });
