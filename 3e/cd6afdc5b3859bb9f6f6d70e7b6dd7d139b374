@@ -1,0 +1,45 @@
+docs/upgradeV2/12-tasks-audit.md
+  s_25b0cb0b37161d::t_dd1eadb2dd7cf8 106-109
+  s_25b0cb0b37161d::t_94164b40198f03 97-99
+  s_25b0cb0b37161d::t_0d5a8145ef6193 18
+  s_25b0cb0b37161d::t_295b9911b6c0aa 30-31
+  s_25b0cb0b37161d::t_b8b10bf2924e9d 14-15
+  s_25b0cb0b37161d::t_f37a68397539bb 54-60
+  s_25b0cb0b37161d::t_52c8159785fc09 87-89
+eslint.config.mjs
+  s_25b0cb0b37161d::t_ac6af9ce396f2e 17
+scripts/audit-copilotkit-v2-no-new-v1.mjs
+  s_25b0cb0b37161d::t_240965ad25234b 65
+  s_25b0cb0b37161d::t_dc3bc67cbb495b 3-4
+.dependency-cruiser.cjs
+  s_25b0cb0b37161d::t_a08536fd9fed22 2-14,17
+docs/upgradeV2/11-tasks-audit.md
+  s_25b0cb0b37161d::t_80186bdebf10ea 106,108-111,113-114,116
+docs/upgradeV2/todo.md
+  s_25b0cb0b37161d::t_6577d73e5e36b2 63-65
+scripts/copilotkit-v2-allowlist.json
+  s_25b0cb0b37161d::t_e59487cc95597c 2
+scripts/audit-copilotkit-v2-depcruise-proof.mjs
+  s_25b0cb0b37161d::t_3dc6d9a91bd201 3-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "3ecd6afdc5b3859bb9f6f6d70e7b6dd7d139b374",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
