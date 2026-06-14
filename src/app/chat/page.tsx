@@ -1,24 +1,20 @@
-"use client";
+import { ChatSpikeShellV2 } from "@/components/chat/chat-spike-shell-v2";
+import { isCopilotKitV2ChatEnabled } from "@/lib/copilotkit-v2-chat-flag";
+import { ChatPageClient } from "./chat-page-client";
 
-import { CopilotKitCSSProperties } from "@copilotkit/react-ui";
-import { GeoChatShell } from "@/components/chat/geo-chat-shell";
-import { MapContextProvider } from "@/platform/maps/map-context";
-
-/** Concierge surface — original GeoChatShell (SCREEN-001 / MAP-007B). */
+/** Concierge surface — GeoChatShell (v1) or SAN-901 spike shell (v2 flag on). */
 export default function ChatPage() {
-  return (
-    <main
-      id="main-content"
-      style={
-        {
-          "--copilot-kit-primary-color": "var(--primary)",
-        } as CopilotKitCSSProperties
-      }
-      className="min-h-screen bg-background text-foreground"
-    >
-      <MapContextProvider>
-        <GeoChatShell />
-      </MapContextProvider>
-    </main>
-  );
+  if (isCopilotKitV2ChatEnabled()) {
+    return (
+      <main
+        id="main-content"
+        className="min-h-screen bg-background text-foreground"
+      >
+        <ChatSpikeShellV2 />
+      </main>
+    );
+  }
+
+  return <ChatPageClient />;
 }
+
