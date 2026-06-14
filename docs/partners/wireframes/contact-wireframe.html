@@ -320,7 +320,7 @@
       <li><b>Submit path:</b> POST → server route → lead row (reuse schedule-viewing leads pattern). If the table is new: <b>RLS enabled + ≥1 policy</b>. Success is inline (SAN-716 "Lead submitted" pattern), never a redirect.</li>
       <li><b>21st.dev mapping:</b> split form section → <code>21st.dev/s/forms</code> · fields → <code>/s/inputs</code> · partner-type → <code>/s/selects</code> · success/error toast → <code>/s/toasts</code>. Re-token everything to oklch vars.</li>
       <li><b>shadcn:</b> form · input · select · textarea · button · sonner — all already in the project, no new installs expected.</li>
-      <li><b>Prefill contract:</b> <code>/contact?type=venue|host|rentals</code> sets the partner-type select; every landing's "Book a demo" CTA must pass it.</li>
+      <li><b>Prefill contract:</b> <code>/contact?type=venue|host|broker</code> sets the partner-type select; every landing's "Book a demo" CTA must pass it.</li>
       <li><b>Acceptance:</b> lead row verified in DB · all 3 states designed (§03) · <code>?type=</code> prefill works · tokens/motion rules · localhost 200 · floor green · Playwright happy-path submit.</li>
     </ul>
   </div>

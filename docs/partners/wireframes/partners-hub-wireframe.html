@@ -222,7 +222,7 @@
         <div class="tcard"><div class="ic">🏠</div><h5>Rentals &amp; Brokers</h5><p>List apartments; AI qualifies and routes leads.</p><span class="rev">lead fees</span><span class="cta">Go → /partners/rentals</span></div>
         <div class="tcard"><div class="ic gold">★</div><h5>Sponsors</h5><p>Put your brand on events and concierge surfaces.</p><span class="rev">sponsorships</span><span class="cta">Go → /sponsors</span></div>
         <div class="tcard"><div class="ic gold">✦</div><h5>Agencies &amp; AI services</h5><p>Build and run AI services on mdeai for clients.</p><span class="rev">service revenue</span><span class="cta">Go → /business/ai</span></div>
-        <div class="tcard"><div class="ic">📣</div><h5>Creators</h5><p>Promote experiences; earn on what you drive.</p><span class="rev">rev-share</span><span class="cta">Sign up → ?type=partner</span></div>
+        <div class="tcard"><div class="ic">📣</div><h5>Creators</h5><p>Promote experiences; earn on what you drive.</p><span class="rev">rev-share</span><span class="cta">Sign up → ?type=creator</span></div>
       </div>
     </div>
     <aside class="spec">
@@ -231,7 +231,7 @@
       <div class="picks"><span class="chip shad">card · badge · button</span><span class="chip t21">bento grid</span></div>
       <ul class="notes">
         <li><b>Anatomy per card:</b> icon · one-line value · top revenue model (badge) · CTA link</li>
-        <li>All 6 hrefs are acceptance-tested: <code>/host</code> · <code>/venues</code> · <code>/partners/rentals</code> · <code>/sponsors</code> · <code>/business/ai</code> · <code>/partners/signup?type=partner</code></li>
+        <li>All 6 hrefs are acceptance-tested: <code>/host</code> · <code>/venues</code> · <code>/partners/rentals</code> · <code>/sponsors</code> · <code>/business/ai</code> · <code>/partners/signup?type=creator</code></li>
         <li>Mobile: stacks 1-col; whole card is the tap target</li>
       </ul>
     </aside>
@@ -350,7 +350,7 @@
     <h4>Handoff</h4>
     <ul>
       <li><b>What this is:</b> the <code>/partners</code> hub (spec <code>D-PTR-01</code>, SAN-692 · MKT — Partner hub marketing page), derived from the <code>venues-wireframe.html</code> shell + Mindtrip /business overview. Siblings: <code>venues-wireframe.html</code> (For Venues), host wireframe (For Event Hosts).</li>
-      <li><b>Core section = 03</b> — all 6 type-card hrefs are acceptance-tested (Playwright): <code>/host</code> · <code>/venues</code> · <code>/partners/rentals</code> · <code>/sponsors</code> · <code>/business/ai</code> · <code>/partners/signup?type=partner</code>. Hero primary CTA → <code>/partners/signup</code> (200, wizard renders).</li>
+      <li><b>Core section = 03</b> — all 6 type-card hrefs are acceptance-tested (Playwright): <code>/host</code> · <code>/venues</code> · <code>/partners/rentals</code> · <code>/sponsors</code> · <code>/business/ai</code> · <code>/partners/signup?type=creator</code>. Hero primary CTA → <code>/partners/signup</code> (200, wizard renders).</li>
       <li><b>21st.dev category map:</b> hero → <code>21st.dev/s/hero</code> · type grid + AI band + steps → <code>/s/features</code> · logo cloud → <code>/s/clients</code> · quotes → <code>/s/testimonials</code> · footer CTA → <code>/s/cta</code> · stats → <code>/s/numbers</code>. Install via <code>npx shadcn@latest add "https://21st.dev/r/{author}/{component}"</code>, then re-token to oklch.</li>
       <li><b>Components:</b> shadcn <code>card · badge · button · separator</code> + 21st.dev hero-with-stats / bento grid / logo-cloud / testimonial / CTA. No hardcoded <code>gray-*</code>/hex — oklch tokens only; honor <code>prefers-reduced-motion</code>.</li>
       <li><b>Open questions:</b> (1) demo form target — <code>/contact</code> page vs mailto? (2) stats — real numbers available at launch or hide band? (3) pricing teaser gated on SAN-695?</li>
