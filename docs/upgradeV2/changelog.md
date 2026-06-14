@@ -16,7 +16,7 @@ Tracker: [`todo.md`](./todo.md) · Audits: [`12-tasks-audit.md`](./12-tasks-audi
 | grep-zero | ✅ `react-ui` 0 · v1 `/v2`-less imports 0 · `COPILOTKIT_V2_*` 0 |
 | `npm run audit:copilotkit-v2` | ✅ v1 **0** · v2 **16** · hook share **100%** |
 | Browser localhost (pre-merge) | ✅ `/chat` · `/host/event/new` · `/host/analytics` |
-| Linear | ✅ **Done** — [SAN-891](https://linear.app/sanjiovani/issue/SAN-891) · [SAN-886](https://linear.app/sanjiovani/issue/SAN-886) epic **Done** |
+| Linear | ✅ **Done** — [SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui; consolidate frontend to react-core/v2 + remove flags](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react) · [SAN-886 · CK-V2-000 — CopilotKit v1→v2 Migration (frontend-only, subpath path)](https://linear.app/sanjiovani/issue/SAN-886/ck-v2-000-copilotkit-v1v2-migration-frontend-only-subpath-path) epic **Done** |
 | **Prod v2 visible** | 🟡 **0%** until Vercel promotes `4c6ef62e` |
 
 **Delivered:** drop `@copilotkit/react-ui` · promote v2 canonical names · delete v1 twins · remove flag modules · `useConciergeChat` (no `runtime-client-gql`).

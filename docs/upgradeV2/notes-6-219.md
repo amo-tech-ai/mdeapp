@@ -37,8 +37,8 @@
 | 12 | Greptile pathname guard (`/host/events`) | **Not fixed** — low prod impact today | 🟡 |
 | 13 | GitHub merge policy | BLOCKED in API — human/admin merge | 🟡 |
 | 14 | Prod smoke @ mdeai.co post-merge | Not run | 🔴 |
-| 15 | Linear SAN-891 → Done | ✅ Done in Linear |
-| 16 | SAN-886 epic → ~100% | ✅ Epic Done (exec 100%; prod deploy pending) |
+| 15 | Linear SAN-891 → Done | ✅ Done in Linear | 🟢 |
+| 16 | SAN-886 epic → ~100% | ✅ Epic Done (exec 100%; prod deploy pending) | 🟢 |
 | 17 | `09-file-map.md` refresh | Pending post-merge | ⚫ |
 | 18 | Local WIP excluded from PR | `eslint.config.mjs`, `SAN-891-RESULTS.md` edits uncommitted | 🟢 |
 
