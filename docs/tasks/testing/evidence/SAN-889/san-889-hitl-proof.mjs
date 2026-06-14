@@ -138,8 +138,6 @@ async function sendPublishRequest(page, title, retry = false) {
 }
 
 async function waitForApprovalPanel(page, title, timeoutMs = 180_000) {
-  const chatRegion = page.getByTestId("host-copilot-chat-region");
-  const chatInput = chatRegion.getByTestId("copilot-chat-textarea");
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
       await page.getByTestId("host-event-approval-panel").waitFor({

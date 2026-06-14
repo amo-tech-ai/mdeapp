@@ -29,7 +29,7 @@
 | No `pending_approval` race | — | — | PASS | **PASS** |
 | Zero critical console errors | **FAIL** | **PASS** | FAIL (`thought_signature` → SAN-905) | **PASS** |
 
-**SAN-904 verdict:** **PASS** (approve + reject HITL gates) · evidence: [`SAN-889-hitl-approve-results.json`](./SAN-889-hitl-approve-results.json) · [`SAN-889-hitl-results.json`](./SAN-889-hitl-results.json)  
+**SAN-904 verdict:** **FAIL** (reject path: network timeout + console errors pre-SAN-905) · evidence: [`SAN-889-hitl-approve-results.json`](./SAN-889-hitl-approve-results.json) (approve **PASS**) · [`SAN-889-hitl-results.json`](./SAN-889-hitl-results.json) (reject **FAIL**) · post-fix reject **PASS** in [SAN-905 · CK-V2-007d — Console clean on hostEventAgent stream](../SAN-905/RESULTS.md)  
 **Reject run:** `SAN889_REJECT_ONLY=1 COPILOTKIT_V2_HOST_EVENT=1 infisical run -- … node san-889-hitl-proof.mjs`  
 **Approve run:** `COPILOTKIT_V2_HOST_EVENT=1 infisical run -- … node san-889-hitl-approve-proof.mjs`
 

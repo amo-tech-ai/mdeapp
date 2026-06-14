@@ -33,7 +33,7 @@ Roberto's `/host/event/new` wizard is **console-clean** on both flag states and 
 - `thought_signature` on `preview_and_publish` (reject path)
 - Unresolved `AGENT_STREAM_ERROR` with signature payload
 
-v1 `Maximum update depth exceeded` may still appear in DevTools — tracked as [SAN-893](https://linear.app/sanjiovani/issue/SAN-893/ck-v1-001-investigate-v1-host-event-wizard-maximum-update-depth-loop); **excluded** from SAN-905 console gate on flag-off.
+v1 `Maximum update depth exceeded` may still appear in DevTools — tracked as [SAN-893 · CK-V1-001 — Investigate v1 host event wizard maximum update depth loop](https://linear.app/sanjiovani/issue/SAN-893/ck-v1-001-investigate-v1-host-event-wizard-maximum-update-depth-loop); **excluded** from SAN-905 console gate on flag-off.
 
 ## Unit tests
 
@@ -44,8 +44,8 @@ npm run repro:san-902  # turn2 no thought_signature @ 836af36
 
 ## Prod / parent gates
 
-- **Do not** flip `COPILOTKIT_V2_HOST_EVENT` prod flag from this evidence alone — separate SAN-896 gate.
-- [SAN-895](https://linear.app/sanjiovani/issue/SAN-895/ck-v2-007-fix-hosteventagent-gemini-thought-signature-console-errors) **unblocked** for close after review; was held until SAN-905 green.
+- **Do not** flip `COPILOTKIT_V2_HOST_EVENT` prod flag from this evidence alone — separate [SAN-896 · CK-V2-008 — Refresh SAN-888 / SAN-889 localhost evidence @ current main SHA](https://linear.app/sanjiovani/issue/SAN-896/ck-v2-008-refresh-san-888-san-889-localhost-evidence-current-mainsha) gate.
+- [SAN-895 · CK-V2-007 — Fix hostEventAgent Gemini thought_signature console errors](https://linear.app/sanjiovani/issue/SAN-895/ck-v2-007-fix-hosteventagent-gemini-thought-signature-console-errors) **unblocked** for close after review; was held until SAN-905 green.
 
 ## Commands (repro)
 

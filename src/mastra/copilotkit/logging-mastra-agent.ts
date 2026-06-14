@@ -21,9 +21,10 @@ import {
   summarizeToolSpans,
 } from "@/mastra/lib/tool-audit-context";
 /**
- * SAN-905 · CopilotKit replays AG-UI messages without Gemini thought_signature on
- * assistant tool-call parts. Mastra MessageHistory loads signed DB history — keep
- * only the latest user message so unsigned client-tool replay cannot reach Gemini.
+ * [SAN-905 · CK-V2-007d — Console clean on hostEventAgent stream](https://linear.app/sanjiovani/issue/SAN-905/ck-v2-007d-console-clean-on-hosteventagent-stream):
+ * CopilotKit replays AG-UI messages without Gemini thought_signature on assistant
+ * tool-call parts. Mastra MessageHistory loads signed DB history — keep only the
+ * latest user message so unsigned client-tool replay cannot reach Gemini.
  */
 function sanitizeHostEventAgUiInput(input: RunAgentInput): RunAgentInput {
   const messages = input.messages ?? [];
@@ -91,7 +92,7 @@ export class LoggingMastraAgent extends MastraAgent {
 
     return super.run(runInput).pipe(
       tap({
-        error: (err: unknown) => {
+        error: () => {
           status = "error";
         },
       }),

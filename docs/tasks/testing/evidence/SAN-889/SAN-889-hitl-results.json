@@ -11,7 +11,7 @@
     "rejectNoPublishedLink": true,
     "rejectClicked": true,
     "rejectPathPass": true,
-    "zeroConsoleErrors": true
+    "zeroConsoleErrors": false
   },
   "consoleErrors": [
     "[CopilotKit] Agent error: network error \n  Code: agent_run_failed_event \n  Context: {source: onRunFailed, agentId: hostEventAgent} \n  Stack: TypeError: network error",
