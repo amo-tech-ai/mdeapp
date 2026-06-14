@@ -1,0 +1,28 @@
+scripts/san-902-host-event-3turn-repro.ts
+  s_25b0cb0b37161d::t_999ef506592a30 2
+  s_25b0cb0b37161d::t_2549c964192003 87-91
+  s_25b0cb0b37161d::t_e2cbb3e8b64985 15
+  s_25b0cb0b37161d::t_88d551bc70d51e 105
+  s_25b0cb0b37161d::t_3677dacd1456b5 64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "32024272523ddc62846d5d275bd5c7ea7165b616",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
