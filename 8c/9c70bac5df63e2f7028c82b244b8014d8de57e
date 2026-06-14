@@ -1,0 +1,32 @@
+docs/tasks/testing/evidence/SAN-889/RESULTS.md
+  s_25b0cb0b37161d::t_b3d7bb9c72cd8e 32
+src/mastra/copilotkit/logging-mastra-agent.ts
+  s_25b0cb0b37161d::t_7416b9c0b6e831 24-27,95
+src/mastra/lib/agent-memory.ts
+  s_25b0cb0b37161d::t_2fea447b8e4c74 19
+docs/tasks/testing/evidence/SAN-889/SAN-889-hitl-results.json
+  s_25b0cb0b37161d::t_c3cfe27f9c48af 14
+docs/tasks/testing/evidence/SAN-905/RESULTS.md
+  s_25b0cb0b37161d::t_f65f6b6e4f0df0 47
+  s_25b0cb0b37161d::t_c1ecea9a3c400c 36
+  s_25b0cb0b37161d::t_5e59d881520dac 48
+docs/upgradeV2/linear-descriptions/SAN-905.md
+  s_25b0cb0b37161d::t_8f7434fe2ec95a 3
+  s_25b0cb0b37161d::t_6247ad21a013fe 42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "8c9c70bac5df63e2f7028c82b244b8014d8de57e",
+  "prompts": {},
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
