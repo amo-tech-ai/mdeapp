@@ -195,7 +195,7 @@ export function PartnerHub() {
                   </span>
                   {i < PARTNER_HUB_STEPS.length - 1 && (
                     <div
-                      className="mt-2 w-px flex-1 bg-border motion-reduce:hidden"
+                      className="mt-2 w-px flex-1 bg-border"
                       aria-hidden="true"
                     />
                   )}

@@ -58,7 +58,7 @@ describe("PartnerHub (/partners)", () => {
 
   it("routes non-venue program cards to the live typed signup", () => {
     for (const type of SIGNUP_TYPES) {
-      expect(html).toContain(`href="/partners/signup?type=${type}`);
+      expect(html).toContain(`href="/partners/signup?type=${type}"`);
     }
   });
 
@@ -92,8 +92,8 @@ describe("PartnerHub (/partners)", () => {
   });
 
   it("guards motion for prefers-reduced-motion", () => {
-    // Timeline connector + card hover transforms must yield to reduced motion.
-    expect(html).toContain("motion-reduce:hidden");
+    // Card hover transforms must yield to reduced motion. The static timeline
+    // connector never animates, so it stays visible (no motion-reduce:hidden).
     expect(html).toContain("motion-reduce:transition-none");
   });
 
