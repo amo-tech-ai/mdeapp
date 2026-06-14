@@ -5,6 +5,22 @@ Tracker: [`todo.md`](./todo.md) · Audits: [`12-tasks-audit.md`](./12-tasks-audi
 
 ---
 
+## 2026-06-14 — Docs tracker sync **Merged** [PR #220](https://github.com/amo-tech-ai/mdeapp/pull/220) @ `8b3f84ee`
+
+**Verdict:** Post-#219 docs landed on `main` — tracker, changelog, and [`notes-6-219.md`](./notes-6-219.md) audit aligned with Linear [v2-upgrade view](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd).
+
+| Gate | Result |
+|---|---|
+| Merge | ✅ [#220](https://github.com/amo-tech-ai/mdeapp/pull/220) @ `8b3f84ee` (2026-06-14T13:29:04Z) |
+| Files | `todo.md` · `changelog.md` · `notes-6-219.md` |
+| Linear titles | ✅ Full `SAN-NNN · title` + slug URLs |
+| Epic chain | ✅ [SAN-886 · CK-V2-000 — CopilotKit v1→v2 Migration (frontend-only, subpath path)](https://linear.app/sanjiovani/issue/SAN-886/ck-v2-000-copilotkit-v1v2-migration-frontend-only-subpath-path) **Done** · [SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui; consolidate frontend to react-core/v2 + remove flags](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react) **Done** |
+| **Prod v2 visible** | 🟡 Still pending deploy of code @ `4c6ef62e` |
+
+**Next:** prod deploy → Tier-1 smoke → optional `09-file-map.md` refresh.
+
+---
+
 ## 2026-06-14 — [SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react) **Merged** [PR #219](https://github.com/amo-tech-ai/mdeapp/pull/219) @ `4c6ef62e`
 
 **Verdict:** Frontend cutover **100% exec on `main`** — v2-only code merged; **prod v2 visible pending deploy**.
