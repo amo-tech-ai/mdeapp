@@ -1,7 +1,7 @@
 {
   "task": "SAN-889 · CK-V2-003 — v2 HITL approve proof",
-  "commitSha": "0fab08f6d5f5383dfd36eb70f300e70738060c15",
-  "at": "2026-06-12T23:48:42.664Z",
+  "commitSha": "836af36bd55f7763a9e3e9f91b3c8e9b5921e3d8",
+  "at": "2026-06-14T01:59:20.485Z",
   "matrix": {
     "hitlPanelVisible": true,
     "approvePublishedLink": true,

@@ -9,7 +9,7 @@ import { execSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { hostEventAgent } from "../../../../src/mastra/agents/host-event";
+import { hostEventAgent } from "../../../../../src/mastra/agents/host-event";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   useAgent,
   useAgentContext,
@@ -125,13 +125,8 @@ export function HostEventCopilotBridgeV2({ children }: HostEventCopilotBridgeV2P
     value: mergedDraft,
   });
 
-  const lastPushedRef = useRef("");
-  useEffect(() => {
-    const sig = JSON.stringify(draft);
-    if (sig === lastPushedRef.current) return;
-    lastPushedRef.current = sig;
-    agent.setState(draft);
-  }, [agent, draft]);
+  // SAN-905 · skip agent.setState on every draft edit — mid-stream pushes
+  // caused extra CopilotKit turns and Gemini thought_signature replay errors.
 
   useFrontendTool(
     {
