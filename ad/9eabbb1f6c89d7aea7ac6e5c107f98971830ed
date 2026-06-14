@@ -1,0 +1,65 @@
+docs/upgradeV2/todo.md
+  s_a7eb2c95c408ba::t_ef22f4be9af179 79-80
+  s_a7eb2c95c408ba::t_8b10acdd9267e6 15
+  s_a7eb2c95c408ba::t_fd09049b365ec6 48,52-53,55-58
+  s_a7eb2c95c408ba::t_330b9d027d407d 110
+  s_a7eb2c95c408ba::t_cb7e7df7c4be6f 22
+  s_a7eb2c95c408ba::t_b2939538f0dede 35
+  s_a7eb2c95c408ba::t_4f81d2354b086e 98
+  s_a7eb2c95c408ba::t_1023c9afc801c8 123,126-127
+  s_a7eb2c95c408ba::t_ac97db3206095a 3-5
+  s_a7eb2c95c408ba::t_f3b2233ec7235f 150-151
+  s_a7eb2c95c408ba::t_4668d8076f49fc 159-161
+  s_a7eb2c95c408ba::t_992c951e8d7a4e 146
+  s_a7eb2c95c408ba::t_ff57f86ded4222 41
+src/components/chat/geo-chat-shell.tsx
+  s_a7eb2c95c408ba::t_ce2ba929f120be 130-133
+src/components/chat/chat-provider-v2.tsx
+  s_a7eb2c95c408ba::t_ec47274be29f9c 13-15
+src/components/copilot/search-tool-renders-v2.tsx
+  s_a7eb2c95c408ba::t_ea922b8484f632 267-270
+  s_a7eb2c95c408ba::t_c943bc508b3c3a 70-101
+  s_a7eb2c95c408ba::t_7a86ea103cc198 247
+  s_a7eb2c95c408ba::t_ad39a939d8ff8d 161-169,177-182
+  s_a7eb2c95c408ba::t_c1453a30765627 3
+  s_a7eb2c95c408ba::t_3b65c48df4d7d6 22-24
+src/components/chat/geo-chat-shell-v2.tsx
+  s_a7eb2c95c408ba::t_085a7b864903db 22
+  s_a7eb2c95c408ba::t_08e683d2027dc1 123-168,170-180
+src/components/chat/chat-center-panel-v2.tsx
+  s_a7eb2c95c408ba::t_70bf4714802f2f 26-27,35-36,38-60
+  s_a7eb2c95c408ba::t_b59d391d5f1d33 3,6-7
+docs/tasks/testing/evidence/SAN-890/san-890-localhost-proof.mjs
+  s_a7eb2c95c408ba::t_8f9213d4c51a0d 296,298-300
+  s_a7eb2c95c408ba::t_1c8c178cc387c7 377-378
+  s_a7eb2c95c408ba::t_189cf234ca1823 126,129-131,139
+docs/tasks/testing/evidence/SAN-890/SAN-890-v2-flag-off-results.json
+  s_a7eb2c95c408ba::t_b11ecc66480acd 8
+  s_a7eb2c95c408ba::t_4ad02122f25c20 7,13-14
+docs/upgradeV2/changelog.md
+  s_a7eb2c95c408ba::t_a80ccad1d41085 29
+  s_a7eb2c95c408ba::t_001c2e61983ab7 8-26
+src/components/chat/concierge-copilot-bridge-v2.tsx
+  s_a7eb2c95c408ba::t_73f841ee5e7df5 80
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "ad9eabbb1f6c89d7aea7ac6e5c107f98971830ed",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_a7eb2c95c408ba": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "18b281fe-3599-4314-af69-c33116c98c9f",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
