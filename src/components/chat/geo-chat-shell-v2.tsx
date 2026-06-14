@@ -5,7 +5,7 @@ import { ChatCanvasV2 } from "@/components/chat/chat-canvas-v2";
 import { ChatNavDrawer } from "@/components/chat/chat-nav-drawer";
 import { ChatWorkflowProvider } from "@/components/chat/chat-workflow-context";
 import { ConciergeCoAgentProvider } from "@/components/chat/concierge-coagent-context";
-import { ConciergeSessionProviderV2 } from "@/components/chat/concierge-session-context-v2";
+import { ConciergeSessionProvider } from "@/components/chat/concierge-session-context";
 import { ConciergeCopilotBridgeV2 } from "@/components/chat/concierge-copilot-bridge-v2";
 import { EventLocalChatProvider } from "@/components/chat/event-local-chat-context";
 import { EventSearchResultsProvider } from "@/components/chat/event-search-results-context";
@@ -130,7 +130,7 @@ export function GeoChatShellV2() {
                       <RichCardResultsProvider>
                         <EventLocalChatProvider>
                           <VenueBookingDirectHitlProvider>
-                            <ConciergeSessionProviderV2>
+                            <ConciergeSessionProvider>
                               <div
                                 data-testid="geo-chat-shell-v2"
                                 className="flex min-h-screen flex-col"
@@ -167,7 +167,7 @@ export function GeoChatShellV2() {
                                 <EventVenueOfferingsSheetMount />
                                 <EventProposalShellMount />
                               </div>
-                            </ConciergeSessionProviderV2>
+                            </ConciergeSessionProvider>
                           </VenueBookingDirectHitlProvider>
                         </EventLocalChatProvider>
                       </RichCardResultsProvider>
