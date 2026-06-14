@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * CK-V2-012 · SAN-910 — fail new v1 CopilotKit hook/import usage outside allowlist.
+ * CK-V2-012 · SAN-910 · Migration CI guardrails (audit dashboard + no-new-v1 gate) —
+ * fail new v1 CopilotKit hook/import usage outside allowlist.
  * Exempt: copilotkit-v2-allowlist.json · *-v1.tsx rollback twins · __tests__ · e2e/
  */
 import { readFile, readdir, writeFile } from "node:fs/promises";
@@ -61,7 +62,7 @@ async function writeAllowlistFromDisk() {
   const offenders = await scanForAllowlist();
   const payload = {
     description:
-      "CK-V2-012 · SAN-910 — files allowed to use v1 CopilotKit hooks/imports until migrated. Regenerate via: node scripts/audit-copilotkit-v2-no-new-v1.mjs --write-allowlist",
+      "CK-V2-012 · SAN-910 · Migration CI guardrails (audit dashboard + no-new-v1 gate) — files allowed to use v1 CopilotKit hooks/imports until migrated. Regenerate via: node scripts/audit-copilotkit-v2-no-new-v1.mjs --write-allowlist",
     mainSha: process.env.MAIN_SHA ?? "fbcf8d3",
     files: offenders,
   };

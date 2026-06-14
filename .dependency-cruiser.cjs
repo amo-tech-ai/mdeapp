@@ -1,8 +1,20 @@
 /** @type {import('dependency-cruiser').IConfiguration} */
-const allowlist = require("./scripts/copilotkit-v2-allowlist.json").files;
+const fs = require("node:fs");
+const path = require("node:path");
+
+const allowlistPath = path.join(__dirname, "scripts/copilotkit-v2-allowlist.json");
+const allowlist = JSON.parse(fs.readFileSync(allowlistPath, "utf8")).files;
+
+/** Escape path segments for dependency-cruiser pathNot regexes. */
+function pathToRegexPattern(filePath) {
+  return filePath
+    .split("/")
+    .map((segment) => segment.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("[/\\\\]");
+}
 
 const allowlistPatterns = [
-  ...allowlist.map((f) => f.replace(/\//g, "[/\\\\]")),
+  ...allowlist.map(pathToRegexPattern),
   "[/\\\\]__tests__[/\\\\]",
   "\\.test\\.[jt]sx?$",
   "\\.spec\\.[jt]sx?$",

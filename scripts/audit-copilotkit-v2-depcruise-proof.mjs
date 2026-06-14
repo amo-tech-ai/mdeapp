@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * CK-V2-012 · SAN-910 — synthetic violation proof for no-new-v1 guardrail.
+ * CK-V2-012 · SAN-910 · Migration CI guardrails (audit dashboard + no-new-v1 gate) —
+ * synthetic violation proof for no-new-v1 guardrail.
  * Pass: main allowlist scan succeeds · synthetic file fails.
  */
 import { spawnSync } from "node:child_process";

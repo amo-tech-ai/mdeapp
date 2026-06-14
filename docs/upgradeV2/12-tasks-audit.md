@@ -11,11 +11,11 @@
 
 | Step | Action | Result |
 |---|---|---|
-| SAN-895 reopen | Set **In Progress** + comment on DoD chain | ✅ |
-| PR #214 merge | Floor green · `Closes SAN-902` only | ✅ merged → `fbcf8d3` |
+| [SAN-895 · Fix hostEventAgent Gemini thought_signature console errors](https://linear.app/sanjiovani/issue/SAN-895/ck-v2-007-fix-hosteventagent-gemini-thought-signature-console-errors) reopen | Set **In Progress** + comment on DoD chain | ✅ |
+| PR #214 merge | Floor green · `Closes [SAN-902 · Minimal repro: Mastra multi-turn signature](https://linear.app/sanjiovani/issue/SAN-902/ck-v2-007b-minimal-repro-mastra-multi-turn-signature)` only | ✅ merged → `fbcf8d3` |
 | Linear relations | 908←906 · 909←908 · 907←908+909 · 898←907 | ✅ |
 | Docs SHA | todo · 10 · 11 bumped to `fbcf8d3` | ✅ this pass |
-| SAN-910 guardrails | dep-cruiser + no-new-v1 on branch | ✅ implemented |
+| [SAN-910 · Migration CI guardrails (audit dashboard + no-new-v1 gate)](https://linear.app/sanjiovani/issue/SAN-910/ck-v2-012-migration-ci-guardrails-audit-dashboard-no-new-v1-gate) guardrails | dep-cruiser + no-new-v1 on branch | ✅ implemented |
 
 **Score: 96/100 🟢** — board now honest; SAN-910 landing removes last tooling gap.
 
@@ -27,8 +27,8 @@
 |---|---|
 | PR state | ✅ Merged → `fbcf8d3` |
 | Floor CI | ✅ Success (pre-merge) |
-| `Closes SAN-902` only | ✅ |
-| SAN-895 parent | ✅ Still **In Progress** (correct) |
+| `Closes [SAN-902 · Minimal repro: Mastra multi-turn signature](https://linear.app/sanjiovani/issue/SAN-902/ck-v2-007b-minimal-repro-mastra-multi-turn-signature)` only | ✅ |
+| [SAN-895 · Fix hostEventAgent Gemini thought_signature console errors](https://linear.app/sanjiovani/issue/SAN-895/ck-v2-007-fix-hosteventagent-gemini-thought-signature-console-errors) parent | ✅ Still **In Progress** (correct) |
 | Prod flags | ✅ No flip |
 | Deliverables | ✅ `san-902-host-event-3turn-repro.ts` · `RESULTS.md` · `repro:san-902` |
 
@@ -51,13 +51,13 @@
 
 | # | Task | Linear | % | Dot | Notes |
 |---:|---|---|---:|---|---|
-| 6 | **SAN-903 · CK-V2-007a** | Done | 100 | 🟢 | #213 @ `7674986` |
-| 11 | **SAN-902 · CK-V2-007b** | **Done** | 100 | 🟢 | #214 @ `fbcf8d3` |
-| 12 | **SAN-904 · CK-V2-007c** | Backlog | 0 | ⚫ | **open** |
-| 13 | **SAN-905 · CK-V2-007d** | Backlog | 0 | ⚫ | **open** |
-| 10 | **SAN-895 · CK-V2-007 parent** | **In Progress** | 40 | 🟡 | **not Done** — needs 904→905 |
-| 8 | **SAN-910 · CK-V2-012** | In Progress (branch) | 75 | 🟡 | dep-cruiser + allowlist landed |
-| 7 | **SAN-898 · CK-V2-010** | Todo | 0 | ⚫ | relations wired |
+| 6 | **[SAN-903 · P0 workspace opt-out on hostEventAgent](https://linear.app/sanjiovani/issue/SAN-903/ck-v2-007a-p0-workspace-opt-out-on-hosteventagent)** | Done | 100 | 🟢 | #213 @ `7674986` |
+| 11 | **[SAN-902 · Minimal repro: Mastra multi-turn signature](https://linear.app/sanjiovani/issue/SAN-902/ck-v2-007b-minimal-repro-mastra-multi-turn-signature)** | **Done** | 100 | 🟢 | #214 @ `fbcf8d3` |
+| 12 | **[SAN-904 · HITL approve/reject proofs green](https://linear.app/sanjiovani/issue/SAN-904/ck-v2-007c-hitl-approvereject-proofs-green)** | Backlog | 0 | ⚫ | **open** |
+| 13 | **[SAN-905 · Console clean on hostEventAgent stream](https://linear.app/sanjiovani/issue/SAN-905/ck-v2-007d-console-clean-on-hosteventagent-stream)** | Backlog | 0 | ⚫ | **open** |
+| 10 | **[SAN-895 · Fix hostEventAgent Gemini thought_signature console errors](https://linear.app/sanjiovani/issue/SAN-895/ck-v2-007-fix-hosteventagent-gemini-thought-signature-console-errors)** | **In Progress** | 40 | 🟡 | **not Done** — needs 904→905 |
+| 8 | **[SAN-910 · Migration CI guardrails (audit dashboard + no-new-v1 gate)](https://linear.app/sanjiovani/issue/SAN-910/ck-v2-012-migration-ci-guardrails-audit-dashboard-no-new-v1-gate)** | In Progress (branch) | 75 | 🟡 | dep-cruiser + allowlist landed |
+| 7 | **[SAN-898 · Fix v2 host-event hydration mismatch (caret-color transparent)](https://linear.app/sanjiovani/issue/SAN-898/ck-v2-010-fix-v2-host-event-hydration-mismatch-caret-color-transparent)** | Todo | 0 | ⚫ | relations wired |
 
 ---
 
@@ -84,9 +84,9 @@ CHAT (last):
 
 | ID | Blocker | Severity | Status |
 |---|---|---|---|
-| **A** | SAN-904/905 HITL + console proofs | 🔴 High | Open |
-| **B** | SAN-898 hydration | 🔴 High | Open |
-| **C** | SAN-910 PR not merged yet | 🟡 Medium | Branch ready |
+| **A** | [SAN-904 · HITL approve/reject proofs green](https://linear.app/sanjiovani/issue/SAN-904/ck-v2-007c-hitl-approvereject-proofs-green) / [SAN-905 · Console clean on hostEventAgent stream](https://linear.app/sanjiovani/issue/SAN-905/ck-v2-007d-console-clean-on-hosteventagent-stream) | 🔴 High | Open |
+| **B** | [SAN-898 · Fix v2 host-event hydration mismatch (caret-color transparent)](https://linear.app/sanjiovani/issue/SAN-898/ck-v2-010-fix-v2-host-event-hydration-mismatch-caret-color-transparent) | 🔴 High | Open |
+| **C** | [SAN-910 · Migration CI guardrails (audit dashboard + no-new-v1 gate)](https://linear.app/sanjiovani/issue/SAN-910/ck-v2-012-migration-ci-guardrails-audit-dashboard-no-new-v1-gate) PR not merged yet | 🟡 Medium | Branch ready |
 
 **No production blockers.** Flags OFF.
 
@@ -94,19 +94,19 @@ CHAT (last):
 
 ## What NOT to do
 
-- ❌ Close SAN-895 until SAN-904 + SAN-905 green
-- ❌ Flip `COPILOTKIT_V2_HOST_EVENT` until SAN-905 + SAN-898
-- ❌ Start SAN-890
+- ❌ Close [SAN-895 · Fix hostEventAgent Gemini thought_signature console errors](https://linear.app/sanjiovani/issue/SAN-895/ck-v2-007-fix-hosteventagent-gemini-thought-signature-console-errors) until [SAN-904](https://linear.app/sanjiovani/issue/SAN-904/ck-v2-007c-hitl-approvereject-proofs-green) + [SAN-905](https://linear.app/sanjiovani/issue/SAN-905/ck-v2-007d-console-clean-on-hosteventagent-stream) green
+- ❌ Flip `COPILOTKIT_V2_HOST_EVENT` until [SAN-905](https://linear.app/sanjiovani/issue/SAN-905/ck-v2-007d-console-clean-on-hosteventagent-stream) + [SAN-898](https://linear.app/sanjiovani/issue/SAN-898/ck-v2-010-fix-v2-host-event-hydration-mismatch-caret-color-transparent)
+- ❌ Start [SAN-890 · Full /chat v2 migration](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-full-chat-v2-migration)
 - ❌ Bundle unrelated worktree files into CK-V2 PRs
 
 ---
 
 ## Final recommendation
 
-1. **Open PR for SAN-910** (`Closes SAN-910`) — guardrails only, no runtime.
-2. **Run SAN-904/905** browser proofs with clean dev restarts (flag on/off).
-3. **Parallel SAN-898** hydration chain.
-4. Close **SAN-895** only when 904→905 + floor green.
+1. **Merge PR for [SAN-910 · Migration CI guardrails](https://linear.app/sanjiovani/issue/SAN-910/ck-v2-012-migration-ci-guardrails-audit-dashboard-no-new-v1-gate)** (`Closes SAN-910`) — guardrails only, no runtime.
+2. **Run [SAN-904](https://linear.app/sanjiovani/issue/SAN-904/ck-v2-007c-hitl-approvereject-proofs-green) / [SAN-905](https://linear.app/sanjiovani/issue/SAN-905/ck-v2-007d-console-clean-on-hosteventagent-stream)** browser proofs with clean dev restarts (flag on/off).
+3. **Parallel [SAN-898](https://linear.app/sanjiovani/issue/SAN-898/ck-v2-010-fix-v2-host-event-hydration-mismatch-caret-color-transparent)** hydration chain.
+4. Close **[SAN-895](https://linear.app/sanjiovani/issue/SAN-895/ck-v2-007-fix-hosteventagent-gemini-thought-signature-console-errors)** only when 904→905 + floor green.
 
 ---
 

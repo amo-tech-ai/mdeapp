@@ -60,9 +60,9 @@ npm run graphify:query -- "…"        # agent/tool path discovery
 | **8** | **[SAN-910](https://linear.app/sanjiovani/issue/SAN-910)** | CK-V2-012 | **In Progress** | 75 | **NOW** dep-cruiser gate on branch |
 | **9** | **[SAN-896](https://linear.app/sanjiovani/issue/SAN-896)** | CK-V2-008 | **Todo** | 25 | **NOW** evidence refresh @ `fbcf8d3` |
 | 10 | **[SAN-895](https://linear.app/sanjiovani/issue/SAN-895)** | CK-V2-007 | **In Progress** | 40 | After **6b** — proofs 904→905 · **903+902 alone do not close parent** |
-| 11 | SAN-902 | CK-V2-007b | **Done** | 100 | Subtask of 10 — merged #214 |
-| 12 | SAN-904 | CK-V2-007c | Backlog | 0 | Subtask of 10 — **open** |
-| 13 | SAN-905 | CK-V2-007d | Backlog | 0 | Subtask of 10 — **open** |
+| 11 | [SAN-902 · Minimal repro: Mastra multi-turn signature](https://linear.app/sanjiovani/issue/SAN-902/ck-v2-007b-minimal-repro-mastra-multi-turn-signature) | **Done** | 100 | Subtask of 10 — merged #214 |
+| 12 | [SAN-904 · HITL approve/reject proofs green](https://linear.app/sanjiovani/issue/SAN-904/ck-v2-007c-hitl-approvereject-proofs-green) | Backlog | 0 | Subtask of 10 — **open** |
+| 13 | [SAN-905 · Console clean on hostEventAgent stream](https://linear.app/sanjiovani/issue/SAN-905/ck-v2-007d-console-clean-on-hosteventagent-stream) | Backlog | 0 | Subtask of 10 — **open** |
 | 14 | **[SAN-901](https://linear.app/sanjiovani/issue/SAN-901)** | CK-V2-004A | Backlog | 0 | After **5** ✅ · chat spike |
 | 15 | **[SAN-890](https://linear.app/sanjiovani/issue/SAN-890)** | CK-V2-004 | Backlog | 0 | After **14** PASS + approval |
 | 16 | **[SAN-891](https://linear.app/sanjiovani/issue/SAN-891)** | CK-V2-005 | Backlog | 0 | After **15** — retire react-ui last |
