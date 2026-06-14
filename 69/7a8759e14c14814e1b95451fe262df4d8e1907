@@ -1,0 +1,38 @@
+docs/tasks/testing/evidence/SAN-890/SAN-890-v2-flag-on-results.json
+  s_b9d5d18e508f95::t_9212a946f36615 8-21
+docs/tasks/testing/evidence/SAN-890/SAN-890-v2-flag-off-results.json
+  s_b9d5d18e508f95::t_351cf05d510253 1-22
+docs/tasks/testing/evidence/SAN-890/RESULTS.md
+  s_b9d5d18e508f95::t_be5cbdec509591 1-55
+docs/tasks/testing/evidence/SAN-890/san-890-localhost-proof.mjs
+  s_b9d5d18e508f95::t_d9ce45b84de3c1 188
+  s_b9d5d18e508f95::t_f48138b0bd41f3 1-187,189-233,236-255
+  s_b9d5d18e508f95::t_4bb1bbb08c7dc0 234-235
+src/components/chat/geo-chat-shell-v2.tsx
+  s_b9d5d18e508f95::t_d4f5b674197410 7-8
+  s_b9d5d18e508f95::t_54e601f1b167ee 120
+  s_b9d5d18e508f95::t_7b18ee7376c595 131
+  s_b9d5d18e508f95::t_7f9d53d7e254cd 166
+  s_b9d5d18e508f95::t_0497e26e0e203f 177
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "697a8759e14c14814e1b95451fe262df4d8e1907",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_b9d5d18e508f95": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e3d2b029-5d9e-4925-9300-66e497ddaeb2",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
