@@ -1,0 +1,43 @@
+docs/events/plans/05-attendee-crm-plan.md
+  s_bcfa22475523c5::t_a2ef3f53428c74 1-100,105-111,125-150
+  s_bcfa22475523c5::t_d51bf9badf2342 101-104
+  s_bcfa22475523c5::t_6bb001b0a6f582 112-124
+docs/events/plans/00-index.md
+  s_bcfa22475523c5::t_49c996a816a805 19
+docs/design/events/messaging-center-plan.md
+  s_bcfa22475523c5::t_30eb80f8b06d76 1,3-6,8,11-15,62
+  s_bcfa22475523c5::t_8f60c8d65c153e 2,7,9-10,16-61,63-212
+docs/design/events/event-prompts.md
+  s_bcfa22475523c5::t_834d3ec0a599ef 457
+  s_bcfa22475523c5::t_b20d7e02ff31bd 402-403
+  s_bcfa22475523c5::t_c255924f2ec838 362-367,370-401,404-412,416
+  s_bcfa22475523c5::t_585eec8ebe460f 368-369
+  s_bcfa22475523c5::t_7c5da56f72cd3f 414
+  s_bcfa22475523c5::t_fe08dfdb0b4535 419-441,450-456,458-463,465-473,475-482
+  s_bcfa22475523c5::t_8dbaf9d07f202e 464
+  s_bcfa22475523c5::t_caeffe847c4433 442-449
+  s_bcfa22475523c5::t_f3c6e2f1105168 474
+  s_bcfa22475523c5::t_f740300ef3acf0 592
+docs/design/events/attendees-crm-plan.md
+  s_bcfa22475523c5::t_02a3b631bac6da 1-183,273-310
+  s_bcfa22475523c5::t_aac5312a97eb16 184-220
+  s_bcfa22475523c5::t_3ed85ec02b89c2 221-272
+docs/events/audit/13-hievents-review.md
+  s_bcfa22475523c5::t_d6c786d609689d 1-89
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "49be63ddfb5268ebce148239ea5b53587b3bc5eb",
+  "prompts": {},
+  "sessions": {
+    "s_bcfa22475523c5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a4c0e6df-559e-4768-bdc4-abc0aabb5dc3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
