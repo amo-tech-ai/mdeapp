@@ -10,7 +10,7 @@ status: Backlog
 depends_on: [SAN-706, AGT-PTR-06]
 unblocks: [SAN-684]
 skills: [mastra, copilotkitV1, mde-supabase]
-audit: tasks/design/partners/AI/07-ai-intelligence-partners-audit.md
+audit: docs/partners/docs/07-ai-intelligence-partners-audit.md
 ---
 
 # AGT-PTR-05 — Lead qualification + HITL reply

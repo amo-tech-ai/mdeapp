@@ -10,8 +10,8 @@ status: Backlog
 depends_on: [SAN-683, SAN-705]
 unblocks: [SAN-709, SAN-708, SAN-710]
 skills: [mastra, mde-supabase, copilotkitV1]
-audit: tasks/design/partners/AI/07-ai-intelligence-partners-audit.md
-schema_audit: tasks/design/partners/audit/06b-supabase-audit.md
+audit: docs/partners/docs/07-ai-intelligence-partners-audit.md
+schema_audit: docs/partners/audit/06b-supabase-audit.md
 ---
 
 # AGT-PTR-02 — Partner-scoped Supabase tools

@@ -17,7 +17,7 @@ rules: No code changes · no task creation · no SAN-690 work · validate + repo
 2. Navigate to `https://www.mdeai.co/partners`.
 3. Verify: HTTP 200 · page renders · no console errors · no React errors · no hydration errors · no 404 assets · no a11y blockers.
 4. Validate **SAN-692 — MKT Partner Hub**: hero visible · partner cards visible · footer visible · footer contains only live routes · no dead links.
-5. Test every partner path — `/partners`, `/partners/signup`, `/partners/rentals`, `/sponsors`, `/business/ai` — verify HTTP 200 · no console errors · no broken navigation.
+5. Test every partner path — expect **HTTP 200** for `/partners` and `/partners/signup` (live); expect **HTTP 404** for `/partners/rentals`, `/sponsors`, `/business/ai` (not built yet — planned landings SAN-691 · MKT — For Rentals/Brokers, SAN-664 · MKT — Sponsors, SAN-663 · MKT — AI Services). For all: no console errors · no broken navigation. The 404s are a known funnel gap, not a SAN-692 regression.
 6. Test signup flow — `/partners/signup?type=host|venue|broker` — verify type preselected · form loads · validation works · no JS errors.
 7. Performance: LCP · CLS · INP · network failures · slow requests.
 8. Accessibility: keyboard nav · focus states · landmark structure · missing labels · contrast.

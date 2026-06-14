@@ -3,8 +3,8 @@ title: AGT-PTR — Partners AI task pack
 updated: 2026-06-06
 linear_parent: SAN-685
 linear_project: AI & Intelligence
-audit: tasks/design/partners/AI/07-ai-intelligence-partners-audit.md
-forensic_audit: tasks/design/partners/audit/06d-mastra-audit.md
+audit: docs/partners/docs/07-ai-intelligence-partners-audit.md
+forensic_audit: docs/partners/audit/06d-mastra-audit.md
 schema_blocker: SAN-683
 ---
 
@@ -107,4 +107,4 @@ npm test -- --run src/mastra/agents
 
 ## Audit corrections applied (2026-06-06)
 
-See [06d-mastra-audit.md](../../design/partners/audit/06d-mastra-audit.md): PTR-00 added · PTR-04 deps fixed · POST+PATCH drafts · `partnerAgent` naming · lead path `/api/leads/schedule-viewing` · PTR-06 before PTR-05.
+See [06d-mastra-audit.md](../audit/06d-mastra-audit.md): PTR-00 added · PTR-04 deps fixed · POST+PATCH drafts · `partnerAgent` naming · lead path `/api/leads/schedule-viewing` · PTR-06 before PTR-05.

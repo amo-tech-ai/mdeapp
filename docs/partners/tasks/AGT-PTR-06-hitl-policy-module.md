@@ -10,7 +10,7 @@ status: Backlog
 depends_on: [SAN-705]
 unblocks: [SAN-708, SAN-686]
 skills: [mastra, copilotkitV1]
-audit: tasks/design/partners/AI/07-ai-intelligence-partners-audit.md
+audit: docs/partners/docs/07-ai-intelligence-partners-audit.md
 ---
 
 # AGT-PTR-06 — Partner HITL policy module

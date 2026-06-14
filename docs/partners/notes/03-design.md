@@ -49,7 +49,7 @@ Next step: build order is D-PTR-02 â /venues first (it creates the shared s
   What shipped this turn
 
   1. Sitemap fixed (4 rows): /partners/rentals, /sponsors, /business/ai were listed as "shell, 200" but are 404 on production â corrected with verification date; /partners hub re-marked as live-but-basic.
-  2. Task pack created: docs/partners/tasks/design/ â INDEX + 10 files (D-PTR-01â¦10), each with route, Linear link, wireframe path, page sections from the landing-pages doc, a 21st.dev/shadcn component shopping list, and acceptance criteria including the floor gate (the repo's pass/fail quality check). A shared contract in the INDEX keeps them lean: one reusable PartnerLandingShell gets extracted in the venues task and reused everywhere.everywhere.
+  2. Task pack created: docs/partners/tasks/design/ â INDEX + 10 files (D-PTR-01â¦10), each with route, Linear link, wireframe path, page sections from the landing-pages doc, a 21st.dev/shadcn component shopping list, and acceptance criteria including the floor gate (the repo's pass/fail quality check). A shared contract in the INDEX keeps them lean: one reusable PartnerLandingShell gets extracted in the venues task and reused everywhere.
 3. Linear updated â evidence comments posted on all 12 page tasks:
   - SAN-692 Â· MKT â Partner hub marketing page (/partners)
   - SAN-661 Â· MKT â For Venues landing (/venues)

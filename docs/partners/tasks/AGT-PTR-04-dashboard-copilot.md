@@ -11,7 +11,7 @@ depends_on: [SAN-705, SAN-706, AGT-PTR-00]
 unblocks: [SAN-690]
 skills: [copilotkitV1, mastra, shadcn]
 partners_ui: SAN-690
-audit: tasks/design/partners/AI/07-ai-intelligence-partners-audit.md
+audit: docs/partners/docs/07-ai-intelligence-partners-audit.md
 ---
 
 # AGT-PTR-04 — Dashboard copilot shell

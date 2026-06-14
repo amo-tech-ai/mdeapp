@@ -70,5 +70,5 @@ flowchart LR
 
 ## Build notes
 - New role-aware `/dashboard`; `/broker/*` → alias/redirect into it (no rebuild of broker work).
-- Service-role only in server routes per F13 carve-out; partner identity verified first.
+- Service-role only in server routes per the F13 carve-out (the exception allowing service-role keys in specific server files like `src/mastra/lib/**` and `src/lib/supabase/service-env.ts`/`service.ts`; see `LESSONS.md`); partner identity verified first.
 - Charts: keep simple (recharts/shadcn chart) — no heavy BI at MVP.

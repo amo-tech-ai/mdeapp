@@ -1,6 +1,6 @@
 # Partners — canonical home
 
-**Canonical path:** `docs/tasks/partners/` (PTR epic · partner onboarding · B2B)
+**Canonical path:** `docs/partners/` (PTR epic · partner onboarding · B2B)
 
 | Entry | File |
 |-------|------|

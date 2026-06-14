@@ -32,15 +32,15 @@ build_skills:
 
 | Task file | Route | Linear | Wireframe | Priority |
 |---|---|---|---|---|
-| [D-PTR-01](./D-PTR-01-partners-hub.md) | `/partners` | SAN-692 · MKT — Partner hub marketing page | ❌ none — derive from shell | **P0** (live but basic) |
+| [D-PTR-01](./D-PTR-01-partners-hub.md) | `/partners` | SAN-692 · MKT — Partner hub marketing page | ✅ `partners-hub-wireframe.html` | **P0** (live but basic) |
 | [D-PTR-02](./D-PTR-02-venues-landing.md) | `/venues` (+`?v=`) | SAN-661 · MKT — For Venues landing | ✅ `venues-wireframe.html` | **P0** |
 | [D-PTR-03](./D-PTR-03-rentals-brokers.md) | `/partners/rentals` | SAN-691 · MKT — For Rentals / Brokers landing | ✅ `partners-rentals-wireframe.html` | **P0** (404 today) |
 | [D-PTR-04](./D-PTR-04-business-ai.md) | `/business/ai` | SAN-663 · MKT — AI Services for companies | ✅ `business-ai-wireframe.html` | P1 (404 today) |
 | [D-PTR-05](./D-PTR-05-sponsors.md) | `/sponsors` | SAN-664 · MKT — Sponsors / Sponsorship | ✅ `sponsors-wireframe.html` | P1 (404 today) |
-| [D-PTR-06](./D-PTR-06-pricing.md) | `/pricing` | SAN-695 · MKT — Partner pricing | ❌ none | P1 |
-| [D-PTR-07](./D-PTR-07-contact.md) | `/contact` | SAN-693 · MKT — Contact / Book a demo | ❌ none | P1 |
+| [D-PTR-06](./D-PTR-06-pricing.md) | `/pricing` | SAN-695 · MKT — Partner pricing | ✅ `pricing-wireframe.html` | P1 |
+| [D-PTR-07](./D-PTR-07-contact.md) | `/contact` | SAN-693 · MKT — Contact / Book a demo | ✅ `contact-wireframe.html` | P1 |
 | [D-PTR-08](./D-PTR-08-vertical-landings.md) | `/partners/{restaurants,cafes,nightlife}` | SAN-713 / SAN-714 / SAN-712 · MKT — vertical landings | ⚠️ shared shell `?v=` variants | P2 |
-| [D-PTR-09](./D-PTR-09-business-hub.md) | `/business` | SAN-726 · MKT — mdeai for Business hub | ❌ none | P2 |
+| [D-PTR-09](./D-PTR-09-business-hub.md) | `/business` | SAN-726 · MKT — mdeai for Business hub | ✅ `business-hub-wireframe.html` | P2 |
 | [D-PTR-10](./D-PTR-10-about.md) | `/about` | SAN-662 · MKT — About page | ✅ `about-wireframe.html` | P2 |
 
 ## Wireframe coverage verdict (2026-06-10, updated same day)

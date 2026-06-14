@@ -119,17 +119,17 @@ Legend: **Partner relevance** = how directly it unblocks Partners supply-side AI
 
 ## Linear tasks filed (2026-06-06)
 
-> Parent [SAN-685](https://linear.app/sanjiovani/issue/SAN-685) · Disk specs: [`tasks/mastra/partners/AGT-PTR-INDEX.md`](../../../mastra/partners/AGT-PTR-INDEX.md)
+> Parent [SAN-685](https://linear.app/sanjiovani/issue/SAN-685) · Disk specs: [`tasks/mastra/partners/AGT-PTR-INDEX.md`](../tasks/AGT-PTR-INDEX.md)
 
 | Spec | Linear | Type | Priority | Disk spec |
 |---|---|---|---|---|
-| AGT-PTR-01 | [SAN-705](https://linear.app/sanjiovani/issue/SAN-705) | agent | Urgent | [01-foundation](../../../mastra/partners/AGT-PTR-01-partner-agent-foundation.md) |
-| AGT-PTR-02 | [SAN-706](https://linear.app/sanjiovani/issue/SAN-706) | tools | Urgent | [02-tools](../../../mastra/partners/AGT-PTR-02-partner-supabase-tools.md) |
-| AGT-PTR-03 | [SAN-709](https://linear.app/sanjiovani/issue/SAN-709) | UI+agent | High | [03-onboarding](../../../mastra/partners/AGT-PTR-03-onboarding-copilot.md) |
-| AGT-PTR-04 | [SAN-707](https://linear.app/sanjiovani/issue/SAN-707) | UI+agent | High | [04-dashboard](../../../mastra/partners/AGT-PTR-04-dashboard-copilot.md) |
-| AGT-PTR-05 | [SAN-708](https://linear.app/sanjiovani/issue/SAN-708) | workflow | High | [05-leads](../../../mastra/partners/AGT-PTR-05-lead-qualification-hitl.md) |
-| AGT-PTR-06 | [SAN-711](https://linear.app/sanjiovani/issue/SAN-711) | platform | Medium | [06-hitl](../../../mastra/partners/AGT-PTR-06-hitl-policy-module.md) |
-| AGT-PTR-07 | [SAN-710](https://linear.app/sanjiovani/issue/SAN-710) | routing | Medium | [07-attribution](../../../mastra/partners/AGT-PTR-07-concierge-attribution.md) |
+| AGT-PTR-01 | [SAN-705](https://linear.app/sanjiovani/issue/SAN-705) | agent | Urgent | [01-foundation](../tasks/AGT-PTR-01-partner-agent-foundation.md) |
+| AGT-PTR-02 | [SAN-706](https://linear.app/sanjiovani/issue/SAN-706) | tools | Urgent | [02-tools](../tasks/AGT-PTR-02-partner-supabase-tools.md) |
+| AGT-PTR-03 | [SAN-709](https://linear.app/sanjiovani/issue/SAN-709) | UI+agent | High | [03-onboarding](../tasks/AGT-PTR-03-onboarding-copilot.md) |
+| AGT-PTR-04 | [SAN-707](https://linear.app/sanjiovani/issue/SAN-707) | UI+agent | High | [04-dashboard](../tasks/AGT-PTR-04-dashboard-copilot.md) |
+| AGT-PTR-05 | [SAN-708](https://linear.app/sanjiovani/issue/SAN-708) | workflow | High | [05-leads](../tasks/AGT-PTR-05-lead-qualification-hitl.md) |
+| AGT-PTR-06 | [SAN-711](https://linear.app/sanjiovani/issue/SAN-711) | platform | Medium | [06-hitl](../tasks/AGT-PTR-06-hitl-policy-module.md) |
+| AGT-PTR-07 | [SAN-710](https://linear.app/sanjiovani/issue/SAN-710) | routing | Medium | [07-attribution](../tasks/AGT-PTR-07-concierge-attribution.md) |
 
 **Do not create yet:** separate nightclub/restaurant/broker agents, Postiz agent, WhatsApp agent, revenue ML agent.
 

@@ -11,8 +11,8 @@ depends_on: [SAN-705, SAN-706, AGT-PTR-00, SAN-412]
 unblocks: [SAN-665]
 skills: [copilotkitV1, mastra, shadcn, mde-supabase]
 partners_ui: SAN-665
-audit: tasks/design/partners/AI/07-ai-intelligence-partners-audit.md
-forensic_audit: tasks/design/partners/audit/06d-mastra-audit.md
+audit: docs/partners/docs/07-ai-intelligence-partners-audit.md
+forensic_audit: docs/partners/audit/06d-mastra-audit.md
 ---
 
 # AGT-PTR-03 — Onboarding copilot

@@ -10,8 +10,8 @@ status: Backlog
 depends_on: [SAN-683]
 unblocks: [SAN-706, SAN-709, SAN-707, AGT-PTR-00]
 skills: [mastra, copilotkitV1, gemini]
-audit: tasks/design/partners/AI/07-ai-intelligence-partners-audit.md
-forensic_audit: tasks/design/partners/audit/06d-mastra-audit.md
+audit: docs/partners/docs/07-ai-intelligence-partners-audit.md
+forensic_audit: docs/partners/audit/06d-mastra-audit.md
 ---
 
 # AGT-PTR-01 — Partner agent foundation

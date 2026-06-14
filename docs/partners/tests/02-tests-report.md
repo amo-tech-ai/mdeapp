@@ -85,23 +85,23 @@ Captured prod `/partners` at 3 viewports (run 1; prod visually unchanged this ru
 | Tablet | 834×1112 | `ss_9736xwu6k` | 2-up grid, nav intact |
 | Mobile | 390×844 | `ss_08428ad61` | 1-up stacked, CTAs full-width |
 
-> To persist as files, re-run `chrome-devtools` `take_screenshot` (`filePath`) once the profile is free → `tasks/partners/tests/screenshots/{desktop,tablet,mobile}.png`.
+> To persist as files, re-run `chrome-devtools` `take_screenshot` (`filePath`) once the profile is free → `docs/partners/tests/screenshots/{desktop,tablet,mobile}.png`.
 
 ---
 
 # Findings
 
-### Critical
+## Critical
 - **None.** No console/React/hydration errors; no app crash; `/partners` + signup deterministic 10/10.
 
-### High
+## High
 - **Hub funnel cards link to 7 unbuilt routes that 404** (10/10) — `cardDeadDest` confirmed live on prod. Violates SAN-692 AC "card destinations exist / no dead links at launch". **Fix is staged in PR #133** (repoint cards → `/partners/signup?type=…`), currently **OPEN — merge + deploy to resolve.** (Alt PR #123 stubs the landings — pick one approach.)
 
-### Medium
+## Medium
 - LCP cold-load was 2.97s (run 1); warm 1.74s (run 2). Watch under real traffic.
 - Transient 503 on RSC prefetch bursts (run 1; not reproduced run 2) — Vercel edge.
 
-### Low
+## Low
 - Card CTA copy ("Explore venues program →") implies a landing that 404s — also resolved by PR #133 (CTAs → "Start as …").
 - Signup client-side field validation not exercised (JS injection blocked on signup page) — add a Playwright form-fill test.
 

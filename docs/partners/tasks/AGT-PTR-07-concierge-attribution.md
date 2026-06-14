@@ -10,7 +10,7 @@ status: Backlog
 depends_on: [SAN-683, SAN-706]
 unblocks: [SAN-673, SAN-684]
 skills: [mastra, mde-supabase, copilotkitV1]
-audit: tasks/design/partners/AI/07-ai-intelligence-partners-audit.md
+audit: docs/partners/docs/07-ai-intelligence-partners-audit.md
 ---
 
 # AGT-PTR-07 — Concierge `leads.partner_id` attribution
@@ -58,7 +58,7 @@ Requires `partners.landlord_profile_id` or event `organizer_id` bridge (SAN-683 
 
 ## Acceptance criteria
 
-- [ ] **`POST /api/leads/schedule-viewing`** sets `partner_id` when listing context present (primary path on disk today)
+- [ ] **`POST /api/leads/schedule-viewing`** — existing endpoint (`src/app/api/leads/schedule-viewing/route.ts`); add `partner_id` attribution here when listing context present (primary path to update)
 - [ ] Rental/event/grounded search tools expose `partner_id` in tool result metadata when resolvable
 - [ ] Concierge path only — no `partnerAgent` on `/chat`
 - [ ] RLS: partner members see leads via ptr012 policies
