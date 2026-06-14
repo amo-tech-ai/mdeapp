@@ -45,4 +45,4 @@ SAN901_V2=1 COPILOTKIT_V2_CHAT=1 infisical run --silent --env=dev --path=/ -- no
 
 **Artifacts:** `SAN-901-v2-flag-off-results.json` · `SAN-901-v2-flag-on-results.json` · screenshots in this folder.
 
-**Note:** HITL is wired (`useHumanInTheLoop` ×2 names); automated proof only exercises rental tool. Manual café-booking prompt can verify HITL before SAN-890.
+**Note:** HITL is wired (`useHumanInTheLoop` ×2 names); automated proof only exercises rental tool. Manual café-booking prompt can verify HITL before [SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2 — last, highest-risk](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk).

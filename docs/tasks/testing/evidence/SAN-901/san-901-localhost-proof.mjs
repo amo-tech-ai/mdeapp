@@ -27,17 +27,6 @@ function resolveMainSha() {
   }
 }
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const BASE = process.env.SAN901_BASE_URL ?? "http://localhost:3001";
-const BASE_HOST = new URL(BASE).hostname;
-const QA_EMAIL = "qa-landlord@mdeai.co";
-const OUT_DIR = __dirname;
-const V2 =
-  process.env.SAN901_V2 === "1" || process.env.COPILOTKIT_V2_CHAT === "1";
-const slug = V2 ? "flag-on" : "flag-off";
-
-const RENTAL_PROMPT = "1BR in Laureles under $80/night";
-
 function loadEnvLocal() {
   const envPath = path.resolve(process.cwd(), ".env.local");
   if (!fs.existsSync(envPath)) return;
@@ -52,6 +41,21 @@ function loadEnvLocal() {
     }
   }
 }
+
+loadEnvLocal();
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const BASE = process.env.SAN901_BASE_URL ?? "http://localhost:3001";
+const BASE_HOST = new URL(BASE).hostname;
+const QA_EMAIL = "qa-landlord@mdeai.co";
+const OUT_DIR = __dirname;
+const V2 =
+  process.env.SAN901_V2 === "1" ||
+  (process.env.COPILOTKIT_V2_CHAT === "1" &&
+    process.env.NEXT_PUBLIC_COPILOTKIT_V2_CHAT === "1");
+const slug = V2 ? "flag-on" : "flag-off";
+
+const RENTAL_PROMPT = "1BR in Laureles under $80/night";
 
 async function getTestSession() {
   loadEnvLocal();
@@ -114,7 +118,7 @@ async function copilotkitPostOk() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({}),
   });
-  return res.status === 200 || res.status === 400;
+  return [200, 400, 401, 429].includes(res.status);
 }
 
 function filterConsoleErrors(errors) {

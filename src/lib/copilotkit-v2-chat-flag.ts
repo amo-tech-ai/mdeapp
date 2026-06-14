@@ -9,7 +9,7 @@ export function isCopilotKitV2ChatEnabled(): boolean {
   );
 }
 
-/** Same gate as server — single source of truth for root provider skip. */
+/** Client gate — NEXT_PUBLIC only (non-public env is undefined in browser bundles). */
 export function isCopilotKitV2ChatClientEnabled(): boolean {
-  return isCopilotKitV2ChatEnabled();
+  return process.env.NEXT_PUBLIC_COPILOTKIT_V2_CHAT === "1";
 }

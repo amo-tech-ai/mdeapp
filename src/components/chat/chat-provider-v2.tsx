@@ -1,5 +1,6 @@
 "use client";
 
+/** SAN-901 approved exception: v2 subpath only on gated /chat spike path. */
 import "@copilotkit/react-core/v2/styles.css";
 import { CopilotKit } from "@copilotkit/react-core/v2";
 import { useState, type ReactNode } from "react";

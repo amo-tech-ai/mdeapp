@@ -21,10 +21,16 @@ describe("copilotkit-v2-chat-flag", () => {
     expect(isCopilotKitV2ChatEnabled()).toBe(false);
   });
 
-  it("returns false when only client flag is on", () => {
+  it("returns false when only client flag is on (server gate)", () => {
     vi.stubEnv("COPILOTKIT_V2_CHAT", "");
     vi.stubEnv("NEXT_PUBLIC_COPILOTKIT_V2_CHAT", "1");
     expect(isCopilotKitV2ChatEnabled()).toBe(false);
+  });
+
+  it("client gate follows NEXT_PUBLIC only", () => {
+    vi.stubEnv("COPILOTKIT_V2_CHAT", "");
+    vi.stubEnv("NEXT_PUBLIC_COPILOTKIT_V2_CHAT", "1");
+    expect(isCopilotKitV2ChatClientEnabled()).toBe(true);
   });
 
   it("returns true only when both flags are 1", () => {

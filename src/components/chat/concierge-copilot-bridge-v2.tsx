@@ -17,6 +17,10 @@ import {
   MASTRA_TOOL_IDS,
 } from "@/platform/copilot/mastra-tool-action-names";
 import { venueBookingRequestSchema } from "@/lib/venues/venue-booking-form-schema";
+import {
+  getToolRenderErrorMessage,
+  isToolRenderError,
+} from "@/lib/tool-render-state";
 
 const searchRentalsParams = z.object({
   neighborhood: z.string().optional(),
@@ -29,6 +33,17 @@ const searchRentalsParams = z.object({
 type ToolRenderProps = { status: string; result?: unknown };
 
 function SpikeRentalToolRender({ status, result }: ToolRenderProps) {
+  if (isToolRenderError(result, status)) {
+    return (
+      <p
+        className="mx-2 my-2 text-sm text-destructive"
+        data-testid="spike-rental-error"
+      >
+        {getToolRenderErrorMessage(result)}
+      </p>
+    );
+  }
+
   if (status !== "complete" || !result) {
     return (
       <p
@@ -63,8 +78,8 @@ function SpikeRentalToolRender({ status, result }: ToolRenderProps) {
     >
       <p className="text-sm font-medium text-foreground">Rental results</p>
       <ul className="space-y-1 text-sm text-muted-foreground">
-        {rows.slice(0, 5).map((row) => (
-          <li key={row.id ?? row.title}>
+        {rows.slice(0, 5).map((row, index) => (
+          <li key={row.id ?? row.title ?? `rental-${index}`}>
             {row.title ?? "Rental"}
             {row.neighborhood ? ` · ${row.neighborhood}` : ""}
           </li>
@@ -86,13 +101,19 @@ function createVenueBookingHitlRender() {
     status,
     respond,
   }: HitlRenderProps) {
-    const hitlArgs = args as VenueBookingHitlArgs;
+    const parsed = venueBookingRequestSchema.safeParse(args);
+    if (!parsed.success) {
+      return null;
+    }
+
     return (
       <VenueBookingHitlPanel
-        args={hitlArgs}
+        args={parsed.data as VenueBookingHitlArgs}
         status={status}
         respond={(decision) => {
-          void respond?.(decision);
+          respond?.(decision)?.catch((err) => {
+            console.error("[concierge-hitl-v2] respond failed", err);
+          });
         }}
       />
     );
@@ -105,7 +126,7 @@ type ConciergeCopilotBridgeV2Props = {
 
 /**
  * SAN-901 · CK-V2-004A — minimal v2 bridge: useAgent + 1 tool render + 1 HITL.
- * v1 geo-chat-shell bridges untouched for flag-off rollback.
+ * v2 subpath imports are intentional (SAN-901 spike); v1 geo-chat-shell untouched for flag-off rollback.
  */
 export function ConciergeCopilotBridgeV2({
   children,
