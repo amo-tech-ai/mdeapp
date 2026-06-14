@@ -4,6 +4,8 @@ import { AuthStatus } from "@/components/auth/auth-status";
 import { ChatCanvasV2 } from "@/components/chat/chat-canvas-v2";
 import { ChatNavDrawer } from "@/components/chat/chat-nav-drawer";
 import { ChatWorkflowProvider } from "@/components/chat/chat-workflow-context";
+import { ConciergeCoAgentProvider } from "@/components/chat/concierge-coagent-context";
+import { ConciergeSessionProvider } from "@/components/chat/concierge-session-context";
 import { ConciergeCopilotBridgeV2 } from "@/components/chat/concierge-copilot-bridge-v2";
 import { EventLocalChatProvider } from "@/components/chat/event-local-chat-context";
 import { EventSearchResultsProvider } from "@/components/chat/event-search-results-context";
@@ -115,6 +117,7 @@ function NightlifeBookingSheetMount() {
 export function GeoChatShellV2() {
   return (
     <ConciergeCopilotBridgeV2>
+      <ConciergeCoAgentProvider>
       <ChatWorkflowProvider>
         <RentalUiProvider>
           <RentalFastPathProvider>
@@ -125,6 +128,7 @@ export function GeoChatShellV2() {
                     <RichCardResultsProvider>
                       <EventLocalChatProvider>
                         <VenueBookingDirectHitlProvider>
+                          <ConciergeSessionProvider>
                           <div
                             data-testid="geo-chat-shell-v2"
                             className="flex min-h-screen flex-col"
@@ -159,6 +163,7 @@ export function GeoChatShellV2() {
                             <EventVenueOfferingsSheetMount />
                             <EventProposalShellMount />
                           </div>
+                          </ConciergeSessionProvider>
                         </VenueBookingDirectHitlProvider>
                       </EventLocalChatProvider>
                     </RichCardResultsProvider>
@@ -169,6 +174,7 @@ export function GeoChatShellV2() {
           </RentalFastPathProvider>
         </RentalUiProvider>
       </ChatWorkflowProvider>
+      </ConciergeCoAgentProvider>
     </ConciergeCopilotBridgeV2>
   );
 }
