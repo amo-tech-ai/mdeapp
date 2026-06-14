@@ -1,7 +1,7 @@
-# CK-V2 · Tasks audit — 11 (SAN-903 spec + execution)
+# CK-V2 · Tasks audit — 11 (post SAN-902 merge @ `fbcf8d3`)
 
-**Date:** 2026-06-13 · **Re-verified:** post-implementation (local, uncommitted)  
-**Ground truth:** base `4ee1bb9` + SAN-903 diff on disk  
+**Date:** 2026-06-14 · **Re-verified:** after PR #214 merge + Linear hygiene pass  
+**Ground truth:** `origin/main` @ **`fbcf8d3`**  
 **Questions:**
 1. Was the **spec** (~94/100 pre-impl) correct?
 2. Did **execution** meet the updated contract?
@@ -11,10 +11,15 @@
 
 ## Verdict — first read
 
-**Spec audit: 94/100 — was correct; no spec rollback needed.**  
-**Execution audit: ~88/100 — SAN-903 ready for PR (`Closes SAN-903` only); does NOT close SAN-895.**
+**Post-merge verdict:** SAN-903 + SAN-902 shipped correctly; **SAN-895 remains In Progress** until SAN-904→905 green.
 
-**Hypothesis status:** **Partially confirmed** — turn 1 has zero workspace tools; turn 2 completes without `thought_signature`; turn 3 hit a generic `AGENT_STREAM_ERROR` (document in SAN-902, not a SAN-903 blocker).
+| Milestone | Status @ `fbcf8d3` |
+|---|---|
+| SAN-903 workspace opt-out | ✅ merged #213 |
+| SAN-902 3-turn repro | ✅ merged #214 |
+| SAN-895 parent | 🔴 **In Progress** — not Done |
+| SAN-904 / SAN-905 | ⚫ open |
+| Linear relations 898 chain | ✅ wired 2026-06-14 |
 
 | Layer | Score | Dot |
 |---|---:|---|
@@ -99,29 +104,18 @@
 ## Part E — Next steps (correct implementation order)
 
 ```text
-NOW — ship SAN-903 (scoped PR only):
-  src/mastra/agents/host-event.ts
-  src/__tests__/host-event-agent.test.ts
-  docs/upgradeV2/changelog.md · todo.md · 11-tasks-audit.md · linear-descriptions/SAN-903.md
-  PR: Closes SAN-903  (NOT SAN-895)
+DONE:        887 → 888 → 889 → 892 → 900 → 903 → 902
 
-THEN — parallel band (steps 7–9 + 10 start):
-  SAN-902  — commit repro script + document turn3 flake + before/after evidence
-  SAN-898  — hydration caret-color (parallel)
-  SAN-910  — dependency-cruiser guardrails (parallel)
-  SAN-896  — evidence refresh @ new SHA (parallel)
+NOW — parallel:
+  SAN-910  — dep-cruiser guardrails (branch ready)
+  SAN-898  — hydration 906 → 908 → 909 → 907
+  SAN-896  — evidence refresh @ fbcf8d3
 
 THEN — SAN-895 closure chain:
-  SAN-902 → SAN-904 → SAN-905  (parent Done only when 905 green)
+  SAN-904 → SAN-905  (parent Done only when 905 green)
 
 CHAT (after hygiene trending green):
-  SAN-901  — chat vertical slice (unblocked since SAN-900 Done; cleaner after 903 helps)
-  SAN-890  — full /chat (after 901 PASS + explicit approval)
-  SAN-891  — retire react-ui (last)
-
-LATER:
-  SAN-897  — preview analytics (after 896 only)
-  SAN-899  — fallback if 903 hypothesis insufficient (unlikely after turn1–2 pass)
+  SAN-901 → SAN-890 → SAN-891
 ```
 
 | Step | Issue | Ready? |
