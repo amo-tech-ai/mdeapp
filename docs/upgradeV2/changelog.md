@@ -5,29 +5,25 @@ Tracker: [`todo.md`](./todo.md) · Audits: [`12-tasks-audit.md`](./12-tasks-audi
 
 ---
 
-## 2026-06-14 — [SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react) cutover · [PR #219](https://github.com/amo-tech-ai/mdeapp/pull/219) In Review @ `871d751e`
+## 2026-06-14 — [SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react) **Merged** [PR #219](https://github.com/amo-tech-ai/mdeapp/pull/219) @ `4c6ef62e`
 
-**Verdict:** Frontend migration **~95% exec** on 891 branch — v2-only code, grep-zero, browser proof PASS. **Prod still pre-cutover** until #219 merges and deploys.
+**Verdict:** Frontend cutover **100% exec on `main`** — v2-only code merged; **prod v2 visible pending deploy**.
 
 | Gate | Result |
 |---|---|
-| [SAN-890 · CK-V2-004](https://linear.app/sanjiovani/issue/SAN-890) | ✅ **Done** — merged [#218](https://github.com/amo-tech-ai/mdeapp/pull/218) @ `078a677c` |
-| [SAN-891 · CK-V2-005](https://linear.app/sanjiovani/issue/SAN-891) | 🟡 **In Review** · [#219](https://github.com/amo-tech-ai/mdeapp/pull/219) @ `871d751e` |
+| Merge | ✅ [#219](https://github.com/amo-tech-ai/mdeapp/pull/219) squash @ `4c6ef62e` (2026-06-14T12:56:45Z) |
+| CI floor | ✅ PASS @ `cea56f47` (includes react-hooks/refs HITL fix) |
 | grep-zero | ✅ `react-ui` 0 · v1 `/v2`-less imports 0 · `COPILOTKIT_V2_*` 0 |
-| `npm run audit:copilotkit-v2` | ✅ v1 **0** · v2 **16** · react-ui **0** · hook share **100%** |
-| `npm run build` + focused vitest | ✅ build PASS · **10/10** |
-| Browser localhost | ✅ `/chat` · `/host/event/new` · `/host/analytics` · `consoleErrors: []` |
-| `npm run floor` | 🟡 local OOM (worktree lint) — CI source of truth |
-| **SAN-886 epic exec** | **~95%** (891 branch) |
-| **Prod v2 visible** | **0%** — mdeai.co on pre-891 deploy |
+| `npm run audit:copilotkit-v2` | ✅ v1 **0** · v2 **16** · hook share **100%** |
+| Browser localhost (pre-merge) | ✅ `/chat` · `/host/event/new` · `/host/analytics` |
+| Linear | ✅ **Done** — [SAN-891](https://linear.app/sanjiovani/issue/SAN-891) · [SAN-886](https://linear.app/sanjiovani/issue/SAN-886) epic **Done** |
+| **Prod v2 visible** | 🟡 **0%** until Vercel promotes `4c6ef62e` |
 
-**Delivered:** drop `@copilotkit/react-ui` · promote v2 canonical names · delete v1 twins · remove flag modules/branches · `useConciergeChat` · evidence + proof script.
+**Delivered:** drop `@copilotkit/react-ui` · promote v2 canonical names · delete v1 twins · remove flag modules · `useConciergeChat` (no `runtime-client-gql`).
 
-**Evidence:** [`docs/tasks/testing/evidence/SAN-891/SAN-891-RESULTS.md`](../tasks/testing/evidence/SAN-891/SAN-891-RESULTS.md)
+**Evidence:** [`docs/tasks/testing/evidence/SAN-891/SAN-891-RESULTS.md`](../tasks/testing/evidence/SAN-891/SAN-891-RESULTS.md) · audit [`notes-6-219.md`](./notes-6-219.md)
 
-**Linear:** [v2-upgrade view](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd) · tracker [`todo.md`](./todo.md)
-
-**Next:** merge #219 → refresh `09-file-map.md` → optional prod smoke → close SAN-891 + SAN-886.
+**Next:** prod deploy → Tier-1 smoke → refresh `09-file-map.md` · optional 896/898/906.
 
 ---
 
