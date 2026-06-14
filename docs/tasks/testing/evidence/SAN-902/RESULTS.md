@@ -29,7 +29,7 @@ infisical run --silent --env=dev --path=/ -- npm run repro:san-902
 
 **Artifacts:** `SAN-902-3turn-repro-7674986-2026-06-13T23-53-35-675Z.json` · `…-59-275Z.json`
 
-- Script: `scripts/san-902-host-event-3turn-repro.ts`
+- Script: `docs/tasks/testing/evidence/SAN-902/san-902-host-event-3turn-repro.ts`
 - Evidence: `SAN-902-3turn-repro-<sha>-<stamp>.json` in this folder
 
 ## Interpretation

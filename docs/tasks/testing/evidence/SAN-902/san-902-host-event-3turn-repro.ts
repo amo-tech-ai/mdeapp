@@ -1,18 +1,17 @@
 #!/usr/bin/env npx tsx
-// @ts-nocheck — smoke repro; runtime shape validated by evidence JSON, not strict Mastra generics.
 /**
  * SAN-902 · CK-V2-007b — Minimal 3-turn hostEventAgent repro (no browser).
- *
- * Documents turn1/turn2/turn3 behavior after SAN-903 workspace opt-out.
- * Writes JSON evidence under docs/tasks/testing/evidence/SAN-902/.
  *
  * Run:
  *   infisical run --silent --env=dev --path=/ -- npm run repro:san-902
  */
 import { execSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
-import { hostEventAgent } from "../src/mastra/agents/host-event";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { hostEventAgent } from "../../../../src/mastra/agents/host-event";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const TURNS = [
   "Startup mixer March 15 in Provenza, 200 cap, GA free + VIP 50000 COP",
@@ -60,8 +59,25 @@ type TurnResult = {
   hasThoughtSignature: boolean;
 };
 
+type GenerateSnapshot = {
+  text?: string;
+  toolCalls?: Array<{ toolName?: string; payload?: { toolName?: string } }>;
+};
+
+type HostEventAgentGenerate = {
+  generate: (
+    prompt: string,
+    opts?: { threadId?: string; resourceId?: string },
+  ) => Promise<GenerateSnapshot>;
+};
+
+function toolNamesFromResult(result: GenerateSnapshot): string[] {
+  return (result.toolCalls ?? [])
+    .map((t) => t.toolName ?? t.payload?.toolName)
+    .filter((name): name is string => Boolean(name));
+}
+
 async function runTurn(
-  agent: typeof hostEventAgent,
   turn: number,
   prompt: string,
   threadId: string,
@@ -79,16 +95,14 @@ async function runTurn(
   };
 
   try {
+    const agent = hostEventAgent as unknown as HostEventAgentGenerate;
     const result = await agent.generate(prompt, {
       threadId,
       resourceId: "san-902-repro",
     });
-    const toolNames =
-      result.toolCalls?.map((t: { toolName?: string }) => t.toolName).filter(Boolean) ?? [];
-    base.toolNames = toolNames as string[];
-    base.hasWorkspaceTools = toolNames.some((n: string | undefined) =>
-      n ? WORKSPACE_TOOL_RE.test(n) : false,
-    );
+    const toolNames = toolNamesFromResult(result);
+    base.toolNames = toolNames;
+    base.hasWorkspaceTools = toolNames.some((n) => WORKSPACE_TOOL_RE.test(n));
     base.textLength = result.text?.length ?? 0;
     base.ok = true;
     return base;
@@ -102,14 +116,13 @@ async function runTurn(
 }
 
 async function main() {
-  const agent = hostEventAgent;
   const threadId = `san-902-${Date.now()}`;
   const sha = commitSha();
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
 
   const turns: TurnResult[] = [];
   for (let i = 0; i < TURNS.length; i++) {
-    const turn = await runTurn(agent, i + 1, TURNS[i], threadId);
+    const turn = await runTurn(i + 1, TURNS[i], threadId);
     turns.push(turn);
     console.log(
       `turn${turn.turn}`,
@@ -143,10 +156,7 @@ async function main() {
     pass: summary.turn1NoWorkspaceTools && summary.turn2NoThoughtSignature,
   };
 
-  const outDir = resolve(
-    process.cwd(),
-    "docs/tasks/testing/evidence/SAN-902",
-  );
+  const outDir = __dirname;
   mkdirSync(outDir, { recursive: true });
   const outFile = resolve(
     outDir,
