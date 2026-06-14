@@ -130,22 +130,21 @@
 
 ---
 
-## Missing items
+## Missing items (post-merge @ `4c6ef62e`)
 
 | Item | Priority |
 |---|---|
-| Prod Tier-1 smoke | P0 post-merge |
-| Linear SAN-891 Done + SAN-886 epic update | P0 post-merge |
-| Pathname guard tighten | P2 optional pre-merge |
-| `notes-6-219.md` audit (this file) | Done |
-| Re-run browser proof on preview URL after merge | P1 recommended |
+| Prod Tier-1 smoke (`/chat` · `/host/event/new` · `/host/analytics`) | P0 |
+| Refresh [`09-file-map.md`](./09-file-map.md) | P1 |
+| Pathname guard tighten (`/host/event/` vs `/host/events`) | P2 optional fast-follow |
+| Re-run browser proof on prod after deploy | P1 recommended |
 
 ---
 
-## Merge recommendation
+## Post-merge recommendation
 
-**Merge PR #219** once GitHub policy allows (all required checks green). Optional 1-line pathname fix can ship in #219 or fast-follow — **not** a Camila/Roberto blocker today because `/host/events` has no CopilotKit hooks.
+**[#219](https://github.com/amo-tech-ai/mdeapp/pull/219) merged** @ `4c6ef62e`. [SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui; consolidate frontend to react-core/v2 + remove flags](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react) and [SAN-886 · CK-V2-000 — CopilotKit v1→v2 Migration (frontend-only, subpath path)](https://linear.app/sanjiovani/issue/SAN-886/ck-v2-000-copilotkit-v1v2-migration-frontend-only-subpath-path) are **Done** in Linear.
+
+**Next:** Vercel prod deploy → Tier-1 smoke → refresh file map. Optional pathname fix is **not** a Camila/Roberto blocker (`/host/events` has no CopilotKit hooks).
 
 **Do not** revert `chat-center-panel.tsx` to v1 imports.
-
-**After merge:** deploy → prod smoke → Linear Done → SAN-886 ~100% → refresh file map.

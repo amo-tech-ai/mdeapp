@@ -23,7 +23,7 @@ Tracker: [`todo.md`](./todo.md) · Audits: [`12-tasks-audit.md`](./12-tasks-audi
 
 **Evidence:** [`docs/tasks/testing/evidence/SAN-891/SAN-891-RESULTS.md`](../tasks/testing/evidence/SAN-891/SAN-891-RESULTS.md) · audit [`notes-6-219.md`](./notes-6-219.md)
 
-**Next:** prod deploy → Tier-1 smoke → refresh `09-file-map.md` · optional 896/898/906.
+**Next:** prod deploy → Tier-1 smoke → refresh `09-file-map.md` · optional [SAN-896 · CK-V2-008 — Refresh SAN-888 + SAN-889 localhost evidence @ current mainSha (7b596283+)](https://linear.app/sanjiovani/issue/SAN-896/ck-v2-008-refresh-san-888-san-889-localhost-evidence-current-mainsha) / [SAN-898 · CK-V2-010 — Fix v2 host-event hydration mismatch (caret-color transparent)](https://linear.app/sanjiovani/issue/SAN-898/ck-v2-010-fix-v2-host-event-hydration-mismatch-caret-color-transparent) / [SAN-906 · CK-V2-010a — Inventory hydration warnings (host-event v2)](https://linear.app/sanjiovani/issue/SAN-906/ck-v2-010a-inventory-hydration-warnings-host-event-v2).
 
 ---
 
