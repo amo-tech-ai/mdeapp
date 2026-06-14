@@ -1,0 +1,46 @@
+docs/partners/tests/01-tests-prompt.md
+  s_281a432055ceba::t_d8a0a380797a52 20
+docs/partners/tasks/AGT-PTR-INDEX.md
+  s_281a432055ceba::t_835f574cba6f5c 6-7
+  s_281a432055ceba::t_ac05f76a7a531b 110
+docs/partners/README.md
+  s_281a432055ceba::t_c1312f90ff6787 3
+docs/partners/tasks/AGT-PTR-07-concierge-attribution.md
+  s_281a432055ceba::t_1aad5408038067 61
+docs/partners/tests/02-tests-report.md
+  s_281a432055ceba::t_85f28d514a8b0e 94,97,100,104
+  s_281a432055ceba::t_432d8db32f0335 88
+docs/partners/notes/03-design.md
+  s_281a432055ceba::t_ee3b113bcc547c 52
+docs/partners/wireframes/partners-hub-wireframe.html
+  s_281a432055ceba::t_da82e8bffac282 162
+docs/partners/SAN-665-activate-api-plan.md
+  s_281a432055ceba::t_e27735ddbccd54 171,173-175,179
+  s_281a432055ceba::t_da1ea2074fbeff 4
+docs/partners/tasks/design/INDEX.md
+  s_281a432055ceba::t_db27cf91920881 35
+  s_281a432055ceba::t_42d626ebcff09c 40-41
+  s_281a432055ceba::t_10871a269bd3a0 43
+docs/partners/docs/06-dashboards.md
+  s_281a432055ceba::t_ffd5b9eb966e60 73
+docs/partners/tasks/SAN-665-activate-api-plan.md
+  s_281a432055ceba::t_0853a120ad6344 171,173-175,179
+  s_281a432055ceba::t_348b283dc15c39 99
+  s_281a432055ceba::t_c926d3d868a594 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "ae2765eea02fe291496053dccea2c63a2bbeb1d8",
+  "prompts": {},
+  "sessions": {
+    "s_281a432055ceba": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3a7f029f-b18d-4967-8f07-3c82bed0c5c7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
