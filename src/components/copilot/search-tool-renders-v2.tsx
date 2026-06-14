@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, type ReactElement } from "react";
+import { useCallback, useEffect, useRef, type ReactElement } from "react";
 import { useRenderTool } from "@copilotkit/react-core/v2";
 import { z } from "zod";
 import { ToolErrorChip } from "@/components/copilot/tool-error-chip";
@@ -19,9 +19,11 @@ import {
   MASTRA_TOOL_IDS,
 } from "@/platform/copilot/mastra-tool-action-names";
 import type { WorkflowKind } from "@/platform/copilot/workflow-steps";
+import { useEventSearchResults } from "@/components/chat/event-search-results-context";
+import type { EventWebCitationRow } from "@/components/chat/event-search-results-context";
+import { normalizeToolEnvelope } from "@/lib/normalize-tool-envelope";
 import {
   getToolRenderErrorMessage,
-  isToolRenderEmpty,
   isToolRenderError,
 } from "@/lib/tool-render-state";
 
@@ -65,15 +67,44 @@ function LoadingCards() {
   );
 }
 
+function parseWebEventToolCitations(result: unknown): EventWebCitationRow[] {
+  const row =
+    result && typeof result === "object"
+      ? (result as Record<string, unknown>)
+      : {};
+  const list = Array.isArray(row.citations) ? row.citations : [];
+  return list.filter(
+    (c): c is EventWebCitationRow =>
+      Boolean(
+        c &&
+          typeof c === "object" &&
+          typeof (c as { url?: string }).url === "string" &&
+          (c as { url: string }).url.startsWith("http") &&
+          typeof (c as { title?: string }).title === "string",
+      ),
+  );
+}
+
+function WebCitationsSync({ citations }: { citations: EventWebCitationRow[] }) {
+  const { setWebCitations } = useEventSearchResults();
+  const lastKeyRef = useRef("");
+
+  useEffect(() => {
+    const key = JSON.stringify(citations).slice(0, 400);
+    if (key === lastKeyRef.current) return;
+    lastKeyRef.current = key;
+    setWebCitations(citations);
+  }, [citations, setWebCitations]);
+
+  return null;
+}
+
 function resolveCompletedToolBody(
   result: unknown,
   renderResults: ReactElement,
 ): ReactElement {
   if (isToolRenderError(result, "complete")) {
     return <ToolErrorChip message={getToolRenderErrorMessage(result)} />;
-  }
-  if (isToolRenderEmpty(result)) {
-    return renderResults;
   }
   return renderResults;
 }
@@ -127,6 +158,15 @@ function rentalToolRender({ status, result }: ToolRenderProps): ReactElement {
 }
 
 function eventToolRender({ status, result }: ToolRenderProps): ReactElement {
+  const citations =
+    status === "complete" && result
+      ? (normalizeToolEnvelope(result).webGrounding?.citations ?? []).filter(
+          (c): c is EventWebCitationRow =>
+            typeof c.url === "string" &&
+            c.url.startsWith("http") &&
+            typeof c.title === "string",
+        )
+      : [];
   const body = resolveToolBody({
     status,
     result,
@@ -134,7 +174,12 @@ function eventToolRender({ status, result }: ToolRenderProps): ReactElement {
   });
   return (
     <ToolRenderShell kind="event" status={status}>
-      {body}
+      <>
+        {citations.length > 0 ? (
+          <WebCitationsSync citations={citations} />
+        ) : null}
+        {body}
+      </>
     </ToolRenderShell>
   );
 }
@@ -199,20 +244,11 @@ function webEventsToolRender({ status, result }: ToolRenderProps): ReactElement 
       </ToolRenderShell>
     );
   }
+  const parsed = parseWebEventToolCitations(result);
   const row =
     result && typeof result === "object"
       ? (result as Record<string, unknown>)
       : {};
-  const parsed = (Array.isArray(row.citations) ? row.citations : []).filter(
-    (c): c is { title: string; url: string; snippet?: string | null } =>
-      Boolean(
-        c &&
-          typeof c === "object" &&
-          typeof (c as { url?: string }).url === "string" &&
-          (c as { url: string }).url.startsWith("http") &&
-          typeof (c as { title?: string }).title === "string",
-      ),
-  );
   const reason =
     row.metadata && typeof row.metadata === "object"
       ? (row.metadata as { reason?: string }).reason
@@ -228,7 +264,10 @@ function webEventsToolRender({ status, result }: ToolRenderProps): ReactElement 
 
   return (
     <ToolRenderShell kind="event" status={status}>
-      <WebCitationList citations={parsed} reason={reason} />
+      <>
+        {parsed.length > 0 ? <WebCitationsSync citations={parsed} /> : null}
+        <WebCitationList citations={parsed} reason={reason} />
+      </>
     </ToolRenderShell>
   );
 }

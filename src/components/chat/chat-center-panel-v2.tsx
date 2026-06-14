@@ -1,7 +1,10 @@
 "use client";
 
+import { Suspense } from "react";
 import { CopilotChat } from "@copilotkit/react-core/v2";
 
+import { ConciergeInitialPrompt } from "@/components/chat/concierge-initial-prompt";
+import { useConciergeSession } from "@/components/chat/concierge-session-context";
 import { CenterPanelMapResultsSlot } from "@/components/chat/center-panel-map-results-slot";
 import { EventResultsPanel } from "@/components/chat/event-results-panel";
 import { EventFastPathPanel } from "@/components/chat/event-fast-path-panel";
@@ -20,32 +23,42 @@ const CONCIERGE_LABELS = {
  * SAN-890 · CK-V2-004 — center column v2 (default CopilotChat; custom Input/Messages later).
  */
 export function ChatCenterPanelV2() {
+  const { sessionKey } = useConciergeSession();
+
   return (
     <section
       data-testid="center-chat-panel"
       aria-label="Concierge chat"
       className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden"
     >
-      <WorkflowProgressStrip />
       <div
-        id="copilot-chat-region"
-        data-testid="copilot-chat-region"
-        aria-live="polite"
-        aria-relevant="additions"
-        className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden px-2 pb-2 pt-1 sm:px-4"
+        key={sessionKey}
+        className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden"
       >
-        <CopilotChat
-          agentId="conciergeAgent"
-          className="copilotKitChat--center mde-center-copilot-chat min-h-0 flex-1"
-          labels={CONCIERGE_LABELS}
-        />
-        <RentalFastPathPanel />
-        <EventFastPathPanel />
-        <GroundedFastPathPanel />
-        <RestaurantFastPathPanel />
+        <WorkflowProgressStrip />
+        <div
+          id="copilot-chat-region"
+          data-testid="copilot-chat-region"
+          aria-live="polite"
+          aria-relevant="additions"
+          className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden px-2 pb-2 pt-1 sm:px-4"
+        >
+          <Suspense fallback={null}>
+            <ConciergeInitialPrompt />
+          </Suspense>
+          <CopilotChat
+            agentId="conciergeAgent"
+            className="copilotKitChat--center mde-center-copilot-chat min-h-0 flex-1"
+            labels={CONCIERGE_LABELS}
+          />
+          <RentalFastPathPanel />
+          <EventFastPathPanel />
+          <GroundedFastPathPanel />
+          <RestaurantFastPathPanel />
+        </div>
+        <EventResultsPanel />
+        <CenterPanelMapResultsSlot />
       </div>
-      <EventResultsPanel />
-      <CenterPanelMapResultsSlot />
     </section>
   );
 }

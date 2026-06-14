@@ -123,8 +123,11 @@ async function copilotkitPostOk() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({}),
   });
-  return [200, 400, 401, 429].includes(res.status);
+  return res.status === 200 || res.status === 400;
 }
+
+const BENIGN_FAILED_RESOURCE_RE =
+  /Failed to load resource:.*(cpk-web-inspector|googletagmanager|vercel\.live\/_next-live)/i;
 
 function filterConsoleErrors(errors) {
   return errors.filter(
@@ -133,7 +136,7 @@ function filterConsoleErrors(errors) {
       !e.includes("caret-color") &&
       !e.includes("Vector Map") &&
       !e.includes("Lit is in dev mode") &&
-      !e.includes("Failed to load resource") &&
+      !BENIGN_FAILED_RESOURCE_RE.test(e) &&
       !(!V2 && e.includes("Maximum update depth exceeded")),
   );
 }
@@ -290,8 +293,11 @@ try {
     results.gates.spikeShellAbsent =
       (await page.getByTestId("chat-spike-shell-v2").count()) === 0;
   } else {
-    results.gates.geoChatShellV2 =
+    results.gates.geoChatShellV2Absent =
       (await page.getByTestId("geo-chat-shell-v2").count()) === 0;
+    results.gates.geoChatShellV1 = await page
+      .getByTestId("geo-chat-shell-v1")
+      .isVisible();
     results.gates.chatCanvas = await page.getByTestId("chat-canvas").isVisible();
     results.gates.centerChatPanel = await page
       .getByTestId("center-chat-panel")
@@ -368,7 +374,8 @@ try {
       ? results.gates.geoChatShellV2 === true &&
         results.gates.rentalToolRender === true &&
         results.gates.venueHitlCard === true
-      : results.gates.geoChatShellV2 === true);
+      : results.gates.geoChatShellV2Absent === true &&
+        results.gates.geoChatShellV1 === true);
 
   results.gates.signedInEmailSoft = results.gates.signedInEmail === true;
 

@@ -77,11 +77,7 @@ function createVenueBookingHitlRender() {
         <VenueBookingHitlPanel
           args={hitlArgs}
           status={status}
-          respond={(decision) => {
-            respond?.(decision)?.catch((err) => {
-              console.error("[concierge-hitl-v2] respond failed", err);
-            });
-          }}
+          respond={(decision) => respond?.(decision)}
         />
       </>
     );

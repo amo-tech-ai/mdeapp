@@ -127,7 +127,10 @@ export function GeoChatShell() {
                     <EventLocalChatProvider>
                       <VenueBookingDirectHitlProvider>
                       <ConciergeSessionProvider>
-                      <div className="flex min-h-screen flex-col">
+                      <div
+                        data-testid="geo-chat-shell-v1"
+                        className="flex min-h-screen flex-col"
+                      >
                         <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-4 py-3 sm:px-6">
                           <div className="flex min-w-0 items-center gap-3">
                             <ChatNavDrawer />

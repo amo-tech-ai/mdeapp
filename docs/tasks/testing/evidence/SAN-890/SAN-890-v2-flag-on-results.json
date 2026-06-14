@@ -4,21 +4,18 @@
   "mode": "v2-flag-on",
   "flag": "1",
   "baseUrl": "http://localhost:3001",
-  "headSha": "697a8759",
-  "at": "2026-06-14T08:40:06.555Z",
+  "headSha": "20adf10d",
+  "at": "2026-06-14T09:18:55.980Z",
   "gates": {
     "copilotkitPost": true,
     "chatHttp": 200,
     "signedInEmail": true,
-    "geoChatShellV2": true,
+    "geoChatShellV2": false,
     "chatCanvas": true,
     "centerChatPanel": true,
     "spikeShellAbsent": true,
-    "rentalToolRender": true,
-    "venueHitlCard": true,
-    "consoleErrors": [],
-    "screenshot": "SAN-890-v2-flag-on-localhost.png",
-    "signedInEmailSoft": true
+    "errorScreenshot": "SAN-890-v2-flag-on-localhost-error.png"
   },
-  "verdict": "PASS"
+  "error": "page.waitForFunction: Timeout 90000ms exceeded.",
+  "verdict": "FAIL"
 }

@@ -10,6 +10,9 @@ import { reportConciergeError } from "@/lib/concierge-error-store";
 /**
  * SAN-890 · CK-V2-004 — v2 subpath provider for /chat (flag on).
  * Fresh threadId per mount — ThreadNav wiring follows in later SAN-890 slices.
+ *
+ * `@copilotkit/react-core/v2` re-exports the v1 CopilotKit provider (1.55.2),
+ * which still supplies CopilotContext — useCopilotChat / useCoAgent stay valid here.
  */
 export function ChatProviderV2({ children }: { children: ReactNode }) {
   const [threadId] = useState(() => crypto.randomUUID());

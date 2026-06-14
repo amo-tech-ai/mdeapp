@@ -5,9 +5,28 @@ Tracker: [`todo.md`](./todo.md) · Audits: [`12-tasks-audit.md`](./12-tasks-audi
 
 ---
 
+## 2026-06-14 — Program status sync + PR #218 review fixes (uncommitted)
+
+**Verdict:** Migration **code path ~78% exec** — **not** “almost done” for prod v2. Camila/Roberto still on v1 @ mdeai.co (all flags OFF).
+
+| Gate | Result |
+|---|---|
+| [SAN-890 · CK-V2-004](https://linear.app/sanjiovani/issue/SAN-890) | 🟡 **In Review** · [PR #218](https://github.com/amo-tech-ai/mdeapp/pull/218) @ `20adf10d` |
+| Review batch | ✅ proof gates · `ConciergeInitialPrompt` v2 · citation sync · HITL respond passthrough · dead-branch cleanup |
+| [SAN-891 · CK-V2-005](https://linear.app/sanjiovani/issue/SAN-891) | ⚫ **0% exec** — blocks “upgrade complete” (8 `react-ui` files · remove flags) |
+| Hook share @ branch | **33%** (12 v2 / 24 v1 files per `npm run audit:copilotkit-v2`) |
+| **SAN-886 epic exec** | **~78%** |
+| **Prod v2 visible** | **0%** |
+
+**Linear:** [v2-upgrade view](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd) · SAN-886 description synced
+
+**Next:** push review fixes → merge #218 → start SAN-891.
+
+---
+
 ## 2026-06-14 — [SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk) slice 2 — tool renders + map pin + HITL (uncommitted)
 
-**Verdict:** SAN-890 **~95% exec** — all acceptance gates PASS on localhost; **PR not opened** (awaiting commit + review).
+**Verdict:** SAN-890 **~95% exec** — [PR #218](https://github.com/amo-tech-ai/mdeapp/pull/218) In Review; review fixes pending push.
 
 | Gate | Result |
 |---|---|

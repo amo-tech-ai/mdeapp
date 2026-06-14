@@ -19,6 +19,7 @@ import { RichCardResultsProvider } from "@/components/chat/rich-card-results-con
 import { VenueBookingConfirmationBanner } from "@/components/chat/venue-booking-confirmation-banner";
 import { VenueBookingDirectHitlProvider } from "@/components/chat/venue-booking-direct-hitl-context";
 import { FocusMapPinActionV2 } from "@/components/copilot/focus-map-pin-action-v2";
+import { EventWebCitationFetch } from "@/components/copilot/event-web-citation-fetch";
 import { MapUiSync } from "@/components/copilot/map-ui-sync";
 import { ScheduleViewingModal } from "@/components/modals/schedule-viewing-modal";
 import { CafeBookingSheet } from "@/components/sheets/cafe-booking-sheet";
@@ -119,63 +120,64 @@ export function GeoChatShellV2() {
   return (
     <ConciergeCopilotBridgeV2>
       <ConciergeCoAgentProvider>
-      <ChatWorkflowProvider>
-        <RentalUiProvider>
-          <RentalFastPathProvider>
-            <EventFastPathProvider>
-              <RestaurantFastPathProvider>
-                <GroundedFastPathProvider>
-                  <EventSearchResultsProvider>
-                    <RichCardResultsProvider>
-                      <EventLocalChatProvider>
-                        <VenueBookingDirectHitlProvider>
-                          <ConciergeSessionProvider>
-                          <div
-                            data-testid="geo-chat-shell-v2"
-                            className="flex min-h-screen flex-col"
-                          >
-                            <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-4 py-3 sm:px-6">
-                              <div className="flex min-w-0 items-center gap-3">
-                                <ChatNavDrawer />
-                                <div className="min-w-0">
-                                  <h1 className="text-lg font-semibold sm:text-xl">
-                                    mdeai
-                                  </h1>
-                                  <p className="truncate text-xs text-muted-foreground sm:text-sm">
-                                    Concierge — rentals, events, food, map
-                                  </p>
-                                </div>
+        <ChatWorkflowProvider>
+          <RentalUiProvider>
+            <RentalFastPathProvider>
+              <EventFastPathProvider>
+                <RestaurantFastPathProvider>
+                  <GroundedFastPathProvider>
+                    <EventSearchResultsProvider>
+                      <RichCardResultsProvider>
+                        <EventLocalChatProvider>
+                          <VenueBookingDirectHitlProvider>
+                            <ConciergeSessionProvider>
+                              <div
+                                data-testid="geo-chat-shell-v2"
+                                className="flex min-h-screen flex-col"
+                              >
+                                <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-4 py-3 sm:px-6">
+                                  <div className="flex min-w-0 items-center gap-3">
+                                    <ChatNavDrawer />
+                                    <div className="min-w-0">
+                                      <h1 className="text-lg font-semibold sm:text-xl">
+                                        mdeai
+                                      </h1>
+                                      <p className="truncate text-xs text-muted-foreground sm:text-sm">
+                                        Concierge — rentals, events, food, map
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <AuthStatus />
+                                </header>
+                                <MapsShell>
+                                  <FocusMapPinActionV2 />
+                                  <EventWebCitationFetch />
+                                  <MapUiSync />
+                                  <div className="flex min-h-0 flex-1 flex-col">
+                                    <LeadConfirmationBanner />
+                                    <VenueBookingConfirmationBanner />
+                                    <ChatCanvasV2 />
+                                  </div>
+                                </MapsShell>
+                                <ScheduleViewingModal />
+                                <VenueDetailSheet />
+                                <CafeBookingSheetMount />
+                                <RestaurantBookingSheetMount />
+                                <NightlifeBookingSheetMount />
+                                <EventVenueOfferingsSheetMount />
+                                <EventProposalShellMount />
                               </div>
-                              <AuthStatus />
-                            </header>
-                            <MapsShell>
-                              <FocusMapPinActionV2 />
-                              <MapUiSync />
-                              <div className="flex min-h-0 flex-1 flex-col">
-                                <LeadConfirmationBanner />
-                                <VenueBookingConfirmationBanner />
-                                <ChatCanvasV2 />
-                              </div>
-                            </MapsShell>
-                            <ScheduleViewingModal />
-                            <VenueDetailSheet />
-                            <CafeBookingSheetMount />
-                            <RestaurantBookingSheetMount />
-                            <NightlifeBookingSheetMount />
-                            <EventVenueOfferingsSheetMount />
-                            <EventProposalShellMount />
-                          </div>
-                          </ConciergeSessionProvider>
-                        </VenueBookingDirectHitlProvider>
-                      </EventLocalChatProvider>
-                    </RichCardResultsProvider>
-                  </EventSearchResultsProvider>
-                </GroundedFastPathProvider>
-              </RestaurantFastPathProvider>
-            </EventFastPathProvider>
-          </RentalFastPathProvider>
-        </RentalUiProvider>
-      </ChatWorkflowProvider>
+                            </ConciergeSessionProvider>
+                          </VenueBookingDirectHitlProvider>
+                        </EventLocalChatProvider>
+                      </RichCardResultsProvider>
+                    </EventSearchResultsProvider>
+                  </GroundedFastPathProvider>
+                </RestaurantFastPathProvider>
+              </EventFastPathProvider>
+            </RentalFastPathProvider>
+          </RentalUiProvider>
+        </ChatWorkflowProvider>
       </ConciergeCoAgentProvider>
     </ConciergeCopilotBridgeV2>
   );
