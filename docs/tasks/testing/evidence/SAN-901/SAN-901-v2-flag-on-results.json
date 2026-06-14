@@ -1,0 +1,20 @@
+{
+  "task": "SAN-901 · CK-V2-004A — Chat vertical slice spike",
+  "mode": "v2-flag-on",
+  "flag": "1",
+  "baseUrl": "http://localhost:3001",
+  "mainSha": "34d6831",
+  "at": "2026-06-14T04:53:22.726Z",
+  "gates": {
+    "copilotkitPost": true,
+    "chatHttp": 200,
+    "signedInEmail": true,
+    "spikeShell": true,
+    "centerPanel": false,
+    "rentalToolRender": true,
+    "venueHitlCard": false,
+    "consoleErrors": [],
+    "screenshot": "SAN-901-v2-flag-on-localhost.png"
+  },
+  "verdict": "PASS"
+}
