@@ -1,0 +1,43 @@
+docs/intelligence/diagrams/13-patricia-workflow-hitl.mmd
+  s_281a432055ceba::t_d4b0934d2ace93 1-20
+docs/security/dist-leak-scan-maps-key-allowlist.md
+  s_281a432055ceba::t_d4b0934d2ace93 1-89
+sitemap.md
+  s_281a432055ceba::t_9f3866c867473f 31,63,65,68-69,72,89-90,203
+.claude/skills/mde-worktree-pr-flow/SKILL.md
+  s_281a432055ceba::t_d4b0934d2ace93 111-139,146
+.github/pull_request_template.md
+  s_281a432055ceba::t_d4b0934d2ace93 1-38
+.dependency-cruiser.cjs
+  s_281a432055ceba::t_d4b0934d2ace93 1-60
+.claude/hooks/dist-leak-scan.mjs
+  s_281a432055ceba::t_d4b0934d2ace93 6-15,18-23,41,43-50,55-58,69-71,74-82,84-86,103,106-107,112,114-139,154-157,182,184-188,205-206
+docs/events/tasks/MVP/VEB-MVP-010-mastra-postgres-durability.md
+  s_281a432055ceba::t_d4b0934d2ace93 1-60
+docs/intelligence/diagrams/14-san-881-ops-persist.mmd
+  s_281a432055ceba::t_d4b0934d2ace93 1-18
+.env.example
+  s_281a432055ceba::t_d4b0934d2ace93 30-31,55-59
+.claude/hooks/maps-key-allowlist.json
+  s_281a432055ceba::t_d4b0934d2ace93 1-9
+.github/workflows/veb-mvp-010-integration.yml
+  s_281a432055ceba::t_d4b0934d2ace93 1-52
+CLAUDE.md
+  s_281a432055ceba::t_d4b0934d2ace93 112-113
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "665df3ad58a54f507c8cbf18c26e65a6ee1e69d4",
+  "prompts": {},
+  "sessions": {
+    "s_281a432055ceba": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3a7f029f-b18d-4967-8f07-3c82bed0c5c7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
