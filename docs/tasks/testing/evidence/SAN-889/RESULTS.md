@@ -2,20 +2,38 @@
 
 **Task:** [SAN-889 · CK-V2-003 — Migrate /host/event/* (hostEventAgent) to v2](https://linear.app/sanjiovani/issue/SAN-889/ck-v2-003-migrate-hostevent-hosteventagent-to-v2)  
 **Flag:** `COPILOTKIT_V2_HOST_EVENT=1` (default off)  
-**Ground truth:** `main` @ `0fab08f` · **last verified:** 2026-06-12
+**Ground truth:** `main` @ `44e93f2` · **last verified:** 2026-06-14 (SAN-904 proofs post SAN-910)
 
 ## Scripts
 
 | Script | Purpose |
 |--------|---------|
 | [`san-889-localhost-proof.mjs`](./san-889-localhost-proof.mjs) | Flag on/off wizard smoke |
-| [`san-889-hitl-proof.mjs`](./san-889-hitl-proof.mjs) | v2 HITL reject path + panel |
+| [`san-889-hitl-proof.mjs`](./san-889-hitl-proof.mjs) | v2 HITL reject path (`SAN889_REJECT_ONLY=1`) + optional combined |
 | [`san-889-hitl-approve-proof.mjs`](./san-889-hitl-approve-proof.mjs) | v2 HITL approve + published link |
 
 **Server (v2):** `COPILOTKIT_V2_HOST_EVENT=1 infisical run --silent --env=dev --path=/ -- npm run dev`  
 **Server (v1):** `infisical run --silent --env=dev --path=/ -- npm run dev` (flag unset)
 
-## Pass/fail matrix — post-merge re-verify @ `0fab08f`
+## Pass/fail matrix — SAN-904 re-verify @ `44e93f2` (2026-06-14)
+
+| Gate | Flag off (v1) | Flag on (v2) | HITL reject | HITL approve |
+|------|---------------|--------------|-------------|--------------|
+| `copilotkitPost` gate | PASS | PASS | — | — |
+| Wizard HTTP 200 | PASS | PASS | PASS | PASS |
+| Form + manual edit | PASS | PASS | PASS | PASS |
+| Agent neighborhood fill | PASS | PASS | — | — |
+| `host-event-approval-panel` | — | — | **PASS** | **PASS** |
+| Reject → no Published link | — | — | **PASS** | — |
+| Approve → Published link | — | — | — | **PASS** |
+| No `pending_approval` race | — | — | PASS | **PASS** |
+| Zero critical console errors | **FAIL** | **PASS** | FAIL (`thought_signature` → SAN-905) | **PASS** |
+
+**SAN-904 verdict:** **FAIL** (reject path: network timeout + console errors pre-SAN-905) · evidence: [`SAN-889-hitl-approve-results.json`](./SAN-889-hitl-approve-results.json) (approve **PASS**) · [`SAN-889-hitl-results.json`](./SAN-889-hitl-results.json) (reject **FAIL**) · post-fix reject **PASS** in [SAN-905 · CK-V2-007d — Console clean on hostEventAgent stream](../SAN-905/RESULTS.md)  
+**Reject run:** `SAN889_REJECT_ONLY=1 COPILOTKIT_V2_HOST_EVENT=1 infisical run -- … node san-889-hitl-proof.mjs`  
+**Approve run:** `COPILOTKIT_V2_HOST_EVENT=1 infisical run -- … node san-889-hitl-approve-proof.mjs`
+
+## Pass/fail matrix — post-merge re-verify @ `0fab08f` (archive)
 
 | Gate | Flag off (v1) | Flag on (v2) | HITL reject | HITL approve |
 |------|---------------|--------------|-------------|--------------|

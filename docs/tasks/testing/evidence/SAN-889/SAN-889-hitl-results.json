@@ -3,20 +3,21 @@
   "mode": "v2-flag-on-hitl",
   "flag": "1",
   "baseUrl": "http://localhost:3001",
-  "commitSha": "0fab08f6d5f5383dfd36eb70f300e70738060c15",
-  "at": "2026-06-12T23:48:21.757Z",
+  "commitSha": "836af36bd55f7763a9e3e9f91b3c8e9b5921e3d8",
+  "at": "2026-06-14T02:04:21.167Z",
   "matrix": {
     "wizardLoads": true,
     "hitlPanelVisible": true,
     "rejectNoPublishedLink": true,
     "rejectClicked": true,
-    "approvePublishedLink": true,
-    "approveNoPendingApprovalRace": true,
+    "rejectPathPass": true,
     "zeroConsoleErrors": false
   },
   "consoleErrors": [
-    "[CopilotKit] Agent error: AI_APICallError: Function call is missing a thought_signature in functionCall parts. This is required for tools to work correctly, and missing thought_signature may lead to degraded model performance. Additional data, function call `default_api:preview_and_publish` , position 3. Please refer to https://ai.google.dev/gemini-api/docs/thought-signatures for more details. \n  Code: agent_run_error_event \n  Context: {source: onRunErrorEvent, event: Object, runtimeErrorCode: INCOMPLETE_STREAM, agentId: hostEventAgent} \n  Stack: Error: AI_APICallError: Function call is missing a thought_signature in functionCall parts. This is required for tools to work correctly, and missing thought_signature may lead to degraded model performance. Additional data, function call `default_api:preview_and_publish` , position 3. Please refer to https://ai.google.dev/gemini-api/docs/thought-signatures for more details.\n    at Object.onRunErrorEvent (webpack-internal:///(app-pages-browser)/./node_modules/@copilotkit/core/dist/index.mjs:2049:36)\n    at eval (webpack-internal:///(app-pages-browser)/./node_modules/@ag-ui/client/dist/index.mjs:138:10220)\n    at j (webpack-internal:///(app-pages-browser)/./node_modules/@ag-ui/client/dist/index.mjs:138:584)\n    at async eval (webpack-internal:///(app-pages-browser)/./node_modules/@ag-ui/client/dist/index.mjs:138:10178)",
-    "[CopilotKit] Agent error: AI_APICallError: Function call is missing a thought_signature in functionCall parts. This is required for tools to work correctly, and missing thought_signature may lead to degraded model performance. Additional data, function call `default_api:preview_and_publish` , position 3. Please refer to https://ai.google.dev/gemini-api/docs/thought-signatures for more details. \n  Code: agent_run_error_event \n  Context: {source: onRunErrorEvent, event: Object, runtimeErrorCode: INCOMPLETE_STREAM, agentId: hostEventAgent} \n  Stack: Error: AI_APICallError: Function call is missing a thought_signature in functionCall parts. This is required for tools to work correctly, and missing thought_signature may lead to degraded model performance. Additional data, function call `default_api:preview_and_publish` , position 3. Please refer to https://ai.google.dev/gemini-api/docs/thought-signatures for more details.\n    at Object.onRunErrorEvent (webpack-internal:///(app-pages-browser)/./node_modules/@copilotkit/core/dist/index.mjs:2049:36)\n    at eval (webpack-internal:///(app-pages-browser)/./node_modules/@ag-ui/client/dist/index.mjs:138:10220)\n    at j (webpack-internal:///(app-pages-browser)/./node_modules/@ag-ui/client/dist/index.mjs:138:584)\n    at async eval (webpack-internal:///(app-pages-browser)/./node_modules/@ag-ui/client/dist/index.mjs:138:10178)"
+    "[CopilotKit] Agent error: network error \n  Code: agent_run_failed_event \n  Context: {source: onRunFailed, agentId: hostEventAgent} \n  Stack: TypeError: network error",
+    "Agent execution failed: TypeError: network error",
+    "[CopilotKit] Agent error: network error \n  Code: agent_run_failed \n  Context: {agentId: hostEventAgent} \n  Stack: TypeError: network error"
   ],
-  "verdict": "PARTIAL"
+  "error": "locator.waitFor: Timeout 120000ms exceeded.\nCall log:\n  - waiting for getByTestId('host-copilot-chat-region') to be visible\n",
+  "verdict": "FAIL"
 }

@@ -34,4 +34,9 @@ describe("hostEventAgent", () => {
     expect(mastra.getWorkspace()).toBeDefined();
     expect(await conciergeAgent.getWorkspace()).toBeDefined();
   });
+
+  it("SAN-905 · readOnly working memory — no updateWorkingMemory tool", async () => {
+    const tools = await hostEventAgent.listTools();
+    expect(Object.keys(tools)).not.toContain("updateWorkingMemory");
+  });
 });

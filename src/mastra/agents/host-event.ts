@@ -1,6 +1,6 @@
 import { Agent } from "@mastra/core/agent";
 import { EventDraftStateSchema } from "../../lib/types/event-draft";
-import { createThreadMemory } from "../lib/agent-memory";
+import { createHostEventThreadMemory } from "../lib/agent-memory";
 import { FLASH_MODEL } from "../lib/models";
 import { HOST_EVENT_INSTRUCTIONS } from "./host-event-prompt";
 
@@ -12,5 +12,5 @@ export const hostEventAgent = new Agent({
   model: FLASH_MODEL,
   instructions: HOST_EVENT_INSTRUCTIONS,
   // @ts-expect-error beta drift — same as pingAgent / F02
-  memory: createThreadMemory(EventDraftStateSchema),
+  memory: createHostEventThreadMemory(EventDraftStateSchema),
 });

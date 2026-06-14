@@ -20,6 +20,25 @@ import {
   getToolSpans,
   summarizeToolSpans,
 } from "@/mastra/lib/tool-audit-context";
+/**
+ * [SAN-905 · CK-V2-007d — Console clean on hostEventAgent stream](https://linear.app/sanjiovani/issue/SAN-905/ck-v2-007d-console-clean-on-hosteventagent-stream):
+ * CopilotKit replays AG-UI messages without Gemini thought_signature on assistant
+ * tool-call parts. Mastra MessageHistory loads signed DB history — keep only the
+ * latest user message so unsigned client-tool replay cannot reach Gemini.
+ */
+function sanitizeHostEventAgUiInput(input: RunAgentInput): RunAgentInput {
+  const messages = input.messages ?? [];
+  if (messages.length <= 1) return input;
+
+  const userMessages = messages.filter((m) => m.role === "user");
+  if (userMessages.length === 0) return input;
+
+  return {
+    ...input,
+    messages: [userMessages[userMessages.length - 1]!],
+  };
+}
+
 
 /** Route may wrap with next/server after(); scripts default to fire-and-forget. */
 export type PersistTurnLog = (opts: TurnLogInput) => void;
@@ -66,8 +85,12 @@ export class LoggingMastraAgent extends MastraAgent {
   override run(input: RunAgentInput): Observable<BaseEvent> {
     const startMs = Date.now();
     let status: "success" | "error" = "success";
+    const runInput =
+      this.agentMapKey === "hostEventAgent"
+        ? sanitizeHostEventAgUiInput(input)
+        : input;
 
-    return super.run(input).pipe(
+    return super.run(runInput).pipe(
       tap({
         error: () => {
           status = "error";
