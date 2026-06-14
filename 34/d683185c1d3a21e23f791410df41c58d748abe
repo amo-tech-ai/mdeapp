@@ -1,0 +1,91 @@
+docs/tasks/testing/evidence/SAN-889/RESULTS.md
+  s_25b0cb0b37161d::t_ca480221dc46ed 5
+  s_25b0cb0b37161d::t_1440f69f40315d 12
+  s_25b0cb0b37161d::t_5e5c014b7ff5c4 18-31,33-36
+  s_25b0cb0b37161d::t_b3d7bb9c72cd8e 32
+docs/tasks/testing/evidence/SAN-902/san-902-host-event-3turn-repro.ts
+  s_25b0cb0b37161d::t_f2233d2001c70e 12
+src/__tests__/host-event-agent.test.ts
+  s_25b0cb0b37161d::t_13cc4738cda8cd 37
+  s_25b0cb0b37161d::t_90d940faf3e44b 38-40
+docs/tasks/testing/evidence/SAN-889/SAN-889-v2-flag-on-results.json
+  s_25b0cb0b37161d::t_6cf43712a1c621 7
+src/mastra/copilotkit/logging-mastra-agent.ts
+  s_25b0cb0b37161d::t_556921cb1e7406 23,28-40,87-90,92
+  s_25b0cb0b37161d::t_7416b9c0b6e831 24-27,95
+  s_25b0cb0b37161d::t_9f3a3b9e5f04e9 94
+docs/tasks/testing/evidence/SAN-889/san-889-hitl-proof.mjs
+  s_25b0cb0b37161d::t_1c179b3484adc6 106-107
+  s_25b0cb0b37161d::t_d34149d3565f9b 128,133-136,140-153
+  s_25b0cb0b37161d::t_a575358ae377a3 130,132
+  s_25b0cb0b37161d::t_40eb9b54dc800f 191
+  s_25b0cb0b37161d::t_ec60e8f7c21181 197,199-200
+  s_25b0cb0b37161d::t_7b30392c2eeaa2 198
+  s_25b0cb0b37161d::t_5c6b9431886f93 217-227,232-235
+  s_25b0cb0b37161d::t_af5ddf27a0ea47 228-231
+  s_25b0cb0b37161d::t_767ee64ee2acf9 242-243
+  s_25b0cb0b37161d::t_18141e172de8c9 266-269,271-278
+  s_25b0cb0b37161d::t_00b29972bdef38 270
+docs/tasks/testing/evidence/SAN-889/san-889-localhost-proof.mjs
+  s_25b0cb0b37161d::t_879fe15c2bb1c3 122-162
+  s_25b0cb0b37161d::t_a833fbbe69da63 163-165,190-191
+  s_25b0cb0b37161d::t_005b8c09be3b1b 192
+  s_25b0cb0b37161d::t_3f28ba6790a60e 193,196,198-208
+  s_25b0cb0b37161d::t_b40e33def83f36 194-195
+  s_25b0cb0b37161d::t_05f90f4389bcfc 197
+  s_25b0cb0b37161d::t_af1d62b0223dee 215-229
+  s_25b0cb0b37161d::t_f6fa007e7b7764 252
+docs/tasks/testing/evidence/SAN-889/SAN-889-hitl-results.json
+  s_25b0cb0b37161d::t_49769931186798 13
+  s_25b0cb0b37161d::t_c3cfe27f9c48af 14
+docs/tasks/testing/evidence/SAN-889/SAN-889-v2-flag-off-results.json
+  s_25b0cb0b37161d::t_66dbe57e72cba5 6-7
+  s_25b0cb0b37161d::t_e98c96db0076f2 15,17,20
+docs/tasks/testing/evidence/SAN-889/SAN-889-hitl-approve-results.json
+  s_25b0cb0b37161d::t_a45aae6df72e52 3
+  s_25b0cb0b37161d::t_a51a6662ef76ef 4
+src/components/host/host-event-provider-v2.tsx
+  s_25b0cb0b37161d::t_cf5ebda0a67670 5
+  s_25b0cb0b37161d::t_3c31ff905e0ec2 10,20-24
+  s_25b0cb0b37161d::t_dc1ba39a407ed3 17
+  s_25b0cb0b37161d::t_1541a81347cc51 18
+docs/upgradeV2/linear-descriptions/SAN-905.md
+  s_25b0cb0b37161d::t_8f7434fe2ec95a 3
+  s_25b0cb0b37161d::t_6247ad21a013fe 42
+src/components/host/host-event-copilot-bridge-v2.tsx
+  s_25b0cb0b37161d::t_5392dbcf197dba 3,128-129
+docs/tasks/testing/evidence/SAN-905/RESULTS.md
+  s_25b0cb0b37161d::t_1b7f1d57b3702b 1-4,6,8,10,12,19-21,29,31,35,38-40,43-44,46,49-56,60-62,64-65,67-68
+  s_25b0cb0b37161d::t_892fb7d2df0b9f 5,7,9,11,13-18,22-28,30,32-34,37,41-42,45,57-59,63,66
+  s_25b0cb0b37161d::t_c1ecea9a3c400c 36
+  s_25b0cb0b37161d::t_f65f6b6e4f0df0 47
+  s_25b0cb0b37161d::t_5e59d881520dac 48
+src/components/host/host-event-provider-v1.tsx
+  s_25b0cb0b37161d::t_c8ae859f085eb2 4
+  s_25b0cb0b37161d::t_bdf0f13e2b73fa 9,19-24
+  s_25b0cb0b37161d::t_dd513abd0ced94 16
+  s_25b0cb0b37161d::t_1541a81347cc51 17
+src/mastra/agents/host-event.ts
+  s_25b0cb0b37161d::t_ba941b66595fd5 3
+  s_25b0cb0b37161d::t_8e4bfaa6cf0cdd 15
+src/mastra/lib/agent-memory.ts
+  s_25b0cb0b37161d::t_adacc599cec409 18,20-29,31-33
+  s_25b0cb0b37161d::t_2fea447b8e4c74 19
+  s_25b0cb0b37161d::t_e7e749e56506fa 30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "34d683185c1d3a21e23f791410df41c58d748abe",
+  "prompts": {},
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
