@@ -1,0 +1,38 @@
+src/components/chat/concierge-copilot-bridge-v2.tsx
+  s_25b0cb0b37161d::t_09203c51265e76 128-129
+src/components/chat/geo-chat-shell-v2.tsx
+  s_25b0cb0b37161d::t_3557871ce0b640 1-174
+src/components/chat/chat-center-panel-v2.tsx
+  s_25b0cb0b37161d::t_f617f9b53b9510 1-51
+src/app/chat/chat-page-v2-client.tsx
+  s_25b0cb0b37161d::t_977427d2f3231e 1-18
+src/components/chat/chat-canvas-v2.tsx
+  s_25b0cb0b37161d::t_93cb397044306d 1-32
+src/components/chat/chat-provider-v2.tsx
+  s_25b0cb0b37161d::t_9273f6eefbe520 11-12
+src/app/chat/layout.tsx
+  s_25b0cb0b37161d::t_0a7431f56c7546 6
+src/app/chat/page.tsx
+  s_25b0cb0b37161d::t_b64937f4c2feec 1,5,8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "f74422384187a72120f14e901ce39989d4af96e1",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}

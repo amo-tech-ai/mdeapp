@@ -1,0 +1,97 @@
+docs/tasks/testing/evidence/SAN-890/SAN-890-v2-flag-off-results.json
+  s_a7eb2c95c408ba::t_8d420168a0dd87 3,17-18
+  s_b9d5d18e508f95::t_99bef04f98a207 7
+  s_a7eb2c95c408ba::t_ebaa4fbea2fa82 8
+docs/tasks/testing/evidence/SAN-890/san-890-localhost-proof.mjs
+  s_a7eb2c95c408ba::t_1e6882852b6bf3 368-370
+  s_a7eb2c95c408ba::t_05988df6b27c0f 61-63
+  s_a7eb2c95c408ba::t_f0b2422ffafe7e 60
+  s_a7eb2c95c408ba::t_a080596429b4e5 172-174
+  s_a7eb2c95c408ba::t_98049202eece51 141-168
+  s_a7eb2c95c408ba::t_36affcec485129 178
+  s_a7eb2c95c408ba::t_ca77a53beb47e8 225
+  s_a7eb2c95c408ba::t_9bf089032f1649 254
+  s_a7eb2c95c408ba::t_7d6deec1716999 242
+  s_a7eb2c95c408ba::t_754609eca728af 57-59
+  s_a7eb2c95c408ba::t_d5c860ad3a975c 169-171,175,188,204-208
+  s_a7eb2c95c408ba::t_66cb2d16a0f8a7 303,305,309,320-327,330,332-337,343-344
+  s_a7eb2c95c408ba::t_112f7162c95408 307-308,310-319,328-329,331,342,345-351
+  s_a7eb2c95c408ba::t_a04491bff81f54 190-203
+  s_a7eb2c95c408ba::t_28f509db0e85b0 338-341
+  s_a7eb2c95c408ba::t_a9b91a4d451d47 176-177,179-187,189
+  s_a7eb2c95c408ba::t_bc6303ca93ff7a 212-214,216,222-223,236
+  s_a7eb2c95c408ba::t_192b46d0f9cc6c 273-281
+docs/tasks/testing/evidence/SAN-890/RESULTS.md
+  s_a7eb2c95c408ba::t_44659ef39a0873 1,5-6,8,12-16,18,41-42,44,47-60,62-64,66,68-70
+src/components/chat/geo-chat-shell-v2.tsx
+  s_a7eb2c95c408ba::t_c91d4ec901b870 21,152
+docs/tasks/testing/evidence/SAN-890/SAN-890-v2-flag-on-results.json
+  s_a7eb2c95c408ba::t_c0eeb1b913b3d0 8,12,17-18,21
+docs/upgradeV2/todo.md
+  s_a7eb2c95c408ba::t_12fec0500e45a5 41
+  s_25b0cb0b37161d::t_e73d401dfaf96e 13-14,16-17
+  s_b9d5d18e508f95::t_6030ed69811980 12,18-21,23,40,48,68-72,79-83,88,91,94-98,108-111,118,121,124,140-144,147,149,153,155-156,162
+  s_a7eb2c95c408ba::t_7b9e3d0076d887 35
+  s_a7eb2c95c408ba::t_b83c1c099f81cd 53,55-57
+  s_25b0cb0b37161d::t_ff596305f27419 120,126-127
+  s_25b0cb0b37161d::t_842dd83e9da524 145
+  s_a7eb2c95c408ba::t_b7064cfd55d509 3-5
+  s_25b0cb0b37161d::t_ab072c74adfaa9 24-27
+  s_a7eb2c95c408ba::t_2a39dd0e43c721 67,73-78
+  s_a7eb2c95c408ba::t_390f46bca2e5eb 15
+  s_25b0cb0b37161d::t_bb7dc41857e42a 104
+  s_25b0cb0b37161d::t_07b8c5934b000d 138
+  s_25b0cb0b37161d::t_ad87be26cc4233 6
+  s_a7eb2c95c408ba::t_eee6eb63e40000 22
+  s_25b0cb0b37161d::t_8dba3c3b34b411 42
+  s_25b0cb0b37161d::t_24ed3bebd0279f 93
+  s_25b0cb0b37161d::t_d1bcc5f0608b72 37-39
+src/components/copilot/search-tool-renders-v2.tsx
+  s_a7eb2c95c408ba::t_8226dcaa24b01a 1-312
+docs/upgradeV2/changelog.md
+  s_b9d5d18e508f95::t_dc134ad46fc6ac 29-63
+  s_a7eb2c95c408ba::t_cfe9bb27e38ea4 8,10,14-28
+src/components/chat/concierge-copilot-bridge-v2.tsx
+  s_a7eb2c95c408ba::t_6d8fb7bbf08dcb 65-66
+  s_a7eb2c95c408ba::t_1d18c1d191e152 3,13-14,21-48,54,62,70-71,73-86,107
+src/components/copilot/focus-map-pin-action-v2.tsx
+  s_a7eb2c95c408ba::t_9f555b55523bbd 1-43
+  s_a7eb2c95c408ba::t_068145634006b5 44-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "2924440d4232ef3f585e7419b896595e638ae420",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_a7eb2c95c408ba": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "18b281fe-3599-4314-af69-c33116c98c9f",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_b9d5d18e508f95": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e3d2b029-5d9e-4925-9300-66e497ddaeb2",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
