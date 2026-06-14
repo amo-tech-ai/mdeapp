@@ -14,7 +14,7 @@ import { getSalesInsightsTool } from "@/mastra/tools/hostops-insight-tool";
  * Answers an event host's "how are my sales?" by running the deterministic read
  * tools + SAN-759 · AIE-007 — salesInsightWorkflow; it relays numbers, never computes
  * them. Its thread working memory is the lean `hostOpsMemorySchema` (focus + narration
- * only) — the full render-ready `HostDashboardState` is the useCoAgent contract for
+ * only) — the full render-ready `HostDashboardState` is the UI state contract for
  * SAN-729 · AIE-008 — Host Analytics Page + HostOpsCopilotBridge.
  */
 export const hostOpsAgent = new Agent({

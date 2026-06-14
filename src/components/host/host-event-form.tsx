@@ -10,7 +10,7 @@ type HostEventFormProps = {
   onChange: (patch: Partial<EventDraftState>) => void;
 };
 
-/** Manual edit fields — stay in sync with useCoAgent state. */
+/** Manual edit fields stay in sync with the agent draft state. */
 export function HostEventForm({ draft, onChange }: HostEventFormProps) {
   return (
     <div

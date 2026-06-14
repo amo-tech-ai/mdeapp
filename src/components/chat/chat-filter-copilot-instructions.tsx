@@ -1,6 +1,6 @@
 "use client";
 
-import { useCopilotAdditionalInstructions } from "@copilotkit/react-core";
+import { useAgentContext } from "@copilotkit/react-core/v2";
 import { useConciergeCoAgent } from "@/components/chat/concierge-coagent-context";
 import type { ConciergeWorkingMemory } from "@/lib/types";
 import {
@@ -46,13 +46,10 @@ export function ChatFilterCopilotInstructions() {
 
   const instructions = buildEventsInstructions(eventsMode, memory);
 
-  useCopilotAdditionalInstructions(
-    {
-      instructions,
-      available: eventsMode ? "enabled" : "disabled",
-    },
-    [eventsMode, memory.lastEventQuery?.category, memory.lastEventQuery?.dateWindow, memory.lastEventQuery?.neighborhood],
-  );
+  useAgentContext({
+    description: "Chat filter instructions for concierge",
+    value: eventsMode ? instructions : "",
+  });
 
   return null;
 }

@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useCopilotChat } from "@copilotkit/react-core";
+import { useConciergeChat } from "@/lib/hooks/use-concierge-chat";
 import { useConciergeCoAgent } from "@/components/chat/concierge-coagent-context";
 import { useEventSearchResults } from "@/components/chat/event-search-results-context";
 import { shouldChainWebGrounding } from "@/mastra/lib/attach-web-grounding";
 
 /** MAP-002D — load web citations after concierge turn (EventResultsPanel). */
 export function EventWebCitationFetch() {
-  const { isLoading } = useCopilotChat();
+  const { isLoading } = useConciergeChat();
   const { state } = useConciergeCoAgent();
   const { rows, webCitations, setWebCitations } = useEventSearchResults();
   const wasLoadingRef = useRef(false);

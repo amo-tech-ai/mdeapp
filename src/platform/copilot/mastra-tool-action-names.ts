@@ -1,5 +1,5 @@
 /**
- * CopilotKit useCopilotAction `name` must match Mastra `tools: { searchRentalsTool }` keys,
+ * CopilotKit tool render `name` must match Mastra `tools: { searchRentalsTool }` keys,
  * not createTool `id` (e.g. search-rentals). See CopilotKit mastra example: weatherTool vs get-weather.
  */
 export const MASTRA_COPILOT_TOOL_ACTIONS = {

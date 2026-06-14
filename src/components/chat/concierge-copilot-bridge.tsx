@@ -11,7 +11,7 @@ import {
   type VenueBookingHitlArgs,
 } from "@/components/chat/venue-booking-hitl-panel";
 import { useRentalUi } from "@/components/chat/rental-ui-context";
-import { useSearchToolRendersV2 } from "@/components/copilot/search-tool-renders-v2";
+import { useSearchToolRenders } from "@/components/copilot/search-tool-renders";
 import {
   MASTRA_COPILOT_TOOL_ACTIONS,
   MASTRA_TOOL_IDS,
@@ -84,23 +84,19 @@ function createVenueBookingHitlRender() {
   };
 }
 
-type ConciergeCopilotBridgeV2Props = {
+type ConciergeCopilotBridgeProps = {
   children: ReactNode;
 };
 
-/**
- * SAN-890 · CK-V2-004 — v2 concierge bridge (expanding from SAN-901 spike).
- * v1 geo-chat-shell bridges untouched for flag-off rollback.
- */
-export function ConciergeCopilotBridgeV2({
+export function ConciergeCopilotBridge({
   children,
-}: ConciergeCopilotBridgeV2Props) {
+}: ConciergeCopilotBridgeProps) {
   useAgent({
     agentId: "conciergeAgent",
     updates: [UseAgentUpdate.OnStateChanged],
   });
 
-  useSearchToolRendersV2();
+  useSearchToolRenders();
   const VenueBookingHitlRender = useMemo(() => createVenueBookingHitlRender(), []);
 
   useHumanInTheLoop(

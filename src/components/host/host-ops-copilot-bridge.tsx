@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { useCoAgent, useCopilotAction } from "@copilotkit/react-core";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useAgent, useRenderTool, UseAgentUpdate } from "@copilotkit/react-core/v2";
+import { z } from "zod";
 import {
   parseInsightResult,
   parseEventsResult,
@@ -13,25 +14,6 @@ import {
   type HostDashboardState,
 } from "@/lib/types/host-dashboard";
 
-/**
- * SAN-729 · AIE-008 — HostOpsCopilotBridge.
- *
- * Owns `HostDashboardState` and keeps it in sync with `hostOpsAgent` via
- * `useCoAgent`. The KPI canvas re-renders live as the agent answers — the
- * AI-native dashboard mechanic.
- *
- * GUARDRAIL: numeric fields are lifted from the DETERMINISTIC tool `result`
- * (`get_sales_insights` → SAN-759 · AIE-007 — salesInsightWorkflow), never from
- * LLM-generated text. Parsing + state-safety live in pure, unit-tested helpers
- * (`host-dashboard-result.ts`); the agent path can ONLY set `focusedEventId`.
- *
- * RENDER-LOOP NOTE: CopilotKit re-invokes a `render` (and REMOUNTS its component)
- * on every parent render, handing a NEW `result` object ref each time. So dedup
- * must live in the PARENT (a ref that survives child remounts) — a child-local ref
- * resets on remount and the apply→setState→re-render→apply loop returns
- * ("Maximum update depth exceeded"). We apply once per distinct (status, result).
- */
-
 type ToolRenderProps = { status: string; result: unknown };
 type SyncFn = (status: string, result: unknown) => void;
 
@@ -39,7 +21,6 @@ function isLoading(status: string): boolean {
   return status === "inProgress" || status === "executing";
 }
 
-/** Thin child: fires the parent's stable sync callback once per render. Holds NO state. */
 function ToolResultSync({
   status,
   result,
@@ -62,20 +43,34 @@ type HostOpsCopilotBridgeProps = {
 };
 
 export function HostOpsCopilotBridge({ children }: HostOpsCopilotBridgeProps) {
-  const [state, setState] = useState<HostDashboardState>(EMPTY_HOST_DASHBOARD);
-
-  // Parent-level dedup refs — survive the child remount CopilotKit triggers each render.
+  const [dashboardState, setDashboardState] =
+    useState<HostDashboardState>(EMPTY_HOST_DASHBOARD);
   const insightSig = useRef<string>("");
   const eventsSig = useRef<string>("");
 
+  const { agent } = useAgent({
+    agentId: "hostOpsAgent",
+    updates: [UseAgentUpdate.OnStateChanged],
+  });
+
+  // Contract 3 — merge agent focusedEventId at render time (no setState-in-effect).
+  const agentState = agent.state;
+  const state = useMemo(() => {
+    if (!agentState || typeof agentState !== "object") return dashboardState;
+    return applyAgentState(
+      dashboardState,
+      agentState as Partial<HostDashboardState>,
+    );
+  }, [dashboardState, agentState]);
+
   const apply = useCallback((patch: Partial<HostDashboardState>) => {
-    setState((prev) => ({ ...prev, ...patch }));
+    setDashboardState((prev) => ({ ...prev, ...patch }));
   }, []);
 
   const syncInsight = useCallback<SyncFn>(
     (status, result) => {
       const sig = toolRenderSignature(status, result);
-      if (sig === insightSig.current) return; // already applied this exact result
+      if (sig === insightSig.current) return;
       insightSig.current = sig;
       if (isLoading(status)) {
         apply({ workflowStatus: "loading" });
@@ -104,32 +99,58 @@ export function HostOpsCopilotBridge({ children }: HostOpsCopilotBridgeProps) {
     [apply],
   );
 
-  // Shared state with hostOpsAgent. The agent path is CLOBBER-PROOF: applyAgentState
-  // only lets the LLM change `focusedEventId` — never the numeric/render fields.
-  useCoAgent<HostDashboardState>({
-    name: "hostOpsAgent",
-    state,
-    setState: (next) =>
-      setState((prev) =>
-        applyAgentState(prev, typeof next === "function" ? (next(prev) ?? {}) : (next ?? {})),
-      ),
-  });
+  // Push dashboard context to the agent without echoing focusedEventId merges back.
+  const lastPushedStateRef = useRef<string>("");
+  useEffect(() => {
+    const sig = JSON.stringify(dashboardState);
+    if (sig === lastPushedStateRef.current) return;
+    lastPushedStateRef.current = sig;
+    agent.setState(dashboardState);
+  }, [agent, dashboardState]);
 
-  // Generative-UI mirrors of the backend tools. name must match the Mastra
-  // `tools: {}` KEY (getSalesInsightsTool), with the createTool id as a fallback.
   const insightRender = useCallback(
-    (props: ToolRenderProps) => <ToolResultSync {...props} onSync={syncInsight} ack />,
+    (props: { status: string; result?: string }) => (
+      <ToolResultSync
+        status={props.status}
+        result={props.result}
+        onSync={syncInsight}
+        ack
+      />
+    ),
     [syncInsight],
   );
+
   const eventsRender = useCallback(
-    (props: ToolRenderProps) => <ToolResultSync {...props} onSync={syncEvents} />,
+    (props: { status: string; result?: string }) => (
+      <ToolResultSync status={props.status} result={props.result} onSync={syncEvents} />
+    ),
     [syncEvents],
   );
 
-  useCopilotAction({ name: "getSalesInsightsTool", available: "disabled", render: insightRender }, [insightRender]);
-  useCopilotAction({ name: "get-sales-insights", available: "disabled", render: insightRender }, [insightRender]);
-  useCopilotAction({ name: "listHostEventsTool", available: "disabled", render: eventsRender }, [eventsRender]);
-  useCopilotAction({ name: "list-host-events", available: "disabled", render: eventsRender }, [eventsRender]);
+  const salesInsightsParams = z.object({
+    eventId: z.string().uuid().optional(),
+  });
+  const listHostEventsParams = z.object({
+    status: z.string().optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+  });
+
+  useRenderTool(
+    { name: "getSalesInsightsTool", parameters: salesInsightsParams, render: insightRender },
+    [insightRender],
+  );
+  useRenderTool(
+    { name: "get-sales-insights", parameters: salesInsightsParams, render: insightRender },
+    [insightRender],
+  );
+  useRenderTool(
+    { name: "listHostEventsTool", parameters: listHostEventsParams, render: eventsRender },
+    [eventsRender],
+  );
+  useRenderTool(
+    { name: "list-host-events", parameters: listHostEventsParams, render: eventsRender },
+    [eventsRender],
+  );
 
   return <>{children({ state })}</>;
 }

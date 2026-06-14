@@ -8,8 +8,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useCopilotChat } from "@copilotkit/react-core";
 import { useConciergeCoAgent } from "@/components/chat/concierge-coagent-context";
+import { useConciergeChat } from "@/lib/hooks/use-concierge-chat";
 import { useEventLocalChat } from "@/components/chat/event-local-chat-context";
 import { useEventSearchResults } from "@/components/chat/event-search-results-context";
 import { useGroundedFastPath } from "@/components/chat/grounded-fast-path-context";
@@ -32,7 +32,7 @@ const ConciergeSessionContext =
 
 export function ConciergeSessionProvider({ children }: { children: ReactNode }) {
   const [sessionKey, setSessionKey] = useState(0);
-  const { reset } = useCopilotChat();
+  const { reset } = useConciergeChat();
   const { setState } = useConciergeCoAgent();
   const { clearPins, setSelectedPinId, clearFocusPinRequest } = useMapContext();
   const { setToolResult: setRentalFp } = useRentalFastPath();

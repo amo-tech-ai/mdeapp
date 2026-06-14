@@ -13,7 +13,7 @@ import {
  *
  * `HostDashboardState` is the **shared-state contract for the AI-native host
  * dashboard** (SAN-729 · AIE-008 — Host Analytics Page + HostOpsCopilotBridge):
- * the `useCoAgent<HostDashboardState>` type whose KPI cards re-render live as the
+ * the host dashboard state type whose KPI cards re-render live as the
  * agent answers. It is NOT lightweight agent memory — it is render-ready data.
  *
  * GUARDRAIL (preserves SAN-759 · AIE-007 — salesInsightWorkflow's "AI explains,

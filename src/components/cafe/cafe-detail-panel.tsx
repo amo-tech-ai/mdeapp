@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { useCopilotChat } from "@copilotkit/react-core";
+import { useConciergeChat } from "@/lib/hooks/use-concierge-chat";
 import { MessageRole, TextMessage } from "@copilotkit/runtime-client-gql";
 import {
   CalendarCheck,
@@ -159,7 +159,7 @@ function AskPrompts({
   title: string;
   primaryType?: string;
 }) {
-  const { appendMessage, isLoading } = useCopilotChat();
+  const { appendMessage, isLoading } = useConciergeChat();
   const prompts = buildCafeAskPrompts(title, primaryType);
 
   const onPrompt = useCallback(

@@ -1,18 +1,50 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
-  useCoAgent,
-  useCopilotAction,
-  useCopilotReadable,
-} from "@copilotkit/react-core";
+  useAgent,
+  useAgentContext,
+  useFrontendTool,
+  useHumanInTheLoop,
+  UseAgentUpdate,
+} from "@copilotkit/react-core/v2";
+import { z } from "zod";
+import { EventPublishApprovalPanel } from "@/components/host/event-publish-approval-panel";
+import {
+  applySetEventBasics,
+  applySetPricing,
+  applySetVenue,
+  publishDecisionDraftPatch,
+} from "@/lib/events/host-event-wizard-tool-handlers";
+import type { ApprovalDecision } from "@/lib/events/approval-decision";
 import {
   EMPTY_EVENT_DRAFT,
+  EventDraftStateSchema,
+  EventTicketTierDraft,
   mergeEventDraft,
   type EventDraftState,
-  type EventTicketTierDraft,
 } from "@/lib/types";
-import { EventPublishApprovalPanel } from "@/components/host/event-publish-approval-panel";
+
+const setEventBasicsParams = z.object({
+  title: z.string(),
+  neighborhood: z.string(),
+  dateIso: z.string().describe("ISO 8601 datetime"),
+});
+
+const setVenueParams = z.object({
+  venue: z.string(),
+  capacity: z.number(),
+});
+
+const setPricingParams = z.object({
+  priceMinCop: z.number(),
+  description: z.string().optional(),
+  ticketTiers: z.array(EventTicketTierDraft).optional(),
+});
+
+const previewPublishParams = z.object({
+  draft: EventDraftStateSchema,
+});
 
 type HostEventCopilotBridgeProps = {
   children: (ctx: {
@@ -21,104 +53,33 @@ type HostEventCopilotBridgeProps = {
   }) => React.ReactNode;
 };
 
-/** F36 — shared co-agent state + frontend tools for hostEventAgent. */
-export function HostEventCopilotBridge({ children }: HostEventCopilotBridgeProps) {
-  const [draft, setDraftState] = useState<EventDraftState>(EMPTY_EVENT_DRAFT);
+type HitlRenderProps = {
+  args: Partial<{ draft: EventDraftState }>;
+  status: "inProgress" | "executing" | "complete";
+  respond?: (result: unknown) => Promise<void>;
+};
 
-  // React state is source of truth — form works even before hostEventAgent connects.
-  // CopilotKit docs: pass state + setState for external state management.
-  useCoAgent<EventDraftState>({
-    name: "hostEventAgent",
-    state: draft,
-    setState: (next) => {
-      setDraftState((prev) => {
-        if (typeof next === "function") {
-          const updated = next(prev);
-          return updated ? mergeEventDraft(prev, updated) : prev;
-        }
-        return mergeEventDraft(prev, next);
-      });
-    },
-  });
+function createPublishHitlRender(
+  getDraft: () => EventDraftState,
+  setDraft: (patch: Partial<EventDraftState>) => void,
+) {
+  return function HostEventPublishHitlRender({
+    args,
+    status,
+    respond,
+  }: HitlRenderProps) {
+    const draftArg = (args.draft as EventDraftState | undefined) ?? getDraft();
+    const panelStatus =
+      status === "inProgress"
+        ? "inProgress"
+        : status === "executing"
+          ? "executing"
+          : "complete";
 
-  const setDraft = useCallback((patch: Partial<EventDraftState>) => {
-    setDraftState((prev) => mergeEventDraft(prev, patch));
-  }, []);
-
-  useCopilotReadable(
-    {
-      description: "Roberto's in-progress event draft for the host wizard",
-      value: draft,
-    },
-    [draft],
-  );
-
-  useCopilotAction({
-    name: "set_event_basics",
-    description: "Set event title, neighborhood, and start datetime",
-    parameters: [
-      { name: "title", type: "string", required: true },
-      { name: "neighborhood", type: "string", required: true },
-      { name: "dateIso", type: "string", required: true, description: "ISO 8601 datetime" },
-    ],
-    handler: async ({ title, neighborhood, dateIso }) => {
-      setDraft({ title, neighborhood, dateIso });
-    },
-  });
-
-  useCopilotAction({
-    name: "set_venue",
-    description: "Set venue name and capacity",
-    parameters: [
-      { name: "venue", type: "string", required: true },
-      { name: "capacity", type: "number", required: true },
-    ],
-    handler: async ({ venue, capacity }) => {
-      setDraft({ venue, capacity: Number(capacity) });
-    },
-  });
-
-  useCopilotAction({
-    name: "set_pricing",
-    description: "Set minimum ticket price in COP cents, description, optional tiers",
-    parameters: [
-      { name: "priceMinCop", type: "number", required: true },
-      { name: "description", type: "string", required: false },
-      {
-        name: "ticketTiers",
-        type: "object[]",
-        required: false,
-        description: "Array of { name, priceCop, quantity }",
-      },
-    ],
-    handler: async ({ priceMinCop, description, ticketTiers }) => {
-      const tiers = Array.isArray(ticketTiers)
-        ? (ticketTiers as EventTicketTierDraft[])
-        : draft.ticketTiers;
-      setDraft({
-        priceMinCop: Number(priceMinCop),
-        description: typeof description === "string" ? description : draft.description,
-        ticketTiers: tiers,
-      });
-    },
-  });
-
-  useCopilotAction({
-    name: "preview_and_publish",
-    description: "Show HITL publish approval panel when the draft is complete",
-    available: "remote",
-    parameters: [
-      {
-        name: "draft",
-        type: "object",
-        required: true,
-        description: "Complete EventDraftState snapshot",
-      },
-    ],
-    renderAndWaitForResponse: ({ args, respond, status }) => (
+    return (
       <EventPublishApprovalPanel
-        draft={(args.draft as EventDraftState) ?? draft}
-        status={status}
+        draft={draftArg}
+        status={panelStatus}
         onPublished={({ eventId, slug, approvalRequestId }) => {
           setDraft({
             status: "published",
@@ -127,20 +88,93 @@ export function HostEventCopilotBridge({ children }: HostEventCopilotBridgeProps
             approvalRequestId,
           });
         }}
-        respond={(decision) => {
-          // On approve, the wizard publishes straight to `published` — `onPublished`
-          // owns that state transition (with the event id/slug). Do NOT set
-          // `pending_approval` here, or it races and clobbers the published status.
-          if (decision === "rejected") {
-            setDraft({ status: "rejected" });
-          } else if (decision !== "approved") {
-            setDraft({ status: "draft" });
-          }
-          respond?.(decision);
+        respond={(decision: ApprovalDecision) => {
+          const patch = publishDecisionDraftPatch(decision);
+          if (patch) setDraft(patch);
+          void respond?.(decision);
         }}
       />
-    ),
+    );
+  };
+}
+
+export function HostEventCopilotBridge({ children }: HostEventCopilotBridgeProps) {
+  const [draft, setDraftState] = useState<EventDraftState>(EMPTY_EVENT_DRAFT);
+
+  const setDraft = useCallback((patch: Partial<EventDraftState>) => {
+    setDraftState((prev) => mergeEventDraft(prev, patch));
+  }, []);
+
+  const { agent } = useAgent({
+    agentId: "hostEventAgent",
+    updates: [UseAgentUpdate.OnStateChanged],
   });
 
-  return <>{children({ draft, setDraft })}</>;
+  const agentDraft = agent.state;
+  const mergedDraft = useMemo(() => {
+    if (!agentDraft || typeof agentDraft !== "object") return draft;
+    return mergeEventDraft(draft, agentDraft as Partial<EventDraftState>);
+  }, [draft, agentDraft]);
+
+  useAgentContext({
+    description: "Roberto's in-progress event draft for the host wizard",
+    value: mergedDraft,
+  });
+
+  // SAN-905 · skip agent.setState on every draft edit — mid-stream pushes
+  // caused extra CopilotKit turns and Gemini thought_signature replay errors.
+
+  useFrontendTool(
+    {
+      name: "set_event_basics",
+      description: "Set event title, neighborhood, and start datetime",
+      parameters: setEventBasicsParams,
+      handler: async (args) => {
+        setDraftState((prev) => applySetEventBasics(prev, args));
+      },
+    },
+    [],
+  );
+
+  useFrontendTool(
+    {
+      name: "set_venue",
+      description: "Set venue name and capacity",
+      parameters: setVenueParams,
+      handler: async (args) => {
+        setDraftState((prev) => applySetVenue(prev, args));
+      },
+    },
+    [],
+  );
+
+  useFrontendTool(
+    {
+      name: "set_pricing",
+      description:
+        "Set minimum ticket price in COP cents, description, optional tiers",
+      parameters: setPricingParams,
+      handler: async (args) => {
+        setDraftState((prev) => applySetPricing(prev, args));
+      },
+    },
+    [],
+  );
+
+  const PublishHitlRender = useMemo(
+    () => createPublishHitlRender(() => mergedDraft, setDraft),
+    [mergedDraft, setDraft],
+  );
+
+  useHumanInTheLoop(
+    {
+      name: "preview_and_publish",
+      description: "Show HITL publish approval panel when the draft is complete",
+      parameters: previewPublishParams,
+      render: PublishHitlRender,
+    },
+    [PublishHitlRender],
+  );
+
+  return <>{children({ draft: mergedDraft, setDraft })}</>;
 }

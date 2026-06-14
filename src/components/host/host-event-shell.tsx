@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CopilotChat } from "@copilotkit/react-ui";
+import { CopilotChat } from "@copilotkit/react-core/v2";
 import { AuthStatus } from "@/components/auth/auth-status";
 import { HostEventCopilotBridge } from "@/components/host/host-event-copilot-bridge";
 import { HostEventForm } from "@/components/host/host-event-form";
@@ -20,7 +20,6 @@ type HostEventShellProps = {
   userEmail?: string | null;
 };
 
-/** SCREEN-016 — Roberto host wizard with co-agent + frontend tools. */
 export function HostEventShell({ userEmail }: HostEventShellProps) {
   return (
     <HostEventCopilotBridge>
@@ -59,8 +58,12 @@ export function HostEventShell({ userEmail }: HostEventShellProps) {
                 className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden px-2 pb-2 pt-1 sm:px-4"
               >
                 <CopilotChat
+                  agentId="hostEventAgent"
                   className="copilotKitChat--center mde-center-copilot-chat min-h-0 flex-1"
-                  labels={HOST_LABELS}
+                  labels={{
+                    modalHeaderTitle: HOST_LABELS.title,
+                    welcomeMessageText: HOST_LABELS.initial,
+                  }}
                 />
               </div>
               {draft.publishedSlug ? (
