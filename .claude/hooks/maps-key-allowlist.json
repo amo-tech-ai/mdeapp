@@ -1,0 +1,9 @@
+{
+  "_about": "SAN-883 · DEV-SEC — SHA-256 hashes of browser-PUBLISHABLE Google Maps API keys (NEXT_PUBLIC_GOOGLE_MAPS_API_KEY / VITE_GOOGLE_MAPS_API_KEY). These keys ship in client bundles by design and are gated by HTTP-referrer restrictions in Google Cloud Console, so recognising them is safe. HASHES ONLY — no raw key is committed (so GitHub push-protection and human reviewers never see a key-shaped string). The dist-leak-scan hook allows an AIzaSy… match ONLY when its value hashes to one of these; every other Google key (Gemini, arbitrary GOOGLE_*), Supabase service-role, Stripe, etc. still BLOCKS the deploy command.",
+  "_rotation": "When the publishable Maps key rotates, append the new value's SHA-256 here (compute: printf '%s' \"$KEY\" | sha256sum). Old hashes may be left or pruned; leaving them only allows already-public keys.",
+  "publishableMapsKeySha256": [
+    "25743f3f2040830f6542a31d115d84d7a43e3a7138f71082386b4581bf528e50",
+    "a6cfcd37dc941c0c89cf6dc9f67163623a32293b55a47496c0b1037fca2436b4",
+    "e76ffb2e8a437e802b08bb644efc95b0a7b44bf76958b88894dce8e191d924b2"
+  ]
+}

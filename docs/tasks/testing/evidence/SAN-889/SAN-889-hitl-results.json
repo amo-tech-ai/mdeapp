@@ -1,0 +1,23 @@
+{
+  "task": "SAN-889 · CK-V2-003 — v2 HITL publish proof",
+  "mode": "v2-flag-on-hitl",
+  "flag": "1",
+  "baseUrl": "http://localhost:3001",
+  "commitSha": "836af36bd55f7763a9e3e9f91b3c8e9b5921e3d8",
+  "at": "2026-06-14T02:04:21.167Z",
+  "matrix": {
+    "wizardLoads": true,
+    "hitlPanelVisible": true,
+    "rejectNoPublishedLink": true,
+    "rejectClicked": true,
+    "rejectPathPass": true,
+    "zeroConsoleErrors": false
+  },
+  "consoleErrors": [
+    "[CopilotKit] Agent error: network error \n  Code: agent_run_failed_event \n  Context: {source: onRunFailed, agentId: hostEventAgent} \n  Stack: TypeError: network error",
+    "Agent execution failed: TypeError: network error",
+    "[CopilotKit] Agent error: network error \n  Code: agent_run_failed \n  Context: {agentId: hostEventAgent} \n  Stack: TypeError: network error"
+  ],
+  "error": "locator.waitFor: Timeout 120000ms exceeded.\nCall log:\n  - waiting for getByTestId('host-copilot-chat-region') to be visible\n",
+  "verdict": "FAIL"
+}

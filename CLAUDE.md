@@ -109,6 +109,8 @@ Invariants:
 
 ## Response style — lead with the answer
 
+> **STRICT RULE — plain language, no exceptions.** Every reply must be understandable on the first read by a smart non-engineer who runs this business. Lead with the answer in the first sentence. Short sentences, one idea per line. Gloss every technical term in plain English on first use, or cut it. Tie each point to a real mdeai persona + surface ("Camila's pins on `/`") or say "internal only — no user impact". End with the one concrete next step or the one thing you need. If the user could read only your first three lines and still know what to do, you passed; if not, rewrite the top. This rule overrides any default tendency toward technical or long-winded answers.
+
 **Write so a busy non-expert gets it on the first read.** Plain, real-world, easy to understand — every reply.
 
 Default shape for any non-trivial reply: **(1) one-line answer/verdict first → (2) a short summary or table → (3) details only if needed → (4) the decision or next step.** Rules:

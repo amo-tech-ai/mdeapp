@@ -1,4 +1,4 @@
-type CopilotAgentName = "conciergeAgent" | "hostEventAgent";
+type CopilotAgentName = "conciergeAgent" | "hostEventAgent" | "hostOpsAgent";
 
 /** Module-level empties — never inline `{}` on <CopilotKit>; new refs each render retrigger connect. */
 const STABLE_HEADERS: Record<string, string> = {};

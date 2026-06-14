@@ -33,6 +33,7 @@ export function EventWebCitationFetch() {
     };
 
     if (!shouldChainWebGrounding(payload, sqlEventCount)) return;
+    if (process.env.NEXT_PUBLIC_ENABLE_SEARCH_GROUNDING !== "1") return;
 
     const turnKey = JSON.stringify({ ...payload, sqlEventCount });
     if (turnKey === lastTurnRef.current) return;

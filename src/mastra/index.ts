@@ -9,11 +9,13 @@ import {
   eventAgent,
   evaluationAgent,
   hostEventAgent,
+  hostOpsAgent,
 } from "./agents";
 import {
   rentalSearchWorkflow,
   eventDiscoveryWorkflow,
-  conciergeRoutingWorkflow,
+  eventVenueBookingWorkflow,
+  salesInsightWorkflow,
 } from "./workflows";
 import { workspace } from "./workspaces";
 import { scorers } from "./scorers";
@@ -29,11 +31,13 @@ export const mastra = new Mastra({
     eventAgent,
     evaluationAgent,
     hostEventAgent,
+    hostOpsAgent,
   },
   workflows: {
     rentalSearchWorkflow,
     eventDiscoveryWorkflow,
-    conciergeRoutingWorkflow,
+    eventVenueBookingWorkflow,
+    salesInsightWorkflow,
   },
   workspace,
   scorers,

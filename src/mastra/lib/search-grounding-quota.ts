@@ -1,3 +1,4 @@
+import { isSearchGroundingEnabled } from "@/lib/is-search-grounding-enabled";
 import { createClient } from "@supabase/supabase-js";
 
 const DEFAULT_DAILY_CAP = 50;
@@ -8,7 +9,7 @@ export type SearchGroundingQuotaResult =
 
 /** GS-003 — Search grounding bucket separate from Maps MCP (`search_grounding_quota_log`). */
 export async function incrementAndCheckSearchGroundingQuota(): Promise<SearchGroundingQuotaResult> {
-  if (process.env.ENABLE_SEARCH_GROUNDING?.trim().toLowerCase() !== "1") {
+  if (!isSearchGroundingEnabled()) {
     return { allowed: false, reason: "disabled" };
   }
 

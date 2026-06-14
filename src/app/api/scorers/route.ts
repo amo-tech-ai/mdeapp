@@ -13,6 +13,7 @@ import { mastra } from "@/mastra";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 5;
 
 export async function GET() {
   const registered = (mastra.listScorers() ?? {}) as Record<string, MastraScorer>;

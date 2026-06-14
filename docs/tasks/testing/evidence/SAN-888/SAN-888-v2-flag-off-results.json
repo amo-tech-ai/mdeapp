@@ -1,0 +1,19 @@
+{
+  "task": "SAN-888 · CK-V2-002 — Host Analytics prototype",
+  "mode": "v1-flag-off",
+  "flag": "(unset)",
+  "baseUrl": "http://localhost:3001",
+  "mainSha": "b9a4f70",
+  "at": "2026-06-12T22:20:49.075Z",
+  "gates": {
+    "copilotkitPost": 400,
+    "analyticsHttp": 200,
+    "signedInEmail": true,
+    "hostAnalyticsTestId": true,
+    "salesLoadedAck": true,
+    "kpiPanelHasRevenue": true,
+    "consoleErrors": [],
+    "screenshot": "SAN-888-v2-flag-off-localhost.png"
+  },
+  "verdict": "PASS"
+}

@@ -7,6 +7,7 @@ import { useRentalSearchFastPath } from "@/hooks/use-rental-search-fast-path";
 import { useEventSearchFastPath } from "@/hooks/use-event-search-fast-path";
 import { useRestaurantSearchFastPath } from "@/hooks/use-restaurant-search-fast-path";
 import { useGroundedSearchFastPath } from "@/hooks/use-grounded-search-fast-path";
+import { useEventVenueBookingFastPath } from "@/hooks/use-event-venue-booking-fast-path";
 import {
   clearConciergePendingSend,
   getConciergePendingSendVersion,
@@ -79,6 +80,8 @@ export function ConciergeChatInput({
     useRestaurantSearchFastPath();
   const { handleUserMessage: handleGroundedMessage } =
     useGroundedSearchFastPath();
+  const { handleUserMessage: handleEventVenueBookingMessage } =
+    useEventVenueBookingFastPath();
   const [text, setText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const pendingVersion = useSyncExternalStore(
@@ -109,6 +112,7 @@ export function ConciergeChatInput({
     }
     await sendConciergeUserMessage(trimmed, {
       handleRentalMessage,
+      handleEventVenueBookingMessage,
       handleEventMessage,
       handleGroundedMessage,
       handleRestaurantMessage,
@@ -119,6 +123,7 @@ export function ConciergeChatInput({
     text,
     inProgress,
     handleRentalMessage,
+    handleEventVenueBookingMessage,
     handleEventMessage,
     handleGroundedMessage,
     handleRestaurantMessage,

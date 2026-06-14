@@ -36,10 +36,14 @@ describe("classify-intent tool", () => {
     expect(result).toEqual(input);
   });
 
-  it("intentSchema accepts all four intent labels", () => {
+  it("intentSchema accepts all eight router intents", () => {
     for (const intent of [
       "rental_search",
       "event_discovery",
+      "venue_booking",
+      "restaurant_discovery",
+      "day_trip_planning",
+      "general_concierge",
       "chitchat",
       "unknown",
     ] as const) {
@@ -47,7 +51,7 @@ describe("classify-intent tool", () => {
     }
   });
 
-  it("intentSchema rejects invalid labels", () => {
-    expect(() => intentSchema.parse("restaurant_search")).toThrow();
+  it("intentSchema rejects legacy cafe_search label", () => {
+    expect(() => intentSchema.parse("cafe_search")).toThrow();
   });
 });

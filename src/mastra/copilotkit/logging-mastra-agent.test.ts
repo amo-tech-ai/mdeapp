@@ -6,7 +6,7 @@ import {
 } from "./logging-mastra-agent";
 
 describe("getLocalAgentsWithLogging — runtime allowlist (SAN-591)", () => {
-  it("filters 7 registered agents down to the Phase-1 allowlist", () => {
+  it("filters 8 registered agents down to the Phase-1 allowlist", () => {
     const allKeys = [
       "pingAgent",
       "routerAgent",
@@ -15,6 +15,7 @@ describe("getLocalAgentsWithLogging — runtime allowlist (SAN-591)", () => {
       "eventAgent",
       "evaluationAgent",
       "hostEventAgent",
+      "hostOpsAgent",
     ] as const;
     const agents = Object.fromEntries(allKeys.map((key) => [key, { id: key }]));
     const mastra = { listAgents: () => agents } as unknown as Mastra;

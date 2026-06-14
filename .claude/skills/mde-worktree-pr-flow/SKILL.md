@@ -108,12 +108,42 @@ cp /home/sk/mdeai/mdeapp/.env.local .worktrees/wt-san-NNN-slug/
 cp /path/to/main/.env.local <worktree-path>/
 ```
 
+### 1cc. Provision `node_modules` (hardlink — NOT symlink)
+
+**Hard rule (2026-06-11):** give the worktree its OWN `node_modules` via a hardlink copy. **Never `ln -s`** the main checkout's `node_modules`.
+
+```bash
+cp -al /home/sk/mdeai/mdeapp/node_modules <worktree-path>/node_modules
+```
+
+**Why:** Next 16 / Turbopack **rejects a symlinked `node_modules`** that points outside the worktree —
+`next build` dies with *"Symlink [project]/node_modules is invalid, it points out of the filesystem root."*
+`cp -al` makes a real directory of **hardlinks** — instant, no disk duplication (same inodes), and Turbopack
+accepts it. `node_modules` is gitignored, so it never enters the diff. (First hit on SAN-759 · AIE-007 —
+salesInsightWorkflow; the symlink passed lint+test but failed the build gate.)
+
+> ⚠️ **Hardlinks share inodes — do NOT `npm install`/`pnpm install` inside a hardlinked worktree.** A tool that
+> edits a file **in place** would mutate the main checkout's `node_modules` through the shared inode. The worktree
+> is meant to **reuse main's already-installed deps read-only** — that's the whole point. If a worktree genuinely
+> needs different deps, first detach it from the hardlinks: `rm -rf <worktree-path>/node_modules` then run a real
+> `npm ci` there (no `cp -al`). (npm/pnpm normally write-new-then-rename, which breaks the link safely, but don't
+> rely on it — treat hardlinked `node_modules` as install-frozen.)
+
+If a worktree was already created with a symlinked **or** real `node_modules`, replace it before building
+(`rm -rf` handles both a symlink and a directory):
+
+```bash
+rm -rf <worktree-path>/node_modules
+cp -al /home/sk/mdeai/mdeapp/node_modules <worktree-path>/node_modules
+```
+
 ### 1d. Post-creation validation
 
 ```bash
 git worktree list                          # shows expected path + branch
 git -C <worktree-path> status --short      # must be clean
 git -C <worktree-path> log --oneline -3    # tip matches origin/main
+ls -ld <worktree-path>/node_modules        # must be a DIRECTORY, not an 'l'/symlink
 ```
 
 ## Step 2 — Verify path convention before staging

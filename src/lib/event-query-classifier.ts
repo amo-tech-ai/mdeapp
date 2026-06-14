@@ -3,6 +3,7 @@
  * concierge agent applies the same rules via prompt (F39).
  */
 import type { EventCategory } from "@/mastra/tools/search-events";
+import { looksLikeEventVenueBookingQuery } from "@/lib/event-venue-booking-intent";
 import { looksLikeNightlifeGroundingSearch } from "@/lib/restaurant-query-classifier";
 
 export type EventDateWindow =
@@ -48,6 +49,10 @@ const NEIGHBORHOOD_PATTERNS: Array<{ neighborhood: string; re: RegExp }> = [
 const SHOW_ALL_RE =
   /\b(show all|all events|popular events|top events|everything happening|what'?s on)\b/i;
 
+/** Shared with router-intent.ts — day-trip / activity planning, not ticketed events. */
+export const DAY_TRIP_RE =
+  /\b(what should i do|things to do|what can i do|plan my (?:weekend|trip|day)|day trip|sightseeing|guatap[eé]|comuna 13|attractions?|tours?\b|museums?|viewpoints?)\b/i;
+
 /** Rental / venue-seeking queries — must not hijack event fast-path. */
 const NON_EVENT_RENTAL_RE =
   /\b(1\s?br|2\s?br|3\s?br|bedroom|bedrooms|apartment|apartments|rental|rentals|airbnb|under\s+\$?\d+|\/night|per night|monthly|for rent)\b/i;
@@ -59,8 +64,10 @@ const NON_EVENT_FOOD_VENUE_RE =
 /** True when the message is clearly rental, food-venue, or map nightlife POI search — not ticketed events. */
 export function looksLikeNonEventSearch(text: string): boolean {
   const t = text.trim();
+  if (looksLikeEventVenueBookingQuery(t)) return true;
   if (/\bevents?\b/i.test(t)) return false;
   return (
+    DAY_TRIP_RE.test(t) ||
     NON_EVENT_RENTAL_RE.test(t) ||
     NON_EVENT_FOOD_VENUE_RE.test(t) ||
     looksLikeNightlifeGroundingSearch(t)
@@ -95,7 +102,11 @@ export function scoreEventQuery(text: string): EventQuerySignals {
   const hasShowAll = SHOW_ALL_RE.test(normalized);
 
   let category: EventCategory | undefined;
+  const skipPartyCategory = looksLikeEventVenueBookingQuery(normalized);
   for (const { category: cat, re } of CATEGORY_PATTERNS) {
+    if (skipPartyCategory && cat === "nightlife" && /\bparty\b/i.test(normalized)) {
+      continue;
+    }
     if (re.test(normalized)) {
       category = cat;
       break;

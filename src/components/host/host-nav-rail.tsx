@@ -11,7 +11,7 @@ type NavItem =
 const NAV_ITEMS: NavItem[] = [
   { href: "/host/events", label: "Events", testId: "host-nav-link-events" },
   { href: "/host/event/new", label: "New event", testId: "host-nav-link-new-event" },
-  { href: "/host/analytics", label: "Analytics", testId: "host-nav-analytics-soon", disabled: true },
+  { href: "/host/analytics", label: "Analytics", testId: "host-nav-link-analytics" },
 ];
 
 const linkClassName = (active: boolean) =>
@@ -29,7 +29,7 @@ export function isHostNavActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-/** Host sidebar — Events + New event; Analytics deferred until PAGE-M02 ships. */
+/** Host sidebar — Events · New event · Analytics (SAN-729 · AIE-008). */
 export function HostNavRail() {
   const pathname = usePathname();
 

@@ -204,6 +204,85 @@ describe("insertEventProposal", () => {
     });
   });
 
+  it("returns 400 on malformed idempotencyKey (too short)", async () => {
+    const supabase = mockSupabaseInsert({ data: null, error: null });
+    const result = await insertEventProposal(supabase, "user-1", {
+      ...validBody,
+      partnerId: MAMACITA_PARTNER_ID,
+      idempotencyKey: "short",
+    });
+    expect(result).toEqual({
+      ok: false,
+      status: 400,
+      message: "Validation failed",
+    });
+    expect(supabase.insert).not.toHaveBeenCalled();
+  });
+
+  it("returns 400 on malformed partnerLocationId (not 500)", async () => {
+    const supabase = mockSupabaseInsert({ data: null, error: null });
+    const result = await insertEventProposal(supabase, "user-1", {
+      ...validBody,
+      partnerLocationId: "not-a-uuid",
+    });
+    expect(result).toEqual({
+      ok: false,
+      status: 400,
+      message: "Validation failed",
+    });
+    expect(supabase.insert).not.toHaveBeenCalled();
+  });
+
+  it("returns 400 when guest count exceeds schema max", async () => {
+    const supabase = mockSupabaseInsert({ data: null, error: null });
+    const result = await insertEventProposal(supabase, "user-1", {
+      ...validBody,
+      partySize: 5000,
+    });
+    expect(result).toEqual({
+      ok: false,
+      status: 400,
+      message: "Validation failed",
+    });
+  });
+
+  it("uses stable idempotency_key for identical proposal inputs", async () => {
+    const supabase = mockSupabaseInsert({
+      data: { id: "booking-uuid-1" },
+      error: null,
+    });
+    await insertEventProposal(supabase, "user-abc", {
+      ...validBody,
+      partnerId: MAMACITA_PARTNER_ID,
+    });
+    const firstKey = (supabase.insert as ReturnType<typeof vi.fn>).mock
+      .calls[0][0].idempotency_key;
+
+    vi.clearAllMocks();
+    (supabase.insert as ReturnType<typeof vi.fn>).mockImplementation(() => ({
+      select: () => ({
+        single: vi.fn(async () => ({
+          data: null,
+          error: { code: "23505" },
+        })),
+      }),
+    }));
+
+    const second = await insertEventProposal(supabase, "user-abc", {
+      ...validBody,
+      partnerId: MAMACITA_PARTNER_ID,
+    });
+    const secondKey = (supabase.insert as ReturnType<typeof vi.fn>).mock
+      .calls[0][0].idempotency_key;
+
+    expect(firstKey).toBe(secondKey);
+    expect(second).toEqual({
+      ok: false,
+      status: 409,
+      message: "You already submitted this event proposal.",
+    });
+  });
+
   it("resolves partner_id from partnerLocationId when omitted", async () => {
     const supabase = mockSupabaseWithLookup(
       {
@@ -230,6 +309,7 @@ describe("insertEventProposal", () => {
         status: "pending",
         user_id: "user-abc",
         party_size: 25,
+        idempotency_key: expect.stringMatching(/^ep-[a-f0-9]{32}$/),
       }),
     );
   });

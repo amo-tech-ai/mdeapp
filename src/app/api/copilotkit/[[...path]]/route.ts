@@ -6,16 +6,21 @@ import {
 import { MASTRA_RESOURCE_ID_KEY, RequestContext } from "@mastra/core/request-context";
 import { NextRequest, after } from "next/server";
 import { assertCopilotKitAuthorized } from "@/lib/copilotkit-auth";
+import {
+  checkCopilotKitIpGate,
+  checkCopilotKitRateLimit,
+} from "@/lib/api-ip-rate-limit";
 import { createClient } from "@/lib/supabase/server";
 import { mastra } from "@/mastra";
 import { getLocalAgentsWithLogging } from "@/mastra/copilotkit/logging-mastra-agent";
 import { setAuditUserId } from "@/mastra/lib/tool-audit-context";
+import { HOST_SUPABASE_KEY } from "@/mastra/tools/hostops-read-tools";
 import { logAgentRunForTurn } from "@/mastra/lib/log-agent-run";
 import type { PersistTurnLog } from "@/mastra/copilotkit/logging-mastra-agent";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+export const maxDuration = 30;
 
 const serviceAdapter = new ExperimentalEmptyAdapter();
 
@@ -67,17 +72,28 @@ async function handleCopilotKit(req: NextRequest) {
   const unauthorized = assertCopilotKitAuthorized(req);
   if (unauthorized) return unauthorized;
 
+  const ipGate = checkCopilotKitIpGate(req);
+  if (ipGate) return ipGate;
+
   try {
     const supabase = await createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
-    const requestContext = new RequestContext();
     const userId = user?.id ?? null;
+
+    const rateLimited = checkCopilotKitRateLimit(req, userId);
+    if (rateLimited) return rateLimited;
+
+    const requestContext = new RequestContext();
     if (userId) {
       requestContext.set(MASTRA_RESOURCE_ID_KEY, userId);
       setAuditUserId(requestContext, userId);
+      // SAN-760 · AIE-005 — hostOpsAgent + HostDashboardState — hand the agent's
+      // tools the SAME user-scoped client (RLS-governed; never service-role).
+      // getHostContext reads it back.
+      requestContext.set(HOST_SUPABASE_KEY, supabase);
     }
 
     return await buildHandler({ userId, requestContext })(req);

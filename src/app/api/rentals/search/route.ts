@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { checkSearchFastPathRateLimit } from "@/lib/api-ip-rate-limit";
 import { searchRentals } from "@/mastra/tools/search-rentals";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 10;
 
 const bodySchema = z.object({
   neighborhood: z.string().optional(),
@@ -18,6 +20,9 @@ const bodySchema = z.object({
 
 /** Fast path — rental search without conciergeAgent round-trip. */
 export async function POST(req: Request) {
+  const rateLimited = checkSearchFastPathRateLimit(req);
+  if (rateLimited) return rateLimited;
+
   let json: unknown;
   try {
     json = await req.json();

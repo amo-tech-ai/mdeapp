@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { checkSearchFastPathRateLimit } from "@/lib/api-ip-rate-limit";
 import { prepareRestaurantSearchResults } from "@/lib/restaurant-place-photo";
 import { searchRestaurants } from "@/mastra/tools/search-restaurants";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 10;
 
 const bodySchema = z
   .object({
@@ -40,6 +42,9 @@ const bodySchema = z
 
 /** Fast path — Supabase restaurant search without conciergeAgent. */
 export async function POST(req: Request) {
+  const rateLimited = checkSearchFastPathRateLimit(req);
+  if (rateLimited) return rateLimited;
+
   let json: unknown;
   try {
     json = await req.json();

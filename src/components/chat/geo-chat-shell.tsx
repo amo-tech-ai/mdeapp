@@ -13,6 +13,7 @@ import { EventSearchResultsProvider } from "@/components/chat/event-search-resul
 import { RichCardResultsProvider } from "@/components/chat/rich-card-results-context";
 import { EventLocalChatProvider } from "@/components/chat/event-local-chat-context";
 import { ConciergeSessionProvider } from "@/components/chat/concierge-session-context";
+import { VenueBookingDirectHitlProvider } from "@/components/chat/venue-booking-direct-hitl-context";
 import { FocusMapPinAction } from "@/components/copilot/focus-map-pin-action";
 import { MapUiSync } from "@/components/copilot/map-ui-sync";
 import { SearchToolRenders } from "@/components/copilot/search-tool-renders";
@@ -25,6 +26,7 @@ import { ScheduleViewingModal } from "@/components/modals/schedule-viewing-modal
 import { VenueDetailSheet } from "@/components/sheets/venue-detail-sheet";
 import { CafeBookingSheet } from "@/components/sheets/cafe-booking-sheet";
 import { EventVenueOfferingsSheet } from "@/components/sheets/event-venue-offerings-sheet";
+import { EventProposalShell } from "@/components/sheets/event-proposal-shell";
 import { NightlifeBookingSheet } from "@/components/sheets/nightlife-booking-sheet";
 import { RestaurantBookingSheet } from "@/components/sheets/restaurant-booking-sheet";
 import { useRentalUi } from "@/components/chat/rental-ui-context";
@@ -55,6 +57,23 @@ function EventVenueOfferingsSheetMount() {
       open={eventVenueOfferingsOpen}
       onOpenChange={(open) => {
         if (!open) closeEventVenueOfferings();
+      }}
+    />
+  );
+}
+
+function EventProposalShellMount() {
+  const {
+    eventProposalShellTarget,
+    eventProposalShellOpen,
+    closeEventProposalShell,
+  } = useRentalUi();
+  return (
+    <EventProposalShell
+      target={eventProposalShellTarget}
+      open={eventProposalShellOpen}
+      onOpenChange={(open) => {
+        if (!open) closeEventProposalShell();
       }}
     />
   );
@@ -106,6 +125,7 @@ export function GeoChatShell() {
                 <EventSearchResultsProvider>
                   <RichCardResultsProvider>
                     <EventLocalChatProvider>
+                      <VenueBookingDirectHitlProvider>
                       <ConciergeSessionProvider>
                       <div className="flex min-h-screen flex-col">
                         <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-4 py-3 sm:px-6">
@@ -139,8 +159,10 @@ export function GeoChatShell() {
                         <RestaurantBookingSheetMount />
                         <NightlifeBookingSheetMount />
                         <EventVenueOfferingsSheetMount />
+                        <EventProposalShellMount />
                       </div>
                       </ConciergeSessionProvider>
+                      </VenueBookingDirectHitlProvider>
                     </EventLocalChatProvider>
                   </RichCardResultsProvider>
                 </EventSearchResultsProvider>

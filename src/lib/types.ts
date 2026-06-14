@@ -8,7 +8,7 @@ export type MdeState = {
 
 /** Mirrors conciergeWorkingMemorySchema — keep in sync with concierge.ts */
 export type ConciergeWorkingMemory = {
-  lastIntent?: "rental_search" | "event_discovery" | "restaurant_search" | "cafe_search" | "chitchat" | "unknown";
+  lastIntent?: import("@/lib/router-intent").RouterIntent;
   lastRentalQuery?: {
     neighborhood?: string;
     minBedrooms?: number;
@@ -58,3 +58,13 @@ export {
   isDraftReadyForPublish,
   type EventDraftState,
 } from "./types/event-draft";
+
+export {
+  hostDashboardStateSchema,
+  kpiCardSchema,
+  hostOpsMemorySchema,
+  EMPTY_HOST_DASHBOARD,
+  type HostDashboardState,
+  type KpiCard,
+  type HostOpsMemory,
+} from "./types/host-dashboard";
