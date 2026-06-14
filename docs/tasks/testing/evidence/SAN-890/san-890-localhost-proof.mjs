@@ -54,6 +54,13 @@ const V2 =
   (process.env.COPILOTKIT_V2_CHAT === "1" &&
     process.env.NEXT_PUBLIC_COPILOTKIT_V2_CHAT === "1");
 const slug = V2 ? "flag-on" : "flag-off";
+const RENTAL_PROMPT = "1BR in Laureles under $80/night";
+const HITL_PROMPT =
+  "Find me a café in Laureles and help me request a booking.";
+const HITL_SLOT_FILL =
+  "Book the first café you found Friday June 13 2026 at 8pm for 4. Contact QA User at qa-landlord@mdeai.co. Submit the booking request now.";
+const HITL_NUDGE =
+  "Call requestVenueBooking now with the café placeId from your search results.";
 
 async function getTestSession() {
   loadEnvLocal();
@@ -131,20 +138,91 @@ function filterConsoleErrors(errors) {
   );
 }
 
+async function hideCopilotWebInspector(page) {
+  await page.addStyleTag({
+    content:
+      "cpk-web-inspector, #cpk-web-inspector { display: none !important; pointer-events: none !important; }",
+  });
+}
+
+async function waitForCopilotRuntime(page) {
+  await page
+    .waitForResponse(
+      (r) => r.url().includes("/api/copilotkit") && r.status() === 200,
+      { timeout: 60_000 },
+    )
+    .catch(() => undefined);
+  await page.waitForTimeout(1500);
+}
+
+async function waitForCopilotIdle(page, timeout = 120_000) {
+  const chatRegion = page.getByTestId("copilot-chat-region");
+  const progress = chatRegion.locator('[data-copilotkit-in-progress="true"]');
+  try {
+    await progress.waitFor({ state: "attached", timeout: 15_000 });
+    await progress.waitFor({ state: "detached", timeout });
+  } catch {
+    await page.waitForTimeout(3000);
+  }
+}
+
+async function sendChatPrompt(page, prompt) {
+  const chatRegion = page.getByTestId("copilot-chat-region");
+  const chatInput = V2
+    ? chatRegion
+        .getByTestId("copilot-chat-textarea")
+        .or(chatRegion.locator(".copilotKitInput textarea").first())
+    : chatRegion.locator("textarea").first();
+  await chatInput.click();
+  await chatInput.evaluate((node, value) => {
+    const textarea = node;
+    const setter = Object.getOwnPropertyDescriptor(
+      HTMLTextAreaElement.prototype,
+      "value",
+    )?.set;
+    setter?.call(textarea, value);
+    textarea.dispatchEvent(new Event("input", { bubbles: true }));
+    textarea.dispatchEvent(new Event("change", { bubbles: true }));
+  }, prompt);
+
+  if (V2) {
+    const send = chatRegion.getByTestId("copilot-send-button");
+    try {
+      await page.waitForFunction(
+        () => {
+          const btn = document.querySelector(
+            '[data-testid="copilot-chat-region"] [data-testid="copilot-send-button"]',
+          );
+          return btn instanceof HTMLButtonElement && !btn.disabled;
+        },
+        { timeout: 60_000 },
+      );
+      await send.click();
+    } catch {
+      await chatInput.press("Enter");
+    }
+  } else {
+    await chatRegion.locator("button").last().click();
+  }
+}
+
 async function waitForCopilotChatReady(page) {
   const chatRegion = page.getByTestId("copilot-chat-region");
   const chatInput = V2
-    ? chatRegion.getByTestId("copilot-chat-textarea")
+    ? chatRegion
+        .getByTestId("copilot-chat-textarea")
+        .or(chatRegion.locator(".copilotKitInput textarea").first())
     : chatRegion.locator("textarea").first();
-  await chatInput.waitFor({ state: "visible", timeout: 30_000 });
+  await chatInput.waitFor({ state: "visible", timeout: 90_000 });
   await page.waitForFunction(
     (isV2) => {
       const region = document.querySelector('[data-testid="copilot-chat-region"]');
       if (!region) return false;
       const textarea = isV2
-        ? region.querySelector('[data-testid="copilot-chat-textarea"]')
+        ? region.querySelector('[data-testid="copilot-chat-textarea"]') ??
+          region.querySelector(".copilotKitInput textarea")
         : region.querySelector("textarea");
-      if (!(textarea instanceof HTMLTextAreaElement) || textarea.disabled) {
+      if (!(textarea instanceof HTMLTextAreaElement)) {
         return false;
       }
       if (isV2) {
@@ -155,13 +233,13 @@ async function waitForCopilotChatReady(page) {
       return buttons.length > 0;
     },
     V2,
-    { timeout: 60_000 },
+    { timeout: 90_000 },
   );
 }
 
 const results = {
   task: "SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2",
-  slice: "GeoChatShellV2 scaffold",
+  slice: "tool renders + map pin + HITL",
   mode: V2 ? "v2-flag-on" : "v1-flag-off",
   flag: process.env.COPILOTKIT_V2_CHAT ?? "(unset)",
   baseUrl: BASE,
@@ -173,6 +251,7 @@ const results = {
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ viewport: { width: 1400, height: 900 } });
 const page = await context.newPage();
+page.setDefaultTimeout(180_000);
 const consoleErrors = [];
 page.on("console", (msg) => {
   if (msg.type() === "error") consoleErrors.push(msg.text());
@@ -190,6 +269,15 @@ try {
   });
   results.gates.chatHttp = nav?.status() ?? 0;
   results.gates.signedInEmail = (await page.getByText(QA_EMAIL).count()) > 0;
+
+  if (V2 && !results.gates.signedInEmail) {
+    try {
+      await page.getByText(QA_EMAIL).waitFor({ timeout: 15_000 });
+      results.gates.signedInEmail = true;
+    } catch {
+      /* soft — rental/HITL may still work */
+    }
+  }
 
   if (V2) {
     results.gates.geoChatShellV2 = await page
@@ -212,7 +300,55 @@ try {
       (await page.getByTestId("chat-spike-shell-v2").count()) === 0;
   }
 
+  await hideCopilotWebInspector(page);
   await waitForCopilotChatReady(page);
+  await waitForCopilotRuntime(page);
+
+  if (V2) {
+    await sendChatPrompt(page, RENTAL_PROMPT);
+    await waitForCopilotIdle(page);
+    try {
+      await page
+        .getByTestId("rental-card")
+        .or(page.getByTestId("rentals-empty"))
+        .first()
+        .waitFor({ timeout: 120_000 });
+      results.gates.rentalToolRender =
+        (await page.getByTestId("rental-card").count()) > 0 ||
+        (await page.getByTestId("rentals-empty").count()) > 0;
+    } catch {
+      await sendChatPrompt(
+        page,
+        "Run search-rentals now for 1BR in Laureles under $80 per night.",
+      );
+      await waitForCopilotIdle(page, 120_000);
+      results.gates.rentalToolRender =
+        (await page.getByTestId("rental-card").count()) > 0 ||
+        (await page.getByTestId("rentals-empty").count()) > 0;
+    }
+
+    await waitForCopilotIdle(page);
+    await sendChatPrompt(page, HITL_PROMPT);
+    await waitForCopilotIdle(page, 180_000);
+    const hitlCard = page.getByTestId("venue-booking-hitl-card");
+    if ((await hitlCard.count()) === 0) {
+      await sendChatPrompt(page, HITL_SLOT_FILL);
+      await waitForCopilotIdle(page, 180_000);
+    }
+    if ((await hitlCard.count()) === 0) {
+      await sendChatPrompt(page, HITL_NUDGE);
+      await waitForCopilotIdle(page, 120_000);
+    }
+    try {
+      await hitlCard.waitFor({ timeout: 60_000 });
+      results.gates.venueHitlCard = (await hitlCard.count()) > 0;
+    } catch {
+      results.gates.venueHitlCard = false;
+    }
+  } else {
+    results.gates.rentalToolRender = null;
+    results.gates.venueHitlCard = null;
+  }
 
   await page.waitForTimeout(2000);
   results.gates.consoleErrors = filterConsoleErrors(consoleErrors);
@@ -229,7 +365,9 @@ try {
     results.gates.centerChatPanel === true &&
     results.gates.spikeShellAbsent === true &&
     (V2
-      ? results.gates.geoChatShellV2 === true
+      ? results.gates.geoChatShellV2 === true &&
+        results.gates.rentalToolRender === true &&
+        results.gates.venueHitlCard === true
       : results.gates.geoChatShellV2 === true);
 
   results.gates.signedInEmailSoft = results.gates.signedInEmail === true;

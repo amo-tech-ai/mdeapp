@@ -1,97 +1,57 @@
 "use client";
 
-import { useCallback, useMemo, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, type ReactNode } from "react";
 import {
   useAgent,
   useHumanInTheLoop,
-  useRenderTool,
   UseAgentUpdate,
 } from "@copilotkit/react-core/v2";
-import { z } from "zod";
 import {
   VenueBookingHitlPanel,
   type VenueBookingHitlArgs,
 } from "@/components/chat/venue-booking-hitl-panel";
+import { useRentalUi } from "@/components/chat/rental-ui-context";
+import { useSearchToolRendersV2 } from "@/components/copilot/search-tool-renders-v2";
 import {
   MASTRA_COPILOT_TOOL_ACTIONS,
   MASTRA_TOOL_IDS,
 } from "@/platform/copilot/mastra-tool-action-names";
 import { venueBookingRequestSchema } from "@/lib/venues/venue-booking-form-schema";
-import {
-  getToolRenderErrorMessage,
-  isToolRenderError,
-} from "@/lib/tool-render-state";
 
-const searchRentalsParams = z.object({
-  neighborhood: z.string().optional(),
-  minBedrooms: z.number().int().min(0).optional(),
-  maxPricePerNight: z.number().positive().optional(),
-  limit: z.number().int().min(1).max(20).optional(),
-  queryText: z.string().optional(),
-});
+function VenueBookingResultBannerSync({
+  result,
+  venueTitle,
+}: {
+  result: unknown;
+  venueTitle: string;
+}) {
+  const { setVenueBookingConfirmation } = useRentalUi();
+  const syncedRef = useRef<string | null>(null);
 
-type ToolRenderProps = { status: string; result?: unknown };
+  useEffect(() => {
+    if (!result || typeof result !== "object") return;
+    const payload = result as {
+      success?: boolean;
+      requestId?: string;
+      message?: string;
+    };
+    if (!payload.success || !payload.requestId || !payload.message) return;
+    if (syncedRef.current === payload.requestId) return;
+    syncedRef.current = payload.requestId;
+    setVenueBookingConfirmation({
+      requestId: payload.requestId,
+      message: payload.message,
+      venueTitle,
+    });
+  }, [result, setVenueBookingConfirmation, venueTitle]);
 
-function SpikeRentalToolRender({ status, result }: ToolRenderProps) {
-  if (isToolRenderError(result, status)) {
-    return (
-      <p
-        className="mx-2 my-2 text-sm text-destructive"
-        data-testid="spike-rental-error"
-      >
-        {getToolRenderErrorMessage(result)}
-      </p>
-    );
-  }
-
-  if (status !== "complete" || !result) {
-    return (
-      <p
-        className="mx-2 my-2 text-sm text-muted-foreground"
-        data-testid="spike-rental-loading"
-      >
-        Searching rentals…
-      </p>
-    );
-  }
-
-  const envelope = result as {
-    results?: Array<{ id?: string; title?: string; neighborhood?: string }>;
-  };
-  const rows = envelope.results ?? [];
-
-  if (rows.length === 0) {
-    return (
-      <p
-        className="mx-2 my-2 text-sm text-muted-foreground"
-        data-testid="spike-rental-empty"
-      >
-        No rentals matched this search.
-      </p>
-    );
-  }
-
-  return (
-    <div
-      className="mx-2 my-2 space-y-2 rounded-md border border-border bg-card p-3"
-      data-testid="spike-rental-results"
-    >
-      <p className="text-sm font-medium text-foreground">Rental results</p>
-      <ul className="space-y-1 text-sm text-muted-foreground">
-        {rows.slice(0, 5).map((row, index) => (
-          <li key={row.id ?? row.title ?? `rental-${index}`}>
-            {row.title ?? "Rental"}
-            {row.neighborhood ? ` · ${row.neighborhood}` : ""}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+  return null;
 }
 
 type HitlRenderProps = {
   args: Partial<VenueBookingHitlArgs>;
   status: "inProgress" | "executing" | "complete";
+  result?: unknown;
   respond?: (result: unknown) => Promise<void>;
 };
 
@@ -99,23 +59,31 @@ function createVenueBookingHitlRender() {
   return function VenueBookingHitlRender({
     args,
     status,
+    result,
     respond,
   }: HitlRenderProps) {
-    const parsed = venueBookingRequestSchema.safeParse(args);
-    if (!parsed.success) {
+    const hitlArgs = args as VenueBookingHitlArgs;
+    if (!hitlArgs?.placeId || !hitlArgs?.requestedAt || !hitlArgs?.partySize) {
       return null;
     }
 
+    const venueTitle = hitlArgs.venueTitle?.trim() || hitlArgs.placeId;
+
     return (
-      <VenueBookingHitlPanel
-        args={parsed.data as VenueBookingHitlArgs}
-        status={status}
-        respond={(decision) => {
-          respond?.(decision)?.catch((err) => {
-            console.error("[concierge-hitl-v2] respond failed", err);
-          });
-        }}
-      />
+      <>
+        {status === "complete" ? (
+          <VenueBookingResultBannerSync result={result} venueTitle={venueTitle} />
+        ) : null}
+        <VenueBookingHitlPanel
+          args={hitlArgs}
+          status={status}
+          respond={(decision) => {
+            respond?.(decision)?.catch((err) => {
+              console.error("[concierge-hitl-v2] respond failed", err);
+            });
+          }}
+        />
+      </>
     );
   };
 }
@@ -136,30 +104,8 @@ export function ConciergeCopilotBridgeV2({
     updates: [UseAgentUpdate.OnStateChanged],
   });
 
-  const rentalRender = useCallback(
-    (props: ToolRenderProps) => <SpikeRentalToolRender {...props} />,
-    [],
-  );
-
+  useSearchToolRendersV2();
   const VenueBookingHitlRender = useMemo(() => createVenueBookingHitlRender(), []);
-
-  useRenderTool(
-    {
-      name: MASTRA_COPILOT_TOOL_ACTIONS.rentals,
-      parameters: searchRentalsParams,
-      render: rentalRender,
-    },
-    [rentalRender],
-  );
-
-  useRenderTool(
-    {
-      name: MASTRA_TOOL_IDS.rentals,
-      parameters: searchRentalsParams,
-      render: rentalRender,
-    },
-    [rentalRender],
-  );
 
   useHumanInTheLoop(
     {

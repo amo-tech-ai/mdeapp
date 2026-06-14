@@ -18,6 +18,7 @@ import { RestaurantFastPathProvider } from "@/components/chat/restaurant-fast-pa
 import { RichCardResultsProvider } from "@/components/chat/rich-card-results-context";
 import { VenueBookingConfirmationBanner } from "@/components/chat/venue-booking-confirmation-banner";
 import { VenueBookingDirectHitlProvider } from "@/components/chat/venue-booking-direct-hitl-context";
+import { FocusMapPinActionV2 } from "@/components/copilot/focus-map-pin-action-v2";
 import { MapUiSync } from "@/components/copilot/map-ui-sync";
 import { ScheduleViewingModal } from "@/components/modals/schedule-viewing-modal";
 import { CafeBookingSheet } from "@/components/sheets/cafe-booking-sheet";
@@ -148,6 +149,7 @@ export function GeoChatShellV2() {
                               <AuthStatus />
                             </header>
                             <MapsShell>
+                              <FocusMapPinActionV2 />
                               <MapUiSync />
                               <div className="flex min-h-0 flex-1 flex-col">
                                 <LeadConfirmationBanner />

@@ -1,11 +1,11 @@
 {
   "task": "SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2",
-  "slice": "GeoChatShellV2 scaffold",
+  "slice": "tool renders + map pin + HITL",
   "mode": "v1-flag-off",
   "flag": "(unset)",
   "baseUrl": "http://localhost:3001",
-  "headSha": "827dd684",
-  "at": "2026-06-14T07:34:21.423Z",
+  "headSha": "697a8759",
+  "at": "2026-06-14T08:42:20.448Z",
   "gates": {
     "copilotkitPost": true,
     "chatHttp": 200,
@@ -14,6 +14,8 @@
     "chatCanvas": true,
     "centerChatPanel": true,
     "spikeShellAbsent": true,
+    "rentalToolRender": null,
+    "venueHitlCard": null,
     "consoleErrors": [],
     "screenshot": "SAN-890-v2-flag-off-localhost.png",
     "signedInEmailSoft": false
