@@ -1,0 +1,144 @@
+src/components/copilot/focus-map-pin-action-v2.tsx
+  s_a7eb2c95c408ba::t_9f555b55523bbd 1-43
+  s_a7eb2c95c408ba::t_068145634006b5 44-50
+docs/tasks/testing/evidence/SAN-890/SAN-890-v2-flag-on-results.json
+  s_b9d5d18e508f95::t_9212a946f36615 9-11,14-16,18
+  s_a7eb2c95c408ba::t_c0eeb1b913b3d0 12
+docs/tasks/testing/evidence/SAN-890/SAN-890-v2-flag-off-results.json
+  s_b9d5d18e508f95::t_351cf05d510253 1-2,4-6,9-12,15-17,20-25
+  s_a7eb2c95c408ba::t_8d420168a0dd87 3,18-19
+  s_a7eb2c95c408ba::t_4ad02122f25c20 7,13-14
+  s_a7eb2c95c408ba::t_b11ecc66480acd 8
+docs/upgradeV2/changelog.md
+  s_a7eb2c95c408ba::t_001c2e61983ab7 8-26
+  s_a7eb2c95c408ba::t_cfe9bb27e38ea4 27,33-47
+  s_a7eb2c95c408ba::t_a80ccad1d41085 29
+  s_b9d5d18e508f95::t_dc134ad46fc6ac 48-82
+src/components/chat/geo-chat-shell.tsx
+  s_a7eb2c95c408ba::t_ce2ba929f120be 130-133
+src/app/chat/page.tsx
+  s_25b0cb0b37161d::t_b64937f4c2feec 1,5,8
+src/components/chat/chat-canvas-v2.tsx
+  s_25b0cb0b37161d::t_93cb397044306d 1-32
+src/components/chat/chat-provider-v2.tsx
+  s_25b0cb0b37161d::t_9273f6eefbe520 11-12
+  s_a7eb2c95c408ba::t_ec47274be29f9c 13-15
+src/app/chat/chat-page-v2-client.tsx
+  s_25b0cb0b37161d::t_977427d2f3231e 1-18
+src/components/chat/concierge-copilot-bridge-v2.tsx
+  s_a7eb2c95c408ba::t_1d18c1d191e152 3,13-14,21-48,54,62,70-71,73-79,81-82,103
+  s_a7eb2c95c408ba::t_6d8fb7bbf08dcb 65-66
+  s_a7eb2c95c408ba::t_73f841ee5e7df5 80
+  s_25b0cb0b37161d::t_09203c51265e76 92-93
+src/components/chat/chat-center-panel-v2.tsx
+  s_25b0cb0b37161d::t_f617f9b53b9510 1-2,4-5,8-25,28-34,37,61-64
+  s_a7eb2c95c408ba::t_b59d391d5f1d33 3,6-7
+  s_a7eb2c95c408ba::t_70bf4714802f2f 26-27,35-36,38-60
+src/app/chat/layout.tsx
+  s_25b0cb0b37161d::t_0a7431f56c7546 6
+docs/upgradeV2/todo.md
+  s_a7eb2c95c408ba::t_ac97db3206095a 3-5
+  s_25b0cb0b37161d::t_ad87be26cc4233 6
+  s_b9d5d18e508f95::t_6030ed69811980 12,18-21,23,40,69-73,81-85,90,93,96-97,99-100,111-113,120,143-145,147,153,157,167
+  s_25b0cb0b37161d::t_e73d401dfaf96e 13-14,16-17
+  s_a7eb2c95c408ba::t_8b10acdd9267e6 15
+  s_a7eb2c95c408ba::t_cb7e7df7c4be6f 22
+  s_25b0cb0b37161d::t_ab072c74adfaa9 24-27
+  s_a7eb2c95c408ba::t_b2939538f0dede 35
+  s_25b0cb0b37161d::t_d1bcc5f0608b72 37-39
+  s_a7eb2c95c408ba::t_ff57f86ded4222 41
+  s_25b0cb0b37161d::t_8dba3c3b34b411 42
+  s_a7eb2c95c408ba::t_fd09049b365ec6 48,52-53,55-58
+  s_a7eb2c95c408ba::t_2a39dd0e43c721 68,74-78
+  s_a7eb2c95c408ba::t_ef22f4be9af179 79-80
+  s_25b0cb0b37161d::t_24ed3bebd0279f 95
+  s_a7eb2c95c408ba::t_4f81d2354b086e 98
+  s_25b0cb0b37161d::t_bb7dc41857e42a 106
+  s_a7eb2c95c408ba::t_330b9d027d407d 110
+  s_25b0cb0b37161d::t_ff596305f27419 122,129-130
+  s_a7eb2c95c408ba::t_1023c9afc801c8 123,126-127
+  s_25b0cb0b37161d::t_07b8c5934b000d 141
+  s_a7eb2c95c408ba::t_992c951e8d7a4e 146
+  s_25b0cb0b37161d::t_842dd83e9da524 148
+  s_a7eb2c95c408ba::t_f3b2233ec7235f 150-151
+  s_a7eb2c95c408ba::t_4668d8076f49fc 159-161
+docs/tasks/testing/evidence/SAN-890/RESULTS.md
+  s_a7eb2c95c408ba::t_44659ef39a0873 1,5-6,8,12-16,18,41-42,44,47-60,62-64,66,68-70
+  s_b9d5d18e508f95::t_be5cbdec509591 2-4,7,9-11,17,19-40,43,45-46,61,65,67
+docs/tasks/testing/evidence/SAN-890/san-890-localhost-proof.mjs
+  s_b9d5d18e508f95::t_f48138b0bd41f3 1-56,64-125,127-128,132-138,140-143,212-214,218,220-224,227,229-238,240-244,246-256,258-269,271-275,285-295,297,301-308,310,358-373,381-400
+  s_a7eb2c95c408ba::t_754609eca728af 57-59
+  s_a7eb2c95c408ba::t_f0b2422ffafe7e 60
+  s_a7eb2c95c408ba::t_05988df6b27c0f 61-63
+  s_a7eb2c95c408ba::t_189cf234ca1823 126,129-131,139
+  s_a7eb2c95c408ba::t_98049202eece51 144-171
+  s_a7eb2c95c408ba::t_d5c860ad3a975c 172-174,178,191,207-211
+  s_a7eb2c95c408ba::t_a080596429b4e5 175-177
+  s_a7eb2c95c408ba::t_a9b91a4d451d47 179-180,182-190,192
+  s_a7eb2c95c408ba::t_36affcec485129 181
+  s_a7eb2c95c408ba::t_a04491bff81f54 193-206
+  s_a7eb2c95c408ba::t_bc6303ca93ff7a 215-217,219,225-226,239
+  s_a7eb2c95c408ba::t_ca77a53beb47e8 228
+  s_a7eb2c95c408ba::t_7d6deec1716999 245
+  s_a7eb2c95c408ba::t_9bf089032f1649 257
+  s_b9d5d18e508f95::t_d9ce45b84de3c1 270
+  s_a7eb2c95c408ba::t_192b46d0f9cc6c 276-284
+  s_a7eb2c95c408ba::t_8f9213d4c51a0d 296,298-300
+  s_a7eb2c95c408ba::t_66cb2d16a0f8a7 309,311,315,326-333,336,338-343,349-350
+  s_a7eb2c95c408ba::t_112f7162c95408 313-314,316-325,334-335,337,348,351-357
+  s_a7eb2c95c408ba::t_28f509db0e85b0 344-347
+  s_a7eb2c95c408ba::t_1e6882852b6bf3 374-376
+  s_a7eb2c95c408ba::t_1c8c178cc387c7 377-378
+  s_b9d5d18e508f95::t_4bb1bbb08c7dc0 379-380
+src/components/chat/geo-chat-shell-v2.tsx
+  s_25b0cb0b37161d::t_3557871ce0b640 1-6,9-20,23-121,169,182-184
+  s_b9d5d18e508f95::t_d4f5b674197410 7
+  s_a7eb2c95c408ba::t_ace8810806b8a6 8
+  s_a7eb2c95c408ba::t_c91d4ec901b870 21
+  s_a7eb2c95c408ba::t_085a7b864903db 22
+  s_b9d5d18e508f95::t_54e601f1b167ee 122
+  s_a7eb2c95c408ba::t_08e683d2027dc1 123-132,134-168,171-180
+  s_a7eb2c95c408ba::t_b00cb31b10a023 133
+  s_a7eb2c95c408ba::t_b9d61062380a7c 170
+  s_b9d5d18e508f95::t_0497e26e0e203f 181
+src/components/copilot/search-tool-renders-v2.tsx
+  s_a7eb2c95c408ba::t_8226dcaa24b01a 1-2,4-21,25-69,102-160,170-176,183-246,248-266,271-351
+  s_a7eb2c95c408ba::t_c1453a30765627 3
+  s_a7eb2c95c408ba::t_3b65c48df4d7d6 22-24
+  s_a7eb2c95c408ba::t_c943bc508b3c3a 70-101
+  s_a7eb2c95c408ba::t_ad39a939d8ff8d 161-169,177-182
+  s_a7eb2c95c408ba::t_7a86ea103cc198 247
+  s_a7eb2c95c408ba::t_ea922b8484f632 267-270
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "078a677ca17f9b1cff779c758975e2d62b106b62",
+  "prompts": {},
+  "sessions": {
+    "s_25b0cb0b37161d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fdf8e7ae-b399-4639-a090-a91e66d1e9bb",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_a7eb2c95c408ba": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "18b281fe-3599-4314-af69-c33116c98c9f",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_b9d5d18e508f95": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "e3d2b029-5d9e-4925-9300-66e497ddaeb2",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
