@@ -1,7 +1,7 @@
 ---
 task_id: SAN-665
 title: POST /api/partners/activate — implementation plan
-status: Plan — awaiting approval (do not implement yet)
+status: Implemented — reference specification (route + service + tests live)
 depends_on: SAN-683 (Done — prod schema live)
 unblocks: SAN-690, AGT-PTR-02, AGT-PTR-03
 phase: launch
@@ -96,7 +96,7 @@ sequenceDiagram
 
 | File | Change |
 |---|---|
-| `tasks/design/partners/audit/06e-supabase-audit.md` | Link SAN-665 plan when in progress |
+| `docs/partners/audit/06e-supabase-audit.md` | Link SAN-665 plan when in progress |
 | `sitemap.md` | Add `POST /api/partners/activate` under API inventory when shipped |
 | `tasks/commit/COMMIT-LEDGER.md` | Row `C-###` partners activate API |
 
@@ -168,12 +168,12 @@ npm run floor
 
 Branch naming: `ai/san-665-partners-activate-api`
 
-## Open decisions (approve before implement)
+## Decisions (resolved — reflected in the shipped code)
 
-1. **`redirectTo`:** `/dashboard` vs `/partners/dashboard` — sitemap has no live `/dashboard` yet; return `/dashboard` and add shell in SAN-690, or return `/partners/signup?activated=1` interim?
-2. **Draft handling:** require `draftId` vs auto-link latest unsubmitted draft for `(profile_id, type)`?
-3. **409 vs 200** on duplicate — recommend **200 idempotent** per unique index.
+1. **`redirectTo`:** uses the `PARTNER_ACTIVATE_REDIRECT` constant (`src/lib/partners/activate-partner.ts`).
+2. **Draft handling:** optional `draftId` parameter, validated when present (no auto-link).
+3. **Duplicate handling:** returns **200 with `created: false`** (idempotent per the unique index), asserted in `src/__tests__/api/partners-activate.test.ts`.
 
 ---
 
-**Approval needed:** reply "approved" with redirect + draft decisions, then implement.
+**Status:** implemented — this doc is now a reference spec for the live route at `src/app/api/partners/activate/route.ts`.

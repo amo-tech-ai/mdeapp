@@ -6,7 +6,7 @@ verifier_skill: task-verifier
 skills_loaded: [task-verifier, mastra, copilotkitV1, mde-supabase]
 scope:
   - tasks/mastra/partners/AGT-PTR-*.md
-  - tasks/design/partners/AI/07-ai-intelligence-partners-audit.md
+  - docs/partners/docs/07-ai-intelligence-partners-audit.md
   - Linear SAN-685, SAN-705–711
   - mdeapp disk (mastra, copilotkit, routes)
 mcp_used: [user-mastra, project-0-mdeai-copilotkit, plugin-linear-linear]
