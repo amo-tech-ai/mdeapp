@@ -1,0 +1,34 @@
+src/components/chat/concierge-session-context.tsx
+  s_a7eb2c95c408ba::t_84f4cd767330df 34-39
+  s_a7eb2c95c408ba::t_002fbaae77ce6b 33
+  s_a7eb2c95c408ba::t_28d2df774c76b6 84
+  s_a7eb2c95c408ba::t_d07e613fdf9aeb 61
+  s_a7eb2c95c408ba::t_095c4628117544 118-130
+src/components/chat/geo-chat-shell-v2.tsx
+  s_a7eb2c95c408ba::t_b00cb31b10a023 133
+  s_a7eb2c95c408ba::t_b9d61062380a7c 170
+  s_a7eb2c95c408ba::t_ace8810806b8a6 8
+src/components/chat/concierge-session-context-v2.tsx
+  s_a7eb2c95c408ba::t_6dd1b382516dd6 1-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "63ce04aa05f86501921297a3f6c86ba89dacedc8",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_a7eb2c95c408ba": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "18b281fe-3599-4314-af69-c33116c98c9f",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
