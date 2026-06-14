@@ -1,4 +1,5 @@
 #!/usr/bin/env npx tsx
+// @ts-nocheck — smoke repro; runtime shape validated by evidence JSON, not strict Mastra generics.
 /**
  * SAN-902 · CK-V2-007b — Minimal 3-turn hostEventAgent repro (no browser).
  *
@@ -11,7 +12,7 @@
 import { execSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { mastra } from "../src/mastra/index";
+import { hostEventAgent } from "../src/mastra/agents/host-event";
 
 const TURNS = [
   "Startup mixer March 15 in Provenza, 200 cap, GA free + VIP 50000 COP",
@@ -60,7 +61,7 @@ type TurnResult = {
 };
 
 async function runTurn(
-  agent: ReturnType<typeof mastra.getAgent>,
+  agent: typeof hostEventAgent,
   turn: number,
   prompt: string,
   threadId: string,
@@ -83,9 +84,11 @@ async function runTurn(
       resourceId: "san-902-repro",
     });
     const toolNames =
-      result.toolCalls?.map((t) => t.toolName).filter(Boolean) ?? [];
-    base.toolNames = toolNames;
-    base.hasWorkspaceTools = toolNames.some((n) => WORKSPACE_TOOL_RE.test(n));
+      result.toolCalls?.map((t: { toolName?: string }) => t.toolName).filter(Boolean) ?? [];
+    base.toolNames = toolNames as string[];
+    base.hasWorkspaceTools = toolNames.some((n: string | undefined) =>
+      n ? WORKSPACE_TOOL_RE.test(n) : false,
+    );
     base.textLength = result.text?.length ?? 0;
     base.ok = true;
     return base;
@@ -99,7 +102,7 @@ async function runTurn(
 }
 
 async function main() {
-  const agent = mastra.getAgent("hostEventAgent");
+  const agent = hostEventAgent;
   const threadId = `san-902-${Date.now()}`;
   const sha = commitSha();
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
