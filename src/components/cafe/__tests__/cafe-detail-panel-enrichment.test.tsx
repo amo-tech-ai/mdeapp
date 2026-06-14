@@ -8,8 +8,8 @@ vi.mock("@/hooks/use-place-details", () => ({
   usePlaceDetails: () => ({ status: "error" as const }),
 }));
 
-vi.mock("@copilotkit/react-core", () => ({
-  useCopilotChat: () => ({ appendMessage: vi.fn(), isLoading: false }),
+vi.mock("@/lib/hooks/use-concierge-chat", () => ({
+  useConciergeChat: () => ({ appendMessage: vi.fn(), isLoading: false }),
 }));
 
 vi.mock("@/components/chat/rental-ui-context", () => ({

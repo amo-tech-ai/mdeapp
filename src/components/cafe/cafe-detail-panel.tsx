@@ -1,8 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { useCopilotChat } from "@copilotkit/react-core";
-import { MessageRole, TextMessage } from "@copilotkit/runtime-client-gql";
+import { useConciergeChat } from "@/lib/hooks/use-concierge-chat";
 import {
   CalendarCheck,
   ExternalLink,
@@ -159,15 +158,13 @@ function AskPrompts({
   title: string;
   primaryType?: string;
 }) {
-  const { appendMessage, isLoading } = useCopilotChat();
+  const { appendMessage, isLoading } = useConciergeChat();
   const prompts = buildCafeAskPrompts(title, primaryType);
 
   const onPrompt = useCallback(
     async (prompt: string) => {
       if (isLoading) return;
-      await appendMessage(
-        new TextMessage({ role: MessageRole.User, content: prompt }),
-      );
+      await appendMessage(prompt);
     },
     [appendMessage, isLoading],
   );

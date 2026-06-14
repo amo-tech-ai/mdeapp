@@ -7,9 +7,7 @@ import { CafeDetailMobileSheet } from "@/components/chat/cafe-detail-mobile-shee
 import { NightlifeDetailMobileSheet } from "@/components/chat/nightlife-detail-mobile-sheet";
 import { MapMobileSheet } from "@/components/chat/map-mobile-sheet";
 
-/**
- * MAP-007B Mindtrip layout: nav · center CopilotChat · right map.
- */
+/** Mindtrip layout: nav, center chat, right map. */
 export function ChatCanvas() {
   return (
     <>

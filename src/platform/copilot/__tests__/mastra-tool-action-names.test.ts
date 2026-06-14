@@ -36,15 +36,16 @@ describe("MASTRA_COPILOT_TOOL_ACTIONS", () => {
       "utf8",
     );
     const bridge = readFileSync(
-      join(process.cwd(), "src/components/copilot/concierge-venue-booking-bridge.tsx"),
+      join(process.cwd(), "src/components/chat/concierge-copilot-bridge.tsx"),
       "utf8",
     );
     expect(tool).toContain(`id: "${MASTRA_TOOL_IDS.venueBooking}"`);
     expect(concierge).toContain(MASTRA_COPILOT_TOOL_ACTIONS.venueBooking);
-    expect(bridge).toContain(MASTRA_COPILOT_TOOL_ACTIONS.venueBooking);
+    expect(bridge).toContain("MASTRA_COPILOT_TOOL_ACTIONS.venueBooking");
+    expect(bridge).toContain("MASTRA_TOOL_IDS.venueBooking");
   });
 
-  it("UX-T-014 search tools do not use writer.custom — cards via useCopilotAction render", () => {
+  it("UX-T-014 search tools do not use writer.custom — cards render via CopilotKit tools", () => {
     const toolFiles = [
       "src/mastra/tools/search-restaurants.ts",
       "src/mastra/tools/search-rentals.ts",
@@ -61,6 +62,6 @@ describe("MASTRA_COPILOT_TOOL_ACTIONS", () => {
       "utf8",
     );
     expect(renders).not.toMatch(/writer\?\.custom\s*\(/);
-    expect(renders).toContain("useDisabledToolRender");
+    expect(renders).toContain("useRenderTool");
   });
 });

@@ -5,22 +5,53 @@ Tracker: [`todo.md`](./todo.md) · Audits: [`12-tasks-audit.md`](./12-tasks-audi
 
 ---
 
-## 2026-06-14 — Program status sync + PR #218 review fixes (uncommitted)
+## 2026-06-14 — [SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react) cutover · [PR #219](https://github.com/amo-tech-ai/mdeapp/pull/219) In Review @ `871d751e`
 
-**Verdict:** Migration **code path ~78% exec** — **not** “almost done” for prod v2. Camila/Roberto still on v1 @ mdeai.co (all flags OFF).
+**Verdict:** Frontend migration **~95% exec** on 891 branch — v2-only code, grep-zero, browser proof PASS. **Prod still pre-cutover** until #219 merges and deploys.
 
 | Gate | Result |
 |---|---|
-| [SAN-890 · CK-V2-004](https://linear.app/sanjiovani/issue/SAN-890) | 🟡 **In Review** · [PR #218](https://github.com/amo-tech-ai/mdeapp/pull/218) @ `20adf10d` |
-| Review batch | ✅ proof gates · `ConciergeInitialPrompt` v2 · citation sync · HITL respond passthrough · dead-branch cleanup |
-| [SAN-891 · CK-V2-005](https://linear.app/sanjiovani/issue/SAN-891) | ⚫ **0% exec** — blocks “upgrade complete” (8 `react-ui` files · remove flags) |
-| Hook share @ branch | **33%** (12 v2 / 24 v1 files per `npm run audit:copilotkit-v2`) |
-| **SAN-886 epic exec** | **~78%** |
-| **Prod v2 visible** | **0%** |
+| [SAN-890 · CK-V2-004](https://linear.app/sanjiovani/issue/SAN-890) | ✅ **Done** — merged [#218](https://github.com/amo-tech-ai/mdeapp/pull/218) @ `078a677c` |
+| [SAN-891 · CK-V2-005](https://linear.app/sanjiovani/issue/SAN-891) | 🟡 **In Review** · [#219](https://github.com/amo-tech-ai/mdeapp/pull/219) @ `871d751e` |
+| grep-zero | ✅ `react-ui` 0 · v1 `/v2`-less imports 0 · `COPILOTKIT_V2_*` 0 |
+| `npm run audit:copilotkit-v2` | ✅ v1 **0** · v2 **16** · react-ui **0** · hook share **100%** |
+| `npm run build` + focused vitest | ✅ build PASS · **10/10** |
+| Browser localhost | ✅ `/chat` · `/host/event/new` · `/host/analytics` · `consoleErrors: []` |
+| `npm run floor` | 🟡 local OOM (worktree lint) — CI source of truth |
+| **SAN-886 epic exec** | **~95%** (891 branch) |
+| **Prod v2 visible** | **0%** — mdeai.co on pre-891 deploy |
 
-**Linear:** [v2-upgrade view](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd) · SAN-886 description synced
+**Delivered:** drop `@copilotkit/react-ui` · promote v2 canonical names · delete v1 twins · remove flag modules/branches · `useConciergeChat` · evidence + proof script.
 
-**Next:** push review fixes → merge #218 → start SAN-891.
+**Evidence:** [`docs/tasks/testing/evidence/SAN-891/SAN-891-RESULTS.md`](../tasks/testing/evidence/SAN-891/SAN-891-RESULTS.md)
+
+**Linear:** [v2-upgrade view](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd) · tracker [`todo.md`](./todo.md)
+
+**Next:** merge #219 → refresh `09-file-map.md` → optional prod smoke → close SAN-891 + SAN-886.
+
+---
+
+## 2026-06-14 — [SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk) **Merged** [PR #218](https://github.com/amo-tech-ai/mdeapp/pull/218) @ `078a677c`
+
+**Verdict:** SAN-890 **100% complete** — unblocks SAN-891 irreversible cutover.
+
+| Gate | Result |
+|---|---|
+| Merge | ✅ [#218](https://github.com/amo-tech-ai/mdeapp/pull/218) @ `078a677c` (merged 2026-06-14) |
+| Tool renders + map pin + HITL | ✅ flag-on/off proofs PASS |
+| Review fixes | ✅ merged (proof gates · citations · HITL respond) |
+| Linear | ✅ **Done** (user-confirmed) |
+| **SAN-886 epic @ main** | **~78%** — chat behind flag until 891 |
+
+**Evidence:** [`docs/tasks/testing/evidence/SAN-890/RESULTS.md`](../tasks/testing/evidence/SAN-890/RESULTS.md)
+
+**Next:** SAN-891 cutover → [#219](https://github.com/amo-tech-ai/mdeapp/pull/219).
+
+---
+
+## 2026-06-14 — Program status sync + PR #218 review fixes (superseded)
+
+**Superseded by:** SAN-890 merge (#218) + SAN-891 PR #219 entries above.
 
 ---
 

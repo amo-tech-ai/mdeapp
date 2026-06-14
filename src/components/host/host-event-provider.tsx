@@ -1,14 +1,11 @@
 "use client";
 
-import { CopilotKit } from "@copilotkit/react-core";
+import { CopilotKit } from "@copilotkit/react-core/v2";
 import { useState } from "react";
 import { getCopilotKitClientProps } from "@/lib/copilotkit-client-props";
 
-/**
- * SAN-889 · CK-V2-003 — v1 CopilotKit provider for /host/event/* (flag off).
- * SAN-905 · fresh threadId per wizard session — avoids stale thought_signature history.
- */
-export function HostEventProviderV1({
+/** Fresh threadId per wizard session avoids stale thought_signature history. */
+export function HostEventProvider({
   children,
 }: {
   children: React.ReactNode;
@@ -19,6 +16,7 @@ export function HostEventProviderV1({
     <CopilotKit
       {...getCopilotKitClientProps("hostEventAgent")}
       threadId={threadId}
+      enableInspector={false}
     >
       {children}
     </CopilotKit>

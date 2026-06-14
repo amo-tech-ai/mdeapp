@@ -1,0 +1,37 @@
+{
+  "task": "SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui",
+  "mode": "v2-only",
+  "baseUrl": "http://localhost:3001",
+  "headSha": "078a677c",
+  "baselineSha": "078a677c",
+  "at": "2026-06-14T11:23:14.019Z",
+  "routes": {
+    "chat": {
+      "http": 200,
+      "geoChatShell": true,
+      "chatCanvas": true,
+      "centerPanel": true,
+      "rentalCards": false,
+      "eventCards": true,
+      "toolCards": true,
+      "screenshot": "SAN-891-chat-localhost.png"
+    },
+    "hostEventNew": {
+      "http": 200,
+      "wizard": true,
+      "form": true,
+      "screenshot": "SAN-891-host-event-new-localhost.png"
+    },
+    "hostAnalytics": {
+      "http": 200,
+      "shell": true,
+      "salesAck": false,
+      "screenshot": "SAN-891-host-analytics-localhost.png"
+    }
+  },
+  "gates": {
+    "copilotkitPost": true,
+    "consoleErrors": []
+  },
+  "verdict": "PASS"
+}

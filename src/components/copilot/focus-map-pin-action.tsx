@@ -1,20 +1,15 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useCopilotAction } from "@copilotkit/react-core";
+import { useFrontendTool } from "@copilotkit/react-core/v2";
+import { z } from "zod";
 import { useMapContext } from "@/platform/maps/map-context";
 
-/**
- * Frontend tool: agent pans map to a pin by id (F50).
- *
- * Registers the action exactly once (`[]` deps). The handler reads the latest
- * `pins`/`panToPin` through refs, so a stable registration never goes stale.
- * This avoids the v1 re-registration render loop that an inline
- * `useCopilotAction({...})` with no dependency array would trigger (a new action
- * object every render → re-register → re-render), which previously flooded
- * `POST /api/copilotkit`.
- */
-export function FocusMapPinAction() {
+const focusMapPinParams = z.object({
+  pinId: z.string().describe("Map pin id (often rental-{listingId})"),
+});
+
+export function useFocusMapPinAction() {
   const { panToPin, pins } = useMapContext();
 
   const pinsRef = useRef(pins);
@@ -24,19 +19,12 @@ export function FocusMapPinAction() {
     panToPinRef.current = panToPin;
   }, [pins, panToPin]);
 
-  useCopilotAction(
+  useFrontendTool(
     {
       name: "focusMapPin",
       description:
         "Pan the map to highlight a listing or place pin by pinId. Use when the user asks to show a result on the map.",
-      parameters: [
-        {
-          name: "pinId",
-          type: "string",
-          description: "Map pin id (often matches rental listing id)",
-          required: true,
-        },
-      ],
+      parameters: focusMapPinParams,
       handler: async ({ pinId }) => {
         const currentPins = pinsRef.current;
         const resolved =
@@ -51,6 +39,10 @@ export function FocusMapPinAction() {
     },
     [],
   );
+}
 
+/** Mount inside MapsShell — requires MapContextProvider. */
+export function FocusMapPinAction() {
+  useFocusMapPinAction();
   return null;
 }

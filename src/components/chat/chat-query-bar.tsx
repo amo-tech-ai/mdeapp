@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useCopilotChat } from "@copilotkit/react-core";
+import { useConciergeChat } from "@/lib/hooks/use-concierge-chat";
 import { useConciergeCoAgent } from "@/components/chat/concierge-coagent-context";
-import { MessageRole, TextMessage } from "@copilotkit/runtime-client-gql";
 import type { ConciergeWorkingMemory } from "@/lib/types";
 import { eventSubChipPrompt } from "@/lib/event-query-classifier";
 import { useEventSearchFastPath } from "@/hooks/use-event-search-fast-path";
@@ -20,7 +19,7 @@ import {
 /** SCREEN-003 + F39 — sticky chips → concierge working memory; event sub-row when Events active. */
 export function ChatQueryBar() {
   const { state: agentState, setState } = useConciergeCoAgent();
-  const { appendMessage, isLoading } = useCopilotChat();
+  const { appendMessage, isLoading } = useConciergeChat();
   const { handleEventChip } = useEventSearchFastPath();
   const [localState, setLocalState] = useState<ConciergeWorkingMemory>({});
 
@@ -52,12 +51,7 @@ export function ChatQueryBar() {
     });
     const handled = await handleEventChip(chip, prompt, next);
     if (!handled) {
-      await appendMessage(
-        new TextMessage({
-          role: MessageRole.User,
-          content: prompt,
-        }),
-      );
+      await appendMessage(prompt);
     }
   }
 

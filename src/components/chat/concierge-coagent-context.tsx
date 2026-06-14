@@ -2,25 +2,55 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
+  useMemo,
   type ReactNode,
 } from "react";
-import { useCoAgent } from "@copilotkit/react-core";
+import { useAgent, UseAgentUpdate } from "@copilotkit/react-core/v2";
 import type { ConciergeWorkingMemory } from "@/lib/types";
 
-type ConciergeCoAgentValue = ReturnType<
-  typeof useCoAgent<ConciergeWorkingMemory>
->;
+type ConciergeCoAgentValue = {
+  state: ConciergeWorkingMemory;
+  setState: (
+    patch:
+      | Partial<ConciergeWorkingMemory>
+      | ((prev: ConciergeWorkingMemory) => ConciergeWorkingMemory),
+  ) => void;
+};
 
 const ConciergeCoAgentContext = createContext<ConciergeCoAgentValue | null>(
   null,
 );
 
-/** Single useCoAgent mount for / — avoids N duplicate CopilotKit sync POSTs. */
+/** Single useAgent mount for concierge — avoids duplicate CopilotKit sync POSTs. */
 export function ConciergeCoAgentProvider({ children }: { children: ReactNode }) {
-  const value = useCoAgent<ConciergeWorkingMemory>({ name: "conciergeAgent" });
+  const { agent } = useAgent({
+    agentId: "conciergeAgent",
+    updates: [UseAgentUpdate.OnStateChanged],
+  });
+
+  const state = useMemo(
+    () => (agent.state ?? {}) as ConciergeWorkingMemory,
+    [agent.state],
+  );
+
+  const setState = useCallback(
+    (
+      patch:
+        | Partial<ConciergeWorkingMemory>
+        | ((prev: ConciergeWorkingMemory) => ConciergeWorkingMemory),
+    ) => {
+      const current = (agent.state ?? {}) as ConciergeWorkingMemory;
+      const next =
+        typeof patch === "function" ? patch(current) : { ...current, ...patch };
+      agent.setState(next);
+    },
+    [agent],
+  );
+
   return (
-    <ConciergeCoAgentContext.Provider value={value}>
+    <ConciergeCoAgentContext.Provider value={{ state, setState }}>
       {children}
     </ConciergeCoAgentContext.Provider>
   );
