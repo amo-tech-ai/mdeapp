@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { ChatProviderV2 } from "@/components/chat/chat-provider-v2";
 import { isCopilotKitV2ChatEnabled } from "@/lib/copilotkit-v2-chat-flag";
 
@@ -8,7 +9,7 @@ import { isCopilotKitV2ChatEnabled } from "@/lib/copilotkit-v2-chat-flag";
 export default function ChatLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   if (isCopilotKitV2ChatEnabled()) {
     return <ChatProviderV2>{children}</ChatProviderV2>;
