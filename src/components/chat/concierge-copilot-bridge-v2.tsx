@@ -125,8 +125,8 @@ type ConciergeCopilotBridgeV2Props = {
 };
 
 /**
- * SAN-901 · CK-V2-004A — minimal v2 bridge: useAgent + 1 tool render + 1 HITL.
- * v2 subpath imports are intentional (SAN-901 spike); v1 geo-chat-shell untouched for flag-off rollback.
+ * SAN-890 · CK-V2-004 — v2 concierge bridge (expanding from SAN-901 spike).
+ * v1 geo-chat-shell bridges untouched for flag-off rollback.
  */
 export function ConciergeCopilotBridgeV2({
   children,
