@@ -1,7 +1,7 @@
-# CK-V2 · Tasks audit — 11 (SAN-903 spec + execution)
+# CK-V2 · Tasks audit — 11 (post SAN-902 merge @ `fbcf8d3`)
 
-**Date:** 2026-06-13 · **Re-verified:** post-implementation (local, uncommitted)  
-**Ground truth:** base `4ee1bb9` + SAN-903 diff on disk  
+**Date:** 2026-06-14 · **Re-verified:** after PR #214 merge + Linear hygiene pass  
+**Ground truth:** `origin/main` @ **`fbcf8d3`**  
 **Questions:**
 1. Was the **spec** (~94/100 pre-impl) correct?
 2. Did **execution** meet the updated contract?
@@ -11,10 +11,15 @@
 
 ## Verdict — first read
 
-**Spec audit: 94/100 — was correct; no spec rollback needed.**  
-**Execution audit: ~88/100 — SAN-903 ready for PR (`Closes SAN-903` only); does NOT close SAN-895.**
+**Post-merge verdict:** SAN-903 + SAN-902 shipped correctly; **SAN-895 remains In Progress** until SAN-904→905 green.
 
-**Hypothesis status:** **Partially confirmed** — turn 1 has zero workspace tools; turn 2 completes without `thought_signature`; turn 3 hit a generic `AGENT_STREAM_ERROR` (document in SAN-902, not a SAN-903 blocker).
+| Milestone | Status @ `fbcf8d3` |
+|---|---|
+| SAN-903 workspace opt-out | ✅ merged #213 |
+| SAN-902 3-turn repro | ✅ merged #214 |
+| SAN-895 parent | 🔴 **In Progress** — not Done |
+| SAN-904 / SAN-905 | ⚫ open |
+| Linear relations 898 chain | ✅ wired 2026-06-14 |
 
 | Layer | Score | Dot |
 |---|---:|---|
@@ -98,31 +103,17 @@
 
 ## Part E — Next steps (correct implementation order)
 
-```text
-NOW — ship SAN-903 (scoped PR only):
-  src/mastra/agents/host-event.ts
-  src/__tests__/host-event-agent.test.ts
-  docs/upgradeV2/changelog.md · todo.md · 11-tasks-audit.md · linear-descriptions/SAN-903.md
-  PR: Closes SAN-903  (NOT SAN-895)
+**DONE:** [SAN-887](https://linear.app/sanjiovani/issue/SAN-887) → [SAN-888](https://linear.app/sanjiovani/issue/SAN-888) → [SAN-889](https://linear.app/sanjiovani/issue/SAN-889) → [SAN-892](https://linear.app/sanjiovani/issue/SAN-892) → [SAN-900](https://linear.app/sanjiovani/issue/SAN-900) → [SAN-903 · P0 workspace opt-out](https://linear.app/sanjiovani/issue/SAN-903/ck-v2-007a-p0-workspace-opt-out-on-hosteventagent) → [SAN-902 · Minimal repro](https://linear.app/sanjiovani/issue/SAN-902/ck-v2-007b-minimal-repro-mastra-multi-turn-signature)
 
-THEN — parallel band (steps 7–9 + 10 start):
-  SAN-902  — commit repro script + document turn3 flake + before/after evidence
-  SAN-898  — hydration caret-color (parallel)
-  SAN-910  — dependency-cruiser guardrails (parallel)
-  SAN-896  — evidence refresh @ new SHA (parallel)
+**NOW (parallel):**
+- [SAN-910 · Migration CI guardrails](https://linear.app/sanjiovani/issue/SAN-910/ck-v2-012-migration-ci-guardrails-audit-dashboard-no-new-v1-gate)
+- [SAN-898 · Hydration mismatch](https://linear.app/sanjiovani/issue/SAN-898/ck-v2-010-fix-v2-host-event-hydration-mismatch-caret-color-transparent) ([906](https://linear.app/sanjiovani/issue/SAN-906) → [908](https://linear.app/sanjiovani/issue/SAN-908) → [909](https://linear.app/sanjiovani/issue/SAN-909) → [907](https://linear.app/sanjiovani/issue/SAN-907))
+- [SAN-896 · Refresh evidence](https://linear.app/sanjiovani/issue/SAN-896/ck-v2-008-refresh-san-888-san-889-localhost-evidence-current-mainsha) @ `fbcf8d3`
 
-THEN — SAN-895 closure chain:
-  SAN-902 → SAN-904 → SAN-905  (parent Done only when 905 green)
+**THEN — [SAN-895](https://linear.app/sanjiovani/issue/SAN-895/ck-v2-007-fix-hosteventagent-gemini-thought-signature-console-errors) closure:**
+- [SAN-904 · HITL proofs](https://linear.app/sanjiovani/issue/SAN-904/ck-v2-007c-hitl-approvereject-proofs-green) → [SAN-905 · Console clean](https://linear.app/sanjiovani/issue/SAN-905/ck-v2-007d-console-clean-on-hosteventagent-stream)
 
-CHAT (after hygiene trending green):
-  SAN-901  — chat vertical slice (unblocked since SAN-900 Done; cleaner after 903 helps)
-  SAN-890  — full /chat (after 901 PASS + explicit approval)
-  SAN-891  — retire react-ui (last)
-
-LATER:
-  SAN-897  — preview analytics (after 896 only)
-  SAN-899  — fallback if 903 hypothesis insufficient (unlikely after turn1–2 pass)
-```
+**CHAT:** [SAN-901](https://linear.app/sanjiovani/issue/SAN-901/ck-v2-004a-chat-vertical-slice-spike-useagent-1-tool-1-hitl) → [SAN-890](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-full-chat-v2-migration) → [SAN-891](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react)
 
 | Step | Issue | Ready? |
 |---:|---|---|

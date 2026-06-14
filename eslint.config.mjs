@@ -14,6 +14,7 @@ const config = [
       "commerce/**",
       "docs/**",
       "graphify-out/**",
+      ".dependency-cruiser.cjs",
     ],
   },
   ...nextCoreWebVitals,
