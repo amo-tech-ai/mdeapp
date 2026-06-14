@@ -1,0 +1,44 @@
+src/components/host/host-ops-copilot-bridge.tsx
+  s_a7eb2c95c408ba::t_6499e4594a297c 112,114-118
+  s_a7eb2c95c408ba::t_1fedc4515ed044 45-52
+src/components/host/host-event-copilot-bridge.tsx
+  s_a7eb2c95c408ba::t_4f9d9fd9d40cc4 3,164-166,168-169
+docs/upgradeV2/changelog.md
+  s_a7eb2c95c408ba::t_a386eb9953ed2e 8,10,14-22,24,26-54
+src/app/chat/page.tsx
+  s_a7eb2c95c408ba::t_727920f50632c8 3
+src/lib/hooks/use-concierge-chat.ts
+  s_a7eb2c95c408ba::t_2db4be8e83fbcf 29,31-35
+src/components/chat/concierge-initial-prompt.tsx
+  s_a7eb2c95c408ba::t_4ef160e51390f4 33
+docs/tasks/testing/evidence/SAN-891/san-891-localhost-proof.mjs
+  s_a7eb2c95c408ba::t_e41273c32ecced 111
+src/components/chat/concierge-copilot-bridge.tsx
+  s_a7eb2c95c408ba::t_1122ab0769ef37 4
+src/components/chat/concierge-coagent-context.tsx
+  s_a7eb2c95c408ba::t_4a8f2bd99f4a81 44,46,49
+src/components/cafe/cafe-detail-panel.tsx
+  s_a7eb2c95c408ba::t_abd9899d820d74 167
+src/components/copilot/search-tool-renders.tsx
+  s_a7eb2c95c408ba::t_1e71755581268b 93
+docs/upgradeV2/todo.md
+  s_a7eb2c95c408ba::t_fbf10e0dbb0792 3-5,7,15,22-23,35-37,39,41-42,44,48,50-59,69,73-85,93,98,101-102,105-106,114-116,125,128,131-132,135,151-152,155-156,158,164-166
+src/components/chat/chat-query-bar.tsx
+  s_a7eb2c95c408ba::t_39c2cfdce49157 54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "b07c29bb8cc2aff449bec23d9f286da4751e3eaf",
+  "prompts": {},
+  "sessions": {
+    "s_a7eb2c95c408ba": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "18b281fe-3599-4314-af69-c33116c98c9f",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
