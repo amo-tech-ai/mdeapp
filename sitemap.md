@@ -69,7 +69,7 @@ prod: https://www.mdeai.co
 ├── /business/ai                     ⚠️ SHELL   Placeholder (200, "coming soon") — Agency card target; full landing SAN-663 (child of /business SAN-726)
 │   ├── /business/social             ⚫ POST    Postiz social management (SAN-697)
 │   └── /business/event-marketing    ⚫ POST    Event marketing services (SAN-701)
-├── /venues                          ⚫ POST    Venue landing (?v=restaurant|cafe|nightclub) — Venue card → /restaurants for MVP (SAN-661)
+├── /venues                          ✅ LIVE    Venue landing (?v=restaurant|cafe|nightclub|space) — partner-hub venue verticals route here (SAN-661)
 │   └── /venues/features             ⚫ POST    Venue features deep-dive (SAN-703)
 ├── /pricing                         ⚫ POST    Partner pricing across types (SAN-695)
 ├── /contact                         ⚫ POST    Book a demo / sales (SAN-693)
