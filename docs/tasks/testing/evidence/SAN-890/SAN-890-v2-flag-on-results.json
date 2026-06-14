@@ -1,0 +1,21 @@
+{
+  "task": "SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2",
+  "slice": "tool renders + map pin + HITL",
+  "mode": "v2-flag-on",
+  "flag": "1",
+  "baseUrl": "http://localhost:3001",
+  "headSha": "20adf10d",
+  "at": "2026-06-14T09:18:55.980Z",
+  "gates": {
+    "copilotkitPost": true,
+    "chatHttp": 200,
+    "signedInEmail": true,
+    "geoChatShellV2": false,
+    "chatCanvas": true,
+    "centerChatPanel": true,
+    "spikeShellAbsent": true,
+    "errorScreenshot": "SAN-890-v2-flag-on-localhost-error.png"
+  },
+  "error": "page.waitForFunction: Timeout 90000ms exceeded.",
+  "verdict": "FAIL"
+}

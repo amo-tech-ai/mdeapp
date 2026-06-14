@@ -1,28 +1,103 @@
 # CK-V2 · CopilotKit v1→v2 migration — Changelog
 
 Reverse-chronological log of verified program events.  
-Tracker: [`todo.md`](./todo.md) · Audits: [`11-tasks-audit.md`](./11-tasks-audit.md) · [`08-local-hostaudit.md`](./08-local-hostaudit.md) · [`05-890audit.md`](./05-890audit.md)
+Tracker: [`todo.md`](./todo.md) · Audits: [`12-tasks-audit.md`](./12-tasks-audit.md) · [`11-tasks-audit.md`](./11-tasks-audit.md) · [`08-local-hostaudit.md`](./08-local-hostaudit.md)
 
 ---
 
-## 2026-06-13 — [SAN-903 · CK-V2-007a — P0 workspace opt-out on hostEventAgent](https://linear.app/sanjiovani/issue/SAN-903/ck-v2-007a-p0-workspace-opt-out-on-hosteventagent) [PR #213](https://github.com/amo-tech-ai/mdeapp/pull/213) @ `3778e91`
+## 2026-06-14 — Program status sync + PR #218 review fixes (uncommitted)
 
-**Verdict:** Hypothesis test **shipped in PR** — `Closes SAN-903` only · **does not** close SAN-895.
+**Verdict:** Migration **code path ~78% exec** — **not** “almost done” for prod v2. Camila/Roberto still on v1 @ mdeai.co (all flags OFF).
 
 | Gate | Result |
 |---|---|
+| [SAN-890 · CK-V2-004](https://linear.app/sanjiovani/issue/SAN-890) | 🟡 **In Review** · [PR #218](https://github.com/amo-tech-ai/mdeapp/pull/218) @ `20adf10d` |
+| Review batch | ✅ proof gates · `ConciergeInitialPrompt` v2 · citation sync · HITL respond passthrough · dead-branch cleanup |
+| [SAN-891 · CK-V2-005](https://linear.app/sanjiovani/issue/SAN-891) | ⚫ **0% exec** — blocks “upgrade complete” (8 `react-ui` files · remove flags) |
+| Hook share @ branch | **33%** (12 v2 / 24 v1 files per `npm run audit:copilotkit-v2`) |
+| **SAN-886 epic exec** | **~78%** |
+| **Prod v2 visible** | **0%** |
+
+**Linear:** [v2-upgrade view](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd) · SAN-886 description synced
+
+**Next:** push review fixes → merge #218 → start SAN-891.
+
+---
+
+## 2026-06-14 — [SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk) slice 2 — tool renders + map pin + HITL (uncommitted)
+
+**Verdict:** SAN-890 **~95% exec** — [PR #218](https://github.com/amo-tech-ai/mdeapp/pull/218) In Review; review fixes pending push.
+
+| Gate | Result |
+|---|---|
+| 12× `useRenderTool` | ✅ `search-tool-renders-v2.tsx` (events · restaurants · grounded · citations · errors · rental) |
+| Map pin | ✅ `focus-map-pin-action-v2.tsx` inside `MapsShell` |
+| HITL | ✅ `venue-booking-hitl-card` · café booking prompt · `consoleErrors: []` |
+| Flag on proof | ✅ PASS @ `697a8759` working tree |
+| Flag off rollback | ✅ PASS · v1 shell · `consoleErrors: []` |
+| v2 hook files | **12** (+2 vs slice 1) · hook share **~34%** |
+| **SAN-886 epic** | **~75%** |
+| Prod flags | ✅ OFF |
+
+**Evidence:** [`docs/tasks/testing/evidence/SAN-890/RESULTS.md`](../tasks/testing/evidence/SAN-890/RESULTS.md)
+
+**Next:** commit branch → open single SAN-890 PR → then SAN-891.
+
+---
+
+## 2026-06-14 — [SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk) slice 1 @ `697a8759`
+
+**Verdict:** SAN-890 **~40% exec** — GeoChatShellV2 scaffold + flag proofs PASS; bridge/tools/HITL/PR remain.
+
+| Gate | Result |
+|---|---|
+| [SAN-901 · CK-V2-004A](https://linear.app/sanjiovani/issue/SAN-901) | ✅ **100%** — merged [PR #217](https://github.com/amo-tech-ai/mdeapp/pull/217) @ `a57516de` |
+| Slice 1 commits | `827dd684` scaffold · `697a8759` coagent providers + proof |
+| Flag on shell | ✅ `geo-chat-shell-v2` · `chat-canvas` · `center-chat-panel` · `consoleErrors: []` |
+| Flag off rollback | ✅ v1 `GeoChatShell` · no v2 shell testid · `consoleErrors: []` |
+| v2 hook files | **10** (was 6 @ `a57516de`) · hook share **30%** |
+| **SAN-886 epic** | **~68%** (was ~62%) |
+| Prod flags | ✅ OFF |
+
+**Evidence:** [`docs/tasks/testing/evidence/SAN-890/RESULTS.md`](../tasks/testing/evidence/SAN-890/RESULTS.md)
+
+**Next:** expand `concierge-copilot-bridge-v2` (12 tool renders) → map pin → HITL proof → single PR.
+
+---
+
+## 2026-06-14 — [SAN-901 · CK-V2-004A — Chat vertical slice spike](https://linear.app/sanjiovani/issue/SAN-901/ck-v2-004a-chat-vertical-slice-spike-useagent-1-tool-1-hitl) **Merged** [PR #217](https://github.com/amo-tech-ai/mdeapp/pull/217) @ `a57516de`
+
+**Verdict:** SAN-901 **100% complete** — unblocks SAN-890 full migration.
+
+| Gate | Result |
+|---|---|
+| Flag on/off localhost | ✅ PASS |
+| Rental tool render | ✅ `spike-rental-results` |
+| Venue HITL | 🟡 wired · soft (not auto-triggered) |
+| Linear | ✅ **Done** |
+
+**Evidence:** [`docs/tasks/testing/evidence/SAN-901/RESULTS.md`](../tasks/testing/evidence/SAN-901/RESULTS.md)
+
+---
+
+## 2026-06-13 — [SAN-903 · CK-V2-007a — P0 workspace opt-out on hostEventAgent](https://linear.app/sanjiovani/issue/SAN-903/ck-v2-007a-p0-workspace-opt-out-on-hosteventagent) **Merged** [PR #213](https://github.com/amo-tech-ai/mdeapp/pull/213) @ `7674986`
+
+**Verdict:** Hypothesis test **merged** — `Closes SAN-903` only · **does not** close SAN-895.
+
+| Gate | Result |
+|---|---|
+| Merge commit | ✅ `7674986` (squash of `3778e91` + `0ce16b7`) |
+| Floor CI on PR | ✅ Success |
 | `workspace: () => undefined` on `hostEventAgent` | ✅ `host-event.ts` |
 | Unit: opt-out + B2a `getWorkspace()` collateral | ✅ 5/5 `host-event-agent` |
-| `npm run build` | ✅ |
 | Live turn1 | ✅ no `mastra_workspace_*` |
-| Live turn2 | ✅ no `thought_signature` |
-| Live turn3 | 🟡 generic stream error → **SAN-902** |
+| Live turn2 | ✅ no thrown `thought_signature` |
+| Live turn3 (pre-merge) | 🟡 generic `AGENT_STREAM_ERROR` → SAN-902 |
 | SAN-895 parent | ⛔ remains open until 902→904→905 |
 
-**Files:** `host-event.ts` · `host-event-agent.test.ts` · `docs/upgradeV2/{todo,changelog,11-tasks-audit,linear-descriptions/SAN-903}.md`
+**Post-merge:** SAN-902 repro @ `7674986` PASS 2/2 (turn3 flake **not** reproduced in script). Browser HITL approve PASS · reject/combined script still intermittent `thought_signature` on `preview_and_publish` → SAN-904/905.
 
-**Next:** merge PR → SAN-902 repro → parallel 898/910/896 → SAN-901 spike.
-
+**Next:** merge [PR #214](https://github.com/amo-tech-ai/mdeapp/pull/214) (SAN-902, floor ✅) → SAN-904/905 → parallel 898/910/896.
 
 ---
 
