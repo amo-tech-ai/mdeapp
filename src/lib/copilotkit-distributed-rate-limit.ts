@@ -25,7 +25,7 @@ export function buildCopilotKitRateLimitKey(
 export function buildRateLimitedResponse(
   result: Pick<DistributedRateLimitResult, "max" | "count" | "retryAfterSeconds">,
 ): Response {
-  const retryAfter = Math.max(1, result.retryAfterSeconds || COPILOTKIT_WINDOW_SECONDS);
+  const retryAfter = Math.max(1, result.retryAfterSeconds ?? COPILOTKIT_WINDOW_SECONDS);
   const remaining = Math.max(0, result.max - result.count);
 
   return new Response(
@@ -73,11 +73,12 @@ async function evaluateLimit(
   max: number,
   scope: string,
   userId: string | null,
+  options: { emergencyFallback?: boolean } = {},
 ): Promise<Response | null> {
   const result = await checkRateLimitDurable(key, max, COPILOTKIT_WINDOW_SECONDS);
 
   if (!result.storeAvailable) {
-    if (emergencyFloodBlocked(req)) {
+    if (options.emergencyFallback && emergencyFloodBlocked(req)) {
       logRateLimitBlock({
         scope: `${scope}:emergency-local`,
         ip: clientIpFromRequest(req),
@@ -119,6 +120,7 @@ export async function checkCopilotKitDistributedIpHardCeiling(
     COPILOTKIT_HARD_IP_MAX,
     "ip-hard",
     null,
+    { emergencyFallback: true },
   );
 }
 

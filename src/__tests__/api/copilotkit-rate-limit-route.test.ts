@@ -95,4 +95,12 @@ describe("POST /api/copilotkit — distributed rate limit gate", () => {
     expect(getUserMock).not.toHaveBeenCalled();
     expect(handleRequestMock).not.toHaveBeenCalled();
   });
+
+  it("returns 500 when hard-ceiling check throws inside try/catch", async () => {
+    ipHardCeilingMock.mockRejectedValueOnce(new Error("rpc exploded"));
+
+    const res = await POST(postRequest("186.81.102.183") as never);
+    expect(res.status).toBe(500);
+    expect(getUserMock).not.toHaveBeenCalled();
+  });
 });

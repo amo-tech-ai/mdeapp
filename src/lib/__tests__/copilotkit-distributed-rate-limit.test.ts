@@ -3,6 +3,7 @@ import {
   COPILOTKIT_ANON_IP_MAX,
   COPILOTKIT_AUTH_USER_MAX,
   COPILOTKIT_HARD_IP_MAX,
+  buildRateLimitedResponse,
   checkCopilotKitDistributedIpHardCeiling,
   checkCopilotKitDistributedRateLimit,
   resetCopilotKitDistributedRateLimitsForTests,
@@ -149,7 +150,36 @@ describe("copilotkit-distributed-rate-limit", () => {
     expect(await checkCopilotKitDistributedRateLimit(reqWithIp("203.0.113.53"), null)).toBeNull();
   });
 
+  it("uses ?? so retryAfterSeconds 0 does not fall back to full window", () => {
+    const res = buildRateLimitedResponse({
+      max: 30,
+      count: 31,
+      retryAfterSeconds: 0,
+    });
+    expect(res.headers.get("Retry-After")).toBe("1");
+  });
+
   it("fails closed on obvious local flood when durable store is unavailable", async () => {
+    rpcMock.mockResolvedValue({
+      allowed: true,
+      count: 0,
+      max: COPILOTKIT_HARD_IP_MAX,
+      retryAfterSeconds: 0,
+      storeAvailable: false,
+    });
+
+    const req = reqWithIp("203.0.113.54");
+    for (let i = 0; i < 81; i += 1) {
+      const result = await checkCopilotKitDistributedIpHardCeiling(req);
+      if (i < 80) {
+        expect(result).toBeNull();
+      } else {
+        expect(result?.status).toBe(429);
+      }
+    }
+  });
+
+  it("does not double-count emergency fallback on anon check when store is down", async () => {
     rpcMock.mockResolvedValue({
       allowed: true,
       count: 0,
@@ -158,14 +188,9 @@ describe("copilotkit-distributed-rate-limit", () => {
       storeAvailable: false,
     });
 
-    const req = reqWithIp("203.0.113.54");
-    for (let i = 0; i < 81; i += 1) {
-      const result = await checkCopilotKitDistributedRateLimit(req, null);
-      if (i < 80) {
-        expect(result).toBeNull();
-      } else {
-        expect(result?.status).toBe(429);
-      }
+    const req = reqWithIp("203.0.113.55");
+    for (let i = 0; i < 120; i += 1) {
+      expect(await checkCopilotKitDistributedRateLimit(req, null)).toBeNull();
     }
   });
 });

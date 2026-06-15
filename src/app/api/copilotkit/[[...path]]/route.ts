@@ -72,10 +72,10 @@ async function handleCopilotKit(req: NextRequest) {
   const unauthorized = assertCopilotKitAuthorized(req);
   if (unauthorized) return unauthorized;
 
-  const ipHardCeiling = await checkCopilotKitDistributedIpHardCeiling(req);
-  if (ipHardCeiling) return ipHardCeiling;
-
   try {
+    const ipHardCeiling = await checkCopilotKitDistributedIpHardCeiling(req);
+    if (ipHardCeiling) return ipHardCeiling;
+
     const supabase = await createClient();
     const {
       data: { user },
