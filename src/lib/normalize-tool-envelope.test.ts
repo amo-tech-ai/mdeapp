@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalizeToolEnvelope } from "./normalize-tool-envelope";
+import { decodeToolJson, normalizeToolEnvelope } from "./normalize-tool-envelope";
 
 describe("normalizeToolEnvelope", () => {
   it("passes through object results", () => {
@@ -26,5 +26,14 @@ describe("normalizeToolEnvelope", () => {
   it("returns empty for invalid input", () => {
     expect(normalizeToolEnvelope(null).results).toBeUndefined();
     expect(normalizeToolEnvelope("not-json").results).toBeUndefined();
+  });
+
+  it("decodeToolJson unwraps double-encoded web-events payloads", () => {
+    const payload = {
+      citations: [{ title: "Event", url: "https://example.com/e" }],
+      metadata: { reason: "router_skip" },
+    };
+    const decoded = decodeToolJson(JSON.stringify(JSON.stringify(payload)));
+    expect(decoded).toEqual(payload);
   });
 });
