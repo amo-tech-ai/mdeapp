@@ -2,6 +2,8 @@
 
 **Task:** PERF-001b · Class **C** · P0 flood protection for `/api/copilotkit`
 
+**PR:** [#222](https://github.com/amo-tech-ai/mdeapp/pull/222) · **Head:** `fbcc6707`
+
 ## Incident summary (verified via Vercel CLI, 2026-06-15)
 
 | Signal | Value |
@@ -63,7 +65,7 @@ npm test -- --run \
 
 **Result:** 17/17 passed (2026-06-15)
 
-**Floor:** PASS on CI after commit `25018a76` — `fix(rate-limit): PERF-001b — satisfy floor test types` (TypeScript test-only fixes — no runtime change).
+**Floor:** PASS on CI — `fix(rate-limit): PERF-001b — satisfy floor test types` (TypeScript test-only fixes at PR head; no runtime change).
 
 Coverage:
 
