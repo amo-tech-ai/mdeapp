@@ -67,4 +67,21 @@ describe("distributed-rate-limit", () => {
     vi.stubEnv("NODE_ENV", "production");
     expect(clientIpFromRequest(req({ "x-forwarded-for": "10.0.0.99" }))).toBe("unknown");
   });
+
+  it("ignores spoofed x-vercel-id and x-forwarded-for in production without x-real-ip", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    expect(
+      clientIpFromRequest(
+        req({
+          "x-vercel-id": "spoofed-deployment-id",
+          "x-forwarded-for": "203.0.113.99",
+        }),
+      ),
+    ).toBe("unknown");
+  });
+
+  it("uses x-forwarded-for leftmost in non-production for local tests", () => {
+    vi.stubEnv("NODE_ENV", "test");
+    expect(clientIpFromRequest(req({ "x-forwarded-for": "203.0.113.77" }))).toBe("203.0.113.77");
+  });
 });

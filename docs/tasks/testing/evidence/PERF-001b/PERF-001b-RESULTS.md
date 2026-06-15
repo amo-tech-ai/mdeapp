@@ -63,7 +63,7 @@ npm test -- --run \
   src/__tests__/api/copilotkit-rate-limit-route.test.ts
 ```
 
-**Result:** 17/17 passed (2026-06-15)
+**Result:** 19/19 passed (2026-06-15, includes XFF hardening tests)
 
 **Floor:** PASS on CI — `fix(rate-limit): PERF-001b — satisfy floor test types` (TypeScript test-only fixes at PR head; no runtime change).
 
@@ -77,13 +77,15 @@ Coverage:
 - RPC error → fail open; local emergency flood → 429 (ip-hard only)
 - Emergency fallback does not double-count on anon/user checks when store is down
 - `retryAfterSeconds: 0` uses `??` (header `Retry-After: 1`, not full window)
-- Production IP trust: `x-real-ip` preferred; client `x-forwarded-for` ignored without platform IP
+- Production IP trust: `x-real-ip` only; client `x-forwarded-for` and spoofable `x-vercel-id` ignored
+- Non-production: `x-forwarded-for` leftmost for local curl/tests
 
 ## PR review fixes (commits after initial PERF-001b)
 
 | Fix | Commit theme |
 |-----|----------------|
 | Prefer `x-real-ip` over spoofable `x-forwarded-for` | Security |
+| Remove `x-vercel-id` + XFF fallback (prod trusts `x-real-ip` only) | Security |
 | Wrap IP hard ceiling in `try/catch` | Resilience |
 | `retryAfterSeconds ?? window` → `?? 1` when zero | Correct 429 headers |
 | Emergency brake only on `ip-hard` check | Avoid double-count |
@@ -93,7 +95,7 @@ Coverage:
 
 | Check | Status |
 |-------|--------|
-| Unit + route tests | ✅ 17/17 |
+| Unit + route tests | ✅ 19/19 |
 | GitHub floor CI | ✅ PASS (post type-fix push) |
 | Preview/prod 429 smoke (31× anon POST) | ⏳ **Pending deploy** — do not mark PERF-001b Done until complete |
 
