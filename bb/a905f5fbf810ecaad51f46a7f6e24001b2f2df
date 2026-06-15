@@ -1,0 +1,33 @@
+src/lib/copilotkit-distributed-rate-limit.ts
+  s_d934f93e3b39ca::t_0ab9b0d6087ae0 123
+  s_d934f93e3b39ca::t_3dfc6d8fd6b9d6 28
+  s_d934f93e3b39ca::t_48e971dcae0d22 76,81
+src/lib/__tests__/copilotkit-distributed-rate-limit.test.ts
+  s_d934f93e3b39ca::t_ac76ba85c14077 153-161,166,173,181-193
+  s_d934f93e3b39ca::t_dd8d05cbe11e77 6
+src/app/api/copilotkit/[[...path]]/route.ts
+  s_d934f93e3b39ca::t_76a8830d23056f 76-78
+src/__tests__/api/copilotkit-rate-limit-route.test.ts
+  s_d934f93e3b39ca::t_21309ae13ffcb3 98-105
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "bba905f5fbf810ecaad51f46a7f6e24001b2f2df",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_d934f93e3b39ca": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ed309e68-af99-497b-8545-2c3f383d3a5a",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
