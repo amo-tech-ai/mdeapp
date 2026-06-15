@@ -1,0 +1,31 @@
+docs/tasks/testing/evidence/PERF-001b/PERF-001b-RESULTS.md
+  s_d934f93e3b39ca::t_82f4f90761301a 66
+  s_d934f93e3b39ca::t_4a27981b2918aa 64-65,75-96
+src/lib/__tests__/distributed-rate-limit.test.ts
+  s_d934f93e3b39ca::t_82ae07708413de 55-63,67-68
+  s_d934f93e3b39ca::t_0a0b8473f48cf1 1
+  s_d934f93e3b39ca::t_288064cac6d5fe 17-20
+src/lib/__tests__/copilotkit-distributed-rate-limit.test.ts
+  s_d934f93e3b39ca::t_b4e602f3e58944 64-65,69-76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "fbcc6707dbb757da1e648e21aab5e7fcddb270dd",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_d934f93e3b39ca": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ed309e68-af99-497b-8545-2c3f383d3a5a",
+        "model": "default"
+      },
+      "human_author": null
+    }
+  }
+}
