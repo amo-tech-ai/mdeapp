@@ -1,0 +1,46 @@
+docs/upgradeV2/13-spikes.md
+  s_d934f93e3b39ca::t_b06a5899743180 1,3,5-13,16-18,24-27
+  h_712413820f8934 2,4,14-15,19-23,28-284,295-299,301-305,313-337,341-345,349-382
+  s_d934f93e3b39ca::t_9986d02a4b7066 338-340,346-348
+  s_d934f93e3b39ca::t_de83195935984d 285-294,300,306-312
+  s_d934f93e3b39ca::t_9afe0617d0c0b8 383-385
+docs/tasks/testing/evidence/PERF-001b/PERF-001b-RESULTS.md
+  s_d934f93e3b39ca::t_664fe635da075d 1-96
+src/__tests__/api/copilotkit-rate-limit-route.test.ts
+  s_d934f93e3b39ca::t_ae0ef385d7b4b7 1-80,84-98
+  s_d934f93e3b39ca::t_c60506fa22d54c 81-83
+src/lib/__tests__/distributed-rate-limit.test.ts
+  s_d934f93e3b39ca::t_f0acd11d5d3995 1-45
+src/lib/api-ip-rate-limit.ts
+  s_d934f93e3b39ca::t_479a95c3f67740 7
+src/lib/copilotkit-distributed-rate-limit.ts
+  s_d934f93e3b39ca::t_624db16296a771 1-154
+src/lib/distributed-rate-limit.ts
+  s_d934f93e3b39ca::t_6e02829d03cd40 1-97
+src/app/api/copilotkit/[[...path]]/route.ts
+  s_d934f93e3b39ca::t_479a95c3f67740 10-12,75-76,86
+src/lib/__tests__/copilotkit-distributed-rate-limit.test.ts
+  s_d934f93e3b39ca::t_9c3ebcd0f410a1 1-161,163,165-171
+  s_d934f93e3b39ca::t_2c6c57fa52fb29 162,164
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "ade4142b0ae115be241f25662f090a591f8a9e27",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_d934f93e3b39ca": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ed309e68-af99-497b-8545-2c3f383d3a5a",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
