@@ -9,13 +9,28 @@ export interface DistributedRateLimitResult {
   storeAvailable: boolean;
 }
 
+/**
+ * Client IP for rate limiting.
+ * Prefer platform-set x-real-ip (Vercel edge) over x-forwarded-for leftmost,
+ * which clients can spoof when no trusted proxy strips it.
+ */
 export function clientIpFromRequest(req: Request): string {
-  const forwarded = req.headers.get("x-forwarded-for");
-  if (forwarded) {
-    const first = forwarded.split(",")[0]?.trim();
-    if (first) return first;
+  const realIp = req.headers.get("x-real-ip")?.trim();
+  if (realIp) return realIp;
+
+  if (req.headers.get("x-vercel-id")) {
+    const vercelForwarded = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+    if (vercelForwarded) return vercelForwarded;
   }
-  return req.headers.get("x-real-ip") ?? "unknown";
+
+  if (process.env.NODE_ENV === "production") {
+    return "unknown";
+  }
+
+  const devForwarded = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  if (devForwarded) return devForwarded;
+
+  return "unknown";
 }
 
 /** Log-safe IP: IPv4 first two octets; IPv6 short hash prefix. */
