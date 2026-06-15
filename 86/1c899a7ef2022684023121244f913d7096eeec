@@ -1,0 +1,28 @@
+src/lib/distributed-rate-limit.ts
+  s_d934f93e3b39ca::t_9ff29eecb8c8b8 12-16,18-27,29-33
+src/lib/__tests__/distributed-rate-limit.test.ts
+  s_d934f93e3b39ca::t_eeb4a3168ef5b1 12-14
+  s_d934f93e3b39ca::t_ad2fe7487974d4 10
+  s_d934f93e3b39ca::t_58aedd6a440cab 49-75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "861c899a7ef2022684023121244f913d7096eeec",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_d934f93e3b39ca": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ed309e68-af99-497b-8545-2c3f383d3a5a",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
