@@ -61,7 +61,9 @@ npm test -- --run \
   src/__tests__/api/copilotkit-rate-limit-route.test.ts
 ```
 
-**Result:** 12/12 passed (2026-06-15)
+**Result:** 17/17 passed (2026-06-15)
+
+**Floor:** PASS on CI after commit `25018a76` — `fix(rate-limit): PERF-001b — satisfy floor test types` (TypeScript test-only fixes — no runtime change).
 
 Coverage:
 
@@ -70,7 +72,28 @@ Coverage:
 - IP hard ceiling before auth
 - Blocked request does not call Mastra runtime
 - Under-limit empty POST still returns handler 400
-- RPC error → fail open; local emergency flood → 429
+- RPC error → fail open; local emergency flood → 429 (ip-hard only)
+- Emergency fallback does not double-count on anon/user checks when store is down
+- `retryAfterSeconds: 0` uses `??` (header `Retry-After: 1`, not full window)
+- Production IP trust: `x-real-ip` preferred; client `x-forwarded-for` ignored without platform IP
+
+## PR review fixes (commits after initial PERF-001b)
+
+| Fix | Commit theme |
+|-----|----------------|
+| Prefer `x-real-ip` over spoofable `x-forwarded-for` | Security |
+| Wrap IP hard ceiling in `try/catch` | Resilience |
+| `retryAfterSeconds ?? window` → `?? 1` when zero | Correct 429 headers |
+| Emergency brake only on `ip-hard` check | Avoid double-count |
+| Test types: spread mock sequence + `vi.stubEnv("NODE_ENV")` | Floor / `tsc` green |
+
+## Production proof
+
+| Check | Status |
+|-------|--------|
+| Unit + route tests | ✅ 17/17 |
+| GitHub floor CI | ✅ PASS (post type-fix push) |
+| Preview/prod 429 smoke (31× anon POST) | ⏳ **Pending deploy** — do not mark PERF-001b Done until complete |
 
 ## Simulated flood (would-have-blocked)
 

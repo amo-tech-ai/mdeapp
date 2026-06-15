@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { redactIpForLog } from "../distributed-rate-limit";
 
 const rpcMock = vi.hoisted(() => vi.fn());
@@ -14,6 +14,10 @@ function req(headers: Record<string, string>): Request {
 }
 
 describe("distributed-rate-limit", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("redacts IPv4 for logs", () => {
     expect(redactIpForLog("186.81.102.183")).toBe("186.81.*.*");
   });
@@ -48,29 +52,19 @@ describe("distributed-rate-limit", () => {
   });
 
   it("prefers x-real-ip over spoofed x-forwarded-for in production", () => {
-    const priorEnv = process.env.NODE_ENV;
-    process.env.NODE_ENV = "production";
-    try {
-      expect(
-        clientIpFromRequest(
-          req({
-            "x-real-ip": "186.81.102.183",
-            "x-forwarded-for": "10.0.0.1, 10.0.0.2",
-          }),
-        ),
-      ).toBe("186.81.102.183");
-    } finally {
-      process.env.NODE_ENV = priorEnv;
-    }
+    vi.stubEnv("NODE_ENV", "production");
+    expect(
+      clientIpFromRequest(
+        req({
+          "x-real-ip": "186.81.102.183",
+          "x-forwarded-for": "10.0.0.1, 10.0.0.2",
+        }),
+      ),
+    ).toBe("186.81.102.183");
   });
 
   it("ignores client x-forwarded-for in production without platform IP", () => {
-    const priorEnv = process.env.NODE_ENV;
-    process.env.NODE_ENV = "production";
-    try {
-      expect(clientIpFromRequest(req({ "x-forwarded-for": "10.0.0.99" }))).toBe("unknown");
-    } finally {
-      process.env.NODE_ENV = priorEnv;
-    }
+    vi.stubEnv("NODE_ENV", "production");
+    expect(clientIpFromRequest(req({ "x-forwarded-for": "10.0.0.99" }))).toBe("unknown");
   });
 });

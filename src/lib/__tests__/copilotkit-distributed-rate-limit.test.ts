@@ -61,20 +61,19 @@ describe("copilotkit-distributed-rate-limit", () => {
 
   it("returns 429 on the 31st anonymous request from one IP", async () => {
     const req = reqWithIp("203.0.113.50");
-    mockRpcSequence(
-      Array.from({ length: 30 }, (_, i) => ({
+    mockRpcSequence([
+      ...Array.from({ length: 30 }, (_, i) => ({
         allowed: true,
         count: i + 1,
         max: COPILOTKIT_ANON_IP_MAX,
-      })).concat([
-        {
-          allowed: false,
-          count: 31,
-          max: COPILOTKIT_ANON_IP_MAX,
-          retryAfterSeconds: 180,
-        },
-      ]),
-    );
+      })),
+      {
+        allowed: false,
+        count: 31,
+        max: COPILOTKIT_ANON_IP_MAX,
+        retryAfterSeconds: 180,
+      },
+    ]);
 
     for (let i = 0; i < 30; i += 1) {
       expect(await checkCopilotKitDistributedRateLimit(req, null)).toBeNull();
