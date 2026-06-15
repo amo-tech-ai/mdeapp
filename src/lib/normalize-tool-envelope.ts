@@ -13,7 +13,7 @@ export function normalizeToolEnvelope(result: unknown): {
   webGrounding?: WebGroundingEnvelope;
 } {
   let value = result;
-  if (typeof value === "string") {
+  while (typeof value === "string") {
     try {
       value = JSON.parse(value) as unknown;
     } catch {

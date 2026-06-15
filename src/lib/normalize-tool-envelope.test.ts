@@ -17,6 +17,12 @@ describe("normalizeToolEnvelope", () => {
     expect(out.results).toHaveLength(1);
   });
 
+  it("parses double-encoded JSON string results", () => {
+    const inner = JSON.stringify({ results: [{ id: "3" }], total: 1 });
+    const out = normalizeToolEnvelope(JSON.stringify(inner));
+    expect(out.results).toHaveLength(1);
+  });
+
   it("returns empty for invalid input", () => {
     expect(normalizeToolEnvelope(null).results).toBeUndefined();
     expect(normalizeToolEnvelope("not-json").results).toBeUndefined();

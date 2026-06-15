@@ -221,25 +221,21 @@ export function RentalResults({
   const { selectedPinId, panToPin } = useMapContext();
   const { openScheduleViewing, openVenueDetail } = useRentalUi();
   const listRef = useRef<HTMLDivElement>(null);
-  const envelope = result as {
-    results?: Array<{
-      id: string;
-      title: string;
-      neighborhood: string;
-      nightly_price?: number;
-      bedrooms?: number;
-      photo_url?: string;
-      image_url?: string;
-      amenities?: string[];
-      tags?: string[];
-      wifi?: boolean;
-      availability?: string;
-      host_name?: string;
-    }>;
-    rankExplanation?: Array<{ factor: string; score: number; note: string }>;
-    hybridUsed?: boolean;
-  };
-  const rows = envelope.results ?? [];
+  const envelope = normalizeToolEnvelope(result);
+  const rows = (envelope.results ?? []) as Array<{
+    id: string;
+    title: string;
+    neighborhood: string;
+    nightly_price?: number;
+    bedrooms?: number;
+    photo_url?: string;
+    image_url?: string;
+    amenities?: string[];
+    tags?: string[];
+    wifi?: boolean;
+    availability?: string;
+    host_name?: string;
+  }>;
   const rankExplanation = envelope.rankExplanation ?? [];
   const searchParams = searchMeta?.params;
 

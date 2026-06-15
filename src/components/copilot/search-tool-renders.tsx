@@ -68,10 +68,16 @@ function LoadingCards() {
 }
 
 function parseWebEventToolCitations(result: unknown): EventWebCitationRow[] {
-  const row =
-    result && typeof result === "object"
-      ? (result as Record<string, unknown>)
-      : {};
+  let row: Record<string, unknown> = {};
+  if (typeof result === "string") {
+    try {
+      row = JSON.parse(result) as Record<string, unknown>;
+    } catch {
+      return [];
+    }
+  } else if (result && typeof result === "object") {
+    row = result as Record<string, unknown>;
+  }
   const list = Array.isArray(row.citations) ? row.citations : [];
   return list.filter(
     (c): c is EventWebCitationRow =>

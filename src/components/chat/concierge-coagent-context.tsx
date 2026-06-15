@@ -7,10 +7,15 @@ import {
   useMemo,
   type ReactNode,
 } from "react";
-import { useAgent, UseAgentUpdate } from "@copilotkit/react-core/v2";
+import {
+  useAgent,
+  UseAgentUpdate,
+  type AbstractAgent,
+} from "@copilotkit/react-core/v2";
 import type { ConciergeWorkingMemory } from "@/lib/types";
 
 type ConciergeCoAgentValue = {
+  agent: AbstractAgent | undefined;
   state: ConciergeWorkingMemory;
   setState: (
     patch:
@@ -27,7 +32,11 @@ const ConciergeCoAgentContext = createContext<ConciergeCoAgentValue | null>(
 export function ConciergeCoAgentProvider({ children }: { children: ReactNode }) {
   const { agent } = useAgent({
     agentId: "conciergeAgent",
-    updates: [UseAgentUpdate.OnStateChanged],
+    updates: [
+      UseAgentUpdate.OnStateChanged,
+      UseAgentUpdate.OnRunStatusChanged,
+      UseAgentUpdate.OnMessagesChanged,
+    ],
   });
 
   const state = useMemo(
@@ -49,8 +58,13 @@ export function ConciergeCoAgentProvider({ children }: { children: ReactNode }) 
     [agent],
   );
 
+  const value = useMemo(
+    () => ({ agent, state, setState }),
+    [agent, state, setState],
+  );
+
   return (
-    <ConciergeCoAgentContext.Provider value={{ state, setState }}>
+    <ConciergeCoAgentContext.Provider value={value}>
       {children}
     </ConciergeCoAgentContext.Provider>
   );

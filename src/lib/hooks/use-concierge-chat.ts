@@ -1,22 +1,13 @@
 "use client";
 
 import { useCallback } from "react";
-import {
-  useAgent,
-  useCopilotKit,
-  UseAgentUpdate,
-} from "@copilotkit/react-core/v2";
+import { useCopilotKit } from "@copilotkit/react-core/v2";
+import { useConciergeCoAgent } from "@/components/chat/concierge-coagent-context";
 
 /** Shared concierge chat controller for v2 routes. */
 export function useConciergeChat() {
   const { copilotkit } = useCopilotKit();
-  const { agent } = useAgent({
-    agentId: "conciergeAgent",
-    updates: [
-      UseAgentUpdate.OnRunStatusChanged,
-      UseAgentUpdate.OnMessagesChanged,
-    ],
-  });
+  const { agent } = useConciergeCoAgent();
 
   const isLoading = Boolean(agent?.isRunning);
 
