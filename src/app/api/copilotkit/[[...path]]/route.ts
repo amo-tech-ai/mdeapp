@@ -7,9 +7,9 @@ import { MASTRA_RESOURCE_ID_KEY, RequestContext } from "@mastra/core/request-con
 import { NextRequest, after } from "next/server";
 import { assertCopilotKitAuthorized } from "@/lib/copilotkit-auth";
 import {
-  checkCopilotKitIpGate,
-  checkCopilotKitRateLimit,
-} from "@/lib/api-ip-rate-limit";
+  checkCopilotKitDistributedIpHardCeiling,
+  checkCopilotKitDistributedRateLimit,
+} from "@/lib/copilotkit-distributed-rate-limit";
 import { createClient } from "@/lib/supabase/server";
 import { mastra } from "@/mastra";
 import { getLocalAgentsWithLogging } from "@/mastra/copilotkit/logging-mastra-agent";
@@ -46,6 +46,7 @@ const persistTurnLog: PersistTurnLog = (opts) => {
   });
 };
 
+/** Build per-request CopilotKit handler with Mastra agents and audit logging. */
 function buildHandler(options: {
   userId: string | null;
   requestContext: RequestContext;
@@ -68,14 +69,15 @@ function buildHandler(options: {
   }).handleRequest;
 }
 
+/** Auth, distributed rate limits, then CopilotKit/Mastra runtime. */
 async function handleCopilotKit(req: NextRequest) {
   const unauthorized = assertCopilotKitAuthorized(req);
   if (unauthorized) return unauthorized;
 
-  const ipGate = checkCopilotKitIpGate(req);
-  if (ipGate) return ipGate;
-
   try {
+    const ipHardCeiling = await checkCopilotKitDistributedIpHardCeiling(req);
+    if (ipHardCeiling) return ipHardCeiling;
+
     const supabase = await createClient();
     const {
       data: { user },
@@ -83,7 +85,7 @@ async function handleCopilotKit(req: NextRequest) {
 
     const userId = user?.id ?? null;
 
-    const rateLimited = checkCopilotKitRateLimit(req, userId);
+    const rateLimited = await checkCopilotKitDistributedRateLimit(req, userId);
     if (rateLimited) return rateLimited;
 
     const requestContext = new RequestContext();
