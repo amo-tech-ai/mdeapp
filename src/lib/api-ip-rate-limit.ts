@@ -4,7 +4,7 @@ import { createPlacesRateLimiter } from "@/lib/places-rate-limiter";
 
 const searchFastPathLimiter = createPlacesRateLimiter(30);
 const groundingLimiter = createPlacesRateLimiter(15);
-/** Legacy in-process CopilotKit buckets — superseded by PERF-001b distributed limiter on route. */
+/** Legacy in-process CopilotKit buckets — superseded by PERF-001b · Distributed CopilotKit rate limit (Jun 12 flood fix) on route. */
 const copilotKitIpGateLimiter = createPlacesRateLimiter(60);
 const copilotKitAnonLimiter = createPlacesRateLimiter(15);
 const copilotKitAuthedLimiter = createPlacesRateLimiter(40);

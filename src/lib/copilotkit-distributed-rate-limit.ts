@@ -3,6 +3,7 @@ import {
   checkRateLimitDurable,
   clientIpFromRequest,
   redactIpForLog,
+  redactUserIdForLog,
   type DistributedRateLimitResult,
 } from "@/lib/distributed-rate-limit";
 
@@ -15,6 +16,7 @@ export const COPILOTKIT_HARD_IP_MAX = 300;
 /** Per-instance emergency brake when durable store is unavailable. */
 const emergencyFloodLimiter = createPlacesRateLimiter(80);
 
+/** Postgres key for a CopilotKit rate-limit bucket (ip-hard, anon, or user). */
 export function buildCopilotKitRateLimitKey(
   scope: "ip-hard" | "anon" | "user",
   value: string,
@@ -22,6 +24,7 @@ export function buildCopilotKitRateLimitKey(
   return `${COPILOTKIT_ROUTE}:${scope}:${value}`;
 }
 
+/** Standard 429 JSON + Retry-After / X-RateLimit-* headers for CopilotKit. */
 export function buildRateLimitedResponse(
   result: Pick<DistributedRateLimitResult, "max" | "count" | "retryAfterSeconds">,
 ): Response {
@@ -43,6 +46,7 @@ export function buildRateLimitedResponse(
   );
 }
 
+/** Structured warn when a distributed or emergency local limit blocks a request. */
 function logRateLimitBlock(input: {
   scope: string;
   ip: string;
@@ -55,18 +59,20 @@ function logRateLimitBlock(input: {
     route: COPILOTKIT_ROUTE,
     scope: input.scope,
     ip: redactIpForLog(input.ip),
-    userId: input.userId,
+    userId: input.userId ? redactUserIdForLog(input.userId) : null,
     count: input.count,
     max: input.max,
     storeAvailable: input.storeAvailable,
   });
 }
 
+/** Per-instance 80/min brake when durable store is down (ip-hard check only). */
 function emergencyFloodBlocked(req: Request): boolean {
   const key = `emergency:${clientIpFromRequest(req)}`;
   return emergencyFloodLimiter.isRateLimited(key);
 }
 
+/** Shared limit evaluation: durable RPC, optional emergency fallback, 429 response. */
 async function evaluateLimit(
   req: Request,
   key: string,

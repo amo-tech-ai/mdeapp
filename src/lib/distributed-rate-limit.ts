@@ -29,6 +29,11 @@ export function clientIpFromRequest(req: Request): string {
   return "unknown";
 }
 
+/** Log-safe user id: first 8 chars only (matches IP redaction pattern). */
+export function redactUserIdForLog(userId: string): string {
+  return userId.length <= 8 ? userId : `${userId.slice(0, 8)}…`;
+}
+
 /** Log-safe IP: IPv4 first two octets; IPv6 short hash prefix. */
 export function redactIpForLog(ip: string): string {
   if (ip === "unknown") return ip;
@@ -39,6 +44,7 @@ export function redactIpForLog(ip: string): string {
   return createHash("sha256").update(ip).digest("hex").slice(0, 12);
 }
 
+/** Map Supabase check_rate_limit RPC payload into a typed result. */
 function parseRpcResult(
   data: unknown,
   max: number,

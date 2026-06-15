@@ -46,6 +46,7 @@ const persistTurnLog: PersistTurnLog = (opts) => {
   });
 };
 
+/** Build per-request CopilotKit handler with Mastra agents and audit logging. */
 function buildHandler(options: {
   userId: string | null;
   requestContext: RequestContext;
@@ -68,6 +69,7 @@ function buildHandler(options: {
   }).handleRequest;
 }
 
+/** Auth, distributed rate limits, then CopilotKit/Mastra runtime. */
 async function handleCopilotKit(req: NextRequest) {
   const unauthorized = assertCopilotKitAuthorized(req);
   if (unauthorized) return unauthorized;

@@ -7,7 +7,7 @@ vi.mock("@/lib/supabase/service", () => ({
   createServiceRoleClient: vi.fn(() => ({ rpc: rpcMock })),
 }));
 
-import { checkRateLimitDurable, clientIpFromRequest } from "../distributed-rate-limit";
+import { checkRateLimitDurable, clientIpFromRequest, redactUserIdForLog } from "../distributed-rate-limit";
 
 function req(headers: Record<string, string>): Request {
   return new Request("http://localhost/api/copilotkit", { headers });
@@ -49,6 +49,10 @@ describe("distributed-rate-limit", () => {
     const result = await checkRateLimitDurable("copilotkit:anon:203.0.113.2", 30, 300);
     expect(result.storeAvailable).toBe(false);
     expect(result.allowed).toBe(true);
+  });
+
+  it("redacts user ids for logs", () => {
+    expect(redactUserIdForLog("aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa")).toBe("aaaaaaaa…");
   });
 
   it("prefers x-real-ip over spoofed x-forwarded-for in production", () => {

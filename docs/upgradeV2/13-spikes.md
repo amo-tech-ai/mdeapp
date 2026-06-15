@@ -56,7 +56,7 @@ Jun 14 08:29
 Production
 Partial — bundle already enlarged; docs-only code
 dpl_75EoVrq3kS2Xmd9EHjADLPXtYGKF
-4c6ef62e · SAN-891 · CK-V2-005 #219
+4c6ef62e · [SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui; consolidate frontend to react-core/v2 + remove flags](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react) #219
 Jun 14 07:56
 Production
 Yes — global v2 cutover; dual useAgent watch item
@@ -176,7 +176,7 @@ Correct split, but /chat stack still stacks providers
 Stable props (good)
 copilotkit-client-props.ts — module-level empty objects
 LESSONS §1 guard
-SAN-891 audit flag
+[SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui; consolidate frontend to react-core/v2 + remove flags](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react) audit flag
 docs/upgradeV2/notes-6-219.md line 71
 “Two useAgent subscriptions… Monitor POST volume”
 Not found in code review: recursive agent loops, missing debouncing in route handler, backend duplicate agent execution per message.
@@ -273,7 +273,7 @@ Primary root cause:
 
 Secondary contributing causes:
 
-SAN-891 · CK-V2-005 — multiple v2 useAgent({ agentId: "conciergeAgent" }) hooks → 5–6 parallel POSTs per /chat load.
+[SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui; consolidate frontend to react-core/v2 + remove flags](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react) — multiple v2 useAgent({ agentId: "conciergeAgent" }) hooks → 5–6 parallel POSTs per /chat load.
 Jun 14 production deploy wave — larger lambda + middleware, repeated cold starts with [mastra-storage] using Postgres.
 after() + logAgentRunForTurn — extends serverless lifecycle after SSE completes.
 Jun 14 01:00 UTC — 41 host-event runs from one authenticated user (dev/QA burst, not public attack).
