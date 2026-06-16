@@ -49,4 +49,6 @@ export type BuyerOrderListItem = {
   quantity: number;
   eventName: string;
   eventStartTime: string;
+  imageUrl: string | null;
+  venue: string | null;
 };

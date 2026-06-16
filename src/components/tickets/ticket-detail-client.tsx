@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { TicketQrDisplay } from "@/components/tickets/ticket-qr-display";
+import {
+  TicketQrDisplay,
+  type QrPassState,
+} from "@/components/tickets/ticket-qr-display";
+import { TicketPassActions } from "@/components/tickets/ticket-pass-actions";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -23,6 +27,7 @@ export function TicketDetailClient({
   const [payload, setPayload] = useState<WalletOrderPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [missing, setMissing] = useState(false);
+  const [nowMs] = useState(() => Date.now());
 
   useEffect(() => {
     let cancelled = false;
@@ -103,39 +108,80 @@ export function TicketDetailClient({
     );
   }
 
+  const holder = primary.full_name ?? order.buyer_name ?? "Guest";
+  const eventEnd = event.event_end_time ?? event.event_start_time;
+  const isExpired = new Date(eventEnd).getTime() < nowMs;
+  const isUsed = primary.status !== "active";
+  const passState: QrPassState = isUsed
+    ? "used"
+    : isExpired
+      ? "expired"
+      : "valid";
+  const venueLine = [event.address, event.city].filter(Boolean).join(" · ");
+  const directionsQuery = venueLine
+    ? `${event.name}, ${venueLine}`
+    : event.name;
+  const shareUrl =
+    typeof window !== "undefined" ? window.location.href : "";
+
   return (
     <main className="mx-auto max-w-lg px-4 py-10" data-testid="my-tickets-detail">
       <Link
         href="/me/tickets"
         className={cn(
           buttonVariants({ variant: "ghost", size: "sm" }),
-          "mb-6 -ml-2 inline-flex",
+          "mb-6 -ml-2 inline-flex min-h-11",
         )}
       >
         ← My tickets
       </Link>
 
-      <TicketQrDisplay
-        value={primary.qr_token}
-        label={`${primary.full_name ?? order.buyer_name ?? "Guest"} · scan at door`}
-      />
-
-      <div className="mt-6 space-y-1 text-center">
+      <div className="space-y-1 pb-5 text-center">
         <h1 className="font-serif text-xl font-semibold">{event.name}</h1>
         <p className="text-sm text-muted-foreground">
           {formatEventWhen(event.event_start_time)}
         </p>
-        {event.address ? (
-          <p className="text-sm text-muted-foreground">
-            {event.address}
-            {event.city ? ` · ${event.city}` : ""}
-          </p>
+        {venueLine ? (
+          <p className="text-sm text-muted-foreground">{venueLine}</p>
         ) : null}
-        <p className="pt-2 text-sm">
-          Order {order.short_id ?? order.id.slice(0, 8)} · Paid{" "}
-          {formatWalletMoney(order.total_cents, order.currency)}
-        </p>
       </div>
+
+      <TicketQrDisplay
+        value={primary.qr_token}
+        label={`${holder} · scan at door`}
+        state={passState}
+      />
+
+      <dl className="mt-5 divide-y divide-border rounded-xl border border-border text-sm">
+        <PassRow label="Ticket holder" value={holder} />
+        <PassRow
+          label="Tickets"
+          value={`${order.quantity} ${order.quantity === 1 ? "ticket" : "tickets"}`}
+        />
+        <PassRow
+          label="Order"
+          value={order.short_id ?? order.id.slice(0, 8)}
+        />
+        <PassRow
+          label="Paid"
+          value={formatWalletMoney(order.total_cents, order.currency)}
+        />
+      </dl>
+
+      <TicketPassActions
+        eventName={event.name}
+        directionsQuery={venueLine ? directionsQuery : null}
+        shareUrl={shareUrl}
+      />
     </main>
+  );
+}
+
+function PassRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between gap-4 px-4 py-3">
+      <dt className="text-muted-foreground">{label}</dt>
+      <dd className="font-medium">{value}</dd>
+    </div>
   );
 }
