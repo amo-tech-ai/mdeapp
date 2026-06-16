@@ -1,0 +1,24 @@
+docs/upgradeV2/20-cost-001-verification.md
+  s_1b6702612cb2ad::t_3be2bdde4f7ef7 1-98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "a3234a2324f67c9cd4da5bcd0dbec943bd350660",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_1b6702612cb2ad": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "67f7b762-119f-4af8-b5a6-8301dbdc2ef3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
