@@ -14,6 +14,15 @@ describe("resolveEventCategoryForQuery", () => {
     ).toBe("music");
   });
 
+  it("remaps nightlife chip + hyphenated live-music queryText to music", () => {
+    expect(
+      resolveEventCategoryForQuery(
+        "nightlife",
+        "live-music in Laureles tonight",
+      ),
+    ).toBe("music");
+  });
+
   it("keeps nightlife when query has no salsa/live-music signals", () => {
     expect(
       resolveEventCategoryForQuery("nightlife", "clubs this weekend in Poblado"),
@@ -40,6 +49,11 @@ describe("parseEventIntelligenceSlots", () => {
     expect(slots.wantsLiveMusic).toBe(true);
     expect(slots.dateWindow).toBe("tonight");
     expect(slots.neighborhood).toBe("Laureles");
+  });
+
+  it("extracts hyphenated live-music intent", () => {
+    const slots = parseEventIntelligenceSlots("live-music in Laureles tonight");
+    expect(slots.wantsLiveMusic).toBe(true);
   });
 
   it("extracts fashion + networking", () => {

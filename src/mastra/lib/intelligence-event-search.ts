@@ -85,7 +85,7 @@ export function resolveEventCategoryForQuery(
 }
 
 export function parseEventIntelligenceSlots(queryText: string): EventIntelligenceSlots {
-  const q = queryText.toLowerCase();
+  const q = queryText.toLowerCase().replace(/-/g, " ");
   const slots: EventIntelligenceSlots = {};
   if (/laureles/.test(q)) slots.neighborhood = "Laureles";
   else if (/poblado|provenza/.test(q)) slots.neighborhood = "El Poblado";

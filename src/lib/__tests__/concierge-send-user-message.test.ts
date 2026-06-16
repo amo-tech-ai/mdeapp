@@ -8,7 +8,7 @@ function makeHandlers() {
     handleEventMessage: vi.fn(async () => false),
     handleGroundedMessage: vi.fn(async () => false),
     handleRestaurantMessage: vi.fn(async () => false),
-    onAgentSend: vi.fn(async () => {}),
+    onAgentSend: vi.fn(async () => true),
   };
 }
 

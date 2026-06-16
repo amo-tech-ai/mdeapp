@@ -18,15 +18,18 @@ export function ConciergeChatView(props: CopilotChatViewProps) {
     [handlers],
   );
   return (
-    <CopilotChatView
-      {...props}
-      onSubmitMessage={onSubmitMessage}
-      input={
-        typeof props.input === "object" && props.input !== null && !("$$typeof" in props.input)
-          ? { ...props.input, onSubmitMessage }
-          : { onSubmitMessage }
-      }
-      data-testid="concierge-chat-view-mounted"
-    />
+    <div data-testid="concierge-chat-view-mounted" className="contents">
+      <CopilotChatView
+        {...props}
+        onSubmitMessage={onSubmitMessage}
+        input={
+          typeof props.input === "object" &&
+          props.input !== null &&
+          !("$$typeof" in props.input)
+            ? { ...props.input, onSubmitMessage }
+            : { onSubmitMessage }
+        }
+      />
+    </div>
   );
 }

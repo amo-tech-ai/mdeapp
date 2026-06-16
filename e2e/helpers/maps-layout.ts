@@ -168,10 +168,21 @@ export async function sendConciergeMessage(page: Page, text: string) {
   }, text);
 
   const sendNearComposer = page
-    .locator('[data-testid="concierge-chat-view-mounted"] button:not([disabled])')
-    .last();
+    .locator(
+      '[data-testid="concierge-chat-view-mounted"] .copilotKitInputControlButton, [data-testid="concierge-chat-view-mounted"] .copilotKitInput button:not([disabled])',
+    )
+    .first();
   if (await sendNearComposer.isVisible().catch(() => false)) {
+    await expect(sendNearComposer).toBeEnabled({ timeout: 10_000 });
     await sendNearComposer.click();
+    return;
+  }
+
+  const sendBesideInput = input
+    .locator("xpath=ancestor::div[.//button][1]//button[not(@disabled)]")
+    .last();
+  if (await sendBesideInput.isVisible().catch(() => false)) {
+    await sendBesideInput.click();
     return;
   }
 

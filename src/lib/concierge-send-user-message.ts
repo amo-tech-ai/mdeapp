@@ -19,7 +19,7 @@ export type ConciergeSendHandlers = {
   handleEventMessage: (text: string) => Promise<boolean>;
   handleGroundedMessage: (text: string) => Promise<boolean>;
   handleRestaurantMessage: (text: string) => Promise<boolean>;
-  onAgentSend: (text: string) => Promise<void>;
+  onAgentSend: (text: string) => Promise<boolean>;
   /** Working-memory lastIntent — enables Flash topicShift (SAN-873). */
   lastIntent?: FlashRouteClassification["intent"];
 };
@@ -49,9 +49,9 @@ async function invokeConciergeHandler(
 export async function sendConciergeUserMessage(
   text: string,
   handlers: ConciergeSendHandlers,
-): Promise<void> {
+): Promise<boolean> {
   const trimmed = text.trim();
-  if (!trimmed) return;
+  if (!trimmed) return false;
 
   clearConciergeError();
 
@@ -61,14 +61,15 @@ export async function sendConciergeUserMessage(
     });
 
     for (const target of routerHandlerOrderFromClassification(classification)) {
-      if (await invokeConciergeHandler(target, trimmed, handlers)) return;
+      if (await invokeConciergeHandler(target, trimmed, handlers)) return true;
     }
 
     setConciergePendingSend(true);
-    await handlers.onAgentSend(trimmed);
+    return handlers.onAgentSend(trimmed);
   } catch (err) {
     console.error("[concierge-send]", err);
     clearConciergePendingSend();
     reportConciergeError();
+    return false;
   }
 }

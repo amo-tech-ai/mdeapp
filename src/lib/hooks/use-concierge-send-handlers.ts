@@ -24,9 +24,7 @@ export function useConciergeSendHandlers(): ConciergeSendHandlers {
     useEventVenueBookingFastPath();
 
   const onAgentSend = useCallback(
-    async (text: string) => {
-      await appendMessage(text);
-    },
+    async (text: string) => appendMessage(text),
     [appendMessage],
   );
 

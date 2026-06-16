@@ -27,9 +27,10 @@ export function ConciergeInitialPrompt() {
     }
     if (!trimmedQ || sentRef.current || isLoading) return;
 
-    sentRef.current = true;
+    void sendConciergeUserMessage(trimmedQ, handlers).then((handled) => {
+      if (!handled) return;
 
-    void sendConciergeUserMessage(trimmedQ, handlers).finally(() => {
+      sentRef.current = true;
       if (typeof window === "undefined") return;
       const onChatWithQ =
         window.location.pathname === "/chat" &&
