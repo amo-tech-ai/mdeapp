@@ -1,0 +1,32 @@
+e2e/san-896-ck-v2-evidence.spec.ts
+  s_d934f93e3b39ca::t_6136722f46767a 40-48
+  s_d934f93e3b39ca::t_386712f5abfdb8 110-118
+docs/tasks/testing/evidence/SAN-896/RESULTS.md
+  s_d934f93e3b39ca::t_db7b8589ccccbc 3-71
+src/mastra/lib/intelligence-event-search.ts
+  s_d934f93e3b39ca::t_114a22321c03c0 74
+docs/upgradeV2/todo.md
+  s_d934f93e3b39ca::t_1165eb9564139e 3-5
+src/components/chat/concierge-copilot-chat-view.tsx
+  s_d934f93e3b39ca::t_ee025dc6895606 11
+docs/upgradeV2/16-copilotkitv2-audit.md
+  s_d934f93e3b39ca::t_0faf9c2804f4c8 16-18
+docs/upgradeV2/changelog.md
+  s_d934f93e3b39ca::t_ffacdb58935f10 4-49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "8bde5461b2e278ea22e60c3ef006e6636d6d9b43",
+  "prompts": {},
+  "sessions": {
+    "s_d934f93e3b39ca": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ed309e68-af99-497b-8545-2c3f383d3a5a",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
