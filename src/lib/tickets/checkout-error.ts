@@ -32,7 +32,7 @@ export function classifyCheckoutError(
   ) {
     return {
       kind: "sold_out",
-      heading: "Tickets just sold out",
+      heading: "Tickets are sold out",
       detail:
         "These tickets sold out while you were checking out. No charge was made — try another tier or join the waitlist.",
       canRetry: false,
