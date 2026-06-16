@@ -1,12 +1,60 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CheckCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CheckoutWalletLink } from "@/components/tickets/checkout-wallet-link";
+import {
+  CheckoutWalletLink,
+  readWalletAccess,
+} from "@/components/tickets/checkout-wallet-link";
 import { cn } from "@/lib/utils";
+
+/** Poll the real order until finalized; resolve to confirmed vs still pending. */
+type FinalizeState = "pending" | "confirmed";
+
+function useOrderFinalizeState(active: boolean): FinalizeState {
+  const [state, setState] = useState<FinalizeState>("pending");
+
+  useEffect(() => {
+    if (!active) return;
+    const access = readWalletAccess();
+    if (!access) return; // No token (e.g. email-only return) → stay pending
+
+    let cancelled = false;
+    let attempts = 0;
+    const controller = new AbortController();
+    const poll = async () => {
+      attempts += 1;
+      try {
+        const res = await fetch(
+          `/api/tickets/wallet?orderId=${encodeURIComponent(access.orderId)}&token=${encodeURIComponent(access.token)}`,
+          { signal: controller.signal },
+        );
+        if (res.ok) {
+          const data = (await res.json()) as { order?: { status?: string } };
+          if (data?.order?.status === "paid") {
+            if (!cancelled) setState("confirmed");
+            return;
+          }
+        }
+      } catch {
+        // Network hiccup or abort — retry below; never claim success on error
+      }
+      if (!cancelled && attempts < 6) {
+        window.setTimeout(poll, 2000);
+      }
+    };
+    poll();
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
+  }, [active]);
+
+  return state;
+}
 
 /** Post-Stripe return banner on event detail (SCREEN-009). */
 export function EventCheckoutNotice() {
@@ -14,12 +62,15 @@ export function EventCheckoutNotice() {
   const status = searchParams.get("checkout");
   const [dismissed, setDismissed] = useState(false);
 
+  const isSuccess = status === "success";
+  const finalizeState = useOrderFinalizeState(isSuccess && !dismissed);
+
   const show =
     !dismissed && (status === "success" || status === "cancelled");
 
   if (!show || !status) return null;
 
-  const isSuccess = status === "success";
+  const confirmed = isSuccess && finalizeState === "confirmed";
 
   return (
     <div
@@ -55,7 +106,9 @@ export function EventCheckoutNotice() {
           {isSuccess ? (
             <>
               <p className="mt-1 text-muted-foreground">
-                Your order is processing. Your QR code will be ready shortly.
+                {confirmed
+                  ? "Your tickets are confirmed and ready in your wallet."
+                  : "Your order is processing. Your QR code will be ready shortly."}
               </p>
               <div className="mt-2 flex flex-wrap gap-2">
                 <CheckoutWalletLink />
