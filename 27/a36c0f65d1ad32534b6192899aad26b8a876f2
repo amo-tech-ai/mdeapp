@@ -1,0 +1,35 @@
+package.json
+  s_bcfa22475523c5::t_8720daafa177a0 19-21
+  s_1b6702612cb2ad::t_0738f8069ad7da 33
+scripts/verify-cost-tracking.mjs
+  s_1b6702612cb2ad::t_f271965b2b3e75 1-93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "27a36c0f65d1ad32534b6192899aad26b8a876f2",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_1b6702612cb2ad": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "67f7b762-119f-4af8-b5a6-8301dbdc2ef3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_bcfa22475523c5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a4c0e6df-559e-4768-bdc4-abc0aabb5dc3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
