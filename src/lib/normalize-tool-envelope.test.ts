@@ -36,4 +36,32 @@ describe("normalizeToolEnvelope", () => {
     const decoded = decodeToolJson(JSON.stringify(JSON.stringify(payload)));
     expect(decoded).toEqual(payload);
   });
+
+  it("unwraps AG-UI tool-result array from CopilotKit v2 tool messages", () => {
+    const envelope = {
+      results: [{ id: "evt-1", title: "Salsa Night" }],
+      total: 1,
+      source: "supabase",
+    };
+    const agUiContent = [
+      {
+        type: "tool-result",
+        toolCallId: "call-1",
+        toolName: "searchEventsTool",
+        result: JSON.stringify(envelope),
+      },
+    ];
+    const out = normalizeToolEnvelope(agUiContent);
+    expect(out.results).toHaveLength(1);
+    expect(out.total).toBe(1);
+  });
+
+  it("unwraps nested { result: envelope } without search fields at top level", () => {
+    const envelope = {
+      results: [{ id: "evt-2", title: "Festival" }],
+      total: 1,
+    };
+    const out = normalizeToolEnvelope({ result: JSON.stringify(envelope) });
+    expect(out.results).toHaveLength(1);
+  });
 });

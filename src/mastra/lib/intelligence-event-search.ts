@@ -71,6 +71,19 @@ function num(v: number | string | null | undefined): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
+export function resolveEventCategoryForQuery(
+  category: EventQuery["category"],
+  queryText?: string,
+): EventQuery["category"] {
+  const text = queryText?.trim();
+  if (!category || !text) return category;
+  const slots = parseEventIntelligenceSlots(text);
+  if ((slots.wantsSalsa || slots.wantsLiveMusic) && category === "nightlife") {
+    return "music";
+  }
+  return category;
+}
+
 export function parseEventIntelligenceSlots(queryText: string): EventIntelligenceSlots {
   const q = queryText.toLowerCase();
   const slots: EventIntelligenceSlots = {};
