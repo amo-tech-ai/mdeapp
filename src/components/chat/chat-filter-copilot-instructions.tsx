@@ -9,6 +9,8 @@ import {
   EVENT_SUB_CHIPS,
 } from "@/platform/copilot/chat-filter-chips";
 
+/** Build agent instructions when the Events filter chip (and sub-chips) are active. */
+/** Build concierge agent instructions when the Events filter chip is active. */
 function buildEventsInstructions(
   eventsMode: boolean,
   memory: ConciergeWorkingMemory,

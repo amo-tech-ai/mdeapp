@@ -71,6 +71,8 @@ function num(v: number | string | null | undefined): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
+/** Remap Events chip category using queryText signals (e.g. nightlife + salsa → music). */
+/** Remap Events chip category using queryText signals; clears nightlife when queryText absent (CK-V2-015). */
 export function resolveEventCategoryForQuery(
   category: EventQuery["category"],
   queryText?: string,
@@ -89,6 +91,7 @@ export function resolveEventCategoryForQuery(
   return category;
 }
 
+/** Extract salsa, live-music, neighborhood, and date-window signals from natural-language query text. */
 export function parseEventIntelligenceSlots(queryText: string): EventIntelligenceSlots {
   const q = queryText.toLowerCase().replace(/-/g, " ");
   const slots: EventIntelligenceSlots = {};

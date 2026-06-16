@@ -54,6 +54,8 @@ function unwrapAgUiToolPayload(result: unknown): unknown {
   return value;
 }
 
+/** Normalize AG-UI / CopilotKit v2 tool payloads into card envelope fields. */
+/** Normalize AG-UI / CopilotKit v2 tool payloads into card envelope fields. */
 export function normalizeToolEnvelope(result: unknown): {
   results?: unknown[];
   total?: number;

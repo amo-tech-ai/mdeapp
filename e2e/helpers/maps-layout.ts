@@ -144,6 +144,7 @@ export async function ensureChatInputVisible(page: Page) {
   await input.waitFor({ state: "visible", timeout: 15_000 });
 }
 
+/** Playwright helper — type into the concierge composer and submit (multi-strategy send cascade). */
 export async function sendConciergeMessage(page: Page, text: string) {
   await ensureChatInputVisible(page);
   const input = page
@@ -167,6 +168,13 @@ export async function sendConciergeMessage(page: Page, text: string) {
     textarea.dispatchEvent(new Event("change", { bubbles: true }));
   }, text);
 
+  // CopilotKit v2 chat layouts differ (center panel, sidebar, welcome screen).
+  // Try composer-scoped controls first, then broader fallbacks, then Enter.
+  // sendNearComposer — CK-V2 ConciergeChatView mount + .copilotKitInput send
+  // sendBesideInput — XPath: nearest ancestor row with buttons (legacy layouts)
+  // controlSend — global .copilotKitInputControlButton (no mount testid)
+  // namedSend — accessible "Send" label when class names drift
+  // Enter — last resort when no send button is clickable
   const sendNearComposer = page
     .locator(
       '[data-testid="concierge-chat-view-mounted"] .copilotKitInputControlButton, [data-testid="concierge-chat-view-mounted"] .copilotKitInput button:not([disabled])',
