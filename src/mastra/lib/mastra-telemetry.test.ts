@@ -24,6 +24,7 @@ describe("classifyAgentError / describeAgentError (OBS-002)", () => {
     expect(classifyAgentError({ status: 429, message: "slow down" })).toBe("rate_limit");
     expect(classifyAgentError({ status: 401, message: "nope" })).toBe("auth");
     expect(classifyAgentError(new Error("zod validation failed"))).toBe("validation");
+    expect(classifyAgentError(new Error("tool execution failed"))).toBe("tool_failure");
     expect(classifyAgentError(new Error("supabase rpc relation missing"))).toBe("database");
     expect(classifyAgentError(new Error("gemini generativelanguage 503"))).toBe("model_failure");
     expect(classifyAgentError(new Error("something weird"))).toBe("unknown");
