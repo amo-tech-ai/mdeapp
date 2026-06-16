@@ -6,6 +6,24 @@ export const TELEMETRY_SCHEMA_VERSION = "agt-00c-v1";
 
 export type TurnStatus = "success" | "error";
 
+/**
+ * OBS-002 — coarse failure class for every non-success turn so Patricia can see
+ * *why* turns fail without a stack-trace pipeline. Stored on `ai_runs.metadata`
+ * (and mirrored to a column via migration) so `error_message` is never the only
+ * signal. `client_abort` is distinct from a real failure: AG-UI unsubscribes the
+ * stream when the user navigates away mid-turn — that is not an outage.
+ */
+export type AgentErrorType =
+  | "client_abort"
+  | "timeout"
+  | "rate_limit"
+  | "auth"
+  | "tool_failure"
+  | "model_failure"
+  | "validation"
+  | "database"
+  | "unknown";
+
 export interface TurnTelemetryPayload extends ToolSpanSummary {
   telemetry_version: typeof TELEMETRY_SCHEMA_VERSION;
   agent_map_key: string;
@@ -18,6 +36,51 @@ export interface TurnTelemetryPayload extends ToolSpanSummary {
   input_tokens: number;
   output_tokens: number;
   total_tokens: number;
+  /** Populated only when turn_status === "error". */
+  error_type?: AgentErrorType;
+  /** Trimmed human-readable cause; never the full stack. */
+  error_message?: string;
+}
+
+/** Normalize an unknown thrown value into a short, log-safe message. */
+export function describeAgentError(err: unknown): string {
+  if (err instanceof Error) return err.message.slice(0, 500);
+  if (typeof err === "string") return err.slice(0, 500);
+  try {
+    return JSON.stringify(err).slice(0, 500);
+  } catch {
+    return "non-serializable error";
+  }
+}
+
+/**
+ * Classify a thrown turn error into an {@link AgentErrorType}. Heuristic and
+ * intentionally conservative — anything unrecognized is `unknown`, which is the
+ * signal to add a new branch rather than hide the failure.
+ */
+export function classifyAgentError(err: unknown): AgentErrorType {
+  const msg = describeAgentError(err).toLowerCase();
+  const name = err instanceof Error ? err.name.toLowerCase() : "";
+  const status = (err as { status?: number; statusCode?: number } | null)?.status
+    ?? (err as { statusCode?: number } | null)?.statusCode;
+
+  if (name === "aborterror" || msg.includes("abort") || msg.includes("cancel"))
+    return "client_abort";
+  if (name === "timeouterror" || msg.includes("timeout") || msg.includes("timed out"))
+    return "timeout";
+  if (status === 429 || msg.includes("rate limit") || msg.includes("too many requests") || msg.includes("resource_exhausted"))
+    return "rate_limit";
+  if (status === 401 || status === 403 || msg.includes("unauthorized") || msg.includes("permission") || msg.includes("forbidden"))
+    return "auth";
+  if (msg.includes("tool") && (msg.includes("fail") || msg.includes("error")))
+    return "tool_failure";
+  if (msg.includes("zod") || msg.includes("invalid") || msg.includes("validation") || msg.includes("schema"))
+    return "validation";
+  if (msg.includes("supabase") || msg.includes("postgres") || msg.includes("rpc") || msg.includes("relation") || msg.includes("database"))
+    return "database";
+  if (msg.includes("gemini") || msg.includes("model") || msg.includes("generativelanguage") || (typeof status === "number" && status >= 500))
+    return "model_failure";
+  return "unknown";
 }
 
 /** Resolve model id from a Mastra Agent's AI SDK model config when available. */
@@ -73,6 +136,8 @@ export function buildTurnTelemetryMetadata(opts: {
   threadId?: string;
   runId?: string;
   requestContext?: unknown;
+  errorType?: AgentErrorType;
+  errorMessage?: string;
 }): TurnTelemetryPayload {
   const tokens = normalizeTokenUsage(
     getTokenUsage(toTelemetryContext(opts.requestContext)),
@@ -88,6 +153,9 @@ export function buildTurnTelemetryMetadata(opts: {
     integration: "copilotkit-pattern-1",
     ...opts.toolSummary,
     ...tokens,
+    ...(opts.status === "error"
+      ? { error_type: opts.errorType ?? "unknown", error_message: opts.errorMessage }
+      : {}),
   };
 }
 

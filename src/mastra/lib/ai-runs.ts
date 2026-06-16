@@ -26,6 +26,12 @@ export interface MastraRunRecord {
   status: AiRunStatus;
   error_message?: string | null;
   error_code?: string | null;
+  /**
+   * OBS-002 — coarse failure class. Folded into `metadata.error_type` (not a
+   * dedicated column yet) so the insert stays compatible with the live `ai_runs`
+   * schema; promote to a first-class column via migration when ready.
+   */
+  error_type?: string | null;
   input_tokens?: number;
   output_tokens?: number;
   total_tokens?: number;
@@ -78,7 +84,9 @@ export async function recordMastraRun(record: MastraRunRecord): Promise<void> {
           (record.input_tokens ?? 0) + (record.output_tokens ?? 0),
         duration_ms: record.duration_ms ?? 0,
         model_name: record.model_name ?? null,
-        metadata: record.metadata ?? null,
+        metadata: record.error_type
+          ? { ...(record.metadata ?? {}), error_type: record.error_type }
+          : (record.metadata ?? null),
       }),
       deadline,
     ]);

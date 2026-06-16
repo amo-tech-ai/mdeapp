@@ -3,6 +3,8 @@ import { RequestContext } from "@mastra/core/request-context";
 import { describe, expect, it, vi } from "vitest";
 import {
   buildTurnTelemetryMetadata,
+  classifyAgentError,
+  describeAgentError,
   resolveAgentModelName,
   TELEMETRY_SCHEMA_VERSION,
   type TurnTelemetryPayload,
@@ -13,6 +15,52 @@ import {
   recordToolSpan,
   summarizeToolSpans,
 } from "./tool-audit-context";
+
+describe("classifyAgentError / describeAgentError (OBS-002)", () => {
+  it("classifies common production failures", () => {
+    expect(classifyAgentError(new Error("Request aborted by user"))).toBe("client_abort");
+    expect(classifyAgentError(Object.assign(new Error("x"), { name: "AbortError" }))).toBe("client_abort");
+    expect(classifyAgentError(new Error("operation timed out"))).toBe("timeout");
+    expect(classifyAgentError({ status: 429, message: "slow down" })).toBe("rate_limit");
+    expect(classifyAgentError({ status: 401, message: "nope" })).toBe("auth");
+    expect(classifyAgentError(new Error("zod validation failed"))).toBe("validation");
+    expect(classifyAgentError(new Error("supabase rpc relation missing"))).toBe("database");
+    expect(classifyAgentError(new Error("gemini generativelanguage 503"))).toBe("model_failure");
+    expect(classifyAgentError(new Error("something weird"))).toBe("unknown");
+  });
+
+  it("describeAgentError never throws and trims long messages", () => {
+    expect(describeAgentError(new Error("boom"))).toBe("boom");
+    expect(describeAgentError("plain string")).toBe("plain string");
+    expect(describeAgentError({ a: 1 })).toContain("a");
+    const circular: Record<string, unknown> = {};
+    circular.self = circular;
+    expect(describeAgentError(circular)).toBe("non-serializable error");
+    expect(describeAgentError(new Error("x".repeat(900))).length).toBeLessThanOrEqual(500);
+  });
+
+  it("buildTurnTelemetryMetadata attaches error fields only on error turns", () => {
+    const ok = buildTurnTelemetryMetadata({
+      agentMapKey: "conciergeAgent",
+      agent: {},
+      status: "success",
+      durationMs: 10,
+      toolSummary: summarizeToolSpans([]),
+    });
+    expect(ok.error_type).toBeUndefined();
+    const bad = buildTurnTelemetryMetadata({
+      agentMapKey: "conciergeAgent",
+      agent: {},
+      status: "error",
+      durationMs: 10,
+      toolSummary: summarizeToolSpans([]),
+      errorType: "rate_limit",
+      errorMessage: "429",
+    });
+    expect(bad.error_type).toBe("rate_limit");
+    expect(bad.error_message).toBe("429");
+  });
+});
 
 describe("resolveAgentModelName (AGT-00C)", () => {
   it("reads modelId from Mastra agent config", () => {

@@ -14,7 +14,10 @@ import {
 } from "@/mastra/lib/log-agent-run";
 import {
   buildTurnTelemetryMetadata,
+  classifyAgentError,
+  describeAgentError,
   logTurnTelemetryDebug,
+  type AgentErrorType,
 } from "@/mastra/lib/mastra-telemetry";
 import {
   getToolSpans,
@@ -84,7 +87,16 @@ export class LoggingMastraAgent extends MastraAgent {
 
   override run(input: RunAgentInput): Observable<BaseEvent> {
     const startMs = Date.now();
+    // OBS-002 — track the real turn outcome instead of discarding it. rxjs
+    // `finalize` fires on complete, error, AND unsubscribe (client navigates
+    // away), while `tap.error`/`tap.complete` distinguish the cause. Previously
+    // only `error` flipped a boolean and the thrown value was thrown away, so
+    // every failure landed in ai_runs with status=error + error_message=NULL,
+    // and aborts were silently mislabeled success.
     let status: "success" | "error" = "success";
+    let completed = false;
+    let errorType: AgentErrorType | undefined;
+    let errorMessage: string | undefined;
     const runInput =
       this.agentMapKey === "hostEventAgent"
         ? sanitizeHostEventAgUiInput(input)
@@ -92,11 +104,22 @@ export class LoggingMastraAgent extends MastraAgent {
 
     return super.run(runInput).pipe(
       tap({
-        error: () => {
+        complete: () => {
+          completed = true;
+        },
+        error: (err: unknown) => {
           status = "error";
+          errorType = classifyAgentError(err);
+          errorMessage = describeAgentError(err);
         },
       }),
       finalize(() => {
+        // Unsubscribed before completing and without an error = client abort.
+        if (status === "success" && !completed) {
+          status = "error";
+          errorType = "client_abort";
+          errorMessage = "stream unsubscribed before completion (client abort)";
+        }
         const durationMs = Date.now() - startMs;
         const toolSummary = summarizeToolSpans(
           getToolSpans({ requestContext: this.requestContext }),
@@ -110,6 +133,8 @@ export class LoggingMastraAgent extends MastraAgent {
           threadId: input.threadId,
           runId: input.runId,
           requestContext: this.requestContext,
+          errorType,
+          errorMessage,
         });
         logTurnTelemetryDebug(telemetry);
         this.persistTurnLog({
@@ -120,6 +145,8 @@ export class LoggingMastraAgent extends MastraAgent {
           modelName: telemetry.model_name,
           input_tokens: telemetry.input_tokens,
           output_tokens: telemetry.output_tokens,
+          errorType,
+          errorMessage,
           metadata: telemetry as unknown as Record<string, unknown>,
         });
       }),

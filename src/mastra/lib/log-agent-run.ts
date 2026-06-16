@@ -23,6 +23,10 @@ export type TurnLogInput = {
   modelName?: string;
   input_tokens?: number;
   output_tokens?: number;
+  /** OBS-002 — coarse failure class, set only when status !== "success". */
+  errorType?: string;
+  /** OBS-002 — trimmed cause, set only when status !== "success". */
+  errorMessage?: string;
   inputSummary?: Record<string, unknown>;
   outputSummary?: Record<string, unknown>;
   metadata?: Record<string, unknown>;
@@ -46,6 +50,8 @@ export async function logAgentRunForTurn(opts: TurnLogInput): Promise<void> {
     agent_name: agentName,
     agent_type: agentType,
     status: opts.status,
+    error_message: opts.errorMessage ?? null,
+    error_type: opts.errorType ?? null,
     duration_ms: opts.durationMs,
     model_name: opts.modelName ?? "gemini-3.5-flash",
     input_tokens: inputTokens,
