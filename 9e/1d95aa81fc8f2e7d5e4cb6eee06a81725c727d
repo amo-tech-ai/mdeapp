@@ -1,0 +1,101 @@
+docs/tasks/mastra/partners/AGT-PTR-06-hitl-policy-module.md
+  s_bcfa22475523c5::t_4bfea171f548d4 12
+  s_bcfa22475523c5::t_ccda798ba46976 33
+  s_bcfa22475523c5::t_f5a0992eecabfb 20
+docs/partners/tasks/AGT-PTR-INDEX.md
+  s_bcfa22475523c5::t_3a958b507e6b74 34
+  s_bcfa22475523c5::t_990c01216033fc 15-16
+docs/tasks/events/tasks/AI-native-system/Core/AIE-009-core-generative-kpi-cards.md
+  s_bcfa22475523c5::t_46c2bb8b08410e 20
+docs/tasks/mastra/partners/AGT-PTR-01-partner-agent-foundation.md
+  s_bcfa22475523c5::t_4bfea171f548d4 12
+docs/partners/tasks/AGT-PTR-02-partner-supabase-tools.md
+  s_bcfa22475523c5::t_4bfea171f548d4 12
+docs/partners/tasks/AGT-PTR-03-onboarding-copilot.md
+  s_bcfa22475523c5::t_a61229dce008e1 51-52
+  s_bcfa22475523c5::t_4bfea171f548d4 12
+  s_bcfa22475523c5::t_45672814b0b9da 69-70
+  s_bcfa22475523c5::t_6e45ac8844498f 78
+  s_bcfa22475523c5::t_59f9ba41ef5b81 24-25
+docs/tasks/events/tasks/AI-native-system/Core/AIE-005-core-hostops-agent-state.md
+  s_bcfa22475523c5::t_64d6d8af115bfa 29
+  s_bcfa22475523c5::t_eae74fb6255a3e 23-24
+CLAUDE.md
+  s_bcfa22475523c5::t_6286dd390dafbd 40
+  s_bcfa22475523c5::t_6bfe8164f56119 110,112,114-118,120-129
+docs/partners/tasks/AGT-PTR-00-copilotkit-route-architecture.md
+  s_bcfa22475523c5::t_4bfea171f548d4 12
+docs/tasks/mastra/partners/AGT-PTR-00-copilotkit-route-architecture.md
+  s_bcfa22475523c5::t_4bfea171f548d4 12
+.claude/output-styles/mdeai-plain.md
+  s_bcfa22475523c5::t_d6f653b8c4aa9f 21-28
+docs/tasks/mastra/partners/AGT-PTR-02-partner-supabase-tools.md
+  s_bcfa22475523c5::t_4bfea171f548d4 12
+docs/partners/tasks/AGT-PTR-04-dashboard-copilot.md
+  s_bcfa22475523c5::t_4bfea171f548d4 12
+  s_bcfa22475523c5::t_235b7da2218c1e 45
+  s_bcfa22475523c5::t_218887e219d210 23-24
+docs/tasks/mastra/partners/AGT-PTR-INDEX.md
+  s_bcfa22475523c5::t_ea1c2b6a3d715c 34
+  s_bcfa22475523c5::t_ff22d49ec9b23b 15-16
+docs/tasks/mastra/partners/AGT-PTR-03-onboarding-copilot.md
+  s_bcfa22475523c5::t_24e791287d9717 78
+  s_bcfa22475523c5::t_1b87a67722b4ce 69-70
+  s_bcfa22475523c5::t_eee4ce6a819fdd 51-52
+  s_bcfa22475523c5::t_a4e70cd1b65b70 24-25
+  s_bcfa22475523c5::t_4bfea171f548d4 12
+docs/partners/tasks/AGT-PTR-07-concierge-attribution.md
+  s_bcfa22475523c5::t_4bfea171f548d4 12
+docs/tasks/events/tasks/AI-native-system/LINEAR-SYNC.md
+  s_bcfa22475523c5::t_eab09a6e1be716 28
+  s_bcfa22475523c5::t_f0eaa67e155030 27
+docs/tasks/mastra/partners/AGT-PTR-05-lead-qualification-hitl.md
+  s_bcfa22475523c5::t_8db34ef9da4267 39
+  s_bcfa22475523c5::t_4bfea171f548d4 12
+  s_bcfa22475523c5::t_536806d2c1f345 49
+docs/partners/tasks/AGT-PTR-06-hitl-policy-module.md
+  s_bcfa22475523c5::t_4bfea171f548d4 12
+  s_bcfa22475523c5::t_2e8c2b5734cd42 20
+  s_bcfa22475523c5::t_9c0ac446c4a67d 33
+docs/partners/tasks/AGT-PTR-05-lead-qualification-hitl.md
+  s_bcfa22475523c5::t_4bfea171f548d4 12
+  s_bcfa22475523c5::t_c7c80fe196e16f 39
+  s_bcfa22475523c5::t_5b586d262e79c3 49
+docs/tasks/events/tasks/AI-native-system/Core/AIE-008-core-host-analytics-page.md
+  s_bcfa22475523c5::t_f977e00367693b 26
+docs/tasks/mastra/partners/AGT-PTR-04-dashboard-copilot.md
+  s_bcfa22475523c5::t_4bfea171f548d4 12
+  s_bcfa22475523c5::t_1bc8af35612890 23-24
+  s_bcfa22475523c5::t_7d580e6dfe3fa3 45
+docs/partners/tasks/AGT-PTR-01-partner-agent-foundation.md
+  s_bcfa22475523c5::t_4bfea171f548d4 12
+docs/intelligence/audit/04-linear-task-ai-native-v2-audit-2026-06-15.md
+  s_bcfa22475523c5::t_d75a1324ecee49 79-80
+  s_bcfa22475523c5::t_1ba06118eb9c4a 120-131
+  s_bcfa22475523c5::t_f9b94d1cc5b7fc 1-78,81-119,132-138
+docs/tasks/events/tasks/AI-native-system/MVP/AIE-015-mvp-recommendations-hub.md
+  s_bcfa22475523c5::t_d1526e18764c46 34
+docs/tasks/mastra/partners/AGT-PTR-07-concierge-attribution.md
+  s_bcfa22475523c5::t_4bfea171f548d4 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "9e1d95aa81fc8f2e7d5e4cb6eee06a81725c727d",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_bcfa22475523c5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a4c0e6df-559e-4768-bdc4-abc0aabb5dc3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
