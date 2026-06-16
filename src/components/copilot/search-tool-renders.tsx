@@ -21,7 +21,10 @@ import {
 import type { WorkflowKind } from "@/platform/copilot/workflow-steps";
 import { useEventSearchResults } from "@/components/chat/event-search-results-context";
 import type { EventWebCitationRow } from "@/components/chat/event-search-results-context";
-import { normalizeToolEnvelope } from "@/lib/normalize-tool-envelope";
+import {
+  decodeToolJson,
+  normalizeToolEnvelope,
+} from "@/lib/normalize-tool-envelope";
 import {
   getToolRenderErrorMessage,
   isToolRenderError,
@@ -67,13 +70,17 @@ function LoadingCards() {
   );
 }
 
-function parseWebEventToolCitations(result: unknown): EventWebCitationRow[] {
-  const row =
-    result && typeof result === "object"
-      ? (result as Record<string, unknown>)
-      : {};
+function parseWebEventToolGrounding(result: unknown): {
+  citations: EventWebCitationRow[];
+  reason: string | null;
+} {
+  const decoded = decodeToolJson(result);
+  if (!decoded || typeof decoded !== "object") {
+    return { citations: [], reason: null };
+  }
+  const row = decoded as Record<string, unknown>;
   const list = Array.isArray(row.citations) ? row.citations : [];
-  return list.filter(
+  const citations = list.filter(
     (c): c is EventWebCitationRow =>
       Boolean(
         c &&
@@ -83,6 +90,13 @@ function parseWebEventToolCitations(result: unknown): EventWebCitationRow[] {
           typeof (c as { title?: string }).title === "string",
       ),
   );
+  const reason =
+    row.metadata &&
+    typeof row.metadata === "object" &&
+    typeof (row.metadata as { reason?: unknown }).reason === "string"
+      ? (row.metadata as { reason: string }).reason
+      : null;
+  return { citations, reason };
 }
 
 function WebCitationsSync({ citations }: { citations: EventWebCitationRow[] }) {
@@ -244,15 +258,7 @@ function webEventsToolRender({ status, result }: ToolRenderProps): ReactElement 
       </ToolRenderShell>
     );
   }
-  const parsed = parseWebEventToolCitations(result);
-  const row =
-    result && typeof result === "object"
-      ? (result as Record<string, unknown>)
-      : {};
-  const reason =
-    row.metadata && typeof row.metadata === "object"
-      ? (row.metadata as { reason?: string }).reason
-      : null;
+  const { citations: parsed, reason } = parseWebEventToolGrounding(result);
 
   if (parsed.length === 0 && !reason) {
     return (

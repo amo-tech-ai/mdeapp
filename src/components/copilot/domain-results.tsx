@@ -8,6 +8,7 @@ import { ToolPinsSync } from "@/components/copilot/tool-pins-sync";
 import { EmptyState } from "@/components/empty/empty-state";
 import { RichCardResultsRegistrar } from "@/components/chat/rich-card-results-context";
 import { useRentalUi } from "@/components/chat/rental-ui-context";
+import { normalizeToolEnvelope } from "@/lib/normalize-tool-envelope";
 import { toRestaurantVenueDetail } from "@/lib/venues/to-restaurant-venue-detail";
 import { useMapContext } from "@/platform/maps/map-context";
 import type { MapPinCategory } from "@/platform/contracts";
@@ -88,12 +89,8 @@ export function DomainResults({
   const { selectedPinId, panToPin } = useMapContext();
   const { openCafeDetail, openRestaurantBooking } = useRentalUi();
   const listRef = useRef<HTMLDivElement>(null);
-  const envelope = result as {
-    results?: PlaceRow[];
-    rankExplanation?: Array<{ factor: string; score: number; note: string }>;
-    hybridUsed?: boolean;
-  };
-  const rows = envelope.results ?? [];
+  const envelope = normalizeToolEnvelope(result);
+  const rows = (envelope.results ?? []) as PlaceRow[];
   const rankExplanation = envelope.rankExplanation ?? [];
 
   useEffect(() => {

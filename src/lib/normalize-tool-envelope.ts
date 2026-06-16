@@ -4,6 +4,19 @@ export type WebGroundingEnvelope = {
   metadata?: Record<string, unknown>;
 };
 
+/** Unwrap CopilotKit v2 tool payloads that may be JSON-string encoded one or more times. */
+export function decodeToolJson(result: unknown): unknown {
+  let value = result;
+  while (typeof value === "string") {
+    try {
+      value = JSON.parse(value) as unknown;
+    } catch {
+      return undefined;
+    }
+  }
+  return value;
+}
+
 export function normalizeToolEnvelope(result: unknown): {
   results?: unknown[];
   total?: number;
@@ -12,14 +25,7 @@ export function normalizeToolEnvelope(result: unknown): {
   rankExplanation?: Array<{ factor: string; score: number; note: string }>;
   webGrounding?: WebGroundingEnvelope;
 } {
-  let value = result;
-  if (typeof value === "string") {
-    try {
-      value = JSON.parse(value) as unknown;
-    } catch {
-      return {};
-    }
-  }
+  const value = decodeToolJson(result);
   if (!value || typeof value !== "object") return {};
   const envelope = value as {
     results?: unknown[];
