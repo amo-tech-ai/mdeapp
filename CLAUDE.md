@@ -37,7 +37,7 @@ Compact always-on guardrails; deeper detail in the named skill. (12 wired enforc
 - **Every new Supabase table:** RLS enabled + ≥ 1 policy. (→ `mde-supabase`)
 - **Every Places API New call:** `X-Goog-FieldMask` (cost lever). (→ `mde-maps`)
 - **Every `<AdvancedMarker>`:** `mapId` on the parent `<Map>`. (→ `mde-maps`)
-- **CopilotKit pinned at `1.55.2`** for Phase 1 — v1 imports only, never mix v1/v2. Migrate to v2 in Phase 2 when Mastra ships on v2. (→ `copilotkit`)
+- **CopilotKit on the v2 API, package pinned at `1.55.2`.** The whole app migrated to the v2 API surface (CK-V2 epic, 2026-06): **import from the `/v2` subpath only** — `@copilotkit/react-core/v2`, `@copilotkit/react-ui/v2` (0 v1 imports remain in `src/**`). This is the v2 API *inside* package `1.55.2`, **not** a 2.x version bump — keep the package pinned. New CopilotKit code uses `/v2`; never re-introduce a bare `@copilotkit/react-core` v1 import — mixing v1/v2 is the documented breakage. (→ `copilotkit`)
 - **One worktree, one PR.** (→ `mde-worktree-pr-flow`, `/invoke`-only)
 - **Localhost runtime proof required for Done** (2026-05-20): no task flips `status: Done` without evidence that `npm run dev` booted clean AND the relevant surface responded. Anti-fake-done gate 9 (`.claude/skills/task-verifier/references/anti-fake-done-checklist.md`). N/A only for pure-doc tasks.
 - **Before any UI/SCREEN work: read [`DESIGN.MD`](./DESIGN.MD)** — color tokens (oklch), layout system, component anatomy, do/don't rules, and Mindtrip competitive patterns. Using hardcoded `gray-*` shades, omitting `prefers-reduced-motion`, or skipping skeletons are regressions. (→ `shadcn`, `tailwind-best-practices`)
