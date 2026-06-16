@@ -1,8 +1,8 @@
 # CK-V2 · CopilotKit v1→v2 migration — Progress Task Tracker
 
-**Updated:** 2026-06-14 ([SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui; consolidate frontend to react-core/v2 + remove flags](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react) merged [#219](https://github.com/amo-tech-ai/mdeapp/pull/219)) · **Mode:** `post-cutover · prod deploy + smoke`  
-**Ground truth:** `main` @ **`4c6ef62e`** (squash merge #219 · 2026-06-14T12:56:45Z) · prior `078a677c` ([SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2 — last, highest-risk](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk) #218)  
-**Active:** Post-merge — prod deploy · Tier-1 smoke · optional [SAN-896 · CK-V2-008 — Refresh SAN-888 + SAN-889 localhost evidence @ current mainSha (7b596283+)](https://linear.app/sanjiovani/issue/SAN-896/ck-v2-008-refresh-san-888-san-889-localhost-evidence-current-mainsha) / [SAN-898 · CK-V2-010 — Fix v2 host-event hydration mismatch (caret-color transparent)](https://linear.app/sanjiovani/issue/SAN-898/ck-v2-010-fix-v2-host-event-hydration-mismatch-caret-color-transparent) / [SAN-906 · CK-V2-010a — Inventory hydration warnings (host-event v2)](https://linear.app/sanjiovani/issue/SAN-906/ck-v2-010a-inventory-hydration-warnings-host-event-v2)  
+**Updated:** 2026-06-16 ([#225](https://github.com/amo-tech-ai/mdeapp/pull/225) CK-V2-015 merged · [SAN-896 · CK-V2-008 — Refresh post-cutover v2 evidence @ current main SHA](https://linear.app/sanjiovani/issue/SAN-896/ck-v2-008-refresh-san-888-san-889-localhost-evidence-current-mainsha) localhost **PASS**) · **Mode:** `post-#225 · SAN-896 sign-off`  
+**Ground truth:** `main` @ **`2d9c8ed6`** ([#225](https://github.com/amo-tech-ai/mdeapp/pull/225) CK-V2-015 · 2026-06-16) · prior `4f43390a` (#223) · cutover `4c6ef62e` (#219)  
+**Active:** Small follow-up PR (JSDoc + `san-896` e2e send fix) → SAN-896 **Done** on user OK · prod deploy #225+  
 **Linear view:** [v2-upgrade](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd) (label **`V2UP`**) — **18 parent + 8 sub issues**  
 **Package pin:** `@copilotkit/react-core@1.55.2` · subpath `/v2` only (no package bump in 891)  
 **Linear contracts:** [`linear-descriptions/`](./linear-descriptions/)

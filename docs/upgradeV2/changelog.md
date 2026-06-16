@@ -1,7 +1,52 @@
 # CK-V2 · CopilotKit v1→v2 migration — Changelog
 
 Reverse-chronological log of verified program events.  
-Tracker: [`todo.md`](./todo.md) · Audits: [`12-tasks-audit.md`](./12-tasks-audit.md) · [`11-tasks-audit.md`](./11-tasks-audit.md) · [`08-local-hostaudit.md`](./08-local-hostaudit.md)
+Tracker: [`todo.md`](./todo.md) · [Linear v2-upgrade view](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd) · Audits: [`16-copilotkitv2-audit.md`](./16-copilotkitv2-audit.md) · [`15-tasks-audit.md`](./15-tasks-audit.md) · [`12-tasks-audit.md`](./12-tasks-audit.md)
+
+---
+
+## 2026-06-16 — [SAN-896 · CK-V2-008 — Refresh post-cutover v2 evidence @ current main SHA](https://linear.app/sanjiovani/issue/SAN-896/ck-v2-008-refresh-san-888-san-889-localhost-evidence-current-mainsha) **localhost sign-off** @ `2d9c8ed6`
+
+**Verdict:** Localhost matrix **4/4 PASS** after [#225](https://github.com/amo-tech-ai/mdeapp/pull/225) merge — Roberto `hostEventAgent` form fill was a **v2 e2e send-selector bug**, not a product regression.
+
+| Gate | Result |
+|---|---|
+| CK-V2-015 merge | ✅ [#225](https://github.com/amo-tech-ai/mdeapp/pull/225) @ `2d9c8ed6` |
+| Events chip → agent | ✅ Tourist `/chat` · `event-card ≥ 1` |
+| Host wizard agent fill | ✅ Roberto `/host/event/new` · v2 `copilot-chat-textarea` send |
+| Host analytics | ✅ KPI grid after `how are my sales?` |
+| Playwright | ✅ `e2e/san-896-ck-v2-evidence.spec.ts` 4/4 |
+| Cosmetic | ✅ dedupe duplicate JSDoc (CK-V2-015 docstring pass) |
+
+**Evidence:** [`docs/tasks/testing/evidence/SAN-896/RESULTS.md`](../tasks/testing/evidence/SAN-896/RESULTS.md)
+
+**Next:** small follow-up PR (JSDoc + e2e harness) → flip SAN-896 **Done** on user OK · optional prod re-smoke after #225 deploy.
+
+---
+
+## 2026-06-16 — CK-V2-015 — Events chip category resolution **Merged** [PR #225](https://github.com/amo-tech-ai/mdeapp/pull/225) @ `2d9c8ed6`
+
+**Verdict:** Tourist **Events chip + agent path** empty-state fixed on `main`.
+
+| Gate | Result |
+|---|---|
+| Merge | ✅ [#225](https://github.com/amo-tech-ai/mdeapp/pull/225) @ `2d9c8ed6` |
+| Root cause | Hybrid ranked salsa rows; post-filter `nightlife` chip dropped `music` rows |
+| Fix | `resolveEventCategoryForQuery()` · ConciergeChatView send bridge · AG-UI envelope unwrap |
+| Vitest + Playwright | ✅ `intelligence-event-search` · `e2e/ck-v2-015-events-chip.spec.ts` |
+
+**Evidence:** [`docs/tasks/testing/evidence/2026-06-15/CK-V2-015-events-chip-agent-path-RESULTS.md`](../tasks/testing/evidence/2026-06-15/CK-V2-015-events-chip-agent-path-RESULTS.md)
+
+---
+
+## 2026-06-16 — CK-V2-014 + PERF-001 **Merged** [PR #223](https://github.com/amo-tech-ai/mdeapp/pull/223) @ `4f43390a`
+
+**Verdict:** Camila `/chat` generative cards + single `conciergeAgent` `useAgent` owner — **on `main`**.
+
+| Gate | Result |
+|---|---|
+| Merge | ✅ [#223](https://github.com/amo-tech-ai/mdeapp/pull/223) @ `4f43390a` |
+| Audit @ `4f43390a` | **85/100** — [`16-copilotkitv2-audit.md`](./16-copilotkitv2-audit.md) |
 
 ---
 
