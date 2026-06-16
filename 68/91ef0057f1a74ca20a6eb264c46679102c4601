@@ -1,0 +1,28 @@
+src/mastra/lib/ai-runs.ts
+  s_1b6702612cb2ad::t_3c505b09735044 30-32
+  s_1b6702612cb2ad::t_90d3f61f945677 82
+  s_1b6702612cb2ad::t_03a19b2e2d48db 91
+supabase/migrations/20260616120000_obs002b_ai_runs_error_type.sql
+  s_1b6702612cb2ad::t_1e9327e237f22a 1-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "6891ef0057f1a74ca20a6eb264c46679102c4601",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_1b6702612cb2ad": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "67f7b762-119f-4af8-b5a6-8301dbdc2ef3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
