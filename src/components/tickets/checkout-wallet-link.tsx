@@ -7,18 +7,23 @@ import { cn } from "@/lib/utils";
 
 const WALLET_KEY_PREFIX = "mdeai_wallet:";
 
-function readWalletHref(): string | null {
+/** Pre-redirect wallet access stored in sessionStorage (orderId + token). */
+export function readWalletAccess(): { orderId: string; token: string } | null {
   if (typeof window === "undefined") return null;
   for (let i = 0; i < sessionStorage.length; i++) {
     const key = sessionStorage.key(i);
     if (!key?.startsWith(WALLET_KEY_PREFIX)) continue;
     const orderId = key.slice(WALLET_KEY_PREFIX.length);
     const token = sessionStorage.getItem(key);
-    if (orderId && token) {
-      return `/me/tickets/${orderId}?token=${encodeURIComponent(token)}`;
-    }
+    if (orderId && token) return { orderId, token };
   }
   return null;
+}
+
+function readWalletHref(): string | null {
+  const access = readWalletAccess();
+  if (!access) return null;
+  return `/me/tickets/${access.orderId}?token=${encodeURIComponent(access.token)}`;
 }
 
 /** After Stripe return, link to wallet using token stored pre-redirect. */

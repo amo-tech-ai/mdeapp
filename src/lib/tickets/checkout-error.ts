@@ -25,11 +25,16 @@ export function classifyCheckoutError(
     };
   }
   const msg = message ?? "";
-  if (SOLD_OUT_RE.test(msg) || code === "TIER_SOLD_OUT") {
+  if (
+    SOLD_OUT_RE.test(msg) ||
+    code === "TIER_SOLD_OUT" ||
+    code === "OUT_OF_STOCK"
+  ) {
     return {
       kind: "sold_out",
-      heading: "Tickets are sold out",
-      detail: "This tier is no longer available. No charge was made.",
+      heading: "Tickets just sold out",
+      detail:
+        "These tickets sold out while you were checking out. No charge was made — try another tier or join the waitlist.",
       canRetry: false,
     };
   }

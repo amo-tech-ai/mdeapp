@@ -12,6 +12,9 @@ import type { BookingCheckoutTarget } from "@/components/modals/booking-checkout
 
 type TierQuantities = Record<string, number>;
 
+/** Max tickets a single order may contain (PAY-CO-2). Mirrored server-side. */
+const MAX_PER_ORDER = 8;
+
 function initialQuantities(tickets: PublicEventTicket[]): TierQuantities {
   const next: TierQuantities = {};
   for (const tier of tickets) {
@@ -102,6 +105,8 @@ export function EventTicketTiers({
             const remaining = ticketsRemaining(tier.qtyTotal, tier.qtySold);
             const soldOut = remaining === 0;
             const qty = quantities[tier.id] ?? 0;
+            const cap = Math.min(remaining, MAX_PER_ORDER);
+            const atOrderCap = qty >= MAX_PER_ORDER && MAX_PER_ORDER <= remaining;
 
             return (
               <li
@@ -154,14 +159,11 @@ export function EventTicketTiers({
                         variant="outline"
                         size="icon-sm"
                         aria-label={`Increase ${tier.name} quantity`}
-                        disabled={qty >= remaining}
+                        disabled={qty >= cap}
                         onClick={() =>
                           setQuantities((prev) => ({
                             ...prev,
-                            [tier.id]: Math.min(
-                              remaining,
-                              (prev[tier.id] ?? 0) + 1,
-                            ),
+                            [tier.id]: Math.min(cap, (prev[tier.id] ?? 0) + 1),
                           }))
                         }
                       >
@@ -170,6 +172,15 @@ export function EventTicketTiers({
                     </div>
                   ) : null}
                 </div>
+                {atOrderCap ? (
+                  <p
+                    className="mt-2 text-xs text-muted-foreground"
+                    data-testid="event-tier-order-cap"
+                  >
+                    Up to {MAX_PER_ORDER} tickets per order. For larger groups,
+                    place another order.
+                  </p>
+                ) : null}
                 {!soldOut && !compactFooter ? (
                   <Button
                     type="button"
