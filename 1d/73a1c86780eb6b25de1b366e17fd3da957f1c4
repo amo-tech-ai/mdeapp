@@ -1,0 +1,34 @@
+src/mastra/lib/ai-runs.ts
+  s_533d3795f50b67::t_e5f5e9201c1aed 29,33-34
+  s_533d3795f50b67::t_3d00ca7f03185c 38-39
+  s_533d3795f50b67::t_52f79f1928ff38 88
+  s_1b6702612cb2ad::t_3c505b09735044 30-32
+  s_1b6702612cb2ad::t_90d3f61f945677 82
+  s_1b6702612cb2ad::t_03a19b2e2d48db 91
+supabase/migrations/20260616120000_obs002b_ai_runs_error_type.sql
+  s_1b6702612cb2ad::t_1e9327e237f22a 1-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "1d73a1c86780eb6b25de1b366e17fd3da957f1c4",
+  "prompts": {},
+  "sessions": {
+    "s_1b6702612cb2ad": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "67f7b762-119f-4af8-b5a6-8301dbdc2ef3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_533d3795f50b67": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "25bdae88-e036-4d04-b09f-470c482f6675",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
