@@ -9,7 +9,7 @@ priority: P2
 status: Backlog
 depends_on: [SAN-705]
 unblocks: [SAN-708, SAN-686]
-skills: [mastra, copilotkitV1]
+skills: [mastra, copilotkit]
 audit: docs/partners/docs/07-ai-intelligence-partners-audit.md
 ---
 
@@ -17,7 +17,7 @@ audit: docs/partners/docs/07-ai-intelligence-partners-audit.md
 
 ## Purpose
 
-Shared module listing which partner (and host) actions require `renderAndWaitForResponse`. Ship **before or with** PTR-05 so lead reply uses policy from day one.
+Shared module listing which partner (and host) actions require `useHumanInTheLoop`. Ship **before or with** PTR-05 so lead reply uses policy from day one.
 
 **Persona:** Patricia ops — one policy table for money/public actions across host + partner agents.
 
@@ -30,7 +30,7 @@ flowchart TD
 
   T["Tool invoked"] --> P{"requiresPartnerHitl?"}
   P -->|no| X["Execute tool"]
-  P -->|yes| H["renderAndWaitForResponse"]
+  P -->|yes| H["useHumanInTheLoop"]
   H --> A{"approved?"}
   A -->|yes| X
   A -->|no| R["Abort with reason"]

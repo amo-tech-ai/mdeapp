@@ -9,7 +9,7 @@ priority: P0
 status: Backlog
 depends_on: []
 unblocks: [SAN-709, SAN-707]
-skills: [copilotkitV1, mastra]
+skills: [copilotkit, mastra]
 forensic_audit: docs/partners/audit/06d-mastra-audit.md
 disk_only: true
 ---

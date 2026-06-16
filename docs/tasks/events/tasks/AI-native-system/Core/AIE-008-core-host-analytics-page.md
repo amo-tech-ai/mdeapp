@@ -23,7 +23,7 @@ Ship `/host/analytics` — 3-panel layout with `hostOpsAgent` chat center and KP
 ## Scope
 
 - `src/app/host/analytics/page.tsx`
-- `HostOpsCopilotBridge` — `useCoAgent({ name: "hostOpsAgent" })`
+- `HostOpsCopilotBridge` — `useAgent({ name: "hostOpsAgent" })`
 - Event selector · date range · host nav entry (AIE-002)
 - No AI inside Stripe paths
 

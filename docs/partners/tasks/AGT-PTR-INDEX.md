@@ -12,6 +12,8 @@ schema_blocker: SAN-683
 
 > One `partnerAgent` · scoped Supabase tools · HITL for money/public actions. **Not** 18 vertical agents.
 
+> **Note:** `partnerAgent` is a deferred marketplace-tier agent — until marketplace scale, fold this capability into an existing agent (`conciergeAgent`/`hostEventAgent`) as a tool rather than standing up a new agent.
+
 ## System overview
 
 ```mermaid
@@ -29,7 +31,7 @@ flowchart TD
   Tools --> Routes["/api/partners/*"]
   Routes --> DB["Supabase RLS"]
   Agent --> HITL{"Money or public?"}
-  HITL -->|yes| Approve["renderAndWaitForResponse"]
+  HITL -->|yes| Approve["useHumanInTheLoop"]
   HITL -->|no| Run["Execute"]
 ```
 

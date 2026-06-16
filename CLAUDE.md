@@ -37,7 +37,7 @@ Compact always-on guardrails; deeper detail in the named skill. (12 wired enforc
 - **Every new Supabase table:** RLS enabled + ≥ 1 policy. (→ `mde-supabase`)
 - **Every Places API New call:** `X-Goog-FieldMask` (cost lever). (→ `mde-maps`)
 - **Every `<AdvancedMarker>`:** `mapId` on the parent `<Map>`. (→ `mde-maps`)
-- **CopilotKit pinned at `1.55.2`** for Phase 1 — v1 imports only, never mix v1/v2. Migrate to v2 in Phase 2 when Mastra ships on v2. (→ `copilotkit`)
+- **CopilotKit frontend is on v2** (the `/v2` subpath of the still-pinned `1.55.2` packages — a subpath swap, **not** a version bump; landed on `main` via PRs #217/#219/#220/#222). Use v2 hooks in `src/**`: `useAgent`, `useHumanInTheLoop`, `useFrontendTool`/`useRenderTool`, `useAgentContext`. v1 symbols (`useCoAgent`, `renderAndWaitForResponse`, `useCopilotAction`, `useCopilotReadable`, `@copilotkit/react-ui`) are **retired** — never reintroduce them; CI guards `npm run audit:copilotkit-v2*` block new v1 imports. Backend/Mastra is unchanged. Never mix v1 and v2 within the frontend. (→ `copilotkit`)
 - **One worktree, one PR.** (→ `mde-worktree-pr-flow`, `/invoke`-only)
 - **Localhost runtime proof required for Done** (2026-05-20): no task flips `status: Done` without evidence that `npm run dev` booted clean AND the relevant surface responded. Anti-fake-done gate 9 (`.claude/skills/task-verifier/references/anti-fake-done-checklist.md`). N/A only for pure-doc tasks.
 - **Before any UI/SCREEN work: read [`DESIGN.MD`](./DESIGN.MD)** — color tokens (oklch), layout system, component anatomy, do/don't rules, and Mindtrip competitive patterns. Using hardcoded `gray-*` shades, omitting `prefers-reduced-motion`, or skipping skeletons are regressions. (→ `shadcn`, `tailwind-best-practices`)
@@ -107,20 +107,26 @@ Invariants:
 - `renderAndWaitForResponse` is the HITL pattern; the component gets `respond(value)` to unblock the agent.
 - Working-memory schema changes touch THREE places: the Zod in the agent file, the TS type in `src/lib/types.ts`, and (W4) `packages/types/src/`.
 
-## Response style — lead with the answer
+## Response style — lead with the answer, in plain words
 
-> **STRICT RULE — plain language, no exceptions.** Every reply must be understandable on the first read by a smart non-engineer who runs this business. Lead with the answer in the first sentence. Short sentences, one idea per line. Gloss every technical term in plain English on first use, or cut it. Tie each point to a real mdeai persona + surface ("Camila's pins on `/`") or say "internal only — no user impact". End with the one concrete next step or the one thing you need. If the user could read only your first three lines and still know what to do, you passed; if not, rewrite the top. This rule overrides any default tendency toward technical or long-winded answers.
+**The test:** a smart non-engineer who runs this business should be able to read only your first three lines and know what to do. If they couldn't, rewrite the top. This overrides any pull toward technical or long-winded answers.
 
-**Write so a busy non-expert gets it on the first read.** Plain, real-world, easy to understand — every reply.
+**Shape every non-trivial reply like this:**
+1. **The answer — first sentence, plain words.** Yes/no, what you found, what changed.
+2. **What it means in the real world.** One to three sentences naming a real mdeai persona + surface ("Camila's pins on `/` are stale", "no real money moved yet"). No real-world effect? Write "internal only — no user impact" and move on.
+3. **Details — only what changes a decision.** Prefer a short table or list. Cut the rest.
+4. **Next step.** The one thing you'll do, or the one thing you need from the user.
 
-Default shape for any non-trivial reply: **(1) one-line answer/verdict first → (2) a short summary or table → (3) details only if needed → (4) the decision or next step.** Rules:
-- **Get to the point.** Put the conclusion in the first sentence; don't make the user read to find it.
-- **Easy to understand — the priority.** Short sentences, everyday words, one idea per line. Define any jargon the first time or skip it. If a sentence needs re-reading, rewrite it. Prefer a table or a short list over a wall of prose.
-- **Real-world, not abstract.** Say what actually changes for a real person — name the mdeai persona + surface ("Camila's chat on `/chat` keeps her budget after a redeploy"), not "the persistence layer is wired." A change with no real-world effect is plumbing — say so in one line and move on.
-- **Logical order.** Most-important → least; group related points; never bury a blocker mid-paragraph.
-- **Show the number with its name.** Money, counts, dates, and task IDs always carry their meaning (`SAN-546 · OPS-JOURNEY`, "431 threads = ~2 weeks of dev traffic"), never a bare figure.
-- **Summarize.** End multi-part work with a tight recap + an explicit "what I need from you" / next step.
-- **Be honest.** State what's done, what's skipped, what's risky — plainly, no hedging, no fake confidence.
+**Worked example — same finding, wrong vs right:**
+- ❌ *"The persistence layer is wired; threads now hydrate from LibSQL on cold-start via the after() flush."* — jargon, no persona, no decision.
+- ✅ *"Camila's chat now survives a redeploy. Before, turn 11 forgot turns 1–10 when the server cold-started; now the history reloads. Plumbing is done — next I'll add a test that proves it."*
+
+**Language rules:**
+- **Gloss jargon on first use, then use it freely** — "RLS (per-row database access rules)", "the floor check (the repo's pass/fail quality gate)". Can't gloss it? Cut it.
+- **Always name a task** — `SAN-546 · OPS-JOURNEY — <full title>`, never a bare number (a Stop hook blocks bare IDs). Same for spec IDs. Look the name up if you don't know it.
+- **Numbers carry their meaning** — "31 of 49 events", "431 threads ≈ 2 weeks of dev traffic", never a bare figure.
+- **Short sentences, one idea per line.** A table beats a wall of prose. Most-important first; never bury a blocker mid-paragraph.
+- **Be honest** — done / skipped / risky, stated plainly. No hedging, no fake confidence.
 
 ## Explanation style — use mdeai personas, not generic analogies
 

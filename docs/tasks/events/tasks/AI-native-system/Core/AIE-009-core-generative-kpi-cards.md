@@ -17,7 +17,7 @@ wireframe: ../../wireframes/events/013-revenue-dashboard.md
 
 ## Objective
 
-`useCopilotAction` with `available: "disabled"` renders revenue/tier charts when `salesInsightWorkflow` completes.
+`useRenderTool` (`available: "disabled"` render) renders revenue/tier charts when `salesInsightWorkflow` completes.
 
 ## Components
 

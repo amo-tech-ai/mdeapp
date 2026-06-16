@@ -9,7 +9,7 @@ priority: P2
 status: Backlog
 depends_on: [SAN-683, SAN-706]
 unblocks: [SAN-673, SAN-684]
-skills: [mastra, mde-supabase, copilotkitV1]
+skills: [mastra, mde-supabase, copilotkit]
 audit: tasks/design/partners/AI/07-ai-intelligence-partners-audit.md
 ---
 

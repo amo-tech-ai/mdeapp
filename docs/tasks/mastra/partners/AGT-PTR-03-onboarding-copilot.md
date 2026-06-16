@@ -9,7 +9,7 @@ priority: P1
 status: Backlog
 depends_on: [SAN-705, SAN-706, AGT-PTR-00, SAN-412]
 unblocks: [SAN-665]
-skills: [copilotkitV1, mastra, shadcn, mde-supabase]
+skills: [copilotkit, mastra, shadcn, mde-supabase]
 partners_ui: SAN-665
 audit: tasks/design/partners/AI/07-ai-intelligence-partners-audit.md
 forensic_audit: tasks/design/partners/audit/06d-mastra-audit.md
@@ -20,6 +20,8 @@ forensic_audit: tasks/design/partners/audit/06d-mastra-audit.md
 ## Purpose
 
 CopilotKit on `/partners/signup` where `partnerAgent` reads/writes `partner_drafts.payload` via PTR-02 tools. Form + agent stay in sync (INT-009 / SAN-412).
+
+> **Note:** `partnerAgent` is a deferred marketplace-tier agent — until marketplace scale, fold this capability into an existing agent (e.g. `conciergeAgent`/`hostEventAgent`) as a tool rather than standing up a new agent.
 
 **Persona:** Venue owner describes business in plain English; wizard fields fill; draft resumes on return.
 
@@ -46,8 +48,8 @@ flowchart LR
 
 - [ ] `partners/signup/layout.tsx` per AGT-PTR-00 — `getCopilotKitClientProps("partnerAgent")`
 - [ ] `threadId={`partner-draft:${draftId}`}` on layout; server `resourceId` matches
-- [ ] `useCoAgent({ name: "partnerAgent" })` with React state + `setState` (host bridge pattern)
-- [ ] `useCopilotAction` handlers mirror wizard fields (SAN-665 step matrix)
+- [ ] `useAgent({ name: "partnerAgent" })` with React state + `setState` (host bridge pattern)
+- [ ] `useRenderTool` handlers mirror wizard fields (SAN-665 step matrix)
 - [ ] Autosave: debounced PATCH via `upsert_partner_draft`; resume `?draft={id}`
 - [ ] First slice: `?type=host` only; other types "coming soon"
 - [ ] Activation checklist gates submit (SAN-683 fields)
@@ -64,8 +66,8 @@ sequenceDiagram
   participant Agent as partnerAgent
 
   User->>Bridge: types in chat
-  Bridge->>Agent: useCoAgent state
-  Agent->>Bridge: useCopilotAction set fields
+  Bridge->>Agent: useAgent state
+  Agent->>Bridge: useRenderTool set fields
   Bridge->>Form: mergePartnerDraft
   Form->>Bridge: user edits field
   Bridge->>Agent: setState patch
@@ -73,7 +75,7 @@ sequenceDiagram
 
 ## Reuse
 
-- `host-event-copilot-bridge.tsx` — external state + `useCopilotAction`
+- `host-event-copilot-bridge.tsx` — external state + `useRenderTool`
 - [SAN-412](https://linear.app/sanjiovani/issue/SAN-412) INT-009 state mirror
 - `05-signup-wizard.md` step matrix
 

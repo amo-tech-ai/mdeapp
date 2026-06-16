@@ -31,5 +31,5 @@ Standalone `/recommendations` — events, venues, restaurants, cafés from histo
 ## Acceptance criteria
 
 - Route in sitemap MVP
-- `useCopilotReadable` user context
+- `useAgentContext` user context
 - ≥1 card per vertical in browser smoke

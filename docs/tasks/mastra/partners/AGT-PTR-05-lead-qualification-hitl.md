@@ -9,7 +9,7 @@ priority: P1
 status: Backlog
 depends_on: [SAN-706, AGT-PTR-06]
 unblocks: [SAN-684]
-skills: [mastra, copilotkitV1, mde-supabase]
+skills: [mastra, copilotkit, mde-supabase]
 audit: tasks/design/partners/AI/07-ai-intelligence-partners-audit.md
 ---
 
@@ -36,7 +36,7 @@ sequenceDiagram
   Agent->>Agent: draft_lead_reply tool
   Agent->>Policy: requiresPartnerHitl send_lead_reply
   Policy-->>Agent: true
-  Agent->>UI: renderAndWaitForResponse
+  Agent->>UI: useHumanInTheLoop
   Partner->>UI: approve or edit
   UI->>Agent: respond approved true
   Agent->>API: PATCH status contacted
@@ -46,7 +46,7 @@ sequenceDiagram
 
 - [ ] Tool `qualify_lead`: score + rationale in agent state
 - [ ] Tool `draft_lead_reply`: draft in state or `leads.metadata`
-- [ ] `useCopilotAction` + `renderAndWaitForResponse` before `send_lead_reply`
+- [ ] `useHumanInTheLoop` before `send_lead_reply`
 - [ ] `send_lead_reply` only after `respond({ approved: true })`
 - [ ] Updates `leads.status` via `/api/partners/leads/[id]` with RLS
 - [ ] `requiresPartnerHitl` from AGT-PTR-06 gates outbound send

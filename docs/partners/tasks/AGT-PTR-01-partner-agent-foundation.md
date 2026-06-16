@@ -9,7 +9,7 @@ priority: P0
 status: Backlog
 depends_on: [SAN-683]
 unblocks: [SAN-706, SAN-709, SAN-707, AGT-PTR-00]
-skills: [mastra, copilotkitV1, gemini]
+skills: [mastra, copilotkit, gemini]
 audit: docs/partners/docs/07-ai-intelligence-partners-audit.md
 forensic_audit: docs/partners/audit/06d-mastra-audit.md
 ---

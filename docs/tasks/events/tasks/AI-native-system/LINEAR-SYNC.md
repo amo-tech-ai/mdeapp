@@ -24,8 +24,8 @@ verified: 2026-06-08
 
 | Check | Source | Result |
 |-------|--------|--------|
-| CopilotKit v1 hooks | `copilotkitV1` skill + [Mastra shared-state](https://docs.copilotkit.ai/integrations/mastra/shared-state) | ✅ `useCoAgent`, `useCopilotAction`, `renderAndWaitForResponse` |
-| No v2 trap | CopilotKit MCP | ✅ v2 `useAgent` documented as avoid for mdeapp |
+| CopilotKit v2 hooks | `copilotkit` skill + [Mastra shared-state](https://docs.copilotkit.ai/integrations/mastra/shared-state) | ✅ `useAgent`, `useFrontendTool` (logic/actions), `useRenderTool` (UI approval/review cards), `useHumanInTheLoop` |
+| v2 adopted | CopilotKit MCP | ✅ frontend migrated to v2 `useAgent` (the `/v2` subpath of pinned 1.55.2) — landed on `main` |
 | Mastra Pattern 1 | `copilotkit-integrations/mastra.md` | ✅ in-process `/api/copilotkit` |
 | Workflows | Mastra local docs | ✅ deterministic steps before LLM narrate |
 | Agent cap | `04-AI-native-system.md` §4 | ✅ 5 / 8 / 12 enforced in epic |

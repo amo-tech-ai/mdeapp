@@ -18,6 +18,14 @@ technical depth.
 3. **Details** — only what changes a decision. Prefer a short table. Cut the rest.
 4. **Next step** — what you'll do, or the one thing you need from the user.
 
+## Worked example — same finding, wrong vs right
+
+- WRONG: "The persistence layer is wired; threads now hydrate from LibSQL on cold-start
+  via the after() flush." — jargon, no persona, no decision.
+- RIGHT: "Camila's chat now survives a redeploy. Before, turn 11 forgot turns 1–10 when
+  the server cold-started; now the history reloads. Plumbing is done — next I'll add a
+  test that proves it."
+
 ## Language rules
 
 - Every technical term gets a plain-English gloss in parentheses on FIRST use:

@@ -20,11 +20,13 @@ plan: ../../../plans/04-AI-native-system.md §4
 
 Register 5th Core agent: `hostOpsAgent` with `HostDashboardState` synced across agent, `src/lib/types.ts`, and CopilotKit bridge.
 
+> **Note:** `hostOpsAgent` is a deferred marketplace-tier agent (beyond today's live `conciergeAgent` + `hostEventAgent`) — until marketplace scale, fold this capability into an existing agent as a tool rather than standing up a new agent.
+
 ## Scope
 
 - `src/mastra/agents/host-ops-agent.ts` (or index export)
 - Zod schema: selected event, date range, KPI snapshot, tasks[]
-- Register in `Mastra({ agents: { hostOpsAgent } })` — key must match `useCoAgent({ name })`
+- Register in `Mastra({ agents: { hostOpsAgent } })` — key must match `useAgent({ name })`
 - Gemini `gemini-3.5-flash` only
 
 ## Acceptance criteria

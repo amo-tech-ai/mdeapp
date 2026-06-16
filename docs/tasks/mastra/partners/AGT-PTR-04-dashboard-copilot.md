@@ -9,7 +9,7 @@ priority: P1
 status: Backlog
 depends_on: [SAN-705, SAN-706, AGT-PTR-00]
 unblocks: [SAN-690]
-skills: [copilotkitV1, mastra, shadcn]
+skills: [copilotkit, mastra, shadcn]
 partners_ui: SAN-690
 audit: tasks/design/partners/AI/07-ai-intelligence-partners-audit.md
 ---
@@ -19,6 +19,8 @@ audit: tasks/design/partners/AI/07-ai-intelligence-partners-audit.md
 ## Purpose
 
 Partner dashboard mounts `partnerAgent` with `capability: "dashboard"` in working memory. Read-only KPIs and navigation help first.
+
+> **Note:** `partnerAgent` is a deferred marketplace-tier agent — until marketplace scale, fold this capability into an existing agent as a tool rather than standing up a new agent.
 
 **Persona:** Activated partner asks "how many leads this week?" without leaving `/dashboard`.
 
@@ -40,7 +42,7 @@ flowchart TD
 
 - [ ] `dashboard/layout.tsx` per AGT-PTR-00 — `threadId={`partner:${partnerId}`}`
 - [ ] CopilotKit sidebar or embedded panel
-- [ ] `useCoAgent({ name: "partnerAgent" })` initial state `{ capability: "dashboard", partnerId }`
+- [ ] `useAgent({ name: "partnerAgent" })` initial state `{ capability: "dashboard", partnerId }`
 - [ ] Read-only tools: `get_partner_profile`, `list_partner_leads` (requires SAN-706)
 - [ ] No booking/Postiz/revenue mutations without PTR-05/06 HITL
 - [ ] Auth: unauthenticated → `/login`; no partner row → `/partners/signup`
