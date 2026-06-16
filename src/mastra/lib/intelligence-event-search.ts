@@ -75,8 +75,13 @@ export function resolveEventCategoryForQuery(
   category: EventQuery["category"],
   queryText?: string,
 ): EventQuery["category"] {
+  if (!category) return category;
   const text = queryText?.trim();
-  if (!category || !text) return category;
+  if (!text) {
+    // Events chip often sets nightlife without queryText — skip strict filter.
+    if (category === "nightlife") return undefined;
+    return category;
+  }
   const slots = parseEventIntelligenceSlots(text);
   if ((slots.wantsSalsa || slots.wantsLiveMusic) && category === "nightlife") {
     return "music";

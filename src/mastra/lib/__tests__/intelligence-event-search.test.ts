@@ -14,6 +14,15 @@ describe("resolveEventCategoryForQuery", () => {
     ).toBe("music");
   });
 
+  it("clears nightlife when queryText is absent (chip-only scope)", () => {
+    expect(resolveEventCategoryForQuery("nightlife", undefined)).toBeUndefined();
+    expect(resolveEventCategoryForQuery("nightlife", "")).toBeUndefined();
+  });
+
+  it("keeps other categories when queryText is absent", () => {
+    expect(resolveEventCategoryForQuery("music", undefined)).toBe("music");
+  });
+
   it("remaps nightlife chip + hyphenated live-music queryText to music", () => {
     expect(
       resolveEventCategoryForQuery(
