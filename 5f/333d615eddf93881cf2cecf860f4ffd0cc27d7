@@ -1,0 +1,25 @@
+docs/tasks/testing/evidence/2026-06-15/PR223-CK-V2-014-PERF-001-RESULTS.md
+  s_d934f93e3b39ca::t_91be6490000f5d 1-27,29-43
+  s_d934f93e3b39ca::t_437753091d792a 28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "5f333d615eddf93881cf2cecf860f4ffd0cc27d7",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_d934f93e3b39ca": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ed309e68-af99-497b-8545-2c3f383d3a5a",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
