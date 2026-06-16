@@ -1,0 +1,24 @@
+CLAUDE.md
+  s_bcfa22475523c5::t_fd6b8094eb8e5f 40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "371fcef743273d3dd93f9c088b55b4b1dcd40dd6",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_bcfa22475523c5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a4c0e6df-559e-4768-bdc4-abc0aabb5dc3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
