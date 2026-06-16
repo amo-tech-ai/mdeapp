@@ -107,6 +107,12 @@ test.describe("SAN-896 · CK-V2-008 evidence", () => {
 
       await page.goto("/host/event/new", { waitUntil: "domcontentloaded" });
       await waitForCopilotRuntime(page);
+
+      const assistantMessages = page.locator(
+        ".copilotKitAssistantMessage, [data-message-role='assistant']",
+      );
+      const baselineAssistants = await assistantMessages.count();
+
       await sendHostChat(page, HOST_EVENT_PROMPT);
       await page
         .waitForResponse(
@@ -129,12 +135,11 @@ test.describe("SAN-896 · CK-V2-008 evidence", () => {
               const title = (await titleField.inputValue().catch(() => "")).trim();
               const hood = (await neighborhoodField.inputValue().catch(() => "")).trim();
               const hitl = await hitlPanel.isVisible().catch(() => false);
-              const assistants = await page
-                .locator(
-                  ".copilotKitAssistantMessage, [data-message-role='assistant']",
-                )
-                .count();
-              return Boolean(title || hood || hitl || assistants > 0);
+              const assistants = await assistantMessages.count();
+              return (
+                Boolean(title || hood || hitl) ||
+                assistants > baselineAssistants
+              );
             },
             { timeout: 180_000 },
           )
@@ -171,6 +176,8 @@ test.describe("SAN-896 · CK-V2-008 evidence", () => {
       await expect(page.getByTestId("host-analytics")).toBeVisible();
       await expect(page.getByTestId("host-ops-chat-region")).toBeVisible();
 
+      await expect(page.getByTestId("host-kpi-empty")).toBeVisible();
+
       await Promise.all([
         page.waitForResponse(
           (r) =>
@@ -182,21 +189,18 @@ test.describe("SAN-896 · CK-V2-008 evidence", () => {
         sendHostChat(page, ANALYTICS_PROMPT),
       ]);
 
-      await page.getByText("Sales loaded ✓").waitFor({ timeout: 180_000 }).catch(() => undefined);
-
+      const salesLoaded = page.getByText("Sales loaded ✓");
       const kpiGrid = page.getByTestId("host-kpi-grid");
-      const kpiEmpty = page.getByTestId("host-kpi-empty");
-      const assistantCount = await page
-        .locator(".copilotKitAssistantMessage, [data-message-role='assistant']")
-        .count();
-      await Promise.race([
-        kpiGrid.waitFor({ state: "visible", timeout: 180_000 }),
-        kpiEmpty.waitFor({ state: "visible", timeout: 180_000 }),
-      ]);
-
-      const hasGrid = await kpiGrid.isVisible().catch(() => false);
-      const hasEmpty = await kpiEmpty.isVisible().catch(() => false);
-      expect(hasGrid || hasEmpty || assistantCount > 0).toBe(true);
+      await expect
+        .poll(
+          async () => {
+            const loaded = await salesLoaded.isVisible().catch(() => false);
+            const grid = await kpiGrid.isVisible().catch(() => false);
+            return loaded || grid;
+          },
+          { timeout: 180_000 },
+        )
+        .toBe(true);
 
       await page.screenshot({
         path: path.join(EVIDENCE_DIR, "07-host-analytics.png"),

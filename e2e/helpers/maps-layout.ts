@@ -113,12 +113,30 @@ export async function gotoHome(page: Page) {
   await gotoConcierge(page);
 }
 
+const CPK_INSPECTOR_HIDE_CSS =
+  "cpk-web-inspector { display: none !important; pointer-events: none !important; }";
+
 /** CopilotKit dev inspector overlay blocks sheet/modal clicks in e2e. */
 export async function hideCopilotWebInspector(page: Page) {
-  await page.addStyleTag({
-    content:
-      "cpk-web-inspector { display: none !important; pointer-events: none !important; }",
-  });
+  await page.addInitScript((css) => {
+    const id = "mde-e2e-hide-cpk-inspector";
+    if (document.getElementById(id)) return;
+    const style = document.createElement("style");
+    style.id = id;
+    style.textContent = css;
+    (document.head || document.documentElement).appendChild(style);
+  }, CPK_INSPECTOR_HIDE_CSS);
+  // Also hide on the current document when called after navigation.
+  await page
+    .evaluate((css) => {
+      const id = "mde-e2e-hide-cpk-inspector";
+      if (document.getElementById(id)) return;
+      const style = document.createElement("style");
+      style.id = id;
+      style.textContent = css;
+      (document.head || document.documentElement).appendChild(style);
+    }, CPK_INSPECTOR_HIDE_CSS)
+    .catch(() => undefined);
 }
 
 /** Wait for CopilotKit runtime handshake before co-agent / chat actions. */
