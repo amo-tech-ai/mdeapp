@@ -24,11 +24,13 @@ function useOrderFinalizeState(active: boolean): FinalizeState {
 
     let cancelled = false;
     let attempts = 0;
+    const controller = new AbortController();
     const poll = async () => {
       attempts += 1;
       try {
         const res = await fetch(
           `/api/tickets/wallet?orderId=${encodeURIComponent(access.orderId)}&token=${encodeURIComponent(access.token)}`,
+          { signal: controller.signal },
         );
         if (res.ok) {
           const data = (await res.json()) as { order?: { status?: string } };
@@ -38,7 +40,7 @@ function useOrderFinalizeState(active: boolean): FinalizeState {
           }
         }
       } catch {
-        // Network hiccup — retry below; never claim success on error
+        // Network hiccup or abort — retry below; never claim success on error
       }
       if (!cancelled && attempts < 6) {
         window.setTimeout(poll, 2000);
@@ -47,6 +49,7 @@ function useOrderFinalizeState(active: boolean): FinalizeState {
     poll();
     return () => {
       cancelled = true;
+      controller.abort();
     };
   }, [active]);
 

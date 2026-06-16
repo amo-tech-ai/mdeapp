@@ -106,7 +106,7 @@ export function EventTicketTiers({
             const soldOut = remaining === 0;
             const qty = quantities[tier.id] ?? 0;
             const cap = Math.min(remaining, MAX_PER_ORDER);
-            const atOrderCap = qty >= MAX_PER_ORDER && MAX_PER_ORDER <= remaining;
+            const atOrderCap = qty >= MAX_PER_ORDER && remaining > MAX_PER_ORDER;
 
             return (
               <li
