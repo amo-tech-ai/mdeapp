@@ -71,8 +71,7 @@ function num(v: number | string | null | undefined): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
-/** Remap Events chip category using queryText signals (e.g. nightlife + salsa → music). */
-/** Remap Events chip category using queryText signals; clears nightlife when queryText absent (CK-V2-015). */
+/** Remap Events chip category using queryText signals (e.g. nightlife + salsa → music); clears nightlife when queryText absent (CK-V2-015). */
 export function resolveEventCategoryForQuery(
   category: EventQuery["category"],
   queryText?: string,

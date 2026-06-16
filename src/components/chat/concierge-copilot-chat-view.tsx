@@ -8,8 +8,7 @@ import {
 import { sendConciergeUserMessage } from "@/lib/concierge-send-user-message";
 import { useConciergeSendHandlers } from "@/lib/hooks/use-concierge-send-handlers";
 
-/** Wrap CopilotChatView — route composer submit through classify + fast-path (CK-V2-015). */
-/** Routes composer submit through classify + fast-path before agent fallback (CK-V2-015). */
+/** Wrap CopilotChatView — route composer submit through classify + fast-path before agent fallback (CK-V2-015). */
 function ConciergeChatViewInner(props: CopilotChatViewProps) {
   const handlers = useConciergeSendHandlers();
   const onSubmitMessage = useCallback(
