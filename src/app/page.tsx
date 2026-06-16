@@ -3,6 +3,7 @@ import { HomeNav } from "@/components/home/home-nav";
 import { HomeHero } from "@/components/home/home-hero";
 import { HomeMapTeaser } from "@/components/home/home-map-teaser";
 import { HomeVerticalsStrip } from "@/components/home/home-verticals-strip";
+import { HomeFeatures } from "@/components/home/home-features";
 import { HomeSuggestions } from "@/components/home/home-suggestions";
 import { HomeTrending } from "@/components/home/home-trending";
 import { HomeDiscoveryRows } from "@/components/home/home-discovery-rows";
@@ -38,6 +39,9 @@ export default async function HomePage({ searchParams }: Props) {
 
         {/* Band 04: Verticals strip */}
         <HomeVerticalsStrip />
+
+        {/* Band 04b: Why mdeai value props */}
+        <HomeFeatures />
 
         {/* Band 05: AI suggestions */}
         <HomeSuggestions />
