@@ -1,0 +1,21 @@
+src/components/events/event-ticket-tiers.tsx
+  s_f47ea5ebcd9235::t_10cf0160fc16c5 109
+src/components/events/event-checkout-notice.tsx
+  s_f47ea5ebcd9235::t_1800fd9b16076a 27,33,43,52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "5f344299c0996f83e9cd48cfceb3f5de04d85e8a",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
