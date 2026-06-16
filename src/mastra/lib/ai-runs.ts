@@ -35,6 +35,8 @@ export interface MastraRunRecord {
   input_tokens?: number;
   output_tokens?: number;
   total_tokens?: number;
+  /** COST-001 — estimated USD cost; written to the existing column. */
+  estimated_cost_usd?: number | null;
   duration_ms?: number;
   model_name?: string;
   metadata?: Record<string, unknown>;
@@ -82,6 +84,7 @@ export async function recordMastraRun(record: MastraRunRecord): Promise<void> {
         total_tokens:
           record.total_tokens ??
           (record.input_tokens ?? 0) + (record.output_tokens ?? 0),
+        estimated_cost_usd: record.estimated_cost_usd ?? null,
         duration_ms: record.duration_ms ?? 0,
         model_name: record.model_name ?? null,
         metadata: record.error_type

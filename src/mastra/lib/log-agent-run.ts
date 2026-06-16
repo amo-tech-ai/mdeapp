@@ -23,6 +23,8 @@ export type TurnLogInput = {
   modelName?: string;
   input_tokens?: number;
   output_tokens?: number;
+  /** COST-001 — estimated USD cost for the turn (from token counts × rate). */
+  estimatedCostUsd?: number;
   /** OBS-002 — coarse failure class, set only when status !== "success". */
   errorType?: string;
   /** OBS-002 — trimmed cause, set only when status !== "success". */
@@ -57,6 +59,7 @@ export async function logAgentRunForTurn(opts: TurnLogInput): Promise<void> {
     input_tokens: inputTokens,
     output_tokens: outputTokens,
     total_tokens: inputTokens + outputTokens,
+    estimated_cost_usd: opts.estimatedCostUsd ?? null,
     input_data: opts.inputSummary ?? {},
     output_data: opts.outputSummary ?? {},
     metadata: opts.metadata,

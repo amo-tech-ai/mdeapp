@@ -23,6 +23,10 @@ import {
   getToolSpans,
   summarizeToolSpans,
 } from "@/mastra/lib/tool-audit-context";
+import {
+  createTokenSink,
+  runWithTokenSink,
+} from "@/mastra/lib/token-usage-als";
 /**
  * [SAN-905 · CK-V2-007d — Console clean on hostEventAgent stream](https://linear.app/sanjiovani/issue/SAN-905/ck-v2-007d-console-clean-on-hosteventagent-stream):
  * CopilotKit replays AG-UI messages without Gemini thought_signature on assistant
@@ -102,7 +106,12 @@ export class LoggingMastraAgent extends MastraAgent {
         ? sanitizeHostEventAgUiInput(input)
         : input;
 
-    return super.run(runInput).pipe(
+    // COST-001 — open a per-turn token sink. The wrapped Gemini model
+    // (token-usage-middleware) writes usage here while the model runs inside
+    // this turn's async context; we read it back in finalize().
+    const tokenSink = createTokenSink();
+
+    const stream = super.run(runInput).pipe(
       tap({
         complete: () => {
           completed = true;
@@ -124,6 +133,16 @@ export class LoggingMastraAgent extends MastraAgent {
         const toolSummary = summarizeToolSpans(
           getToolSpans({ requestContext: this.requestContext }),
         );
+        // Prefer the sink (real captured usage); 0 calls ⇒ leave undefined so
+        // the telemetry token fields fall back to any RequestContext usage.
+        const tokens =
+          tokenSink.calls > 0
+            ? {
+                input_tokens: tokenSink.inputTokens,
+                output_tokens: tokenSink.outputTokens,
+                total_tokens: tokenSink.totalTokens,
+              }
+            : undefined;
         const telemetry = buildTurnTelemetryMetadata({
           agentMapKey: this.agentMapKey,
           agent: this.agent,
@@ -135,6 +154,7 @@ export class LoggingMastraAgent extends MastraAgent {
           requestContext: this.requestContext,
           errorType,
           errorMessage,
+          tokens,
         });
         logTurnTelemetryDebug(telemetry);
         this.persistTurnLog({
@@ -145,12 +165,20 @@ export class LoggingMastraAgent extends MastraAgent {
           modelName: telemetry.model_name,
           input_tokens: telemetry.input_tokens,
           output_tokens: telemetry.output_tokens,
+          estimatedCostUsd: telemetry.estimated_cost_usd,
           errorType,
           errorMessage,
           metadata: telemetry as unknown as Record<string, unknown>,
         });
       }),
     );
+
+    // Subscribe inside the sink's async context so model calls triggered by the
+    // AG-UI bridge (which starts its work synchronously on subscribe) inherit it.
+    return new Observable<BaseEvent>((subscriber) => {
+      const sub = runWithTokenSink(tokenSink, () => stream.subscribe(subscriber));
+      return () => sub.unsubscribe();
+    });
   }
 }
 

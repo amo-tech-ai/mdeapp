@@ -2,9 +2,14 @@
  * SAN-872 · INT-023-A — Gemini Flash structured router for ambiguous concierge prompts.
  * Runs only when FLASH_ROUTE=1 and regex confidence is in the ambiguous band (or low-confidence venue collision).
  */
+import { google } from "@ai-sdk/google";
 import { generateObject } from "ai";
 import { z } from "zod";
-import { FLASH_MODEL } from "@/mastra/lib/models";
+// Uses the raw Gemini model (not the COST-001-wrapped FLASH_MODEL): this module
+// is reachable from the client chat bundle, and the wrapped model pulls in the
+// server-only node:async_hooks token sink. Same model + behavior; the classifier
+// is a separate, FLASH_ROUTE-gated call whose tokens are not turn-attributed.
+const FLASH_MODEL = google("gemini-3.5-flash");
 import {
   classifyRouterIntent,
   routerConfidenceToAction,

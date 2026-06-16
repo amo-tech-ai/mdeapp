@@ -1,3 +1,4 @@
+import { calculateModelCost } from "./model-cost";
 import type { ToolSpanSummary } from "./tool-audit-context";
 import { getTokenUsage, type TokenUsage } from "./tool-audit-context";
 
@@ -36,6 +37,12 @@ export interface TurnTelemetryPayload extends ToolSpanSummary {
   input_tokens: number;
   output_tokens: number;
   total_tokens: number;
+  /** COST-001 — model provider id (currently always "google"/Gemini). */
+  provider: string;
+  /** COST-001 — estimated USD cost of this turn from token counts × rate. */
+  estimated_cost_usd: number;
+  /** True when the model id was unknown and a fallback rate was used. */
+  cost_rate_fallback?: boolean;
   /** Populated only when turn_status === "error". */
   error_type?: AgentErrorType;
   /** Trimmed human-readable cause; never the full stack. */
@@ -138,19 +145,39 @@ export function buildTurnTelemetryMetadata(opts: {
   requestContext?: unknown;
   errorType?: AgentErrorType;
   errorMessage?: string;
+  /** COST-001 — explicit usage captured by the model middleware; preferred over
+   * the RequestContext fallback when present. */
+  tokens?: Partial<TokenUsage>;
 }): TurnTelemetryPayload {
   const tokens = normalizeTokenUsage(
-    getTokenUsage(toTelemetryContext(opts.requestContext)),
+    opts.tokens
+      ? {
+          input_tokens: opts.tokens.input_tokens ?? 0,
+          output_tokens: opts.tokens.output_tokens ?? 0,
+          total_tokens:
+            opts.tokens.total_tokens ??
+            (opts.tokens.input_tokens ?? 0) + (opts.tokens.output_tokens ?? 0),
+        }
+      : getTokenUsage(toTelemetryContext(opts.requestContext)),
   );
+  const modelName = resolveAgentModelName(opts.agent);
+  const cost = calculateModelCost({
+    modelName,
+    inputTokens: tokens.input_tokens,
+    outputTokens: tokens.output_tokens,
+  });
   return {
     telemetry_version: TELEMETRY_SCHEMA_VERSION,
     agent_map_key: opts.agentMapKey,
-    model_name: resolveAgentModelName(opts.agent),
+    model_name: modelName,
     turn_status: opts.status,
     turn_duration_ms: opts.durationMs,
     thread_id: opts.threadId,
     run_id: opts.runId,
     integration: "copilotkit-pattern-1",
+    provider: "google",
+    estimated_cost_usd: cost.estimatedCostUsd,
+    ...(cost.rateFallback ? { cost_rate_fallback: true } : {}),
     ...opts.toolSummary,
     ...tokens,
     ...(opts.status === "error"

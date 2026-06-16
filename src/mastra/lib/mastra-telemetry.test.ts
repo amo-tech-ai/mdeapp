@@ -126,6 +126,8 @@ describe("logTurnTelemetryDebug", () => {
     turn_status: "success",
     turn_duration_ms: 1,
     integration: "copilotkit-pattern-1",
+    provider: "google",
+    estimated_cost_usd: 0,
     tool_spans: [],
     tool_count: 0,
     tool_ms_total: 0,
