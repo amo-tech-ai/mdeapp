@@ -1,0 +1,32 @@
+src/mastra/lib/log-agent-run.ts
+  s_533d3795f50b67::t_82910478418b2c 26-29
+  s_533d3795f50b67::t_716b860131ae14 53-54
+src/mastra/copilotkit/logging-mastra-agent.ts
+  s_533d3795f50b67::t_afdb6adb94eb9f 17-18,20
+  s_533d3795f50b67::t_40b64ced07f3c1 90-95,97-99,107-110,112-113,117-122,136-137,148-149
+src/mastra/lib/mastra-telemetry.test.ts
+  s_533d3795f50b67::t_1342817c911519 6-7
+  s_533d3795f50b67::t_d2a6a166dd1c75 19-64
+src/mastra/lib/ai-runs.ts
+  s_533d3795f50b67::t_e5f5e9201c1aed 29-34
+  s_533d3795f50b67::t_b09e6c9940a6b2 87-89
+src/mastra/lib/mastra-telemetry.ts
+  s_533d3795f50b67::t_44d6c02238a2bd 9-26,39-83
+  s_533d3795f50b67::t_dea8acc1cce7ff 139-140,156-158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "73c7e11848de2f63f45b3f14ebc8aa39eacb4399",
+  "prompts": {},
+  "sessions": {
+    "s_533d3795f50b67": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "25bdae88-e036-4d04-b09f-470c482f6675",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
