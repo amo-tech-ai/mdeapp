@@ -1,10 +1,11 @@
 "use client";
 
 import type { KeyboardEvent } from "react";
-import { Bed, Calendar, Heart, Wifi } from "lucide-react";
+import { Bed, Building2, Calendar, Heart, Wifi } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { VenueCardShell } from "@/components/browse/venue-card-shell";
+import { VenueCardPlaceholder } from "@/components/browse/venue-card-placeholder";
 import { formatRentalPrices } from "@/lib/rental-display";
 import { cn } from "@/lib/utils";
 import type { Rental } from "@/mastra/tools/search-rentals";
@@ -79,32 +80,25 @@ function RentalBrowseCardMedia({
   neighborhood: string;
   nightlyLabel: string | null;
 }) {
-  const gradients: Record<string, string> = {
-    laureles: "from-blue-900/80 to-blue-700/40",
-    "el poblado": "from-emerald-900/80 to-emerald-700/40",
-    envigado: "from-amber-900/80 to-amber-700/40",
-    sabaneta: "from-violet-900/80 to-violet-700/40",
-    belén: "from-rose-900/80 to-rose-700/40",
-    centro: "from-slate-900/80 to-slate-700/40",
-  };
-  const grad = gradients[neighborhood.toLowerCase()] ?? "from-slate-900/80 to-slate-700/40";
-
   return (
-    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-muted">
+    <div className="relative">
       {imageUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={imageUrl}
-          alt={`${title} rental in ${neighborhood}`}
-          className="size-full object-cover"
-          loading="lazy"
-          data-testid="rental-browse-card-photo"
-        />
+        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-muted">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imageUrl}
+            alt={`${title} rental in ${neighborhood}`}
+            className="size-full object-cover"
+            loading="lazy"
+            data-testid="rental-browse-card-photo"
+          />
+        </div>
       ) : (
-        <div
-          className={cn("size-full bg-gradient-to-br", grad)}
-          aria-hidden
-          data-testid="rental-browse-card-photo-placeholder"
+        <VenueCardPlaceholder
+          label="Apartment"
+          icon={<Building2 className="size-5" aria-hidden />}
+          mediaLayout="cover"
+          testId="rental-browse-card-photo-placeholder"
         />
       )}
       {nightlyLabel ? (

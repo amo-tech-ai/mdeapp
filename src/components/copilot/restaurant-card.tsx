@@ -3,10 +3,18 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { VenueCardShell } from "@/components/browse/venue-card-shell";
+import { VenueCardPlaceholder } from "@/components/browse/venue-card-placeholder";
 import { formatGroundedRating } from "@/lib/places-display";
 import { mapsDeepLinksEnabled } from "@/lib/maps-deep-links";
 import { cn } from "@/lib/utils";
-import { CalendarCheck, ExternalLink, Info, MapPin, PartyPopper } from "lucide-react";
+import {
+  CalendarCheck,
+  ExternalLink,
+  Info,
+  MapPin,
+  PartyPopper,
+  UtensilsCrossed,
+} from "lucide-react";
 import type { CardInteractionProps, ResultKind } from "@/components/cards/card-interaction-props";
 
 export type RestaurantCardProps = {
@@ -121,16 +129,12 @@ function RestaurantCardMedia({
   }
 
   return (
-    <div
-      className={cn(
-        frameClass,
-        "flex items-center justify-center text-xs text-muted-foreground",
-      )}
-      data-testid="restaurant-card-photo-placeholder"
-      aria-hidden
-    >
-      Restaurant
-    </div>
+    <VenueCardPlaceholder
+      label="Restaurant"
+      icon={<UtensilsCrossed className="size-5" aria-hidden />}
+      mediaLayout={mediaLayout}
+      testId="restaurant-card-photo-placeholder"
+    />
   );
 }
 
