@@ -1,0 +1,33 @@
+src/components/rentals/rental-browse-card.tsx
+  s_f47ea5ebcd9235::t_07e776e7f33c18 4,8
+  s_f47ea5ebcd9235::t_31e4bf778f345b 84,86-95,97-101
+src/components/browse/venue-card-placeholder.tsx
+  s_f47ea5ebcd9235::t_9117c5a10d5cec 1-45
+src/components/nightlife/nightlife-browse-card.tsx
+  s_f47ea5ebcd9235::t_29eb7c23b5965a 2,6
+  s_f47ea5ebcd9235::t_a1b1c7ee3b5e26 29-34
+src/components/copilot/restaurant-card.tsx
+  s_f47ea5ebcd9235::t_ee56c8930ba6f5 132-137
+  s_f47ea5ebcd9235::t_0e0baa20441af3 6,10-17
+src/components/cafes/cafe-browse-card.tsx
+  s_f47ea5ebcd9235::t_27a83c19d8d4d0 2,6
+  s_f47ea5ebcd9235::t_b4dde117ddd2fc 29-34
+src/components/browse/__tests__/venue-card-placeholder.test.tsx
+  s_f47ea5ebcd9235::t_8e68a6e28b6290 1-35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "b110897898d75a5ec386381149037cb33c715afe",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
