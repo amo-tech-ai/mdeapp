@@ -18,13 +18,14 @@ export function useConciergeChat() {
 
   const appendMessage = useCallback(
     async (content: string) => {
-      if (!agent) return;
+      if (!agent) return false;
       agent.addMessage({
         id: crypto.randomUUID(),
         role: "user",
         content,
       });
       await copilotkit.runAgent({ agent });
+      return true;
     },
     [agent, copilotkit],
   );

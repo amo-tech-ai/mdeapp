@@ -71,8 +71,29 @@ function num(v: number | string | null | undefined): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
+/** Remap Events chip category using queryText signals (e.g. nightlife + salsa → music). */
+/** Remap Events chip category using queryText signals; clears nightlife when queryText absent (CK-V2-015). */
+export function resolveEventCategoryForQuery(
+  category: EventQuery["category"],
+  queryText?: string,
+): EventQuery["category"] {
+  if (!category) return category;
+  const text = queryText?.trim();
+  if (!text) {
+    // Events chip often sets nightlife without queryText — skip strict filter.
+    if (category === "nightlife") return undefined;
+    return category;
+  }
+  const slots = parseEventIntelligenceSlots(text);
+  if ((slots.wantsSalsa || slots.wantsLiveMusic) && category === "nightlife") {
+    return "music";
+  }
+  return category;
+}
+
+/** Extract salsa, live-music, neighborhood, and date-window signals from natural-language query text. */
 export function parseEventIntelligenceSlots(queryText: string): EventIntelligenceSlots {
-  const q = queryText.toLowerCase();
+  const q = queryText.toLowerCase().replace(/-/g, " ");
   const slots: EventIntelligenceSlots = {};
   if (/laureles/.test(q)) slots.neighborhood = "Laureles";
   else if (/poblado|provenza/.test(q)) slots.neighborhood = "El Poblado";

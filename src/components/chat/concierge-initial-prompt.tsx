@@ -1,14 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useConciergeChat } from "@/lib/hooks/use-concierge-chat";
-import { useRentalSearchFastPath } from "@/hooks/use-rental-search-fast-path";
-import { useEventSearchFastPath } from "@/hooks/use-event-search-fast-path";
-import { useRestaurantSearchFastPath } from "@/hooks/use-restaurant-search-fast-path";
-import { useGroundedSearchFastPath } from "@/hooks/use-grounded-search-fast-path";
-import { useEventVenueBookingFastPath } from "@/hooks/use-event-venue-booking-fast-path";
 import { sendConciergeUserMessage } from "@/lib/concierge-send-user-message";
+import { useConciergeSendHandlers } from "@/lib/hooks/use-concierge-send-handlers";
 
 /**
  * Reads /chat?q= from home CTAs, auto-sends once, then strips the query param.
@@ -17,23 +13,9 @@ import { sendConciergeUserMessage } from "@/lib/concierge-send-user-message";
 export function ConciergeInitialPrompt() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { appendMessage, isLoading } = useConciergeChat();
-  const { handleUserMessage: handleRentalMessage } = useRentalSearchFastPath();
-  const { handleUserMessage: handleEventMessage } = useEventSearchFastPath();
-  const { handleUserMessage: handleRestaurantMessage } =
-    useRestaurantSearchFastPath();
-  const { handleUserMessage: handleGroundedMessage } =
-    useGroundedSearchFastPath();
-  const { handleUserMessage: handleEventVenueBookingMessage } =
-    useEventVenueBookingFastPath();
+  const { isLoading } = useConciergeChat();
+  const handlers = useConciergeSendHandlers();
   const sentRef = useRef(false);
-
-  const onAgentSend = useCallback(
-    async (text: string) => {
-      await appendMessage(text);
-    },
-    [appendMessage],
-  );
 
   useEffect(() => {
     const rawQ = searchParams.get("q");
@@ -45,16 +27,10 @@ export function ConciergeInitialPrompt() {
     }
     if (!trimmedQ || sentRef.current || isLoading) return;
 
-    sentRef.current = true;
+    void sendConciergeUserMessage(trimmedQ, handlers).then((handled) => {
+      if (!handled) return;
 
-    void sendConciergeUserMessage(trimmedQ, {
-      handleRentalMessage,
-      handleEventVenueBookingMessage,
-      handleEventMessage,
-      handleGroundedMessage,
-      handleRestaurantMessage,
-      onAgentSend,
-    }).finally(() => {
+      sentRef.current = true;
       if (typeof window === "undefined") return;
       const onChatWithQ =
         window.location.pathname === "/chat" &&
@@ -63,17 +39,7 @@ export function ConciergeInitialPrompt() {
         router.replace("/chat", { scroll: false });
       }
     });
-  }, [
-    searchParams,
-    isLoading,
-    router,
-    handleRentalMessage,
-    handleEventVenueBookingMessage,
-    handleEventMessage,
-    handleGroundedMessage,
-    handleRestaurantMessage,
-    onAgentSend,
-  ]);
+  }, [searchParams, isLoading, router, handlers]);
 
   return null;
 }

@@ -10,7 +10,7 @@ import { createTool } from '@mastra/core/tools';
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { runAuditedSearch } from '../lib/run-audited-search';
-import { searchEventsIntelligent } from '../lib/intelligence-event-search';
+import { searchEventsIntelligent, resolveEventCategoryForQuery } from '../lib/intelligence-event-search';
 import { writeSearchLog } from '../lib/search-logs';
 
 // ── Schema ────────────────────────────────────────────────────────────────────
@@ -239,14 +239,16 @@ export async function searchEvents(
   query: EventQuery,
 ): Promise<EventSearchResult> {
   const limit = query.limit ?? 5;
+  const category = resolveEventCategoryForQuery(query.category, query.queryText);
+  const normalizedQuery = category === query.category ? query : { ...query, category };
 
-  if (query.queryText?.trim()) {
+  if (normalizedQuery.queryText?.trim()) {
     try {
       const started = Date.now();
-      const intel = await searchEventsIntelligent(query);
+      const intel = await searchEventsIntelligent(normalizedQuery);
       const latencyMs = Date.now() - started;
       await writeSearchLog({
-        queryText: query.queryText,
+        queryText: normalizedQuery.queryText!.trim(),
         slots: intel.slots,
         toolName: 'search-events',
         resultsCount: intel.results.length,
@@ -285,8 +287,8 @@ export async function searchEvents(
     .order('event_start_time', { ascending: true })
     .limit(limit);
 
-  if (query.category) {
-    const dbTypes = dbEventTypesForCategory(query.category);
+  if (category) {
+    const dbTypes = dbEventTypesForCategory(category);
     q = q.in('event_type', dbTypes);
   }
 

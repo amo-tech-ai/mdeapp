@@ -133,7 +133,9 @@ export async function waitForCopilotRuntime(page: Page) {
 }
 
 export async function ensureChatInputVisible(page: Page) {
-  const input = page.locator(".copilotKitInput textarea").first();
+  const input = page
+    .locator('.copilotKitInput textarea, [role="textbox"][placeholder*="message" i]')
+    .first();
   if (await input.isVisible().catch(() => false)) return;
   const open = page.getByRole("button", { name: /open chat/i });
   if (await open.isVisible().catch(() => false)) {
@@ -142,9 +144,12 @@ export async function ensureChatInputVisible(page: Page) {
   await input.waitFor({ state: "visible", timeout: 15_000 });
 }
 
+/** Playwright helper — type into the concierge composer and submit (multi-strategy send cascade). */
 export async function sendConciergeMessage(page: Page, text: string) {
   await ensureChatInputVisible(page);
-  const input = page.locator(".copilotKitInput textarea").first();
+  const input = page
+    .locator('.copilotKitInput textarea, [role="textbox"][placeholder*="message" i]')
+    .first();
   await input.click();
   await input.evaluate((node, value) => {
     const textarea = node as HTMLTextAreaElement;
@@ -153,15 +158,55 @@ export async function sendConciergeMessage(page: Page, text: string) {
       "value",
     )?.set;
     setter?.call(textarea, value);
-    textarea.dispatchEvent(new Event("input", { bubbles: true }));
+    textarea.dispatchEvent(
+      new InputEvent("input", {
+        bubbles: true,
+        data: value,
+        inputType: "insertText",
+      }),
+    );
     textarea.dispatchEvent(new Event("change", { bubbles: true }));
   }, text);
 
-  const send = page.getByRole("button", { name: /^send$/i });
-  await send.waitFor({ state: "visible", timeout: 10_000 });
-  if (await send.isEnabled().catch(() => false)) {
-    await send.click();
+  // CopilotKit v2 chat layouts differ (center panel, sidebar, welcome screen).
+  // Try composer-scoped controls first, then broader fallbacks, then Enter.
+  // sendNearComposer — CK-V2 ConciergeChatView mount + .copilotKitInput send
+  // sendBesideInput — XPath: nearest ancestor row with buttons (legacy layouts)
+  // controlSend — global .copilotKitInputControlButton (no mount testid)
+  // namedSend — accessible "Send" label when class names drift
+  // Enter — last resort when no send button is clickable
+  const sendNearComposer = page
+    .locator(
+      '[data-testid="concierge-chat-view-mounted"] .copilotKitInputControlButton, [data-testid="concierge-chat-view-mounted"] .copilotKitInput button:not([disabled])',
+    )
+    .first();
+  if (await sendNearComposer.isVisible().catch(() => false)) {
+    await expect(sendNearComposer).toBeEnabled({ timeout: 10_000 });
+    await sendNearComposer.click();
     return;
+  }
+
+  const sendBesideInput = input
+    .locator("xpath=ancestor::div[.//button][1]//button[not(@disabled)]")
+    .last();
+  if (await sendBesideInput.isVisible().catch(() => false)) {
+    await sendBesideInput.click();
+    return;
+  }
+
+  const controlSend = page.locator(".copilotKitInputControlButton").first();
+  if (await controlSend.isVisible().catch(() => false)) {
+    await expect(controlSend).toBeEnabled({ timeout: 10_000 });
+    await controlSend.click();
+    return;
+  }
+
+  const namedSend = page.getByRole("button", { name: /^send$/i });
+  if (await namedSend.isVisible().catch(() => false)) {
+    if (await namedSend.isEnabled().catch(() => false)) {
+      await namedSend.click();
+      return;
+    }
   }
 
   await input.press("Enter");
@@ -281,7 +326,7 @@ export async function waitForEventCards(page: Page) {
   } catch {
     await sendConciergeMessage(
       page,
-      "Call search-events for salsa nightlife this weekend in Medellín and show ticketed events.",
+      "Call search-events for salsa events this weekend in Medellín and show ticketed events.",
     );
     await card.waitFor({ state: "visible", timeout: 120_000 });
   }

@@ -5,6 +5,7 @@ import { CopilotChat } from "@copilotkit/react-core/v2";
 
 import { ChatFilterCopilotInstructions } from "@/components/chat/chat-filter-copilot-instructions";
 import { ChatQueryBar } from "@/components/chat/chat-query-bar";
+import { ConciergeChatView } from "@/components/chat/concierge-copilot-chat-view";
 import { ConciergeInitialPrompt } from "@/components/chat/concierge-initial-prompt";
 import { useConciergeSession } from "@/components/chat/concierge-session-context";
 import { CenterPanelMapResultsSlot } from "@/components/chat/center-panel-map-results-slot";
@@ -20,6 +21,18 @@ const CONCIERGE_LABELS = {
   welcomeMessageText:
     'Hi — I can help with rentals, events, restaurants, and day trips in Medellín. Try: "1BR in Laureles under $80/night" or "salsa events this weekend".',
 };
+
+/** CopilotChat with ConciergeChatView slot — fast-path before agent (CK-V2-015). */
+function ConciergeCopilotChat() {
+  return (
+    <CopilotChat
+      agentId="conciergeAgent"
+      className="copilotKitChat--center mde-center-copilot-chat min-h-0 flex-1"
+      labels={CONCIERGE_LABELS}
+      chatView={ConciergeChatView}
+    />
+  );
+}
 
 export function ChatCenterPanel() {
   const { sessionKey } = useConciergeSession();
@@ -47,11 +60,7 @@ export function ChatCenterPanel() {
           <Suspense fallback={null}>
             <ConciergeInitialPrompt />
           </Suspense>
-          <CopilotChat
-            agentId="conciergeAgent"
-            className="copilotKitChat--center mde-center-copilot-chat min-h-0 flex-1"
-            labels={CONCIERGE_LABELS}
-          />
+          <ConciergeCopilotChat />
           <RentalFastPathPanel />
           <EventFastPathPanel />
           <GroundedFastPathPanel />
