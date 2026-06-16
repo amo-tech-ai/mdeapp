@@ -1,0 +1,23 @@
+e2e/helpers/maps-layout.ts
+  s_d934f93e3b39ca::t_efbfbe0ec3a885 116-118,121-139
+e2e/san-896-ck-v2-evidence.spec.ts
+  s_d934f93e3b39ca::t_6ee0f14252f392 179-180,192,194-203
+  s_d934f93e3b39ca::t_8f954e91a659b4 110-115
+  s_d934f93e3b39ca::t_273301eb28e26c 138-142
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "20d9ac47a8281402cb0b4648987038f480bb5e1b",
+  "prompts": {},
+  "sessions": {
+    "s_d934f93e3b39ca": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ed309e68-af99-497b-8545-2c3f383d3a5a",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
