@@ -1,0 +1,44 @@
+docs/upgradeV2/changelog.md
+  s_533d3795f50b67::t_c7b1166da815ec 8-27
+  s_d934f93e3b39ca::t_f5b4db1cae02e2 48-49
+  s_d934f93e3b39ca::t_ac91f6a32f5000 5-7,47,50-72
+  s_d934f93e3b39ca::t_981be98e3f7b61 91
+  s_d934f93e3b39ca::t_911b0e1686080d 4
+  s_d934f93e3b39ca::t_baae8f2e666f46 28-46
+docs/upgradeV2/todo.md
+  s_d934f93e3b39ca::t_98d0685cb7b705 83
+  s_d934f93e3b39ca::t_235af1adef3e64 192,194
+  s_d934f93e3b39ca::t_d087d6ca5c5484 92,94,97-98,103
+  s_d934f93e3b39ca::t_4bac5aa88f6ee6 79
+  s_d934f93e3b39ca::t_de54a6456471ec 208
+  s_d934f93e3b39ca::t_6e88ece89d724f 158
+  s_533d3795f50b67::t_91ecb5e4de92da 10-24,31-33
+  s_d934f93e3b39ca::t_cf996171495730 168,170-171
+  s_d934f93e3b39ca::t_2c7872bd18bfd6 198,200,206
+  s_d934f93e3b39ca::t_0efc0971275d10 88
+  s_d934f93e3b39ca::t_c52f26c484bf83 1,3-9,25-30,34-46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "1d85337cc41ee21c4f3051e62f5bebab8944519e",
+  "prompts": {},
+  "sessions": {
+    "s_533d3795f50b67": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "25bdae88-e036-4d04-b09f-470c482f6675",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_d934f93e3b39ca": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ed309e68-af99-497b-8545-2c3f383d3a5a",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
