@@ -1,0 +1,42 @@
+src/components/chat/concierge-copilot-chat-view.tsx
+  s_d934f93e3b39ca::t_6df9d513d6b935 12
+  s_d934f93e3b39ca::t_3986d85a764d77 11
+src/lib/normalize-tool-envelope.ts
+  s_d934f93e3b39ca::t_832b402b6649a4 58
+  s_d934f93e3b39ca::t_f4e7bb103df26d 57
+src/mastra/lib/intelligence-event-search.ts
+  s_d934f93e3b39ca::t_46587065e12c53 94
+  s_d934f93e3b39ca::t_4b99617ea683ec 74
+  s_d934f93e3b39ca::t_3bcb8b5a2d045a 75
+src/components/chat/chat-filter-copilot-instructions.tsx
+  s_d934f93e3b39ca::t_6c10a97e2b2735 13
+  s_d934f93e3b39ca::t_6a01886cc40c80 12
+e2e/helpers/maps-layout.ts
+  s_d934f93e3b39ca::t_c1fe4245d37f96 171-177
+  s_d934f93e3b39ca::t_4f8f62470d1a1d 147
+src/lib/concierge-send-user-message.ts
+  s_d934f93e3b39ca::t_0608983e65e22c 27
+  s_d934f93e3b39ca::t_cfcaf53c668c8b 17
+  s_d934f93e3b39ca::t_9f4b4eea2e4909 28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "d71346cc3de069bcf2345f0ebeb83e87709a4590",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_d934f93e3b39ca": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ed309e68-af99-497b-8545-2c3f383d3a5a",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
