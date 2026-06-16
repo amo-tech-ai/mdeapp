@@ -1,0 +1,19 @@
+src/lib/tickets/checkout-error.ts
+  s_f47ea5ebcd9235::t_f2b85248be55ae 35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "e376a1e400a1f1f078671ea8d1f87e14f7628760",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
