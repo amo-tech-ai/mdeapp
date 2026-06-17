@@ -1,0 +1,40 @@
+src/components/host/rentals/rentals-listings-shell.tsx
+  s_f9d5f98a31145c::t_6e7a0e3ce4d8c9 199-202
+src/app/host/rentals/listings/page.tsx
+  s_f9d5f98a31145c::t_065f070dd6f033 22,28-34
+src/app/api/host/rentals/listings/publish/route.ts
+  s_f9d5f98a31145c::t_dd3935c0f46e21 16,18,23-32,37-38,42,44
+src/app/api/host/rentals/listings/[id]/detail/route.ts
+  s_f9d5f98a31145c::t_b74a5cad6daf26 33,38-40
+  s_f9d5f98a31145c::t_6e7a0e3ce4d8c9 25-29
+src/components/host/rentals/rentals-listings-drawer.tsx
+  s_f9d5f98a31145c::t_6e7a0e3ce4d8c9 54,69,72,85-87
+src/components/host/rentals/rentals-inventory-nav.tsx
+  s_f9d5f98a31145c::t_6e7a0e3ce4d8c9 16
+src/lib/rentals/run-publish-rpc.ts
+  s_f9d5f98a31145c::t_bca3acc3864c47 47,55,59,69
+  s_f9d5f98a31145c::t_8f58e03dda9db5 12-37
+src/components/host/rentals/rentals-listings-map.tsx
+  s_f9d5f98a31145c::t_6e7a0e3ce4d8c9 3-4,20-44,85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "584fef3324de706ff04ac2663d6f09a8ec3084b7",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
