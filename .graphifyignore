@@ -3,7 +3,7 @@ node_modules/
 .github/
 .worktrees/
 workspace/
-commerce/
+commerce/b2c-storefront/   # local reference clone (gitignored); commerce/mercur/ is tracked code — keep it indexed
 github/
 
 # Build / generated (gitignored but explicit for graphify)
