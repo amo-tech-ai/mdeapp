@@ -1,10 +1,10 @@
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import {
   RentalsListingsShell,
   RentalsListingsSkeleton,
 } from "@/components/host/rentals/rentals-listings-shell";
 import { fetchBrokerListings } from "@/lib/rentals/fetch-broker-listings";
+import { getBrokerContext } from "@/lib/rentals/get-broker-context";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata = {
@@ -12,32 +12,13 @@ export const metadata = {
 };
 
 async function ListingsContent() {
+  const ctx = await getBrokerContext();
+  if (ctx.state !== "authorized") {
+    return null;
+  }
+
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) redirect("/login?next=/host/rentals/listings");
-
-  const { data: profiles, error: profileError } = await supabase
-    .from("landlord_profiles")
-    .select("id")
-    .eq("user_id", user.id)
-    .limit(1);
-
-  if (profileError) {
-    return (
-      <main data-testid="rentals-listings">
-        <RentalsListingsShell initialListings={[]} loadError={profileError.message} />
-      </main>
-    );
-  }
-
-  if (!profiles?.length) {
-    redirect("/host/rentals/onboarding");
-  }
-
-  const result = await fetchBrokerListings(supabase, user.id);
+  const result = await fetchBrokerListings(supabase, ctx.user.id);
 
   return (
     <main data-testid="rentals-listings">
