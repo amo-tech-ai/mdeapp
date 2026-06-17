@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { BrokerRentalsGateError } from "@/components/host/rentals/broker-rentals-gate-error";
 import { brokerLoginNextPath } from "@/lib/rentals/broker-route-gate";
 import { getBrokerContext } from "@/lib/rentals/get-broker-context";
+import { getBrokerRequestPathname } from "@/lib/rentals/get-broker-request-path";
 
 export const metadata = {
   title: "Rentals host · mdeai",
@@ -16,12 +17,13 @@ export default async function HostRentalsLayout({
   const ctx = await getBrokerContext();
 
   if (ctx.state === "unauthorized") {
-    const next = brokerLoginNextPath("/host/rentals");
+    const next = brokerLoginNextPath(await getBrokerRequestPathname());
     redirect(`/login?next=${encodeURIComponent(next)}`);
   }
 
   if (ctx.state === "error") {
-    return <BrokerRentalsGateError message={ctx.message} />;
+    console.error("[host/rentals] broker context error:", ctx.message);
+    return <BrokerRentalsGateError />;
   }
 
   return children;

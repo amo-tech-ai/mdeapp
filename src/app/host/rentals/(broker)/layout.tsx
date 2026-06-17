@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { HostRentalsShell } from "@/components/host/rentals/host-rentals-shell";
-import { BROKER_ONBOARDING_PATH } from "@/lib/rentals/broker-route-gate";
+import { BROKER_ONBOARDING_PATH, brokerLoginNextPath } from "@/lib/rentals/broker-route-gate";
 import { getBrokerContext } from "@/lib/rentals/get-broker-context";
+import { getBrokerRequestPathname } from "@/lib/rentals/get-broker-request-path";
 
 /** RE-WIRE-001 — broker shell + profile gate for inventory routes. */
 export default async function HostRentalsBrokerLayout({
@@ -12,7 +13,8 @@ export default async function HostRentalsBrokerLayout({
   const ctx = await getBrokerContext();
 
   if (ctx.state === "unauthorized") {
-    redirect("/login?next=/host/rentals");
+    const next = brokerLoginNextPath(await getBrokerRequestPathname());
+    redirect(`/login?next=${encodeURIComponent(next)}`);
   }
 
   if (ctx.state === "error") {

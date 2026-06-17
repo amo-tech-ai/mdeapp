@@ -51,19 +51,19 @@ export const getBrokerContext = cache(async function getBrokerContext(): Promise
     error: authError,
   } = await supabase.auth.getUser();
 
-  if (authError) {
+  if (!user) {
     return {
-      state: "error",
-      message: authError.message,
+      state: "unauthorized",
       user: null,
       landlordProfile: null,
       hasBrokerProfile: false,
     };
   }
 
-  if (!user) {
+  if (authError) {
     return {
-      state: "unauthorized",
+      state: "error",
+      message: authError.message,
       user: null,
       landlordProfile: null,
       hasBrokerProfile: false,
