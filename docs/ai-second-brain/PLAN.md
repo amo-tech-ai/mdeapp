@@ -12,7 +12,7 @@
 We give Claude and Cursor a **shared, always-fresh "second brain"** so they stop re-reading the whole
 repo every session, stop guessing where code lives, and stop editing the wrong file.
 
-In plain terms: today every Claude/Cursor session starts blind and burns tokens scanning 591 source
+In plain terms: today every Claude/Cursor session starts blind and burns tokens scanning 742 TS/TSX
 files + 1,000+ docs to relearn the repo. This plan wires up **three memory layers** that already
 partly exist, so an AI assistant looks up "where does Camila's map pin code live?" in a graph in
 seconds instead of grepping for minutes — and answers from facts, not hallucination.
@@ -24,10 +24,12 @@ itself after each commit.
 **What does NOT change:** No production code, no agents, no Gemini/CopilotKit/Supabase runtime. This is
 tooling that lives in `docs/`, `obsidian/`, and gitignored output dirs. Pure-doc + dev-infra only.
 
-**Important nuance — we are not starting from zero.** Graphify is already installed and configured for
-this repo (see [`docs/graphify-reference.md`](../graphify-reference.md), build script
-`scripts/graphify-phase2-build.py`, output in gitignored `graphify-out/`). OpenClaw was already audited
-out and archived on 2026-06-09. So Task 1 below is mostly **formalize + automate what exists**, and the
+**Important nuance — we are partly, not fully, set up.** Graphify is configured for this repo
+(see [`docs/graphify-reference.md`](../graphify-reference.md), output in gitignored `graphify-out/`),
+**but the build script `scripts/graphify-phase2-build.py` it documents is not present in the repo —
+the path is only referenced from `docs/graphify-reference.md`.** So Task 1 is **restore + formalize
+`scripts/graphify-phase2-build.py`** (get the builder back on disk, then pin the index/ignore lists),
+not just "formalize what exists." OpenClaw was already audited out and archived on 2026-06-09. The
 genuinely new work is the visual map (Task 2), the Obsidian vault (Task 3), and the workflow/safety
 rules (Tasks 4–8).
 
@@ -99,7 +101,7 @@ layer of that rule.
 
 | # | Spec ID | Title | New or existing? | Depends on |
 |---|---|---|---|---|
-| 1 | `OPS-SB-1` | Formalize & auto-update the Graphify repo map | Mostly **exists** — formalize | — |
+| 1 | `OPS-SB-1` | Restore & formalize the Graphify repo map | Partly exists — **restore + formalize** | — |
 | 2 | `OPS-SB-2` | Stand up the Understand Anything visual architecture map | **New** | 1 |
 | 3 | `OPS-SB-3` | Create the Obsidian second-brain vault | **New** | 1 |
 | 4 | `OPS-SB-4` | Claude Code workflow + slash commands | **New** | 1, 2, 3 |
@@ -110,19 +112,22 @@ layer of that rule.
 
 ---
 
-### Task 1 · `OPS-SB-1` — Formalize & auto-update the Graphify repo map
+### Task 1 · `OPS-SB-1` — Restore & formalize the Graphify repo map
 
 **Goal:** a fast map so Claude finds the right file instead of re-reading everything.
 
-**Reality check:** Graphify is already built for this repo (17,080 nodes, 19,416 edges, 0 import
-cycles, $0). This task is to **pin the index/ignore lists** and **make rebuilds automatic**, not to set
-it up from scratch.
+**Reality check:** Graphify is configured for this repo and `docs/graphify-reference.md` documents a
+prior build (17,080 nodes, 19,416 edges, 0 import cycles, $0) — **but the build script it cites,
+`scripts/graphify-phase2-build.py`, is not in the repo today (only referenced from the reference
+doc).** So this task is: (a) **restore `scripts/graphify-phase2-build.py`** (or reconcile the
+reference doc to whatever drives Graphify now), then (b) **pin the index/ignore lists** and **make
+rebuilds automatic**. It is "restore + formalize," not setup-from-scratch and not "already done."
 
 **Index (keep these in the corpus):**
 
 | Path | Why |
 |---|---|
-| `src/` (591 TS/TSX) | The code Claude edits — AST extraction, zero LLM cost |
+| `src/` (742 TS/TSX) | The code Claude edits — AST extraction, zero LLM cost |
 | `docs/` (incl. `docs/tasks/`, `docs/prd/`) | PRDs, ARCHITECTURE, task specs, audits |
 | `CLAUDE.md`, `AGENTS.md`, `DESIGN.MD`, `sitemap.md`, `linear.md`, `LESSONS.md` | The always-on guardrail docs |
 | `supabase/migrations/` (current only) | Live schema shape |
@@ -145,14 +150,18 @@ commerce/                     # standalone sub-apps, separate concern
 ```
 
 **Steps:**
-1. Move the index/ignore lists above into the build script's `DOC_DIRS` + ignore filters so they're the
+1. **Restore `scripts/graphify-phase2-build.py`** to the repo (recover the documented builder, or update
+   `docs/graphify-reference.md` to whatever actually drives Graphify now) so the build is reproducible
+   from source — not just described in a doc.
+2. Move the index/ignore lists above into the build script's `DOC_DIRS` + ignore filters so they're the
    committed source of truth (today they're partly implicit).
-2. Run a clean rebuild; confirm `graph.json`, `GRAPH_REPORT.md` regenerate and import cycles stay at 0.
-3. Document the four `graphify` query verbs (`query` / `path` / `explain` / `affected`) in the vault
+3. Run a clean rebuild; confirm `graph.json`, `GRAPH_REPORT.md` regenerate and import cycles stay at 0.
+4. Document the four `graphify` query verbs (`query` / `path` / `explain` / `affected`) in the vault
    (Task 3) so any teammate can use them.
 
-**Definition of done:** index/ignore lists committed in the build script; a fresh `graphify-out/` builds
-clean; verbs documented. (Output stays gitignored.)
+**Definition of done:** the build script is back on disk (or the reference doc reconciled); index/ignore
+lists committed in the build script; a fresh `graphify-out/` builds clean; verbs documented. (Output
+stays gitignored.)
 
 ---
 
@@ -233,14 +242,16 @@ source links; graph exports landing in `09-graph-imports/`.
    UI; `LESSONS.md` for CopilotKit/Mastra/Maps/Supabase work.
 4. **Propose the smallest safe change** — name the files, then edit only those.
 
-**Proposed slash commands** (thin wrappers over the existing build script + verbs; no new agents):
+**Proposed slash commands** (thin wrappers over the build script + verbs; no new agents). We keep the
+`/sb-*` names because they read cleanly for mdeai, with **compatibility aliases** to the underlying
+Graphify / Understand Anything actions so either name works:
 
-| Command | Does | Wraps |
-|---|---|---|
-| `/sb-locate <thing>` | Find the real file/symbol for a concept | `graphify query` + `path` |
-| `/sb-impact <symbol>` | Show what breaks if this changes | `graphify affected` |
-| `/sb-refresh` | Rebuild graph + visual map after big changes | `scripts/graphify-phase2-build.py` |
-| `/sb-verify` | Cross-check a claim against the graph + source doc before stating it | read-only |
+| Command | Does | Wraps | Alias for |
+|---|---|---|---|
+| `/sb-locate <thing>` | Find the real file/symbol for a concept | `graphify query` + `path` | Graphify locate |
+| `/sb-impact <symbol>` | Show what breaks if this changes | `graphify affected` | Understand Anything impact / dependency check |
+| `/sb-refresh` | Rebuild graph + visual map after big changes | `scripts/graphify-phase2-build.py` | `/graphify update` + `/understand auto-update` |
+| `/sb-verify` | Cross-check a claim against the graph + source doc before stating it | read-only | source-doc verification before edit |
 
 **Steps:** add the checklist as a short pointer in CLAUDE.md (keep it lean — link out to this PLAN, don't
 inline it); add the commands as `.claude/commands/` markdown in a **later** PR (this PR is plan-only).
@@ -262,13 +273,15 @@ the follow-up implementation PR.
    question (its semantic search is strongest when the target set is already small).
 4. Ask Cursor for a **patch, not a rewrite**.
 
-**Why:** Cursor combines exact grep + semantic embeddings; combining them beats grep alone by ~12.5% on
-1,000+ file repos. Feeding it the graph's shortlist keeps that search on-target and cheap.
+**Why:** Cursor combines exact grep + semantic embeddings; per Cursor's own docs, combining them beats
+grep alone by ~12.5% on 1,000+ file repos (vendor figure). Feeding it the graph's shortlist keeps that
+search on-target and cheap.
 
-**Steps:** write a `.cursorrules` / Cursor rules note (in the follow-up PR) encoding "graph shortlist →
-3–8 files → patch not rewrite"; document the pattern in the vault `00-start-here/`.
+**Steps:** write `.cursor/rules/*.mdc` project rules (in the follow-up PR — `.cursorrules` is the
+deprecated legacy format) encoding "graph shortlist → 3–8 files → patch not rewrite"; document the
+pattern in the vault `00-start-here/`.
 
-**Definition of done:** the Cursor pattern is documented here + in the vault; `.cursorrules` lands in the
+**Definition of done:** the Cursor pattern is documented here + in the vault; `.cursor/rules/*.mdc` lands in the
 follow-up implementation PR.
 
 ---
@@ -346,8 +359,9 @@ new product surfaces.
 ## 5. Next step
 
 **One thing I need from you:** approve this plan (or flag any task to cut). On approval, the follow-up
-implementation PR will (a) commit the index/ignore lists into the build script, (b) create the
-`obsidian/mdeai-second-brain/` tree + start-here notes, (c) add the `.claude/commands/` + `.cursorrules`
-files, and (d) add the plain git hook for auto-rebuild — each small and scoped, no production code touched.
+implementation PR will (a) restore `scripts/graphify-phase2-build.py` and commit the index/ignore lists
+into it, (b) create the `obsidian/mdeai-second-brain/` tree + start-here notes, (c) add the
+`.claude/commands/` + `.cursor/rules/*.mdc` files, and (d) add the plain git hook for auto-rebuild —
+each small and scoped, no production code touched.
 
 This PR is **plan-only**: it adds this one markdown file and changes nothing else.
