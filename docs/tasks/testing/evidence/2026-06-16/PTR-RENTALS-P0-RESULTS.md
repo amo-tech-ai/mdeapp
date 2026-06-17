@@ -9,11 +9,13 @@
 
 | Step | Result |
 |------|--------|
-| `main` @ `201ee731` | pulled |
-| Migrations applied (4) | **pass** — via Supabase MCP `apply_migration` (CLI not linked to `zkwcbyxiwklihegjhuql`) |
-| `database.types.ts` regenerated | **pass** — `generate_typescript_types` MCP |
-| Prod structural verify | **pass** — see below |
-| Full RLS smoke on prod | **skipped** — fixture script inserts test auth users; not safe on prod |
+| `main` @ `201ee731` + rebase `203f957e` | pulled |
+| Migrations applied (4) on prod | **pass** — Supabase MCP `apply_migration` (`zkwcbyxiwklihegjhuql`) |
+| `database.types.ts` regenerated | **pass** — commit `cc193a6f` (pending PR — `main` is branch-protected) |
+| Prod structural verify | **pass** |
+| Full RLS smoke on prod | **skipped** — fixture inserts test `auth.users`; unsafe on prod |
+| Local RLS smoke `:54322` (`supabase_db_mdeapp`) | **9/9 pass** (2026-06-17 re-run) |
+| Supabase CLI link | **linked** — `supabase/.temp/project-ref` = `zkwcbyxiwklihegjhuql` |
 | `npm test -- --run src/lib/rentals` | **9/9** |
 | `npm run lint` | **fail** — pre-existing warnings in `scripts/` on `main` (unrelated to PTR-P0); `src/lib/rentals` clean |
 | `npm run typecheck` | **pre-existing e2e failures** on `main` (`e2e/rental-lead-loop.spec.ts`); no errors in `src/lib/rentals` or `database.types.ts` |
@@ -50,8 +52,21 @@ ptr_rentals_partner_leads_align
 ### Known gaps (prod)
 
 - `rental_applications` still uses legacy `host_id` path (out of PTR-P0)
-- Full two-user RLS smoke remains **local-only** (`:54322`); re-run after next local reset
-- `supabase db lint` reports pre-existing view lint on local shadow DB (unrelated `events` column)
+- `git push origin main` **blocked** by branch protection — typegen + evidence ship via follow-up PR
+- `supabase db lint` — pre-existing view lint on local shadow DB (unrelated `events` column)
+
+## Linear gate (2026-06-17)
+
+| Task | Recommendation |
+|------|----------------|
+| [SAN-1104 · PTR-RENTALS-001 — landlord_id ownership model](https://linear.app/sanjiovani/issue/SAN-1104) | **Ready for human review** — prod + local proof |
+| [SAN-1105 · PTR-RENTALS-002 — Broker RLS + two-user test](https://linear.app/sanjiovani/issue/SAN-1105) | **Ready for human review** — local smoke **9/9** |
+| [SAN-1106 · PTR-RENTALS-003 — Publish state machine + audit columns](https://linear.app/sanjiovani/issue/SAN-1106) | **Ready for human review** |
+| [SAN-1107 · PTR-RENTALS-004 — Onboarding backend writes](https://linear.app/sanjiovani/issue/SAN-1107) | **Ready for human review** |
+| [SAN-1108 · PTR-RENTALS-005 — Broker empty/loading/error contract](https://linear.app/sanjiovani/issue/SAN-1108) | **Ready for human review** — vitest 9/9 |
+| [SAN-1094 · D-12 — Broker Listings + map](https://linear.app/sanjiovani/issue/SAN-1094) | **Unblocked — new PR** (UI + real RPC wiring; not PTR-P0) |
+
+**Do not auto-flip Done** until typegen PR merges and human signs evidence.
 
 ## Tasks covered
 
@@ -98,8 +113,8 @@ ptr_rentals_partner_leads_align
 
 ```bash
 npm test -- --run src/lib/rentals   # 9/9
-npm run typecheck                   # pass
-npm run lint                        # pass
+npm run typecheck                   # pre-existing e2e failures on main (unrelated)
+npm run lint                        # pre-existing scripts/ warnings on main (unrelated)
 ```
 
 RLS smoke (`docs/tasks/testing/scripts/ptr-rentals-p0-rls-smoke.sql`):
