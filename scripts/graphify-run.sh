@@ -15,8 +15,14 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 GRAPHIFY="${GRAPHIFY_BIN:-$HOME/.venvs/graphify/bin/graphify}"
 
+# Fall back to a graphify on PATH (e.g. from `uv tool install graphifyy`, which
+# installs to ~/.local/bin — not the venv path checked above).
+if [[ ! -x "$GRAPHIFY" ]] && command -v graphify >/dev/null 2>&1; then
+  GRAPHIFY="$(command -v graphify)"
+fi
+
 if [[ ! -x "$GRAPHIFY" ]]; then
-  echo "graphify not found at $GRAPHIFY" >&2
+  echo "graphify not found at $GRAPHIFY (and none on PATH)" >&2
   echo "Install: uv tool install graphifyy  OR  python3 -m venv ~/.venvs/graphify && ~/.venvs/graphify/bin/pip install graphifyy" >&2
   exit 1
 fi
