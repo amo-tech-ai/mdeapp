@@ -111,21 +111,27 @@ $$;
 
 CREATE OR REPLACE FUNCTION public.request_listing_publish(p_apartment_id uuid)
 RETURNS public.apartments
-LANGUAGE sql SECURITY INVOKER SET search_path = public
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
 AS $$ SELECT public.transition_listing_workflow(p_apartment_id, 'ready_for_review'); $$;
 
 CREATE OR REPLACE FUNCTION public.publish_listing(p_apartment_id uuid)
 RETURNS public.apartments
-LANGUAGE sql SECURITY INVOKER SET search_path = public
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
 AS $$ SELECT public.transition_listing_workflow(p_apartment_id, 'published'); $$;
 
 CREATE OR REPLACE FUNCTION public.pause_listing(p_apartment_id uuid)
 RETURNS public.apartments
-LANGUAGE sql SECURITY INVOKER SET search_path = public
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
 AS $$ SELECT public.transition_listing_workflow(p_apartment_id, 'paused'); $$;
 
 REVOKE ALL ON FUNCTION public.assert_listing_workflow_transition(text, text) FROM PUBLIC;
-REVOKE ALL ON FUNCTION public.transition_listing_workflow(uuid, text, text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.transition_listing_workflow(uuid, text, text) FROM PUBLIC, authenticated, anon;
 REVOKE ALL ON FUNCTION public.request_listing_publish(uuid) FROM PUBLIC;
 REVOKE ALL ON FUNCTION public.publish_listing(uuid) FROM PUBLIC;
 REVOKE ALL ON FUNCTION public.pause_listing(uuid) FROM PUBLIC;
