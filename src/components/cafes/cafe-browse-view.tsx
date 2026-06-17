@@ -3,7 +3,7 @@ import { Coffee } from "lucide-react";
 import { BrowseLayout } from "@/components/browse/BrowseLayout";
 import { EmptyState } from "@/components/empty/empty-state";
 import { Button } from "@/components/ui/button";
-import { CafeBrowseCard } from "@/components/cafes/cafe-browse-card";
+import { VenueBrowseCard } from "@/components/browse/venue-browse-card";
 import { CafeBrowseFilters } from "@/components/cafes/cafe-browse-filters";
 import type { CafeFeature, CafeListing } from "@/lib/cafe-browse";
 
@@ -77,8 +77,9 @@ export function CafeBrowseView({
             data-testid="cafes-grid"
           >
             {results.map((listing) => (
-              <CafeBrowseCard
+              <VenueBrowseCard
                 key={listing.id}
+                kind="cafe"
                 listing={listing}
                 composition="nova"
                 mediaLayout="cover"

@@ -3,7 +3,7 @@ import { MoonStar } from "lucide-react";
 import { BrowseLayout } from "@/components/browse/BrowseLayout";
 import { EmptyState } from "@/components/empty/empty-state";
 import { Button } from "@/components/ui/button";
-import { NightlifeBrowseCard } from "@/components/nightlife/nightlife-browse-card";
+import { VenueBrowseCard } from "@/components/browse/venue-browse-card";
 import { NightlifeBrowseFilters } from "@/components/nightlife/nightlife-browse-filters";
 import type { NightlifeListing, NightlifeVibe } from "@/lib/nightlife-browse";
 
@@ -87,8 +87,9 @@ export function NightlifeBrowseView({
             data-testid="nightlife-grid"
           >
             {results.map((listing) => (
-              <NightlifeBrowseCard
+              <VenueBrowseCard
                 key={listing.id}
+                kind="nightlife"
                 listing={listing}
                 composition="nova"
                 mediaLayout="cover"
