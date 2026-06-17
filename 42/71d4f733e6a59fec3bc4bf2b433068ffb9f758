@@ -1,0 +1,29 @@
+scripts/graphify-run.sh
+  s_1ea51060724821::t_05c8bb21014b71 2-12
+docs/ai-second-brain/GRAPHIFY-BASELINE.md
+  s_1ea51060724821::t_26917720f24d34 1-92
+.graphifyignore
+  s_1ea51060724821::t_7a817f0d46ce27 16-22
+  s_1ea51060724821::t_ad286067beab81 1
+docs/graphify-reference.md
+  s_1ea51060724821::t_a1edbbdd08dc5e 123-125
+  s_1ea51060724821::t_c333b14ffe52ba 251
+  s_1ea51060724821::t_062142bf4d730a 75,78,81-88
+  s_1ea51060724821::t_1dea561cde39a4 8-9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "4271d4f733e6a59fec3bc4bf2b433068ffb9f758",
+  "prompts": {},
+  "sessions": {
+    "s_1ea51060724821": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "96514f4c-c86e-40bd-a03e-0d0178a3f504",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
