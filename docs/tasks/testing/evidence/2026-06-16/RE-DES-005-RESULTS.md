@@ -3,51 +3,50 @@
 **Date:** 2026-06-16  
 **Task:** [SAN-1092 · RE-DES-005 — Broker onboarding wizard UI](https://linear.app/sanjiovani/issue/SAN-1092/d-10-re-des-005-broker-onboarding-wizard-ui)  
 **Class:** U  
-**Surface:** Roberto `/host/rentals/onboarding`
+**Surface:** Roberto `/host/rentals/onboarding` → `/host/rentals/listings`
 
 ## Verdict
 
-🟢 Implementation landed — 3-step wizard, `create_broker_onboarding_draft()` RPC, minimal chrome, route-gate redirects.
+🟢 **Done-ready** — Playwright Class U proof passed; `landlord_profiles` + draft `apartments` row verified via service role.
 
-## Linear amendments (pre-impl)
+## Browser proof (2026-06-16)
 
-| Check | Result |
-|-------|--------|
-| Blockers → SAN-1107 + SAN-1109 (not SAN-1104 alone) | ✅ Updated issue body + blockedBy |
-| RPC `create_broker_onboarding_draft()` | ✅ Server action |
-| Photo optional (URL only) | ✅ No storage gate |
-| Profile exists → `/host/rentals/listings` | ✅ `onboarding/page.tsx` |
-| Minimal chrome (no HostNavRail) | ✅ `onboarding/layout.tsx` |
+| Step | Check | Result |
+|------|-------|--------|
+| 1 | Fresh user (no `landlord_profiles`) → `/host/rentals/onboarding` | ✅ |
+| 2 | Profile step (display name + neighborhood) | ✅ `SAN-1092-onboarding-step1.png` |
+| 3 | Listing step (address, beds, rent) | ✅ `SAN-1092-onboarding-step2.png` |
+| 4 | Review + `ro-ack` checkbox | ✅ `SAN-1092-onboarding-step3.png` |
+| 5 | Submit → redirect `/host/rentals/listings` | ✅ `SAN-1092-onboarding-listings.png` |
+| 6 | DB: `landlord_profiles` for user | ✅ |
+| 7 | DB: draft `apartments` with `price_monthly` | ✅ |
 
-## Disk
-
-| Path | Purpose |
-|------|---------|
-| `src/app/host/rentals/onboarding/page.tsx` | Gate + wizard mount |
-| `src/app/host/rentals/onboarding/layout.tsx` | Minimal chrome |
-| `src/components/host/rentals/rentals-onboarding-wizard.tsx` | 3-step UI + testids |
-| `src/lib/rentals/submit-broker-onboarding.ts` | RPC + RLS PATCH |
-| `src/lib/rentals/broker-onboarding-validate.ts` | Validation |
-| `src/app/host/rentals/layout.tsx` | Auth only |
-| `src/app/host/rentals/(broker)/layout.tsx` | Shell + profile gate |
-
-## Tests
+**Command:**
 
 ```bash
-npm test -- --run src/lib/rentals/__tests__/broker-onboarding-validate.test.ts src/lib/rentals/__tests__/broker-route-gate.test.ts
-# 13 passed
+PW_SKIP_WEBSERVER=1 infisical run --silent --env=dev --path=/ -- \
+  npx playwright test e2e/san-1092-broker-onboarding.spec.ts --project=chromium
 ```
 
-## Route-gate matrix (code)
+**Spec:** `e2e/san-1092-broker-onboarding.spec.ts`
 
-| Case | Expected | Implementation |
-|------|----------|----------------|
-| anon → `/host/rentals/listings` | login | `(broker)/layout` + root layout |
-| auth, no profile → onboarding | allow wizard | `onboarding/page.tsx` |
-| auth, no profile → listings | redirect onboarding | `(broker)/layout` |
-| auth, has profile → onboarding | redirect listings | `onboarding/page.tsx` |
+## Unit tests
 
-## Browser (manual / follow-up)
+```bash
+npm test -- --run src/lib/rentals/__tests__/broker-onboarding-validate.test.ts \
+  src/lib/rentals/__tests__/broker-route-gate.test.ts
+# 13+ passed (full rentals: 38)
+```
 
-- [ ] Complete wizard as new broker → lands on listings with draft row
-- [ ] Screenshot: `tasks/testing/evidence/2026-06-16/SAN-1092-onboarding.png`
+## Screenshots
+
+| File | Step |
+|------|------|
+| `SAN-1092-onboarding-step1.png` | Profile |
+| `SAN-1092-onboarding-step2.png` | Listing |
+| `SAN-1092-onboarding-step3.png` | Review + ack |
+| `SAN-1092-onboarding-listings.png` | Post-submit listings |
+
+## PR
+
+[#243](https://github.com/amo-tech-ai/mdeapp/pull/243) — stacks on [#242](https://github.com/amo-tech-ai/mdeapp/pull/242) (SAN-1109).
