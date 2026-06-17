@@ -5,7 +5,8 @@ Knowledge graph tool for codebase + docs analysis. Builds a queryable graph of e
 **Package:** `graphifyy` 0.8.36  
 **Venv:** `~/.venvs/graphify`  
 **Output:** `mdeapp/graphify-out/` (gitignored)  
-**Build script:** `scripts/graphify-phase2-build.py`
+**Builder:** `scripts/graphify-run.sh` (thin wrapper over the `graphify` CLI)  
+**Current baseline:** [`docs/ai-second-brain/GRAPHIFY-BASELINE.md`](ai-second-brain/GRAPHIFY-BASELINE.md)
 
 ---
 
@@ -71,20 +72,20 @@ graphify affected "NEIGHBORHOODS" --relation calls
 
 ## Rebuild the Graph
 
-Run the Phase 2 build script from `mdeapp/`:
+Run the builder from `mdeapp/`:
 
 ```bash
-source ~/.venvs/graphify/bin/activate
-python3 scripts/graphify-phase2-build.py
+bash scripts/graphify-run.sh update .
 ```
 
-This takes ~3 minutes. It:
-1. Reuses the Phase 1 AST extraction from `.graphify_ast.json`
-2. Extracts 1,064 markdown docs locally (no LLM calls, no API cost)
-3. Builds the merged graph (17,080 nodes, 19,416 edges)
-4. Runs Leiden clustering (1,527 communities)
-5. Labels top 40 communities via `claude-cli`
-6. Writes `GRAPH_REPORT.md` and `graph.json`
+This takes ~1 minute (AST-only, **$0, no LLM**). It:
+1. Re-extracts changed code + docs via the `graphify` CLI (respecting `.graphifyignore`)
+2. Runs clustering into communities
+3. Writes `GRAPH_REPORT.md`, `manifest.json`, and `graph.json` into `graphify-out/`
+
+Regenerate the HTML viz with `bash scripts/graphify-run.sh tree` → `graphify-out/GRAPH_TREE.html`.
+Current measured node/edge/build-time numbers live in
+[`docs/ai-second-brain/GRAPHIFY-BASELINE.md`](ai-second-brain/GRAPHIFY-BASELINE.md).
 
 **When to rebuild:**
 - After significant new code (new features, major refactors)
@@ -119,7 +120,9 @@ graphify update src/
 | `tasks/evidence/` | 121 `.md` | F-series evidence files |
 | `tasks/partners/` | 45 `.md` | Partner tasks |
 
-To add more directories, edit `DOC_DIRS` at the top of `scripts/graphify-phase2-build.py`.
+To change what is indexed, edit `.graphifyignore` (the include/exclude contract) — not a
+script constant. Corpus counts above are historical Phase-1/2 figures; see
+[`GRAPHIFY-BASELINE.md`](ai-second-brain/GRAPHIFY-BASELINE.md) for the current measured corpus.
 
 ---
 
@@ -245,5 +248,5 @@ mdeapp/
     .graphify_labels.json     ← community labels
     .graphify_analysis.json   ← god nodes, surprises, cycles
   scripts/
-    graphify-phase2-build.py  ← build script (run this to rebuild)
+    graphify-run.sh           ← canonical builder (run this to rebuild)
 ```
