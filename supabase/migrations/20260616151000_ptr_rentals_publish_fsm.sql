@@ -130,7 +130,6 @@ REVOKE ALL ON FUNCTION public.request_listing_publish(uuid) FROM PUBLIC;
 REVOKE ALL ON FUNCTION public.publish_listing(uuid) FROM PUBLIC;
 REVOKE ALL ON FUNCTION public.pause_listing(uuid) FROM PUBLIC;
 
-GRANT EXECUTE ON FUNCTION public.transition_listing_workflow(uuid, text, text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.request_listing_publish(uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.publish_listing(uuid) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.pause_listing(uuid) TO authenticated;

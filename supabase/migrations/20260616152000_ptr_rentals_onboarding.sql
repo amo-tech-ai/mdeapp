@@ -33,16 +33,25 @@ BEGIN
     RAISE EXCEPTION 'failed to upsert landlord profile' USING ERRCODE = 'P0001';
   END IF;
 
-  INSERT INTO public.apartments (title, neighborhood, landlord_id, status, listing_workflow_status, created_by)
-  VALUES (
-    COALESCE(NULLIF(btrim(p_listing_title), ''), 'Untitled listing'),
-    COALESCE(NULLIF(btrim(p_neighborhood), ''), 'Medellín'),
-    v_profile.id,
-    'inactive',
-    'draft',
-    v_uid
-  )
-  RETURNING * INTO v_apartment;
+  SELECT * INTO v_apartment
+  FROM public.apartments
+  WHERE landlord_id = v_profile.id
+    AND listing_workflow_status = 'draft'
+  ORDER BY created_at DESC
+  LIMIT 1;
+
+  IF NOT FOUND THEN
+    INSERT INTO public.apartments (title, neighborhood, landlord_id, status, listing_workflow_status, created_by)
+    VALUES (
+      COALESCE(NULLIF(btrim(p_listing_title), ''), 'Untitled listing'),
+      COALESCE(NULLIF(btrim(p_neighborhood), ''), 'Medellín'),
+      v_profile.id,
+      'inactive',
+      'draft',
+      v_uid
+    )
+    RETURNING * INTO v_apartment;
+  END IF;
 
   RETURN jsonb_build_object(
     'landlord_profile_id', v_profile.id,

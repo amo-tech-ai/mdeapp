@@ -17,6 +17,10 @@ export {
 } from "./broker-surface-state";
 export { DATA_PENDING_LABEL, formatBrokerMetric } from "./data-pending";
 export {
+  mapPublishTransitionFromRpc,
+  type PublishTransitionRpcRow,
+} from "./publish-transition-mapper";
+export {
   assertListingWorkflowTransition,
   canTransitionListingWorkflow,
   isListingWorkflowStatus,

@@ -18,6 +18,7 @@ const VALID_TRANSITIONS: Record<ListingWorkflowStatus, readonly ListingWorkflowS
   rejected: ["draft"],
 };
 
+/** Type guard for `listing_workflow_status` values from Supabase. */
 export function isListingWorkflowStatus(value: unknown): value is ListingWorkflowStatus {
   return (
     typeof value === "string" &&
@@ -25,6 +26,7 @@ export function isListingWorkflowStatus(value: unknown): value is ListingWorkflo
   );
 }
 
+/** Return true when `from → to` is allowed (or a no-op). */
 export function canTransitionListingWorkflow(
   from: ListingWorkflowStatus,
   to: ListingWorkflowStatus,
@@ -33,6 +35,7 @@ export function canTransitionListingWorkflow(
   return VALID_TRANSITIONS[from].includes(to);
 }
 
+/** Throw when `from → to` is not a valid listing workflow transition. */
 export function assertListingWorkflowTransition(
   from: ListingWorkflowStatus,
   to: ListingWorkflowStatus,

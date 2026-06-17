@@ -1,6 +1,6 @@
 /** PTR-RENTALS-005 / SAN-1108 — broker UI data contracts (loading | empty | result | error) */
 
-import { DATA_PENDING_LABEL, formatBrokerMetric } from "./data-pending";
+import { formatBrokerMetric } from "./data-pending";
 import type { ListingWorkflowStatus } from "./listing-workflow";
 
 export type BrokerSurfaceKind =
@@ -62,16 +62,19 @@ export type BrokerShowingRow = {
 };
 
 export type PublishTransitionResult = {
+  /** Broker listing id (maps from RPC `apartments.id`). */
   apartmentId: string;
   listingWorkflowStatus: ListingWorkflowStatus;
   publishedAt: string | null;
   publishedBy: string | null;
 };
 
+/** Return a loading broker-surface state for the given kind. */
 export function brokerSurfaceLoading(kind: BrokerSurfaceKind): BrokerSurfaceLoading {
   return { kind, state: "loading" };
 }
 
+/** Return an empty broker-surface state with an optional message. */
 export function brokerSurfaceEmpty(
   kind: BrokerSurfaceKind,
   message = "Nothing here yet.",
@@ -79,6 +82,7 @@ export function brokerSurfaceEmpty(
   return { kind, state: "empty", message };
 }
 
+/** Return an error broker-surface state; defaults to retryable. */
 export function brokerSurfaceError(
   kind: BrokerSurfaceKind,
   message: string,
@@ -87,6 +91,7 @@ export function brokerSurfaceError(
   return { kind, state: "error", message, retryable };
 }
 
+/** Return a result broker-surface state wrapping typed payload data. */
 export function brokerSurfaceResult<T>(
   kind: BrokerSurfaceKind,
   data: T,
@@ -94,6 +99,7 @@ export function brokerSurfaceResult<T>(
   return { kind, state: "result", data };
 }
 
+/** Format publish audit timestamps/ids; blank values become `Data pending.`. */
 export function formatPublishAuditValue(value: string | null | undefined): string {
   return formatBrokerMetric(value);
 }
