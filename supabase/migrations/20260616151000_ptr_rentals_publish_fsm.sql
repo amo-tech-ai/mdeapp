@@ -116,17 +116,8 @@ AS $$ SELECT public.transition_listing_workflow(p_apartment_id, 'ready_for_revie
 
 CREATE OR REPLACE FUNCTION public.publish_listing(p_apartment_id uuid)
 RETURNS public.apartments
-LANGUAGE plpgsql SECURITY INVOKER SET search_path = public
-AS $$
-DECLARE v_row public.apartments;
-BEGIN
-  SELECT * INTO v_row FROM public.apartments WHERE id = p_apartment_id;
-  IF v_row.listing_workflow_status = 'draft' THEN
-    PERFORM public.transition_listing_workflow(p_apartment_id, 'ready_for_review');
-  END IF;
-  RETURN public.transition_listing_workflow(p_apartment_id, 'published');
-END;
-$$;
+LANGUAGE sql SECURITY INVOKER SET search_path = public
+AS $$ SELECT public.transition_listing_workflow(p_apartment_id, 'published'); $$;
 
 CREATE OR REPLACE FUNCTION public.pause_listing(p_apartment_id uuid)
 RETURNS public.apartments

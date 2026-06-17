@@ -25,5 +25,7 @@ describe("broker surface state contracts", () => {
     expect(formatBrokerMetric("")).toBe(DATA_PENDING_LABEL);
     expect(formatBrokerMetric(42)).toBe("42");
     expect(formatPublishAuditValue(null)).toBe(DATA_PENDING_LABEL);
+    expect(formatPublishAuditValue("")).toBe(DATA_PENDING_LABEL);
+    expect(formatPublishAuditValue("   ")).toBe(DATA_PENDING_LABEL);
   });
 });

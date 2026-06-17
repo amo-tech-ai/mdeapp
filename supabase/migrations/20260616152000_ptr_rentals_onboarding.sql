@@ -24,11 +24,13 @@ BEGIN
     RAISE EXCEPTION 'display_name is required' USING ERRCODE = 'check_violation';
   END IF;
 
+  INSERT INTO public.landlord_profiles (user_id, display_name, kind)
+  VALUES (v_uid, btrim(p_display_name), 'agent')
+  ON CONFLICT (user_id) DO NOTHING;
+
   SELECT * INTO v_profile FROM public.landlord_profiles WHERE user_id = v_uid;
   IF NOT FOUND THEN
-    INSERT INTO public.landlord_profiles (user_id, display_name, kind)
-    VALUES (v_uid, btrim(p_display_name), 'agent')
-    RETURNING * INTO v_profile;
+    RAISE EXCEPTION 'failed to upsert landlord profile' USING ERRCODE = 'P0001';
   END IF;
 
   INSERT INTO public.apartments (title, neighborhood, landlord_id, status, listing_workflow_status, created_by)

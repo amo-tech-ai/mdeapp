@@ -1,6 +1,6 @@
 /** PTR-RENTALS-005 / SAN-1108 — broker UI data contracts (loading | empty | result | error) */
 
-import { DATA_PENDING_LABEL } from "./data-pending";
+import { DATA_PENDING_LABEL, formatBrokerMetric } from "./data-pending";
 import type { ListingWorkflowStatus } from "./listing-workflow";
 
 export type BrokerSurfaceKind =
@@ -95,5 +95,5 @@ export function brokerSurfaceResult<T>(
 }
 
 export function formatPublishAuditValue(value: string | null | undefined): string {
-  return value ?? DATA_PENDING_LABEL;
+  return formatBrokerMetric(value);
 }

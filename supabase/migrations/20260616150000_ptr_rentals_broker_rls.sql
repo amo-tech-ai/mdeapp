@@ -65,13 +65,16 @@ CREATE POLICY leads_select_broker_listing
   FOR SELECT
   TO authenticated
   USING (
-    apartment_id IS NOT NULL
-    AND EXISTS (
-      SELECT 1
-      FROM public.apartments a
-      WHERE a.id = leads.apartment_id
-        AND a.landlord_id IN (SELECT public.acting_landlord_ids())
+    (
+      apartment_id IS NOT NULL
+      AND EXISTS (
+        SELECT 1
+        FROM public.apartments a
+        WHERE a.id = leads.apartment_id
+          AND a.landlord_id IN (SELECT public.acting_landlord_ids())
+      )
     )
+    OR (SELECT public.is_admin())
   );
 
 DROP POLICY IF EXISTS leads_update_broker_listing ON public.leads;
@@ -80,22 +83,28 @@ CREATE POLICY leads_update_broker_listing
   FOR UPDATE
   TO authenticated
   USING (
-    apartment_id IS NOT NULL
-    AND EXISTS (
-      SELECT 1
-      FROM public.apartments a
-      WHERE a.id = leads.apartment_id
-        AND a.landlord_id IN (SELECT public.acting_landlord_ids())
+    (
+      apartment_id IS NOT NULL
+      AND EXISTS (
+        SELECT 1
+        FROM public.apartments a
+        WHERE a.id = leads.apartment_id
+          AND a.landlord_id IN (SELECT public.acting_landlord_ids())
+      )
     )
+    OR (SELECT public.is_admin())
   )
   WITH CHECK (
-    apartment_id IS NOT NULL
-    AND EXISTS (
-      SELECT 1
-      FROM public.apartments a
-      WHERE a.id = leads.apartment_id
-        AND a.landlord_id IN (SELECT public.acting_landlord_ids())
+    (
+      apartment_id IS NOT NULL
+      AND EXISTS (
+        SELECT 1
+        FROM public.apartments a
+        WHERE a.id = leads.apartment_id
+          AND a.landlord_id IN (SELECT public.acting_landlord_ids())
+      )
     )
+    OR (SELECT public.is_admin())
   );
 
 DROP POLICY IF EXISTS showings_select_visible ON public.showings;
