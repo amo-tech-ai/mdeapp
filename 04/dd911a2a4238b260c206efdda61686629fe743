@@ -1,0 +1,31 @@
+lean.md
+  s_00aa72bb98a15f::t_499152b29cb800 36
+  s_00aa72bb98a15f::t_be8f4d233827c4 27-28
+  s_00aa72bb98a15f::t_d8b5ada0f6d32e 16
+  s_00aa72bb98a15f::t_c7c249cd5a6a90 208
+  s_00aa72bb98a15f::t_2935673d6e3093 133,143,146-149
+  s_00aa72bb98a15f::t_ae565a8fcd06dc 15
+  s_00aa72bb98a15f::t_19c744f3dfed79 118,121
+  s_00aa72bb98a15f::t_f4819dbcf74409 11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "04dd911a2a4238b260c206efdda61686629fe743",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_00aa72bb98a15f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "1a4abb2e-41bc-46ce-9005-baa2e9b1da80",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
