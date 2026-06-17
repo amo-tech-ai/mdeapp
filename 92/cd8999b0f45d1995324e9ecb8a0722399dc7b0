@@ -1,0 +1,90 @@
+src/lib/rentals/filter-owned-broker-listings.ts
+  s_f9d5f98a31145c::t_0bdd1dd5df4c65 1-13
+src/components/host/rentals/rentals-listings-drawer.tsx
+  s_f9d5f98a31145c::t_46db0d44fdb3ec 210,219
+  s_f9d5f98a31145c::t_6cce03b3b16776 148
+  s_f9d5f98a31145c::t_563b524bdec101 3
+  s_f9d5f98a31145c::t_8736df60db9082 52
+  s_f9d5f98a31145c::t_62b130a9fd9e9d 76-83,85
+  s_f9d5f98a31145c::t_6371856a36f329 1-2,4-51,53-75,84,86-147,149-209,211-218,220-306
+src/lib/rentals/broker-listing-detail.ts
+  s_f9d5f98a31145c::t_f9d816c9bc9b4a 1-36
+src/lib/rentals/format-broker-rent.ts
+  s_f9d5f98a31145c::t_47f1cb0cef0d19 1-14
+src/components/host/rentals/host-rentals-nav.tsx
+  s_f9d5f98a31145c::t_70d0f94a135016 1-53
+src/app/host/rentals/page.tsx
+  s_f9d5f98a31145c::t_d833ea5f0b59b2 1-27
+src/lib/rentals/resolve-publish-rpc.ts
+  s_f9d5f98a31145c::t_8815ca89715c57 1-41
+src/components/host/rentals/listing-workflow-pill.tsx
+  s_f9d5f98a31145c::t_7e65eb52b8cdfb 1-37
+src/app/api/host/rentals/listings/[id]/detail/route.ts
+  s_f9d5f98a31145c::t_6d95c0871fffb0 1-80
+src/lib/rentals/filter-broker-listings.ts
+  s_f9d5f98a31145c::t_bcd47cd820e4c9 1-43
+src/app/host/rentals/dashboard/page.tsx
+  s_f9d5f98a31145c::t_0aded17224ad1b 1-23
+src/lib/rentals/listing-completeness.ts
+  s_f9d5f98a31145c::t_0c04f7f36163a0 1-54
+src/components/host/rentals/rentals-listings-map.tsx
+  s_f9d5f98a31145c::t_d88fbc464a9ce4 67,69,71
+  s_f9d5f98a31145c::t_8d06e749fa29cc 1-66,68,70,72-86
+src/components/host/rentals/rentals-inventory-nav.tsx
+  s_f9d5f98a31145c::t_def34be0859891 1-106
+src/components/host/rentals/rentals-listings-grid.tsx
+  s_f9d5f98a31145c::t_4e066894731ada 1-77
+docs/tasks/testing/evidence/2026-06-16/RE-DES-003-RESULTS.md
+  s_f9d5f98a31145c::t_eaf4844f06cd3d 1-70
+src/lib/rentals/run-publish-rpc.ts
+  s_f9d5f98a31145c::t_0097ab94f88017 1-46
+src/lib/rentals/fetch-broker-listings.ts
+  s_f9d5f98a31145c::t_ef8f2a99a49b6c 1-46
+src/app/host/rentals/onboarding/page.tsx
+  s_f9d5f98a31145c::t_8ef0ccd750d9cc 1-26
+src/app/host/rentals/layout.tsx
+  s_f9d5f98a31145c::t_273557e052df02 9
+  s_f9d5f98a31145c::t_69e38756a8e9ef 1-8,10-33
+src/lib/rentals/__tests__/filter-broker-listings.test.ts
+  s_f9d5f98a31145c::t_844b2a52d7f0c4 1-56
+src/lib/rentals/__tests__/publish-broker-listing.test.ts
+  s_f9d5f98a31145c::t_db1928fe0f4b18 1-20
+src/app/host/rentals/listings/page.tsx
+  s_f9d5f98a31145c::t_7f903453a2d0cd 1-51
+src/lib/rentals/index.ts
+  s_f9d5f98a31145c::t_b85d195a15aff1 30-59
+src/lib/rentals/__tests__/filter-owned-broker-listings.test.ts
+  s_f9d5f98a31145c::t_e45efb2d063960 1-34
+src/lib/rentals/__tests__/map-broker-listing-row.test.ts
+  s_f9d5f98a31145c::t_995adfc779e22b 1-56
+src/lib/rentals/map-broker-listing-row.ts
+  s_f9d5f98a31145c::t_6d289dbaa5a951 1-48
+src/app/api/host/rentals/listings/publish/route.ts
+  s_f9d5f98a31145c::t_3d4132af6e2230 1-38
+src/lib/rentals/__tests__/resolve-publish-rpc.test.ts
+  s_f9d5f98a31145c::t_061b47fc509dec 1-42
+src/components/host/rentals/rentals-listings-shell.tsx
+  s_f9d5f98a31145c::t_2308365df66ebe 1-219,221-246
+  s_f9d5f98a31145c::t_0fb2dbd1cb6af7 220
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "92cd8999b0f45d1995324e9ecb8a0722399dc7b0",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
