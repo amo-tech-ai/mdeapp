@@ -1,0 +1,28 @@
+docs/ai-second-brain/PLAN.md
+  s_1ea51060724821::t_3c538d84c01b97 284
+  s_1ea51060724821::t_0ea3d115a0a109 276-278,280-282
+  s_1ea51060724821::t_fdb8af9876f3b8 104
+  s_1ea51060724821::t_62533045c1aa04 362-365
+  s_1ea51060724821::t_88a0e056b0fb10 115,119-124
+  s_1ea51060724821::t_4b4d8a2d45c53a 245-247,249-254
+  s_1ea51060724821::t_de0be2115d6988 27-32
+  s_1ea51060724821::t_9a87a4b7aed98c 15
+  s_1ea51060724821::t_40800acff65d38 130
+  s_1ea51060724821::t_e234348dc7eca3 153-156,158-159,162-164
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "91472da4079d39da3d3babf58e9c8f93a28aeaa3",
+  "prompts": {},
+  "sessions": {
+    "s_1ea51060724821": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "96514f4c-c86e-40bd-a03e-0d0178a3f504",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
