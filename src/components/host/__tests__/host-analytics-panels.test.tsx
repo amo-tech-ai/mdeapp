@@ -4,6 +4,7 @@ import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { HostKpiPanel } from "@/components/host/host-kpi-panel";
 import { HostRecommendationsPanel } from "@/components/host/host-recommendations-panel";
+import { HostAnalyticsAside } from "@/components/host/host-analytics-aside";
 import { HostNarrativeBanner } from "@/components/host/host-narrative-banner";
 import { EMPTY_HOST_DASHBOARD, type HostDashboardState } from "@/lib/types/host-dashboard";
 
@@ -67,6 +68,14 @@ describe("HostRecommendationsPanel", () => {
 
   it("renders nothing when empty", () => {
     expect(renderToStaticMarkup(<HostRecommendationsPanel state={state()} />)).toBe("");
+  });
+});
+
+describe("HostAnalyticsAside", () => {
+  it("shows onboarding copy when no recommendations", () => {
+    const html = renderToStaticMarkup(<HostAnalyticsAside state={state()} />);
+    expect(html).toContain('data-testid="host-analytics-aside-empty"');
+    expect(html).toContain("Sales assistant");
   });
 });
 

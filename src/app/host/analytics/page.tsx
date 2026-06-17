@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { HostAnalyticsShell } from "@/components/host/host-analytics-shell";
+import { loadHostDashboardInitial } from "@/lib/events/load-host-dashboard";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata = {
@@ -14,5 +15,9 @@ export default async function HostAnalyticsPage() {
 
   if (!user) redirect("/login?next=/host/analytics");
 
-  return <HostAnalyticsShell userEmail={user.email} />;
+  const initialDashboard = await loadHostDashboardInitial(supabase, user.id);
+
+  return (
+    <HostAnalyticsShell userEmail={user.email} initialDashboard={initialDashboard} />
+  );
 }

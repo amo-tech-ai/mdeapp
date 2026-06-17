@@ -40,6 +40,8 @@ function ToolResultSync({
 
 type HostOpsCopilotBridgeProps = {
   children: (args: { state: HostDashboardState }) => ReactNode;
+  /** Server-loaded KPIs (deterministic); agent chat still refreshes narration. */
+  initialState?: HostDashboardState;
 };
 
 const salesInsightsParams = z.object({
@@ -50,9 +52,13 @@ const listHostEventsParams = z.object({
   limit: z.number().int().min(1).max(100).optional(),
 });
 
-export function HostOpsCopilotBridge({ children }: HostOpsCopilotBridgeProps) {
-  const [dashboardState, setDashboardState] =
-    useState<HostDashboardState>(EMPTY_HOST_DASHBOARD);
+export function HostOpsCopilotBridge({
+  children,
+  initialState,
+}: HostOpsCopilotBridgeProps) {
+  const [dashboardState, setDashboardState] = useState<HostDashboardState>(
+    initialState ?? EMPTY_HOST_DASHBOARD,
+  );
   const insightSig = useRef<string>("");
   const eventsSig = useRef<string>("");
 
