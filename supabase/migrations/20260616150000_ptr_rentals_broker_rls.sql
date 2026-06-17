@@ -59,6 +59,13 @@ CREATE POLICY apartments_update_broker
     OR (SELECT public.is_admin())
   );
 
+-- Broker listing policies are additive (PostgreSQL ORs permissive policies).
+-- Legacy policies are kept on purpose:
+--   leads_select_own_or_agent_or_admin — prospect + assigned-agent CRM (p1_leads)
+--   leads_select_partner_member — partner queue (ptr012)
+-- They do not grant cross-broker reads: an unassigned broker cannot SELECT another
+-- landlord's leads (smoke: broker_a_cannot_read_broker_b_lead in ptr-rentals-p0-rls-smoke.sql).
+
 DROP POLICY IF EXISTS leads_select_broker_listing ON public.leads;
 CREATE POLICY leads_select_broker_listing
   ON public.leads
