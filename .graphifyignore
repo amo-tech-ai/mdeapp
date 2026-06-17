@@ -1,0 +1,39 @@
+# mdeai graphify exclusions — see docs/graphify-reference.md
+node_modules/
+.github/
+.worktrees/
+workspace/
+commerce/b2c-storefront/   # local reference clone (gitignored); commerce/mercur/ is tracked code — keep it indexed
+github/
+
+# Build / generated (gitignored but explicit for graphify)
+.next/
+.mastra/
+dist/
+out/
+.turbo/
+
+# Test / coverage artifacts (AI-SB-001 — derived output, never index)
+coverage/
+test-results/
+playwright-report/
+**/screenshots/
+**/__screenshots__/
+
+# Huge design asset trees (11 GB+ images)
+docs/tasks/design/colors/
+docs/tasks/design/**/images/
+
+# Archives and backups — move obsolete docs here instead of deleting
+**/_archive/**
+**/backup/**
+
+# Vendored clones under research
+docs/research/**/repos/
+
+# Generated graph outputs (never ingest)
+graphify-out/
+docs/graphify-out/
+
+# Editor caches
+**/.obsidian/
