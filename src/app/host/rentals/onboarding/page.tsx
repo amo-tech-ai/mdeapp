@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { RentalsOnboardingWizard } from "@/components/host/rentals/rentals-onboarding-wizard";
 import { BrokerRentalsGateError } from "@/components/host/rentals/broker-rentals-gate-error";
 import { BROKER_HOME_PATH } from "@/lib/rentals/broker-route-gate";
 import { getBrokerContext } from "@/lib/rentals/get-broker-context";
@@ -7,7 +8,7 @@ export const metadata = {
   title: "Broker onboarding · mdeai",
 };
 
-/** RE-WIRE-001 — loop-safe onboarding shell; wizard ships in SAN-1092. */
+/** RE-DES-005 — broker onboarding wizard (SAN-1092). */
 // skipcq: JS-0067
 export default async function HostRentalsOnboardingPage() {
   const ctx = await getBrokerContext();
@@ -26,14 +27,8 @@ export default async function HostRentalsOnboardingPage() {
   }
 
   return (
-    <main
-      data-testid="host-rentals-onboarding"
-      className="mx-auto max-w-lg space-y-4 py-12"
-    >
-      <h1 className="font-serif text-2xl font-semibold">Broker onboarding</h1>
-      <p className="text-sm text-muted-foreground">
-        Create your broker profile to list rentals on mdeai.
-      </p>
+    <main data-testid="host-rentals-onboarding">
+      <RentalsOnboardingWizard />
     </main>
   );
 }
