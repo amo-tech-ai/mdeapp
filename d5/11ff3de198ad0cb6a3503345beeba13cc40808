@@ -1,0 +1,29 @@
+src/lib/supabase/database.types.ts
+  s_f9d5f98a31145c::t_93b04f8c375502 25,46,67,173,182,187-188,191,237,246,251-252,255,301,310,315-316,319,7419-7426,7453-7460,7791-7794,7882-7954,7995-8067,8102-8174,8876-8952
+docs/tasks/testing/evidence/2026-06-16/PTR-RENTALS-P0-RESULTS.md
+  s_f9d5f98a31145c::t_94e8ac6e3c7554 6-17,19-46,48-54
+  s_f9d5f98a31145c::t_f4b67934a7c9dc 18
+  s_f9d5f98a31145c::t_6f8fe52184d7ea 47
+  s_f9d5f98a31145c::t_1cf214891f1a58 123,125,129
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "d511ff3de198ad0cb6a3503345beeba13cc40808",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
