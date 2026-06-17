@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { ExternalLink, MapPin } from "lucide-react";
+import { Coffee, ExternalLink, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { VenueCardShell } from "@/components/browse/venue-card-shell";
+import { VenueCardPlaceholder } from "@/components/browse/venue-card-placeholder";
 import { mapsDeepLinksEnabled } from "@/lib/maps-deep-links";
-import { cn } from "@/lib/utils";
 import type { CafeListing } from "@/lib/cafe-browse";
 
 type CafeBrowseCardProps = {
@@ -25,21 +25,13 @@ function CafeBrowseCardMedia({
 }: {
   mediaLayout: "inline" | "cover";
 }) {
-  const frameClass = cn(
-    "relative flex items-center justify-center overflow-hidden rounded-xl bg-muted text-xs text-muted-foreground",
-    mediaLayout === "cover"
-      ? "aspect-[16/10] w-full"
-      : "aspect-[16/10] w-24 shrink-0 self-start",
-  );
-
   return (
-    <div
-      className={frameClass}
-      data-testid="cafe-browse-card-photo-placeholder"
-      aria-hidden
-    >
-      Café
-    </div>
+    <VenueCardPlaceholder
+      label="Café"
+      icon={<Coffee className="size-5" aria-hidden />}
+      mediaLayout={mediaLayout}
+      testId="cafe-browse-card-photo-placeholder"
+    />
   );
 }
 
