@@ -1,0 +1,60 @@
+src/components/host/rentals/broker-rentals-gate-error.tsx
+  s_f9d5f98a31145c::t_987dd0b530ec1c 1-12
+src/app/host/rentals/(broker)/layout.tsx
+  s_f9d5f98a31145c::t_b6fcf71342af2f 2,6,26
+  s_f9d5f98a31145c::t_e44b1c9b1c63f7 1,3-5,7-25,27
+src/app/host/rentals/layout.tsx
+  s_f9d5f98a31145c::t_aef4267a7706ea 2-4,16,18-21,23,25-26
+  s_f9d5f98a31145c::t_a9b6f8f2f6348c 10,24,27
+src/components/host/__tests__/host-nav-rail.test.ts
+  s_f9d5f98a31145c::t_20df0449fbf7c9 20-39
+src/components/host/host-nav-rail.tsx
+  s_f9d5f98a31145c::t_aaa7f94ff2db9f 5-8,15,21-43,56-61,65-73,75,77,80,107-124
+src/components/host/rentals/host-rentals-shell.tsx
+  s_f9d5f98a31145c::t_7c27597f5a47e1 1-15
+src/app/host/rentals/(broker)/page.tsx
+  s_f9d5f98a31145c::t_596b2fbe01f2c7 6,9-10,12-13,15-16
+src/app/host/rentals/(broker)/dashboard/page.tsx
+  s_f9d5f98a31145c::t_cf304b76af615e 3,10,15-17
+src/lib/rentals/__tests__/broker-route-gate.test.ts
+  s_f9d5f98a31145c::t_fdd4452fa75c81 1-85
+docs/tasks/testing/evidence/2026-06-16/RE-WIRE-001-RESULTS.md
+  s_f9d5f98a31145c::t_e902864973e34a 1-91
+src/lib/rentals/get-broker-context.ts
+  s_f9d5f98a31145c::t_1e4aee92802ac6 104
+  s_f9d5f98a31145c::t_000e1ee4d0825c 47
+  s_f9d5f98a31145c::t_5f97eb6ee5ceab 1
+  s_f9d5f98a31145c::t_b4ac5b194912e1 2-46,48-103
+src/app/host/rentals/onboarding/page.tsx
+  s_f9d5f98a31145c::t_1c175e5a643844 10,19,27-30,32-33
+  s_f9d5f98a31145c::t_0e24048c391b0d 2
+  s_f9d5f98a31145c::t_457a54cd6923ec 1,3-4,11-18,20-25
+src/lib/rentals/broker-route-gate.ts
+  s_f9d5f98a31145c::t_e5ce070b743e3b 1-5,8-43
+  s_f9d5f98a31145c::t_39cc02eb8e1d3f 6-7
+src/lib/rentals/index.ts
+  s_f9d5f98a31145c::t_96d084abf1a159 60-77
+src/app/host/rentals/(broker)/listings/page.tsx
+  s_f9d5f98a31145c::t_3e1564944a1850 7,15-17,20-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "05320eed7e65dd6ea2933c07bdf510d2749a356b",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
