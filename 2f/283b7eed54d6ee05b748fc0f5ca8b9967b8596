@@ -1,0 +1,26 @@
+e2e/san-1092-broker-onboarding.spec.ts
+  s_f9d5f98a31145c::t_0dd40a7d0a6c58 1-124
+docs/tasks/testing/evidence/2026-06-16/RE-DES-005-RESULTS.md
+  s_f9d5f98a31145c::t_f77ca1da05f3a4 6,10,12,14-22,24,26-31,33,36-38,41,43-48,50,52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "2f283b7eed54d6ee05b748fc0f5ca8b9967b8596",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
