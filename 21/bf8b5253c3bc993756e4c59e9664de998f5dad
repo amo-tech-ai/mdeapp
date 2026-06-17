@@ -1,0 +1,45 @@
+src/lib/events/__tests__/load-host-dashboard.test.ts
+  s_f47ea5ebcd9235::t_7d8d276b0cf087 1-45
+src/components/host/host-analytics-aside.tsx
+  s_f47ea5ebcd9235::t_7d8d276b0cf087 1-25
+src/components/host/host-analytics-prompt-chips.tsx
+  s_f47ea5ebcd9235::t_7d8d276b0cf087 1-63
+docs/tasks/testing/evidence/2026-06-16/SAN-729-host-analytics-p1.md
+  s_f9d5f98a31145c::t_58ed2d9b1c549a 1-63
+src/components/host/__tests__/host-analytics-panels.test.tsx
+  s_f47ea5ebcd9235::t_7d8d276b0cf087 7,74-78
+src/components/host/host-analytics-shell.tsx
+  s_f47ea5ebcd9235::t_7d8d276b0cf087 10-12,22,25-28,30,59-61,85
+src/app/host/analytics/page.tsx
+  s_f47ea5ebcd9235::t_7d8d276b0cf087 3,18-22
+src/lib/events/load-host-dashboard.ts
+  s_f47ea5ebcd9235::t_7d8d276b0cf087 1-46
+src/components/host/host-ops-copilot-bridge.tsx
+  s_f47ea5ebcd9235::t_7d8d276b0cf087 43-44,55-61
+src/lib/hooks/use-host-ops-chat.ts
+  s_f47ea5ebcd9235::t_7d8d276b0cf087 1-28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "21bf8b5253c3bc993756e4c59e9664de998f5dad",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
