@@ -196,7 +196,10 @@ export function RentalsListingsShell({
               <RentalsListingsMap
                 listings={visibleListings}
                 selectedId={selectedId}
-                onSelect={setSelectedId}
+                onSelect={(id) => {
+                  setSelectedId(id);
+                  setPublishError(null);
+                }}
               />
             </div>
           ) : null}

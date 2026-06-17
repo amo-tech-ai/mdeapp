@@ -51,7 +51,7 @@ export function RentalsListingsDrawer({
   const [detailError, setDetailError] = useState<string | null>(null);
   const [detailLoadedFor, setDetailLoadedFor] = useState<string | null>(null);
 
-  const loadDetail = useCallback(async (apartmentId: string) => {
+  const loadDetail = useCallback(async (apartmentId: string): Promise<boolean> => {
     setDetailLoading(true);
     setDetailError(null);
     try {
@@ -66,8 +66,10 @@ export function RentalsListingsDrawer({
       };
       setLeads(body.leads ?? []);
       setShowings(body.showings ?? []);
+      return true;
     } catch (e) {
       setDetailError(e instanceof Error ? e.message : "Failed to load detail");
+      return false;
     } finally {
       setDetailLoading(false);
     }
@@ -80,7 +82,9 @@ export function RentalsListingsDrawer({
       (next === "leads" || next === "viewings" || next === "performance") &&
       detailLoadedFor !== listing.id
     ) {
-      void loadDetail(listing.id).then(() => setDetailLoadedFor(listing.id));
+      void loadDetail(listing.id).then((ok) => {
+        if (ok) setDetailLoadedFor(listing.id);
+      });
     }
   };
 

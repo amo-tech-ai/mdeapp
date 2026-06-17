@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
-import { AdvancedMarker, Map } from "@vis.gl/react-google-maps";
+import { useEffect, useMemo } from "react";
+import { AdvancedMarker, Map, useMap } from "@vis.gl/react-google-maps";
 import type { BrokerListingDetail } from "@/lib/rentals/broker-listing-detail";
 import { MapsShell } from "@/components/maps/MapProvider";
 import { CategoryMapMarker } from "@/components/maps/markers/CategoryMapMarker";
@@ -16,6 +16,31 @@ type RentalsListingsMapProps = {
   selectedId: string | null;
   onSelect: (id: string) => void;
 };
+
+function MapSelectionPan({
+  selectedId,
+  pins,
+}: {
+  selectedId: string | null;
+  pins: BrokerListingDetail[];
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map || !selectedId) return;
+    const sel = pins.find((p) => p.id === selectedId);
+    if (
+      sel?.latitude != null &&
+      sel.longitude != null &&
+      Number.isFinite(sel.latitude) &&
+      Number.isFinite(sel.longitude)
+    ) {
+      map.panTo({ lat: sel.latitude, lng: sel.longitude });
+    }
+  }, [map, selectedId, pins]);
+
+  return null;
+}
 
 function BrokerListingsMapInner({
   listings,
@@ -57,6 +82,7 @@ function BrokerListingsMapInner({
         disableDefaultUI
         className="h-full w-full"
       >
+        <MapSelectionPan selectedId={selectedId} pins={pins} />
         {pins.map((listing) => (
           <AdvancedMarker
             key={listing.id}

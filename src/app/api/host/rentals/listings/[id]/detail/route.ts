@@ -22,14 +22,22 @@ export async function GET(
     .eq("id", apartmentId)
     .maybeSingle();
 
-  if (aptError || !apartment) {
+  if (aptError) {
+    return NextResponse.json({ error: "Failed to load listing" }, { status: 500 });
+  }
+
+  if (!apartment) {
     return NextResponse.json({ error: "Listing not found" }, { status: 404 });
   }
 
-  const { data: profiles } = await supabase
+  const { data: profiles, error: profilesError } = await supabase
     .from("landlord_profiles")
     .select("id")
     .eq("user_id", user.id);
+
+  if (profilesError) {
+    return NextResponse.json({ error: "Failed to load broker profile" }, { status: 500 });
+  }
 
   const ownedIds = new Set((profiles ?? []).map((p) => p.id));
   if (!apartment.landlord_id || !ownedIds.has(apartment.landlord_id)) {

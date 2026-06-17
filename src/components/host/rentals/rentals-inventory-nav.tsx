@@ -13,6 +13,7 @@ const STATUS_FILTERS: { value: BrokerListingStatusFilter; label: string; testId:
   { value: "review", label: "Review", testId: "lx-filter-review" },
   { value: "published", label: "Published", testId: "lx-filter-published" },
   { value: "paused", label: "Paused", testId: "lx-filter-paused" },
+  { value: "rejected", label: "Rejected", testId: "lx-filter-rejected" },
 ];
 
 type RentalsInventoryNavProps = {

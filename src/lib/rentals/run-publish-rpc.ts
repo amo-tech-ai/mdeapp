@@ -9,7 +9,32 @@ type DbClient = SupabaseClient<Database>;
 
 export type RunPublishRpcResult =
   | { ok: true; transition: PublishTransitionResult }
-  | { ok: false; message: string };
+  | { ok: false; message: string; status: 400 | 403 | 404 | 500 };
+
+function publishRpcFailure(
+  message: string,
+  code?: string,
+): Extract<RunPublishRpcResult, { ok: false }> {
+  if (
+    code === "42501" ||
+    /authentication required|broker does not own this apartment/i.test(message)
+  ) {
+    return { ok: false, message, status: 403 };
+  }
+  if (code === "P0002" || /apartment not found/i.test(message)) {
+    return { ok: false, message, status: 404 };
+  }
+  if (
+    code === "check_violation" ||
+    /invalid listing workflow transition|No publish action for status/i.test(message)
+  ) {
+    return { ok: false, message, status: 400 };
+  }
+  if (/unexpected payload|Failed to map publish transition/i.test(message)) {
+    return { ok: false, message, status: 500 };
+  }
+  return { ok: false, message, status: 500 };
+}
 
 /** Call publish FSM RPC for a broker-owned apartment. */
 export async function runPublishRpc(
@@ -19,7 +44,7 @@ export async function runPublishRpc(
 ): Promise<RunPublishRpcResult> {
   const rpc = resolvePublishRpc(currentStatus);
   if (!rpc) {
-    return { ok: false, message: `No publish action for status: ${currentStatus}` };
+    return publishRpcFailure(`No publish action for status: ${currentStatus}`);
   }
 
   const { data, error } = await supabase.rpc(rpc, {
@@ -27,11 +52,11 @@ export async function runPublishRpc(
   });
 
   if (error) {
-    return { ok: false, message: error.message };
+    return publishRpcFailure(error.message, error.code);
   }
 
   if (!data || typeof data !== "object" || !("id" in data)) {
-    return { ok: false, message: "Publish RPC returned an unexpected payload." };
+    return publishRpcFailure("Publish RPC returned an unexpected payload.");
   }
 
   try {
@@ -41,6 +66,6 @@ export async function runPublishRpc(
     return { ok: true, transition };
   } catch (e) {
     const message = e instanceof Error ? e.message : "Failed to map publish transition.";
-    return { ok: false, message };
+    return publishRpcFailure(message);
   }
 }

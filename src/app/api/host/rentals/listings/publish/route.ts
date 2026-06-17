@@ -13,25 +13,35 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let body: { apartmentId?: string; listingWorkflowStatus?: string };
+  let raw: unknown;
   try {
-    body = (await request.json()) as typeof body;
+    raw = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const apartmentId = body.apartmentId?.trim();
+  if (raw === null || typeof raw !== "object" || Array.isArray(raw)) {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  const apartmentIdRaw = (raw as Record<string, unknown>).apartmentId;
+  if (typeof apartmentIdRaw !== "string") {
+    return NextResponse.json({ error: "apartmentId must be a string" }, { status: 400 });
+  }
+
+  const apartmentId = apartmentIdRaw.trim();
   if (!apartmentId) {
     return NextResponse.json({ error: "apartmentId is required" }, { status: 400 });
   }
 
-  if (!isListingWorkflowStatus(body.listingWorkflowStatus)) {
+  const listingWorkflowStatus = (raw as Record<string, unknown>).listingWorkflowStatus;
+  if (!isListingWorkflowStatus(listingWorkflowStatus)) {
     return NextResponse.json({ error: "Invalid listingWorkflowStatus" }, { status: 400 });
   }
 
-  const result = await runPublishRpc(supabase, apartmentId, body.listingWorkflowStatus);
+  const result = await runPublishRpc(supabase, apartmentId, listingWorkflowStatus);
   if (!result.ok) {
-    return NextResponse.json({ error: result.message }, { status: 400 });
+    return NextResponse.json({ error: result.message }, { status: result.status });
   }
 
   return NextResponse.json({ transition: result.transition });
