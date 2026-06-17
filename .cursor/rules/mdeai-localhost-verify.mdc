@@ -1,0 +1,9 @@
+---
+description: DEPRECATED — use mdeai-testing.mdc. Redirect only.
+globs: []
+alwaysApply: false
+---
+
+# Deprecated
+
+**Use [`.cursor/rules/mdeai-testing.mdc`](./mdeai-testing.mdc)** — full localhost gate, test packs, Browser MCP, Playwright, evidence.

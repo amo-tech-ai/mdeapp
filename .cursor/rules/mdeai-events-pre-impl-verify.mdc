@@ -1,0 +1,130 @@
+---
+description: STRICT — Before implementing any Events task, run skills+MCP pre-verify, score readiness, log blockers/failure points in todo.md. No code until verify passes.
+globs:
+  - tasks/events/**
+  - mdeapp/src/app/events/**
+  - mdeapp/src/app/host/**
+  - mdeapp/src/components/events/**
+  - mdeapp/src/components/host/**
+  - mdeapp/src/components/partners/**
+  - mdeapp/e2e/**/events/**
+  - mdeapp/e2e/**/host/**
+alwaysApply: false
+---
+
+# Events pre-implementation verify — before any code
+
+**Todo (scores + failure points):** [`tasks/events/todo.md`](../../../tasks/events/todo.md) § Per-task verify pack  
+**Enforcement:** [`mdeai-events-task-skill-mcp-gate.mdc`](./mdeai-events-task-skill-mcp-gate.mdc) (alwaysApply)  
+**Skills index:** [`index-skills.md`](../../../index-skills.md) § Events Platform
+
+## Hard rule
+
+**Do not write implementation code** for an Events task until pre-verify completes and `todo.md` is updated with readiness + failure points for that row.
+
+---
+
+## Pre-verify protocol (run in order)
+
+| Step | Action | Tool |
+|------|--------|------|
+| 1 | Read full task row in `todo.md` + Linear issue body | Linear MCP `get_issue` + `includeRelations: true` |
+| 2 | Confirm blockers cleared | Linear `blockedBy`; gate audit if Phase B |
+| 3 | Load ≤5 routed skills | [`mdeai-skills-best-practices.mdc`](./mdeai-skills-best-practices.mdc) |
+| 4 | **MCP before external APIs** | Supabase schema · CopilotKit · Gemini · Maps — per touch surface |
+| 5 | Disk probes | `task-verifier` — paths, deps, RLS, enums, agent names |
+| 6 | Score **readiness** (0–100) | Rubric below |
+| 7 | Estimate **success rate** (0–100) | First-pass merge probability |
+| 8 | List **failure points** | Errors, blockers, scope creep, test gaps |
+| 9 | Update `todo.md` row | Readiness + success rate + failure points column |
+| 10 | **Stop** if readiness &lt; 70 or any 🔴 blocker | Report to user; do not implement |
+
+---
+
+## Readiness rubric (pre-implementation, 100 pts)
+
+| Dimension | Weight | Probe |
+|-----------|-------:|-------|
+| Spec / AC on disk | 25 | Linear body + `tasks/events/**` spec exists and matches scope |
+| Blockers / deps | 25 | Linear relations; gate audit if venue chain |
+| Skills + MCP match | 25 | Correct skill pack; MCP confirms APIs/schema/models |
+| Test plan | 15 | Playwright/Vitest path named; evidence template ready |
+| Process | 10 | Full SAN title; one PR; branch name; no scope creep |
+
+```text
+readiness = round(0.25×spec + 0.25×blockers + 0.25×mcp + 0.15×tests + 0.10×process)
+```
+
+| Readiness | Meaning |
+|----------:|---------|
+| 90–100 | Safe to implement |
+| 70–89 | Proceed with listed mitigations |
+| &lt;70 | **Do not implement** — fix spec/blockers first |
+
+---
+
+## Success rate (pre vs post)
+
+| Phase | Definition |
+|-------|------------|
+| **Pre-implementation** | Estimated probability of clean first merge (readiness minus penalty per 🔴 failure point: −10 each, 🟡 −5, cap 0) |
+| **Post-shipment** | Equals **% correct** from [`changelog.md`](../../../tasks/events/changelog.md) execution formula |
+
+After merge: replace pre-impl success rate with post-ship **Grade** + **% correct** in `todo.md`.
+
+---
+
+## Failure points (required in todo.md)
+
+For each task, document before coding:
+
+```markdown
+**Failure points:** 🔴 blocker · 🟡 risk · 🟢 mitigated
+- 🔴 …
+- 🟡 …
+```
+
+Categories to check:
+
+- Linear `blockedBy` not cleared
+- Missing spec / wireframe / migration plan
+- MCP contradicts skill (wrong model, schema drift)
+- Scope overlap with adjacent PR (e.g. SAN-731 vs SAN-135)
+- No test spec; prod env gap
+- RLS / service-role / CopilotKit agent-name traps
+
+---
+
+## Required pre-impl output (chat or comment)
+
+```markdown
+## Pre-verify — SAN-### · SPEC-ID — title
+
+| Field | Value |
+|-------|-------|
+| Readiness | NN/100 |
+| Success rate (est.) | NN% |
+| Grade / % correct | — (pre-ship) |
+
+**Skills loaded:** …
+**MCP probes:** …
+
+**Failure points:**
+- 🔴 …
+- 🟡 …
+
+**Verdict:** GO / HOLD
+```
+
+**GO** only if readiness ≥ 70 and no unresolved 🔴 blockers.
+
+---
+
+## Pair with post-ship gates
+
+| When | Rule |
+|------|------|
+| Before code | This rule + update `todo.md` |
+| After code | [`mdeai-testing.mdc`](./mdeai-testing.mdc) |
+| Before merge | cubic/CodeRabbit + floor |
+| Before Done | [`mdeai-events-changelog.mdc`](./mdeai-events-changelog.mdc) + gate audit for Phase B |

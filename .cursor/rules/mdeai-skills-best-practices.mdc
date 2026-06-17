@@ -1,0 +1,76 @@
+---
+description: Skill routing, MCP-first verification, Done gates. Load when implementing in mdeapp/ or tasks/.
+globs:
+  - mdeapp/**
+  - tasks/**
+alwaysApply: false
+---
+
+# mdeai skills best practices
+
+**Lean orchestrator:** [`mdeai-workflow.mdc`](./mdeai-workflow.mdc) — classify D/C/U/S first.
+
+Full routing + MCP matrix: [`.cursor/docs/02-skills-plan.md`](../docs/02-skills-plan.md). Skills live at `.claude/skills/` (runtime) and `.agents/skills/` (canonical source).
+
+## Before coding
+
+1. **Source order:** PRD v7 (`plan/prd/README.md`) → task spec (`tasks/**`) → disk (`mdeapp/src/**`) → skill → MCP.
+2. **Read the skill** — open `SKILL.md` for the routed pack; do not guess APIs from memory.
+3. **MCP before external APIs** — verify model IDs, CopilotKit hooks, Mastra APIs, Places field masks, Supabase schema via MCP. If MCP contradicts the skill, fix implementation before proceeding.
+
+## Load ≤5 skills per task
+
+Pick **one row**; router skills (`copilotkit`, `gemini`) point to sub-skills — do not load the whole 33-skill pack.
+
+| Work type | Load first | Then |
+|-----------|------------|------|
+| Task / Done gate | `mde-task-lifecycle` → `task-verifier` | `testing` |
+| Screen (`SCREEN-*`) | `copilotkitV1` | `shadcn`, `testing` |
+| Events Platform (`mdeapp/docs/events/**`, AIE/EVT, SAN-757+) | `mde-events` | `copilotkitV1`, `shadcn` (forms), `mastra`, `lean-dev-flow`, `task-verifier` |
+| Mastra agent/tool | `mastra` | `gemini`, `copilotkit-integrations`, `mastra-smoke-test` |
+| CopilotKit / HITL | `copilotkit` (router) → `skills/copilotkit-agui` or `skills/copilotkit-develop` | `skills/copilotkit-debug` if broken |
+| Supabase / edge | `mde-supabase` | Supabase MCP |
+| Maps / Places | `mde-maps` | `google-maps-code-assist` MCP |
+| Stripe | `mde-stripe` | `mde-supabase` |
+| Deploy / PR | `mde-worktree-pr-flow` | `mde-vercel`, `code-review` |
+
+**Do not load for Phase 1 MVP:** `_archive/**`, OpenClaw/Postiz, `mde-tool-use`, legacy `mastra-routing`, vendor SaaS skills.
+
+## Skill authoring hygiene
+
+- **One skill = one job** — keep `SKILL.md` ≤ ~500 lines; depth in `references/`.
+- **Description = trigger** — YAML `description` must state *when* to load (keywords, paths, task types).
+- **Verifiable steps** — end workflows with a command + expected exit code.
+- **Edit canonical source** — native skills in `.agents/skills/`; sync symlinks under `.claude/skills/`.
+- **Stack:** production AI = **Gemini only** in `mdeapp/`; CopilotKit **1.55.2** only (no v1/v2 mix).
+
+## Per-task gate (mandatory)
+
+**Before any task is marked Done or "100% correct":**
+
+1. Open [`mdeapp/todo.md`](../todo.md) § **Skill + MCP gate** — load listed skills (≤5), run listed MCPs
+2. Write pre-flight → `tasks/testing/evidence/YYYY-MM-DD/SAN-###-PREFLIGHT.md`
+3. Run completion gate → check every box in todo row; Evidence Score ≥ **90** for P0
+
+Enforced by [`mdeai-task-skill-mcp-gate.mdc`](./mdeai-task-skill-mcp-gate.mdc).
+
+## Done gates (never skip)
+
+- **`task-verifier`** before flipping any task to Done — **class S / P0** ([`03-lean.md`](../docs/03-lean.md))
+- **Testing rule** — [`.cursor/rules/mdeai-testing.mdc`](./mdeai-testing.mdc): class **U+**; evidence under `tasks/testing/evidence/`
+- **Commit rule** — suggest slice commit; **user confirms** ([`mdeai-commit-discipline.mdc`](./mdeai-commit-discipline.mdc))
+- **Linear rule** — [`.cursor/rules/mdeai-linear.mdc`](./mdeai-linear.mdc): Todo/In Review sorted by implementation order; sync SAN-* when task status changes ([`tasks/linear/01-linear.md`](../../../tasks/linear/01-linear.md)).
+- **Localhost proof** when touching source: `cd mdeapp && npm run dev` clean boot + relevant route/API responds (see `task-verifier` anti-fake-done checklist).
+- **Screens:** follow `tasks/screens/SCREEN-TESTING-STANDARD.md` §7.
+
+## MCP checklist by touch surface
+
+| Touching | MCP first |
+|----------|-----------|
+| `src/mastra/**` | mastra |
+| `@copilotkit/*`, `/api/copilotkit` | copilotkit |
+| `google("…")` in agents | gemini-api-docs-mcp |
+| Places / Maps | google-maps-code-assist |
+| DB / RLS / edge fn | Supabase MCP |
+
+If project MCP is down, use the matching local skill + vendored example (`CopilotKit/examples/integrations/mastra/` for CopilotKit).

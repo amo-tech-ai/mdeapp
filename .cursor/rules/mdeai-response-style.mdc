@@ -1,0 +1,130 @@
+---
+description: Agent chat responses — lead with the answer, plain language, mdeai persona impact. Always apply.
+alwaysApply: true
+---
+
+# mdeai response style — easy, real-world, named tasks
+
+**Pair with:** [`mdeai-workflow.mdc`](./mdeai-workflow.mdc) · [`mdeai-task-naming.mdc`](./mdeai-task-naming.mdc) · personas in `CLAUDE.md`
+
+---
+
+## 1. Lead with the answer
+
+First sentence = **verdict or decision** (merge yes/no, blocker, score). For implementation work, include **change class D/C/U/S** ([`mdeai-workflow.mdc`](./mdeai-workflow.mdc)). Details after.
+
+```text
+✅ "Safe to merge PR #140 — test-only; do not close SAN-546 yet."
+❌ "I reviewed the PR and looked at several aspects…" (bury the verdict)
+```
+
+**Shape:** (1) one-line answer → (2) short table or bullets → (3) detail only if needed → (4) next step.
+
+---
+
+## 2. Easy to understand
+
+- Plain English; short sentences; define jargon once.
+- Prefer a **table** over a wall of prose when comparing tasks, gates, or scores.
+- No telegraphic shorthand (`SAN-546 partial harness flake J14` without names).
+- Scores need **one line of meaning** (what the number blocks for whom).
+
+---
+
+## 3. Real-world framing (mdeai personas + surfaces)
+
+Anchor explanations in **who on mdeai.co is affected**, not generic SaaS analogies. Translate infra/DB into **what someone sees or cannot do**.
+
+| Persona | Use when explaining… |
+|---------|----------------------|
+| **Camila** | Rentals, chat, cards, pins, thread memory |
+| **Andrés** | Paid ticket, wallet QR, `/me/tickets` |
+| **Roberto** | Host wizard, publish, `/host/events`, `/host/event/new` |
+| **Lucía** | Prod smoke, journey matrix, Playwright proof |
+| **Patricia** | Admin, ledgers, booking queues, `ai_runs` observability |
+| **Tourist** | Restaurants, cafés, nightlife, ADK grounding |
+| **Sofía** | Floor, hooks, CI, migration review — say when impact is dev-only |
+
+**Good vs bad:**
+
+| ❌ Abstract | ✅ Real-world |
+|------------|---------------|
+| "31 rows have NULL `organizer_id`" | "Roberto opens `/host/events` and won't see 31 older catalogue events — they're discovery imports, not his publishes" |
+| "SAN-492 not applied" | "Tourist can't book Mamacita for a private event yet — venue offerings tables don't exist on prod" |
+| "Readiness 88" | "Schema is ready for a **branch PR**; Andrés still can't buy a ticket on prod until **SAN-178 · PAY-001** proof lands" |
+
+**Example:** "Andrés still cannot complete a real purchase on mdeai.co — checkout code exists, but no prod proof in wallet" — not "the payment integration lacks E2E validation."
+
+---
+
+## 4. Always name tasks (never bare SAN-###)
+
+**Enforced by:** [`mdeai-task-naming.mdc`](./mdeai-task-naming.mdc) (`alwaysApply: true`) — applies to **every chat reply**, including task lists, tables, blockers, and next steps.
+
+Every mention of a Linear issue in **chat** uses the full form:
+
+```text
+SAN-### · SPEC-ID — <Linear title>
+```
+
+**First mention in a reply** — markdown link with full link text:
+
+```markdown
+[SAN-178 · PAY-001 — Live ticket purchase on production](https://linear.app/sanjiovani/issue/SAN-178/pay-001-live-ticket-purchase-on-production)
+```
+
+| OK in chat | Not OK |
+|------------|--------|
+| "Blocker: **SAN-178 · PAY-001** — Andrés paid ticket" | "SAN-178 is open" |
+| "Merge helps **SAN-546 · OPS-JOURNEY** J14/J15 harness" | "fixes 546" |
+| Table column `Task (full name)` | Table column `SAN` only |
+
+**Exceptions (narrow):** git branch `ai/san-546-…` · PR footer `Closes SAN-546` · filename `SAN-546-j14-j15-prod.spec.ts` — still spell out full name in the same paragraph once.
+
+**Unsure of title?** `get_issue` via Linear MCP before writing.
+
+**No classic SPEC-ID?** Use the Linear title prefix — e.g. `SAN-858 · DATA-QUALITY — Events Ownership Classification` (not `SAN-858`).
+
+**Events board examples (copy pattern):**
+
+```markdown
+[SAN-178 · PAY-001 — Live ticket purchase on production](https://linear.app/sanjiovani/issue/SAN-178)
+[SAN-492 · EVT-033 — Event venue + offerings schema](https://linear.app/sanjiovani/issue/SAN-492)
+[SAN-858 · DATA-QUALITY — Events ownership classification](https://linear.app/sanjiovani/issue/SAN-858)
+```
+
+---
+
+## 5. Audits, PR reviews, and checklists
+
+Use this header pattern:
+
+```markdown
+**Verdict:** <one line>
+
+| Check | Result |
+|-------|--------|
+| [SAN-828 · UX-043 — …](url) | 🟢 Done |
+```
+
+- Separate **merge safety** vs **production sign-off** vs **MVP exit** — do not collapse into one optimistic %.
+- Call out **false positives** (e.g. weak test assertion that passed but stricter test fails on prod).
+
+---
+
+## 6. Anti-patterns
+
+- ❌ Generic "imagine a user…" / Stripe-as-default analogies
+- ❌ `89% launch ready` without saying **which gate** (concierge vs Andrés G1)
+- ❌ Listing five SAN IDs with no SPEC-ID or persona
+- ❌ Engagement bait ("Let me know if you want me to…") — end with one clear next step if needed
+
+---
+
+## Quick checklist (every non-trivial reply)
+
+- [ ] First sentence = answer
+- [ ] Task IDs include **SPEC-ID + title** (linked on first use)
+- [ ] Impact named for a **persona + surface** (`/chat`, `/me/tickets`, …)
+- [ ] Tables used for gates/scores/comparisons
+- [ ] Next step is concrete (command, PR action, or blocker owner)

@@ -1,0 +1,130 @@
+---
+description: Mercur 2 + Medusa v2 commerce work in commerce/mercur — skills, env, boundaries, verification. Load when touching commerce/** or docs/ecommerce/**.
+globs: commerce/**,docs/ecommerce/**
+alwaysApply: false
+---
+
+# Mercur + Medusa commerce (mdeai)
+
+**Foundation:** `mdeapp/commerce/mercur/` — Mercur 2.1 scaffold on Medusa 2.13 (`@mercurjs/core`).  
+**Task index:** `mdeapp/docs/ecommerce/tasks/INDEX.md` · **Boot:** `commerce/mercur/BOOT.md`
+
+## Read first (in order)
+
+1. `commerce/mercur/CLAUDE.md` — task router, starter contracts, verification
+2. `commerce/mercur/AGENTS.md` — architecture, CLI, block system
+3. `commerce/mercur/BOOT.md` — localhost URLs, seller id, publishable key, seed commands
+4. Area guides when touching subfolders:
+   - Backend: `commerce/mercur/packages/api/CLAUDE.md`
+   - Admin UI: `commerce/mercur/apps/admin/CLAUDE.md`
+   - Vendor UI: `commerce/mercur/apps/vendor/CLAUDE.md`
+5. Task spec (`docs/ecommerce/tasks/ECOM-*.md`) before implementing a Linear SAN-* item
+6. `commerce/mercur/.claude/lessons.md` if present — known gotchas
+
+## Env (`commerce/.env`)
+
+User-local reference (not Infisical). Read for dev IDs; **never commit** values:
+
+| Var | Purpose |
+|-----|---------|
+| `MEDUSA_PUBLISHABLE_KEY` | Store API header `x-publishable-api-key` |
+| `SELLER_ID` | Demo seller `mdeai` (`sel_…`) |
+
+Runtime secrets (DB, Redis, Stripe) live in `commerce/mercur/packages/api/.env` — inject via Infisical `/commerce` per ECOM-C-003.
+
+## Skills — load ≤3 per task
+
+**Mercur repo skills** (canonical for `commerce/mercur/**`):
+
+| Path | Skill | When |
+|------|-------|------|
+| `commerce/mercur/.claude/skills/mercur-cli/SKILL.md` | `mercur-cli` | CLI, registry search, codegen, `blocks.json` |
+| `commerce/mercur/.claude/skills/mercur-blocks/SKILL.md` | `mercur-blocks` | Install registry blocks before custom code |
+| `commerce/mercur/.claude/skills/medusa-ui-conformance/SKILL.md` | `medusa-ui-conformance` | Admin/vendor UI — before inventing components |
+| `commerce/mercur/.claude/skills/dashboard-page-ui/SKILL.md` | `dashboard-page-ui` | Custom admin/vendor pages |
+| `commerce/mercur/.claude/skills/dashboard-form-ui/SKILL.md` | `dashboard-form-ui` | Forms in dashboards |
+| `commerce/mercur/.claude/skills/dashboard-tab-ui/SKILL.md` | `dashboard-tab-ui` | Tab layouts |
+| `commerce/mercur/.claude/skills/migration-guide/SKILL.md` | `migration-guide` | Mercur/Medusa migrations |
+
+**mdeapp skills** (Phase 2+ bridge only — `mdeapp/src/**`):
+
+| Skill | When |
+|-------|------|
+| `mdeapp/.claude/skills/building-with-medusa/SKILL.md` | Medusa modules, workflows, API routes in bridge code |
+| `mdeapp/.claude/skills/learning-medusa/SKILL.md` | Onboarding / tutorial only |
+| `mde-stripe` | ECOM-C-004+ checkout (not Connect until C-016 done) |
+| `mde-task-lifecycle` → `task-verifier` | Flip ECOM-* task to Done |
+| `testing` | Evidence under `tasks/testing/evidence/` |
+
+**Registry before custom code:** `bunx @mercurjs/cli search -q "<keyword>"` — see `mercur-blocks`.
+
+## MCP / docs (verify before external APIs)
+
+| Surface | Source |
+|---------|--------|
+| Mercur | https://docs.mercurjs.com/mcp · https://docs.mercurjs.com/llms.txt |
+| Medusa v2 | Medusa docs · `medusajs/examples` (agentic-commerce for Phase 3) |
+| Supabase (links only, Phase 3) | Supabase MCP — never product/cart/order truth |
+
+## Hard boundaries (Phase 1)
+
+- **Do not** re-run `mercur create` or re-clone `mercurjs/mercur` over `commerce/mercur/`
+- **Do not** clone `medusajs/medusa` monorepo for Phase 1
+- **Do not** touch `mdeapp/src/**` until ECOM-C-018 exit gate (except docs/tasks)
+- **Do not** Stripe Connect, vendor onboarding UX, CopilotKit, embeddings, or second storefront
+- **Do not** put product/cart/order truth in Supabase
+
+## Local URLs (this scaffold)
+
+| Service | URL |
+|---------|-----|
+| API health | http://localhost:9000/health |
+| Admin | http://localhost:9000/dashboard |
+| Vendor | http://localhost:9000/seller |
+| Store API | http://localhost:9000/store/* + publishable key |
+
+`bun run dev` from `commerce/mercur/` — **not** separate `:7000`/`:7001` unless `dev:all`.
+
+## Mercur Store API invariant
+
+`/store/products` only returns products linked via `product_seller` to sellers with `status: open`. Seeding without seller → `count: 0`. Fix: `bun run seed:mdeai-catalog`.
+
+## Commands
+
+```bash
+cd /home/sk/mdeai/mdeapp/commerce/mercur
+bun run dev
+bun run seed:mdeai-catalog    # idempotent — seller mdeai + 20 SKUs
+bun run seed:seller           # seller only
+```
+
+**Verify Store API:**
+
+```bash
+source /home/sk/mdeai/mdeapp/commerce/.env  # or export MEDUSA_PUBLISHABLE_KEY
+curl -s -H "x-publishable-api-key: $MEDUSA_PUBLISHABLE_KEY" \
+  "http://localhost:9000/store/products?limit=25" | jq '{count, titles: [.products[].title]}'
+```
+
+Pass: `count >= 20`.
+
+## Workflows import
+
+Use `@mercurjs/core/workflows` (not deep paths):
+
+```typescript
+import { createSellersWorkflow, approveSellerWorkflow } from "@mercurjs/core/workflows";
+```
+
+Product + seller link: `createProductsWorkflow` with `additional_data: { seller_id }` (hooks in `@mercurjs/core`).
+
+## Verification before Done
+
+| Touch | Check |
+|-------|-------|
+| Seed / catalog | `bun run seed:mdeai-catalog` exit 0; Store API `count >= 20` |
+| `packages/api` | `bun run build` or relevant `test:*` from `packages/api` |
+| Admin/vendor UI | lint/build for touched app |
+| Routes / codegen | `bunx @mercurjs/cli codegen` if API routes changed |
+
+Commerce task Done: pair with `task-verifier` + evidence in `tasks/testing/evidence/`.

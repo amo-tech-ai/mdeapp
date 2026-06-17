@@ -1,0 +1,23 @@
+---
+description: When editing task specs or flipping status, load task-verifier + mde-task-lifecycle before marking Done.
+globs:
+  - tasks/**
+  - tasks/**/F*.md
+  - tasks/**/SCREEN-*.md
+alwaysApply: false
+---
+
+# Task spec gate
+
+Editing `tasks/**` or claiming a task is Done → **read and follow**:
+
+1. `.claude/skills/mde-task-lifecycle/SKILL.md`
+2. `.claude/skills/task-verifier/SKILL.md`
+
+**Before `status: Done`:**
+
+- Prove acceptance criteria against disk + runtime (not the status field).
+- Add evidence file under `tasks/notes/` when the spec requires it.
+- Localhost proof when source changed: `cd mdeapp && npm run dev` + route/API responds.
+
+**Do not** flip Done from doc edits alone — verify `mdeapp/src/**` matches the spec.

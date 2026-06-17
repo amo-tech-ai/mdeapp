@@ -1,0 +1,51 @@
+---
+description: Stop docs disappearing — mdeapp-only git, branch from main, never sparse checkout
+alwaysApply: false
+globs: docs/**, tasks/**
+---
+
+# mdeai docs — git safety (docs do NOT get deleted)
+
+## Why docs "disappear" (root cause)
+
+Docs are **not deleted**. Git **replaces your working tree** when you:
+
+1. **Checkout a feature branch** forked **before** commit `6542210` (Jun 9 docs migration on `main`)
+2. **Work in the outer `mdeai/` repo** — `/mdeapp/` is **gitignored** there; only symlinks under `tasks/` are tracked, not file contents
+3. **Leave restores uncommitted** — `git checkout main -- docs/` stages files but `git checkout <old-branch>` drops them if not committed
+4. **Use stale worktrees** — `.worktrees/*` on old branches show ~20 files, not 2,600
+
+**PR #158 merged docs to `main`.** Feature branches that never merged `main` still show an empty tree.
+
+## Non-negotiable rules (agents + humans)
+
+| Rule | Why |
+|------|-----|
+| **All doc commits in `mdeapp/`** | `cd /home/sk/mdeai/mdeapp && git add docs/` — never outer `mdeai/` for content |
+| **Branch from fresh `main`** | `git fetch origin main && git checkout -b ai/san-NNN-… origin/main` |
+| **Merge `main` before doc work** | `git merge origin/main` on any branch older than Jun 9 2026 |
+| **Never `git checkout` old branch** without merging main first | checkout = wipe sparse tree |
+| **Run `npm run verify:docs-tree`** after branch switch | fails if &lt;2500 `docs/tasks` files |
+
+## Recovery (one command)
+
+```bash
+cd /home/sk/mdeai/mdeapp
+git fetch origin main
+git merge origin/main          # preferred — keeps history
+# OR: git checkout origin/main -- docs/
+npm run verify:docs-tree
+```
+
+## Canonical paths
+
+- Tasks: `mdeapp/docs/tasks/` (not outer `tasks/` — symlinks only)
+- Index: `docs/index-docs.md` · `docs/tasks/RESTORE-CHECKLIST.md`
+- Events diagrams: `docs/tasks/events/diagrams/00-INDEX.md`
+
+## Agent checklist before editing docs
+
+1. `git branch --show-current` — note branch name
+2. `npm run verify:docs-tree` — if FAIL, merge `origin/main` first; do not organize docs on a sparse branch
+3. Commit in **mdeapp** repo only
+4. Do not create worktrees from pre-migration SHAs

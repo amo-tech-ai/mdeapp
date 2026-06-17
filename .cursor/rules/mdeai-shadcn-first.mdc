@@ -1,0 +1,43 @@
+---
+description: STRICT — Use shadcn/ui components and Field + react-hook-form for all new forms and UI primitives. Load shadcn skill before custom markup.
+globs:
+  - mdeapp/src/components/**
+  - mdeapp/src/app/**
+alwaysApply: false
+---
+
+# shadcn/ui first — forms and components
+
+**Skill:** `.claude/skills/shadcn` · **Design tokens:** [`DESIGN.MD`](../../../DESIGN.MD) · **Lean:** [`03-lean.md`](../docs/03-lean.md)
+
+## Hard rules
+
+1. **Search before inventing** — `npx shadcn@latest search @shadcn` or `add <component>` before hand-rolling UI ([components](https://ui.shadcn.com/docs/components) · [blocks](https://ui.shadcn.com/blocks)).
+2. **Forms = react-hook-form + shadcn Field** — follow [Next.js forms](https://ui.shadcn.com/docs/forms/next) and [RHF forms](https://ui.shadcn.com/docs/forms/react-hook-form). Use `FieldGroup`, `Field`, `FieldLabel`, `FieldError`, `Controller` — not raw `div` + `space-y-*` + uncontrolled `useState` for new forms. If `field` is missing: `npx shadcn@latest add field` (+ `form` if needed).
+3. **Primitives from `@/components/ui/*`** — `Button`, `Input`, `Textarea`, `Select`, `Sheet`, `Dialog`, `Card` (full composition), `Calendar` + `Popover` for dates.
+4. **Semantic tokens only** — `bg-background`, `text-muted-foreground`, `border-border`; no hardcoded `gray-*` ([theming](https://ui.shadcn.com/docs/theming)).
+5. **CLI for new pieces** — `npx shadcn@latest add <name>` ([CLI](https://ui.shadcn.com/docs/cli)); match existing `components.json`.
+
+## Form pattern (copy)
+
+```tsx
+import { Controller, useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+
+// defaultValues + zodResolver(schema) · submit via server action or fetch
+```
+
+## When legacy `useState` forms exist
+
+- **New screens** (SAN-495, SAN-496, host wizard steps): **must** use Field + RHF.
+- **Surgical fixes** on shipped sheets (e.g. venue booking): OK to patch without full RHF migration unless the task is form-focused.
+
+## Pair with
+
+| Work | Also load |
+|------|-----------|
+| Events UI | `mde-events` + `copilotkitV1` |
+| Any implement | `karpathy-guidelines` |
+| Ship / Done | `task-verifier` (class S) |

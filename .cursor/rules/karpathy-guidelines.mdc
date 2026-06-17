@@ -1,0 +1,48 @@
+---
+description: Behavioral guidelines to reduce common LLM coding mistakes. Use when writing, reviewing, or refactoring code to avoid overcomplication, make surgical changes, surface assumptions, and define verifiable success criteria.
+alwaysApply: true
+---
+
+# Karpathy behavioral guidelines
+
+Bias toward caution over speed. For trivial tasks, use judgment. Full skill: `.agents/skills/karpathy-guidelines/SKILL.md`.
+
+## 1. Think before coding
+
+- State assumptions explicitly; ask if uncertain.
+- If multiple interpretations exist, present them — do not pick silently.
+- If a simpler approach exists, say so; push back when warranted.
+- If unclear, stop, name the confusion, ask.
+
+## 2. Simplicity first
+
+- Minimum code that solves the problem; nothing speculative.
+- No unrequested features, abstractions, flexibility, or error handling for impossible cases.
+- If 200 lines could be 50, rewrite.
+
+## 3. Surgical changes
+
+- Do not "improve" adjacent code, comments, or formatting.
+- Do not refactor unrelated code; match existing style.
+- Mention unrelated dead code; do not delete unless asked.
+- Remove orphans **your** changes created (unused imports, vars, functions).
+- **Test:** every changed line traces to the user's request.
+
+## 4. Goal-driven execution
+
+Turn requests into verifiable checks:
+
+| Request | Success criteria |
+|---------|------------------|
+| Add validation | Tests for invalid inputs pass |
+| Fix bug | Repro test fails then passes |
+| Refactor | Tests pass before and after |
+
+Multi-step work — brief plan with verification per step:
+
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+```
+
+Weak criteria ("make it work") need clarification before coding.

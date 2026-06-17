@@ -1,0 +1,35 @@
+---
+description: Rich generative cards are the sole primary listing surface — suppress duplicate Map results and fallback lists
+globs:
+  - mdeapp/src/components/copilot/search-tool-renders.tsx
+  - mdeapp/src/components/chat/center-panel-map-results-slot.tsx
+  - mdeapp/src/components/chat/chat-results-column.tsx
+  - mdeapp/src/components/chat/event-results-panel.tsx
+  - mdeapp/src/components/chat/rich-card-results-context.tsx
+  - mdeapp/src/platform/copilot/rich-card-results.ts
+---
+
+# Rich card dedup — one listing surface
+
+When a search vertical renders **generative cards in chat** (`RICH_CARD_CATEGORIES` in `rich-card-results.ts`), that vertical owns the list UX.
+
+## Do
+
+- Register card counts via `RichCardResultsRegistrar` in every rich tool render (`RentalResults`, `EventResults`, `GenericResults`, `GroundedPlaceResults`).
+- Keep **map pin sync** (`ToolPinsSync`) — pins on the map are not duplicate lists.
+- Show **compact attribution only** when required (`WebCitationList`, `GroundingAttribution`) — never duplicate venue name lists already on cards.
+- Hide `ChatResultsColumn` / "Map results" via `CenterPanelMapResultsSlot` + `shouldSuppressGenericMapResults`.
+
+## Do not
+
+- Render the same entities as cards **and** generic pin rows **and** plain-text source lists.
+- Put `EventCard` lists in `EventResultsPanel` — panel is **web citation attribution only**.
+- Add vertical-specific hacks in `CenterPanelMapResultsSlot`; extend `RICH_CARD_CATEGORIES` instead.
+
+## Verification
+
+Before marking Done on listing UX work:
+
+1. **Restart dev server** (`pkill` on :3001/:4111, then `cd mdeapp && npm run dev`) — hot reload is not enough for CopilotKit tool render changes.
+2. `npx playwright test e2e/rich-card-dedup.spec.ts --project=chromium`
+3. Assert `[data-testid="results-column"]` count is 0 when rich cards visible.

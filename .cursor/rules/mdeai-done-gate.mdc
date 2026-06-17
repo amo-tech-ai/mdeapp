@@ -1,0 +1,124 @@
+---
+description: STRICT Done gate — P0 launch and full Evidence Score path. Superseded for daily work by mdeai-workflow; load for phase:launch or explicit audit.
+globs:
+  - tasks/**
+  - mdeapp/todo.md
+alwaysApply: false
+---
+
+# mdeai Done gate — track, verify, prove
+
+> **Daily work:** use [`mdeai-workflow.mdc`](./mdeai-workflow.mdc) classes D/C/U/S. This rule = **P0 / launch / full audit** depth.
+
+Orchestrates: [`mdeai-real-world-proof-pr-review.mdc`](./mdeai-real-world-proof-pr-review.mdc) · [`mdeai-task-verifier.mdc`](./mdeai-task-verifier.mdc) · [`mdeai-events-pre-impl-verify.mdc`](./mdeai-events-pre-impl-verify.mdc) · [`mdeai-events-task-skill-mcp-gate.mdc`](./mdeai-events-task-skill-mcp-gate.mdc) · [`mdeai-testing.mdc`](./mdeai-testing.mdc) · [`mdeai-events-changelog.mdc`](./mdeai-events-changelog.mdc) · [`mdeai-skills-best-practices.mdc`](./mdeai-skills-best-practices.mdc) · [`mdeai-linear.mdc`](./mdeai-linear.mdc)
+
+## Task naming (mandatory — Events + all SAN work)
+
+```text
+SAN-### · SPEC-ID — <full Linear title>
+```
+
+Example: **SAN-731 · UI-004 — Event detail loading skeleton + hero alt (a11y)**
+
+Never SAN-only, spec-only, or abbreviated titles in execution lists, PRs, commits, or chat. Events detail: [`tasks/events/notes/1-notes.md`](../../../tasks/events/notes/1-notes.md).
+
+---
+
+## Workflow (every task)
+
+| Step | When | Action |
+|------|------|--------|
+| **1. Name** | Always | Full `SAN-### · SPEC-ID — title` in branch, PR, Linear, notes |
+| **2. Before code** | Start | **Pre-verify** ([`mdeai-events-pre-impl-verify.mdc`](./mdeai-events-pre-impl-verify.mdc)): skills + MCP + task-verifier → update `todo.md` readiness + failure points; **no code if readiness &lt; 70** |
+| **3. After code** | Pre-PR | Vitest → Playwright → **real-world browser** (localhost screenshot) → evidence MD — see [`mdeai-real-world-proof-pr-review.mdc`](./mdeai-real-world-proof-pr-review.mdc) |
+| **4. Before PR** | PR open | Local **`cr review --agent --base main`** + **`cubic review --base main`**; fix Critical/Warning |
+| **5. Before merge** | PR ready | cubic + CodeRabbit **PR threads resolved**; re-run browser if UI changed; `npm run floor` / CI green |
+| **6. Linear** | Ship | **In Review** + evidence link; **Done** only after user approval |
+
+One issue = one branch = one PR (`Closes SAN-###`).
+
+---
+
+## Verification stack (order)
+
+```text
+Skills + MCP docs  →  implement  →  unit/Playwright
+  →  REAL-WORLD BROWSER (mandatory): Playwright and/or Cursor Browser MCP
+      → localhost:3001 screenshot + console clean
+      → Chrome DevTools MCP if failures (network/console)
+      → https://www.mdeai.co/ or https://mdeai.co/ before merge
+  →  LOCAL cr review + cubic review (pre-PR)
+  →  evidence file  →  open PR
+  →  resolve cubic + CodeRabbit PR threads  →  merge
+  →  changelog (Events)  →  Linear In Review
+```
+
+Full spec: [`mdeai-real-world-proof-pr-review.mdc`](./mdeai-real-world-proof-pr-review.mdc)
+
+**Anti-fake-done:** Memory and Linear `status:` are not evidence. Re-probe disk + runtime.
+
+---
+
+## Evidence file
+
+Path: `tasks/testing/evidence/YYYY-MM-DD/SAN-###-<slug>-RESULTS.md`
+
+```markdown
+# SAN-### · SPEC-ID — <full Linear title>
+
+| Check | localhost | prod |
+|-------|-----------|------|
+| curl GET / | | |
+| targeted vitest | | |
+| Playwright | | |
+| Real-world browser (localhost) | PASS + screenshot path | PASS/BLOCKED + screenshot path |
+| Console / network | clean | clean |
+| Playwright | PASS/FAIL | — |
+| cubic (local + PR) | PASS — threads resolved | |
+| CodeRabbit (local + PR) | PASS — threads resolved | |
+| floor | PASS/FAIL | |
+
+Commits: <sha> · PR: #NNN
+Screenshot: tasks/testing/evidence/YYYY-MM-DD/SAN-###.png
+```
+
+Required for persona-visible UI/agent changes before In Review.
+
+---
+
+## Events tasks — extra gate
+
+Before Linear In Review/Done on Events work → append graded row to [`tasks/events/changelog.md`](../../../tasks/events/changelog.md) per [`mdeai-events-changelog.mdc`](./mdeai-events-changelog.mdc).
+
+**Canonical todo order:** [`tasks/events/todo.md`](../../../tasks/events/todo.md) — agents must read before picking the next Events issue.
+
+### Cycle 1 venue chain (strict order — Phase B)
+
+Do **not** reorder or skip. **Do not assign to Cycle 1 until Phase A gate clears** (see [`mdeai-events-gate-audit.mdc`](./mdeai-events-gate-audit.mdc)). Start Phase B only after SAN-731 + SAN-135 merged on `main`:
+
+```text
+SAN-492 · EVT-033 — Event venue + offerings schema
+  → SAN-493 · EVT-034 — Seed Mamacita + 5 event partners
+  → SAN-510 · EVT-051 — Wire: Event offerings panel + Event Venue CTA
+  → SAN-511 · EVT-052 — Wire: Request proposal modal
+  → SAN-494 · EVT-035 — Restaurant card Event Venue CTA
+  → SAN-495 · EVT-036 — Event offerings detail panel
+  → SAN-496 · EVT-037 — Request proposal modal (HITL)
+```
+
+After each ship: update `todo.md` row (Grade, % correct, Success rate) + `changelog.md` + Linear (In Review with evidence).
+
+**Pre-implementation:** Every task row must have Readiness + Success rate (est.) + Failure points before coding ([`mdeai-events-pre-impl-verify.mdc`](./mdeai-events-pre-impl-verify.mdc)).
+
+---
+
+## PR merge checklist
+
+- [ ] **Real-world proof** — localhost browser screenshot in evidence ([`mdeai-real-world-proof-pr-review.mdc`](./mdeai-real-world-proof-pr-review.mdc))
+- [ ] **Pre-PR bots** — `cr review --agent --base main` + `cubic review --base main` run
+- [ ] Scope = one `SAN-*` issue; full title in PR body
+- [ ] cubic + CodeRabbit **PR threads resolved** (or wont-fix in evidence)
+- [ ] floor / Vercel green
+- [ ] Evidence path in PR comment (and changelog if Events)
+- [ ] Prod browser/curl after deploy for ship claims
+- [ ] Linear **In Review** — not Done until user approves

@@ -1,0 +1,68 @@
+---
+description: When to use shadcn/ui docs, CLI, blocks, theming, charts, and React Hook Form — mdeapp UI work
+globs: mdeapp/src/**/*.tsx,mdeapp/components.json,mdeapp/src/app/globals.css
+alwaysApply: false
+---
+
+# shadcn/ui — doc routing (mdeapp)
+
+**App root:** `mdeapp/` only (`components.json` → `base-nova`, RSC, Tailwind v4, `lucide`).  
+**Deep rules:** load skill `shadcn` (`.claude/skills/shadcn/` → `rules/forms.md`, `composition.md`, `styling.md`).  
+**CLI:** always `cd mdeapp && npx shadcn@latest …` (match project package manager).
+
+## Which doc to open first
+
+| You are doing… | Open | Do not |
+|----------------|------|--------|
+| New component missing from disk | [Components](https://ui.shadcn.com/docs/components) → `npx shadcn@latest docs <name>` → `add` | Guess APIs from memory |
+| Bootstrap / fix `components.json` | [Next installation](https://ui.shadcn.com/docs/installation/next) | Re-init without user approval |
+| Understand philosophy / distribution | [Introduction](https://ui.shadcn.com/docs) | Treat as npm black-box library |
+| Colors, tokens, dark mode | [Theming](https://ui.shadcn.com/docs/theming) — edit `src/app/globals.css` only | Raw `bg-blue-500`, manual `dark:` overrides |
+| **Any form** (booking, HITL, auth) | [React Hook Form](https://ui.shadcn.com/docs/forms/react-hook-form) + `Field`/`FieldGroup` | TanStack Form, Formisch, `useActionState`, raw `Label`+`div` layout |
+| Admin filters / single search box | `Input` only — no full form framework | RHF for one field |
+| Dashboard / Patricia metrics | [Charts](https://ui.shadcn.com/charts/area) → add `chart` + Recharts | Custom chart CSS or random npm chart lib |
+| Full page shell (login, sidebar dashboard) | [Blocks](https://ui.shadcn.com/blocks) — copy/adapt, then trim | Blocks for one field inside existing `/chat` shell |
+| Venue booking sheet (VEN-017+) | RHF + Zod + `Sheet` + `Field` — see `tasks/venues/docs/venues-booking.md` §10.1 | Multi-step wizard, second form impl for 021/019 |
+
+## Forms (required in mdeapp)
+
+```text
+FieldGroup → Field → FieldLabel + control (Input / Textarea / Select / Checkbox / Calendar)
+useForm + zodResolver(schema)
+Invalid: data-invalid on Field, aria-invalid on control
+```
+
+Install path: `field`, `input`, `textarea`, `select`, `checkbox`, `calendar` (if date picker) + `react-hook-form` `@hookform/resolvers`.
+
+## Theming (required)
+
+- Use semantic tokens: `bg-background`, `text-muted-foreground`, `border-border`, `bg-primary`.
+- Spacing: `flex` + `gap-*` — never `space-x-*` / `space-y-*` on form layout.
+- Icons in `Button`: `data-icon="inline-start"` — no `size-4` on icons inside components.
+
+## Charts (when needed)
+
+- Use shadcn `Chart` wrapper + chart CSS variables (`chart-1`…`chart-5` in globals).
+- Phase 1 default: **no charts** unless task spec names admin/analytics surface.
+
+## Blocks (when needed)
+
+- Use for **new routes** (e.g. `/admin/*` shell, marketing login) — `npx shadcn add <block-id>`.
+- **Not** for CopilotKit chat column, map panel, or generative cards — compose existing `Card`/`Sheet`/`Sidebar` instead.
+- After `add`, read generated files; fix imports to `@/components/ui/*` and project `iconLibrary`.
+
+## CLI checklist
+
+1. `npx shadcn@latest info --json` — aliases, installed components, `base` vs `radix`.
+2. Check `src/components/ui/` before `add`.
+3. `npx shadcn@latest docs <component>` before editing that component.
+4. Never `--overwrite` without explicit user OK.
+
+## mdeai surfaces (quick map)
+
+| Surface | shadcn primitives |
+|---------|-------------------|
+| `/chat` detail column | `Sheet`, `Card`, `ScrollArea`, `Badge`, `Button` |
+| Booking (café/restaurant/nightlife) | `Sheet` + RHF `Field` form |
+| `/admin/*` queue | `Table`, `Input` filters, `Badge` status |
+| Nav (SCREEN-002) | `Sidebar` / `Tooltip` — already wired |

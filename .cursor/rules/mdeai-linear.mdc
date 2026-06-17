@@ -1,0 +1,134 @@
+---
+description: Keep MDEAPP Linear board in sync with tasks/** — 4-column workflow, implementation-order sort in Todo/In Review, MCP updates, Cursor delegation.
+globs:
+  - tasks/**
+  - mdeapp/**
+alwaysApply: false
+---
+
+# mdeai Linear — board sync & implementation order
+
+**Project:** [MDEAPP](https://linear.app/sanjiovani/project/mdeapp-099cd7795071/issues) · Team **Sanjiovani**  
+**Events view:** [events board](https://linear.app/sanjiovani/view/events-02e135249149)  
+**Playbook:** [`tasks/linear/linear.md`](../../../tasks/linear/linear.md) (hub) · [`tasks/linear/01-linear.md`](../../../tasks/linear/01-linear.md) · [`tasks/linear/12-linear-official-practices.md`](../../../tasks/linear/12-linear-official-practices.md) · [`tasks/linear/02-views-sort.md`](../../../tasks/linear/02-views-sort.md) · [`tasks/linear/05-issue-description-standard.md`](../../../tasks/linear/05-issue-description-standard.md)  
+**Cursor ↔ Linear:** [Cursor integration docs](https://cursor.com/docs/integrations/linear) · [Linear docs](https://linear.app/docs/)  
+**Naming in chat/docs:** [`mdeai-task-naming.mdc`](./mdeai-task-naming.mdc) + [`mdeai-response-style.mdc`](./mdeai-response-style.mdc) — always `SAN-### · SPEC-ID — title`, never bare IDs.
+
+## Source of truth
+
+```text
+tasks/** spec (status + depends_on + evidence)  →  Linear issue (mirror)
+```
+
+Never mark a Linear issue **Done** without **user approval** (see § Done approval gate). Disk proof (`tasks/evidence/`, `task-verifier`) moves issues to **In Review** only — not Done. Never reorder Todo to match gut feel — use **implementation order** below.
+
+## Board workflow (only these columns)
+
+| Column | When | Sort |
+|--------|------|------|
+| **Todo** | Ready, not started | **Manual** — top = next to implement |
+| **In Progress** | Active agent/dev (max 1–3) | By priority |
+| **In Review** | PR open / awaiting merge | **Manual** — implementation order; **~10 active items near top** |
+| **Done** | **User-approved** only — merged + verified | Closed |
+
+Flow: **Todo → In Progress → In Review → Done** (Done requires explicit user approval; no agent/script skip).
+
+## Done approval gate (hard rule)
+
+**Only the user** may move an issue to **Done**. Playbook: [`tasks/linear/04-completion-approval.md`](../../../tasks/linear/04-completion-approval.md).
+
+| Actor | When evidence passes | Linear state |
+|-------|----------------------|--------------|
+| Agent / script | task-verifier + evidence file | **In Review** + comment with evidence path |
+| User | Reviews evidence, approves | **Done** |
+| User (batch) | Adds label `approved-done` | Agent may set Done in same session if user asked |
+
+Import scripts map disk `status: Done` → **In Review**, never Done.
+
+Remove or hide extra statuses (Backlog, Triage, Canceled duplicates) on the MDEAPP project board.
+
+## Implementation order (authoritative)
+
+Pull **Todo** top-to-bottom from these sources (first match wins):
+
+1. **P0 pull order** — [`tasks/linear/02-views-sort.md`](../../../tasks/linear/02-views-sort.md) § P0 pull order  
+2. **Screen-first order** — [`tasks/INDEX-SCREEN-FIRST.md`](../../../tasks/INDEX-SCREEN-FIRST.md) implementation table  
+3. **Screen tracker** — [`tasks/screens/INDEX.md`](../../../tasks/screens/INDEX.md) (🟡/⚪ rows first, by order column)  
+4. **Milestone bucket** — P0 → P1 Events → P1 Screens & café → P1 Maps → Phase 2 → Deferred (never pull Deferred before P0 Done)
+
+Within a milestone: **Priority** (Urgent > High > Medium > Low) → **`depends_on` unblocked** → spec file order.
+
+### Current P0 queue (update when disk changes)
+
+| Order | Issue | Spec | State target |
+|------:|-------|------|--------------|
+| 079 | SAN-178 | Andrés G1 paid proof | Todo / In Progress |
+| 080 | SAN-116 | EVP-003 webhook secrets | In Progress |
+| 081 | SAN-117 | EVP-013 EventCard E2E | Partial |
+| 082 | *(import)* | G3 host publish proof | Partial |
+| 083 | SAN-115 | EVP-001 proof ledger | Blocked |
+| 084 | SAN-100 | F32 prod smoke | Todo |
+| 085 | *(import)* | AUTH-011 prod auth | Ready |
+
+After P0: **010-scr** map panel · **026 Phase B** (VEC) · **017-scr** auth · **CAFE-001**.
+
+## Agent contract — keep Linear updated
+
+When you **start**, **finish**, or **open a PR** on a tracked task:
+
+1. Find issue — `import-log.json` task ID → `SAN-*`, or Linear MCP `list_issues` with `project: MDEAPP` + title prefix (`SCREEN-021`, `F47`, etc.)
+2. Update state via Linear MCP `save_issue`:
+   - Start coding → **In Progress**
+   - PR opened → **In Review** (+ link PR in `links`)
+   - `task-verifier` + evidence pass → **In Review** (+ comment with evidence path) — **never Done unless user explicitly approves**
+3. **Todo reorder** — after status changes, ensure next unblocked P0 item is **top of Todo** (manual drag in UI, or note in comment if MCP cannot set sort)
+4. **In Review** — keep ~10 implementation tasks visible near top, ordered by implementation order (not PR date)
+
+When flipping `tasks/**` frontmatter `status: Done` → update Linear to **In Review** pending user approval (or tell user which SAN-* to approve).
+
+## Cursor Cloud Agent delegation
+
+Per [Cursor Linear integration](https://cursor.com/docs/integrations/linear):
+
+- Assign issue to **Cursor**, or comment `@Cursor …`
+- Always include repo: `@Cursor implement … [repo=amo-tech-ai/mdeapp]`
+- Optional: `[branch=feature-name]` · `[model=…]`
+- Label group **`repo`** → child `amo-tech-ai/mdeapp` on issues/projects (see Cursor docs § Repository labels)
+
+Cloud Agent PR → move issue to **In Review**; user approves → **Done**.
+
+## MCP checklist
+
+| Action | Tool |
+|--------|------|
+| List / find issues | `list_issues` — `project: MDEAPP`, `state`, `label` |
+| Update status / links | `save_issue` — `state`, `links`, `description` |
+| **Weekly changelog** | `save_status_update` — `type: initiative`, `initiative: Phase 1 — mdeai MVP launch` — template [`tasks/linear/templates/initiative-update.md`](../../../tasks/linear/templates/initiative-update.md) |
+| Team statuses | `list_issue_statuses` — team `Sanjiovani` |
+| Bulk import / deps | `node scripts/linear-import-tasks.mjs` then `linear-organize-project.mjs` |
+| **Todo manual sort** | `node scripts/linear-sort-todo.mjs` — all Todo issues by milestone + impl order |
+
+`LINEAR_API_KEY` in repo root `.env.local` (never commit).
+
+## Views (Linear UI)
+
+Create/maintain under **Project → Views** — [`tasks/linear/09-views-setup.md`](../../../tasks/linear/09-views-setup.md) · [`tasks/linear/02-views-sort.md`](../../../tasks/linear/02-views-sort.md):
+
+- **Now — P0 MVP** — milestone P0, sort Priority
+- **Phase 1 active** — P0 + P1 milestones, group by Milestone
+- **Events** — [events-02e135249149](https://linear.app/sanjiovani/view/events-02e135249149) — keep In Review stack ordered
+
+## Anti-patterns
+
+- ❌ Agent or import script sets **Done** without user approval
+- ❌ Todo sorted by `updatedAt` or created date
+- ❌ Linear Done while `tasks/**` still `Not Started` / no evidence
+- ❌ Starting Deferred milestone work while P0 open
+- ❌ >3 issues In Progress without user approval
+- ❌ New issue without `track:*` label + milestone
+
+## Related rules
+
+- Done gate: `mdeai-task-verifier.mdc`
+- Commit/PR: `mdeai-commit-discipline.mdc` (In Review = PR open)
+- Testing evidence: `mdeai-testing.mdc`

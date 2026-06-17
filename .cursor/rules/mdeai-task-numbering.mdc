@@ -1,0 +1,127 @@
+---
+description: Task spec numbering — tier order (core → mvp → post-mvp → advanced), filename patterns, index files, no duplicate trackers.
+globs:
+  - tasks/**
+alwaysApply: false
+---
+
+# mdeai task numbering
+
+When creating, renaming, or reordering anything under `tasks/**`, follow **one global build order** and **one canonical file per task**.
+
+## Tier order (always)
+
+Execute and list tasks in this sequence within each domain:
+
+```text
+core → mvp → post-mvp → advanced
+```
+
+| Tier | When | Typical scope |
+|------|------|----------------|
+| **core** | Revenue, auth, platform gates, P0 infra | Must ship before vertical MVP |
+| **mvp** | Phase 1 persona-visible hero flows | Done gate = localhost + tests |
+| **post-mvp** | Polish, vitest depth, optional workflows | After MVP index is complete |
+| **advanced** | Phase 2+, automation, partner CRM, suspend/resume | Explicitly out of Phase 1 |
+
+**Never** interleave tiers in an index table. **Never** create a second file that tracks the same work (no lifecycle “mirror” specs).
+
+---
+
+## Required index per domain
+
+Every task folder that has ordered specs **must** have a tier index authors update in the same PR as renames:
+
+| Folder | Index file |
+|--------|------------|
+| `tasks/core/` | Listed in [`tasks/INDEX.md`](../tasks/INDEX.md) F01–Fxx table |
+| `tasks/venues/tasks/` | [`mvp/mvp-index.md`](../tasks/venues/tasks/mvp/mvp-index.md) + [`post-mvp/post-mvp-index.md`](../tasks/venues/tasks/post-mvp/post-mvp-index.md) |
+| `tasks/events/` | [`INDEX.md`](../tasks/events/INDEX.md) |
+| `tasks/maps/` | [`INDEX.md`](../tasks/maps/INDEX.md) + [`NUMBERING.md`](../tasks/maps/NUMBERING.md) |
+| `tasks/openclaw/tasks/` | [`index-ocl.md`](../tasks/openclaw/index-ocl.md) |
+
+New domain folder → add `{tier}-index.md` or single `INDEX.md` with tier sections **core · mvp · post-mvp · advanced** in order.
+
+---
+
+## Filename patterns (by domain)
+
+Use **zero-padded step numbers** in **implementation order**. Put **tier** and **layer** in the name when the domain uses them.
+
+| Domain | Pattern | Example | Notes |
+|--------|---------|---------|-------|
+| Platform | `F{NN}-*.md` | `F09-floor-script-and-vitest.md` | `tasks/core/` — F01–F13, F18–F20, F48–F50 |
+| Venues data | `data-{NNN}-*.md` | `data-004-restaurant-seed.md` | `tasks/venues/tasks/mvp/data/` steps **01–08** |
+| Venues build | `{NNN}-ven-{layer}-*.md` | `015-ven-mastra-request-booking-tool.md` | MVP **09–24**; post-MVP **25–34** |
+| Venues wireframes | `{NNN}-{scr\|wire}-*.md` | `008-scr-restaurant-listings-map.md` | Design refs in `mvp/wireframes/` — not build step numbers |
+| Events | `EVP-{NNN}-{tier}-*.md` | `EVP-002-core-ticket-checkout-webhook-port.md` | Tier in filename: `core` · `mvp` · `advanced` |
+| Maps | `MAP-{NNN}-*.md` | `MAP-004-places-grounding-clients.md` | Order in [`maps/INDEX.md`](../tasks/maps/INDEX.md) |
+| OpenClaw | `OCL-{NNN}-{tier}-*.md` | `OCL-013-mvp-coffee-tour-crawler.md` | Ranges in [`openclaw/tasks/INDEX.md`](../tasks/openclaw/tasks/INDEX.md) |
+| Screens | `{NNN}-scr-*` / `{NNN}-wire-*` | Paired scr+wire per [`SCR-WIRE-PAIRING-CHECKLIST.md`](../tasks/screens/SCR-WIRE-PAIRING-CHECKLIST.md) |
+
+**Layer tokens** (venues build + post-mvp): `mastra` · `copilot` · `vitest` · `data` · `supabase` · `maps` (when Maps-specific)
+
+---
+
+## Venues spine (reference)
+
+```text
+mvp/data/     01–08   data-001 … data-008
+mvp/          09–24   009-ven-* … 024-ven-*
+post-mvp/     25–34   025-ven-* … 034-ven-*
+advanced/     35+     035-ven-* … (when folder exists)
+wireframes/   005–008 scr/wire (design only)
+```
+
+Hub: [`tasks/venues/INDEX.md`](../tasks/venues/INDEX.md) · [`tasks/venues/tasks/NUMBERING.md`](../tasks/venues/tasks/NUMBERING.md)
+
+---
+
+## Frontmatter (required on every spec)
+
+```yaml
+task_id: ven-015          # or F09, EVP-002-core, MAP-004, OCL-013-mvp
+mvp_step: 015             # or post_mvp_step: 025 — match filename step
+layer: mastra             # mastra | copilot | vitest | data | supabase | UI | …
+depends_on: [ven-014]     # use canonical ids only — not CKV-*, MSV-*, CAF-*
+unblocks: [ven-016]
+status: Not Started
+```
+
+- **`depends_on` / `unblocks`** must reference **canonical** ids (`ven-*`, `data-*`, `F*`, `EVP-*`), not retired prefixes.
+- Do **not** add `legacy_id` columns to indexes or create redirect stub files.
+
+---
+
+## Adding or renumbering tasks
+
+1. Read the domain **index** — confirm tier and next free step number.
+2. Pick tier: default **mvp** unless clearly platform (**core**) or Phase 2+ (**advanced** / **post-mvp**).
+3. Name file with step + domain prefix + layer (if venues).
+4. Insert row in index in **dependency order**, not alphabetical.
+5. Update `depends_on` on downstream specs in the same change.
+6. **Delete** superseded duplicate trackers — do not leave “Moved →” stubs.
+
+---
+
+## Anti-patterns (reject in review)
+
+| Don't | Do instead |
+|-------|------------|
+| CAF-010 / CKV-001 / MSV-005 parallel files | One `ven-NNN` spec |
+| `legacy/` redirect stubs | Update links; delete old file |
+| Second index with different order | Single `*-index.md` per tier spine |
+| scr/wire as build steps 09–24 | Wireframes in `wireframes/`; build in `ven-*` |
+| advanced work in mvp folder | `post-mvp/` or `advanced/` + index row |
+
+---
+
+## Verification
+
+After numbering changes:
+
+```bash
+node scripts/verify-scr-wire-pairing.mjs   # if scr/wire touched
+```
+
+Before marking Done: `task-verifier` + index row status matches disk.

@@ -1,0 +1,28 @@
+---
+description: mdeai CopilotKit 1.55.2 + Mastra — which examples to copy (not CopilotKit monorepo vendor rules)
+globs:
+  - mdeapp/**
+  - tasks/**
+  - plan/**
+alwaysApply: false
+---
+
+# mdeai CopilotKit examples (Phase 1)
+
+**Do not** load `CopilotKit/.cursor/rules/*` for mdeapp work — those target CopilotKit upstream development (coagents paths, v2 APIs).
+
+**Use instead:**
+- [`index.md`](../index.md) §3 CopilotKit examples (scores + AVOID/DEFER)
+- [`.claude/skills/copilotkit-integrations/`](../.claude/skills/copilotkit-integrations/) + [`copilotkit/`](../.claude/skills/copilotkit/)
+- Reference tasks: [`tasks/copilotkit/INDEX.md`](../tasks/copilotkit/INDEX.md)
+
+**Hard constraints:** CopilotKit **1.55.2** only · runtime = `integrations/mastra` · **no** `examples/v2/*` · **no** LangGraph/Python agent runtimes in product code.
+
+**MVP patterns:**
+| Persona | Examples |
+|---------|----------|
+| Roberto | `v1/form-filling`, `canvas/mastra-pm`, `canvas/mastra`, `showcases/banking` |
+| Camila | `v1/chat-with-your-data` (UI), `showcases/generative-ui`, `canvas/mastra` (`/chat`) |
+| Maps layout | `v1/travel` (progress UI only — map is OSM; use vis.gl for pins) |
+
+**Defer:** `showcases/multi-agent-canvas`, `showcases/a2a-travel` (A2A + Python orchestrators).

@@ -1,0 +1,102 @@
+---
+description: Skills + MCP + task-verifier before Done. P0 tasks in mdeapp/todo.md; daily work uses mdeai-workflow.
+globs:
+  - mdeapp/**
+  - tasks/**
+alwaysApply: false
+---
+
+# Task skill + MCP gate (100% correct before Done)
+
+> **Lean path:** [`mdeai-workflow.mdc`](./mdeai-workflow.mdc) — ≤3 skills, lite pre-flight for C/U. Full gate below for **P0 launch**.
+
+Parent: [`mdeai-proof-driven-delivery.mdc`](./mdeai-proof-driven-delivery.mdc) · [`mdeai-skills-best-practices.mdc`](./mdeai-skills-best-practices.mdc)  
+**Index:** [`mdeapp/index-skills.md`](../index-skills.md) · **Per-task matrix:** [`mdeapp/todo.md`](../todo.md) § Skill + MCP gate  
+**Scan root:** `mdeapp/.claude/skills/` (symlinks → `.agents/skills/`)
+
+## Agent contract (every task, every session)
+
+**Do not mark a task Done, merge-ready, or "100% correct" without all three:**
+
+1. **Skills loaded** — read `SKILL.md` for each skill in the task's todo row (≤5 total)
+2. **MCP verified** — call matching MCP before external API claims or AC sign-off
+3. **`task-verifier` pass** — disk + tests + runtime + prod proof; Evidence Score ≥ **90** for P0 `phase:launch`
+
+## Mandatory workflow (in order)
+
+| Step | Action | Artifact |
+|------|--------|----------|
+| **0 Pre-flight** | Linear MCP `get_issue` + spec on disk + route skills/MCP from todo row | `tasks/testing/evidence/YYYY-MM-DD/SAN-###-PREFLIGHT.md` |
+| **1 Implement** | Only after pre-flight **PROCEED** | — |
+| **2 Test** | L1 Vitest + L2 Playwright (if UI/agent) | evidence file |
+| **3 Real-world** | Browser / Playwright / Chrome DevTools on localhost + prod | screenshot path in evidence |
+| **4 PR review** | cubic + CodeRabbit when PR exists | review table in evidence |
+| **5 Completion gate** | Re-run `task-verifier` checklist; score all 5 Evidence dimensions | update `mdeapp/changelog.md` + `mdeapp/todo.md` |
+| **6 Linear** | In Review with evidence link; **Done** only after user OK | — |
+
+## 100% correct definition (P0 launch tasks)
+
+A task is **100% correct** only when **all** pass:
+
+| Gate | Requirement |
+|------|-------------|
+| Spec | Linear AC + disk spec match; pre-flight **PROCEED** |
+| Skills | Every skill in todo row **read** (`SKILL.md`); logged in pre-flight |
+| MCP | Every MCP in todo row **called**; contradictions fixed before code |
+| Tests | Targeted Vitest green; Playwright if persona-visible |
+| Runtime | `npm run dev` clean + route/API 200 |
+| Production | Prod SHA = merge commit; curl + L4 browser for P0 |
+| Process | Full Linear title; changelog + todo synced; ledger + persona updated |
+| Score | Evidence Score ≥ **90** (Grade **A**) |
+
+**< 90% = not Done** — status stays **In Review** or **In Progress**.
+
+## Skill routing (authoritative rows)
+
+Use the **per-task table** in [`mdeapp/todo.md`](../todo.md) § **Skill + MCP gate**.  
+Fallback router: [`index-skills.md`](../index-skills.md) § Load by work type.
+
+**Always load (every task):** `mde-task-lifecycle` → `task-verifier`  
+**Cap:** ≤5 skills total including domain pack.
+
+## MCP matrix (call before coding)
+
+| Touch surface | MCP server | Tool examples |
+|---------------|------------|---------------|
+| Linear issue truth | `plugin-linear-linear` | `get_issue` |
+| Gemini models | `user-gemini-api-docs-mcp` | `search_docs` |
+| CopilotKit / AG-UI | CopilotKit MCP | `search-docs`, `search-ag-ui-docs` |
+| Mastra | `user-mastra` | `searchMastraDocs` |
+| Supabase schema / RLS | `plugin-supabase-supabase` | `execute_sql`, `list_tables` |
+| Maps / Places | `user-google-maps-code-assist` | `retrieve-instructions`, docs |
+
+If MCP is down → matching skill + vendored example; log **MCP unavailable** in pre-flight.
+
+## Symlink paths (scan root)
+
+| Pack | Path from `mdeapp/.claude/skills/` |
+|------|-------------------------------------|
+| Mercur / mcloud | `../../../.agents/skills/<name>` |
+| Phase 1 (copilotkit, testing, mde-*, etc.) | `../../../../.agents/skills/<name>` |
+| `code-review` | alias → `coderabbit` |
+
+If a skill is missing from scan root, load `.agents/skills/<name>/SKILL.md` and log in pre-flight. See [`index-skills.md`](../index-skills.md) § Scan root audit.
+
+## Sync obligations (after every task)
+
+Update **before** claiming complete:
+
+- [`mdeapp/todo.md`](../todo.md) — skill/MCP checkboxes + grades
+- [`mdeapp/changelog.md`](../changelog.md) — append entry
+- [`tasks/testing/evidence/TASK-LEDGER.md`](../../../tasks/testing/evidence/TASK-LEDGER.md)
+- Persona file under `tasks/testing/personas/`
+- [`tasks/dashboard/project-health.md`](../../../tasks/dashboard/project-health.md) on batch changes
+
+## Anti-patterns (reject)
+
+- ❌ Completing a task without reading routed `SKILL.md` files
+- ❌ Claiming AC met without MCP verification on external APIs
+- ❌ Done / 100% with Evidence Score < 90 on P0
+- ❌ Skipping `task-verifier` because tests passed
+- ❌ todo/changelog not synced at end of turn
+- ❌ Using shorthand `SAN-545` without full Linear title in evidence — see [`mdeai-task-naming.mdc`](./mdeai-task-naming.mdc) (always apply)

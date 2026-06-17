@@ -1,0 +1,203 @@
+---
+description: Browser proof + cubic/CodeRabbit PR loop. Loads for mdeapp/src and e2e — class U/S ship work.
+globs:
+  - mdeapp/src/**
+  - mdeapp/e2e/**
+alwaysApply: false
+---
+
+# Real-world proof + PR review bots
+
+> **When:** class **U** or **S** per [`mdeai-workflow.mdc`](./mdeai-workflow.mdc). Docs-only PRs skip Part B local bots.
+
+Orchestrates: [`mdeai-testing.mdc`](./mdeai-testing.mdc) · [`mdeai-live-prod-check.mdc`](./mdeai-live-prod-check.mdc) · [`mdeai-done-gate.mdc`](./mdeai-done-gate.mdc) · [`pr-agent.mdc`](./pr-agent.mdc) · skill `coderabbit` · skill `run-review`
+
+**Principle:** Unit tests alone are not proof. Every persona-visible change needs **interactive browser proof** saved to disk. Every PR must **run and resolve** cubic + CodeRabbit feedback before merge. **PR-Agent** (PR #236) auto-reviews on open/sync — triage its comments too; see `pr-agent.mdc`.
+
+---
+
+## Part A — Real-world browser proof (mandatory)
+
+### When required
+
+Any change to **chat, cards, maps, host, events, landings, checkout, agents, or persona-visible UI** — before **opening PR**, **In Review**, or **Done**.
+
+### Tools (pick ≥1 — all are valid real-world proof)
+
+| Tool | Use for |
+|------|---------|
+| **Cursor Browser MCP** | Default — interactive persona flow, snapshot, `browser_take_screenshot` |
+| **Playwright** | Automated e2e; hero/chat via `e2e/helpers/maps-layout.ts` |
+| **Chrome DevTools MCP** | Console, network, a11y — use for proof **or** when Browser/Playwright fails |
+
+**At least one** of Browser MCP, Playwright, or Chrome DevTools MCP is **required** — Vitest/curl alone does not count.
+
+### Environments (both columns in evidence)
+
+| Environment | URL | When |
+|-------------|-----|------|
+| **Localhost** | `http://localhost:3001/` (read `[ui]` port from `npm run dev`) | **Always** — fresh dev restart first |
+| **Production** | `https://www.mdeai.co/` or `https://mdeai.co/` | Before merge / ship claims; after deploy for P0 |
+
+If prod not deployed yet → evidence must say **PROD BLOCKED (PR open)** — do not fake PASS.
+
+### Minimum proof per task
+
+1. **Restart dev** — kill stale `[ui]`/`[agent]`; confirm GET `/` → 200
+2. **Persona journey** — navigate to touched surface; perform AC action (e.g. Andrés opens event detail, sees skeleton → content)
+3. **Screenshot** — save under `tasks/testing/evidence/YYYY-MM-DD/SAN-###-<surface>.png`
+4. **Console** — no uncaught errors (Browser MCP snapshot or Playwright `assertConsoleClean`)
+5. **Network** — no 401/403/500 on touched APIs (Chrome DevTools MCP if needed)
+6. **Repeat on prod** when PR targets merge (curl + browser or `chat-smoke.mjs --base https://www.mdeai.co`)
+
+### Evidence file (required)
+
+Path: `tasks/testing/evidence/YYYY-MM-DD/SAN-###-<slug>-RESULTS.md`
+
+Each browser row must include:
+
+```markdown
+| Check | localhost | prod |
+|-------|-----------|------|
+| Real-world browser | PASS + screenshot path | PASS/BLOCKED + screenshot path |
+| Console clean | PASS/FAIL | PASS/FAIL |
+| Network (touched APIs) | PASS/FAIL | PASS/FAIL |
+```
+
+Copy screenshots from `mdeapp/tmp/screenshots/` into the evidence folder when Playwright wrote there.
+
+### Anti-patterns
+
+- ❌ "Playwright passed" with no screenshot in evidence
+- ❌ curl-only proof for UI tasks
+- ❌ Skipping localhost because dev was already running (stale server)
+- ❌ Claiming prod PASS before merge deploy
+
+---
+
+## Part B — PR review bots (cubic + CodeRabbit)
+
+### When required
+
+**Before opening PR** and **before merge** on every `mdeapp/` PR.
+
+### Workflow
+
+```text
+1. Local pre-PR review (catch issues early)
+2. Push branch → open PR
+3. Wait for CI + cubic + CodeRabbit on PR
+4. Fetch ALL unresolved threads/comments
+5. Triage → fix legitimate issues → push
+6. Re-run tests + browser proof if UI touched
+7. Resolve threads (or document wont-fix with reason in evidence)
+8. Merge only when floor green + zero unresolved P1/P2 threads
+```
+
+### Step 1 — Local review (before `gh pr create`)
+
+```bash
+# CodeRabbit CLI (skill: coderabbit)
+cd /home/sk/mdeai/mdeapp
+coderabbit auth status
+cr review --agent --base main
+
+# cubic local review (skill: run-review)
+cubic auth status
+cubic review --base main
+```
+
+Fix Critical + Warning findings before opening PR when feasible.
+
+### Step 2 — After PR open
+
+```bash
+cd /home/sk/mdeai/mdeapp
+gh pr checks <PR#>                    # floor, Vercel, cubic, PR Agent
+gh pr view <PR#> --comments           # CodeRabbit + PR-Agent summaries
+```
+
+**Fetch unresolved review threads:**
+
+```bash
+# CodeRabbit bot threads — skill: coderabbit → references/pr-autofix.md
+# Use gh GraphQL for unresolved threads; fix → push → resolve each thread
+
+# cubic — CI check + PR inline comments on cubic.dev
+gh pr checks <PR#> | rg cubic
+```
+
+### Step 3 — Run every PR review prompt
+
+Agents must **read and execute** (fix, test, or document wont-fix) **every** cubic, CodeRabbit, and PR-Agent comment/prompt on the PR — not only summaries.
+
+```bash
+gh pr view <PR#> --comments
+gh api repos/amo-tech-ai/mdeapp/pulls/<PR#>/comments
+gh pr checks <PR#> | rg -i 'cubic|coderabbit|pr.agent|pr_agent'
+```
+
+Re-run **Part A** browser proof after UI fixes from review bots.
+
+### Step 4 — Apply feedback loop
+
+For **each** cubic or CodeRabbit finding:
+
+| Severity | Action |
+|----------|--------|
+| 🔴 Critical / P1 | **Must fix** before merge |
+| 🟡 Warning / P2 | Fix or document wont-fix in evidence + PR comment |
+| 🟢 Info | Fix if trivial; else skip with note |
+
+After fixes:
+
+```bash
+npm test -- --run <touched-pattern>    # targeted Vitest
+npx playwright test <spec> --project=chromium   # if UI
+# Re-run Part A browser proof if persona-visible
+git push
+gh pr checks <PR#>   # wait green
+```
+
+**Resolve threads** via GitHub UI or GraphQL — repo may **block merge** until conversations resolved (see SAN-730 #135).
+
+### Evidence row (required in SAN-###-RESULTS.md)
+
+```markdown
+| cubic | PASS — 0 unresolved P1/P2 · check run ID … |
+| CodeRabbit | PASS — threads resolved · or N wont-fix documented |
+| PR-Agent | PASS — `/review` green or findings triaged · Actions job … |
+```
+
+### Skills / rules
+
+| Bot | Skill / rule | Mode |
+|-----|-------|------|
+| CodeRabbit | `coderabbit` | CLI pre-PR · PR autofix post-open |
+| cubic | `run-review` | Local `cubic review` pre-PR · CI + PR comments post-open |
+| PR-Agent | `pr-agent.mdc` | Auto on PR · `/review` `/describe` `/improve` on demand |
+
+### Anti-patterns
+
+- ❌ Opening PR without running local `cr review` or `cubic review`
+- ❌ Ignoring cubic P2 that blocked merge on prior PRs
+- ❌ Resolving threads without pushing fixes
+- ❌ Merge with unresolved CodeRabbit/cubic conversations
+
+---
+
+## PR open gate (combined checklist)
+
+- [ ] Part A: localhost browser proof + screenshot in evidence
+- [ ] Part A: prod curl (or PROD BLOCKED noted)
+- [ ] Part B: local `cr review --agent --base main` run (or documented skip)
+- [ ] Part B: local `cubic review --base main` run (or documented skip)
+- [ ] Evidence file path ready for PR body
+- [ ] Full title: `SAN-### · SPEC-ID — <Linear title>` · `Closes SAN-###`
+
+## Merge gate (combined checklist)
+
+- [ ] Part B: cubic CI green + threads resolved
+- [ ] Part B: CodeRabbit threads resolved
+- [ ] Part A: prod browser proof (post-deploy) for ship claims
+- [ ] floor / Vercel green

@@ -1,0 +1,78 @@
+---
+description: Launch gate — seven gates + Evidence Score. P0 / phase:launch only; daily work uses mdeai-workflow class S.
+globs:
+  - tasks/**
+  - mdeapp/todo.md
+alwaysApply: false
+---
+
+# mdeai launch gate
+
+> **Lean path:** [`mdeai-workflow.mdc`](./mdeai-workflow.mdc) class **S**. This file = P0 launch checklist depth.
+
+Parent: [`mdeai-proof-driven-delivery.mdc`](./mdeai-proof-driven-delivery.mdc)
+
+## Rule
+
+**A Linear status is never proof.**
+
+### Gate 0 — Pre-implementation (before any code)
+
+No implementation until **Level 0** in [`mdeai-proof-driven-delivery.mdc`](./mdeai-proof-driven-delivery.mdc) completes:
+
+| Step | Proof |
+|------|-------|
+| Linear + spec verified | `get_issue` + disk spec + [`mdeapp/todo.md`](../todo.md) |
+| Skills loaded | `task-verifier` + `mde-task-lifecycle` + domain skill |
+| MCP checked | Per touch surface (Gemini, CopilotKit, Mastra, Supabase, Maps) |
+| Pre-flight written | `SAN-###-PREFLIGHT.md` or chat table with **Errors · Blockers · Failure points** |
+| Verdict | **PROCEED** or **BLOCKED** — if BLOCKED, do not implement |
+
+---
+
+A task may only move to **Done** when ALL seven gates pass:
+
+| # | Gate | Proof |
+|---|------|-------|
+| 1 | **Spec** | `task-verifier` — acceptance criteria on disk |
+| 2 | **Tests** | Vitest + Playwright (L1 + L2) green on touched paths |
+| 3 | **Runtime** | `npm run dev` boot + route/API 200 |
+| 4 | **Browser** | **Real-world proof** — Cursor Browser MCP **or** Playwright **or** Chrome DevTools MCP on **localhost + prod** (`https://www.mdeai.co/` / `https://mdeai.co/`) + persona prompt + screenshot ([`mdeai-real-world-proof-pr-review.mdc`](./mdeai-real-world-proof-pr-review.mdc)) |
+| 5 | **Evidence** | `tasks/testing/evidence/YYYY-MM-DD/SAN-###-…-RESULTS.md` + `TASK-LEDGER.md` row |
+| 6 | **Linear** | Issue updated; PR merged for ship claims; `Closes SAN-###` |
+| 7 | **Persona** | Journey line updated in `tasks/testing/personas/<persona>.md` |
+
+If **any** gate is missing → status stays **In Review** (never Done).
+
+## P0 (`phase:launch`) extra requirements
+
+- Evidence Score ≥ **90** (Grade A or high B with documented prod blocker)
+- Production Proof category > 0 — merge deployed to `https://www.mdeai.co/`
+- L4 prod browser or API curl with timestamp in evidence
+- No mixed-scope PRs
+
+## Real-world proof checklist
+
+- [ ] Dev restarted; localhost GET `/` → 200
+- [ ] Persona prompt on **localhost** — Browser MCP / Playwright / Chrome DevTools + screenshot
+- [ ] Same prompt on **`https://www.mdeai.co/`** (or **PROD BLOCKED** with PR/deploy SHA)
+- [ ] Evidence: prompt · env · tool · expected · actual · PASS/FAIL
+
+## PR merge checklist
+
+- [ ] Full title: `SAN-### · SPEC-ID — <Linear title>`
+- [ ] Pre-PR: `cr review --agent --base main` + `cubic review --base main` (cubic-dev)
+- [ ] On open PR: **every cubic + CodeRabbit prompt executed**; P0/P1 fixed; threads resolved (or waiver in evidence)
+- [ ] CI / floor green (or slice waiver documented)
+- [ ] Evidence path in PR comment
+- [ ] Prod SHA recorded after merge
+- [ ] Linear **In Review** — **Done** only after user says so
+
+## Quick fail actions
+
+| Symptom | Action |
+|---------|--------|
+| PR not merged | BLOCK prod claims; Evidence Score Production = 0 |
+| `embedStatus` null on prod | SAN-545 not closable — deploy first |
+| Browser Search disabled | Use `e2e/helpers/maps-layout.ts`, not raw fill |
+| CopilotKit 401 on smoke | Document under **SAN-828**; don’t fake J19 PASS |

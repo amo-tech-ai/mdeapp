@@ -1,0 +1,17 @@
+---
+description: graphify knowledge graph — query before broad architecture reads on mdeapp
+alwaysApply: false
+globs: src/**, docs/**, graphify-out/**
+---
+
+This project has a graphify knowledge graph at `graphify-out/` (built from `src/` + docs + tasks).
+
+**CLI:** run from repo root (`mdeapp/`). Prefer `graphify` on PATH (`uv tool install graphifyy`); fallback `~/.venvs/graphify/bin/graphify`.
+
+- For codebase or architecture questions, when `graphify-out/graph.json` exists, first run `graphify query "<question>"` (or `graphify path "<A>" "<B>"` / `graphify explain "<concept>"`). These return a scoped subgraph, usually much smaller than `GRAPH_REPORT.md` or raw grep output.
+- If `graphify-out/wiki/index.md` exists, navigate it instead of reading raw files
+- Read `graphify-out/GRAPH_REPORT.md` only for broad architecture review or when query/path/explain do not surface enough context (~17k nodes — do not load whole file into chat)
+- After modifying **`src/**`**: commit (post-commit hook rebuilds AST), or `npm run graphify:update` from repo root
+- Full rebuild: `npm run graphify:update` (see `docs/graphify/SETUP.md`)
+- Optional auto-rebuild on commit: `graphify hook install` (union-merge driver for `graph.json`)
+- Interactive map: open `graphify-out/graph.html` in a browser

@@ -1,0 +1,98 @@
+---
+description: Continual live verification on https://www.mdeai.co/ — curl, chat-smoke, Browser MCP, Playwright prod matrix (events, restaurants, cafés, rentals). Run before Done/PR and after deploys.
+globs:
+  - mdeapp/src/**
+  - mdeapp/e2e/**
+  - tasks/testing/**
+alwaysApply: false
+---
+
+# Live prod check — mdeai.co
+
+> **When:** class **S**, user says "check prod", or persona-visible ship claim. Tier 1 curl+smoke often enough; full matrix for chat/agents PRs.
+
+**URL:** https://www.mdeai.co/ · **Companion:** [`tasks/testing/09-prod-live-journey-matrix.md`](../../../tasks/testing/09-prod-live-journey-matrix.md)
+
+Agents **must not** claim ship/Done on persona-visible changes without prod proof. Pair with [`mdeai-testing.mdc`](./mdeai-testing.mdc) (localhost + evidence paths).
+
+## When to run
+
+| Trigger | Depth |
+|---------|--------|
+| Any PR touching chat, agents, maps, cards, API routes | **Full matrix** (below) |
+| Daily / before merge to `main` | **Quick** (Tier 1) |
+| After Vercel deploy | **Quick** + one Browser prompt |
+| User says "check prod" / `@Browser` | Full matrix on prod |
+
+## Tier 1 — Quick (≤2 min, no browser)
+
+```bash
+curl -s -o /dev/null -w "prod GET / -> %{http_code}\n" https://www.mdeai.co/
+node /home/sk/mdeai/tasks/testing/scripts/chat-smoke.mjs --base https://www.mdeai.co
+```
+
+**Pass:** GET `/` → 200 · rentals/events API shape OK · `/api/copilotkit` empty body → 400 (not 5xx).
+
+## Tier 2 — Browser MCP (interactive, prod)
+
+1. `browser_navigate` → `https://www.mdeai.co/` · viewport **≥1360px**
+2. Hide dev inspector if present: `#cpk-web-inspector { display: none !important; }`
+3. Send prompts (React textarea — `input` event + Send; empty textarea keeps Send disabled):
+
+| Vertical | Sample prompt | Assert |
+|----------|---------------|--------|
+| **Events** | `salsa events this weekend in Medellín` | `[data-testid="event-card"]` ≥1 |
+| **Restaurants** | `quiet rooftop dinner in Provenza` | `[data-testid="restaurant-card"]` ≥1 |
+| **Cafés** | `quiet specialty coffee in Laureles` | `[data-testid="grounded-card"][data-result-kind="cafe"]` ≥1 |
+| **Rentals** | `1BR in Laureles under $80/night` | `[data-testid="rental-card"]` ≥1 |
+
+4. Map: pins appear in `[data-testid="map-panel"]` after cards (not stuck on "No pins yet")
+5. Screenshot → `tasks/testing/evidence/YYYY-MM-DD/prod-<vertical>.png`
+
+## Tier 3 — Playwright prod synthetic (SAN-462)
+
+```bash
+cd /home/sk/mdeai/mdeapp
+PROD_SMOKE_BASE_URL=https://www.mdeai.co \
+PROD_SMOKE_OUT_DIR=../tasks/testing/evidence/$(date +%Y-%m-%d)/prod-synthetic \
+npx playwright test e2e/prod-synthetic-smoke.spec.ts --project=chromium --workers=1
+
+PROD_SMOKE_OUT_DIR=../tasks/testing/evidence/$(date +%Y-%m-%d)/prod-venues \
+npm run test:e2e:prod-venues-journey
+```
+
+Runs core 4 verticals + CK POST budget + **J05–J08** venues journeys. Per-task: `npm run verify:task -- <TASK-ID>`. See [`improve.md`](../../../tasks/notes/improve.md).
+
+## Tier 4 — Chrome DevTools MCP (debug only)
+
+Use when Browser/Playwright fails:
+
+- `list_network_requests` — no 401/403/500 on `/api/copilotkit`, `/api/rentals/search`, `/api/events/search`
+- `list_console_messages` — no uncaught errors on load
+- `take_snapshot` — a11y tree matches expected regions (`Concierge chat`, `Search results on map`)
+
+## Fail actions
+
+| Symptom | Likely cause | Check |
+|---------|--------------|-------|
+| Cards but no pins | MAP-008B / mapId | env on Vercel |
+| Wrong card kind (café for clubs) | VEN-012 routing | nightlife query |
+| CK POST storm | CopilotKit loop | count POSTs per query (<8) |
+| 502 on places detail | DATA-008 cache cold | `/api/places/detail` |
+
+## Evidence
+
+Write `tasks/testing/evidence/YYYY-MM-DD/prod-live-RESULTS.md`:
+
+```markdown
+| Check | localhost | prod |
+|-------|-----------|------|
+| chat-smoke | PASS | PASS |
+| events prompt | … | … |
+| restaurants | … | … |
+| cafés | … | … |
+```
+
+## Do not skip prod because
+
+Localhost-only proof misses Vercel env (Map ID, ADK URL, auth cookies, edge cold start).

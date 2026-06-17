@@ -1,0 +1,83 @@
+---
+description: Commit slices per tasks/commit playbook — suggest at slice boundary; commit only when user asks.
+globs:
+  - mdeapp/**
+  - tasks/**
+alwaysApply: false
+---
+
+# Commit discipline — small, frequent slices
+
+**Playbook:** [`tasks/commit/00-commit-playbook.md`](../tasks/commit/00-commit-playbook.md)  
+**Ledger:** [`tasks/commit/COMMIT-LEDGER.md`](../tasks/commit/COMMIT-LEDGER.md)  
+**Skill:** `mde-worktree-pr-flow`
+
+Git root is **`mdeapp/`** only. Planning lives in `tasks/commit/` — use the ledger so work does not pile into one 98-file PR.
+
+**Agent contract:** At slice completion, **suggest** the exact `git add` + commit message; **commit only when the user asks**. Before marking Done, opening a PR, or switching tasks, warn if unstaged shippable work remains. Do not accumulate multi-day diffs.
+
+## When to commit (cadence)
+
+Commit **after each logical slice completes**, not at end of day or end of session:
+
+| Trigger | Example |
+|---------|---------|
+| One ledger row (`C-###`) done | `C-004` chat shell only |
+| One screen sub-phase shippable | Phase A.5 café panel without booking DB |
+| Floor passes for touched area | `npm run test -- place-details` |
+| ~≤400 lines / ≤15 files in slice | Split if larger **before** committing |
+| Before switching tasks or agents | Never leave 30+ unstaged files overnight |
+| Every ~1–2 hours of active coding on same feature | Checkpoint even if slice is partial (`wip` only if floor green on touched files) |
+| User asks for PR / review | Split first if diff exceeds limits below |
+
+**Stop rule:** If `git diff --stat origin/main` shows **>20 files** or **>500 insertions**, update the ledger and **split before the next commit**. Offer to split when user asks for a PR and diff is too large.
+
+## Size limits (per commit)
+
+| Type | Files | Lines (approx) | Scope |
+|------|------:|---------------:|-------|
+| `fix` | 1–5 | ≤150 | Single bug, lint |
+| `feat` | 5–15 | ≤400 | **One** surface (maps OR chat OR events) |
+| `test` | tests only | — | e2e/vitest for prior feat |
+| `chore` | any | ≤200 | deps, env.example |
+| `docs` | docs only | — | no `mdeapp/src` |
+
+**One scope per commit** — never `feat(maps,events,chat)` in one subject.
+
+## Workflow (every task)
+
+1. **Preflight** — `cd mdeapp && npm run commit:status` (or `git status` + `git diff --stat`)
+2. **Ledger row first** — add `C-###` to COMMIT-LEDGER with file globs *before* coding
+3. **Implement one row**
+4. **Verify** — subset of floor + Browser/Playwright if UI (`mdeai-testing.mdc`)
+5. **Stage surgically** — `git add path1 path2` — **never `git add .`** unless chore row says so
+6. **Commit** — Conventional Commits; body references `C-###`
+7. **Mark ledger** — `status: committed`, `sha: …`
+8. **Push** when branch goal complete — one PR per branch goal
+
+## Message format
+
+```text
+feat(chat): café detail panel in map column (C-007)
+
+- Right-column mode toggle; Places enrichment on open
+- Refs tasks/commit/COMMIT-LEDGER.md C-007
+```
+
+## Anti-patterns
+
+- ❌ "WIP everything since Tuesday" single commit
+- ❌ Commit on red `floor`
+- ❌ Mixed domains in one commit (maps + events + café)
+- ❌ Empty ledger while `git status` shows 20+ files
+- ❌ Amending pushed commits (new commit instead)
+
+## PR size target
+
+Stack **3–8 small commits** per PR, not one monolith. If the user asks for a PR and diff is too large → **split PRs** (`split-to-prs` skill) using ledger rows.
+
+## Related
+
+- Testing before commit: `.cursor/rules/mdeai-testing.mdc`
+- Done gate: `.cursor/rules/mdeai-task-verifier.mdc`
+- Checklist per commit: [`tasks/commit/CHECKLIST.md`](../tasks/commit/CHECKLIST.md)

@@ -1,0 +1,61 @@
+---
+description: Author and validate Mermaid diagrams in docs/specs/PRs — load mermaid-diagrams skill, validate before ship, mdeapp stack only.
+globs:
+  - "**/diagrams/**"
+  - tasks/**/*.md
+  - plan/**/*.md
+  - mdeapp/docs/**/*.md
+alwaysApply: false
+---
+
+# Mermaid diagrams — mdeai
+
+**Skill (read before editing any ` ```mermaid ` block):** `.claude/skills/mermaid-diagrams/SKILL.md`  
+**Required first:** `.claude/skills/mermaid-diagrams/references/best-practices.md`  
+**Then one syntax ref** from `references/*.md` matching the diagram type (`load_when` in each file's frontmatter).
+
+## Workflow
+
+1. Pick type → read matching reference (flowchart, sequenceDiagram, journey, erDiagram, …).
+2. Author **one idea per diagram** — split if it needs a legend.
+3. **Validate** before commit: Mermaid MCP `validate_and_render_mermaid_diagram` or https://mermaid.live; offline gotchas in best-practices §3 if unreachable.
+4. Set `verified: YYYY-MM-DD` in the **markdown file** YAML when auditing a diagram set.
+
+## mdeapp stack (Phase 1)
+
+Diagrams for **new work** must match live architecture:
+
+- Next.js 16 · CopilotKit **1.55.2 v1** · Mastra in-process / AG-UI · Gemini · Supabase · Stripe
+
+Do **not** copy legacy nodes from `chatbot-diagrams.md` templates (`ai-chat`, Deno edge, OpenClaw, Vite) into mdeapp docs.
+
+## Syntax traps (top failures)
+
+| Trap | Fix |
+|------|-----|
+| `end` as flowchart node | Capitalize (`End`) or reword |
+| State note inside `state X { }` | Use top-level `note right of X : text` |
+| Labels with `()`, `:`, `#` | Quote the label |
+| Design tables not migrated | Mark `(design)` in diagram labels; don't imply live schema |
+| Client writes to Supabase on approval | Route through server `/api/approval-commit` (see events `03-data-flow.md`) |
+
+## Accessibility (shipped diagram sets)
+
+Inside each mermaid block:
+
+```text
+accTitle: Short title
+accDescr: One-sentence summary
+```
+
+## mdeai defaults
+
+| Use case | Type | Example |
+|----------|------|---------|
+| Agent routing / HITL | `flowchart TD` | `mdeapp/docs/tasks/events/diagrams/04-agent-workflow.md` |
+| Chat → tool → DB | `sequenceDiagram` | `…/diagrams/03-data-flow.md` |
+| Persona journeys | `journey` | `…/diagrams/02-user-journey.md` |
+| Logical schema | `erDiagram` | `…/diagrams/05-erd.md` |
+| Roadmap phases | `flowchart TB` | `…/diagrams/07-roadmap.md` |
+
+Audit checklist for diagram folders: `mdeapp/docs/tasks/events/diagrams/notes.md`.

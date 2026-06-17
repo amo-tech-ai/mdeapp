@@ -1,0 +1,104 @@
+---
+description: Lean task/PR orchestrator — classify change (D/C/U/S), load ≤3 skills, verify by tier, evidence only when ship-class. Always apply.
+alwaysApply: true
+---
+
+# mdeai workflow — lean orchestrator
+
+**Deep refs (load only when class or user requires):** [`03-lean.md`](../docs/03-lean.md) · [`mdeai-proof-driven-delivery.mdc`](./mdeai-proof-driven-delivery.mdc) (P0 audit) · [`mdeai-skills-best-practices.mdc`](./mdeai-skills-best-practices.mdc)
+
+## Step 0 — Classify (state in first reply)
+
+| Class | Examples | Min verify |
+|-------|----------|------------|
+| **D** Docs/plan/spec/diagram | `tasks/**`, `plan/**`, `mdeapp/docs/**` | Links + mermaid validate if diagrams |
+| **C** Code, no persona UI | lib, API, migration, hooks | Targeted vitest + `npm run dev` + curl |
+| **U** Persona UI/agent/maps | `mdeapp/src/**` chat, cards, host | **C** + Browser MCP or Playwright + localhost screenshot |
+| **S** Ship / PR / P0 / prod claim | merge, `phase:launch`, "check prod" | **U** + prod smoke + PR bot pass |
+
+**One SAN = one PR.** Full title: `SAN-### · SPEC-ID — <Linear title>` ([`mdeai-task-naming.mdc`](./mdeai-task-naming.mdc)).
+
+## Step 1 — Skills (≤3, not 5)
+
+Router: [`.cursor/docs/02-skills-plan.md`](../docs/02-skills-plan.md) §4. Read `SKILL.md` before coding external APIs.
+
+| Work | Load |
+|------|------|
+| Any implement | domain skill + `karpathy-guidelines` |
+| UI/agent | + `copilotkitV1` or `mde-events` · forms → `shadcn` ([`mdeai-shadcn-first.mdc`](./mdeai-shadcn-first.mdc)) |
+| Done / P0 | + `task-verifier` (class S only) |
+
+MCP when touching Gemini, CopilotKit, Mastra, Supabase, Maps — not for class D.
+
+## Step 2 — Implement
+
+Surgical diff only ([`karpathy-guidelines.mdc`](./karpathy-guidelines.mdc)). Pre-flight **required for class C/U/S** on new features; **skip for class D**.
+
+Lite pre-flight (chat table OK for C/U):
+
+```text
+SAN-### · title · Class · Skills · Blockers · Verdict PROCEED|BLOCKED
+```
+
+Full PREFLIGHT.md + TASK-LEDGER + persona updates → **class S / P0 launch only**.
+
+## Step 3 — Verify by class
+
+```text
+D → markdown links; mermaid MCP or mermaid.live if ```mermaid```
+C → npm test -- --run <pattern>; /localhost-probe or npm run dev + curl
+U → Browser matrix below (localhost default); screenshot → tasks/testing/evidence/YYYY-MM-DD/
+S → U localhost proof + /prod-quick or /prod-smoke; cubic OR CodeRabbit on PR (≤15 files)
+```
+
+Persona-visible **Done/ship** claims → [`mdeai-live-prod-check.mdc`](./mdeai-live-prod-check.mdc) Tier 1 minimum.
+
+### Class **U** — Browser matrix (localhost default)
+
+Use **Browser subagent** or `@browser`. Viewport **≥1360px**. Hide inspector: `#cpk-web-inspector { display: none !important; }`.
+
+Base URL: `http://localhost:3001` (or `:3002` in `mdeapp/.worktrees/*` via `dev:ui:worktree`).
+
+Send each prompt in the CopilotKit textarea (`input` event + Send):
+
+| Vertical | Prompt | Pass |
+|----------|--------|------|
+| **Events** | `salsa events this weekend in Medellín` | `[data-testid="event-card"]` ≥1 |
+| **Restaurants** | `quiet rooftop dinner in Provenza` | `[data-testid="restaurant-card"]` ≥1 |
+| **Cafés** | `quiet specialty coffee in Laureles` | `[data-testid="grounded-card"][data-result-kind="cafe"]` ≥1 |
+| **Rentals** | `1BR in Laureles under $80/night` | `[data-testid="rental-card"]` ≥1 |
+
+Also: pins in `[data-testid="map-panel"]` after cards (not "No pins yet"). Screenshot → `tasks/testing/evidence/YYYY-MM-DD/SAN-###-<vertical>.png`.
+
+**Class S on prod:** same prompts at `https://www.mdeai.co/` — see [`mdeai-live-prod-check.mdc`](./mdeai-live-prod-check.mdc) Tier 2.
+
+**Slash helpers:** `/verify-floor` · `/classify` · `/prod-quick` · subagents `/localhost-probe` · `/prod-smoke`
+
+## Step 4 — Evidence (class U/S only)
+
+Path: `tasks/testing/evidence/YYYY-MM-DD/SAN-###-<slug>-RESULTS.md` — **rows for checks actually run**.
+
+Events ship → append [`tasks/events/changelog.md`](../../../tasks/events/changelog.md).
+
+## Step 5 — Commit / PR / Linear
+
+- **Commit:** only when user asks ([`mdeai-commit-discipline.mdc`](./mdeai-commit-discipline.mdc)) — suggest `git add` + message at slice boundary.
+- **PR:** `Closes SAN-###`; bot review per class S table in [`03-lean.md`](../docs/03-lean.md).
+- **Linear:** In Review with evidence link; **Done** on user OK — never from memory alone.
+
+## Pairing (default)
+
+```text
+classify → skills(≤3) → implement → verify(class) → evidence(if U/S) → PR(if S) → In Review
+```
+
+## Glob-loaded deep rules (not always-on)
+
+| Rule | When |
+|------|------|
+| [`mdeai-testing.mdc`](./mdeai-testing.mdc) | `mdeapp/src`, e2e |
+| [`mdeai-real-world-proof-pr-review.mdc`](./mdeai-real-world-proof-pr-review.mdc) | UI/agent PR |
+| [`mdeai-events-task-skill-mcp-gate.mdc`](./mdeai-events-task-skill-mcp-gate.mdc) | Events paths |
+| [`mdeai-live-prod-check.mdc`](./mdeai-live-prod-check.mdc) | prod / class S |
+| [`mdeai-proof-driven-delivery.mdc`](./mdeai-proof-driven-delivery.mdc) | P0 launch audit |
+| [`graphify.mdc`](./graphify.mdc) | architecture questions on `mdeapp/src` |

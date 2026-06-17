@@ -8,12 +8,12 @@
 
 ## Progress tracker
 
-**Overall: 87 / 100 — Grade B+** · P1 agents + plugin settings + automation draft; wire Vercel webhook in UI.
+**Overall: 87 / 100 — Grade B+** · Lean 3-rule budget restored; automation webhook still pending.
 
 | # | Area | ● | Score | Weight | Weighted | Target | Gap / next action |
 |---|------|---|------:|-------:|---------:|--------|-------------------|
-| 1 | Lean rules (3 always-on) | 🟢 | 98 | 12 | 11.8 | 3 rules ~100 lines | Maintain; don’t re-expand alwaysApply |
-| 2 | Rule demotion (glob depth) | 🟢 | 95 | 8 | 7.6 | 11 rules glob-only | Done — see demoted list below |
+| 1 | Lean rules (3 always-on) | 🟢 | 95 | 12 | 11.4 | 3 rules only | Restored 2026-06-17 — demoted graphify/graphite/docs-git-safety/task-naming |
+| 2 | Rule demotion (glob depth) | 🟢 | 98 | 8 | 7.8 | Intelligent + glob depth | Restored 2026-06-17 — see demoted list |
 | 3 | D/C/U/S orchestrator | 🟢 | 96 | 10 | 9.6 | Class in first reply | Done — Browser matrix in workflow Step 3 |
 | 4 | Evidence policy (U/S) | 🟢 | 90 | 6 | 5.4 | One RESULTS.md per SAN | Enforce in practice, not just docs |
 | 5 | Hooks (`.cursor/hooks.json`) | 🟢 | 92 | 12 | 11.0 | Parity with Claude guards | Done — `/hook-smoke` + IDE verify |
@@ -24,8 +24,8 @@
 | 10 | Automations (class S) | 🟡 | 55 | 6 | 3.3 | Post-deploy prod smoke | Draft in [06-automations.md](./.cursor/docs/06-automations.md); wire webhook |
 | 11 | Worktrees (`mdeapp/.worktrees/`) | 🟡 | 78 | 4 | 3.1 | B- locked | 8 legacy; 4 frozen dirty |
 | 12 | Plugins (dashboard) | 🟢 | 85 | 4 | 3.4 | Supabase + Linear + Stripe | [07-dashboard-mcp.md](./.cursor/docs/07-dashboard-mcp.md); OAuth per machine |
-| 13 | Docs canon | 🟢 | 88 | 5 | 4.4 | Single source | 01–07 lean canon |
-| | **Total** | | | **100** | **87.0** | **≥90 = Grade A** | Automation live + worktree cleanup |
+| 13 | Docs canon | 🟢 | 92 | 5 | 4.6 | Single source | README + lean synced 2026-06-17 |
+| | **Total** | | | **100** | **87.2** | **≥90 = Grade A** | Automation live + worktree cleanup |
 
 **Legend:** 🟢 ≥85 done · 🟡 50–84 partial · ⚫ 1–49 not started · 🔴 0–49 missing or regressing
 
@@ -33,7 +33,7 @@
 
 | Layer | Score | ● | What it measures |
 |-------|------:|---|------------------|
-| **Rules & workflow** | **96%** | 🟢 | Lean consolidation, D/C/U/S, Browser matrix, demotion |
+| **Rules & workflow** | **97%** | 🟢 | Lean 3 always-on restored; PR-Agent + Bugbot intelligent-apply |
 | **Enforcement** | **90%** | 🟢 | Hooks runtime verified; worktree + env guards |
 | **Verification** | **85%** | 🟢 | 7 subagents + pinned Browser matrix + slash verify |
 | **Tooling & automation** | **68%** | 🟡 | Plugins + automation draft; webhook pending |
@@ -115,7 +115,10 @@ Agents **state class in the first reply**.
 |----|------|
 | Docs-only, ≤15 files | CI green only |
 | UI/agent | **cubic OR CodeRabbit** on PR — not both local pre-PR |
+| Any PR to `main` | **PR-Agent** auto-runs (optional 3rd lane; triage comments; not a merge blocker unless branch protection added) |
 | P0 `phase:launch` | Full loop — see `mdeai-proof-driven-delivery.mdc` |
+
+Rules: [`pr-agent.mdc`](./.cursor/rules/pr-agent.mdc) · [`bugbot.mdc`](./.cursor/rules/bugbot.mdc) · [`mdeai-real-world-proof-pr-review.mdc`](./.cursor/rules/mdeai-real-world-proof-pr-review.mdc)
 
 ## Evidence (simplified)
 
@@ -127,7 +130,7 @@ Agents **state class in the first reply**.
 
 Aligned with user rule: **suggest** `git add` + message at slice boundary; **commit only when user asks** (`mdeai-commit-discipline.mdc`).
 
-## Demoted rules (alwaysApply → glob)
+## Demoted rules (alwaysApply → glob or intelligent apply)
 
 - `mdeai-proof-driven-delivery.mdc`
 - `mdeai-done-gate.mdc`
@@ -137,9 +140,13 @@ Aligned with user rule: **suggest** `git add` + message at slice boundary; **com
 - `mdeai-live-prod-check.mdc`
 - `mdeai-skills-best-practices.mdc`
 - `mdeai-commit-discipline.mdc`
-- `mdeai-task-naming.mdc`
+- `mdeai-task-naming.mdc` (chat naming also in `mdeai-response-style.mdc` + hook)
 - `mdeai-events-task-skill-mcp-gate.mdc`
 - `graphify.mdc`
+- `mdeai-docs-git-safety.mdc`
+- `graphite-stacking.mdc`
+
+**Intelligent apply (description, no glob):** `pr-agent.mdc`, `bugbot.mdc`
 
 ## Kept strict (on purpose)
 
@@ -198,6 +205,7 @@ Prioritized to move **Overall** from **66 → 85+ (Grade B)**.
 
 | Date | Overall | Grade | Notes |
 |------|--------:|-------|-------|
+| 2026-06-17 | 87 | B+ | Restore 3 always-on; demote graphify/graphite/docs-git/task-naming; add pr-agent + bugbot to index |
 | 2026-06-09 | 87 | B+ | `.cursor/` canonical at `mdeapp/.cursor/`; parent symlink |
 | 2026-06-08 | 87 | B+ | P1 agents + plugins + automation draft + 01-best-practices refresh |
 | 2026-06-08 | 83 | B | Hook smoke script + runtime verify (workspace-scoped) |

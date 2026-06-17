@@ -1,0 +1,82 @@
+---
+description: Use Graphite (gt) for stacked PRs on amo-tech-ai/mdeapp — auth, tracking, submit, restack
+alwaysApply: false
+---
+
+# Graphite stacking (mdeapp)
+
+Use **Graphite CLI (`gt`)** for branch stacks and PR submission on `amo-tech-ai/mdeapp`. Load `.claude/skills/graphite/SKILL.md` for full workflows. Docs: [CLI overview](https://graphite.com/docs/cli-overview), [quick start](https://graphite.com/docs/get-started).
+
+## When to use Graphite vs plain git
+
+| Situation | Tool |
+|-----------|------|
+| Single focused PR (one task, one goal) | `mde-worktree-pr-flow` — one branch, `gh pr create` OK |
+| Multi-PR stack (dependent slices, same feature) | **`gt`** — `gt create`, `gt submit`, `gt restack` |
+| Untracked branch error | `gt track -p main` (or `-p <parent-branch>`) |
+
+Stacks must still obey mdeai rules: each PR passes floor independently, `Closes SAN-NNN` in body, pair every task ID with its full title.
+
+## Verified setup (repo)
+
+- CLI: `gt` ≥ 1.8.x · trunk: **`main`** · remote: **`origin`**
+- Auth: token in `~/.config/graphite/auth` only — **never** commit tokens or paste into rules/chat
+- Repo init: `.git/.graphite_repo_config` with `"trunk": "main"`
+
+Before first `gt create` on a branch: `gt branch info` — if untracked, `gt track -p main`.
+
+## Branch naming (mdeai)
+
+Keep Linear convention on branch names:
+
+`ai/san-NNN-spec-id-short-slug`
+
+Example stack for one feature:
+
+```
+ai/san-888-ck-v2-002-analytics-provider
+ai/san-888-ck-v2-002-analytics-hooks
+ai/san-888-ck-v2-002-analytics-route
+```
+
+Parent chain: first branch → `main`; each next → previous stack branch.
+
+## Core workflow
+
+```bash
+git add <files>
+gt create ai/san-NNN-spec-id-slug -m "feat(scope): message — Closes SAN-NNN"
+# repeat per PR in stack
+gt ls                    # verify first branch parents on main
+npm run floor            # per branch before submit
+gt submit --no-interactive
+```
+
+Amend current stack branch: `git add …` then `gt modify -m "…"`.
+
+Navigate: `gt up` / `gt down` / `gt top` / `gt bottom`.
+
+Rebase stack on updated main: `gt restack` (or targeted `git rebase` + `gt modify --no-edit` if unrelated conflicts).
+
+## PR descriptions
+
+Do **not** use shell heredocs for PR bodies (escaping breaks markdown). Write `/tmp/pr-body.md`, then:
+
+```bash
+gh pr edit <number> --title "SAN-NNN · SPEC — title" --body-file /tmp/pr-body.md
+```
+
+Include: Stack Context, Why, test plan, `Closes SAN-NNN`.
+
+## Integrations (optional)
+
+- **Linear**: link issues on PRs per [Graphite Linear integration](https://graphite.com/docs/linear.md)
+- **Insights**: team velocity in Graphite dashboard ([docs](https://graphite.com/docs/insights)) — beta, no agent action required
+- **Agents / GT MCP**: Cursor Cloud Agents in Graphite UI ([agents](https://graphite.com/docs/agents)); CLI MCP at [GT MCP](https://graphite.com/docs/gt-mcp.md) — optional, not required for local `gt` stacks
+
+## Hard rules
+
+- Never store `gt auth --token` values in repo files, rules, or commits
+- Root stack on **`main`** before `gt submit` (`gt ls` → first parent is `main`)
+- Do not force-push `main`/`master`
+- Prefer **more small PRs** over one large PR when stacking

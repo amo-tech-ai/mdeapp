@@ -74,7 +74,9 @@ supabase/.temp/
 # IDE / agent tooling (repo-local)
 .agents/
 .codex/
-.cursor/
+.cursor/**
+!.cursor/rules/
+!.cursor/rules/**
 .gemini/
 .vscode/
 .zed/

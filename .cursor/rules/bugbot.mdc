@@ -1,0 +1,50 @@
+---
+description: When and how to use Cursor Bugbot for PR reviews (local + GitHub)
+alwaysApply: false
+globs: "**/*"
+---
+
+# Bugbot workflow (mdeapp)
+
+Use [Cursor Bugbot](https://cursor.com/docs/bugbot) before opening or updating CK-V2 PRs.
+
+## Local review (agent)
+
+When the user says `review`, `/review-bugbot`, or before `gh pr create`:
+
+1. Launch the **bugbot** subagent (`readonly: true`) with:
+   - `Full Repository Path: /home/sk/mdeai/mdeapp`
+   - `Diff: branch changes` (or `uncommitted changes` if asked)
+   - `Base Branch:` only when not comparing to `main`
+2. Summarize findings in a Severity | Location | Finding table.
+3. **Do not auto-fix** unless the user asks.
+
+Running `/review-bugbot` locally syncs with GitHub Bugbot via patch ID — same diff may skip duplicate remote review.
+
+## GitHub review (manual)
+
+On an open PR, comment:
+
+```text
+cursor review
+```
+
+or `bugbot run`. Verbose: `cursor review verbose=true`.
+
+## Project rules file
+
+Bugbot reads `.cursor/BUGBOT.md` (root) plus nested `.cursor/BUGBOT.md` when reviewing files in those trees. Keep mdeai hard rules there, not duplicated in every PR.
+
+## Teach Bugbot inline
+
+On a PR comment: `@cursor remember [fact]` — saved as a learned rule for future reviews.
+
+## CI check
+
+GitHub check name: `Cursor Bugbot`. Default findings are `neutral`; enable fail-on-unresolved in dashboard if merges must block on bugs.
+
+## mdeapp habits
+
+- One PR closes one `SAN-NNN` only.
+- CK-V2 guardrail PRs: run `npm run audit:copilotkit-v2:depcruise` before push.
+- Do not bundle unrelated dirty worktree files (see `LESSONS.md` §0).

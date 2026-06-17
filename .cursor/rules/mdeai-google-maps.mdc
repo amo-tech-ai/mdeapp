@@ -1,0 +1,106 @@
+---
+description: Google Maps Platform — Code Assist MCP (gmp-code-assist), vis.gl, field masks, MAP tasks
+globs:
+  - mdeapp/**/*
+  - mdeapp/src/**/*[Mm]ap*
+  - plan/maps/**
+  - plan/ADK/adk-roadmap.md
+  - plan/prd/04-maps-grounding.md
+  - tasks/maps/**
+  - github/maps/**
+alwaysApply: false
+---
+
+# mdeai Google Maps (Phase 1)
+
+> **GMP Gemini extension prompt:** Do **not** paste the full upstream `GEMINI.md` as an always-on rule. This file is the **mdeai-trimmed** version: same MCP workflow, plus Medellín stack (vis.gl, Grounding Lite, Places New, no legacy loader). For Gemini CLI only, use `gemini extensions install google-maps-platform` — Cursor uses [`.mcp.json`](../.mcp.json) with `"type": "http"`, not `httpUrl`.
+
+**Skill (read first):** [`.claude/skills/mde-maps/SKILL.md`](../.claude/skills/mde-maps/SKILL.md)
+
+**Planning:** [`plan/maps/maps-prd.md`](../plan/maps/maps-prd.md) · tasks [`tasks/maps/MAP-001`](../tasks/maps/MAP-001-platform-map-pipeline.md)
+
+---
+
+## Two MCP servers — do not confuse
+
+| MCP | Endpoint | Purpose | Production runtime? |
+|-----|----------|---------|---------------------|
+| **Maps Code Assist** | `https://mapscodeassist.googleapis.com/mcp` | Docs RAG — verify APIs, masks, vis.gl patterns | **No** — dev/planning only |
+| **Maps Grounding Lite** | `https://mapstools.googleapis.com/mcp` | Live `search_places`, `compute_routes`, etc. | **Yes** — MAP-002 Mastra tools |
+
+Official overview: [Maps Code Assist toolkit](https://developers.google.com/maps/ai/code-assist)
+
+---
+
+## Maps Code Assist — required workflow
+
+**Server names:** upstream docs say `gmp-code-assist`; in Cursor this repo configures **`google-maps-code-assist`** → same URL `https://mapscodeassist.googleapis.com/mcp` (may appear as `user-google-maps-code-assist` in the UI).
+
+**Auto-use MCP** when the task mentions: maps/pins, geocoding, Places/Routes, Street View, POI, store locator, routing, logistics, Medellín neighborhoods, field masks, `mapId`, AdvancedMarker, Grounding Lite, or any MAP-### task.
+
+Before **any** GMP implementation or task spec change (Places, Routes, vis.gl, Advanced Markers, grounding):
+
+1. Call MCP **`retrieve-instructions`** with `{ "name": "instructions" }` — **always first** ([tool schema](https://developers.google.com/maps/ai/code-assist/reference/mcp/tools_list/retrieve-instructions))
+2. Call **`retrieve-google-maps-platform-docs`** with a concrete `llmQuery` + optional `filter` (e.g. `"Places API (New)"`, `"field mask"`, `"Advanced Markers"`)
+3. Ground every API name, field mask, and `mapId` claim in code — **do not** rely on training data alone
+4. **Validate:** `cd mdeapp && npm test` / `npm run floor` after code changes; cite doc URI in task evidence when flipping MAP Done
+
+Set `source: "mdeai-app"` (≤64 chars) on doc queries for analytics.
+
+**Attribution:** When presenting MCP doc results to users, include Google Maps source links from `documentationUri`.
+
+**ToS:** Do not cache MCP doc payloads for model training; product DB rules for `generativeSummary` are separate (see skill).
+
+**Deprecated path:** Do **not** add npm `@googlemaps/code-assist-mcp` — [platform-ai README](https://github.com/googlemaps/platform-ai) deprecates npm by **2026-07-01**; use **hosted HTTP MCP** only.
+
+---
+
+## Cursor / project MCP config
+
+- **Cursor (user):** `google-maps-code-assist` → `https://mapscodeassist.googleapis.com/mcp` (Streamable HTTP)
+- **Project:** [`.mcp.json`](../.mcp.json) — same URL for Claude Code parity
+- **Quick ref:** [`.cursor/MCP-GOOGLE-MAPS.md`](../.cursor/MCP-GOOGLE-MAPS.md)
+
+Verify: `curl -X POST -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"tools/list","id":"1"}' https://mapscodeassist.googleapis.com/mcp`
+
+---
+
+## Canonical `github/maps/` clones (read-only)
+
+**Do not vendor-import** into `mdeapp/src`. **npm install** for runtime libs.
+
+| Clone | Use for | mdeapp action |
+|-------|---------|---------------|
+| [`react-google-maps/`](../github/maps/react-google-maps/) | **98** — vis.gl `APIProvider`, `Map`, `AdvancedMarker` | `npm install @vis.gl/react-google-maps` (MAP-001) |
+| [`codelab-maps-platform-101-react-js/`](../github/maps/codelab-maps-platform-101-react-js/) | AdvancedMarker + clusterer together | Pattern reference |
+| [`grounding-lite-mcp-sample-app/`](../github/maps/grounding-lite-mcp-sample-app/) | Grounding Lite MCP → Mastra | MAP-002 |
+| [`js-markerclusterer/`](../github/maps/js-markerclusterer/) | Clustering | MAP-009 — `npm install @googlemaps/markerclusterer` |
+| [`js-api-samples/`](../github/maps/js-api-samples/) | Official JS API patterns | Field masks, loader |
+| [`google-maps-services-js/`](../github/maps/google-maps-services-js/) | Server Places/Routes | MAP-004–005 edge |
+| [`platform-ai/`](../github/maps/platform-ai/) | Code Assist source, `GEMINI.md` | MCP behavior only — **not** product runtime |
+| `react-wrapper/` | **Archived** | **Never** — use vis.gl |
+
+Index: [`github/maps/README.md`](../github/maps/README.md) · scores: [`index.md`](../index.md) §4
+
+---
+
+## mdeapp product constraints
+
+| Rule | Detail |
+|------|--------|
+| **React maps** | `@vis.gl/react-google-maps` only — every `<Map>` has `mapId={getGoogleMapsMapId()}` |
+| **Env (Next.js)** | `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`, `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` in `mdeapp/.env.local` |
+| **Places (server)** | `GOOGLE_PLACES_API_KEY` — never `NEXT_PUBLIC_*` |
+| **Field masks** | **Every** Places API (New) call includes `X-Goog-FieldMask` |
+| **Medellín default** | `{ lat: 6.2442, lng: -75.5812 }` |
+| **Avoid** | `react-wrapper`, legacy `loadGoogleMapsLibrary`, raw `google.maps.Map` in new code |
+
+---
+
+## When to invoke Code Assist vs skill only
+
+| Situation | Action |
+|-----------|--------|
+| Writing/editing map UI, Places tool, MAP task | MCP **retrieve-instructions** + **retrieve-google-maps-platform-docs** |
+| mdeai-specific pins, MapContext, CopilotKit render | **mde-maps** skill references (no MCP required if already verified this session) |
+| Live place search in prod chat | **Grounding Lite** or Supabase — **not** Code Assist |

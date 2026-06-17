@@ -1,0 +1,87 @@
+---
+description: Audit Events Platform gate before venue work or Cycle 1 venue assignment. Run when promoting Phase B or assigning SAN-492–496.
+globs:
+  - tasks/events/**
+alwaysApply: false
+---
+
+# Events gate audit — before venue / Cycle promotion
+
+**Todo:** [`tasks/events/todo.md`](../../../tasks/events/todo.md)  
+**Pre-verify (before code):** [`mdeai-events-pre-impl-verify.mdc`](./mdeai-events-pre-impl-verify.mdc)  
+**Changelog:** [`tasks/events/changelog.md`](../../../tasks/events/changelog.md)
+
+## When to run
+
+- Before assigning **SAN-492–496** to Cycle 1
+- Before starting **Phase B** venue implementation
+- After any agent claims "gate cleared"
+
+## Phase A exit checklist (all must PASS)
+
+| # | Check | How to verify |
+|---|-------|----------------|
+| 1 | **SAN-731 · UI-004** merged on `main` | `git log main --oneline \| grep -i 731` + Linear Done |
+| 2 | **SAN-135 · AIE-024** merged on `main` | `git log main --oneline \| grep -i 135` + Linear Done |
+| 3 | **Changelog** updated | Rows in `tasks/events/changelog.md` for 731 + 135 |
+| 4 | **Evidence** exists | `tasks/testing/evidence/YYYY-MM-DD/SAN-731-*` and SAN-135 |
+| 5 | **Linear Done** | User approved (not agent-only In Review) |
+| 6 | **Blockers** updated | e.g. SAN-729 unblocked by SAN-730 Done |
+
+**If any check fails → stop.** Next task remains Phase A (731 or 135), not venue.
+
+## Blocker chain verification (Phase B)
+
+Confirm via Linear MCP `get_issue` + `includeRelations: true`:
+
+```text
+SAN-492 · EVT-033 — Event venue + offerings schema
+  ↓
+SAN-493 · EVT-034 — Seed Mamacita + 5 event partners
+  ↓
+SAN-510 · EVT-051 + SAN-511 · EVT-052
+  ↓
+SAN-494 · EVT-035 — Restaurant card Event Venue CTA
+  ↓
+SAN-495 · EVT-036 — Event offerings detail panel
+  ↓
+SAN-496 · EVT-037 — Request proposal modal (HITL)
+```
+
+## Cycle 1 assignment rule
+
+**Do not** assign B.1–B.7 to Cycle 1 while SAN-731 or SAN-135 are not merged.
+
+**After gate passes only**, assign in order:
+
+SAN-492 → SAN-493 → SAN-510 → SAN-511 → SAN-494 → SAN-495 → SAN-496
+
+## Required output (audit report)
+
+```markdown
+## Events gate audit — YYYY-MM-DD
+
+| Check | Result |
+|-------|--------|
+| SAN-731 on main | PASS/FAIL |
+| SAN-135 on main | PASS/FAIL |
+| Changelog | PASS/FAIL |
+| Evidence | PASS/FAIL |
+| Linear Done | PASS/FAIL |
+| Blockers | PASS/FAIL |
+
+**Readiness score:** NN/100
+**Gate verdict:** OPEN / CLEARED
+**Cycle assignment:** HOLD / assign B.1–B.7
+**Next implementation task:** SAN-### · SPEC-ID — title
+```
+
+## Current cycle focus (until gate clears)
+
+```text
+Cycle 1 active work:
+  ├── SAN-731 · UI-004 — Event detail loading skeleton + hero alt (a11y)
+  └── SAN-135 · AIE-024 — MVP Luma event detail layout (EVP-032)
+
+Venue chain: HOLD — assign after both merged
+```

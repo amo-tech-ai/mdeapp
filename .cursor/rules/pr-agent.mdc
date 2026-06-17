@@ -1,0 +1,85 @@
+---
+description: When and how to use PR-Agent on mdeapp PRs (GitHub Action + PR comment tools)
+alwaysApply: false
+globs: "**/*"
+---
+
+# PR-Agent workflow (mdeapp)
+
+Shipped in PR #236 (merged). Upstream: [The-PR-Agent/pr-agent](https://github.com/The-PR-Agent/pr-agent) · docs: [docs.pr-agent.ai](https://docs.pr-agent.ai/).
+
+**Role:** Third automated review lane for Sofía — alongside Cursor Bugbot and CodeRabbit. Helpful for `/describe`, `/review`, and `/improve` on PRs to `main`. **Not** a merge blocker unless you wire it into branch protection (today: informational + Actions check only).
+
+## What runs automatically
+
+Workflow: `.github/workflows/pr-agent.yml`
+
+| Trigger | Behavior |
+|---------|----------|
+| PR **opened**, **synchronize**, or **reopened** targeting `main` | GitHub Actions job **PR Agent** (`pr_agent_job`) |
+| Sender is a **bot** | Skipped (`github.event.sender.type != 'Bot'`) — avoids loops with Bugbot / CodeRabbit |
+
+| Setting | Value |
+|---------|--------|
+| Action pin | `the-pr-agent/pr-agent@v0.36.0` |
+| Secret | `OPENAI_KEY` (repo Actions secret) |
+| Token | Default `GITHUB_TOKEN` (no manual secret) |
+| Permissions | `pull-requests: write`, `issues: write`, `contents: read` |
+
+Verify: `gh pr checks <PR#> | rg -i 'pr.agent|pr_agent'`
+
+## Manual tools (PR comments)
+
+Comment on the **PR** (not issue) to re-run or invoke a specific tool:
+
+| Command | Use when |
+|---------|----------|
+| `/review` | Full PR review — bugs, risks, suggestions |
+| `/describe` | Auto-generate or refresh PR title + description |
+| `/improve` | Actionable code-improvement suggestions |
+| `/ask <question>` | Q&A about the PR diff |
+| `/help` | List available tools |
+
+Docs: [Review](https://docs.pr-agent.ai/tools/review/) · [Describe](https://docs.pr-agent.ai/tools/describe/) · [Improve](https://docs.pr-agent.ai/tools/improve/) · [Ask](https://docs.pr-agent.ai/tools/ask/)
+
+**Agent habit:** After opening a PR, scan PR-Agent comments the same way as CodeRabbit/cubic — fix P0/P1 or document wont-fix in evidence.
+
+## Local CLI (optional)
+
+For pre-PR review without waiting on Actions:
+
+```bash
+pip install pr-agent
+export OPENAI_KEY=...   # never commit; use your own key locally
+pr-agent --pr_url https://github.com/amo-tech-ai/mdeapp/pull/<N> review
+```
+
+Other tools: append `describe`, `improve`, or `ask` instead of `review`. See [CLI usage](https://docs.pr-agent.ai/usage-guide/automations_and_usage/#local-repo-cli).
+
+## How PR-Agent fits with other reviewers
+
+| Tool | When | Agent action |
+|------|------|----------------|
+| **Bugbot** | Before push; `cursor review` on PR | Subagent `/review-bugbot` — see `bugbot.mdc` |
+| **CodeRabbit** | Pre-PR CLI + post-open threads | Skill `coderabbit` |
+| **cubic** | Pre-PR CLI + CI | Skill `run-review` |
+| **PR-Agent** | Auto on PR + `/review` etc. on demand | Read PR comments; fix or wont-fix |
+
+**Do not** treat three bots as one — triage separately. Floor + Vercel remain the **required** merge gates.
+
+## Optional repo config
+
+Add `.pr_agent.toml` at repo root only when you need model or tool tuning — see [configuration](https://docs.pr-agent.ai/usage-guide/configuration/). Default OpenAI model comes from PR-Agent + `OPENAI_KEY`. Production app AI stays **Gemini-only** (`src/**`); PR-Agent OpenAI usage is **CI-only**.
+
+## mdeapp habits
+
+- One PR closes one `SAN-NNN` only — pair full Linear title in PR body.
+- Small focused PRs (≤15 files) get better `/review` signal — see `mde-worktree-pr-flow`.
+- Do not paste secrets into PR comments or `.pr_agent.toml` commits.
+- After applying PR-Agent `/improve` suggestions, re-run targeted `npm test` and browser proof if UI changed (`mdeai-real-world-proof-pr-review.mdc`).
+
+## When agents should load this rule
+
+- User mentions PR-Agent, `/review`, `/describe`, `/improve` on a PR
+- Debugging why **PR Agent** Actions job failed (missing `OPENAI_KEY`, permissions, bot skip)
+- Adding or changing `.github/workflows/pr-agent.yml` or `.pr_agent.toml`

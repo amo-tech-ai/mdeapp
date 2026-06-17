@@ -1,0 +1,75 @@
+---
+description: STRICT — Every Events task (tasks/events/todo.md) requires skills+MCP+task-verifier before code and before Done. Agents must load the per-task pack from todo.md; no implementation or Done without GO verdict.
+globs:
+  - docs/events/**
+  - tasks/events/**
+  - mdeapp/src/app/events/**
+  - mdeapp/src/app/host/**
+  - mdeapp/src/components/events/**
+  - mdeapp/src/components/host/**
+  - mdeapp/src/components/partners/**
+  - mdeapp/e2e/**/events/**
+  - mdeapp/e2e/**/host/**
+alwaysApply: false
+---
+
+# Events task — skill + MCP + verifier gate (enforced)
+
+> **Orchestrator:** [`mdeai-workflow.mdc`](./mdeai-workflow.mdc) class **U/S** for Events paths.
+
+**Canonical order + per-task packs:** [`docs/events/todo.md`](../../../docs/events/todo.md) (symlink: `tasks/events/todo.md`)  
+**Skills index:** [`index-skills.md`](../../../index-skills.md) § Events Platform  
+**Orchestrator:** [`mdeai-done-gate.mdc`](./mdeai-done-gate.mdc)
+
+## Hard rules
+
+1. **Before any Events implementation** — run pre-verify ([`mdeai-events-pre-impl-verify.mdc`](./mdeai-events-pre-impl-verify.mdc)): load the task's **≤5 skills** + **MCP probes** from `todo.md` § Per-task verify pack; score readiness; **no code if &lt; 70 or 🔴 blocker**.
+2. **Before Linear Done / claiming 100% correct** — run **`task-verifier`** forensic pass on disk + runtime; append evidence; update [`changelog.md`](../../../tasks/events/changelog.md).
+3. **Load cap** — max **5 skills** per task; read each `SKILL.md` under `.claude/skills/` (do not guess APIs).
+4. **MCP before external APIs** — Supabase schema/RLS, CopilotKit, Gemini models, Maps field masks — per task row in `todo.md`.
+
+## Required workflow (every SAN row in todo.md)
+
+```text
+Pick task from todo.md (dependency order)
+  → Linear MCP get_issue (+ includeRelations)
+  → Load ≤5 skills from Per-task verify pack
+  → Run MCP probes from pack
+  → task-verifier pre-impl (readiness ≥ 70, no 🔴)
+  → Update todo.md row (Readiness, Success rate, Failure points)
+  → GO only → implement
+  → testing + browser + cr/cubic + evidence
+  → task-verifier post-ship (100% AC on disk)
+  → changelog row → Linear In Review → Done (user OK)
+```
+
+## Pre-impl output (mandatory in chat or Linear comment)
+
+```markdown
+## Pre-verify — SAN-### · SPEC-ID — title
+Skills loaded: (≤5, from todo pack)
+MCP probes: (list + pass/fail)
+Readiness: NN/100 · Success rate (est.): NN%
+Verdict: GO | HOLD
+```
+
+## Done output (mandatory before Linear Done)
+
+```markdown
+## task-verifier — SAN-### · SPEC-ID — title
+AC checklist: N/N verified on disk + runtime
+Evidence: tasks/testing/evidence/YYYY-MM-DD/SAN-###-RESULTS.md
+Grade / % correct: (changelog)
+Verdict: SHIP | HOLD — list any unverified AC
+```
+
+**Never** flip Done from status fields, memory, or Linear alone.
+
+## Pair rules
+
+| Phase | Rule |
+|-------|------|
+| Pre-code | [`mdeai-events-pre-impl-verify.mdc`](./mdeai-events-pre-impl-verify.mdc) |
+| Post-code / PR | [`mdeai-real-world-proof-pr-review.mdc`](./mdeai-real-world-proof-pr-review.mdc) |
+| Phase B promotion | [`mdeai-events-gate-audit.mdc`](./mdeai-events-gate-audit.mdc) |
+| Skills routing | [`mdeai-skills-best-practices.mdc`](./mdeai-skills-best-practices.mdc) · [`index-skills.md`](../../../index-skills.md) |

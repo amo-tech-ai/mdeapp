@@ -1,0 +1,349 @@
+---
+description: Full Proof-Driven Delivery (Levels 0–7, Evidence Score). P0 launch audits only — not every task.
+globs:
+  - tasks/**
+  - mdeapp/todo.md
+alwaysApply: false
+---
+
+# mdeai Proof-Driven Delivery System
+
+> **Default:** [`mdeai-workflow.mdc`](./mdeai-workflow.mdc). Load this file for **P0 `phase:launch`**, batch audits, or when user asks for Evidence Score.
+
+**Principle:** A Linear status is never proof. Launch readiness = persona journeys + Evidence Score + runtime proof.
+
+Orchestrates: [`mdeai-task-skill-mcp-gate.mdc`](./mdeai-task-skill-mcp-gate.mdc) · [`mdeai-real-world-proof-pr-review.mdc`](./mdeai-real-world-proof-pr-review.mdc) · [`mdeai-done-gate.mdc`](./mdeai-done-gate.mdc) · [`mdeai-launch-gate.mdc`](./mdeai-launch-gate.mdc) · [`mdeai-testing.mdc`](./mdeai-testing.mdc) · [`mdeai-live-prod-check.mdc`](./mdeai-live-prod-check.mdc) · skills `task-verifier` · `mde-task-lifecycle` · `run-review` · `check-pr-comments`
+
+---
+
+## Level 1 — Planning (every task)
+
+Every task entry MUST use:
+
+```text
+SAN-### · SPEC-ID — <full Linear title>
+Area: <domain> / <Persona>
+Persona: Camila | Roberto | Andrés | Lucía | Patricia | Tourist
+Journey: <persona journey name>
+Priority: P0 | P1 | P2
+```
+
+**Never** `SAN-545` alone in execution lists, PRs, commits, evidence, or chat tables.
+
+**Persona priority (Phase 1):** Camila (#1) · Roberto (#2) · Andrés (#3) · Lucía (#4) · Patricia (#5)
+
+---
+
+## Level 0 — Pre-implementation verification (BEFORE any code)
+
+**Do not implement until this gate passes or blockers are explicitly logged.**
+
+Every task starts with **verify correctness** — not coding. Linear status, todo row, and spec can all be wrong.
+
+### Mandatory steps (in order)
+
+1. **Resolve full task identity**
+   - Linear MCP `get_issue` → title, status, `blockedBy`, attachments, slug URL
+   - Cross-check [`mdeapp/todo.md`](../todo.md) + spec path on disk (`tasks/**`, `plan/prd/`)
+   - Output: `SAN-### · SPEC-ID — <full Linear title>` + Area + Persona + Journey
+
+2. **Load skills (≤5)** — read `SKILL.md`, do not guess APIs
+   - Always: `task-verifier` + `mde-task-lifecycle`
+   - Domain: `copilotkit` / `mde-maps` / `gemini` / `mde-supabase` / `mastra` / `testing` (per touch surface)
+   - Router: [`mdeai-skills-best-practices.mdc`](./mdeai-skills-best-practices.mdc)
+
+3. **MCP verification** — before touching external APIs or claiming AC met
+
+   | Surface | MCP |
+   |---------|-----|
+   | Gemini models | `gemini-api-docs-mcp` |
+   | CopilotKit / AG-UI | `mcp__copilotkit__search-docs` / `search-ag-ui-docs` |
+   | Mastra | `mcp__mastra__searchMastraDocs` |
+   | Supabase schema / RLS | `mcp__plugin_supabase_supabase__execute_sql` |
+   | Maps / Places | `google-maps-code-assist` |
+   | Linear issue truth | `plugin-linear-linear` `get_issue` |
+
+   If MCP contradicts skill or spec → **fix understanding first**; do not code on stale assumptions.
+
+4. **Disk + LESSONS probe**
+   - Grep [`LESSONS.md`](../../LESSONS.md) for the touch area (CopilotKit, maps, cards, grounding, …)
+   - Read files the spec names; confirm AC still matches `mdeapp/src/**` reality
+   - `task-verifier` probes — spec score is invalid without this
+
+5. **Pre-flight report (required output before implement)**
+
+   Publish in chat **and** append to evidence stub `tasks/testing/evidence/YYYY-MM-DD/SAN-###-PREFLIGHT.md`:
+
+   ```markdown
+   ## Pre-flight — SAN-### · SPEC-ID — <title>
+
+   **Verified:** YYYY-MM-DD UTC · Skills: … · MCPs: …
+
+   ### Task correct?
+   - [ ] Linear title matches todo/changelog
+   - [ ] Spec path exists and AC still valid
+   - [ ] Scope fence OK (not events/ticketing/… unless asked)
+   - [ ] One SAN = one PR scope
+
+   ### Errors (spec/disk drift)
+   - …
+
+   ### Blockers (must clear before implement)
+   - …
+
+   ### Failure points (watch during implement + test)
+   - …
+
+   **Verdict:** PROCEED | BLOCKED — <reason>
+   ```
+
+6. **Verdict rules**
+   - **BLOCKED** → update [`mdeapp/todo.md`](../todo.md) + do not open PR; tell user what unblocks
+   - **PROCEED** → continue to Level 6 step 3 (Implement)
+   - Hidden blocker discovered mid-flight → stop, update pre-flight, status **In Review** not Done
+
+### Pre-flight anti-patterns (reject)
+
+- ❌ Implementing on Linear title or SAN number alone
+- ❌ Skipping `task-verifier` / MCP because “task looks simple”
+- ❌ No blockers section when PR is open, prod SHA stale, or dependency unresolved
+- ❌ Coding before pre-flight file or equivalent chat table exists
+
+---
+
+## Level 2 — Evidence Score (replaces naive “Done”)
+
+Track per task — do not trust Linear `Done` without score.
+
+| Category | Weight | What it measures |
+|----------|--------|----------------|
+| Spec Alignment | 25% | Acceptance criteria match disk + `task-verifier` |
+| Tests | 25% | Vitest + Playwright targeted to task |
+| Runtime Verification | 20% | `npm run dev` clean + route/API responds |
+| Production Proof | 20% | `https://www.mdeai.co/` curl + browser (P0 launch tasks) |
+| Process Compliance | 10% | Skills, MCP, cubic/CodeRabbit, one-PR scope, evidence file |
+
+```text
+Evidence Score =
+  0.25 × Spec + 0.25 × Tests + 0.20 × Runtime + 0.20 × Production + 0.10 × Process
+```
+
+| Score | Grade | Linear status |
+|-------|-------|---------------|
+| 90–100 | A | Eligible for **Done** (user approval still required) |
+| 75–89 | B | **In Review** — prod or browser gap |
+| 60–74 | C | **In Progress** — runtime/tests gap |
+| <60 | F | **Blocked** — do not PR |
+
+Record in evidence + ledger (see Level 3).
+
+---
+
+## Level 3 — Structured evidence ledger
+
+### Changelog + todo (graded history + live queue)
+
+- **Changelog:** [`mdeapp/changelog.md`](../changelog.md) — append/update **after every task** ([`mdeai-launch-changelog.mdc`](./mdeai-launch-changelog.mdc))
+- **Todo:** [`mdeapp/todo.md`](../todo.md) — tier-1 order + checklists; **sync after every task** (implement · audit · review · validation · blocker)
+
+**Agent contract:** Do not claim work complete in chat until both files reflect the latest Evidence Score, blockers, and proof levels. Update `Last synced:` in todo header.
+
+### Task ledger (append per SAN)
+
+Path: [`tasks/testing/evidence/TASK-LEDGER.md`](../../../tasks/testing/evidence/TASK-LEDGER.md)
+
+| SAN | Full name | Area | Persona | Journey | PR | Prod SHA | L1–L5 | Evidence Score | Evidence path | Close? |
+|-----|-----------|------|---------|---------|----|---------:|-------|---------------:|---------------|--------|
+
+### Per-task evidence file
+
+Path: `tasks/testing/evidence/YYYY-MM-DD/SAN-###-<slug>-RESULTS.md`
+
+Required fields per check: **URL** · **UTC timestamp** · **query/action** · **expected** · **actual** · **screenshot** · **tool** (Browser / Playwright / Chrome DevTools) · **console errors** · **network failures** · **PASS/FAIL**
+
+PR review block (required before In Review):
+
+```markdown
+| Reviewer | P0 | P1 | P2+ | Action |
+|----------|---:|---:|----:|--------|
+| cubic | | | | fixed / documented |
+| CodeRabbit | | | | resolved / waiver |
+```
+
+Changelog block (copy into evidence):
+
+```markdown
+## SAN-### · SPEC-ID — <full title>
+
+Area: <domain> / <Persona> · Journey: <name>
+
+| Category | Score |
+|----------|------:|
+| Spec | |
+| Tests | |
+| Runtime | |
+| Production | |
+| Process | |
+| **Final** | |
+
+Grade: A/B/C/F · Proof levels: L1–L5 · PR: #NNN · Commits: …
+```
+
+### Persona ledger
+
+Path: [`tasks/testing/personas/`](../../../tasks/testing/personas/) — one file per persona (`camila.md`, `roberto.md`, …)
+
+After each verified task, update the persona’s journey checklist and **Completion %**.
+
+---
+
+## Level 4 — Launch gate
+
+See [`mdeai-launch-gate.mdc`](./mdeai-launch-gate.mdc).
+
+A task cannot move to **Done** unless ALL pass: Spec · Tests · Browser · Evidence · Linear · Persona journey updated.
+
+Any missing → **In Review**.
+
+---
+
+## Level 5 — Browser proof levels (L1–L5)
+
+| Level | Requirement | Tool |
+|-------|-------------|------|
+| **L1** | Unit tests | Vitest |
+| **L2** | E2E automated | Playwright (`e2e/helpers/maps-layout.ts` for hero/chat) |
+| **L3** | Interactive localhost | Browser MCP + screenshot |
+| **L4** | Production browser | Browser MCP or Playwright on prod |
+| **L5** | Full persona journey | Multi-step flow + pins/cards/detail per journey spec |
+
+Record per task: `L1 ✓ L2 ✓ L3 ✓ L4 ✗ L5 ✗` → Status **In Review** until P0 requires L4+.
+
+**P0 launch tasks (`phase:launch`):** minimum **L1 + L2 + L3 + L4**; **L5** for SAN-546 matrix journeys.
+
+### Real-world proof (mandatory — not optional)
+
+Full spec: [`mdeai-real-world-proof-pr-review.mdc`](./mdeai-real-world-proof-pr-review.mdc) Part A.
+
+**Vitest/curl alone is never sufficient** for persona-visible UI, chat, maps, cards, or agents.
+
+Every such task MUST run **≥1** real-world tool and capture proof:
+
+| Tool | When to use |
+|------|-------------|
+| **Cursor Browser MCP** | Default — persona prompt, cards, pins, screenshot |
+| **Playwright** | Scripted regression; hero/chat via `e2e/helpers/maps-layout.ts` |
+| **Chrome DevTools MCP** | Network/console/a11y when Browser fails or for API 401/500 diagnosis |
+
+**Environments (both required unless deploy blocked):**
+
+| Env | URL | Minimum proof |
+|-----|-----|---------------|
+| **Localhost** | `http://localhost:3001/` (port from `[ui]` log) | Dev restart → GET / 200 → persona prompt → screenshot |
+| **Production** | `https://www.mdeai.co/` (alias `https://mdeai.co/`) | Same prompt + screenshot OR `chat-smoke.mjs --base https://www.mdeai.co` |
+
+Evidence row per prompt:
+
+```markdown
+| Prompt | Env | Tool | Expected | Actual | Screenshot | Console | Network | PASS |
+```
+
+**Chat hero:** use `submitHomeHeroQuery` in `e2e/helpers/maps-layout.ts` — never raw `fill()` (Send stays disabled).
+
+If prod not deployed → **BLOCKED** for L4; do not claim post-merge PASS.
+
+---
+
+## Level 6 — Verification stack (mandatory order)
+
+0. **Pre-flight** — Level 0 complete; verdict **PROCEED**; blockers/failure points logged
+1. **Skills** (≤5) — same pack as Level 0 (already loaded — re-read if touch surface changed)
+2. **MCP docs** — same matrix as Level 0 before any new external API call
+3. **Implement** — one SAN per PR; git root `mdeapp/` — **only after pre-flight PROCEED**
+4. **L1 Vitest** — targeted tests
+5. **L2 Playwright** — task e2e spec
+6. **Runtime** — `cd mdeapp && npm run dev` + curl relevant route/API
+7. **Real-world localhost** — Browser MCP **or** Playwright **or** Chrome DevTools MCP: persona prompt + screenshot → `tasks/testing/evidence/YYYY-MM-DD/`
+8. **Real-world prod** — repeat same prompt on `https://www.mdeai.co/` (+ `chat-smoke.mjs`); Chrome DevTools if 401/500/console errors
+9. **Deploy gate** — for prod claims: `gh pr view` merged + prod SHA = merge commit
+10. **PR review — cubic + CodeRabbit** — **always** before In Review/merge ([`mdeai-real-world-proof-pr-review.mdc`](./mdeai-real-world-proof-pr-review.mdc) Part B):
+
+    ```bash
+    cd /home/sk/mdeai/mdeapp
+    cr review --agent --base main          # CodeRabbit — pre-PR
+    cubic review --base main               # cubic-dev — pre-PR (or cubic review -j / -b -j)
+    gh pr create …                         # then on open PR:
+    gh pr checks <N>                       # cubic CI
+    gh pr view <N> --comments              # CodeRabbit PR prompts
+    ```
+
+    **Run every review prompt** from cubic and CodeRabbit on the PR; fix **P0/P1**; resolve threads or document waiver in evidence. Skills: `run-review` · `check-pr-comments` · `coderabbit`.
+
+12. **Evidence Score** — compute + write ledger + update persona file (include cubic + CodeRabbit table)
+13. **Sync todo + changelog** — **mandatory after every task** ([`mdeai-launch-changelog.mdc`](./mdeai-launch-changelog.mdc)): append changelog entry, update todo row/checklists/`Last synced:` — before final reply
+14. **Linear** — **In Review** with evidence link; **Done** only after user approval
+
+Skip full `npm run floor` for ≤2-file UI slices only when L1–L4 for that slice pass; document in evidence.
+
+---
+
+## Level 7 — Project health dashboard
+
+Regenerate after batch validation:
+
+Path: [`tasks/dashboard/project-health.md`](../../../tasks/dashboard/project-health.md)
+
+Sections: Persona scores · Area scores · Launch overall · Open blockers · Last prod SHA
+
+Agent updates dashboard when completing persona-ledger changes or post-merge validation runs.
+
+---
+
+## Deploy gate (prod claims)
+
+Before “post-merge PASS” or Production Score > 0:
+
+```bash
+cd /home/sk/mdeai/mdeapp
+gh pr view <N> --json state,mergedAt,mergeCommit
+gh api repos/amo-tech-ai/mdeapp/deployments --jq '.[] | select(.environment=="Production") | {sha:.sha[0:7],created:.created_at}' | head -1
+```
+
+**BLOCKED** if PR open or prod SHA ≠ merge commit. Evidence must say **BLOCKED**, not PASS.
+
+---
+
+## Status output template (use in every completion reply)
+
+```text
+SAN-### · SPEC-ID — <full title>
+Area: <domain> / <Persona>
+Evidence Score: ## (Grade A/B/C/F)
+Journey: <persona journey>
+Proof: L1 ✓ L2 ✓ L3 ✓ L4 ✗ L5 ✗
+Status: In Review | Done-eligible | Blocked
+Evidence: tasks/testing/evidence/…
+```
+
+---
+
+## Anti-patterns (reject)
+
+- Finishing a task without syncing [`mdeapp/todo.md`](../todo.md) + [`mdeapp/changelog.md`](../changelog.md)
+- Implementing without Level 0 pre-flight (skills + MCP + blockers table)
+- Vitest-only or curl-only proof for chat/maps/cards (no Browser/Playwright/Chrome DevTools)
+- Localhost-only proof when prod is deployable (must hit `https://www.mdeai.co/`)
+- PR opened without `cubic review` + CodeRabbit comment pass
+- Ignoring CodeRabbit/cubic P0/P1 prompts on the PR
+- Linear Done without Evidence Score ≥ 90 for P0
+- “Post-merge validation” while PR is OPEN
+- Hero/browser test with raw `fill()` — use `maps-layout.ts` helpers
+- One PR mixing unrelated SAN scopes
+- Claiming prod without deploy SHA proof
+- Task-centric “tests pass” without persona-visible proof
+
+---
+
+## Scope fences (default agent)
+
+Do not implement/close without explicit ask: Events · ticketing · host wizard · VEB · Revenue R2+ · OpenClaw · new audits

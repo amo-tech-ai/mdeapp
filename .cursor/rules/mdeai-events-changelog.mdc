@@ -1,0 +1,75 @@
+---
+description: STRICT — After every Events task ships, append graded entry to tasks/events/changelog.md before Linear In Review/Done.
+globs:
+  - tasks/events/**
+  - mdeapp/src/app/host/**
+  - mdeapp/src/app/events/**
+  - mdeapp/src/components/events/**
+  - mdeapp/src/components/host/**
+  - mdeapp/src/components/partners/**
+  - mdeapp/e2e/**/host/**
+  - mdeapp/e2e/**/events/**
+  - mdeapp/e2e/screens/SCREEN-014*
+alwaysApply: false
+---
+
+# Events task changelog gate
+
+**Changelog:** [`tasks/events/changelog.md`](../../../tasks/events/changelog.md)  
+**Todo (canonical order):** [`tasks/events/todo.md`](../../../tasks/events/todo.md) — Cycle 1 venue chain B.1–B.7  
+**Naming:** [`tasks/events/notes/1-notes.md`](../../../tasks/events/notes/1-notes.md) — `SAN-### · SPEC-ID — <full Linear title>`
+
+## When this fires
+
+Any Events (or Events-adjacent host/landing/detail) task that moves toward **In Review** or **Done** — including merges to `main`.
+
+## Mandatory before Linear In Review / Done
+
+1. **Append a changelog entry** (newest first) under `tasks/events/changelog.md`:
+   - Full task name (never SAN-only)
+   - PR #, commit SHA, branch, persona + surface
+   - **Five dimension scores** (0–100) per rubric in changelog header
+   - **Weighted % correct** and letter **grade** (A–F)
+   - Evidence path when UI/agent touched
+2. **Update the Summary table** at top of the same file (one row).
+3. **Do not** flip Linear Done without user approval — stop at In Review with changelog + evidence linked.
+
+## Scoring (must compute, not guess)
+
+```text
+% correct = round(0.25×spec + 0.25×tests + 0.20×review + 0.20×runtime + 0.10×process)
+```
+
+| Dimension | What proves the score |
+|-----------|------------------------|
+| Spec / AC | task-verifier probes; files match acceptance criteria |
+| Tests | Vitest + Playwright pass counts; CI floor green |
+| Review hygiene | cubic + CodeRabbit threads resolved at merge |
+| Runtime proof | dev restart + Browser/Playwright; prod when shipped ([`mdeai-testing.mdc`](./mdeai-testing.mdc)) |
+| Process | one issue = one PR; evidence file; full SAN title in PR/commit |
+
+Use the **Template** section at bottom of `changelog.md` — copy, fill, do not skip dimensions.
+
+**After append:** update **Grade**, **% correct**, and **Success rate** (= % correct) on the task row in [`tasks/events/todo.md`](../../../tasks/events/todo.md).
+
+## Cycle 1 venue chain (must follow order in todo.md)
+
+See Phase B in [`tasks/events/todo.md`](../../../tasks/events/todo.md). One PR per SAN-*; do not start B.1 until Phase A gate clears.
+
+## Pair with other gates
+
+| Step | Rule / skill |
+|------|----------------|
+| **Before code** | [`mdeai-events-pre-impl-verify.mdc`](./mdeai-events-pre-impl-verify.mdc) |
+| Orchestrator | [`mdeai-done-gate.mdc`](./mdeai-done-gate.mdc) |
+| Verify before score | `task-verifier` + [`mdeai-task-verifier.mdc`](./mdeai-task-verifier.mdc) |
+| Browser + prod proof | [`mdeai-testing.mdc`](./mdeai-testing.mdc) |
+| Skills + MCP | [`mdeai-skills-best-practices.mdc`](./mdeai-skills-best-practices.mdc) |
+| Linear sync | [`mdeai-linear.mdc`](./mdeai-linear.mdc) |
+
+## Anti-patterns
+
+- ❌ Linear Done with no changelog row
+- ❌ Grade without dimension breakdown
+- ❌ “100%” with failing tests or open review threads
+- ❌ Abbreviated task names in changelog (`SAN-730 nav`)

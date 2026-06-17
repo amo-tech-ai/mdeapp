@@ -1,0 +1,77 @@
+---
+description: Every chat reply lists Linear tasks as SAN-### · SPEC-ID — title (never bare SAN-###). Chat enforcement also in mdeai-response-style.mdc + stop-plain-language hook.
+alwaysApply: false
+globs: docs/tasks/**, tasks/**, todo.md, changelog.md
+---
+
+# mdeai task naming — full titles always
+
+**Canonical format (Linear + chat + docs):**
+
+```text
+SAN-### · SPEC-ID — <full Linear title>
+```
+
+Use the **middle dot** `·` after the SAN number — not em dash `—` alone.
+
+**Markdown link (first mention in every chat reply):**
+
+```markdown
+[SAN-574 · D-08 — Shared browse system (VenueCard + BrowseLayout)](https://linear.app/sanjiovani/issue/SAN-574/d-08-shared-browse-system-venuecard-browselayout)
+```
+
+- **Slug URL** from Linear (`/issue/SAN-###/…`) — not bare `/issue/SAN-###`
+- **SPEC-ID** = disk prefix (`D-08`, `EVT-033`, `PAY-001`, `UX-043`, `SCREEN-024`, …)
+- **No SPEC-ID on Linear?** Use title segment — e.g. `SAN-728 · E2E — Camila schedule-viewing full flow`
+- **Title** = exact Linear issue title (fetch via Linear MCP `get_issue` if unsure)
+- **UX project** ([board](https://linear.app/sanjiovani/project/ux-0ad555e403b4/issues)): all 114 issues use this format (verified 2026-06-10)
+
+## Chat — mandatory every reply
+
+| ✅ Do | ❌ Don't |
+|-------|----------|
+| `[SAN-576 · D-10 — Re-skin Dashboard](url)` in tables | `SAN-576` or "D-10" alone |
+| Bullet lists name **number + SPEC + title** | "the dashboard task" with no ID |
+| Blockers: full linked name on first use | Bare `[SAN-576](url)` link text |
+| Multi-task tables: column `Task (full name)` | Column header `SAN` only |
+
+**Pair with:** [`mdeai-response-style.mdc`](./mdeai-response-style.mdc) §4 (persona + verdict shape).
+
+## Where full names are also mandatory
+
+| Surface | Rule |
+|---------|------|
+| Agent chat | Every table, verdict, blocker, next-step list |
+| `docs/tasks/**/INDEX.md` | Every Linear row |
+| `tasks/testing/evidence/**` | File H1 + `SAN-###-RESULTS.md` header |
+| `mdeapp/todo.md` · changelogs | Every task row |
+| PR body (human text) | SPEC-ID in title; `Closes SAN-###` footer OK |
+| Linear issue titles | `SAN-### · SPEC-ID — …` (UX project enforced) |
+
+## Allowed shorthand (narrow)
+
+| OK | Not OK |
+|----|--------|
+| `Closes SAN-545` in PR footer | Chat: "545 is done" |
+| Branch `ai/san-545-data-embed-fix` | Evidence H1: `# SAN-545` only |
+| Filename `SAN-545-rental-embed-RESULTS.md` | `[SAN-545](url)` with no title in link text |
+
+## Agent workflow
+
+1. **Before** naming a task in chat: `get_issue` → copy Linear title verbatim
+2. **Every** list of tasks uses full names — no exceptions in user-facing replies
+3. **On edit** docs/todos: expand `SAN-###`-only to full name
+4. **task-verifier / Done gate**: reject evidence whose H1 lacks `SAN-### · SPEC-ID — title`
+
+## Examples
+
+```markdown
+✅ [SAN-828 · UX-043 — CopilotKit: audit empty POST 401 vs 400 (order 2)](https://linear.app/sanjiovani/issue/SAN-828/…)
+✅ Blocker: **SAN-576 · D-10** — dashboard re-skin (Roberto `/host` chrome unaffected)
+
+❌ SAN-828 Done-ready
+❌ D-10 is next
+❌ [SAN-828](https://linear.app/sanjiovani/issue/SAN-828/…)
+```
+
+**Playbooks:** [`mdeai-response-style.mdc`](./mdeai-response-style.mdc) · [`mdeai-done-gate.mdc`](./mdeai-done-gate.mdc) · [`mdeapp/docs/tasks/design/INDEX.md`](../mdeapp/docs/tasks/design/INDEX.md)

@@ -1,0 +1,82 @@
+---
+description: Rentals broker OS — kit is visual reference only; never import mdeai-design-system into src/. Port to shadcn + DESIGN.MD.
+globs:
+  - src/app/host/rentals/**
+  - src/components/host/rentals/**
+  - src/app/partners/rentals/**
+  - docs/real-estate/**
+  - mdeai-design-system/**
+alwaysApply: false
+---
+
+# mdeai-design-system — port, don't copy
+
+**Kit root:** `mdeapp/mdeai-design-system/project/ui_kits/partners/`  
+**How to port:** [`docs/real-estate/design/how-use-design-files.md`](../docs/real-estate/design/how-use-design-files.md)  
+**Handoff guardrails:** [`docs/real-estate/design/01-design-handoff.md`](../docs/real-estate/design/01-design-handoff.md)  
+**Linear queue:** [`docs/real-estate/design/LINEAR-ISSUES.md`](../docs/real-estate/design/LINEAR-ISSUES.md)
+
+## Four layers (memorize)
+
+| Layer | Role |
+|-------|------|
+| **Kit** (`mdeai-design-system/`) | What it should **look** like — layout, copy, states, `data-testid`s |
+| **Docs + wireframes** (`docs/real-estate/design/`, `wireframes/`) | **How** to build it in mdeapp |
+| **Linear** (SAN-1088…1111, `RENTV2` + `D-TRACK`) | **What** to execute, in order |
+| **`mdeapp/src/`** | **Only** production code |
+
+## Hard rules — violations are regressions
+
+1. **Kit = visual reference only.** Read JSX/CSS/HTML to understand regions and behavior; **do not** copy-paste kit files into `src/`.
+2. **No imports from `mdeai-design-system/`** in `src/**` — no `rentals-os.css`, no `window.RentalsConcierge`, no relative paths into the kit tree.
+3. **Rebuild with production stack:** shadcn/ui (`@/components/ui/*`), Tailwind + [`DESIGN.MD`](../DESIGN.MD) tokens, existing shells (`HostNavRail`, `HostKpiCard`, `CopilotChat`, map components with `mapId`).
+4. **Map tokens, don't import kit CSS.** e.g. `--pin-rental` → oklch in globals; gold `--accent` = ✦/★ only — **0 gold buttons**.
+5. **Real data or honest empty.** Unknown metrics → **`Data pending.`** pill — never kit mock numbers in prod.
+6. **HITL on commit actions** — publish, send, confirm, schedule: ack checkbox gates primary button.
+7. **Four states everywhere** — empty · loading · result · error (kit state switchers are the spec).
+8. **Preserve kit `data-testid`s** when porting (`rc-*`, `r1-*`, `r2-*`, `le-view-grid`, `ro-step-*`, etc.).
+
+## Shell differences (do not flatten)
+
+| Surface | Kit | Route | Nav pattern |
+|---------|-----|-------|-------------|
+| Concierge | `rentals-os/concierge/` | `/host/rentals` | **Top tabs** · chat hero |
+| Dashboard | `rentals-os/dashboard/` | `/host/rentals/dashboard` | **Left rail** · KPI hero |
+| Listings | `rentals-os/listings/` | `/host/rentals/listings` | **Left rail** · **grid default** (`mapOn=false`) |
+| Onboarding | `rentals-os/onboarding/` | `/host/rentals/onboarding` | Minimal chrome · stepper gate |
+| Partner landing | `rentals/` | `/partners/rentals` | Marketing · no CopilotKit |
+| Consumer browse | listings density ref only | `/rentals` | `ChatNavRail` + grid + map — **not** broker inventory nav |
+
+## Recommended implementation order
+
+1. **[SAN-1094 · D-12 — Broker Listings + map](https://linear.app/sanjiovani/issue/SAN-1094)** — wireframe [`015-re-des-003-full-page.md`](../docs/real-estate/wireframes/015-re-des-003-full-page.md)
+2. **RLS + publish FSM** — [SAN-1104](https://linear.app/sanjiovani/issue/SAN-1104)…[SAN-1108](https://linear.app/sanjiovani/issue/SAN-1108) (backend gate before real broker data)
+3. **[SAN-1092 · D-10 — Onboarding](https://linear.app/sanjiovani/issue/SAN-1092)** — [`016-re-des-005-full-page.md`](../docs/real-estate/wireframes/016-re-des-005-full-page.md)
+4. **[SAN-1095 · D-13 — Dashboard](https://linear.app/sanjiovani/issue/SAN-1095)** — [`014-re-des-004-full-page.md`](../docs/real-estate/wireframes/014-re-des-004-full-page.md)
+5. **Leads / viewings / marketing / performance** — RENT-B · later (not Phase 1 broker OS)
+
+Consumer + nav (parallel track): [SAN-1088](https://linear.app/sanjiovani/issue/SAN-1088) → [SAN-1089](https://linear.app/sanjiovani/issue/SAN-1089) · [SAN-1090](https://linear.app/sanjiovani/issue/SAN-1090) partners landing.
+
+## Port workflow (per task)
+
+1. Open Linear issue + disk plan + wireframe under `docs/real-estate/`.
+2. Read matching kit file(s) under `mdeai-design-system/…` — structure, testids, state machine.
+3. Implement **new** React in `src/app/host/rentals/**` and `src/components/host/rentals/**`.
+4. Reuse existing mdeapp patterns — extend `host-nav-rail.tsx`, don't fork a second nav system.
+5. Class **U** proof + preserve testids before Done.
+
+## Skills
+
+`mde-wireframe` · `shadcn` · `mde-maps` (listings map) · `copilotkitV1` (concierge) · `mde-supabase` (RLS gate)
+
+## Anti-patterns (reject in review)
+
+```ts
+// ❌ NEVER
+import "../../mdeai-design-system/project/ui_kits/partners/rentals-os/rentals-os.css";
+import { RentalsConcierge } from "../../../../mdeai-design-system/...";
+
+// ✅ ALWAYS
+import { Button } from "@/components/ui/button";
+import { RentalsListingsShell } from "@/components/host/rentals/rentals-listings-shell";
+```

@@ -1,0 +1,124 @@
+---
+description: STRICT — After EVERY non-events task, sync mdeapp/changelog.md + mdeapp/todo.md (grades, blockers, checklists). Mandatory before claiming work complete or Linear In Review/Done.
+globs:
+  - mdeapp/changelog.md
+  - mdeapp/todo.md
+  - tasks/testing/**
+  - tasks/dashboard/**
+  - mdeapp/src/mastra/lib/query-embedding.ts
+  - mdeapp/src/mastra/lib/intelligence-rental-search.ts
+  - mdeapp/src/mastra/tools/search-rentals.ts
+  - mdeapp/src/lib/rental-query-parser.ts
+  - mdeapp/src/app/api/rentals/**
+  - mdeapp/e2e/**/rental*
+  - mdeapp/e2e/**/venues*
+  - mdeapp/e2e/prod-synthetic*
+alwaysApply: false
+---
+
+# Launch task changelog gate
+
+Parent: [`mdeai-proof-driven-delivery.mdc`](./mdeai-proof-driven-delivery.mdc)
+
+**Changelog:** [`mdeapp/changelog.md`](../changelog.md) (git root — canonical)  
+**Todo:** [`mdeapp/todo.md`](../todo.md)  
+**Ledger:** [`tasks/testing/evidence/TASK-LEDGER.md`](../../../tasks/testing/evidence/TASK-LEDGER.md)  
+**Personas:** [`tasks/testing/personas/`](../../../tasks/testing/personas/)
+
+Events workstream uses [`mdeai-events-changelog.mdc`](./mdeai-events-changelog.mdc) instead.
+
+## When this fires
+
+**After every task** — not only at Done. Sync both files before the agent ends the turn or claims work complete.
+
+| Trigger | What to write |
+|---------|----------------|
+| Implementation slice shipped | Changelog entry + todo row (grade, proof, PR) |
+| PR pre-merge audit / review | Changelog audit entry + todo merge-gate checkboxes |
+| Post-merge prod validation | Update grades, success rate, Close? |
+| Pre-flight **BLOCKED** | Todo row only — blockers, no changelog grade bump |
+| Linear status move (In Review) | Changelog append **required** |
+| User asks "what's the status?" | Read disk first; if stale, sync then answer |
+
+**Scope:** launch / non-events P0 (rentals, venues, maps, platform smoke, SAN-546 matrix). Events → [`mdeai-events-changelog.mdc`](./mdeai-events-changelog.mdc).
+
+## Mandatory after every task (agent contract)
+
+Before replying **done**, **ready**, **blocked**, or **merge recommendation**:
+
+1. **Append or update** [`mdeapp/changelog.md`](../changelog.md) — Summary table row + full entry (newest first) when evidence changed
+2. **Sync** [`mdeapp/todo.md`](../todo.md) — tier-1 row: Grade · % correct · Success rate · proof levels · checklist boxes · Immediate focus
+3. Set todo header **`Last synced:`** to today + one-line reason (e.g. `PR #136 audit`)
+4. Full task names + Linear slug URLs — never `SAN-545` alone
+
+**Skip changelog append** only for pure read-only Q&A with zero task state change (user explicitly asked no tracking update).
+
+## Mandatory before implement
+
+**Level 0 pre-flight** ([`mdeai-proof-driven-delivery.mdc`](./mdeai-proof-driven-delivery.mdc)) — skills + MCP + errors/blockers/failure points. Verdict **PROCEED** required.
+
+## Mandatory before Linear In Review / Done
+
+**Real-world + PR review (no skip):**
+
+- Localhost + prod persona prompt with Browser / Playwright / Chrome DevTools MCP + screenshots
+- `cubic review -j` or `cubic review -b -j` — P0/P1 in evidence
+- CodeRabbit PR comments via `gh` — prompts run or threads resolved
+
+1. **Append changelog entry** (newest first) in `mdeapp/changelog.md`:
+   - Full task name: `SAN-### · SPEC-ID — <Linear title>`
+   - Area, Persona, Journey
+   - Five dimension scores + **Evidence Score** + Grade
+   - Proof levels L1–L5
+   - PR, prod SHA, Close? Yes/No with reason
+   - Evidence path(s)
+2. **Update Summary table** at top of changelog (one row).
+3. **Sync [`mdeapp/todo.md`](../todo.md)** — status, score, proof, checklist boxes.
+4. **Update [`TASK-LEDGER.md`](../../../tasks/testing/evidence/TASK-LEDGER.md)** active/completed row.
+5. **Update persona file** — e.g. `tasks/testing/personas/camila.md` journey line.
+6. **Regenerate [`tasks/dashboard/project-health.md`](../../../tasks/dashboard/project-health.md)** when batch changes.
+7. **Do not** flip Linear Done without user approval.
+
+## Scoring (compute, do not guess)
+
+```text
+Evidence Score = round(0.25×Spec + 0.25×Tests + 0.20×Runtime + 0.20×Production + 0.10×Process)
+```
+
+| Dimension | Proof |
+|-----------|-------|
+| Spec | `task-verifier`; AC on disk |
+| Tests | Vitest + Playwright counts |
+| Runtime | dev boot + API/route 200 |
+| Production | merge deployed; curl + L4 browser — **0 if PR open** |
+| Process | full title, one PR, evidence file, ledger sync |
+
+Use **Template** at bottom of `changelog.md`.
+
+## Prod claims gate
+
+Before Production score > 0 or Close? Yes:
+
+```bash
+gh pr view <N> --json state,mergedAt
+# prod SHA must equal merge commit
+```
+
+PR **OPEN** → Production dimension ≤ 25, Close? **No**, status **In Review**.
+
+## Pair with
+
+| Step | Rule |
+|------|------|
+| Orchestrator | [`mdeai-proof-driven-delivery.mdc`](./mdeai-proof-driven-delivery.mdc) |
+| Launch gate | [`mdeai-launch-gate.mdc`](./mdeai-launch-gate.mdc) |
+| Browser + prod | [`mdeai-live-prod-check.mdc`](./mdeai-live-prod-check.mdc) |
+
+## Anti-patterns
+
+- ❌ Ending a task turn without updating `todo.md` + `changelog.md`
+- ❌ Linear Done with no changelog row
+- ❌ Score without dimension table
+- ❌ “Post-merge PASS” while PR is OPEN
+- ❌ Todo/changelog/ledger out of sync
+- ❌ Shorthand titles in changelog (`RENT-021`) while todo has full Linear title

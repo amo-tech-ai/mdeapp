@@ -1,0 +1,118 @@
+---
+description: STRICT — agent owns testing. Restart dev, prove localhost AND https://www.mdeai.co/ before Done/PR. Never delegate UI verification to the user.
+globs:
+  - mdeapp/src/**
+  - mdeapp/e2e/**
+  - tasks/screens/**
+  - tasks/testing/**
+alwaysApply: false
+---
+
+# mdeai testing gate (strict)
+
+**Real-world proof + PR bots:** [`mdeai-real-world-proof-pr-review.mdc`](./mdeai-real-world-proof-pr-review.mdc) — mandatory Browser MCP or Playwright screenshots; cubic + CodeRabbit before merge.
+
+**Mandate:** [`tasks/testing/00-agent-testing-mandate.md`](../../../tasks/testing/00-agent-testing-mandate.md)  
+**Index:** [`tasks/testing/INDEX.md`](../../../tasks/testing/INDEX.md)  
+**Evidence:** [`tasks/testing/evidence/`](../../../tasks/testing/evidence/)
+
+## Agent responsibility (read this first)
+
+**You are responsible for testing.** The user is not your QA unless login/secrets block you.
+
+For any change to **chat, CopilotKit, map, agents, tool renders, or persona-visible UI** you MUST:
+
+1. **Restart** `cd mdeapp && npm run dev` (kill stale `[ui]` / `[agent]` first — no HMR-only proof).
+2. **Verify localhost** — HTTP 200 on `/` + **Playwright and/or Cursor Browser MCP** + screenshot → `tasks/testing/evidence/YYYY-MM-DD/`.
+3. **Verify production** — same **browser** checks on **`https://www.mdeai.co/`** or **`https://mdeai.co/`** (curl + Browser MCP or `chat-smoke.mjs --base https://www.mdeai.co`).
+4. **Before PR** — run local `cr review --agent --base main` + `cubic review --base main`; after open, resolve all PR review threads before merge.
+
+Do **not** mark tasks Done, tell the user “it works,” or open a PR without steps 1–4. If prod is not deployed yet, state **BLOCKED** and keep **In Review** — do not fake prod PASS.
+
+**Commit pairing:** run floor + write evidence **before** commit when UI changed (see `mdeai-commit-discipline.mdc`).
+
+## 1. Restart dev (always first)
+
+Run kill and start in **separate steps** — never `pkill && npm run dev` in one line (pkill can kill the new process).
+
+```bash
+pkill -f "next dev" 2>/dev/null; pkill -f "mastra dev" 2>/dev/null; sleep 2
+cd /home/sk/mdeai/mdeapp && npm run dev
+```
+
+Confirm port from `[ui]` log (usually **3001**):
+
+```bash
+curl -s -o /dev/null -w "localhost GET / -> %{http_code}\n" http://localhost:3001/
+node /home/sk/mdeai/tasks/testing/scripts/chat-smoke.mjs --base http://localhost:3001
+```
+
+## 2. Production (required for ship claims)
+
+```bash
+curl -s -o /dev/null -w "prod GET / -> %{http_code}\n" https://www.mdeai.co/
+node /home/sk/mdeai/tasks/testing/scripts/chat-smoke.mjs --base https://www.mdeai.co
+```
+
+Browser MCP: `browser_navigate` → `https://www.mdeai.co/` → repeat the same sample prompt used on localhost. Record both environments in `tasks/testing/evidence/YYYY-MM-DD/*-RESULTS.md`.
+
+## 3. Pick a test pack (sample prompt)
+
+| Surface touched | Pack | Sample prompt |
+|-----------------|------|---------------|
+| Events / fast path | [`01-event-discovery-smoke.md`](../tasks/testing/01-event-discovery-smoke.md) | Show 10 Medellín events from inventory… |
+| Cafés / detail panel | [`03-cafe-detail-smoke.md`](../tasks/testing/03-cafe-detail-smoke.md) | Quiet cafés near Laureles |
+| Multi-intent / routing | [`02-multi-intent-stress.md`](../tasks/testing/02-multi-intent-stress.md) | Rotate Camila/Tourist prompts |
+| Rich cards / dedup | [`e2e/rich-card-dedup.spec.ts`](../mdeapp/e2e/rich-card-dedup.spec.ts) | Café or event query |
+
+## 4. Cursor Browser MCP (interactive proof)
+
+Run on **localhost first**, then **prod** for the same flow:
+
+1. Navigate `http://localhost:3001/` at **≥1360px** width (desktop three-column)
+2. Hide CopilotKit dev inspector if it blocks clicks: `cpk-web-inspector { display: none !important; }`
+3. Send the pack's **sample prompt** (React textarea — use `input` event + Send click; `fill()` alone disables Send)
+4. Assert persona-visible outcome (cards, pins, detail panel, no JSON leak)
+5. Repeat steps 1–4 on `https://www.mdeai.co/`
+6. Screenshot → `tasks/testing/evidence/YYYY-MM-DD/`
+
+**Café detail (Phase A.5) quick checks:**
+
+- `[data-testid="grounded-card"]` in center chat
+- Details → `[data-testid="map-panel"][data-right-column-mode="detail"]` + `cafe-detail-panel`
+- Close (×) → `data-right-column-mode="map"`
+- Ask prompt → user message in chat, panel **stays open**
+- No `venue-detail-sheet` for cafés
+
+## 5. Playwright (when spec exists)
+
+```bash
+cd /home/sk/mdeai/mdeapp
+PW_SKIP_WEBSERVER=1 npx playwright test e2e/screens/SCREEN-021-cafe-listings.spec.ts --project=chromium --workers=1
+```
+
+Run the spec matching the screen you touched (`tasks/screens/SCREEN-*.md` → `playwright_spec` frontmatter).
+
+## 6. Floor before commit
+
+```bash
+cd /home/sk/mdeai/mdeapp && npm run floor
+```
+
+## Evidence (required for Done / In Review with proof)
+
+Write `tasks/testing/evidence/YYYY-MM-DD/<task>-RESULTS.md` with:
+
+- Dev restart + localhost GET / 200
+- Prod GET / 200 + same prompt result
+- Browser or Playwright PASS/FAIL matrix (localhost **and** prod columns)
+
+## Do not mark Done without
+
+- Fresh dev restart + HTTP 200 on localhost `/`
+- HTTP 200 on `https://www.mdeai.co/` + same persona flow tested (or documented deploy blocker)
+- **Real-world proof** on **both** localhost and prod (unless prod BLOCKED): Browser MCP **or** Playwright **or** Chrome DevTools MCP
+- **`cubic review`** run on PR; CodeRabbit prompts addressed
+- Evidence path with prompt · env · tool · screenshot table
+
+Linear **Done** still requires **user approval** — agents stop at **In Review** with evidence. See `task-verifier` anti-fake-done gate 9, `tasks/linear/04-completion-approval.md`, `.cursor/rules/mdeai-task-verifier.mdc`.
