@@ -1,0 +1,36 @@
+src/lib/rentals/listing-workflow.ts
+  s_f9d5f98a31145c::t_b19d0fa7eb519a 21
+  s_f9d5f98a31145c::t_2af4bd207c6a20 29
+  s_f9d5f98a31145c::t_c7aecbde7a84c5 38
+src/lib/rentals/publish-transition-mapper.ts
+  s_f9d5f98a31145c::t_722bb2f7cf86ba 1-23
+src/lib/rentals/broker-surface-state.ts
+  s_f9d5f98a31145c::t_d28c840c692ed6 3
+  s_f9d5f98a31145c::t_921de14959ee80 94
+  s_f9d5f98a31145c::t_5098698fe85076 65,72
+  s_f9d5f98a31145c::t_f3a8c80056b04c 77
+  s_f9d5f98a31145c::t_791da0a74a5ed1 102
+  s_f9d5f98a31145c::t_08e0b0e69677dd 85
+src/lib/rentals/index.ts
+  s_f9d5f98a31145c::t_a90a37d385787a 20-22
+src/lib/rentals/data-pending.ts
+  s_f9d5f98a31145c::t_64086fbb7ce3d0 4
+src/lib/rentals/__tests__/publish-transition-mapper.test.ts
+  s_f9d5f98a31145c::t_c54c224e4424b7 1-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "67269283bd384b2a13e21d3ebd3488b7a1b37994",
+  "prompts": {},
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
