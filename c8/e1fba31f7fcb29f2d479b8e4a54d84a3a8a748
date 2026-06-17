@@ -1,0 +1,36 @@
+src/components/host/rentals/broker-rentals-gate-error.tsx
+  s_f9d5f98a31145c::t_80da77a0fdb5a9 3-7,12
+src/app/host/rentals/onboarding/page.tsx
+  s_f9d5f98a31145c::t_e7f83f4cbd7831 3,19-20,24
+src/lib/rentals/get-broker-context.ts
+  s_f9d5f98a31145c::t_1c3b180606be81 54,56,63,65-66
+src/lib/supabase/middleware.ts
+  s_f9d5f98a31145c::t_bc84e51fc8c20d 96
+src/app/host/rentals/(broker)/layout.tsx
+  s_f9d5f98a31145c::t_ab129a39465913 3,5,16-17
+src/lib/rentals/get-broker-request-path.ts
+  s_f9d5f98a31145c::t_28992eb05680fa 1-9
+src/app/host/rentals/layout.tsx
+  s_f9d5f98a31145c::t_e659bd415fd540 5,20,25-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "c8e1fba31f7fcb29f2d479b8e4a54d84a3a8a748",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
