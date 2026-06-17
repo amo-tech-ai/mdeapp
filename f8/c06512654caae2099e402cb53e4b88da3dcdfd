@@ -1,0 +1,19 @@
+.graphifyignore
+  s_1ea51060724821::t_f82398f139ffc8 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "f8c06512654caae2099e402cb53e4b88da3dcdfd",
+  "prompts": {},
+  "sessions": {
+    "s_1ea51060724821": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "96514f4c-c86e-40bd-a03e-0d0178a3f504",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
