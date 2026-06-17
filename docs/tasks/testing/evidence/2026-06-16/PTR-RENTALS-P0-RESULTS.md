@@ -22,12 +22,13 @@
 | `20260616150000_ptr_rentals_broker_rls.sql` | Broker RLS; `leads_*` includes `is_admin()` bypass |
 | `20260616151000_ptr_rentals_publish_fsm.sql` | FSM columns + wrappers; `transition_listing_workflow` not client-callable |
 | `20260616152000_ptr_rentals_onboarding.sql` | Atomic profile upsert; reuses existing draft apartment |
+| `20260616153000_ptr_rentals_partner_leads_align.sql` | Partner-member leads require `partners.landlord_profile_id` ↔ apartment bridge |
 
 ## PR #234 review disposition (CodeAnt / CodeRabbit)
 
 | Comment | Valid? | Status |
 |---------|--------|--------|
-| Legacy `leads_*` policies bypass broker scope | Partial — OR is real; no cross-broker leak without agent/partner role | **Won't drop** — breaks prospect CRM + partner queue; documented in migration |
+| Legacy `leads_*` policies bypass broker scope | Partial — OR is real; no cross-broker leak without agent/partner role | **Won't drop** — breaks prospect CRM; partner policies **tightened** in `20260616153000` |
 | `transition_listing_workflow` granted to `authenticated` | Yes | **Fixed** — revoked; SECURITY DEFINER wrappers only (`cefd40c9`) |
 | Onboarding creates duplicate drafts | Yes | **Fixed** — reuse existing `draft` row (`67269283`) |
 | `PublishTransitionResult` vs RPC snake_case | Yes | **Fixed** — `mapPublishTransitionFromRpc()` |
