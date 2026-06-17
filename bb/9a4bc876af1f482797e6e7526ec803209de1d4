@@ -1,0 +1,19 @@
+scripts/graphify-run.sh
+  s_1ea51060724821::t_a3ae29a0534b38 18-23,25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "bb9a4bc876af1f482797e6e7526ec803209de1d4",
+  "prompts": {},
+  "sessions": {
+    "s_1ea51060724821": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "96514f4c-c86e-40bd-a03e-0d0178a3f504",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
