@@ -1,0 +1,22 @@
+src/lib/rentals/broker-surface-state.ts
+  s_f9d5f98a31145c::t_a769b4db03b97c 98
+  s_f9d5f98a31145c::t_419399f359b57b 3
+src/lib/rentals/__tests__/broker-surface-state.test.ts
+  s_f9d5f98a31145c::t_9aa25d70875b47 28-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "d480fe99a3b4a49ab5092e9d55a798a012088374",
+  "prompts": {},
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
