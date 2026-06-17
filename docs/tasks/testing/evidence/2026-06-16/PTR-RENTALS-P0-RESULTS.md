@@ -3,7 +3,55 @@
 **Date:** 2026-06-17  
 **Class:** C  
 **PR:** https://github.com/amo-tech-ai/mdeapp/pull/234  
-**Verdict:** Backend gate complete — merge PR then `supabase db push` on prod before broker UI uses real data.
+**Verdict:** Backend gate **shipped on prod** (`zkwcbyxiwklihegjhuql`) — broker UI may wire real RPCs; Linear Done still needs human sign-off.
+
+## Prod migration (2026-06-17)
+
+| Step | Result |
+|------|--------|
+| `main` @ `201ee731` | pulled |
+| Migrations applied (4) | **pass** — via Supabase MCP `apply_migration` (CLI not linked to `zkwcbyxiwklihegjhuql`) |
+| `database.types.ts` regenerated | **pass** — `generate_typescript_types` MCP |
+| Prod structural verify | **pass** — see below |
+| Full RLS smoke on prod | **skipped** — fixture script inserts test auth users; not safe on prod |
+| `npm test -- --run src/lib/rentals` | **9/9** |
+| `npm run lint` | **fail** — pre-existing warnings in `scripts/` on `main` (unrelated to PTR-P0); `src/lib/rentals` clean |
+| `npm run typecheck` | **pre-existing e2e failures** on `main` (`e2e/rental-lead-loop.spec.ts`); no errors in `src/lib/rentals` or `database.types.ts` |
+
+### Prod migration rows (`schema_migrations`)
+
+```text
+ptr_rentals_broker_rls
+ptr_rentals_publish_fsm
+ptr_rentals_onboarding
+ptr_rentals_partner_leads_align
+```
+
+### Prod structural checks (read-only)
+
+| Check | Result |
+|-------|--------|
+| `apartments.listing_workflow_status` column | present |
+| `broker_owns_apartment()` | present |
+| `create_broker_onboarding_draft()` | present; `EXECUTE` granted to `authenticated` |
+| `lead_partner_listing_aligned()` | present |
+| `authenticated_can_view_all_apartments` policy | dropped |
+| `transition_listing_workflow` EXECUTE for `authenticated` | **false** (wrappers only) |
+| `request_listing_publish` / `publish_listing` EXECUTE | **true** |
+| Active/booked apartments backfilled to `published` | **44** rows |
+
+### Advisors (`get_advisors` post-migrate)
+
+| Type | PTR-specific new findings | Notes |
+|------|---------------------------|-------|
+| Security | SECURITY DEFINER wrappers flagged (`authenticated_security_definer_function_executable`) | **Expected** for `request_listing_publish` / `publish_listing` / `pause_listing`; generic FSM RPC not client-callable |
+| Performance | **none** on new objects | — |
+
+### Known gaps (prod)
+
+- `rental_applications` still uses legacy `host_id` path (out of PTR-P0)
+- Full two-user RLS smoke remains **local-only** (`:54322`); re-run after next local reset
+- `supabase db lint` reports pre-existing view lint on local shadow DB (unrelated `events` column)
 
 ## Tasks covered
 
@@ -72,12 +120,10 @@ PGPASSWORD=postgres psql -h 127.0.0.1 -p 54322 -U postgres -d postgres -v ON_ERR
 | Broker B cannot publish Broker A apartment | pass |
 | Anon cannot update apartments | pass |
 
-## Known gaps (post-merge)
+## Known gaps
 
-- Prod migrations not applied until PR #234 merges + `supabase db push`
-- `database.types.ts` — regenerate after migrate
-- `rental_applications` still uses `host_id` (out of PTR-P0)
+- `rental_applications` still uses legacy `host_id` path (out of PTR-P0)
 
 ## [SAN-1094 · D-12 — Broker Listings + map](https://linear.app/sanjiovani/issue/SAN-1094)
 
-**Unblocked for UI shell + data wiring** after prod migrate. Use `mapPublishTransitionFromRpc()` for publish RPC responses.
+**Unblocked for real data wiring** — prod has broker RLS, publish FSM RPCs, onboarding RPC, and regenerated types. Use `mapPublishTransitionFromRpc()` for publish RPC responses. UI work not started (per scope).

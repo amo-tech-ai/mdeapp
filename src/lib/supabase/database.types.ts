@@ -22,6 +22,7 @@ export type Database = {
           created_at: string
           duration_ms: number | null
           error_message: string | null
+          error_type: string | null
           estimated_cost_usd: number | null
           id: string
           input_data: Json
@@ -42,6 +43,7 @@ export type Database = {
           created_at?: string
           duration_ms?: number | null
           error_message?: string | null
+          error_type?: string | null
           estimated_cost_usd?: number | null
           id?: string
           input_data: Json
@@ -62,6 +64,7 @@ export type Database = {
           created_at?: string
           duration_ms?: number | null
           error_message?: string | null
+          error_type?: string | null
           estimated_cost_usd?: number | null
           id?: string
           input_data?: Json
@@ -167,6 +170,7 @@ export type Database = {
           landlord_id: string | null
           last_checked_at: string | null
           latitude: number | null
+          listing_workflow_status: string
           location: unknown
           longitude: number | null
           maximum_stay_days: number | null
@@ -175,12 +179,16 @@ export type Database = {
           moderation_status: string
           neighborhood: string
           parking_included: boolean | null
+          paused_at: string | null
           pet_friendly: boolean | null
           price_daily: number | null
           price_monthly: number | null
           price_weekly: number | null
+          published_at: string | null
+          published_by: string | null
           rating: number | null
           raw_amenities: Json | null
+          ready_for_review_at: string | null
           rejection_reason: string | null
           review_count: number | null
           size_sqm: number | null
@@ -226,6 +234,7 @@ export type Database = {
           landlord_id?: string | null
           last_checked_at?: string | null
           latitude?: number | null
+          listing_workflow_status?: string
           location?: unknown
           longitude?: number | null
           maximum_stay_days?: number | null
@@ -234,12 +243,16 @@ export type Database = {
           moderation_status?: string
           neighborhood: string
           parking_included?: boolean | null
+          paused_at?: string | null
           pet_friendly?: boolean | null
           price_daily?: number | null
           price_monthly?: number | null
           price_weekly?: number | null
+          published_at?: string | null
+          published_by?: string | null
           rating?: number | null
           raw_amenities?: Json | null
+          ready_for_review_at?: string | null
           rejection_reason?: string | null
           review_count?: number | null
           size_sqm?: number | null
@@ -285,6 +298,7 @@ export type Database = {
           landlord_id?: string | null
           last_checked_at?: string | null
           latitude?: number | null
+          listing_workflow_status?: string
           location?: unknown
           longitude?: number | null
           maximum_stay_days?: number | null
@@ -293,12 +307,16 @@ export type Database = {
           moderation_status?: string
           neighborhood?: string
           parking_included?: boolean | null
+          paused_at?: string | null
           pet_friendly?: boolean | null
           price_daily?: number | null
           price_monthly?: number | null
           price_weekly?: number | null
+          published_at?: string | null
+          published_by?: string | null
           rating?: number | null
           raw_amenities?: Json | null
+          ready_for_review_at?: string | null
           rejection_reason?: string | null
           review_count?: number | null
           size_sqm?: number | null
@@ -7398,6 +7416,14 @@ export type Database = {
         Args: { p_application_id: string; p_approved_by: string }
         Returns: undefined
       }
+      assert_listing_workflow_transition: {
+        Args: { p_from: string; p_to: string }
+        Returns: undefined
+      }
+      broker_owns_apartment: {
+        Args: { p_apartment_id: string }
+        Returns: boolean
+      }
       bump_staff_link_version: { Args: { p_event_id: string }; Returns: number }
       calculate_distance: {
         Args: { lat1: number; lat2: number; lng1: number; lng2: number }
@@ -7421,6 +7447,14 @@ export type Database = {
           p_discount_cents?: number
           p_quantity: number
           p_ticket_id: string
+        }
+        Returns: Json
+      }
+      create_broker_onboarding_draft: {
+        Args: {
+          p_display_name: string
+          p_listing_title?: string
+          p_neighborhood?: string
         }
         Returns: Json
       }
@@ -7754,6 +7788,10 @@ export type Database = {
         Args: { p_channel: string; p_identifier: string }
         Returns: boolean
       }
+      lead_partner_listing_aligned: {
+        Args: { p_apartment_id: string; p_partner_id: string }
+        Returns: boolean
+      }
       log_outbound_click: {
         Args: {
           p_affiliate_tag?: string
@@ -7841,6 +7879,79 @@ export type Database = {
       partner_ids_for_user: { Args: never; Returns: string[] }
       partner_is_active: { Args: { _partner_id: string }; Returns: boolean }
       partner_organization_ids_for_user: { Args: never; Returns: string[] }
+      pause_listing: {
+        Args: { p_apartment_id: string }
+        Returns: {
+          address: string | null
+          amenities: string[] | null
+          available_from: string | null
+          available_to: string | null
+          bathrooms: number | null
+          bedrooms: number | null
+          building_amenities: string[] | null
+          city: string | null
+          created_at: string
+          created_by: string | null
+          currency: string | null
+          deposit_amount: number | null
+          description: string | null
+          featured: boolean | null
+          floor_number: number | null
+          freshness_status: string | null
+          fts_content: unknown
+          furnished: boolean | null
+          host_id: string | null
+          host_name: string | null
+          host_response_time: string | null
+          id: string
+          images: string[] | null
+          landlord_id: string | null
+          last_checked_at: string | null
+          latitude: number | null
+          listing_workflow_status: string
+          location: unknown
+          longitude: number | null
+          maximum_stay_days: number | null
+          metadata: Json | null
+          minimum_stay_days: number | null
+          moderation_status: string
+          neighborhood: string
+          parking_included: boolean | null
+          paused_at: string | null
+          pet_friendly: boolean | null
+          price_daily: number | null
+          price_monthly: number | null
+          price_weekly: number | null
+          published_at: string | null
+          published_by: string | null
+          rating: number | null
+          raw_amenities: Json | null
+          ready_for_review_at: string | null
+          rejection_reason: string | null
+          review_count: number | null
+          size_sqm: number | null
+          slug: string | null
+          smoking_allowed: boolean | null
+          source: string | null
+          source_listing_id: string | null
+          source_url: string | null
+          status: string | null
+          title: string
+          total_floors: number | null
+          updated_at: string
+          utilities_included: boolean | null
+          verified: boolean | null
+          video_url: string | null
+          virtual_tour_url: string | null
+          wifi_speed: number | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "apartments"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       populate_geometry_columns:
         | { Args: { tbl_oid: unknown; use_typmod?: boolean }; Returns: number }
         | { Args: { use_typmod?: boolean }; Returns: string }
@@ -7881,6 +7992,79 @@ export type Database = {
       }
       postgis_version: { Args: never; Returns: string }
       postgis_wagyu_version: { Args: never; Returns: string }
+      publish_listing: {
+        Args: { p_apartment_id: string }
+        Returns: {
+          address: string | null
+          amenities: string[] | null
+          available_from: string | null
+          available_to: string | null
+          bathrooms: number | null
+          bedrooms: number | null
+          building_amenities: string[] | null
+          city: string | null
+          created_at: string
+          created_by: string | null
+          currency: string | null
+          deposit_amount: number | null
+          description: string | null
+          featured: boolean | null
+          floor_number: number | null
+          freshness_status: string | null
+          fts_content: unknown
+          furnished: boolean | null
+          host_id: string | null
+          host_name: string | null
+          host_response_time: string | null
+          id: string
+          images: string[] | null
+          landlord_id: string | null
+          last_checked_at: string | null
+          latitude: number | null
+          listing_workflow_status: string
+          location: unknown
+          longitude: number | null
+          maximum_stay_days: number | null
+          metadata: Json | null
+          minimum_stay_days: number | null
+          moderation_status: string
+          neighborhood: string
+          parking_included: boolean | null
+          paused_at: string | null
+          pet_friendly: boolean | null
+          price_daily: number | null
+          price_monthly: number | null
+          price_weekly: number | null
+          published_at: string | null
+          published_by: string | null
+          rating: number | null
+          raw_amenities: Json | null
+          ready_for_review_at: string | null
+          rejection_reason: string | null
+          review_count: number | null
+          size_sqm: number | null
+          slug: string | null
+          smoking_allowed: boolean | null
+          source: string | null
+          source_listing_id: string | null
+          source_url: string | null
+          status: string | null
+          title: string
+          total_floors: number | null
+          updated_at: string
+          utilities_included: boolean | null
+          verified: boolean | null
+          video_url: string | null
+          virtual_tour_url: string | null
+          wifi_speed: number | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "apartments"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       record_check_in: {
         Args: {
           p_attendee_id: string
@@ -7914,6 +8098,79 @@ export type Database = {
           p_subject: string
         }
         Returns: string
+      }
+      request_listing_publish: {
+        Args: { p_apartment_id: string }
+        Returns: {
+          address: string | null
+          amenities: string[] | null
+          available_from: string | null
+          available_to: string | null
+          bathrooms: number | null
+          bedrooms: number | null
+          building_amenities: string[] | null
+          city: string | null
+          created_at: string
+          created_by: string | null
+          currency: string | null
+          deposit_amount: number | null
+          description: string | null
+          featured: boolean | null
+          floor_number: number | null
+          freshness_status: string | null
+          fts_content: unknown
+          furnished: boolean | null
+          host_id: string | null
+          host_name: string | null
+          host_response_time: string | null
+          id: string
+          images: string[] | null
+          landlord_id: string | null
+          last_checked_at: string | null
+          latitude: number | null
+          listing_workflow_status: string
+          location: unknown
+          longitude: number | null
+          maximum_stay_days: number | null
+          metadata: Json | null
+          minimum_stay_days: number | null
+          moderation_status: string
+          neighborhood: string
+          parking_included: boolean | null
+          paused_at: string | null
+          pet_friendly: boolean | null
+          price_daily: number | null
+          price_monthly: number | null
+          price_weekly: number | null
+          published_at: string | null
+          published_by: string | null
+          rating: number | null
+          raw_amenities: Json | null
+          ready_for_review_at: string | null
+          rejection_reason: string | null
+          review_count: number | null
+          size_sqm: number | null
+          slug: string | null
+          smoking_allowed: boolean | null
+          source: string | null
+          source_listing_id: string | null
+          source_url: string | null
+          status: string | null
+          title: string
+          total_floors: number | null
+          updated_at: string
+          utilities_included: boolean | null
+          verified: boolean | null
+          video_url: string | null
+          virtual_tour_url: string | null
+          wifi_speed: number | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "apartments"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       semantic_search_events: {
         Args: {
@@ -8616,6 +8873,83 @@ export type Database = {
         Returns: string
       }
       ticket_validate_consume: { Args: { p_qr_token: string }; Returns: Json }
+      transition_listing_workflow: {
+        Args: {
+          p_apartment_id: string
+          p_rejection_reason?: string
+          p_target_status: string
+        }
+        Returns: {
+          address: string | null
+          amenities: string[] | null
+          available_from: string | null
+          available_to: string | null
+          bathrooms: number | null
+          bedrooms: number | null
+          building_amenities: string[] | null
+          city: string | null
+          created_at: string
+          created_by: string | null
+          currency: string | null
+          deposit_amount: number | null
+          description: string | null
+          featured: boolean | null
+          floor_number: number | null
+          freshness_status: string | null
+          fts_content: unknown
+          furnished: boolean | null
+          host_id: string | null
+          host_name: string | null
+          host_response_time: string | null
+          id: string
+          images: string[] | null
+          landlord_id: string | null
+          last_checked_at: string | null
+          latitude: number | null
+          listing_workflow_status: string
+          location: unknown
+          longitude: number | null
+          maximum_stay_days: number | null
+          metadata: Json | null
+          minimum_stay_days: number | null
+          moderation_status: string
+          neighborhood: string
+          parking_included: boolean | null
+          paused_at: string | null
+          pet_friendly: boolean | null
+          price_daily: number | null
+          price_monthly: number | null
+          price_weekly: number | null
+          published_at: string | null
+          published_by: string | null
+          rating: number | null
+          raw_amenities: Json | null
+          ready_for_review_at: string | null
+          rejection_reason: string | null
+          review_count: number | null
+          size_sqm: number | null
+          slug: string | null
+          smoking_allowed: boolean | null
+          source: string | null
+          source_listing_id: string | null
+          source_url: string | null
+          status: string | null
+          title: string
+          total_floors: number | null
+          updated_at: string
+          utilities_included: boolean | null
+          verified: boolean | null
+          video_url: string | null
+          virtual_tour_url: string | null
+          wifi_speed: number | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "apartments"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       unlockrows: { Args: { "": string }; Returns: number }
       update_agent_job_progress: {
         Args: { p_current_step?: string; p_job_id: string; p_progress: number }
