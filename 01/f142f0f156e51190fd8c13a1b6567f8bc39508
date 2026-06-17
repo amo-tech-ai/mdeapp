@@ -1,0 +1,40 @@
+scripts/perf-002-measure.mjs
+  s_1ea51060724821::t_95a81d5cb8b3b6 1-85
+docs/tasks/testing/evidence/PERF-002/after.json
+  s_1ea51060724821::t_53f14d0adb6695 1-36
+src/mastra/lib/__tests__/agent-input-processors.test.ts
+  s_1ea51060724821::t_bf8a29a562e695 16-18,21,24,28-29
+src/mastra/agents/concierge.ts
+  s_1ea51060724821::t_3a446c823945bb 304-308,319-321,323
+src/mastra/agents/__tests__/concierge.test.ts
+  s_1ea51060724821::t_750d94cb323e7c 114-118,121
+src/mastra/lib/agent-memory.ts
+  s_1ea51060724821::t_bcb30ee5bddd96 5-12,21
+docs/tasks/testing/evidence/PERF-002/baseline.json
+  s_1ea51060724821::t_53f14d0adb6695 1-36
+docs/tasks/testing/evidence/PERF-002/RESULTS.md
+  s_1ea51060724821::t_1540aadf6ebe59 1-96
+src/mastra/lib/agent-input-processors.ts
+  s_1ea51060724821::t_90bb0de4748752 10-19,24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "01f142f0f156e51190fd8c13a1b6567f8bc39508",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_1ea51060724821": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "96514f4c-c86e-40bd-a03e-0d0178a3f504",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
