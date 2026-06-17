@@ -1,0 +1,32 @@
+src/components/cafes/cafe-browse-view.tsx
+  s_f47ea5ebcd9235::t_ba5c6aa34c252d 6
+  s_f47ea5ebcd9235::t_070fdf4e6ba23f 80,82
+src/components/nightlife/nightlife-browse-view.tsx
+  s_f47ea5ebcd9235::t_e074d76b1e8af2 6
+  s_f47ea5ebcd9235::t_8e1b16cae571a1 90,92
+src/components/events/event-browse-card.tsx
+  s_f47ea5ebcd9235::t_d0acf39f0f80b7 2,6
+  s_f47ea5ebcd9235::t_6846fe04edc0de 50-56,70-75
+src/components/browse/__tests__/venue-browse-card.test.tsx
+  s_f47ea5ebcd9235::t_bb098db74da377 3-6,8,17-27,29,34-35,45-59,67,70-71,74-76
+  s_f47ea5ebcd9235::t_8367e66e6d2363 60-66,68-69
+src/components/browse/venue-browse-card.tsx
+  s_f47ea5ebcd9235::t_37bd2c3545939d 3,11-16,18-19
+  s_f47ea5ebcd9235::t_5de8ec04bb4b42 1,10,17,20-65,77-80,82-84,97,101,119,123,133-134,138-140,145-146,149-164,176
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "c9f3c385c965d7652b138150e80e370640ff327f",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
