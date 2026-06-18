@@ -47,10 +47,10 @@
 
 | # | Task | File | Status |
 |---:|---|---|---|
-| 1 | Flip `check-mastra` — allow `/v2`, fail bare `react-core` | `scripts/check-mastra.mjs` | 🟡 #247 |
-| 2 | PreToolUse — allow `/v2` APIs; block full-rewrite + bare `react-core` | `.claude/hooks/copilotkit-version-pin.mjs` | 🟡 #247 |
-| 3 | Session reminder — v2 `/v2` subpath only | `.claude/hooks/session-start.mjs` | 🟡 #247 |
-| 4 | Verify | — | ⏳ after merge |
+| 1 | Flip `check-mastra` — allow `/v2`, fail bare `react-core` | `scripts/check-mastra.mjs` | ✅ #247 merged |
+| 2 | PreToolUse — allow `/v2` APIs; block full-rewrite + bare `react-core` | `.claude/hooks/copilotkit-version-pin.mjs` | ✅ #247 merged |
+| 3 | Session reminder — v2 `/v2` subpath only | `.claude/hooks/session-start.mjs` | ✅ #247 merged |
+| 4 | Verify | — | ✅ `check:mastra` exit 0 on `main` |
 | 5 | **Follow-up:** wire `check:mastra` into `npm run floor` | `package.json` / `floor.yml` | 🔴 post-#247 |
 
 ---
@@ -139,7 +139,7 @@ npm run graphify:query -- "…"        # agent/tool path discovery
 |---|---|---|---|
 | **B1** | ~~[SAN-891 · CK-V2-005 — Retire @copilotkit/react-ui; consolidate frontend to react-core/v2 + remove flags](https://linear.app/sanjiovani/issue/SAN-891/ck-v2-005-retire-copilotkitreact-ui-consolidate-frontend-to-react) merge [#219](https://github.com/amo-tech-ai/mdeapp/pull/219)~~ | — | ✅ **Cleared** @ `4c6ef62e` |
 | **B2** | Prod deploy + Tier-1 smoke | 🟡 High | After Vercel promotes `main` |
-| **B3** | Stale CopilotKit guards post-SAN-886 | 🟡 Medium | Merge [#247](https://github.com/amo-tech-ai/mdeapp/pull/247) |
+| **B3** | Stale CopilotKit guards post-SAN-886 | — | ✅ Cleared — [#247](https://github.com/amo-tech-ai/mdeapp/pull/247) merged |
 | — | ~~[SAN-890 · CK-V2-004 — Migrate /chat (conciergeAgent) to v2 — last, highest-risk](https://linear.app/sanjiovani/issue/SAN-890/ck-v2-004-migrate-chat-conciergeagent-to-v2-last-highest-risk) merge~~ | — | ✅ **Cleared** — [#218](https://github.com/amo-tech-ai/mdeapp/pull/218) @ `078a677c` |
 | — | ~~[SAN-901 · CK-V2-004A — Chat vertical slice spike (useAgent + 1 tool + 1 HITL)](https://linear.app/sanjiovani/issue/SAN-901/ck-v2-004a-chat-vertical-slice-spike-useagent-1-tool-1-hitl) spike~~ | — | ✅ **Cleared** — [#217](https://github.com/amo-tech-ai/mdeapp/pull/217) |
 | — | ~~[SAN-895 · CK-V2-007 — Fix hostEventAgent Gemini thought_signature console errors (mastra_workspace_list_files)](https://linear.app/sanjiovani/issue/SAN-895/ck-v2-007-fix-hosteventagent-gemini-thought-signature-console-errors-mastra-workspace-list-files)/[SAN-904 · CK-V2-007c — HITL approve/reject proofs green](https://linear.app/sanjiovani/issue/SAN-904/ck-v2-007c-hitl-approvereject-proofs-green)/[SAN-905 · CK-V2-007d — Console clean on hostEventAgent stream](https://linear.app/sanjiovani/issue/SAN-905/ck-v2-007d-console-clean-on-hosteventagent-stream)~~ | — | ✅ **Cleared** — [#216](https://github.com/amo-tech-ai/mdeapp/pull/216) |
@@ -185,9 +185,8 @@ Parked (not epic blockers):
 
 ## Next actions
 
-1. **Merge [#247](https://github.com/amo-tech-ai/mdeapp/pull/247)** — guard alignment (`22-notes.md`)
-2. **Follow-up task:** add `check:mastra` to `npm run floor` (Task 5 above)
-3. **Prod deploy** — confirm Vercel promotes `main`
+1. **Follow-up task:** add `check:mastra` to `npm run floor` (Task 5 in `22-notes.md` / todo table)
+2. **Prod deploy** — confirm Vercel promotes `main`
 2. **Tier-1 prod smoke** — `/chat` · `/host/event/new` · `/host/analytics`
 3. **Refresh [`09-file-map.md`](./09-file-map.md)** · optional [SAN-896 · CK-V2-008 — Refresh SAN-888 + SAN-889 localhost evidence @ current mainSha (7b596283+)](https://linear.app/sanjiovani/issue/SAN-896/ck-v2-008-refresh-san-888-san-889-localhost-evidence-current-mainsha) evidence refresh
 4. **Optional:** [SAN-898 · CK-V2-010 — Fix v2 host-event hydration mismatch (caret-color transparent)](https://linear.app/sanjiovani/issue/SAN-898/ck-v2-010-fix-v2-host-event-hydration-mismatch-caret-color-transparent) / [SAN-906 · CK-V2-010a — Inventory hydration warnings (host-event v2)](https://linear.app/sanjiovani/issue/SAN-906/ck-v2-010a-inventory-hydration-warnings-host-event-v2) hydration chain · [SAN-897 · CK-V2-009 — Preview-only flag flip: COPILOTKIT_V2_ANALYTICS=1 (SAN-888)](https://linear.app/sanjiovani/issue/SAN-897/ck-v2-009-preview-only-flag-flip-copilotkit-v2-analytics1-san-888) canceled (flags removed)

@@ -72,7 +72,7 @@ if (/from\s+["']@copilotkit\/react-core["']/.test(content)) {
 }
 ```
 
-**Status:** ✅ in [#247](https://github.com/amo-tech-ai/mdeapp/pull/247)
+**Status:** ✅ merged [#247](https://github.com/amo-tech-ai/mdeapp/pull/247) @ `81e2bead`
 
 ---
 
@@ -103,7 +103,7 @@ In:
 
 - `@copilotkit/runtime` in `src/app/api/copilotkit/**`
 
-**Status:** ✅ in [#247](https://github.com/amo-tech-ai/mdeapp/pull/247)
+**Status:** ✅ merged [#247](https://github.com/amo-tech-ai/mdeapp/pull/247) @ `81e2bead`
 
 ---
 
@@ -128,7 +128,7 @@ CopilotKit v2 /v2 subpath imports only (no bare v1 @copilotkit/react-core).
 Use @copilotkit/react-core/v2. Do not reintroduce bare v1 imports.
 ```
 
-**Status:** ✅ in [#247](https://github.com/amo-tech-ai/mdeapp/pull/247)
+**Status:** ✅ merged [#247](https://github.com/amo-tech-ai/mdeapp/pull/247) @ `81e2bead`
 
 ---
 
@@ -155,7 +155,7 @@ floor: pass
 no bare @copilotkit/react-core imports in src/**
 ```
 
-**Status:** ⏳ pending merge of #247 (floor already green on PR branch; mark PR **Ready** — CodeAnt-AI was pending).
+**Status:** ✅ merged [#247](https://github.com/amo-tech-ai/mdeapp/pull/247) — `node scripts/check-mastra.mjs` exit 0 on `main`
 
 ---
 
