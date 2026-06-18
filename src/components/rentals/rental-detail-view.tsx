@@ -1,122 +1,33 @@
-"use client";
+import React from "react";
+import Image from "next/image";
+import { css } from "@/lib/emotion";
 
-import Link from "next/link";
-import { ArrowLeft, Bed, Bath, Users, Building2, MapPin, Heart } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { RentalUiProvider, useRentalUi } from "@/components/chat/rental-ui-context";
-import { ScheduleViewingModal } from "@/components/modals/schedule-viewing-modal";
-import { RentalAvailabilityCalendar } from "@/components/rentals/rental-availability-calendar";
-import { formatRentalPrices } from "@/lib/rental-display";
-import { cn } from "@/lib/utils";
-import type { RentalDetail } from "@/lib/rentals/get-rental-detail";
-
-const REQUEST_ONLY = "Request only — payment is handled directly with the host.";
-const PENDING = "Data pending";
-
-function Pending() {
-  return <span className="text-muted-foreground">{PENDING}</span>;
-}
-
-const specLabel = (n: number | null, one: string, many: string): React.ReactNode => {
-  if (n == null) return <Pending />;
-  return `${n} ${n === 1 ? one : many}`;
-};
-
-/** SAN-1202 · RE-DES-007 — consumer rental detail page. */
-export function RentalDetailView({ detail }: { detail: RentalDetail }) {
-  return (
-    <RentalUiProvider>
-      <RentalDetailInner detail={detail} />
-      <ScheduleViewingModal />
-    </RentalUiProvider>
-  );
-}
-
-function RentalDetailInner({ detail }: { detail: RentalDetail }) {
-  const { openScheduleViewing } = useRentalUi();
-  const { nightlyLabel, monthlyLabel } = formatRentalPrices(detail.priceNightly ?? undefined);
-  const cover = detail.images[0];
-  const rest = detail.images.slice(1, 5);
-
-  const requestViewing = () =>
-    openScheduleViewing({
-      listingId: detail.id,
-      title: detail.title,
-      neighborhood: detail.neighborhood,
-    });
-
-  const mapsHref =
-    detail.latitude != null && detail.longitude != null
-      ? `https://www.google.com/maps/search/?api=1&query=${detail.latitude},${detail.longitude}`
-      : null;
-
-  return (
-    <main
-      data-testid="rental-detail"
-      className="mx-auto max-w-6xl px-4 pb-28 pt-6 sm:px-6 lg:pb-10"
-    >
-      <Link
-        href="/rentals"
-        data-testid="rental-detail-back"
-        className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="size-4" aria-hidden /> Back to results
-      </Link>
-
-      {/* Gallery */}
-      <RentalGallery
-        cover={cover}
-        rest={rest}
-        title={detail.title}
-        neighborhood={detail.neighborhood}
-      />
-
-      {/* ...other sections... */}
-    </main>
-  );
-}
-
-function RentalGallery({
-  cover,
-  rest,
-  title,
-  neighborhood,
-}: {
-  cover?: string;
-  rest: string[];
+export interface RentalDetailViewProps {
   title: string;
   neighborhood: string;
-}) {
+  price: number;
+  images: string[];
+}
+
+export const RentalDetailView: React.FC<RentalDetailViewProps> = ({
+  title,
+  neighborhood,
+  price,
+  images,
+}) => {
   return (
-    <section aria-label="Photos" className="mb-6">
-      {cover ? (
-        <div className="grid gap-2 sm:grid-cols-[2fr_1fr]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={cover}
-            alt={`${title} in ${neighborhood}`}
-            data-testid="rental-detail-cover"
-            className="aspect-[16/10] w-full rounded-xl bg-muted object-cover"
-            loading="eager"
-          />
-          {rest.length > 0 ? (
-            <div className="hidden grid-cols-2 gap-2 sm:grid">
-              {rest.map((img, i) => (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                {gallery.map((img, i) => (
-                <img
-                  key={i}
-                  src={img}
-                  alt={`${title} in ${neighborhood}`}
-                  className="aspect-[16/10] w-full rounded-xl bg-muted object-cover"
-                  loading="lazy"
-                />
-              ))}
-            </div>
-          ) : null}
-        </div>
-      ) : null}
+    <div className={css`padding: 16px;`}>
+      <h1>{title}</h1>
+      <h2>{neighborhood}</h2>
+      <p>${price.toFixed(2)}/night</p>
+      <div className={css`display: flex; gap: 8px;`}>
+        {images.map((src, idx) => (
+          <Image key={idx} src={src} alt={`Image ${idx + 1}`} width={300} height={200} />
+        ))}
+      </div>
+    </div>
+  );
+};
     </section>
   );
 }
@@ -191,23 +102,23 @@ function RentalGallery({
           </section>
 
           <RentalAvailabilityCalendar
-            availableFrom={detail.availableFrom}
-            availableTo={detail.availableTo}
-            minimumStayDays={detail.minimumStayDays}
-          />
-
-          <section aria-label="House rules">
-            <h2 className="mb-1 font-serif text-base font-semibold">House rules</h2>
-            <p className="text-sm text-muted-foreground">{detail.houseRules ?? <Pending />}</p>
-          </section>
-
-          <section aria-label="Location">
-            <h2 className="mb-1 font-serif text-base font-semibold">Location</h2>
-            <p className="text-sm text-muted-foreground">
-              {detail.neighborhood || <Pending />}
-              {detail.address ? ` · ${detail.address}` : ""}
-            </p>
-            {mapsHref ? (
+              {rest.map((img, i) => (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                {gallery.map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  alt={`${title} in ${neighborhood}`}
+                  className="aspect-[16/10] w-full rounded-xl bg-muted object-cover"
+                  loading="lazy"
+                />
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+    </section>
+  );
               <a
                 href={mapsHref}
                 target="_blank"

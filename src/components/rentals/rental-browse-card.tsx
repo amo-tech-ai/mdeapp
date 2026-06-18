@@ -97,7 +97,7 @@ function RentalBrowseCardMedia({
       ) : (
         <VenueCardPlaceholder
           label="Apartment"
-          icon={<Building2 className="size-5" aria-hidden />}
+          icon={<Building2 className="size-5" aria-hidden />}  
           mediaLayout="cover"
           testId="rental-browse-card-photo-placeholder"
         />

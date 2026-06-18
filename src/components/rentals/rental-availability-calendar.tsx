@@ -103,6 +103,9 @@ export function RentalAvailabilityCalendar({
           </Button>
         </div>
       </div>
+    </section>
+  );
+      </div>
 
       {!hasWindow ? (
         <p data-testid="rental-availability-pending" className="text-sm text-muted-foreground">
