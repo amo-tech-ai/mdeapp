@@ -1,7 +1,7 @@
 # CK-V2 · CopilotKit v1→v2 migration — Progress Task Tracker
 
-**Updated:** 2026-06-17 ([#247](https://github.com/amo-tech-ai/mdeapp/pull/247) guard-alignment · `check:mastra` false positives) · **Mode:** `post-SAN-886 · guard drift fix`  
-**Ground truth:** `main` @ **`2d9c8ed6`** ([#225](https://github.com/amo-tech-ai/mdeapp/pull/225) CK-V2-015 · 2026-06-16) · prior `4f43390a` (#223) · cutover `4c6ef62e` (#219)  
+**Updated:** 2026-06-17 (post-#249 verification · guard follow-up complete @ `e0621c7c`) · **Mode:** `CK-V2 guards + floor CI verified`
+**Ground truth:** `main` @ **`e0621c7c`** ([#249](https://github.com/amo-tech-ai/mdeapp/pull/249) · 2026-06-18) · guards [#247](https://github.com/amo-tech-ai/mdeapp/pull/247) · cutover `4c6ef62e` (#219)  
 **Active:** Small follow-up PR (JSDoc + `san-896` e2e send fix) → SAN-896 **Done** on user OK · prod deploy #225+  
 **Linear view:** [v2-upgrade](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd) (label **`V2UP`**) — **18 parent + 8 sub issues**  
 **Package pin:** `@copilotkit/react-core@1.55.2` · subpath `/v2` only (no package bump in 891)  
@@ -31,19 +31,9 @@
 
 ---
 
-## SAN-886 follow-up — stale guard alignment (active)
+## SAN-886 follow-up — stale guard alignment ✅ complete
 
-**Problem:** [SAN-886 · CK-V2-000 — CopilotKit v1→v2 Migration (frontend-only, subpath path)](https://linear.app/sanjiovani/issue/SAN-886/ck-v2-000-copilotkit-v1v2-migration-frontend-only-subpath-path) merged v2 `/v2` subpath into `src/**`, but enforcement still said “v1 only”. Local `node scripts/check-mastra.mjs` → **17 false FAILs**; `npm run floor` does **not** run that script.
-
-**Rules after fix:**
-
-| Surface | Import rule |
-|---------|-------------|
-| Frontend (`src/app`, `src/components`, hooks) | `@copilotkit/react-core/v2` only — **no bare** `@copilotkit/react-core` |
-| Mastra bridge (`src/app/api/copilotkit/**`) | bare `@copilotkit/runtime` — **unchanged** |
-| Blocked (full-rewrite) | `@copilotkit/react` · `core` · `agent` · `sdk-js` · `BuiltInAgent` · `createCopilotEndpoint` |
-
-**PR:** [#247](https://github.com/amo-tech-ai/mdeapp/pull/247) · **Notes:** [`22-notes.md`](./22-notes.md)
+**Resolved:** [#247](https://github.com/amo-tech-ai/mdeapp/pull/247) guards · [#248](https://github.com/amo-tech-ai/mdeapp/pull/248) docs · [#249](https://github.com/amo-tech-ai/mdeapp/pull/249) floor CI · verification [`CK-V2-POST-249-VERIFICATION-RESULTS.md`](../tasks/testing/evidence/2026-06-17/CK-V2-POST-249-VERIFICATION-RESULTS.md)
 
 | # | Task | File | Status |
 |---:|---|---|---|
@@ -51,7 +41,8 @@
 | 2 | PreToolUse — allow `/v2` APIs; block full-rewrite + bare `react-core` | `.claude/hooks/copilotkit-version-pin.mjs` | ✅ #247 merged |
 | 3 | Session reminder — v2 `/v2` subpath only | `.claude/hooks/session-start.mjs` | ✅ #247 merged |
 | 4 | Verify | — | ✅ `check:mastra` exit 0 on `main` |
-| 5 | **Follow-up:** wire `check:mastra` into `npm run floor` | `package.json` | 🟡 floor PR |
+| 5 | Wire `check:mastra` into `npm run floor` | `package.json` | ✅ #249 merged |
+| 6 | E2E verification (chat + host + floor) | — | ✅ [`CK-V2-POST-249-VERIFICATION-RESULTS.md`](../tasks/testing/evidence/2026-06-17/CK-V2-POST-249-VERIFICATION-RESULTS.md) |
 
 ---
 
@@ -196,6 +187,7 @@ Parked (not epic blockers):
 ## References
 
 - **Changelog:** [`changelog.md`](./changelog.md)
+- **Guard drift notes:** [`22-notes.md`](./22-notes.md) · **Post-#249 evidence:** [`CK-V2-POST-249-VERIFICATION-RESULTS.md`](../tasks/testing/evidence/2026-06-17/CK-V2-POST-249-VERIFICATION-RESULTS.md)
 - **Tasks audit:** [`11-tasks-audit.md`](./11-tasks-audit.md) · **File map:** [`09-file-map.md`](./09-file-map.md)
 - **Linear contracts:** [`linear-descriptions/`](./linear-descriptions/)
 - [Linear v2-upgrade view](https://linear.app/sanjiovani/view/v2-upgrade-30acec9f94bd)

@@ -165,12 +165,20 @@ no bare @copilotkit/react-core imports in src/**
 
 **Fix:** add `npm run check:mastra` to the `floor` script in `package.json` (Option A). No separate `floor.yml` step needed — workflow already runs `npm run floor`.
 
-**Status:** 🟡 PR open — wire into floor CI
+**Status:** ✅ merged [#249](https://github.com/amo-tech-ai/mdeapp/pull/249) @ `e0621c7c` — CI floor run `27734502069` success
 
 Do **after** #247 merges so the gate is not inverted on CI. ✅ #247 merged @ `81e2bead`.
 
 ---
 
+## Task 6 — E2E verification (post-#249)
+
+**Evidence:** [`docs/tasks/testing/evidence/2026-06-17/CK-V2-POST-249-VERIFICATION-RESULTS.md`](../tasks/testing/evidence/2026-06-17/CK-V2-POST-249-VERIFICATION-RESULTS.md)
+
+**Status:** ✅ PASS @ `e0621c7c` — chat events chip, host wizard HITL, `check:mastra`, CI floor
+
+---
+
 ### Bottom line
 
-Merge **PR #247**. The app is not broken. The guard is stale after **SAN-886**. Sofía’s local `check:mastra` and agent PreToolUse hooks were fighting the code Camila/Roberto already ship on `/chat` and `/host/event/new`.
+Guard follow-up **complete** (#247–#249). CopilotKit v2 `/v2` + Mastra runtime verified on localhost. Next: prod deploy + Tier-1 smoke.
