@@ -1,9 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/database.types";
-import * as core from "@/lib/events/sales-insights-core";
 import type { SalesSummary } from "@/lib/events/hostops-read-core";
+import { gatherSalesSummaries } from "@/lib/events/sales-insights-core";
 import { loadHostDashboardInitial } from "@/lib/events/load-host-dashboard";
+
+vi.mock("@/lib/events/sales-insights-core", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/events/sales-insights-core")>();
+  return {
+    ...actual,
+    gatherSalesSummaries: vi.fn(),
+  };
+});
 
 const SAMPLE_SUMMARY: SalesSummary = {
   eventId: "00000000-0000-4000-8000-000000000001",
@@ -28,18 +36,18 @@ describe("loadHostDashboardInitial", () => {
   const fakeClient = {} as SupabaseClient<Database>;
 
   beforeEach(() => {
-    vi.restoreAllMocks();
+    vi.mocked(gatherSalesSummaries).mockReset();
   });
 
   it("returns idle empty when host has no sales", async () => {
-    vi.spyOn(core, "gatherSalesSummaries").mockResolvedValue([]);
+    vi.mocked(gatherSalesSummaries).mockResolvedValue([]);
     const state = await loadHostDashboardInitial(fakeClient, "user-1");
     expect(state.workflowStatus).toBe("idle");
     expect(state.kpiCards).toHaveLength(0);
   });
 
   it("returns ready KPIs when host has paid sales", async () => {
-    vi.spyOn(core, "gatherSalesSummaries").mockResolvedValue([SAMPLE_SUMMARY]);
+    vi.mocked(gatherSalesSummaries).mockResolvedValue([SAMPLE_SUMMARY]);
     const state = await loadHostDashboardInitial(fakeClient, "user-1");
     expect(state.workflowStatus).toBe("ready");
     expect(state.kpiCards.length).toBeGreaterThan(0);
@@ -48,7 +56,7 @@ describe("loadHostDashboardInitial", () => {
   });
 
   it("returns error state when gather throws", async () => {
-    vi.spyOn(core, "gatherSalesSummaries").mockRejectedValue(new Error("db down"));
+    vi.mocked(gatherSalesSummaries).mockRejectedValue(new Error("db down"));
     const state = await loadHostDashboardInitial(fakeClient, "user-1");
     expect(state.workflowStatus).toBe("error");
   });

@@ -22,6 +22,7 @@ type HostAnalyticsShellProps = {
   initialDashboard?: HostDashboardState;
 };
 
+// skipcq: JS-0067 - module-local helper; not browser global scope
 function hostDashboardServerKey(initial?: HostDashboardState): string {
   if (!initial) return "idle:0";
   return (
@@ -29,6 +30,7 @@ function hostDashboardServerKey(initial?: HostDashboardState): string {
   );
 }
 
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function HostAnalyticsShell({
   userEmail,
   initialDashboard,

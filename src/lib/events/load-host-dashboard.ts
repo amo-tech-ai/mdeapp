@@ -15,6 +15,7 @@ import {
  * Loads RLS-scoped sales summaries and builds KPI cards without calling Gemini.
  * Chat still owns plain-language narration via get_sales_insights.
  */
+// skipcq: JS-0067 - ES module export; not browser global scope
 export async function loadHostDashboardInitial(
   supabase: SupabaseClient<Database>,
   userId: string,

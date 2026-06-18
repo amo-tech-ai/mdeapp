@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import { useAgent, useCopilotKit } from "@copilotkit/react-core/v2";
 
 /** Host analytics chat — same runAgent pattern as concierge `useConciergeChat`. */
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function useHostOpsChat() {
   const { copilotkit } = useCopilotKit();
   const { agent } = useAgent({ agentId: "hostOpsAgent" });

@@ -29,8 +29,13 @@ type HostAnalyticsPromptChipsProps = {
 };
 
 /** Quick prompts above host analytics chat — fills composer via hostOpsAgent. */
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function HostAnalyticsPromptChips({ className }: HostAnalyticsPromptChipsProps) {
   const { appendMessage, isLoading } = useHostOpsChat();
+
+  const onChipClick = (message: string) => {
+    appendMessage(message).catch(() => undefined);
+  };
 
   return (
     <div
@@ -47,7 +52,7 @@ export function HostAnalyticsPromptChips({ className }: HostAnalyticsPromptChips
             type="button"
             data-testid={chip.testId}
             disabled={isLoading}
-            onClick={() => void appendMessage(chip.message)}
+            onClick={() => onChipClick(chip.message)}
             className={cn(
               "rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground",
               "motion-safe:transition-colors motion-reduce:transition-none hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",

@@ -110,24 +110,27 @@ function eventTimeMs(iso: string): number | null {
   return Number.isNaN(ms) ? null : ms;
 }
 
+// skipcq: JS-0067 - ES module export; not browser global scope
+// skipcq: JS-0044 - date-window bounds; keep readable for event search tests
 export function isWithinDateWindow(
   eventStart: string,
   window: { gte?: string; lte?: string },
 ): boolean {
-  const t = eventTimeMs(eventStart);
-  if (t === null) return false;
+  const eventMs = eventTimeMs(eventStart);
+  if (eventMs === null) return false;
   if (window.gte) {
-    const gte = eventTimeMs(window.gte);
-    if (gte !== null && t < gte) return false;
+    const gteMs = eventTimeMs(window.gte);
+    if (gteMs !== null && eventMs < gteMs) return false;
   }
   if (window.lte) {
-    const lte = eventTimeMs(window.lte);
-    if (lte !== null && t > lte) return false;
+    const lteMs = eventTimeMs(window.lte);
+    if (lteMs !== null && eventMs > lteMs) return false;
   }
   return true;
 }
 
 /** Post-hybrid filters — category + max price (RPC cannot pre-filter semantically). */
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function filterHybridEventRows(
   rows: HybridEventRow[],
   category?: EventQuery["category"],
@@ -160,6 +163,8 @@ function hybridToEventCard(row: HybridEventRow, rankScore?: number, signalSource
 }
 
 /** Maps hybrid RPC / structured rows to EventCard — venue = full address (matches search-events rowToCard). */
+// skipcq: JS-0067 - ES module export; not browser global scope
+// skipcq: JS-0044 - card field mapping mirrors search-events rowToCard
 export function hybridRowToEventCard(
   row: HybridEventRow,
   rankScore?: number,

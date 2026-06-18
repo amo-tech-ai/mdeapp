@@ -2,7 +2,8 @@ import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 
 const queryResult = { data: null, error: { message: "permission denied" } };
 
-function createQueryBuilder() {
+// skipcq: JS-0067 - test helper; not browser global scope
+const createQueryBuilder = () => {
   const builder: Record<string, unknown> = {};
   for (const method of ["select", "eq", "order", "limit", "gte", "lte", "ilike"] as const) {
     builder[method] = vi.fn(() => builder);
@@ -12,7 +13,7 @@ function createQueryBuilder() {
     onRejected?: (reason: unknown) => unknown,
   ) => Promise.resolve(queryResult).then(onFulfilled, onRejected);
   return builder;
-}
+};
 
 vi.mock("@supabase/supabase-js", () => ({
   createClient: vi.fn(() => ({
