@@ -372,7 +372,7 @@ export function PartnerSignupWizard({
 
   // Analyzing animation: 4 rows, ~600ms each, then transition to review
   useEffect(() => {
-    if (view.kind !== "form" || view.step !== "analyzing") return;
+    if (view.kind !== "form" || view.step !== "analyzing") return null;
     const t1 = setTimeout(() => setAnalyzeProgress(1), 600);
     const t2 = setTimeout(() => setAnalyzeProgress(2), 1200);
     const t3 = setTimeout(() => setAnalyzeProgress(3), 1800);
@@ -512,34 +512,43 @@ export function PartnerSignupWizard({
     );
   }
 
+  function CreatedCard({ title, badgeText, items }: { title: string; badgeText: string; items: string[] }) {
+    return (
+      <Card data-testid="partner-signup-created-card">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center justify-between text-base">
+            {title}
+            <Badge className="border-primary/20 bg-primary/10 text-xs text-primary">
+              {badgeText}
+            </Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="flex flex-col gap-2 text-sm">
+            {items.map((item) => (
+              <li key={item} className="flex items-start gap-2">
+                <CheckIcon className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+    );
+  }
+
   function CreatedCardSection({ dashboardHref }: { dashboardHref: string }) { // skipcq: JS-0415
+    const createdItems = [
+      "Your listing + map pin",
+      "A grounded concierge profile",
+      "2 draft social posts (await your OK)",
+    ];
     return (
       <>
-      <div className="grid gap-4 px-4 sm:grid-cols-2 sm:px-8">
-        <Card data-testid="partner-signup-created-card">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center justify-between text-base">
-              What we created
-              <Badge className="border-primary/20 bg-primary/10 text-xs text-primary">
-                Ready
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="flex flex-col gap-2 text-sm">
-              {["Your listing + map pin", "A grounded concierge profile", "2 draft social posts (await your OK)"].map(
-                (item) => (
-                  <li key={item} className="flex items-start gap-2">
-                    <CheckIcon className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-                    {item}
-                  </li>
-                ),
-              )}
-            </ul>
-          </CardContent>
-        </Card>
+        <div className="grid gap-4 px-4 sm:grid-cols-2 sm:px-8">
+          <CreatedCard title="What we created" badgeText="Ready" items={createdItems} />
 
-        <Card data-testid="partner-signup-activate-card">
+          <Card data-testid="partner-signup-activate-card">
           <CardHeader className="pb-3">
             <CardTitle className="text-base">Activate your listing</CardTitle>
           </CardHeader>
@@ -815,6 +824,15 @@ export function PartnerSignupWizard({
     );
   }
 
+  function ReviewAside() {
+    return (
+      <div className="flex flex-col gap-4">
+        <WizardVisibilityCard />
+        <WizardConciergePreview />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-4xl" data-testid="signup-wizard-step-review">
       <WizardStepBar step="review" />
@@ -837,10 +855,7 @@ export function PartnerSignupWizard({
         <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
           <WizardDraftCard partnerType={partnerType} />
 
-          <div className="flex flex-col gap-4">
-            <WizardVisibilityCard />
-            <WizardConciergePreview />
-          </div>
+          <ReviewAside />
         </div>
 
         {/* Optional: manual edit fields (used when "fill in manually" was chosen) */}
