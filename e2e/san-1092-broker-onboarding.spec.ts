@@ -21,21 +21,27 @@ const EVIDENCE_DIR = path.join(
   EVIDENCE_DATE,
 );
 
+// skipcq: JS-0067
 function serviceClient() {
   loadEnvLocalForE2E();
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) {
+    throw new Error("E2E Supabase env missing (NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)");
+  }
   return createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }
 
+// skipcq: JS-0067
 async function captureEvidence(page: Page, filename: string): Promise<void> {
   fs.mkdirSync(EVIDENCE_DIR, { recursive: true });
   const filePath = path.join(EVIDENCE_DIR, filename);
   await page.screenshot({ path: filePath, fullPage: true });
 }
 
+// skipcq: JS-0067
 async function hideCpkInspector(page: Page): Promise<void> {
   await page.addStyleTag({
     content: "#cpk-web-inspector { display: none !important; }",
@@ -64,11 +70,12 @@ test.describe("SAN-1092 · RE-DES-005 broker onboarding", () => {
     expect(createErr).toBeNull();
     const userId = created.user?.id;
     expect(userId).toBeTruthy();
+    if (!userId) return;
 
     const { data: existingProfile } = await admin
       .from("landlord_profiles")
       .select("id")
-      .eq("user_id", userId!)
+      .eq("user_id", userId)
       .maybeSingle();
     expect(existingProfile).toBeNull();
 
@@ -86,7 +93,7 @@ test.describe("SAN-1092 · RE-DES-005 broker onboarding", () => {
     await expect(page.locator('[data-testid="ro-step-listing"]')).toBeVisible();
     await captureEvidence(page, "SAN-1092-onboarding-step2.png");
 
-    await page.locator("#ro-address").fill("Calle 10 #42-15, Laureles");
+    await page.locator("#ro-address").fill("72 10th Street, Laureles");
     await page.locator("#ro-bedrooms").fill("2");
     await page.locator("#ro-bathrooms").fill("1");
     await page.locator("#ro-rent").fill("2400000");
@@ -104,17 +111,18 @@ test.describe("SAN-1092 · RE-DES-005 broker onboarding", () => {
     const { data: profile } = await admin
       .from("landlord_profiles")
       .select("id, display_name, user_id")
-      .eq("user_id", userId!)
+      .eq("user_id", userId)
       .maybeSingle();
     expect(profile).not.toBeNull();
     expect(profile?.display_name).toBe(displayName);
+    if (!profile) return;
 
     const { data: apartments } = await admin
       .from("apartments")
       .select("id, landlord_id, listing_workflow_status, address, price_monthly")
-      .eq("landlord_id", profile!.id);
+      .eq("landlord_id", profile.id);
     expect((apartments ?? []).length).toBeGreaterThanOrEqual(1);
-    const draft = apartments!.find((a) => a.listing_workflow_status === "draft");
+    const draft = apartments?.find((a) => a.listing_workflow_status === "draft");
     expect(draft).toBeTruthy();
     expect(draft?.price_monthly).toBe(2_400_000);
 

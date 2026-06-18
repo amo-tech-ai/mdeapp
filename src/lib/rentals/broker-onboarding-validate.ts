@@ -31,6 +31,8 @@ export function brokerNeighborhoodProfileFields(neighborhoods: string[]): {
 }
 
 /** Validates onboarding payload before RPC (unit-testable). */
+// skipcq: JS-0067 - JS-R1005 field validation branches
+// skipcq: JS-R1005
 export function validateBrokerOnboardingInput(
   input: BrokerOnboardingFormInput,
 ): BrokerOnboardingSubmitResult {

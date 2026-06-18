@@ -12,6 +12,7 @@ import { createClient } from "@/lib/supabase/server";
 
 export type { BrokerOnboardingFormInput, BrokerOnboardingSubmitResult };
 
+// skipcq: JS-0067
 function parseRpcJson(value: unknown): { apartment_id?: string; landlord_profile_id?: string } {
   if (!value || typeof value !== "object") return {};
   const row = value as Record<string, unknown>;
@@ -23,6 +24,8 @@ function parseRpcJson(value: unknown): { apartment_id?: string; landlord_profile
 }
 
 /** PTR-RENTALS-004 RPC + broker-scoped listing PATCH (SAN-1092). */
+// skipcq: JS-0067 - JS-R1005 RPC + patch branches
+// skipcq: JS-R1005
 export async function submitBrokerOnboarding(
   input: BrokerOnboardingFormInput,
 ): Promise<BrokerOnboardingSubmitResult> {
@@ -103,4 +106,5 @@ export async function submitBrokerOnboarding(
   }
 
   redirect(BROKER_LISTINGS_PATH);
+  return { ok: false, message: "Redirecting to listings." };
 }

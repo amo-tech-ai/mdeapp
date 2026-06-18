@@ -63,6 +63,8 @@ function toggleNeighborhood(current: string[], value: string): string[] {
     : [...current, value];
 }
 
+// skipcq: JS-0067 - JS-R1005 wizard step UI
+// skipcq: JS-R1005
 export function RentalsOnboardingWizard() {
   const [step, setStep] = useState<Step>(1);
   const [form, setForm] = useState<BrokerOnboardingFormInput>(INITIAL);
