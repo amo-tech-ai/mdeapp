@@ -1,0 +1,29 @@
+docs/ecommerce/tasks/ECOM-M-001-mercur-marketplace-foundation.md
+  s_c77eadabf7c0a7::t_c55a320ee47802 4,27,30,36,43-44,46,60-63,71-72
+docs/ecommerce/tasks/ECOM-M-004-vendor-dashboard-v1.md
+  s_c77eadabf7c0a7::t_566187507723f5 31,38,40,54-56,70-72,116-118,121,127-128
+  s_c77eadabf7c0a7::t_0d779a3ec12b37 42
+docs/ecommerce/INDEX-ECOM.md
+  s_c77eadabf7c0a7::t_cedd362d0a0e18 11,13-14,50,115-117,126-130
+  s_c77eadabf7c0a7::t_f19ee13ada7337 1-10,12,15-49,51-114,118-125
+docs/ecommerce/tasks/INDEX.md
+  s_c77eadabf7c0a7::t_cd5cd5c66b04ee 4,19,35-36,100,106
+docs/ecommerce/audit/2026-06-10-standalone-mercur-forensic-audit.md
+  s_c77eadabf7c0a7::t_912434073e0533 1-279
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "4a2d082b7e7cd7ebebc8ad0a14cf79c0ea1c94cd",
+  "prompts": {},
+  "sessions": {
+    "s_c77eadabf7c0a7": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019eaf59-3a1e-7530-a88a-984407f94157",
+        "model": "gpt-5.5"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
