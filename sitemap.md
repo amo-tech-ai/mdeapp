@@ -29,7 +29,7 @@ prod: https://www.mdeai.co
 │   └── [overlay] schedule-viewing  ✅ LIVE    Camila books a rental viewing (HITL lead capture)
 │
 ├── /rentals                         🔵 MVP P0  Redirects to `/chat` today — **REAL-011 (SAN-478)** ships catalog browse
-│   └── /rentals/[id]                🔵 MVP P1  Rental detail page (REAL-012 / SAN-479)
+│   └── /rentals/[id]                ✅ LIVE    Rental detail page — SAN-1202 · RE-DES-007 (gallery·calendar·request-viewing)
 │
 ├── /events                          ✅ LIVE    Public events catalog — **SCREEN-027 (SAN-518)** + **SAN-586** API · nav enabled (SAN-584)
 │   └── /events/[slug]               ✅ LIVE    Event detail — ticket tiers + Buy CTA
