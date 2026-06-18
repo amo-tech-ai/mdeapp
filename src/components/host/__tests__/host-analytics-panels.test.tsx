@@ -77,6 +77,25 @@ describe("HostAnalyticsAside", () => {
     expect(html).toContain('data-testid="host-analytics-aside-empty"');
     expect(html).toContain("Sales assistant");
   });
+
+  it("shows recommendations panel when present", () => {
+    const html = renderToStaticMarkup(
+      <HostAnalyticsAside
+        state={state({
+          recommendations: [
+            {
+              eventId: "00000000-0000-4000-8000-000000000001",
+              eventName: "Salsa Night",
+              severity: "watch",
+              action: "Promote on social.",
+            },
+          ],
+        })}
+      />,
+    );
+    expect(html).toContain('data-testid="host-recommendations"');
+    expect(html).not.toContain('data-testid="host-analytics-aside-empty"');
+  });
 });
 
 describe("HostNarrativeBanner", () => {

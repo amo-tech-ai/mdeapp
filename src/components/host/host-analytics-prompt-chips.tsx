@@ -50,7 +50,7 @@ export function HostAnalyticsPromptChips({ className }: HostAnalyticsPromptChips
             onClick={() => void appendMessage(chip.message)}
             className={cn(
               "rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground",
-              "transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              "motion-safe:transition-colors motion-reduce:transition-none hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
               "disabled:cursor-not-allowed disabled:opacity-50",
             )}
           >

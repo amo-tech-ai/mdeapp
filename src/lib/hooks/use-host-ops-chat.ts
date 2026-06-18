@@ -13,13 +13,17 @@ export function useHostOpsChat() {
   const appendMessage = useCallback(
     async (content: string) => {
       if (!agent) return false;
-      agent.addMessage({
-        id: crypto.randomUUID(),
-        role: "user",
-        content,
-      });
-      await copilotkit.runAgent({ agent });
-      return true;
+      try {
+        agent.addMessage({
+          id: crypto.randomUUID(),
+          role: "user",
+          content,
+        });
+        await copilotkit.runAgent({ agent });
+        return true;
+      } catch {
+        return false;
+      }
     },
     [agent, copilotkit],
   );

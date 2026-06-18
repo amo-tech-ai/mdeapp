@@ -79,7 +79,11 @@ export function HostAnalyticsShell({
             </section>
 
             <aside
-              aria-label="Recommended actions"
+              aria-label={
+                state.recommendations.length > 0
+                  ? "Recommended actions"
+                  : "Sales assistant"
+              }
               className="shrink-0 overflow-y-auto border-t border-border p-4 md:w-72 md:border-l md:border-t-0"
             >
               <HostAnalyticsAside state={state} />
