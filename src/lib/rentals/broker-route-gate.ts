@@ -3,6 +3,8 @@
 export const BROKER_ONBOARDING_PATH = "/host/rentals/onboarding" as const;
 export const BROKER_LISTINGS_PATH = "/host/rentals/listings" as const;
 export const BROKER_HOME_PATH = "/host/rentals" as const;
+export const BROKER_DASHBOARD_PATH = "/host/rentals/dashboard" as const;
+export const BROKER_OVERVIEW_PATH = "/host/rentals?mode=overview" as const;
 
 export type BrokerRouteGateAction =
   | "allow"
