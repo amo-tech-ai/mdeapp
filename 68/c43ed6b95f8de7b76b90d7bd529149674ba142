@@ -1,0 +1,40 @@
+src/app/rentals/[id]/not-found.tsx
+  s_f1f9127cc71b2a::t_1ce9b5985b1245 1-23
+src/components/rentals/rental-browse-card.tsx
+  s_f1f9127cc71b2a::t_f6cfa882be5fd8 189-198
+  s_f1f9127cc71b2a::t_d1407f25c1c400 4
+src/components/rentals/rental-availability-calendar.tsx
+  s_f1f9127cc71b2a::t_7d27c160ec0c42 116,129
+  s_f1f9127cc71b2a::t_c191c9a36dbd57 1-115,117-128,130-149
+e2e/san-1202-rental-detail.spec.ts
+  s_f1f9127cc71b2a::t_f6866b4a42bc0f 1-16,18-34,36-38
+  s_f1f9127cc71b2a::t_5be119b78f2543 17,35
+src/lib/rentals/__tests__/get-rental-detail.test.ts
+  s_f1f9127cc71b2a::t_89f44768d1bd53 1-53
+src/lib/rentals/get-rental-detail.ts
+  s_f1f9127cc71b2a::t_6558419d2917af 1-143
+docs/tasks/testing/evidence/SAN-1202/RE-DES-007-RESULTS.md
+  s_f1f9127cc71b2a::t_a94c6a78f494cf 1-53
+sitemap.md
+  s_f1f9127cc71b2a::t_46e3a1f81fad10 32
+src/components/rentals/rental-detail-view.tsx
+  s_f1f9127cc71b2a::t_cc4ecdfb73b1a2 1-242
+src/app/rentals/[id]/page.tsx
+  s_f1f9127cc71b2a::t_13fded87ec1dae 1-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "68c43ed6b95f8de7b76b90d7bd529149674ba142",
+  "prompts": {},
+  "sessions": {
+    "s_f1f9127cc71b2a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ebcc0856-4735-47c8-9dfa-b58a8e933943",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
