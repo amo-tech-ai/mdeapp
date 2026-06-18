@@ -239,8 +239,7 @@ function RentalDetailInner({ detail }: { detail: RentalDetail }) {
             ) : (
               <Pending />
             )}
-        </div>
-
+            </section>
           <RentalAvailabilityCalendar
             availableFrom={detail.availableFrom}
             availableTo={detail.availableTo}
