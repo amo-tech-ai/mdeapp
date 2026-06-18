@@ -10,6 +10,40 @@ Knowledge graph tool for codebase + docs analysis. Builds a queryable graph of e
 
 ---
 
+## When to use graphify (and when not)
+
+> **Graphify is keyword/label graph traversal, not semantic search.** It matches the
+> exact identifiers extracted from the AST (function, component, file, and doc names) and
+> walks the edges between them. It does not understand intent or paraphrase.
+
+**Use graphify first when you know the exact shared symbol you're about to touch:**
+
+```bash
+# Good — anchor on an exact symbol name
+graphify explain "conciergeAgent"          # locate + immediate neighbors
+graphify explain "HostOpsCopilotBridge"
+graphify explain "HostDashboardState"
+graphify path "useConciergeCoAgent" "concierge.ts"   # how A connects to B
+```
+
+**Do not use graphify for vague natural-language discovery** — it keyword-matches and
+returns noisy hits (e.g. doc nodes that merely contain the word "agent"):
+
+```bash
+# Bad — vague NL, returns noise
+graphify query "where is the agent defined"
+graphify query "what handles onboarding"
+```
+
+For fuzzy or conceptual discovery, use `grep` + `Read` instead. Reach for graphify once
+you have an exact identifier to anchor on.
+
+**Verified 2026-06-18:** `graphify explain "conciergeAgent"` resolves cleanly to
+`src/mastra/agents/concierge.ts`; the vague NL query above returned unrelated doc nodes
+(keyword-matched on "agent"). Exact symbol in → useful subgraph; vague sentence in → noise.
+
+---
+
 ## Quick Start
 
 ```bash
@@ -24,7 +58,7 @@ cd /home/sk/mdeai/mdeapp
 
 ## Commands
 
-### Query — find the shortest path between two things
+### path — shortest path between two things
 
 ```bash
 graphify path "useConciergeCoAgent" "concierge.ts"
@@ -45,28 +79,40 @@ print(hits[:20])
 "
 ```
 
-### Explain — plain-language description of a node
+### explain — plain-language description of a node
 
 ```bash
 graphify explain "useRentalUi"
 graphify explain "search-grounded-places.ts"
 ```
 
-### Query — BFS traversal for a question
+### query — BFS traversal for a question
+
+Keyword-anchored BFS, not semantic. Works when the question contains an exact identifier
+that exists in the graph; degrades to noise for paraphrased / conceptual questions (see
+"When to use graphify" above).
 
 ```bash
-graphify query "which components use the map context"
 graphify query "what calls createClient" --budget 3000
 graphify query "Mastra tool registration" --dfs
 ```
 
-### Affected — what breaks if X changes
+### Blast radius — what depends on X
+
+> There is **no `affected` command** (it is not in the `graphify` CLI nor in
+> `scripts/graphify-run.sh`). Earlier docs that referenced `graphify affected …` were wrong.
+
+To see what a change might break, use `explain` (lists a node's neighbors, including
+importers) or `path` (how two symbols connect):
 
 ```bash
-graphify affected "createClient"
-graphify affected "useMapContext" --depth 3
-graphify affected "NEIGHBORHOODS" --relation calls
+graphify explain "createClient"                       # neighbors + importers of the symbol
+graphify path "useMapContext" "RentalsMapShell"       # is B reachable from A, and how
 ```
+
+These return BFS **neighbors**, not a guaranteed-complete caller list. Before any breaking
+change, confirm the full caller set with `grep` — the graph only captures static imports
+(dynamic imports, `require()`, string lookups, and Next.js routing are invisible to it).
 
 ---
 
