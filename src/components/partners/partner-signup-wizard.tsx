@@ -139,7 +139,7 @@ function DraftCardHeaderSection() {
   );
 }
 
-function DraftCardTags() {
+export function DraftCardTags() {
   return (
     <div className="flex flex-wrap gap-1.5">
       <Badge variant="secondary">Rooftop bar</Badge>
@@ -149,14 +149,14 @@ function DraftCardTags() {
   );
 }
 
-function DetailRow({ label, value }: { label: string; value: string }) {
+const DetailRow = ({ label, value }: { label: string; value: string }) => {
   return (
     <div className="flex items-baseline justify-between border-b border-border pb-2">
       <span className="text-muted-foreground">{label}</span>
       <span className="font-medium">{value}</span>
     </div>
   );
-}
+};
 
 export function WizardDraftCard({ partnerType }: { partnerType: PartnerType }) {
   const label = PARTNER_TYPE_LABELS[partnerType];

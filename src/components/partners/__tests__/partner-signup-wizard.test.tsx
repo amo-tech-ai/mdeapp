@@ -47,7 +47,7 @@ const defaultProps = {
   loginNextPath: "/partners/signup?type=host",
 };
 
-function getRequiredElement<T extends Element>(
+const getRequiredElement = function <T extends Element>(
   container: HTMLElement,
   selector: string,
   label: string,
@@ -57,7 +57,7 @@ function getRequiredElement<T extends Element>(
     throw new Error(`Missing required element: ${label} (${selector})`);
   }
   return node as T;
-}
+};
 
 function setInputValue(input: HTMLInputElement, value: string) {
   const setter = Object.getOwnPropertyDescriptor(
