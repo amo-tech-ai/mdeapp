@@ -1,12 +1,34 @@
-/** RE-DES-005 gate placeholder — full wizard ships separately. */
-export default function HostRentalsOnboardingPage() {
+import { redirect } from "next/navigation";
+import { RentalsOnboardingWizard } from "@/components/host/rentals/rentals-onboarding-wizard";
+import { BrokerRentalsGateError } from "@/components/host/rentals/broker-rentals-gate-error";
+import { BROKER_HOME_PATH } from "@/lib/rentals/broker-route-gate";
+import { getBrokerContext } from "@/lib/rentals/get-broker-context";
+
+export const metadata = {
+  title: "Broker onboarding · mdeai",
+};
+
+/** RE-DES-005 — broker onboarding wizard (SAN-1092). */
+// skipcq: JS-0067
+export default async function HostRentalsOnboardingPage() {
+  const ctx = await getBrokerContext();
+
+  if (ctx.state === "unauthorized") {
+    redirect("/login?next=/host/rentals/onboarding");
+  }
+
+  if (ctx.state === "error") {
+    console.error("[host/rentals/onboarding] broker context error:", ctx.message);
+    return <BrokerRentalsGateError />;
+  }
+
+  if (ctx.hasBrokerProfile) {
+    redirect(BROKER_HOME_PATH);
+  }
+
   return (
-    <main data-testid="host-rentals-onboarding" className="space-y-4 py-8">
-      <h1 className="font-serif text-2xl font-semibold">Broker onboarding</h1>
-      <p className="max-w-lg text-sm text-muted-foreground">
-        Create your broker profile to publish rental listings. The onboarding wizard ships
-        in the next PR in this stack — there is no listings page until your profile exists.
-      </p>
+    <main data-testid="host-rentals-onboarding">
+      <RentalsOnboardingWizard />
     </main>
   );
 }

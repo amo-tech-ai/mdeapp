@@ -143,8 +143,14 @@ fi
 # ---------- Task index sanity ----------
 if in_filter tasks; then
   echo "## tasks/core sanity"
+  task_files=()
   shopt -s nullglob
-  for f in "$REPO/tasks/core/"F*.md; do
+  task_files=("$REPO/tasks/core/"F*.md)
+  shopt -u nullglob
+  if [ ${#task_files[@]} -eq 0 ]; then
+    fail "no F*.md task files in $REPO/tasks/core/"
+  else
+    for f in "${task_files[@]}"; do
     base=$(basename "$f" .md)
     status=$(awk '/^status:/{print $2; exit}' "$f")
     # Strip the leading "depends_on:" key AND any trailing "# comment"
@@ -172,8 +178,8 @@ if in_filter tasks; then
         fail "  $base depends_on $d → no matching file in tasks/core/"
       fi
     done
-  done
-  shopt -u nullglob
+    done
+  fi
   echo
 fi
 

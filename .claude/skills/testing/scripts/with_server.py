@@ -22,6 +22,8 @@ import argparse
 
 def is_server_ready(port, timeout=30):
     """Wait for server to be ready by polling the port."""
+    if not isinstance(port, int) or port < 1 or port > 65535:
+        return False
     start_time = time.time()
     while time.time() - start_time < timeout:
         try:

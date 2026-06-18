@@ -2,7 +2,14 @@ import { Memory } from "@mastra/memory";
 import type { ZodObject, ZodRawShape } from "zod";
 import { getMastraStorage } from "./storage";
 
-export function createThreadMemory<T extends ZodRawShape>(schema: ZodObject<T>) {
+export function createThreadMemory<T extends ZodRawShape>(
+  schema: ZodObject<T>,
+  // PERF-002: lastMessages is the largest input-token driver on busy threads —
+  // replayed tool-result payloads inflate every Gemini call. Callers that don't
+  // need deep raw history pass a smaller window to cut input size (and latency)
+  // without losing follow-up context, which lives in working memory. Default 20.
+  options?: { lastMessages?: number },
+) {
   return new Memory({
     storage: getMastraStorage(),
     options: {
@@ -11,7 +18,7 @@ export function createThreadMemory<T extends ZodRawShape>(schema: ZodObject<T>) 
         scope: "thread",
         schema,
       },
-      lastMessages: 20,
+      lastMessages: options?.lastMessages ?? 20,
     },
   });
 }

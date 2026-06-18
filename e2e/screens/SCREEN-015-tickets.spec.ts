@@ -71,7 +71,72 @@ test.describe(`${SCREEN_ID} my tickets + QR`, () => {
       await expect(page.locator('[data-testid="my-tickets-detail"]')).toContainText(
         "Reina de Antioquia",
       );
+      await expect(
+        page.locator('[data-testid="my-tickets-qr"]'),
+      ).toHaveAttribute("data-qr-state", "valid");
+      await expect(
+        page.locator('[data-testid="my-tickets-pass-actions"]'),
+      ).toBeVisible();
+      await expect(
+        page.locator('[data-testid="my-tickets-action-directions"]'),
+      ).toBeVisible();
+      await expect(
+        page.locator('[data-testid="my-tickets-action-share"]'),
+      ).toBeVisible();
       await captureScreenEvidence(page, SCREEN_ID, "desktop-qr.png");
+      assertConsoleClean(errors);
+    });
+
+    test("used ticket greys the QR", async ({ page }) => {
+      await page.route("**/api/tickets/wallet**", async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            ...MOCK_WALLET,
+            attendees: [{ ...MOCK_WALLET.attendees[0], status: "checked_in" }],
+          }),
+        });
+      });
+      const errors = watchCriticalConsoleErrors(page);
+      await page.goto(`/me/tickets/${MOCK_ORDER_ID}?token=mock-token`, {
+        waitUntil: "domcontentloaded",
+      });
+      await expect(
+        page.locator('[data-testid="my-tickets-qr"]'),
+      ).toHaveAttribute("data-qr-state", "used");
+      await expect(
+        page.locator('[data-testid="my-tickets-qr-overlay"]'),
+      ).toContainText("Already scanned");
+      await captureScreenEvidence(page, SCREEN_ID, "desktop-qr-used.png");
+      assertConsoleClean(errors);
+    });
+
+    test("ended event greys the QR as expired", async ({ page }) => {
+      await page.route("**/api/tickets/wallet**", async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            ...MOCK_WALLET,
+            event: {
+              ...MOCK_WALLET.event,
+              event_start_time: "2020-01-01T01:00:00+00:00",
+              event_end_time: "2020-01-01T04:00:00+00:00",
+            },
+          }),
+        });
+      });
+      const errors = watchCriticalConsoleErrors(page);
+      await page.goto(`/me/tickets/${MOCK_ORDER_ID}?token=mock-token`, {
+        waitUntil: "domcontentloaded",
+      });
+      await expect(
+        page.locator('[data-testid="my-tickets-qr"]'),
+      ).toHaveAttribute("data-qr-state", "expired");
+      await expect(
+        page.locator('[data-testid="my-tickets-qr-overlay"]'),
+      ).toContainText("Event ended");
       assertConsoleClean(errors);
     });
   });

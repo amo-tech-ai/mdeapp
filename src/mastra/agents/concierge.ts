@@ -7,7 +7,6 @@ import { searchRestaurantsTool } from '../tools/search-restaurants';
 import { searchAttractionsTool } from '../tools/search-attractions';
 import { searchGroundedPlacesTool } from '../tools/search-grounded-places';
 import { searchWebGroundedEventsTool } from '../tools/search-web-grounded-events';
-import { extractIntentSlotsTool } from '../tools/extract-intent-slots';
 import { requestVenueBookingTool } from '../tools/request-venue-booking';
 import { FLASH_MODEL } from "../lib/models";
 import { getDefaultInputProcessors } from "../lib/agent-input-processors";
@@ -302,8 +301,12 @@ When the user wants to book a table, café visit, or nightlife reservation:
 
 ${formatEventSourcePromptHint()}`,
   model: FLASH_MODEL,
+  // PERF-002: extractIntentSlotsTool removed. Its execute() just Zod-echoed the
+  // agent's own input (a no-op), but the agent was instructed to call it first —
+  // adding a full Gemini tool-call step to every agent-path turn. Intent routing
+  // already happens client-side (regex + Flash classifier) and via the per-search
+  // clarification gates in the instructions above, so this changes no behavior.
   tools: {
-    extractIntentSlotsTool,
     searchRentalsTool,
     searchEventsTool,
     searchRestaurantsTool,
@@ -313,6 +316,9 @@ ${formatEventSourcePromptHint()}`,
     requestVenueBooking: requestVenueBookingTool,
   },
   inputProcessors: getDefaultInputProcessors(),
+  // PERF-002: 10-message window (was 20). Follow-up state lives in working memory
+  // (lastRentalQuery/lastEventQuery/…), so a shorter raw-history replay cuts input
+  // tokens — and latency — on busy threads without changing follow-up behavior.
   // @ts-expect-error beta drift: Memory.recall() shape vs MastraMemory (same as pingAgent)
-  memory: createThreadMemory(conciergeWorkingMemorySchema),
+  memory: createThreadMemory(conciergeWorkingMemorySchema, { lastMessages: 10 }),
 });

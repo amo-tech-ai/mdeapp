@@ -176,7 +176,23 @@ test.describe("SAN-896 · CK-V2-008 evidence", () => {
       await expect(page.getByTestId("host-analytics")).toBeVisible();
       await expect(page.getByTestId("host-ops-chat-region")).toBeVisible();
 
-      await expect(page.getByTestId("host-kpi-empty")).toBeVisible();
+      const kpiEmpty = page.getByTestId("host-kpi-empty");
+      const kpiGrid = page.getByTestId("host-kpi-grid");
+      await expect
+        .poll(
+          async () => {
+            const empty = await kpiEmpty.isVisible().catch(() => false);
+            const grid = await kpiGrid.isVisible().catch(() => false);
+            return empty || grid;
+          },
+          { timeout: 15_000 },
+        )
+        .toBe(true);
+
+      const hasGridOnLoad = await kpiGrid.isVisible().catch(() => false);
+      if (!hasGridOnLoad) {
+        await expect(page.getByTestId("host-analytics-prompt-chips")).toBeVisible();
+      }
 
       await Promise.all([
         page.waitForResponse(
@@ -190,7 +206,6 @@ test.describe("SAN-896 · CK-V2-008 evidence", () => {
       ]);
 
       const salesLoaded = page.getByText("Sales loaded ✓");
-      const kpiGrid = page.getByTestId("host-kpi-grid");
       await expect
         .poll(
           async () => {

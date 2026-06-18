@@ -1,0 +1,36 @@
+{
+  "condition": "injection_guard_OFF (after)",
+  "prompt": "What neighborhoods do you recommend for a first-time visitor to Medellín?",
+  "iterations": 3,
+  "median_ms": 6328,
+  "median_s": 6.3,
+  "min_s": 6.3,
+  "max_s": 6.4,
+  "samples": [
+    {
+      "iter": 0,
+      "durationMs": 6289,
+      "tool_count": 0,
+      "input_tokens": 19338,
+      "output_tokens": 180,
+      "status": "success"
+    },
+    {
+      "iter": 1,
+      "durationMs": 6328,
+      "tool_count": 0,
+      "input_tokens": 19375,
+      "output_tokens": 275,
+      "status": "success"
+    },
+    {
+      "iter": 2,
+      "durationMs": 6394,
+      "tool_count": 0,
+      "input_tokens": 19318,
+      "output_tokens": 163,
+      "status": "success"
+    }
+  ]
+}
+

@@ -1,33 +1,31 @@
 import { redirect } from "next/navigation";
-import { HostRentalsNav } from "@/components/host/rentals/host-rentals-nav";
-import { createClient } from "@/lib/supabase/server";
+import { BrokerRentalsGateError } from "@/components/host/rentals/broker-rentals-gate-error";
+import { brokerLoginNextPath } from "@/lib/rentals/broker-route-gate";
+import { getBrokerContext } from "@/lib/rentals/get-broker-context";
+import { getBrokerRequestPathname } from "@/lib/rentals/get-broker-request-path";
 
 export const metadata = {
   title: "Rentals host · mdeai",
 };
 
-/** RE-WIRE-001 — shared shell for `/host/rentals/*`. */
+/** RE-WIRE-001 — auth gate only; shell lives under `(broker)/layout`. */
+// skipcq: JS-0067
 export default async function HostRentalsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const ctx = await getBrokerContext();
 
-  if (!user) redirect("/login?next=/host/rentals/listings");
+  if (ctx.state === "unauthorized") {
+    const next = brokerLoginNextPath(await getBrokerRequestPathname());
+    redirect(`/login?next=${encodeURIComponent(next)}`);
+  }
 
-  return (
-    <div data-testid="host-rentals-layout" className="mx-auto min-h-screen max-w-7xl px-4 py-6">
-      <div className="mb-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          Rentals OS
-        </p>
-        <HostRentalsNav />
-      </div>
-      {children}
-    </div>
-  );
+  if (ctx.state === "error") {
+    console.error("[host/rentals] broker context error:", ctx.message);
+    return <BrokerRentalsGateError />;
+  }
+
+  return children;
 }

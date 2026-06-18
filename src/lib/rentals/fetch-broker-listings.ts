@@ -13,7 +13,17 @@ export type FetchBrokerListingsResult =
 
 type DbClient = SupabaseClient<Database>;
 
+const BROKER_LISTINGS_LOAD_ERROR =
+  "Couldn't load your listings. Try again in a moment.";
+
+function failListings(context: string, error: unknown): FetchBrokerListingsResult { // skipcq: JS-0067
+  // skipcq: JS-0005 - server-only loader; raw error must not reach UI
+  console.error(`[fetchBrokerListings] ${context}`, error);
+  return { ok: false, message: BROKER_LISTINGS_LOAD_ERROR };
+}
+
 /** Load broker-scoped apartment inventory (RLS + explicit landlord filter). */
+// skipcq: JS-0067 - ES module export; not browser global scope
 export async function fetchBrokerListings(
   supabase: DbClient,
   userId: string,
@@ -24,7 +34,7 @@ export async function fetchBrokerListings(
     .eq("user_id", userId);
 
   if (profileError) {
-    return { ok: false, message: profileError.message };
+    return failListings("landlord_profiles", profileError);
   }
 
   const landlordProfileIds = (profiles ?? []).map((p) => p.id);
@@ -36,7 +46,7 @@ export async function fetchBrokerListings(
     .limit(200);
 
   if (error) {
-    return { ok: false, message: error.message };
+    return failListings("apartments", error);
   }
 
   const mapped = (data as ApartmentBrokerListingRow[]).map(mapBrokerListingRow);
