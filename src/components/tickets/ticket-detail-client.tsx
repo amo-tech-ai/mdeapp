@@ -20,38 +20,40 @@ type TicketDetailClientProps = {
   accessToken: string;
 };
 
-export function TicketDetailClient({
-  orderId,
-  accessToken,
-}: TicketDetailClientProps) {
+function useWalletPayload(orderId: string, accessToken: string) {
   const [payload, setPayload] = useState<WalletOrderPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [missing, setMissing] = useState(false);
-  const [nowMs] = useState(() => Date.now());
 
   useEffect(() => {
     let cancelled = false;
     const params = new URLSearchParams({ orderId, token: accessToken });
-
     fetch(`/api/tickets/wallet?${params}`)
       .then(async (res) => {
         if (!res.ok) throw new Error("not found");
         return res.json() as Promise<WalletOrderPayload>;
       })
-      .then((data) => {
-        if (!cancelled) setPayload(data);
-      })
-      .catch(() => {
-        if (!cancelled) setMissing(true);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
+      .then((data) => { if (!cancelled) setPayload(data); })
+      .catch(() => { if (!cancelled) setMissing(true); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [orderId, accessToken]);
+
+  return { payload, loading, missing };
+}
+
+function resolvePassState(isUsed: boolean, isExpired: boolean): QrPassState {
+  if (isUsed) return "used";
+  if (isExpired) return "expired";
+  return "valid";
+}
+
+export function TicketDetailClient({
+  orderId,
+  accessToken,
+}: TicketDetailClientProps) {
+  const { payload, loading, missing } = useWalletPayload(orderId, accessToken);
+  const [nowMs] = useState(() => Date.now());
 
   if (loading) {
     return (
@@ -112,11 +114,7 @@ export function TicketDetailClient({
   const eventEnd = event.event_end_time ?? event.event_start_time;
   const isExpired = new Date(eventEnd).getTime() < nowMs;
   const isUsed = primary.status !== "active";
-  const passState: QrPassState = isUsed
-    ? "used"
-    : isExpired
-      ? "expired"
-      : "valid";
+  const passState = resolvePassState(isUsed, isExpired);
   const venueLine = [event.address, event.city].filter(Boolean).join(" · ");
   const directionsQuery = venueLine
     ? `${event.name}, ${venueLine}`
