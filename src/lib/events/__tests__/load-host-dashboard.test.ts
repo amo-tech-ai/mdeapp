@@ -13,7 +13,15 @@ const SAMPLE_SUMMARY: SalesSummary = {
   ticketsSold: 10,
   paidOrders: 2,
   cancelledOrders: 0,
-  tiers: [{ qtyTotal: 100, qtySold: 10 }],
+  tiers: [
+    {
+      ticketId: "00000000-0000-4000-8000-000000000002",
+      name: "General",
+      priceCents: 50_000,
+      qtyTotal: 100,
+      qtySold: 10,
+    },
+  ],
 };
 
 describe("loadHostDashboardInitial", () => {
