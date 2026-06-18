@@ -1,28 +1,22 @@
-import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Suspense } from "react";
+import { RentalsConciergeShell } from "@/components/host/rentals/rentals-concierge-shell";
 
 export const metadata = {
-  title: "Rentals home · mdeai",
+  title: "Rentals concierge · mdeai",
 };
 
-/** RE-DES-002 placeholder — broker concierge ships in SAN-1093. */
-// skipcq: JS-0067
-export default function HostRentalsHomePage() {
+type PageProps = {
+  searchParams: Promise<{ mode?: string }>;
+};
+
+/** SAN-1093 · RE-DES-002 — broker concierge workspace (Phase A static shell). */
+export default async function HostRentalsHomePage({ searchParams }: PageProps) {
+  const { mode } = await searchParams;
+  const workspaceMode = mode === "overview" ? "overview" : "concierge";
+
   return (
-    <main data-testid="host-rentals-home" className="space-y-4 py-8">
-      <h1 className="font-serif text-2xl font-semibold">Rentals home</h1>
-      <p className="max-w-lg text-sm text-muted-foreground">
-        Multi-turn AI for marketing copy, performance analysis, and portfolio questions
-        lands here. Inventory management lives in Listings.
-      </p>
-      <Link
-        href="/host/rentals/listings"
-        data-testid="host-rentals-go-listings"
-        className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-      >
-        Open listings
-      </Link>
-    </main>
+    <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Loading…</div>}>
+      <RentalsConciergeShell workspaceMode={workspaceMode} />
+    </Suspense>
   );
 }
