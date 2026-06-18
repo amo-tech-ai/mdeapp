@@ -1,0 +1,30 @@
+src/components/host/host-ops-copilot-bridge.tsx
+  s_f9d5f98a31145c::t_e398a7064f2985 65-74
+src/lib/events/__tests__/load-host-dashboard.test.ts
+  s_f9d5f98a31145c::t_8e332262a26a5e 5,8-17
+  s_f9d5f98a31145c::t_995e2147b3a485 34
+src/components/host/host-analytics-shell.tsx
+  s_f9d5f98a31145c::t_cb966090115d2d 82-86
+src/components/host/__tests__/host-analytics-panels.test.tsx
+  s_f9d5f98a31145c::t_69567dac9465a5 80-98
+src/lib/hooks/use-host-ops-chat.ts
+  s_f9d5f98a31145c::t_689df0d55e18a0 16-26
+src/components/host/host-analytics-prompt-chips.tsx
+  s_f9d5f98a31145c::t_dd46024074b917 53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "d0b0c2717a400011ec12c68ff9b6f2b6e0442692",
+  "prompts": {},
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
