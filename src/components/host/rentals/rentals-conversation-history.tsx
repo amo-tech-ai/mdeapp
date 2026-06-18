@@ -16,6 +16,7 @@ const DOT_CLASS: Record<string, string> = {
 };
 
 /** Left column — opportunities, workflows, recent (rc-left). Phase A: static, no agent sends. */
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function RentalsConversationHistory() {
   return (
     <aside

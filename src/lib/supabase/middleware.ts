@@ -94,6 +94,10 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  supabaseResponse.headers.set("x-pathname", request.nextUrl.pathname);
+  // Include search so deep links survive the login round-trip (e.g. /host/rentals?mode=overview).
+  supabaseResponse.headers.set(
+    "x-pathname",
+    `${request.nextUrl.pathname}${request.nextUrl.search}`,
+  );
   return supabaseResponse;
 }

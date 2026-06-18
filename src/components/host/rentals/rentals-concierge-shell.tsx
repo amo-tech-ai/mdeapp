@@ -20,6 +20,7 @@ export type RentalsConciergeShellProps = {
  * SAN-1093 · RE-DES-002 Phase A — broker three-panel shell (kit: RentalsConcierge.jsx).
  * CopilotChat + brokerAgent wire in SAN-1124 / SAN-1035.
  */
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function RentalsConciergeShell({
   workspaceMode = "concierge",
 }: RentalsConciergeShellProps) {

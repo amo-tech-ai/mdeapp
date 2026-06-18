@@ -12,6 +12,7 @@ type RentalsConciergeCenterProps = {
 };
 
 /** Center column — empty state + disabled composer (rc-center). No CopilotChat until SAN-1124. */
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function RentalsConciergeCenter({ mode }: RentalsConciergeCenterProps) {
   return (
     <section

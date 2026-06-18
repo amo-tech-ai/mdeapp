@@ -10,6 +10,7 @@ type PageProps = {
 };
 
 /** SAN-1093 · RE-DES-002 — broker concierge workspace (Phase A static shell). */
+// skipcq: JS-0067 - Next.js App Router page export; not browser global scope
 export default async function HostRentalsHomePage({ searchParams }: PageProps) {
   const { mode } = await searchParams;
   const workspaceMode = mode === "overview" ? "overview" : "concierge";

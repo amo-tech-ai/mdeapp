@@ -11,6 +11,7 @@ type RentalsDynamicWorkspaceProps = {
 };
 
 /** Right column — dynamic workspace (rc-right). Phase A: empty + overview KPI stubs. */
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function RentalsDynamicWorkspace({ mode }: RentalsDynamicWorkspaceProps) {
   if (mode === "overview") {
     return (

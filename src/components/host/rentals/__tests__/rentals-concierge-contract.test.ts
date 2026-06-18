@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 
 const ROOT = join(import.meta.dirname, "..");
 
+// skipcq: JS-0067 - module-local test helper; not browser global scope
 function readComponent(name: string): string {
   return readFileSync(join(ROOT, name), "utf8");
 }
