@@ -1,0 +1,30 @@
+src/lib/rentals/broker-route-gate.ts
+  s_f9d5f98a31145c::t_91eb4d84acdda7 6-7
+src/lib/rentals/index.ts
+  s_f9d5f98a31145c::t_68c5ac78355729 61,65
+src/app/host/rentals/(broker)/dashboard/page.tsx
+  s_f9d5f98a31145c::t_19597b29f09b88 1-2,4-6
+src/lib/rentals/__tests__/broker-route-gate.test.ts
+  s_f9d5f98a31145c::t_1db6b1ad322119 3,7
+  s_f9d5f98a31145c::t_6ad208c45b4ee2 62
+  s_f9d5f98a31145c::t_a09e3112f8ea44 81-85
+docs/tasks/testing/evidence/2026-06-16/RE-DES-004-RESULTS.md
+  s_f9d5f98a31145c::t_207cc4e450491a 31
+  s_f9d5f98a31145c::t_639d5f1983d176 1,3-6,10,16-20,22,28-30,32-37,42-43,48-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "6784381b2af8c451006ab8e0e88dbf8fc5450a31",
+  "prompts": {},
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
