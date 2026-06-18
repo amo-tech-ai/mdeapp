@@ -107,7 +107,7 @@ const CELL_CLASS: Record<DayState, string> = {
   unknown: "text-muted-foreground",
 };
 
-// skipcq: JS-0067 - ES module export; not browser global scope
+// skipcq: JS-0067, JS-R1005 - ES module export; App Router/client component, complexity accepted for calendar UI branching
 export function RentalAvailabilityCalendar({
   availableFrom,
   availableTo,
