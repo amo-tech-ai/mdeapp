@@ -1,0 +1,38 @@
+src/components/host/rentals/rentals-concierge-center.tsx
+  s_f9d5f98a31145c::t_216f4b67c53df4 1-43,45-48,50-100
+  s_f9d5f98a31145c::t_61f9454511b2ac 44,49
+src/components/host/rentals/rentals-concierge-constants.ts
+  s_f9d5f98a31145c::t_9708f50d837c83 1-58
+src/components/host/rentals/rentals-conversation-history.tsx
+  s_f9d5f98a31145c::t_2f02655cf68fa2 1-104
+src/components/host/rentals/rentals-concierge-shell.tsx
+  s_f9d5f98a31145c::t_0aea548b25cb79 1-101
+src/app/host/rentals/(broker)/page.tsx
+  s_f9d5f98a31145c::t_9cb6a96a58888a 1
+  s_f9d5f98a31145c::t_45f9ced6fc0178 2,5,8-16
+  s_f9d5f98a31145c::t_686eabc0653fb8 18-20
+src/components/host/rentals/rentals-dynamic-workspace.tsx
+  s_f9d5f98a31145c::t_30219fb4dc320d 1-76
+src/components/host/rentals/__tests__/rentals-concierge-contract.test.ts
+  s_f9d5f98a31145c::t_8593674a65d7c8 33-35
+  s_f9d5f98a31145c::t_52acae39b04d4e 36
+  s_f9d5f98a31145c::t_2beb8085c83c3a 1-32,37-44
+src/components/host/rentals/host-rentals-nav.tsx
+  s_f9d5f98a31145c::t_7b73c99877f2e8 4-5,9-14,19,22-25,31-38,47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "6eaf7351e1a7fe438c5cb48de2935b9795eb746d",
+  "prompts": {},
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
