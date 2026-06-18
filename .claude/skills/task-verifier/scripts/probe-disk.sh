@@ -236,7 +236,9 @@ if in_filter env; then
 
   # Stripe webhook secret distinctness — workspace .env.local
   if [ -f "$REPO/.env.local" ]; then
+    # skipcq: SCT-A000 - parses local env key names; does not hardcode secrets
     t=$(grep -E '^STRIPE_WEBHOOK_SECRET=' "$REPO/.env.local" | cut -d= -f2- | tr -d '\r')
+    # skipcq: SCT-A000 - parses local env key names; does not hardcode secrets
     s=$(grep -E '^STRIPE_SPONSOR_WEBHOOK_SECRET=' "$REPO/.env.local" | cut -d= -f2- | tr -d '\r')
     if [ -n "$t" ] && [ -n "$s" ]; then
       tlen=${#t}; slen=${#s}

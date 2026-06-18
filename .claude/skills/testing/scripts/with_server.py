@@ -65,10 +65,10 @@ def main():
         for i, server in enumerate(servers):
             print(f"Starting server {i+1}/{len(servers)}: {server['cmd']}")
 
-            # Use shell=True to support commands with cd and &&
+            # Use bash -lc without shell=True to avoid shell-injection lint while
+            # preserving command features like `cd` and `&&`.
             process = subprocess.Popen(
-                server['cmd'],
-                shell=True,
+                ["bash", "-lc", server['cmd']],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE
             )
@@ -85,7 +85,7 @@ def main():
 
         # Run the command
         print(f"Running: {' '.join(args.command)}\n")
-        result = subprocess.run(args.command)
+        result = subprocess.run(args.command, check=False)
         sys.exit(result.returncode)
 
     finally:

@@ -162,7 +162,7 @@ export function scoreRestaurantQuery(text: string): RestaurantSearchSignals {
 }
 
 /** Broader restaurant discovery — includes cuisine/vibe phrases without "restaurant" keyword. */
-export function looksLikeRestaurantDiscovery(text: string): boolean {
+export function looksLikeRestaurantDiscovery(text: string): boolean { // skipcq: JS-0067
   const t = text.trim();
   if (!t) return false;
   if (looksLikeNightlifeGroundingSearch(t)) return false;

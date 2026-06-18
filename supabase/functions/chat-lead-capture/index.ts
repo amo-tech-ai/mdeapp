@@ -20,7 +20,7 @@ type Source = (typeof VALID_SOURCES)[number];
 
 const jr = jsonResponse;
 
-Deno.serve(async (req: Request) => {
+Deno.serve(async (req: Request) => { // skipcq: JS-R1005
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: getCorsHeaders(req) });
   }
