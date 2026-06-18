@@ -51,7 +51,7 @@
 | 2 | PreToolUse — allow `/v2` APIs; block full-rewrite + bare `react-core` | `.claude/hooks/copilotkit-version-pin.mjs` | ✅ #247 merged |
 | 3 | Session reminder — v2 `/v2` subpath only | `.claude/hooks/session-start.mjs` | ✅ #247 merged |
 | 4 | Verify | — | ✅ `check:mastra` exit 0 on `main` |
-| 5 | **Follow-up:** wire `check:mastra` into `npm run floor` | `package.json` / `floor.yml` | 🔴 post-#247 |
+| 5 | **Follow-up:** wire `check:mastra` into `npm run floor` | `package.json` | 🟡 floor PR |
 
 ---
 
