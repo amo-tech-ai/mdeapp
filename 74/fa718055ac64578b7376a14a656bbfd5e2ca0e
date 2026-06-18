@@ -1,0 +1,25 @@
+src/lib/rentals/fetch-broker-listings.ts
+  s_f9d5f98a31145c::t_f7b162cff8c320 19
+src/lib/rentals/fetch-broker-dashboard.ts
+  s_f9d5f98a31145c::t_ca456cf4930469 29
+  s_f9d5f98a31145c::t_ecca58820726cc 17-19,22
+src/lib/rentals/build-broker-dashboard-view.ts
+  s_f9d5f98a31145c::t_4ae9939d0dfa40 49
+  s_f9d5f98a31145c::t_15877bdac19fcf 95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "74fa718055ac64578b7376a14a656bbfd5e2ca0e",
+  "prompts": {},
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
