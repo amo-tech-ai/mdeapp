@@ -1,0 +1,39 @@
+src/lib/seo.ts
+  s_64c3b1958bd65c::t_bc21a43a0a5043 1-32
+src/app/sitemap.ts
+  s_64c3b1958bd65c::t_763c2bc55ecfa2 1-30
+src/app/robots.ts
+  s_64c3b1958bd65c::t_72866ac4d9eacc 1-14
+src/app/restaurants/page.tsx
+  s_64c3b1958bd65c::t_29e36ffc9bc8c4 5,7-11
+src/app/layout.tsx
+  s_64c3b1958bd65c::t_a0f27e0761392b 21,24-36
+src/app/events/page.tsx
+  s_64c3b1958bd65c::t_bc7aa2e9f1e8ea 4,6-10
+src/app/nightlife/page.tsx
+  s_64c3b1958bd65c::t_7e86e062b1d288 7,9-13
+src/app/cafes/page.tsx
+  s_64c3b1958bd65c::t_377450c7e4e848 7,9-13
+src/app/rentals/page.tsx
+  s_64c3b1958bd65c::t_a43a5e7a8b6a08 3-9
+src/app/partners/page.tsx
+  s_64c3b1958bd65c::t_7e8f7e7bfec0cd 3,5-9
+next.config.ts
+  s_64c3b1958bd65c::t_cb077c4099d966 20-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "3039cb28cc2ea755ef07c69504bbb675753748b0",
+  "prompts": {},
+  "sessions": {
+    "s_64c3b1958bd65c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e5e476f8-ba89-48b1-8472-b94aa879cd8c",
+        "model": "claude-fable-5"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
