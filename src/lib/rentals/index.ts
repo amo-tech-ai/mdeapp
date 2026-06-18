@@ -58,14 +58,27 @@ export {
 } from "./resolve-publish-rpc";
 export { runPublishRpc, type RunPublishRpcResult } from "./run-publish-rpc";
 export {
+  BROKER_DASHBOARD_PATH,
   BROKER_HOME_PATH,
   BROKER_LISTINGS_PATH,
   BROKER_ONBOARDING_PATH,
+  BROKER_OVERVIEW_PATH,
   brokerLoginNextPath,
   resolveBrokerRouteGate,
   type BrokerRouteGateAction,
   type BrokerRouteGateInput,
 } from "./broker-route-gate";
+export { buildBrokerDashboardView } from "./build-broker-dashboard-view";
+export type {
+  BrokerAttentionItem,
+  BrokerAttentionKind,
+  BrokerDashboardBriefing,
+  BrokerDashboardKpi,
+  BrokerDashboardView,
+  BrokerTrendCard,
+  FetchBrokerDashboardResult,
+} from "./broker-dashboard-types";
+export { fetchBrokerDashboard } from "./fetch-broker-dashboard";
 export {
   getBrokerContext,
   type BrokerContext,

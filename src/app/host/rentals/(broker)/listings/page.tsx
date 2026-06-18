@@ -11,8 +11,7 @@ export const metadata = {
   title: "Broker listings · mdeai",
 };
 
-// skipcq: JS-0067
-async function ListingsContent() {
+async function ListingsContent() { // skipcq: JS-0067 - server component loader
   const ctx = await getBrokerContext();
   if (ctx.state !== "authorized") {
     return null;
@@ -32,7 +31,7 @@ async function ListingsContent() {
 }
 
 /** SAN-1094 · RE-DES-003 — broker inventory grid + optional map split. */
-// skipcq: JS-0067
+// skipcq: JS-0067 - Next.js App Router page default export
 export default function HostRentalsListingsPage() {
   return (
     <Suspense fallback={<RentalsListingsSkeleton />}>
