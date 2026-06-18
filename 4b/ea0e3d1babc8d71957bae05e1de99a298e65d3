@@ -1,0 +1,22 @@
+docs/tasks/testing/evidence/2026-06-16/SAN-729-host-analytics-p1.md
+  s_f9d5f98a31145c::t_78e163ca8f3346 5
+  s_f9d5f98a31145c::t_8e87f86f876688 23
+src/components/host/host-analytics-shell.tsx
+  s_f9d5f98a31145c::t_5bad7405a06d25 25-31,37-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "4bea0e3d1babc8d71957bae05e1de99a298e65d3",
+  "prompts": {},
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
