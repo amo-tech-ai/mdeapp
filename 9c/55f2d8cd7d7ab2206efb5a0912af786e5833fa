@@ -1,0 +1,37 @@
+src/lib/rentals/__tests__/get-rental-detail.test.ts
+  s_ea02d986ff4a87::t_e869c93f6c6518 17,38-43,47-56,60-62
+  s_ea02d986ff4a87::t_2c3cbbd6b84d45 1-13,63-92
+src/components/rentals/rental-availability-calendar.tsx
+  s_ea02d986ff4a87::t_651ecc23d666da 35,38,42
+  s_f1f9127cc71b2a::t_5d44c04748cfe3 36-37,39-41
+  s_f1f9127cc71b2a::t_5ef936a515c60c 20,22-32,43,46-47,54-112,129-130,143,154,168-170,173-177,179-180,183
+  s_ea02d986ff4a87::t_28b1173d9096ec 48-51
+src/lib/rentals/get-rental-detail.ts
+  s_ea02d986ff4a87::t_2cca698695a79d 67-73,121,128
+  s_f1f9127cc71b2a::t_f146ff643c120e 113,117-119
+  s_f1f9127cc71b2a::t_6bff7b6567540d 40,50-54,57-59,62-64,77-78,80-104
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "9c55f2d8cd7d7ab2206efb5a0912af786e5833fa",
+  "prompts": {},
+  "sessions": {
+    "s_ea02d986ff4a87": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019edc0f-e7d3-73c2-a45e-5c7c7310bfd0",
+        "model": "gpt-5.5"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_f1f9127cc71b2a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ebcc0856-4735-47c8-9dfa-b58a8e933943",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
