@@ -22,12 +22,22 @@ type HostAnalyticsShellProps = {
   initialDashboard?: HostDashboardState;
 };
 
+function hostDashboardServerKey(initial?: HostDashboardState): string {
+  if (!initial) return "idle:0";
+  return (
+    initial.lastUpdatedIso ?? `${initial.workflowStatus}:${initial.kpiCards.length}`
+  );
+}
+
 export function HostAnalyticsShell({
   userEmail,
   initialDashboard,
 }: HostAnalyticsShellProps) {
   return (
-    <HostOpsCopilotBridge initialState={initialDashboard}>
+    <HostOpsCopilotBridge
+      key={hostDashboardServerKey(initialDashboard)}
+      initialState={initialDashboard}
+    >
       {({ state }) => (
         <div
           data-testid="host-analytics"

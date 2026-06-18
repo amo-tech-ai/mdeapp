@@ -2,6 +2,7 @@
 
 **Task:** [SAN-729 · AIE-008 — Host Analytics Page + HostOpsCopilotBridge](https://linear.app/sanjiovani/issue/SAN-729/aie-008-host-analytics-page-hostopscopilotbridge)  
 **Run:** 2026-06-17 · localhost `:3001`  
+**Re-run:** 2026-06-18 · pre-merge proof after review fixes (`d0b0c271` + key remount)  
 **Branch:** `ai/san-729-host-analytics-p1`  
 **Verdict:** 🟢 PASS — signed-out redirect, signed-in analytics shell, KPI grid after load + chat prompt
 
@@ -19,7 +20,7 @@ curl -sI http://localhost:3001/host/analytics | grep -iE 'HTTP|location'
 infisical run --silent --env=dev --path=/ -- \
   env PW_SKIP_WEBSERVER=1 npx playwright test e2e/san-896-ck-v2-evidence.spec.ts \
   -g "host/analytics" --project=chromium
-# 1 passed (34.6s)
+# 1 passed (30.9s) — 2026-06-18 pre-merge re-run
 ```
 
 `npm run lint` — ⚠️ 4 warnings in unrelated `scripts/linear-rentals-*.mjs` (pre-existing on main; not in PR scope).  

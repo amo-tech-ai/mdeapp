@@ -62,16 +62,6 @@ export function HostOpsCopilotBridge({
   const insightSig = useRef<string>("");
   const eventsSig = useRef<string>("");
 
-  const initialFingerprint =
-    initialState?.lastUpdatedIso ??
-    `${initialState?.workflowStatus ?? "idle"}:${initialState?.kpiCards.length ?? 0}`;
-
-  useEffect(() => {
-    setDashboardState(initialState ?? EMPTY_HOST_DASHBOARD);
-    insightSig.current = "";
-    eventsSig.current = "";
-  }, [initialFingerprint, initialState]);
-
   const { agent } = useAgent({
     agentId: "hostOpsAgent",
     updates: [UseAgentUpdate.OnStateChanged],
