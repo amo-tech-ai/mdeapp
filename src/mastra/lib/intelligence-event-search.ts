@@ -116,6 +116,7 @@ function eventSignalBoost(slots: EventIntelligenceSlots, s: EventSignalRow): num
   return boost;
 }
 
+// skipcq: JS-0067
 function eventMatchesDateWindow(
   eventStartTime: string | null,
   window: { gte?: string; lte?: string },
@@ -127,6 +128,7 @@ function eventMatchesDateWindow(
   return true;
 }
 
+// skipcq: JS-0067
 function neighborhoodRankMatch(
   neighborhood: string | undefined,
   hood: string | undefined,
@@ -135,6 +137,7 @@ function neighborhoodRankMatch(
   return hood.toLowerCase().includes(neighborhood.toLowerCase()) ? 1 : 0;
 }
 
+// skipcq: JS-0067
 function scoreHybridEventRow(
   row: HybridEventRow,
   idx: number,

@@ -30,6 +30,7 @@ function findBalancedJsonEnd(text: string, start: number): number {
   return -1;
 }
 
+// skipcq: JS-0067
 function groundingResultsContainPlaceId(results: unknown[]): boolean {
   return results.some(
     (r) =>
