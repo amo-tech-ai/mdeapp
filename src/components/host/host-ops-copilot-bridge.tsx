@@ -52,7 +52,8 @@ const listHostEventsParams = z.object({
   limit: z.number().int().min(1).max(100).optional(),
 });
 
-export function HostOpsCopilotBridge({
+// skipcq: JS-0067 - ES module export; not browser global scope
+export function HostOpsCopilotBridge({ // skipcq: JS-0067
   children,
   initialState,
 }: HostOpsCopilotBridgeProps) {

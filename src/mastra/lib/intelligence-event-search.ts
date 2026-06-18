@@ -111,8 +111,8 @@ function eventTimeMs(iso: string): number | null { // skipcq: JS-0067
 }
 
 // skipcq: JS-0067 - ES module export; not browser global scope
-// skipcq: JS-0044 - date-window bounds; keep readable for event search tests
-export function isWithinDateWindow( // skipcq: JS-0044, JS-0067
+// skipcq: JS-R1005 - date-window bounds; keep readable for event search tests
+export function isWithinDateWindow( // skipcq: JS-R1005, JS-0067
   eventStart: string,
   window: { gte?: string; lte?: string },
 ): boolean {
@@ -147,7 +147,7 @@ export function filterHybridEventRows( // skipcq: JS-0067
   return filtered;
 }
 
-function eventSignalBoost(slots: EventIntelligenceSlots, s: EventSignalRow): number { // skipcq: JS-0044, JS-0067
+function eventSignalBoost(slots: EventIntelligenceSlots, s: EventSignalRow): number { // skipcq: JS-R1005, JS-0067
   if ((s.confidence ?? 0) < 0.6) return 0;
   let boost = 0;
   if (slots.wantsSalsa) boost += (s.music_energy ?? 0) * 0.35 + (s.nightlife_score ?? 0) * 0.2;
@@ -164,8 +164,8 @@ function hybridToEventCard(row: HybridEventRow, rankScore?: number, signalSource
 
 /** Maps hybrid RPC / structured rows to EventCard — venue = full address (matches search-events rowToCard). */
 // skipcq: JS-0067 - ES module export; not browser global scope
-// skipcq: JS-0044 - card field mapping mirrors search-events rowToCard
-export function hybridRowToEventCard( // skipcq: JS-0044, JS-0067
+// skipcq: JS-R1005 - card field mapping mirrors search-events rowToCard
+export function hybridRowToEventCard( // skipcq: JS-R1005, JS-0067
   row: HybridEventRow,
   rankScore?: number,
   signalSource?: string,
@@ -190,7 +190,8 @@ export function hybridRowToEventCard( // skipcq: JS-0044, JS-0067
   };
 }
 
-export async function searchEventsIntelligent(
+// skipcq: JS-R1005 - hybrid ranking pipeline; pre-existing complexity
+export async function searchEventsIntelligent( // skipcq: JS-R1005, JS-0067
   query: EventQuery & { queryText?: string },
 ): Promise<{
   results: IntelligenceEventResult[];

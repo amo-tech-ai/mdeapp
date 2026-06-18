@@ -7,7 +7,8 @@ export const metadata = {
   title: "Sales insights · mdeai",
 };
 
-export default async function HostAnalyticsPage() {
+// skipcq: JS-0067 - Next.js App Router page export; not browser global scope
+export default async function HostAnalyticsPage() { // skipcq: JS-0067
   const supabase = await createClient();
   const {
     data: { user },
