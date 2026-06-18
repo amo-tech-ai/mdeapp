@@ -1,0 +1,29 @@
+.claude/skills/task-verifier/scripts/probe-disk.sh
+  s_f1f9127cc71b2a::t_27762bd395f1c9 148-153
+src/mastra/lib/intelligence-event-search.ts
+  s_f6e9bbcc4e4c47::t_2346097292f366 343-348
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "19dade94eee963670dde3cce8dfb290dc3140c32",
+  "prompts": {},
+  "sessions": {
+    "s_f1f9127cc71b2a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ebcc0856-4735-47c8-9dfa-b58a8e933943",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    },
+    "s_f6e9bbcc4e4c47": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6662a4eb-2170-4084-ba04-a6c4a64e984a",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
