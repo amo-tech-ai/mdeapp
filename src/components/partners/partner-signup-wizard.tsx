@@ -483,11 +483,17 @@ export function PartnerSignupWizard({
   // ── Success (done state) ───────────────────────────────────────────────────
   if (view.kind === "success") {
     const dashboardHref = view.data.redirectTo || "/dashboard";
+    const partnerId = view.data.partnerId;
+    const dashboardDeferred = view.dashboardDeferred;
     return (
       <div className="w-full max-w-2xl" data-testid="partner-signup-success">
         <WizardStepBar step="done" />
         <SuccessInfo />
-        <CreatedCardSection dashboardHref={dashboardHref} />
+        <CreatedCardSection
+          dashboardHref={dashboardHref}
+          partnerId={partnerId}
+          dashboardDeferred={dashboardDeferred}
+        />
       </div>
     );
   }
@@ -538,7 +544,15 @@ export function PartnerSignupWizard({
     );
   }
 
-  function CreatedCardSection({ dashboardHref }: { dashboardHref: string }) { // skipcq: JS-0415
+  function CreatedCardSection({
+    dashboardHref,
+    partnerId,
+    dashboardDeferred,
+  }: {
+    dashboardHref: string;
+    partnerId: string;
+    dashboardDeferred: boolean;
+  }) { // skipcq: JS-0415
     const createdItems = [
       "Your listing + map pin",
       "A grounded concierge profile",
@@ -606,10 +620,10 @@ export function PartnerSignupWizard({
       <p className="px-4 pb-2 text-center text-xs text-muted-foreground sm:px-8">
         Listing ID:{" "}
         <span className="font-mono" data-testid="partner-signup-listing-id">
-          {view.data.partnerId}
+            {partnerId}
         </span>
       </p>
-      {view.dashboardDeferred && (
+      {dashboardDeferred && (
         <p className="px-4 pb-6 text-center text-xs text-muted-foreground sm:px-8" data-testid="partner-signup-dashboard-next">
           Dashboard coming next — we&apos;ll take you there as soon as it launches.
         </p>
