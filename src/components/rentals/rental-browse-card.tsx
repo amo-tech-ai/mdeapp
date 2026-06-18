@@ -1,6 +1,7 @@
 "use client";
 
 import type { KeyboardEvent } from "react";
+import Link from "next/link";
 import { Bed, Building2, Calendar, Heart, Wifi } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -185,7 +186,16 @@ export function RentalBrowseCard({
       }
     >
       <p className="text-[11px] font-medium text-muted-foreground">{rental.neighborhood}</p>
-      <h3 className="mt-0.5 font-medium leading-snug">{rental.title}</h3>
+      <h3 className="mt-0.5 font-medium leading-snug">
+        <Link
+          href={`/rentals/${rental.id}`}
+          data-testid={`rental-card-link-${rental.id}`}
+          className="hover:underline"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {rental.title}
+        </Link>
+      </h3>
 
       <div className="mt-2 flex flex-wrap items-center gap-1.5">
         <Badge variant="secondary" className="gap-1 font-normal">
