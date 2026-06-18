@@ -44,8 +44,8 @@ def sort_key(r):
 
 def read_csv(path):
     rows = []
-    with open(path, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
+    with open(path, newline="", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
         for row in reader:
             rows.append(row)
     return rows
@@ -127,7 +127,7 @@ def section_stats(rows):
     return done, wip, ns, fail, total, avg
 
 def summary_table(sections_data, title="Summary"):
-    lines = [
+    summary_lines = [
         f"\n## 📊 {title}\n",
         "| Section | Issues | 🟢 Done | 🟡 WIP | ⚪ Not Started | 🔴 Failed | Avg Score | Grade |",
         "|---------|--------|---------|--------|--------------|-----------|-----------|-------|"
@@ -136,14 +136,14 @@ def summary_table(sections_data, title="Summary"):
     for (name, rows) in sections_data:
         if not rows: continue
         done, wip, ns, fail, total, avg = section_stats(rows)
-        lines.append(f"| {name} | {total} | {done} | {wip} | {ns} | {fail} | {avg} | {grade(avg)} |")
+        summary_lines.append(f"| {name} | {total} | {done} | {wip} | {ns} | {fail} | {avg} | {grade(avg)} |")
         all_rows.extend(rows)
     if all_rows:
         done, wip, ns, fail, total, avg = section_stats(all_rows)
-        lines.append(f"| **TOTAL** | **{total}** | **{done}** | **{wip}** | **{ns}** | **{fail}** | **{avg}** | **{grade(avg)}** |")
+        summary_lines.append(f"| **TOTAL** | **{total}** | **{done}** | **{wip}** | **{ns}** | **{fail}** | **{avg}** | **{grade(avg)}** |")
         pct = round(done/total*100) if total else 0
-        lines.append(f"\n**Overall Score: {avg}/100 — Grade: {grade(avg)} | Completion: {pct}%**\n")
-    return "\n".join(lines)
+        summary_lines.append(f"\n**Overall Score: {avg}/100 — Grade: {grade(avg)} | Completion: {pct}%**\n")
+    return "\n".join(summary_lines)
 
 # ── CORE ──────────────────────────────────────────────────────────────────────
 
@@ -173,7 +173,7 @@ def build_core():
         ("deploy",  "🚀 Production & Launch"),
     ]
 
-    lines = [
+    md_lines = [
         "# 🏗️ CORE Foundation — Implementation Tracker",
         f"> Phase 1 Critical Path | Updated: {TODAY} | Cycle 1: Jun 8–22 2026\n",
         "**Legend:** 🟢 Complete · 🟡 In Progress · ⚪ Not Started · 🔴 Failed/Canceled\n",
@@ -187,14 +187,14 @@ def build_core():
         sections_data.append((label, section_rows))
         if not section_rows: continue
         done, wip, ns, fail, total, avg = section_stats(section_rows)
-        lines.append(f"## {label}")
-        lines.append(f"> {total} issues · 🟢 {done} done · 🟡 {wip} WIP · ⚪ {ns} not started · Score: **{avg}/100 {grade(avg)}**\n")
-        lines.append(table_header())
+        md_lines.append(f"## {label}")
+        md_lines.append(f"> {total} issues · 🟢 {done} done · 🟡 {wip} WIP · ⚪ {ns} not started · Score: **{avg}/100 {grade(avg)}**\n")
+        md_lines.append(table_header())
         for r in section_rows:
-            lines.append(section_row(r))
-        lines.append("")
+            md_lines.append(section_row(r))
+        md_lines.append("")
 
-    lines.append(summary_table(sections_data, "Core Foundation Summary"))
+    md_lines.append(summary_table(sections_data, "Core Foundation Summary"))
 
     # top blockers
     blockers = [r for r in rows if r["Status"].lower() in ("todo","backlog","in progress","in review")
@@ -247,7 +247,7 @@ def build_mvp():
         ("launch",     "🚀 Launch"),
     ]
 
-    lines = [
+    md_lines = [
         "# 🚀 MVP — Full Feature Tracker",
         f"> Phase 1 MVP Launch | Updated: {TODAY} | Cycle 1: Jun 8–22 2026\n",
         "**Legend:** 🟢 Complete · 🟡 In Progress · ⚪ Not Started · 🔴 Failed/Canceled\n",
@@ -261,18 +261,18 @@ def build_mvp():
         sections_data.append((label, section_rows))
         if not section_rows: continue
         done, wip, ns, fail, total, avg = section_stats(section_rows)
-        lines.append(f"## {label}")
-        lines.append(f"> {total} issues · 🟢 {done} done · 🟡 {wip} WIP · ⚪ {ns} not started · Score: **{avg}/100 {grade(avg)}**\n")
-        lines.append(table_header())
+        md_lines.append(f"## {label}")
+        md_lines.append(f"> {total} issues · 🟢 {done} done · 🟡 {wip} WIP · ⚪ {ns} not started · Score: **{avg}/100 {grade(avg)}**\n")
+        md_lines.append(table_header())
         for r in section_rows:
-            lines.append(section_row(r))
-        lines.append("")
+            md_lines.append(section_row(r))
+        md_lines.append("")
 
-    lines.append(summary_table(sections_data, "MVP Summary"))
+    md_lines.append(summary_table(sections_data, "MVP Summary"))
 
     # Top 5 blockers
     blockers = [r for r in rows if r["Status"].lower() in ("todo","backlog")
-                and r.get("Priority","").lower() in ("urgent","high")]
+                and r.get("Priority", "").lower() in ("urgent","high")]
     blockers.sort(key=lambda r: (PRIORITY_ORDER.get(r["Priority"].lower(),9), r["ID"]))
     lines.append("\n### 🔴 Top 10 MVP Blockers (not Done, Urgent/High)")
     for i, r in enumerate(blockers[:10], 1):
@@ -336,7 +336,7 @@ def build_adv():
         ("ux_adv",      "🧭 Advanced UX (CopilotKit v2 · Multi-Agent)"),
     ]
 
-    lines = [
+    output_lines = [
         "# 🔮 ADVANCED — Post-MVP Roadmap",
         f"> Phase 2 / Post-Launch Features | Updated: {TODAY}\n",
         "**Legend:** 🟢 Complete · 🟡 In Progress · ⚪ Not Started · 🔴 Failed/Canceled\n",
@@ -350,17 +350,17 @@ def build_adv():
         sections_data.append((label, section_rows))
         if not section_rows: continue
         done, wip, ns, fail, total, avg = section_stats(section_rows)
-        lines.append(f"## {label}")
-        lines.append(f"> {total} issues · 🟢 {done} done · 🟡 {wip} WIP · ⚪ {ns} not started · Score: **{avg}/100 {grade(avg)}**\n")
-        lines.append(table_header())
+        output_lines.append(f"## {label}")
+        output_lines.append(f"> {total} issues · 🟢 {done} done · 🟡 {wip} WIP · ⚪ {ns} not started · Score: **{avg}/100 {grade(avg)}**\n")
+        output_lines.append(table_header())
         for r in section_rows:
-            lines.append(section_row(r))
-        lines.append("")
+            output_lines.append(section_row(r))
+        output_lines.append("")
 
-    lines.append(summary_table(sections_data, "Advanced Roadmap Summary"))
-    lines.append("\n> 📌 Partner AI Layer (SAN-800–810): Build after CopilotKit v2 migration using Atomic CRM as reference architecture.")
-    lines.append("> 📌 Trips Module: Full implementation begins post-MVP launch.")
-    lines.append("> 📌 Chatwoot/WhatsApp: Wire after Partner CRM Phase 1 (CRM-001–012) is complete.")
+    output_lines.append(summary_table(sections_data, "Advanced Roadmap Summary"))
+    output_lines.append("\n> 📌 Partner AI Layer (SAN-800–810): Build after CopilotKit v2 migration using Atomic CRM as reference architecture.")
+    output_lines.append("> 📌 Trips Module: Full implementation begins post-MVP launch.")
+    output_lines.append("> 📌 Chatwoot/WhatsApp: Wire after Partner CRM Phase 1 (CRM-001–012) is complete.")
 
     return "\n".join(lines)
 
