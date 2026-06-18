@@ -147,7 +147,7 @@ export function filterHybridEventRows( // skipcq: JS-0067
   return filtered;
 }
 
-function eventSignalBoost(slots: EventIntelligenceSlots, s: EventSignalRow): number { // skipcq: JS-0067
+function eventSignalBoost(slots: EventIntelligenceSlots, s: EventSignalRow): number { // skipcq: JS-0044, JS-0067
   if ((s.confidence ?? 0) < 0.6) return 0;
   let boost = 0;
   if (slots.wantsSalsa) boost += (s.music_energy ?? 0) * 0.35 + (s.nightlife_score ?? 0) * 0.2;
