@@ -63,7 +63,7 @@ describe("search-grounded-places café quality filter", () => {
 
   it("detects café intent from normalized query rewrite", () => {
     expect(
-      isCafeGroundingIntent("highly rated venues in El Poblado", undefined),
+      isCafeGroundingIntent("highly rated venues in El Poblado"),
     ).toBe(false);
     expect(isCafeGroundingIntent("list cafes in medellin")).toBe(true);
   });

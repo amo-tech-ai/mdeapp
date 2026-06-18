@@ -21,7 +21,7 @@ describe("broker surface state contracts", () => {
 
   it("returns Data pending. for unknown metrics", () => {
     expect(formatBrokerMetric(null)).toBe(DATA_PENDING_LABEL);
-    expect(formatBrokerMetric(undefined)).toBe(DATA_PENDING_LABEL);
+    expect(formatBrokerMetric()).toBe(DATA_PENDING_LABEL);
     expect(formatBrokerMetric("")).toBe(DATA_PENDING_LABEL);
     expect(formatBrokerMetric(42)).toBe("42");
     expect(formatPublishAuditValue(null)).toBe(DATA_PENDING_LABEL);

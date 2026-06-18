@@ -10,7 +10,7 @@ import { MDEAI_USER_ID_KEY } from "@/mastra/lib/tool-audit-context";
  */
 describe("getHostContext — unauthorized / missing-context guards", () => {
   it("throws when there is no context at all", () => {
-    expect(() => getHostContext(undefined)).toThrow(/sign in/i);
+    expect(() => getHostContext()).toThrow(/sign in/i);
   });
 
   it("throws when userId is present but the client is not (signed in, route didn't inject client)", () => {

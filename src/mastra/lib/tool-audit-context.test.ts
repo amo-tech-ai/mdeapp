@@ -34,7 +34,7 @@ describe("recordToolSpan / getToolSpans (AGT-00C)", () => {
 
   it("is a no-op when there is no RequestContext (anonymous turn)", () => {
     expect(() => recordToolSpan(undefined, { tool: "x", ms: 1, status: "ok", ts: 1 })).not.toThrow();
-    expect(getToolSpans(undefined)).toEqual([]);
+    expect(getToolSpans()).toEqual([]);
     expect(getToolSpans({})).toEqual([]);
   });
 });

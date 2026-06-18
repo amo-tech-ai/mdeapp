@@ -82,7 +82,7 @@ describe('dateWindow', () => {
   it('"any" and undefined return a gte: now filter (no lte) to exclude past events', () => {
     const before = new Date().toISOString();
     const anyBounds = dateWindow('any');
-    const undefBounds = dateWindow(undefined);
+    const undefBounds = dateWindow();
     const after = new Date().toISOString();
 
     // Both should have gte set to approximately now (no lte — no upper bound)

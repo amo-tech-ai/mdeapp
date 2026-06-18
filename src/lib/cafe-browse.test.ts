@@ -50,8 +50,8 @@ describe("cafe-browse", () => {
   });
 
   it("normalizeSearchParam accepts first value when duplicated", () => {
-    expect(normalizeSearchParam([" specialty ", "workspace"])).toBe("specialty");
-    expect(normalizeSearchParam(undefined)).toBeUndefined();
+    expect(normalizeSearchParam([" specialty ", "workspace"])) .toBe("specialty");
+    expect(normalizeSearchParam()).toBeUndefined();
     expect(normalizeSearchParam("  Laureles  ")).toBe("Laureles");
   });
 

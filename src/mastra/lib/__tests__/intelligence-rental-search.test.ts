@@ -81,12 +81,12 @@ describe("isAvailableForStay", () => {
     // available_to 2026-05-31 < checkIn 2026-06-15 → unavailable
     expect(isAvailableForStay(
       { available_from: "2026-04-01", available_to: "2026-05-31" },
-      "2026-06-15", undefined,
+      "2026-06-15"
     )).toBe(false);
     // available_to null → open-ended, passes
     expect(isAvailableForStay(
       { available_from: "2026-06-01", available_to: null },
-      "2026-06-15", undefined,
+      "2026-06-15"
     )).toBe(true);
   });
 

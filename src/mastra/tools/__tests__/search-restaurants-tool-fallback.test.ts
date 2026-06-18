@@ -38,7 +38,7 @@ describe("searchRestaurants fallback + envelope", () => {
 
 describe("searchRestaurantsTool execute", () => {
   it("UX-T-014 returns structured envelope for CopilotKit disabled render (no writer.custom)", async () => {
-    const custom = vi.fn().mockResolvedValue(undefined);
+    const custom = vi.fn().mockResolvedValue();
     const out = (await searchRestaurantsTool.execute!(
       { neighborhood: "Laureles", limit: 2 },
       { writer: { custom } },
