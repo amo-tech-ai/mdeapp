@@ -372,8 +372,7 @@ export function PartnerSignupWizard({
 
   // Analyzing animation: 4 rows, ~600ms each, then transition to review
   useEffect(() => {
-    if (view.kind !== "form" || view.step !== "analyzing") return null;
-    setAnalyzeProgress(0);
+    if (view.kind !== "form" || view.step !== "analyzing") return;
     const t1 = setTimeout(() => setAnalyzeProgress(1), 600);
     const t2 = setTimeout(() => setAnalyzeProgress(2), 1200);
     const t3 = setTimeout(() => setAnalyzeProgress(3), 1800);
@@ -395,6 +394,11 @@ export function PartnerSignupWizard({
     value: PartnerSignupFormState[K],
   ) {
     setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function goToAnalyzingStep() {
+    setAnalyzeProgress(0);
+    setView({ kind: "form", step: "analyzing" });
   }
 
   function handleApprove() {
@@ -475,133 +479,130 @@ export function PartnerSignupWizard({
 
   // ── Success (done state) ───────────────────────────────────────────────────
   if (view.kind === "success") {
+    const dashboardHref = view.data.redirectTo || "/dashboard";
     return (
       <div className="w-full max-w-2xl" data-testid="partner-signup-success">
         <WizardStepBar step="done" />
         <SuccessInfo />
-        <CreatedCardSection />
+        <CreatedCardSection dashboardHref={dashboardHref} />
       </div>
     );
   }
 
-  const SuccessInfo = () => (
-    <div className="flex flex-col items-center gap-4 px-4 py-8 text-center sm:px-8">
-      <div className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-        <CheckCircle2Icon className="size-7" aria-hidden="true" />
-      </div>
-      <h1 className="text-2xl font-semibold tracking-tight">You&apos;re listed.</h1>
-      <Badge
-        variant="secondary"
-        className="gap-1.5 border border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-400"
-      >
-        <span className="size-1.5 rounded-full bg-current" aria-hidden="true" />
-        In review · live within ~24h
-      </Badge>
-      <p className="max-w-md text-sm text-muted-foreground">
-        You approved the draft. A quick human check keeps the concierge trustworthy — your listing is usually live within 24 hours.
-      </p>
-    </div>
-  );
-
-  const CreatedCardSection = () => (
-    <div className="grid gap-4 px-4 sm:grid-cols-2 sm:px-8">
-      <Card data-testid="partner-signup-created-card">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center justify-between text-base">
-            What we created
-            <Badge className="bg-primary/10 text-primary border-primary/20 text-xs">
-              Ready
-            </Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="flex flex-col gap-2 text-sm">
-            {/* list items */}
-          </ul>
-        </CardContent>
-      </Card>
-    </div>
-  );
-                {["Your listing + map pin", "A grounded concierge profile", "2 draft social posts (await your OK)"].map(
-                  (item) => (
-                    <li key={item} className="flex items-start gap-2">
-                      <CheckIcon className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-                      {item}
-                    </li>
-                  ),
-                )}
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card data-testid="partner-signup-activate-card">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Activate your listing</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="flex flex-col gap-2 text-sm">
-                {[
-                  { label: "Listing drafted & approved", done: true },
-                  { label: "Verify your email", done: false },
-                  { label: "Add 3+ photos (+15)", done: false },
-                  { label: "Connect WhatsApp (+5)", done: false },
-                  { label: "Publish your first event", done: false },
-                ].map((item) => (
-                  <li key={item.label} className="flex items-start gap-2">
-                    <span
-                      className={cn(
-                        "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border",
-                        item.done
-                          ? "border-primary bg-primary/10"
-                          : "border-border bg-transparent",
-                      )}
-                      aria-hidden="true"
-                    >
-                      {item.done && <CheckIcon className="size-2.5 text-primary" />}
-                    </span>
-                    <span className={item.done ? "text-foreground" : "text-muted-foreground"}>
-                      {item.label}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
+  function SuccessInfo() {
+    return (
+      <div className="flex flex-col items-center gap-4 px-4 py-8 text-center sm:px-8">
+        <div className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <CheckCircle2Icon className="size-7" aria-hidden="true" />
         </div>
-
-        <div className="flex flex-col gap-3 px-4 pb-8 pt-6 sm:flex-row sm:px-8">
-          <Button
-            size="lg"
-            className="flex-1"
-            nativeButton={false}
-            render={<Link href="/partners" data-testid="partner-signup-preview-listing" />}
-          >
-            Preview your listing
-            <ArrowRightIcon className="size-4" aria-hidden="true" />
-          </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            className="flex-1"
-            nativeButton={false}
-            render={<Link href="/host/dashboard" data-testid="partner-signup-go-dashboard" />}
-          >
-            Go to dashboard
-          </Button>
-        </div>
-
-        <p className="px-4 pb-2 text-center text-xs text-muted-foreground sm:px-8">
-          Listing ID:{" "}
-          <span className="font-mono" data-testid="partner-signup-listing-id">
-            {view.data.partnerId}
-          </span>
+        <h1 className="text-2xl font-semibold tracking-tight">You&apos;re listed.</h1>
+        <Badge
+          variant="secondary"
+          className="gap-1.5 border border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-400"
+        >
+          <span className="size-1.5 rounded-full bg-current" aria-hidden="true" />
+          In review · live within ~24h
+        </Badge>
+        <p className="max-w-md text-sm text-muted-foreground">
+          You approved the draft. A quick human check keeps the concierge trustworthy — your listing is usually live within 24 hours.
         </p>
-        {view.dashboardDeferred && (
-          <p className="px-4 pb-6 text-center text-xs text-muted-foreground sm:px-8" data-testid="partner-signup-dashboard-next">
-            Dashboard coming next — we&apos;ll take you there as soon as it launches.
-          </p>
-        )}
       </div>
+    );
+  }
+
+  function CreatedCardSection({ dashboardHref }: { dashboardHref: string }) {
+    return (
+      <>
+      <div className="grid gap-4 px-4 sm:grid-cols-2 sm:px-8">
+        <Card data-testid="partner-signup-created-card">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center justify-between text-base">
+              What we created
+              <Badge className="border-primary/20 bg-primary/10 text-xs text-primary">
+                Ready
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="flex flex-col gap-2 text-sm">
+              {["Your listing + map pin", "A grounded concierge profile", "2 draft social posts (await your OK)"].map(
+                (item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <CheckIcon className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+                    {item}
+                  </li>
+                ),
+              )}
+            </ul>
+          </CardContent>
+        </Card>
+
+        <Card data-testid="partner-signup-activate-card">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Activate your listing</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="flex flex-col gap-2 text-sm">
+              {[
+                { label: "Listing drafted & approved", done: true },
+                { label: "Verify your email", done: false },
+                { label: "Add 3+ photos (+15)", done: false },
+                { label: "Connect WhatsApp (+5)", done: false },
+                { label: "Publish your first event", done: false },
+              ].map((item) => (
+                <li key={item.label} className="flex items-start gap-2">
+                  <span
+                    className={cn(
+                      "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border",
+                      item.done ? "border-primary bg-primary/10" : "border-border bg-transparent",
+                    )}
+                    aria-hidden="true"
+                  >
+                    {item.done && <CheckIcon className="size-2.5 text-primary" />}
+                  </span>
+                  <span className={item.done ? "text-foreground" : "text-muted-foreground"}>
+                    {item.label}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="flex flex-col gap-3 px-4 pb-8 pt-6 sm:flex-row sm:px-8">
+        <Button
+          size="lg"
+          className="flex-1"
+          nativeButton={false}
+          render={<Link href="/partners" data-testid="partner-signup-preview-listing" />}
+        >
+          Preview your listing
+          <ArrowRightIcon className="size-4" aria-hidden="true" />
+        </Button>
+        <Button
+          size="lg"
+          variant="outline"
+          className="flex-1"
+          nativeButton={false}
+          render={<Link href={dashboardHref} data-testid="partner-signup-go-dashboard" />}
+        >
+          Go to dashboard
+        </Button>
+      </div>
+
+      <p className="px-4 pb-2 text-center text-xs text-muted-foreground sm:px-8">
+        Listing ID:{" "}
+        <span className="font-mono" data-testid="partner-signup-listing-id">
+          {view.data.partnerId}
+        </span>
+      </p>
+      {view.dashboardDeferred && (
+        <p className="px-4 pb-6 text-center text-xs text-muted-foreground sm:px-8" data-testid="partner-signup-dashboard-next">
+          Dashboard coming next — we&apos;ll take you there as soon as it launches.
+        </p>
+      )}
+      </>
     );
   }
 
@@ -653,13 +654,13 @@ export function PartnerSignupWizard({
               data-testid="signup-wizard-url-input"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && businessUrl.trim()) {
-                  setView({ kind: "form", step: "analyzing" });
+                  goToAnalyzingStep();
                 }
               }}
             />
             <Button
               disabled={!businessUrl.trim()}
-              onClick={() => setView({ kind: "form", step: "analyzing" })}
+              onClick={goToAnalyzingStep}
               data-testid="signup-wizard-analyze-btn"
               data-analytics-event="partner_signup_analyze"
             >
@@ -686,7 +687,7 @@ export function PartnerSignupWizard({
           <button
             type="button"
             className="flex w-full items-center justify-center gap-3 rounded-lg border border-border bg-background px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            onClick={() => setView({ kind: "form", step: "analyzing" })}
+            onClick={goToAnalyzingStep}
             data-analytics-event="partner_signup_google"
             data-testid="signup-wizard-google-btn"
           >
@@ -806,27 +807,19 @@ export function PartnerSignupWizard({
         <div>
           <span className="font-semibold text-foreground">After · seconds</span>
           <br />
+          <span className="text-muted-foreground">A listing, map pin, visibility score &amp; concierge preview</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div
-      className="w-full max-w-4xl"
-      data-testid="signup-wizard-step-review"
-    >
+    <div className="w-full max-w-4xl" data-testid="signup-wizard-step-review">
       <WizardStepBar step="review" />
 
       <div className="flex flex-col gap-6 px-4 py-8 sm:px-8">
         <ReviewHeader />
         <TransformStrip businessUrl={businessUrl} />
-      </div>
-    </div>
-  );
-            <span className="text-muted-foreground">A listing, map pin, visibility score &amp; concierge preview</span>
-          </div>
-        </div>
 
         {errorMessage && (
           <p

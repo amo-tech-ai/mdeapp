@@ -47,6 +47,18 @@ const defaultProps = {
   loginNextPath: "/partners/signup?type=host",
 };
 
+function getRequiredElement<T extends Element>(
+  container: HTMLElement,
+  selector: string,
+  label: string,
+): T {
+  const node = container.querySelector(selector);
+  if (!node) {
+    throw new Error(`Missing required element: ${label} (${selector})`);
+  }
+  return node as T;
+}
+
 function setInputValue(input: HTMLInputElement, value: string) {
   const setter = Object.getOwnPropertyDescriptor(
     HTMLInputElement.prototype,
@@ -80,9 +92,11 @@ function mountWizard(
 
 /** Skip to the review step via the "Or fill in manually" link. */
 const advanceToReview = async (container: HTMLElement) => {
-  const manualLink = container.querySelector(
+  const manualLink = getRequiredElement<HTMLElement>(
+    container,
     '[data-testid="signup-wizard-manual-link"]',
-  ) as HTMLElement;
+    "manual review link",
+  );
   await act(() => {
     manualLink.click();
   });
@@ -90,13 +104,17 @@ const advanceToReview = async (container: HTMLElement) => {
 
 /** Fill businessName + click Approve from the review step. */
 const approveWithName = async (container: HTMLElement, name: string) => {
-  const nameInput = container.querySelector(
+  const nameInput = getRequiredElement<HTMLInputElement>(
+    container,
     '[data-testid="signup-wizard-name-input"]',
-  ) as HTMLInputElement;
+    "business name input",
+  );
   setInputValue(nameInput, name);
-  const approveBtn = container.querySelector(
+  const approveBtn = getRequiredElement<HTMLButtonElement>(
+    container,
     '[data-testid="signup-wizard-approve-btn"]',
-  ) as HTMLButtonElement;
+    "approve button",
+  );
   await act(async () => {
     approveBtn.click();
   });
@@ -133,33 +151,39 @@ describe("PartnerSignupWizard (static markup)", () => {
     const container = document.createElement("div");
     document.body.appendChild(container);
     let root!: Root;
-    act(() => {
-      root = createRoot(container);
-      root.render(
-        <PartnerSignupWizard
-          partnerType="venue"
-          initialCategory="Restaurant"
-          isAuthenticated
-          loginNextPath="/partners/signup?type=venue&category=restaurant"
-        />,
-      );
-    });
+    try {
+      act(() => {
+        root = createRoot(container);
+        root.render(
+          <PartnerSignupWizard
+            partnerType="venue"
+            initialCategory="Restaurant"
+            isAuthenticated
+            loginNextPath="/partners/signup?type=venue&category=restaurant"
+          />,
+        );
+      });
 
-    act(() => {
-      (
-        container.querySelector(
+      act(() => {
+        getRequiredElement<HTMLElement>(
+          container,
           '[data-testid="signup-wizard-manual-link"]',
-        ) as HTMLElement
-      ).click();
-    });
+          "manual review link",
+        ).click();
+      });
 
-    const categoryInput = container.querySelector(
-      '[data-testid="signup-wizard-category-input"]',
-    ) as HTMLInputElement;
-    expect(categoryInput?.value).toBe("Restaurant");
-
-    act(() => root.unmount());
-    document.body.removeChild(container);
+      const categoryInput = getRequiredElement<HTMLInputElement>(
+        container,
+        '[data-testid="signup-wizard-category-input"]',
+        "category input",
+      );
+      expect(categoryInput.value).toBe("Restaurant");
+    } finally {
+      if (root) {
+        act(() => root.unmount());
+      }
+      document.body.removeChild(container);
+    }
   });
 
   it("does not show internal roadmap copy in the form footer", () => {
@@ -260,6 +284,12 @@ describe("PartnerSignupWizard (submit flow)", () => {
     expect(
       container.querySelector('[data-testid="partner-signup-dashboard-next"]'),
     ).toBeTruthy();
+    const goDashboardLink = getRequiredElement<HTMLAnchorElement>(
+      container,
+      '[data-testid="partner-signup-go-dashboard"]',
+      "go to dashboard link",
+    );
+    expect(goDashboardLink.getAttribute("href")).toBe("/dashboard");
     unmount();
   });
 
