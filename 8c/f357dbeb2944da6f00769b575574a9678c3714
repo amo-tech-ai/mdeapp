@@ -1,0 +1,23 @@
+src/components/host/rentals/rentals-onboarding-wizard.tsx
+  s_f9d5f98a31145c::t_c8375260ea4260 69
+src/lib/rentals/broker-onboarding-validate.ts
+  s_f9d5f98a31145c::t_9eaabb9263fc90 37
+src/lib/rentals/submit-broker-onboarding.ts
+  s_f9d5f98a31145c::t_ddc555ff2268e3 28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "8cf357dbeb2944da6f00769b575574a9678c3714",
+  "prompts": {},
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
