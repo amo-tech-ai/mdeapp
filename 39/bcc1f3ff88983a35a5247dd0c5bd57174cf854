@@ -1,0 +1,24 @@
+docs/testing/ui-verification.md
+  s_f47ea5ebcd9235::t_1b3cd2c7e05d57 1-179
+docs/graphify-reference.md
+  s_f47ea5ebcd9235::t_a0d225ef19546d 89-93,100-106,109-110,113-115
+  s_f47ea5ebcd9235::t_7478f6d4b3b571 82
+  s_f47ea5ebcd9235::t_d1c2a806765ac1 61
+  s_f47ea5ebcd9235::t_fa18e429a332eb 13-46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "39bcc1f3ff88983a35a5247dd0c5bd57174cf854",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
