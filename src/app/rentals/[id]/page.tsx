@@ -7,6 +7,7 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
+// skipcq: JS-0067 - Next.js App Router metadata export; not browser global scope
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
   try {
@@ -19,6 +20,7 @@ export async function generateMetadata({ params }: Props) {
 }
 
 /** SAN-1202 · RE-DES-007 — consumer rental detail page `/rentals/[id]`. */
+// skipcq: JS-0067 - Next.js App Router page export; not browser global scope
 export default async function RentalDetailPage({ params }: Props) {
   const { id } = await params;
 

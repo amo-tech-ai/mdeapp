@@ -111,6 +111,7 @@ function RentalBrowseCardMedia({
   );
 }
 
+// skipcq: JS-0067 - React component (ES module); not browser global scope
 export function RentalBrowseCard({
   rental,
   testId,

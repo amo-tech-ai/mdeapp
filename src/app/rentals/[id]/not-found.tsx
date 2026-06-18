@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 /** SAN-1202 · RE-DES-007 — not-found / unpublished rental. */
+// skipcq: JS-0067 - Next.js App Router not-found export; not browser global scope
 export default function RentalNotFound() {
   return (
     <main
