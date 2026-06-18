@@ -39,7 +39,7 @@ if (existsSync(tasksIndex)) {
 
 const reminders = [
   "Phase 1, Week 1. App: mdeapp/. CopilotKit pinned at 1.55.2. Gemini model: gemini-3.5-flash.",
-  "Hard rules: no service-role keys in mdeapp/src/**; RLS + ≥1 policy on every new table; X-Goog-FieldMask on every Places call; mapId on every Map; v1 CopilotKit imports only.",
+  "Hard rules: no service-role keys in mdeapp/src/**; RLS + ≥1 policy on every new table; X-Goog-FieldMask on every Places call; mapId on every Map; CopilotKit v2 /v2 subpath imports only (no bare v1 @copilotkit/react-core).",
   "Legacy /home/sk/mde/ is read-only reference. Do not edit it.",
 ];
 
