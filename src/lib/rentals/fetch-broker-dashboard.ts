@@ -26,6 +26,8 @@ function failDashboard(context: string, error: unknown): FetchBrokerDashboardRes
 }
 
 /** Load broker dashboard metrics from Supabase (RLS-scoped). */
+// skipcq: JS-0044 - sequential Supabase reads; split when SAN-1093 wires partial loaders
+// skipcq: JS-R1005 - aggregate loader branches map 1:1 to KPI sources
 // skipcq: JS-0067 - server module export
 export async function fetchBrokerDashboard(
   supabase: DbClient,
