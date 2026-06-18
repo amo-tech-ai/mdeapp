@@ -1,0 +1,19 @@
+src/components/rentals/rental-detail-view.tsx
+  s_2edf90a0fd8976::t_0ee070f7311e3d 173
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "85566ff123da2e66bfedcbd9c0912793584fabcf",
+  "prompts": {},
+  "sessions": {
+    "s_2edf90a0fd8976": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "b30d3838-f33e-44db-afe4-a6ab088967f7",
+        "model": "unknown"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
