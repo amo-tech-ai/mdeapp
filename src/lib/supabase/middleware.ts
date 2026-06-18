@@ -49,6 +49,7 @@ function isProtectedPath(pathname: string) {
   );
 }
 
+// skipcq: JS-0067
 export async function updateSession(request: NextRequest) {
   const authRelay = relaySupabaseAuthQuery(request);
   if (authRelay) {
