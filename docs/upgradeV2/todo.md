@@ -176,11 +176,10 @@ Parked (not epic blockers):
 
 ## Next actions
 
-1. **Follow-up task:** add `check:mastra` to `npm run floor` (Task 5 in `22-notes.md` / todo table)
-2. **Prod deploy** — confirm Vercel promotes `main`
-2. **Tier-1 prod smoke** — `/chat` · `/host/event/new` · `/host/analytics`
-3. **Refresh [`09-file-map.md`](./09-file-map.md)** · optional [SAN-896 · CK-V2-008 — Refresh SAN-888 + SAN-889 localhost evidence @ current mainSha (7b596283+)](https://linear.app/sanjiovani/issue/SAN-896/ck-v2-008-refresh-san-888-san-889-localhost-evidence-current-mainsha) evidence refresh
-4. **Optional:** [SAN-898 · CK-V2-010 — Fix v2 host-event hydration mismatch (caret-color transparent)](https://linear.app/sanjiovani/issue/SAN-898/ck-v2-010-fix-v2-host-event-hydration-mismatch-caret-color-transparent) / [SAN-906 · CK-V2-010a — Inventory hydration warnings (host-event v2)](https://linear.app/sanjiovani/issue/SAN-906/ck-v2-010a-inventory-hydration-warnings-host-event-v2) hydration chain · [SAN-897 · CK-V2-009 — Preview-only flag flip: COPILOTKIT_V2_ANALYTICS=1 (SAN-888)](https://linear.app/sanjiovani/issue/SAN-897/ck-v2-009-preview-only-flag-flip-copilotkit-v2-analytics1-san-888) canceled (flags removed)
+1. **Prod deploy** — confirm Vercel promotes `main` @ `e0621c7c`
+2. **Tier-1 prod smoke** — `/chat` · `/host/event/new` · `/host/analytics` @ `https://www.mdeai.co/`
+3. **Refresh [`09-file-map.md`](./09-file-map.md)** · optional [SAN-896 · CK-V2-008 — Refresh post-cutover v2 evidence @ current main SHA](https://linear.app/sanjiovani/issue/SAN-896/ck-v2-008-refresh-san-888-san-889-localhost-evidence-current-mainsha)
+4. **Optional:** [SAN-898 · CK-V2-010 — Fix v2 host-event hydration mismatch (caret-color transparent)](https://linear.app/sanjiovani/issue/SAN-898/ck-v2-010-fix-v2-host-event-hydration-mismatch-caret-color-transparent) / [SAN-906 · CK-V2-010a — Inventory hydration warnings (host-event v2)](https://linear.app/sanjiovani/issue/SAN-906/ck-v2-010a-inventory-hydration-warnings-host-event-v2)
 
 ---
 
