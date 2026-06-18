@@ -91,8 +91,8 @@ describe('dateWindow', () => {
     expect(anyBounds.gte).toBeDefined();
     expect(undefBounds.gte).toBeDefined();
     // gte must be within the test window
-    expect(anyBounds.gte! >= before).toBe(true);
-    expect(anyBounds.gte! <= after).toBe(true);
+    expect(anyBounds.gte ? anyBounds.gte >= before : false).toBe(true);
+    expect(anyBounds.gte ? anyBounds.gte <= after : false).toBe(true);
   });
 
   it('tonight: gte ≤ lte, both fall on today (2026-05-13 in Bogota)', () => {
@@ -100,8 +100,12 @@ describe('dateWindow', () => {
     expect(gte).toBeDefined();
     expect(lte).toBeDefined();
 
-    const gteDate = toBogotaDate(gte!);
-    const lteDate = toBogotaDate(lte!);
+    if (gte == null || lte == null) {
+      throw new Error('Expected gte and lte to be defined');
+    }
+
+    const gteDate = toBogotaDate(gte);
+    const lteDate = toBogotaDate(lte);
 
     // Both must fall on 2026-05-13
     expect(gteDate.getUTCFullYear()).toBe(2026);
@@ -111,7 +115,7 @@ describe('dateWindow', () => {
     expect(lteDate.getUTCDate()).toBe(13);
 
     // gte must be ≤ lte
-    expect(new Date(gte!).getTime()).toBeLessThanOrEqual(new Date(lte!).getTime());
+    expect(new Date(gte).getTime()).toBeLessThanOrEqual(new Date(lte).getTime());
   });
 
   it('this_weekend: gte is Friday 2026-05-15, lte is Sunday 2026-05-17', () => {
@@ -120,8 +124,11 @@ describe('dateWindow', () => {
     expect(gte).toBeDefined();
     expect(lte).toBeDefined();
 
-    const gteLocal = toBogotaDate(gte!);
-    const lteLocal = toBogotaDate(lte!);
+    if (gte === undefined || lte === undefined) {
+      throw new Error('Expected gte and lte to be defined');
+    }
+    const gteLocal = toBogotaDate(gte);
+    const lteLocal = toBogotaDate(lte);
 
     // Friday = day 5 (UTCDay on a Bogota-local Date)
     expect(gteLocal.getUTCDay()).toBe(5); // Friday
@@ -137,8 +144,12 @@ describe('dateWindow', () => {
     expect(gte).toBeDefined();
     expect(lte).toBeDefined();
 
-    const gteLocal = toBogotaDate(gte!);
-    const lteLocal = toBogotaDate(lte!);
+    if (gte === undefined || lte === undefined) {
+      throw new Error('Date window values are undefined');
+    }
+
+    const gteLocal = toBogotaDate(gte);
+    const lteLocal = toBogotaDate(lte);
 
     expect(gteLocal.getUTCDay()).toBe(1); // Monday
     expect(lteLocal.getUTCDay()).toBe(0); // Sunday

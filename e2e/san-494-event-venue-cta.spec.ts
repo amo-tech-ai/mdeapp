@@ -77,10 +77,13 @@ async function assertSheetFlow(page: Page) {
   const box = await cta.boundingBox();
   expect(box, "CTA bounding box").toBeTruthy();
   expect(
-    box!.height,
+    box ? box.height : 0,
     "CTA touch target height >= 44px",
   ).toBeGreaterThanOrEqual(44);
-  expect(box!.width, "CTA touch target width >= 44px").toBeGreaterThanOrEqual(
+  expect(
+    box ? box.width : 0,
+    "CTA touch target width >= 44px",
+  ).toBeGreaterThanOrEqual(
     44,
   );
 

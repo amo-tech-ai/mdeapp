@@ -84,8 +84,8 @@ Deno.serve(async (req: Request) => {
     isScheduleViewingRequest(intent, listing_id, preferred_at)
   ) {
     const bridge = await createScheduleViewingBridge(serviceClient, {
-      listingId: listing_id!,
-      preferredAt: preferred_at!,
+      listingId: listing_id ? listing_id : '',
+      preferredAt: preferred_at ? preferred_at : '',
       tripId: trip_id,
       idempotencyKey: idempotency_key,
       userId,

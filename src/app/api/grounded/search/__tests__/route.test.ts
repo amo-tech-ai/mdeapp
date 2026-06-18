@@ -11,11 +11,13 @@ import { searchGroundedPlacesTool } from "@/mastra/tools/search-grounded-places"
 
 describe("POST /api/grounded/search", () => {
   beforeEach(() => {
-    vi.mocked(searchGroundedPlacesTool.execute!).mockReset();
+    if (searchGroundedPlacesTool.execute) {
+      vi.mocked(searchGroundedPlacesTool.execute).mockReset();
+    }
   });
 
   it("returns grounded tool envelope", async () => {
-    vi.mocked(searchGroundedPlacesTool.execute!).mockResolvedValue({
+    vi.mocked(searchGroundedPlacesTool.execute)?.mockResolvedValue({
       results: [{ id: "a1", title: "Pergamino", latitude: 6.2, longitude: -75.5 }],
       attribution: [],
       source: "grounding",
@@ -45,7 +47,7 @@ describe("POST /api/grounded/search", () => {
   });
 
   it("forwards intent nightlife to grounded tool", async () => {
-    vi.mocked(searchGroundedPlacesTool.execute!).mockResolvedValue({
+    vi.mocked(searchGroundedPlacesTool.execute).mockResolvedValue({
       results: [],
       attribution: [],
       source: "grounding",

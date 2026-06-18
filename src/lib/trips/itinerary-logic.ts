@@ -110,7 +110,7 @@ export function detectScheduleOverlaps(
           itemBId: b.id,
           itemATitle: a.title,
           itemBTitle: b.title,
-          message: `${formatTime(a.start_at!)} ${a.title} overlaps ${formatTime(b.start_at!)} ${b.title}`,
+          message: `${a.start_at ? formatTime(a.start_at) : ''} ${a.title} overlaps ${b.start_at ? formatTime(b.start_at) : ''} ${b.title}`,
         });
       }
     }

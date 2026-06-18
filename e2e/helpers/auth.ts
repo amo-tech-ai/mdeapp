@@ -90,7 +90,7 @@ export async function injectSession(
   session: Session,
 ): Promise<void> {
   const { url } = supabaseEnv();
-  const ref = new URL(url!).hostname.split(".")[0];
+  const ref = url ? new URL(url).hostname.split(".")[0] : "";
   const payload = JSON.stringify({
     access_token: session.access_token,
     refresh_token: session.refresh_token,

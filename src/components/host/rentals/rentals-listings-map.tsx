@@ -64,7 +64,7 @@ function BrokerListingsMapInner({
       }
     }
     if (pins.length > 0) {
-      return { lat: pins[0].latitude!, lng: pins[0].longitude! };
+      return { lat: pins[0]?.latitude, lng: pins[0]?.longitude };
     }
     return MEDELLIN_CENTER;
   }, [pins, selectedId]);
@@ -86,7 +86,10 @@ function BrokerListingsMapInner({
         {pins.map((listing) => (
           <AdvancedMarker
             key={listing.id}
-            position={{ lat: listing.latitude!, lng: listing.longitude! }}
+            position={{
+              lat: listing.latitude != null ? listing.latitude : 0,
+              lng: listing.longitude != null ? listing.longitude : 0
+            }}
             onClick={() => onSelect(listing.id)}
           >
             <CategoryMapMarker

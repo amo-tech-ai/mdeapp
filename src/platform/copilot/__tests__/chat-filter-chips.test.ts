@@ -6,8 +6,15 @@ import {
   isChipActive,
 } from "@/platform/copilot/chat-filter-chips";
 
+function assertFound<T>(value: T | undefined, name: string): T {
+  if (value === undefined) {
+    throw new Error(`${name} not found`);
+  }
+  return value;
+}
+
 describe("chat-filter-chips", () => {
-  const laureles = CHAT_FILTER_CHIPS.find((c) => c.id === "laureles")!;
+  const laureles = assertFound(CHAT_FILTER_CHIPS.find((c) => c.id === "laureles"), "laureles");
 
   it("activates Laureles neighborhood in working memory", () => {
     const next = applyChipToggle(undefined, laureles, true);
@@ -24,14 +31,14 @@ describe("chat-filter-chips", () => {
   });
 
   it("events chip sets lastIntent", () => {
-    const events = CHAT_FILTER_CHIPS.find((c) => c.id === "events")!;
+    const events = assertFound(CHAT_FILTER_CHIPS.find((c) => c.id === "events"), "events");
     const next = applyChipToggle(undefined, events, true);
     expect(next.lastIntent).toBe("event_discovery");
     expect(isChipActive(next, events)).toBe(true);
   });
 
   it("event sub-chip sets category and clears genericAskPending", () => {
-    const nightlife = EVENT_SUB_CHIPS.find((c) => c.id === "ev-nightlife")!;
+    const nightlife = assertFound(EVENT_SUB_CHIPS.find((c) => c.id === "ev-nightlife"), "ev-nightlife");
     const next = applyChipToggle(
       { lastEventQuery: { genericAskPending: true } },
       nightlife,
@@ -43,7 +50,7 @@ describe("chat-filter-chips", () => {
   });
 
   it("show-all sub-chip sets broad dateWindow", () => {
-    const showAll = EVENT_SUB_CHIPS.find((c) => c.id === "ev-all")!;
+    const showAll = assertFound(EVENT_SUB_CHIPS.find((c) => c.id === "ev-all"), "ev-all");
     const next = applyChipToggle(undefined, showAll, true);
     expect(next.lastEventQuery?.dateWindow).toBe("any");
     expect(isChipActive(next, showAll)).toBe(true);

@@ -351,10 +351,10 @@ function searchRentalsFromMock(query: RentalQuery): { results: Rental[]; total: 
     results = results.filter((r) => r.neighborhood.toLowerCase().includes(q));
   }
   if (typeof query.minBedrooms === 'number') {
-    results = results.filter((r) => r.bedrooms >= query.minBedrooms!);
+    results = results.filter((r) => query.minBedrooms != null ? r.bedrooms >= query.minBedrooms : true);
   }
   if (typeof query.maxPricePerNight === 'number') {
-    results = results.filter((r) => r.nightly_price <= query.maxPricePerNight!);
+    results = results.filter((r) => query.maxPricePerNight != null ? r.nightly_price <= query.maxPricePerNight : true);
   }
   const total = results.length;
   return { results: results.slice(0, query.limit ?? 8), total, source: 'mock' };

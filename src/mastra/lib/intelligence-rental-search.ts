@@ -339,11 +339,12 @@ export async function searchRentalsIntelligent(
         evidenceText: sig?.source ? `Signal source: ${sig.source}` : null,
       };
     }
+    const monthlyNum = num(row.price_monthly);
     return {
       id: row.id,
       title: row.title,
       neighborhood: row.neighborhood ?? neighborhood ?? "Medellín",
-      nightly_price: num(row.price_monthly) ? Math.round(num(row.price_monthly)! / 30) : 0,
+      nightly_price: monthlyNum ? Math.round(monthlyNum / 30) : 0,
       currency: "USD" as const,
       bedrooms: row.bedrooms ?? 0,
       wifi: true,

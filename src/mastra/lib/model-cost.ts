@@ -24,6 +24,7 @@ const MODEL_RATES: Record<string, ModelRate> = {
 };
 
 /** Used when a model id is not in {@link MODEL_RATES} — never returns 0 silently. */
+// skipcq: JS-001 -- fallback rate guaranteed to exist in MODEL_RATES
 const FALLBACK_RATE: ModelRate = MODEL_RATES["gemini-3.5-flash"]!;
 
 export interface ModelCostInput {

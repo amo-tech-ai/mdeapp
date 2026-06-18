@@ -47,9 +47,12 @@ export function shouldUsePostgresStorage(): boolean {
 export function createMastraStorage(id: string) {
   if (shouldUsePostgresStorage()) {
     const connectionString = normalizeDatabaseUrl();
+    if (!connectionString) {
+      throw new Error("Postgres connection string is missing");
+    }
     return new PostgresStore({
       id,
-      connectionString: connectionString!,
+      connectionString,
       max: 3,
       idleTimeoutMillis: 10_000,
     });

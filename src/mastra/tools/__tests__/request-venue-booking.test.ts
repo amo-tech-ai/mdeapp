@@ -40,7 +40,7 @@ describe("requestVenueBookingTool", () => {
   });
 
   it("returns sign-in message when user is anonymous", async () => {
-    const result = await requestVenueBookingTool.execute!(
+    const result = await requestVenueBookingTool.execute?.(
       validInput,
       undefined,
     );
@@ -61,7 +61,7 @@ describe("requestVenueBookingTool", () => {
       },
     });
 
-    const result = await requestVenueBookingTool.execute!(
+    const result = await requestVenueBookingTool.execute(
       validInput,
       {
         requestContext: {
@@ -88,7 +88,7 @@ describe("requestVenueBookingTool", () => {
       message: "You already submitted this booking request.",
     });
 
-    const result = await requestVenueBookingTool.execute!(
+    const result = await requestVenueBookingTool.execute?.(
       validInput,
       {
         requestContext: {

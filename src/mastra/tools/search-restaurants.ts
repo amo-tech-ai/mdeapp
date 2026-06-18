@@ -258,10 +258,10 @@ function applyRestaurantFilters(rows: Restaurant[], query: RestaurantQuery): Res
     results = results.filter((r) => r.priceTier === query.priceTier);
   }
   if (typeof query.maxPricePerPerson === 'number') {
-    results = results.filter((r) => r.avgPricePerPerson <= query.maxPricePerPerson!);
+    results = results.filter((r) => query.maxPricePerPerson != null ? r.avgPricePerPerson <= query.maxPricePerPerson : true);
   }
   if (typeof query.minRating === 'number') {
-    results = results.filter((r) => r.rating >= query.minRating!);
+    results = results.filter((r) => query.minRating != null ? r.rating >= query.minRating : true);
   }
   if (
     typeof query.userLatitude === 'number' &&

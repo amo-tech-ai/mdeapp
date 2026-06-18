@@ -24,7 +24,10 @@ async function runTool(input: {
   query: string;
   sqlEventCount?: number;
 }): Promise<WebToolOut> {
-  const out = await searchWebGroundedEventsTool.execute!(input, {} as never);
+  if (!searchWebGroundedEventsTool.execute) {
+    throw new Error('searchWebGroundedEventsTool.execute is not defined');
+  }
+  const out = await searchWebGroundedEventsTool.execute(input, {} as never);
   return out as WebToolOut;
 }
 
