@@ -59,7 +59,7 @@ def gql(key: str, query: str, variables: dict | None = None) -> dict:
         method="POST",
     )
     with urllib.request.urlopen(req) as resp:
-        out = json.loads(resp.read())
+        out = json.load(resp)
     if "errors" in out:
         raise SystemExit(f"GraphQL errors: {out['errors']}")
     return out
