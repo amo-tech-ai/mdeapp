@@ -1,0 +1,20 @@
+src/lib/tickets/wallet-types.ts
+  s_f47ea5ebcd9235::t_fefbf884cd67bd 56-57
+  s_f47ea5ebcd9235::t_1b620367345303 3,12,25,35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "0aa05f0ca9a6dc2719ae09eedd646bddb1ef1453",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
