@@ -1,0 +1,27 @@
+src/components/tickets/ticket-pass-actions.tsx
+  s_f47ea5ebcd9235::t_a47e9a774da67c 32
+src/components/tickets/__tests__/my-tickets-list.test.tsx
+  s_f47ea5ebcd9235::t_336f2cd0594f30 43
+  s_f47ea5ebcd9235::t_8f81ff358d95ce 83-84
+  s_f47ea5ebcd9235::t_cacb1be1314171 30,33
+src/components/tickets/my-tickets-list.tsx
+  s_f47ea5ebcd9235::t_081b34861b7305 147-153
+e2e/screens/SCREEN-015-tickets.spec.ts
+  s_f47ea5ebcd9235::t_d1e539632d47d4 101,112,130,140
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "53c16f14ad23d871850a89f18f15623cc9d9787f",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
