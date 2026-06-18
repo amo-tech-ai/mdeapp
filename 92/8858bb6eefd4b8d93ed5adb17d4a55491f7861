@@ -1,0 +1,41 @@
+src/mastra/lib/__tests__/intelligence-event-search-errors.test.ts
+  s_f9d5f98a31145c::t_5c9f5d43d48c4d 1-45
+src/lib/event-venue-booking-intent.ts
+  s_f9d5f98a31145c::t_9e0560d8baf9bf 71
+src/lib/__tests__/event-venue-booking-intent.test.ts
+  s_f9d5f98a31145c::t_22c134ecafd0e0 25-30
+.claude/skills/task-verifier/scripts/probe-disk.sh
+  s_f9d5f98a31145c::t_6599aa2d085f99 158
+  s_f9d5f98a31145c::t_bd24b2033d576c 124-131
+src/mastra/lib/__tests__/intelligence-event-search.test.ts
+  s_f9d5f98a31145c::t_29e7d8dd9ca700 105-140
+  s_f9d5f98a31145c::t_80b7e12cdb5c9e 5
+  s_f9d5f98a31145c::t_135e26ec803caf 6-7,10-25
+  s_f9d5f98a31145c::t_902912cbc5599e 94-104
+.claude/skills/testing/scripts/with_server.py
+  s_f9d5f98a31145c::t_de04ddf8fc3b88 25-26,32
+src/mastra/lib/intelligence-event-search.ts
+  s_f9d5f98a31145c::t_95ad1d38afef6e 201
+  s_f9d5f98a31145c::t_9c90df2e6577af 108-112,114-129
+  s_f9d5f98a31145c::t_1c9856f2f609ca 274
+  s_f9d5f98a31145c::t_351d42da701e82 159-167
+  s_f9d5f98a31145c::t_032d5a5865c530 299
+  s_f9d5f98a31145c::t_8de0ff36cde5c4 113
+  s_f9d5f98a31145c::t_c1b71c9bc1a534 130-146
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "928858bb6eefd4b8d93ed5adb17d4a55491f7861",
+  "prompts": {},
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
