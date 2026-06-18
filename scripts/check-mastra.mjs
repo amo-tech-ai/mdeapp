@@ -67,7 +67,7 @@ function checkAgentNames() {
   }
 }
 
-/** 2 — CopilotKit pin + no v2 imports in app/components */
+/** 2 — CopilotKit pin (1.55.2) + no BARE v1 imports in app/components (v2 = /v2 subpath only, post SAN-886 · CK-V2-000) */
 function checkCopilotKitPin() {
   const pkg = JSON.parse(read("package.json"));
   for (const [dep, ver] of Object.entries(pkg.dependencies ?? {})) {
@@ -81,8 +81,12 @@ function checkCopilotKitPin() {
     if (!fs.existsSync(root)) continue;
     for (const file of walk(root)) {
       const content = fs.readFileSync(file, "utf8");
-      if (content.includes("@copilotkit/react-core/v2")) {
-        failures.push(`${relFromRoot(file)} imports @copilotkit/react-core/v2 (Phase 1 = v1 only)`);
+      // Post CK-V2 cutover (SAN-886 · CK-V2-000): src/** is v2-only via the /v2 subpath.
+      // Flag any re-introduced BARE v1 import (@copilotkit/react-core without /v2).
+      if (/from\s+["']@copilotkit\/react-core["']/.test(content)) {
+        failures.push(
+          `${relFromRoot(file)} imports bare v1 @copilotkit/react-core — use the /v2 subpath (SAN-886 · CK-V2-000)`,
+        );
       }
     }
   }
