@@ -1,0 +1,23 @@
+src/mastra/lib/intelligence-event-search.ts
+  s_f47ea5ebcd9235::t_7616663c525757 131
+  s_f47ea5ebcd9235::t_c49984b28c64b5 140
+  s_f47ea5ebcd9235::t_4aa3bf57af1533 119
+src/lib/sanitize-assistant-chat-content.ts
+  s_f47ea5ebcd9235::t_beb2db6fe462b0 33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "8a7a574f727bc4d2ac107632dbf973cb6d34f6c1",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
