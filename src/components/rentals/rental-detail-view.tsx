@@ -250,7 +250,7 @@ function RentalDetailInner({ detail }: { detail: RentalDetail }) {
           <section aria-label="House rules">
             <h2 className="mb-1 font-serif text-base font-semibold">House rules</h2>
             <p className="text-sm text-muted-foreground">{detail.houseRules ?? <Pending />}</p>
-          </div>
+          </section>
 
           <section aria-label="Location">
             <h2 className="mb-1 font-serif text-base font-semibold">Location</h2>
