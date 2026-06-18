@@ -123,20 +123,12 @@ export function eventMatchesDateWindow(
 ): boolean {
   if (!window.gte && !window.lte) return true;
   if (!eventStartTime) return false;
-  // Compare real instants, not ISO strings — "...Z" vs "...+00:00" must not
-  // reorder lexicographically and drop boundary events.
-  const eventMs = Date.parse(eventStartTime);
-  if (Number.isNaN(eventMs)) return false;
-  const gteMs = parseBound(window.gte, Number.NEGATIVE_INFINITY);
-  const lteMs = parseBound(window.lte, Number.POSITIVE_INFINITY);
-  return eventMs >= gteMs && eventMs <= lteMs;
-}
-
-// skipcq: JS-0067 - module-local helper; not browser global scope
-function parseBound(value: string | undefined, openDefault: number): number {
-  if (!value) return openDefault;
-  const ms = Date.parse(value);
-  return Number.isNaN(ms) ? openDefault : ms;
+  // Compare real instants, not ISO strings — "Z" vs "+00:00" must not reorder
+  // lexicographically and drop boundary events.
+  const t = Date.parse(eventStartTime);
+  if (window.gte && t < Date.parse(window.gte)) return false;
+  if (window.lte && t > Date.parse(window.lte)) return false;
+  return true;
 }
 
 // skipcq: JS-0067
@@ -165,7 +157,6 @@ function scoreHybridEventRow(
   return { row, rankScore, sig, hood };
 }
 
-// skipcq: JS-0067 - module-local helper; not browser global scope
 function hybridToEventCard(row: HybridEventRow, rankScore?: number, signalSource?: string): IntelligenceEventResult {
   return {
     id: row.id,

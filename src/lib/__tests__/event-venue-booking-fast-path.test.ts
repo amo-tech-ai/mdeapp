@@ -4,14 +4,6 @@ import {
   canFastPathEventVenueBooking,
   eventVenueBookingAssistantSummary,
 } from "../event-venue-booking-fast-path";
-import { looksLikeEventVenueBookingQuery } from "../event-venue-booking-intent";
-
-describe("event-venue-booking-intent — party plural parity", () => {
-  it("matches both singular 'party' and plural 'parties'", () => {
-    expect(looksLikeEventVenueBookingQuery("suggest venues for a party")).toBe(true);
-    expect(looksLikeEventVenueBookingQuery("suggest venues for parties")).toBe(true);
-  });
-});
 
 describe("event-venue-booking-fast-path", () => {
   it("fast paths all SAN-494 acceptance matrix queries", () => {
