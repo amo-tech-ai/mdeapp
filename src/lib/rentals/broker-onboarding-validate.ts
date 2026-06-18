@@ -18,6 +18,18 @@ function trimOrEmpty(value: string): string {
   return value.trim();
 }
 
+/** landlord_profiles has single primary_neighborhood — store full multi-select in notes until array column ships. */
+export function brokerNeighborhoodProfileFields(neighborhoods: string[]): {
+  primary_neighborhood: string;
+  notes: string;
+} {
+  const primary = neighborhoods[0] ?? "Medellin";
+  return {
+    primary_neighborhood: primary,
+    notes: `service_neighborhoods:${neighborhoods.join(",")}`,
+  };
+}
+
 /** Validates onboarding payload before RPC (unit-testable). */
 export function validateBrokerOnboardingInput(
   input: BrokerOnboardingFormInput,

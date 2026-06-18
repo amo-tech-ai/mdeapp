@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import {
   type BrokerOnboardingFormInput,
   type BrokerOnboardingSubmitResult,
+  brokerNeighborhoodProfileFields,
   validateBrokerOnboardingInput,
 } from "@/lib/rentals/broker-onboarding-validate";
 import { BROKER_LISTINGS_PATH } from "@/lib/rentals/broker-route-gate";
@@ -38,7 +39,8 @@ export async function submitBrokerOnboarding(
   }
 
   const displayName = input.displayName.trim();
-  const primaryNeighborhood = input.neighborhoods[0] ?? "Medellín";
+  const neighborhoodFields = brokerNeighborhoodProfileFields(input.neighborhoods);
+  const primaryNeighborhood = neighborhoodFields.primary_neighborhood;
   const listingTitle = input.address.trim();
   const whatsapp = input.whatsapp.trim();
   const photo = input.photoUrl.trim();
@@ -61,7 +63,8 @@ export async function submitBrokerOnboarding(
   }
 
   const profilePatch: Record<string, string> = {
-    primary_neighborhood: primaryNeighborhood,
+    primary_neighborhood: neighborhoodFields.primary_neighborhood,
+    notes: neighborhoodFields.notes,
   };
   if (whatsapp) profilePatch.whatsapp_e164 = whatsapp;
 

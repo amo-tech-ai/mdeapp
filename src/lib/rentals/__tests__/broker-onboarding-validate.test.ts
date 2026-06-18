@@ -1,11 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { validateBrokerOnboardingInput } from "@/lib/rentals/broker-onboarding-validate";
+import {
+  brokerNeighborhoodProfileFields,
+  validateBrokerOnboardingInput,
+} from "@/lib/rentals/broker-onboarding-validate";
 
 const valid = {
   displayName: "Ana Properties",
   whatsapp: "",
   neighborhoods: ["Laureles"],
-  address: "Calle 10 #42",
+  address: "72 10th Street, Laureles",
   bedrooms: 2,
   bathrooms: 1,
   monthlyRentCop: 2_400_000,
@@ -48,5 +51,16 @@ describe("validateBrokerOnboardingInput", () => {
   it("rejects invalid photo URL", () => {
     const result = validateBrokerOnboardingInput({ ...valid, photoUrl: "not-a-url" });
     expect(result.ok).toBe(false);
+  });
+});
+
+describe("brokerNeighborhoodProfileFields", () => {
+  it("persists all selected neighborhoods in notes", () => {
+    expect(
+      brokerNeighborhoodProfileFields(["Laureles", "El Poblado", "Envigado"]),
+    ).toEqual({
+      primary_neighborhood: "Laureles",
+      notes: "service_neighborhoods:Laureles,El Poblado,Envigado",
+    });
   });
 });

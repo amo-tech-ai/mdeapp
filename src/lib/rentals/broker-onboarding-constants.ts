@@ -1,4 +1,4 @@
-/** Medellín neighborhoods for broker onboarding multi-select (RE-DES-005). */
+/** Medellín neighborhood proper names (English UI — geographic labels, not translated copy). */
 export const BROKER_ONBOARDING_NEIGHBORHOODS = [
   "Laureles",
   "El Poblado",
@@ -6,7 +6,7 @@ export const BROKER_ONBOARDING_NEIGHBORHOODS = [
   "La Florida",
   "Manila",
   "Los Colores",
-  "Belén",
+  "Belen",
   "Armenia",
 ] as const;
 

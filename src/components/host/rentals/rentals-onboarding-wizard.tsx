@@ -74,7 +74,9 @@ export function RentalsOnboardingWizard() {
     form.address.trim().length > 0 &&
     form.monthlyRentCop > 0 &&
     Number.isFinite(form.bedrooms) &&
-    Number.isFinite(form.bathrooms);
+    form.bedrooms >= 0 &&
+    Number.isFinite(form.bathrooms) &&
+    form.bathrooms >= 0;
 
   function patch<K extends keyof BrokerOnboardingFormInput>(
     key: K,
@@ -170,7 +172,7 @@ export function RentalsOnboardingWizard() {
               id="ro-address"
               value={form.address}
               onChange={(e) => patch("address", e.target.value)}
-              placeholder="Calle 10 #42-15"
+              placeholder="72 10th Street, Laureles"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">

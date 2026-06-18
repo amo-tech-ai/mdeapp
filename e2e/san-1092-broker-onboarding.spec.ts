@@ -9,7 +9,6 @@ import { createClient } from "@supabase/supabase-js";
 import fs from "node:fs";
 import path from "node:path";
 import {
-  DESKTOP_VIEWPORT,
   watchCriticalConsoleErrors,
   assertConsoleClean,
 } from "./helpers/screen-evidence";
