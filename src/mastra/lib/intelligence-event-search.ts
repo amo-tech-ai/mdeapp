@@ -105,6 +105,45 @@ export function parseEventIntelligenceSlots(queryText: string): EventIntelligenc
   return slots;
 }
 
+function eventTimeMs(iso: string): number | null {
+  const ms = Date.parse(iso);
+  return Number.isNaN(ms) ? null : ms;
+}
+
+export function isWithinDateWindow(
+  eventStart: string,
+  window: { gte?: string; lte?: string },
+): boolean {
+  const t = eventTimeMs(eventStart);
+  if (t === null) return false;
+  if (window.gte) {
+    const gte = eventTimeMs(window.gte);
+    if (gte !== null && t < gte) return false;
+  }
+  if (window.lte) {
+    const lte = eventTimeMs(window.lte);
+    if (lte !== null && t > lte) return false;
+  }
+  return true;
+}
+
+/** Post-hybrid filters — category + max price (RPC cannot pre-filter semantically). */
+export function filterHybridEventRows(
+  rows: HybridEventRow[],
+  category?: EventQuery["category"],
+  maxPricePerTicket?: number,
+): HybridEventRow[] {
+  let filtered = rows;
+  if (category) {
+    filtered = filtered.filter((r) => mapCategory(r.event_type) === category);
+  }
+  if (typeof maxPricePerTicket === "number") {
+    const maxPrice = maxPricePerTicket;
+    filtered = filtered.filter((r) => (num(r.ticket_price_min) ?? 0) <= maxPrice);
+  }
+  return filtered;
+}
+
 function eventSignalBoost(slots: EventIntelligenceSlots, s: EventSignalRow): number {
   if ((s.confidence ?? 0) < 0.6) return 0;
   let boost = 0;
@@ -117,6 +156,15 @@ function eventSignalBoost(slots: EventIntelligenceSlots, s: EventSignalRow): num
 }
 
 function hybridToEventCard(row: HybridEventRow, rankScore?: number, signalSource?: string): IntelligenceEventResult {
+  return hybridRowToEventCard(row, rankScore, signalSource);
+}
+
+/** Maps hybrid RPC / structured rows to EventCard — venue = full address (matches search-events rowToCard). */
+export function hybridRowToEventCard(
+  row: HybridEventRow,
+  rankScore?: number,
+  signalSource?: string,
+): IntelligenceEventResult {
   return {
     id: row.id,
     title: row.name,
@@ -150,6 +198,7 @@ export async function searchEventsIntelligent(
   const limit = query.limit ?? 5;
   const queryText = query.queryText?.trim() ?? "";
   const slots = queryText ? parseEventIntelligenceSlots(queryText) : {};
+  const category = resolveEventCategoryForQuery(query.category, queryText || undefined);
   const neighborhood = query.neighborhood ?? slots.neighborhood;
   const dw = query.dateWindow ?? slots.dateWindow ?? "any";
   const rankExplanation: RankExplanationEntry[] = [];
@@ -222,13 +271,7 @@ export async function searchEventsIntelligent(
 
   // Explicit category / maxPrice filters apply to both paths — the hybrid RPC
   // ranks semantically and cannot pre-filter, so enforce them here.
-  if (query.category) {
-    hybridRows = hybridRows.filter((r) => mapCategory(r.event_type) === query.category);
-  }
-  if (typeof query.maxPricePerTicket === "number") {
-    const maxPrice = query.maxPricePerTicket;
-    hybridRows = hybridRows.filter((r) => (num(r.ticket_price_min) ?? 0) <= maxPrice);
-  }
+  hybridRows = filterHybridEventRows(hybridRows, category, query.maxPricePerTicket);
 
   const ids = hybridRows.map((r) => r.id);
   const signalMap = new Map<string, EventSignalRow>();
@@ -253,9 +296,7 @@ export async function searchEventsIntelligent(
       if (!window.gte && !window.lte) return true;
       const t = row.event_start_time;
       if (!t) return false;
-      if (window.gte && t < window.gte) return false;
-      if (window.lte && t > window.lte) return false;
-      return true;
+      return isWithinDateWindow(t, window);
     })
     .map((row, idx) => {
       const sig = signalMap.get(row.id);
