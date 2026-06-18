@@ -28,8 +28,10 @@ function useWalletPayload(orderId: string, accessToken: string) {
 
   useEffect(() => {
     let cancelled = false;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30_000);
     const params = new URLSearchParams({ orderId, token: accessToken });
-    fetch(`/api/tickets/wallet?${params}`)
+    fetch(`/api/tickets/wallet?${params}`, { signal: controller.signal })
       .then(async (res) => {
         if (!res.ok) throw new Error("not found");
         return res.json() as Promise<WalletOrderPayload>;
@@ -37,7 +39,11 @@ function useWalletPayload(orderId: string, accessToken: string) {
       .then((data) => { if (!cancelled) setPayload(data); })
       .catch(() => { if (!cancelled) setMissing(true); })
       .finally(() => { if (!cancelled) setLoading(false); });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+      controller.abort();
+    };
   }, [orderId, accessToken]);
 
   return { payload, loading, missing };

@@ -5,6 +5,7 @@ test_patterns = [
   "**/*.test.ts",
   "**/*.test.tsx",
   "**/*.spec.ts",
+  "**/*.spec.tsx",
   "**/tests/**",
   "**/migrations/**",
   "e2e/**",
