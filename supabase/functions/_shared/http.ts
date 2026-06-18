@@ -40,15 +40,17 @@ function isVercelAppOrigin(origin: string): boolean {
   }
 }
 
+// skipcq: JS-0067 - module-local helper; not browser global scope
 function isLocalDevOrigin(origin: string): boolean {
   if (IS_PRODUCTION) return false;
   try {
     const u = new URL(origin);
     if (u.protocol !== "http:" && u.protocol !== "https:") return false;
-    if (u.hostname === "localhost") return true;
-    if (u.hostname === "127.0.0.1") return true;
-    if (u.hostname === "[::1]") return true;
-    return false;
+    return (
+      u.hostname === "localhost" ||
+      u.hostname === "127.0.0.1" ||
+      u.hostname === "[::1]"
+    );
   } catch {
     return false;
   }

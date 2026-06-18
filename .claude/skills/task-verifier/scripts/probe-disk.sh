@@ -144,7 +144,11 @@ fi
 if in_filter tasks; then
   echo "## tasks/core sanity"
   shopt -s nullglob
-  for f in "$REPO/tasks/core/"F*.md; do
+  core_files=("$REPO/tasks/core/"F*.md)
+  if ((${#core_files[@]} == 0)); then
+    fail "tasks/core: no F*.md task files found (dir missing or empty)"
+  fi
+  for f in "${core_files[@]}"; do
     base=$(basename "$f" .md)
     status=$(awk '/^status:/{print $2; exit}' "$f")
     # Strip the leading "depends_on:" key AND any trailing "# comment"

@@ -59,6 +59,7 @@ function looksLikeTicketedEventDiscovery(text: string): boolean {
   return false;
 }
 
+// skipcq: JS-0067 - module-local helper; not browser global scope
 function hasPrivateEventVenueSignals(text: string): boolean {
   const t = text.trim();
   if (VENUE_SEEKING_RE.test(t) && PRIVATE_EVENT_TYPE_RE.test(t)) return true;
@@ -70,7 +71,7 @@ function hasPrivateEventVenueSignals(text: string): boolean {
   if (PRIVATE_EVENT_TYPE_RE.test(t) && /\bvenue\b/i.test(t)) return true;
   if (SUGGEST_VENUES_RE.test(t)) {
     const hasPartyOrGuests =
-      /\bparty\b/i.test(t) || GUEST_COUNT_EVENT_RE.test(t);
+      /\bpart(?:y|ies)\b/i.test(t) || GUEST_COUNT_EVENT_RE.test(t);
     if (hasPartyOrGuests) return true;
   }
   if (PRIVATE_EVENT_SPACE_RE.test(t)) return true;

@@ -90,6 +90,7 @@ function looksLikeEventCategoryNightlifeDiscovery(text: string): boolean {
   return NIGHTLIFE_TIME_RE.test(t) || /\b(this week|next week)\b/i.test(t);
 }
 
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function looksLikeNightlifeGroundingSearch(text: string): boolean {
   const t = text.trim();
   if (!t) return false;
@@ -171,9 +172,7 @@ export function looksLikeRestaurantDiscovery(text: string): boolean {
   if (looksLikeRestaurantSearch(t)) return true;
   if (GENERIC_RESTAURANT_RE.test(t)) return true;
   const signals = scoreRestaurantQuery(t);
-  if (signals.cuisine) return true;
-  if (signals.vibe) return true;
-  return false;
+  return Boolean(signals.cuisine || signals.vibe);
 }
 
 /**

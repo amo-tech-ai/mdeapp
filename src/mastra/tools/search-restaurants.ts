@@ -245,6 +245,7 @@ function haversineKm(
   return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
+// skipcq: JS-0067 - module-local helper; not browser global scope
 function applyRestaurantFilters(rows: Restaurant[], query: RestaurantQuery): Restaurant[] {
   let results = rows.slice();
   if (query.cuisine) {

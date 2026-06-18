@@ -27,7 +27,9 @@ def is_server_ready(port, timeout=30):
         try:
             with socket.create_connection(('localhost', port), timeout=1):
                 return True
-        except OSError:
+        except (OSError, OverflowError, ValueError):
+            # OSError: connection refused/unreachable; OverflowError/ValueError:
+            # out-of-range or non-numeric port — treat as "not ready", never crash.
             time.sleep(0.5)
     return False
 

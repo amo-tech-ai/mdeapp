@@ -235,6 +235,7 @@ export type EventSearchResult = {
   rankExplanation?: import('../lib/search-logs').RankExplanationEntry[];
 };
 
+// skipcq: JS-0067 - ES module export; not browser global scope
 export async function searchEvents(
   query: EventQuery,
 ): Promise<EventSearchResult> {

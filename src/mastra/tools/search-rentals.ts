@@ -344,6 +344,7 @@ const MOCK_RENTALS: Rental[] = [
   },
 ];
 
+// skipcq: JS-0067 - module-local helper; not browser global scope
 function searchRentalsFromMock(query: RentalQuery): { results: Rental[]; total: number; source: 'mock' } {
   let results = MOCK_RENTALS.slice();
   if (query.neighborhood) {

@@ -20,6 +20,7 @@ type Source = (typeof VALID_SOURCES)[number];
 
 const jr = jsonResponse;
 
+// skipcq: JS-R1005 - edge request handler with intentional branching (metric, not a bug)
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: getCorsHeaders(req) });

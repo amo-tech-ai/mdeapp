@@ -40,6 +40,7 @@ function groundingResultsContainPlaceId(results: unknown[]): boolean {
   );
 }
 
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function isToolLeakJson(value: unknown): boolean {
   if (typeof value !== "object" || value === null) return false;
   const o = value as Record<string, unknown>;
@@ -47,10 +48,7 @@ export function isToolLeakJson(value: unknown): boolean {
     return Object.keys(o).length <= 2;
   }
   if (o.source === "grounding") return true;
-  if (Array.isArray(o.results) && groundingResultsContainPlaceId(o.results)) {
-    return true;
-  }
-  return false;
+  return Array.isArray(o.results) && groundingResultsContainPlaceId(o.results);
 }
 
 export function stripBalancedJsonObjects(
