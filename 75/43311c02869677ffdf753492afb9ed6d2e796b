@@ -1,0 +1,37 @@
+src/lib/hooks/use-host-ops-chat.ts
+  s_f9d5f98a31145c::t_7b11abb6a0f3f1 7
+src/lib/events/__tests__/load-host-dashboard.test.ts
+  s_f9d5f98a31145c::t_fcf308e9b53c37 5,8-15,39,43,50,59
+src/components/host/host-analytics-shell.tsx
+  s_f9d5f98a31145c::t_0651b3fc6ce0ae 33
+  s_f9d5f98a31145c::t_7a1a7ccc0b58f6 25
+src/components/host/host-analytics-prompt-chips.tsx
+  s_f9d5f98a31145c::t_98f087190c3c4c 55
+  s_f9d5f98a31145c::t_937613cc458774 32,36-38
+src/mastra/lib/__tests__/intelligence-event-search-errors.test.ts
+  s_f9d5f98a31145c::t_29715ad0327613 5-6
+  s_f9d5f98a31145c::t_0fdfe471c324fc 16
+src/lib/events/load-host-dashboard.ts
+  s_f9d5f98a31145c::t_60647af52efed3 18
+src/mastra/lib/intelligence-event-search.ts
+  s_f9d5f98a31145c::t_7f32490f18b685 113-114,119-120,122-123,126-127,133
+  s_f9d5f98a31145c::t_3a714277f69790 166-167
+src/components/host/host-analytics-aside.tsx
+  s_f9d5f98a31145c::t_d9a023498df7a3 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "7543311c02869677ffdf753492afb9ed6d2e796b",
+  "prompts": {},
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
