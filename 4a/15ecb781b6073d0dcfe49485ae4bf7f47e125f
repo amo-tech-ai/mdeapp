@@ -1,0 +1,40 @@
+src/lib/rentals/broker-onboarding-validate.ts
+  s_f9d5f98a31145c::t_3a73cd282ba1bb 23
+  s_f9d5f98a31145c::t_7bced4e01dda82 36
+  s_f9d5f98a31145c::t_ea80cdbbd7c2dc 17
+src/components/host/rentals/rentals-onboarding-minimal-chrome.tsx
+  s_f9d5f98a31145c::t_308b0c7c6a5bfa 6
+src/app/host/rentals/onboarding/layout.tsx
+  s_f9d5f98a31145c::t_e2535b94c4e247 4
+src/lib/rentals/submit-broker-onboarding.ts
+  s_f9d5f98a31145c::t_17c0cc38d5f295 108
+  s_f9d5f98a31145c::t_fadf6937e1c2c1 27
+  s_f9d5f98a31145c::t_869c59efdfa077 15
+e2e/san-1092-broker-onboarding.spec.ts
+  s_f9d5f98a31145c::t_70e98f4e0c1514 27-31,37
+  s_f9d5f98a31145c::t_d7bd1248f8e167 73,78
+  s_f9d5f98a31145c::t_dc349e2faa5385 24
+  s_f9d5f98a31145c::t_92bbca06cbb062 96
+  s_f9d5f98a31145c::t_d07e67f1ee3c61 114,118,123,125
+  s_f9d5f98a31145c::t_ec88fb1c08a812 44
+src/components/host/rentals/rentals-onboarding-wizard.tsx
+  s_f9d5f98a31145c::t_60b0d28391b084 68
+  s_f9d5f98a31145c::t_6ffb4c5a4847bf 27
+  s_f9d5f98a31145c::t_86c9c2355da151 61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "4a15ecb781b6073d0dcfe49485ae4bf7f47e125f",
+  "prompts": {},
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
