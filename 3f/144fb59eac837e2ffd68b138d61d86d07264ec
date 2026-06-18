@@ -1,0 +1,27 @@
+src/lib/__tests__/event-venue-party-plural.test.ts
+  s_f1f9127cc71b2a::t_bf1f1684ec84ad 1-9
+src/mastra/lib/intelligence-event-search.ts
+  s_f1f9127cc71b2a::t_fde7fc1902ff6a 126-130
+src/mastra/lib/__tests__/event-date-window.test.ts
+  s_f1f9127cc71b2a::t_f3483a7a6f8882 1-23
+.claude/skills/testing/scripts/with_server.py
+  s_f1f9127cc71b2a::t_27762bd395f1c9 30
+.claude/skills/task-verifier/scripts/probe-disk.sh
+  s_f1f9127cc71b2a::t_27762bd395f1c9 147
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "3f144fb59eac837e2ffd68b138d61d86d07264ec",
+  "prompts": {},
+  "sessions": {
+    "s_f1f9127cc71b2a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ebcc0856-4735-47c8-9dfa-b58a8e933943",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
