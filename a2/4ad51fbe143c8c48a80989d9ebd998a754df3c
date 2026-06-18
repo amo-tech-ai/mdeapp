@@ -1,0 +1,25 @@
+src/lib/restaurant-query-classifier.ts
+  s_2e9704330dc5b7::t_a9fc414d23c9eb 165
+.claude/skills/testing/scripts/with_server.py
+  s_2e9704330dc5b7::t_19c438f459d07f 68-69,71,88
+supabase/functions/chat-lead-capture/index.ts
+  s_2e9704330dc5b7::t_53e38d5cc68cec 23
+.claude/skills/task-verifier/scripts/probe-disk.sh
+  s_2e9704330dc5b7::t_65f4d6846ecb7a 239,241
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "a24ad51fbe143c8c48a80989d9ebd998a754df3c",
+  "prompts": {},
+  "sessions": {
+    "s_2e9704330dc5b7": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "06a895ab-da7e-4b24-a8e2-bc5c7c9e4919",
+        "model": "gpt-5-mini"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
