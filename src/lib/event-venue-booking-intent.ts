@@ -68,7 +68,7 @@ function hasPrivateEventVenueSignals(text: string): boolean {
   if (EVENT_VENUE_NOUN_RE.test(t)) return true;
   if (VENUE_SEEKING_RE.test(t) && GUEST_COUNT_EVENT_RE.test(t)) return true;
   if (PRIVATE_EVENT_TYPE_RE.test(t) && /\bvenue\b/i.test(t)) return true;
-  if (SUGGEST_VENUES_RE.test(t) && (/\bparty\b/i.test(t) || GUEST_COUNT_EVENT_RE.test(t)))
+  if (SUGGEST_VENUES_RE.test(t) && (/\bpart(?:y|ies)\b/i.test(t) || GUEST_COUNT_EVENT_RE.test(t)))
     return true;
   if (PRIVATE_EVENT_SPACE_RE.test(t)) return true;
   if (SOMEWHERE_BIRTHDAY_RE.test(t)) return true;

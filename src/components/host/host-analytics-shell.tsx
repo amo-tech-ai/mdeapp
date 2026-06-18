@@ -7,7 +7,9 @@ import { HostNavRail } from "@/components/host/host-nav-rail";
 import { HostOpsCopilotBridge } from "@/components/host/host-ops-copilot-bridge";
 import { HostKpiPanel } from "@/components/host/host-kpi-panel";
 import { HostNarrativeBanner } from "@/components/host/host-narrative-banner";
-import { HostRecommendationsPanel } from "@/components/host/host-recommendations-panel";
+import { HostAnalyticsAside } from "@/components/host/host-analytics-aside";
+import { HostAnalyticsPromptChips } from "@/components/host/host-analytics-prompt-chips";
+import type { HostDashboardState } from "@/lib/types/host-dashboard";
 
 const ANALYTICS_LABELS = {
   title: "Sales insights",
@@ -17,11 +19,27 @@ const ANALYTICS_LABELS = {
 
 type HostAnalyticsShellProps = {
   userEmail?: string | null;
+  initialDashboard?: HostDashboardState;
 };
 
-export function HostAnalyticsShell({ userEmail }: HostAnalyticsShellProps) {
+// skipcq: JS-0067 - module-local helper; not browser global scope
+function hostDashboardServerKey(initial?: HostDashboardState): string { // skipcq: JS-0067
+  if (!initial) return "idle:0";
   return (
-    <HostOpsCopilotBridge>
+    initial.lastUpdatedIso ?? `${initial.workflowStatus}:${initial.kpiCards.length}`
+  );
+}
+
+// skipcq: JS-0067 - ES module export; not browser global scope
+export function HostAnalyticsShell({ // skipcq: JS-0067
+  userEmail,
+  initialDashboard,
+}: HostAnalyticsShellProps) {
+  return (
+    <HostOpsCopilotBridge
+      key={hostDashboardServerKey(initialDashboard)}
+      initialState={initialDashboard}
+    >
       {({ state }) => (
         <div
           data-testid="host-analytics"
@@ -50,6 +68,9 @@ export function HostAnalyticsShell({ userEmail }: HostAnalyticsShellProps) {
               <div className="space-y-3 overflow-y-auto p-4">
                 <HostNarrativeBanner state={state} />
                 <HostKpiPanel state={state} />
+                {state.kpiCards.length === 0 && state.workflowStatus !== "loading" ? (
+                  <HostAnalyticsPromptChips />
+                ) : null}
               </div>
               <div
                 id="host-ops-chat-region"
@@ -70,10 +91,14 @@ export function HostAnalyticsShell({ userEmail }: HostAnalyticsShellProps) {
             </section>
 
             <aside
-              aria-label="Recommended actions"
+              aria-label={
+                state.recommendations.length > 0
+                  ? "Recommended actions"
+                  : "Sales assistant"
+              }
               className="shrink-0 overflow-y-auto border-t border-border p-4 md:w-72 md:border-l md:border-t-0"
             >
-              <HostRecommendationsPanel state={state} />
+              <HostAnalyticsAside state={state} />
             </aside>
           </div>
         </div>
