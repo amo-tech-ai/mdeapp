@@ -92,17 +92,35 @@ const RentalPriceSidebar = ({
   hostName: string | null;
   onRequest: () => void;
 }) => {
-  const primary = prices.monthlyLabel ?? prices.nightlyLabel;
+  const priceDisplay: Record<string, React.ReactNode> = {
+    mn: (
+      <>
+        <div className="font-mono text-xl font-semibold">{prices.monthlyLabel}</div>
+        <div className="text-xs text-muted-foreground">{prices.nightlyLabel}</div>
+      </>
+    ),
+    m: <div className="font-mono text-xl font-semibold">{prices.monthlyLabel}</div>,
+    n: <div className="font-mono text-xl font-semibold">{prices.nightlyLabel}</div>,
+    default: (
+      <div className="font-mono text-xl font-semibold">
+        <Pending />
+      </div>
+    ),
+  };
+  const hasMonthly = !!prices.monthlyLabel;
+  const hasNightly = !!prices.nightlyLabel;
+  const key = hasMonthly ? (hasNightly ? 'mn' : 'm') : hasNightly ? 'n' : 'default';
+
   return (
     <aside className="hidden lg:block">
       <div className="sticky top-6 space-y-3 rounded-xl border border-border bg-card p-4">
-        <div>
-          <div className="font-mono text-xl font-semibold">{primary ?? <Pending />}</div>
-          {prices.monthlyLabel && prices.nightlyLabel ? (
-            <div className="text-xs text-muted-foreground">{prices.nightlyLabel}</div>
-          ) : null}
-        </div>
-        <Button type="button" className="w-full" data-testid="rental-detail-request-cta" onClick={onRequest}>
+        {priceDisplay[key]}
+        <Button
+          type="button"
+          className="w-full"
+          data-testid="rental-detail-request-cta"
+          onClick={onRequest}
+        >
           Request viewing
         </Button>
         <Button
@@ -150,18 +168,20 @@ const mapsHrefFor = (detail: RentalDetail): string | null => {
   return `https://www.google.com/maps/search/?api=1&query=${detail.latitude},${detail.longitude}`;
 };
 
-/** SAN-1202 · RE-DES-007 — consumer rental detail page. */
-// skipcq: JS-0067 - ES module export; not browser global scope
-export function RentalDetailView({ detail }: { detail: RentalDetail }) {
-  return (
-    <RentalUiProvider>
-      <RentalDetailInner detail={detail} />
-      <ScheduleViewingModal />
-    </RentalUiProvider>
-  );
-}
 
 // skipcq: JS-0067 - React component (ES module); not browser global scope
+const RentalDetailHeader = ({ detail }: { detail: RentalDetail }) => (
+  <header>
+    <p className="text-sm font-medium text-muted-foreground">{detail.neighborhood || <Pending />}</p>
+    <h1 className="mt-0.5 font-serif text-2xl font-semibold tracking-tight">{detail.title}</h1>
+    {detail.address ? (
+      <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
+        <MapPin className="size-3.5" aria-hidden /> {detail.address}
+      </p>
+    ) : null}
+  </header>
+);
+
 const RentalDetailInner = ({ detail }: { detail: RentalDetail }) => {
   const { openScheduleViewing } = useRentalUi();
   const prices = formatRentalPrices(detail.priceNightly ?? undefined);
@@ -185,15 +205,7 @@ const RentalDetailInner = ({ detail }: { detail: RentalDetail }) => {
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="min-w-0 space-y-6">
-          <header>
-            <p className="text-sm font-medium text-muted-foreground">{detail.neighborhood || <Pending />}</p>
-            <h1 className="mt-0.5 font-serif text-2xl font-semibold tracking-tight">{detail.title}</h1>
-            {detail.address ? (
-              <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
-                <MapPin className="size-3.5" aria-hidden /> {detail.address}
-              </p>
-            ) : null}
-          </header>
+          <RentalDetailHeader detail={detail} />
 
           <RentalSpecs detail={detail} />
 
