@@ -1,0 +1,23 @@
+src/components/tickets/my-tickets-list.tsx
+  s_f47ea5ebcd9235::t_67e32e05980bce 88
+src/components/tickets/ticket-detail-client.tsx
+  s_f47ea5ebcd9235::t_756595efb8794c 59
+src/lib/tickets/get-wallet-order.ts
+  s_f47ea5ebcd9235::t_ac55db0ce4088e 27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "145cf822f4199aa060679e65ce54092baaef2b7b",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
