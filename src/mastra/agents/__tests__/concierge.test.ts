@@ -111,10 +111,14 @@ describe("conciergeAgent", () => {
     expect(parsed.lastEventQuery?.category).toBe("nightlife");
   });
 
-  it("registers extract-intent-slots tool for INT-001 routing", async () => {
+  // PERF-002: extract-intent-slots was a no-op echo tool the agent was told to
+  // call first, adding a Gemini step every agent turn. Routing now relies on the
+  // client-side classifier + the per-search clarification gates, so the tool is
+  // unwired. Guard against it being re-added to the concierge tool set.
+  it("does not register the no-op extract-intent-slots tool", async () => {
     const tools = await conciergeAgent.listTools();
     const toolIds = Object.values(tools).map((tool) => tool.id);
-    expect(toolIds).toContain("extract-intent-slots");
+    expect(toolIds).not.toContain("extract-intent-slots");
   });
 
   it("working memory accepts router intents including restaurant_discovery", () => {
