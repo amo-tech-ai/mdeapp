@@ -162,6 +162,27 @@ export function RentalDetailView({ detail }: { detail: RentalDetail }) {
   );
 }
 
+// Extracted header into its own component to reduce nesting depth
+const RentalHeader: React.FC<{ neighborhood?: string; title: string; address?: string }> = ({
+  neighborhood,
+  title,
+  address,
+}) => (
+  <header>
+    <p className="text-sm font-medium text-muted-foreground">
+      {neighborhood || <Pending />}
+    </p>
+    <h1 className="mt-0.5 font-serif text-2xl font-semibold tracking-tight">
+      {title}
+    </h1>
+    {address ? (
+      <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
+        <MapPin className="size-3.5" aria-hidden /> {address}
+      </p>
+    ) : null}
+  </header>
+);
+
 // skipcq: JS-0067, JS-R1005, JS-0415 - detail page composition is intentionally explicit for readability and UX sections
 function RentalDetailInner({ detail }: { detail: RentalDetail }) {
   const { openScheduleViewing } = useRentalUi();
@@ -187,15 +208,11 @@ function RentalDetailInner({ detail }: { detail: RentalDetail }) {
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="min-w-0 space-y-6">
-          <header>
-            <p className="text-sm font-medium text-muted-foreground">{detail.neighborhood || <Pending />}</p>
-            <h1 className="mt-0.5 font-serif text-2xl font-semibold tracking-tight">{detail.title}</h1>
-            {detail.address ? (
-              <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
-                <MapPin className="size-3.5" aria-hidden /> {detail.address}
-              </p>
-            ) : null}
-          </header>
+          <RentalHeader
+            neighborhood={detail.neighborhood}
+            title={detail.title}
+            address={detail.address}
+          />
 
           <RentalSpecs detail={detail} />
 
