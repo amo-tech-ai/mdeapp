@@ -28,7 +28,7 @@ console.log("✓ main allowlist scan passes");
 await mkdir(join(ROOT, "src/__fixtures__"), { recursive: true });
 await writeFile(
   SYNTHETIC_ABS,
-  `import { useCoAgent } from "@copilotkit/react-core";\nexport function Bad() { useCoAgent({ name: "x" }); }\n`,
+  `import { useCoAgent } from "@copilotkit/react-core";\nexport const Bad = () => { useCoAgent({ name: "x" }); };\n`,
 );
 
 const violation = run("node", ["scripts/audit-copilotkit-v2-no-new-v1.mjs"]);

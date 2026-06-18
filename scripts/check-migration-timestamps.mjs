@@ -8,7 +8,7 @@ import { join } from "node:path";
 
 const migrationsDir = join(process.cwd(), "supabase/migrations");
 
-function listSqlFiles(dir) {
+const listSqlFiles = (dir) => {
   const entries = readdirSync(dir, { withFileTypes: true });
   const out = [];
   for (const ent of entries) {
@@ -21,7 +21,7 @@ function listSqlFiles(dir) {
     if (ent.name.endsWith(".sql")) out.push(full);
   }
   return out;
-}
+};
 
 let files;
 try {

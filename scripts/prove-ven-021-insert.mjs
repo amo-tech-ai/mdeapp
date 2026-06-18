@@ -30,6 +30,7 @@ const { data: link, error: linkErr } = await admin.auth.admin.generateLink({
   email,
   options: { redirectTo: `${baseUrl}/chat` },
 });
+});
 if (linkErr) {
   console.error("FAIL: generateLink", linkErr.message);
   process.exit(1);

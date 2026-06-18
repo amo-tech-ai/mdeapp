@@ -23,7 +23,7 @@ function findRegistryPath() {
   return join(process.cwd(), rel);
 }
 
-function loadRegistry() {
+const loadRegistry = () => {
   const path = findRegistryPath();
   try {
     return JSON.parse(readFileSync(path, "utf-8"));

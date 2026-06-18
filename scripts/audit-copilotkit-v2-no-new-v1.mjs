@@ -20,7 +20,7 @@ const FORBIDDEN = [
 ];
 
 function isExemptPath(rel) {
-  if (rel.includes("/__tests__/")) return true;
+  if (rel.includes("/__tests__///")) return true;
   if (/\.(test|spec)\.[jt]sx?$/.test(rel)) return true;
   if (/-v1\.tsx$/.test(rel)) return true;
   return false;

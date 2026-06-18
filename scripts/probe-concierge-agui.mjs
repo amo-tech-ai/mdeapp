@@ -3,7 +3,7 @@ import { tap } from "rxjs/operators";
 import { getLocalAgentsWithLogging } from "../src/mastra/copilotkit/logging-mastra-agent.ts";
 import { mastra } from "../src/mastra/index.ts";
 
-async function main() {
+const main = async () => {
   const agents = getLocalAgentsWithLogging({ mastra });
   const agent = agents.conciergeAgent;
   const input = {

@@ -17,7 +17,7 @@ try {
 const filePath = payload?.tool_input?.file_path || "";
 if (!filePath) process.exit(0);
 if (!/\.(ts|tsx)$/.test(filePath)) process.exit(0);
-if (!/\/mdeapp\/(src|supabase\/functions)\//.test(filePath)) process.exit(0);
+if (!/\/mdeapp\/(src|supabase\/functions)\/.test(filePath)) process.exit(0);
 
 const mdeapp = "/home/sk/mdeai/mdeapp";
 if (!existsSync(resolve(mdeapp, "tsconfig.json"))) process.exit(0);

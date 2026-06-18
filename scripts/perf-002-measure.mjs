@@ -37,7 +37,7 @@ async function main() {
     const agents = getLocalAgentsWithLogging({
       mastra,
       resourceId: "perf-002",
-      persistTurnLog: (opts) => captured.push(opts), // measure only, no DB write
+      persistTurnLog: (opts) => { captured.push(opts) }, // measure only, no DB write
     });
     const stamp = Date.now();
     const wallStart = stamp;
