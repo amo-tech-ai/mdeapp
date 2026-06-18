@@ -1,0 +1,20 @@
+src/lib/tickets/wallet-format.ts
+  s_f47ea5ebcd9235::t_a793f9ff3f0b44 1
+  s_f47ea5ebcd9235::t_c225fdae1b6442 14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "9b68838ac86adebb380e7a2b2c8f8a8958b0d76f",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
