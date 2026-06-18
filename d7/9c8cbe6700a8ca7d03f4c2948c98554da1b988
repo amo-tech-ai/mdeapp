@@ -1,0 +1,22 @@
+src/components/partners/partner-signup-wizard.tsx
+  s_f47ea5ebcd9235::t_d61357f1a8cedc 534-539
+  s_f47ea5ebcd9235::t_b4d61b1f639988 5-14,26,46-47,49,57-269,271,273-309,322-324,334-353,361,363-364,385,390,403,408,413,416,420,437,440-444,446-528,530-533,540-542,544-574,576-708,712,714-744,746,750,752-760,762-815,818-821,823-824,826-839
+src/components/partners/__tests__/partner-signup-wizard.test.tsx
+  s_f47ea5ebcd9235::t_b4d61b1f639988 81-94,96-99,101,118,127-129,132-162,191-193,196-198,211-212,214-216,229-230,252-253,256-258,280-281
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "d79c8cbe6700a8ca7d03f4c2948c98554da1b988",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
