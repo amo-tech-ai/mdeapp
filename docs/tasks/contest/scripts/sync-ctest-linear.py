@@ -218,6 +218,7 @@ def resolve_issue_uuid(key: str, identifier: str) -> str:
     return nodes[0]["id"]
 
 
+
 def post_comment(key: str, issue_id: str, body: str) -> None:
     mutation = """
     mutation($id: String!, $body: String!) {
@@ -242,8 +243,8 @@ audit = REPO / "audit" / "2026-06-02-ctest-linear-full-spec.md"
 if audit.exists():
     audit.write_text(
         audit.read_text().split("## Linear issues updated")[0].rstrip()
-        + "\n\n## Linear issues updated (latest resync)\n\n
-
+        + "\n\n## Linear issues updated (latest resync)\n\n"
+    )
 
 if __name__ == "__main__":
     main()
