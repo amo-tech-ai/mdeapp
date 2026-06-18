@@ -104,6 +104,7 @@ function RentalGallery({
             <div className="hidden grid-cols-2 gap-2 sm:grid">
               {rest.map((img, i) => (
                 /* eslint-disable-next-line @next/next/no-img-element */
+                {gallery.map((img, i) => (
                 <img
                   key={i}
                   src={img}

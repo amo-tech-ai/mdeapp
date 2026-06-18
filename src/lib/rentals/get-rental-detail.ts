@@ -111,11 +111,11 @@ export async function getRentalDetail(idOrSlug: string): Promise<RentalDetail | 
   return data ? mapApartmentRowToDetail(data as Record<string, unknown>) : null;
 }
 
-async function getMockRentalDetail(idOrSlug: string): Promise<RentalDetail | null> {
+export async function getMockRentalDetail(idOrSlug: string): Promise<RentalDetail | null> {
   const { results } = await searchRentals({ limit: 24 });
   const hit = results.find((r) => r.id === idOrSlug);
   if (!hit) return null;
-  const FIELD_MAP: { [key in keyof RentalDetail]: keyof typeof hit | ((h: typeof hit) => any) } = {
+  const FIELD_MAP: { [key in keyof RentalDetail]: keyof typeof hit | ((h: typeof hit) => RentalDetail[key]) } = {
     id: "id",
     slug: () => null,
     title: "title",
@@ -144,8 +144,10 @@ async function getMockRentalDetail(idOrSlug: string): Promise<RentalDetail | nul
   };
   const detail = {} as RentalDetail;
   for (const key in FIELD_MAP) {
-    const mapper = FIELD_MAP[key];
-    detail[key] = typeof mapper === "function" ? (mapper as Function)(hit) : hit[mapper];
+    if (Object.prototype.hasOwnProperty.call(FIELD_MAP, key)) {
+      const mapper = FIELD_MAP[key];
+      detail[key] = typeof mapper === "function" ? (mapper as Function)(hit) : hit[mapper];
+    }
   }
   return detail;
 }

@@ -117,54 +117,29 @@ export function RentalAvailabilityCalendar({
           "Tuesday",
           "Wednesday",
           "Thursday",
-          "Friday",
-          "Saturday"
-        ].map((day) => (
-          <div key={day} className="py-1 font-medium text-muted-foreground" role="columnheader">
-            {day.charAt(0)}
-          </div>
-        ))}
-        {cells.map((day, i) =>
-          day == null ? (
-            <div key={`pad-${i}`} aria-hidden />
-          ) : (
-            <div
-              key={day}
-              role="gridcell"
-              className={cn(
-                "rounded-md py-1.5 text-foreground",
-                dayState(day) === "available" && "bg-primary/15 text-foreground",
-                dayState(day) === "outside" && "text-muted-foreground/40",
-                dayState(day) === "unknown" && "text-muted-foreground",
-              )}
-            >
-              {day}
-            </div>
-          ),
+    "Friday",
+    "Saturday"
+  ].map((day) => (
+    <div key={day} className="py-1 font-medium text-muted-foreground" role="columnheader">
+      {day.charAt(0)}
+    </div>
+  ))}
+  {cells.map((day, i) =>
+    day == null ? (
+      <div key={`pad-${i}`} aria-hidden />
+    ) : (
+      <div
+        key={day}
+        role="gridcell"
+        className={cn(
+          "rounded-md py-1.5 text-foreground",
+          dayState(day) === "available" && "bg-primary/15 text-foreground",
+          dayState(day) === "outside" && "text-muted-foreground/40",
+          dayState(day) === "unknown" && "text-muted-foreground",
         )}
-        )}
+      >
+        {day}
       </div>
-
-      <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-        <li className="flex items-center gap-1.5">
-          <span className="size-3 rounded-sm bg-primary/30" aria-hidden /> Available
-        </li>
-        <li className="flex items-center gap-1.5">
-          <span className="size-3 rounded-sm bg-muted" aria-hidden /> Booked — data pending
-        </li>
-        <li className="flex items-center gap-1.5">
-          <span className="size-3 rounded-sm bg-accent/30" aria-hidden /> Pending viewing — data pending
-        </li>
-        <li className="flex items-center gap-1.5">
-          <span className="size-3 rounded-sm bg-destructive/20" aria-hidden /> Blocked — data pending
-        </li>
-      </ul>
-
-      <p className="text-xs text-muted-foreground">
-        {minimumStayDays != null
-          ? `Minimum stay: ${minimumStayDays} night${minimumStayDays === 1 ? "" : "s"}.`
-          : "Minimum stay: data pending."}
-      </p>
-    </section>
-  );
-}
+    ),
+  )}
+</div>
