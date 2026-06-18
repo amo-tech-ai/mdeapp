@@ -1,0 +1,19 @@
+.claude/skills/testing/scripts/with_server.py
+  s_2e9704330dc5b7::t_aafe52c1fe78ff 22,24-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "54ff2d7cbc25ffd38862b01ab06e6393ef2fdc19",
+  "prompts": {},
+  "sessions": {
+    "s_2e9704330dc5b7": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "06a895ab-da7e-4b24-a8e2-bc5c7c9e4919",
+        "model": "gpt-5-mini"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
