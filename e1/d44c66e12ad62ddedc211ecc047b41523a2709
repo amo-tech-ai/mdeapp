@@ -1,0 +1,24 @@
+src/lib/venue-booking-slot-parse.ts
+  s_f47ea5ebcd9235::t_5ef3ee6219c507 7
+  s_f47ea5ebcd9235::t_b71d8c2e48604b 162
+  s_f47ea5ebcd9235::t_bf92b3c319db9b 94-98
+  s_f47ea5ebcd9235::t_9a71651fddcefe 111-116
+src/lib/__tests__/venue-booking-slot-parse.test.ts
+  s_f47ea5ebcd9235::t_d85944f07d81de 16-17,24-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "e1d44c66e12ad62ddedc211ecc047b41523a2709",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
