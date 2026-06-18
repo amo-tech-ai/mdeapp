@@ -227,48 +227,22 @@ def post_comment(key: str, issue_id: str, body: str) -> None:
     gql(key, mutation, {"id": issue_id, "body": body})
 
 
-def main() -> None:
-    key = linear_key()
-    LINEAR_NOTES.mkdir(parents=True, exist_ok=True)
-    mutation = """
-    mutation($id: String!, $desc: String!) {
-      issueUpdate(id: $id, input: { description: $desc }) {
-        success
-        issue { identifier url }
-      }
-    }
-    """
-    summary: list[str] = []
-    for ident, fname in ISSUE_MAP.items():
-        path = TASKS / fname
-        fm, _ = parse_frontmatter(path.read_text())
-        desc = build_description(path, fm)
-        out = LINEAR_NOTES / f"{ident}.md"
-        out.write_text(desc)
-        issue_id = resolve_issue_uuid(key, ident)
-        result = gql(key, mutation, {"id": issue_id, "desc": desc})
-        ok = result.get("data", {}).get("issueUpdate", {}).get("success")
-        url = result.get("data", {}).get("issueUpdate", {}).get("issue", {}).get("url", "")
-        mermaid_n = desc.count("```mermaid")
-        secs = len(re.findall(r"^## \d+\.", desc, re.MULTILINE))
-        line = f"{ident} {'OK' if ok else 'FAIL'} sections={secs} mermaid={mermaid_n} chars={len(desc)}"
-        print(line)
-        summary.append(line)
-        if ok:
-            post_comment(
-                key,
-                issue_id,
-                f"**Full spec resync** — `{fname}`\n\n- Sections 1–12 + metadata\n- Mermaid blocks: **{mermaid_n}**\n- Chars: **{len(desc)}**\n\nRe-sync: `python3 tasks/contest/scripts/sync-ctest-linear.py`",
-            )
-
-    audit = REPO / "audit" / "2026-06-02-ctest-linear-full-spec.md"
-    if audit.exists():
-        audit.write_text(
-            audit.read_text().split("## Linear issues updated")[0].rstrip()
-            + "\n\n## Linear issues updated (latest resync)\n\n```\n"
-            + "\n".join(summary)
-            + "\n```\n"
+    secs = len(re.findall(r"^## \d+\.", desc, re.MULTILINE))
+    line = f"{ident} {'OK' if ok else 'FAIL'} sections={secs} mermaid={mermaid_n} chars={len(desc)}"
+    print(line)
+    summary.append(line)
+    if ok:
+        post_comment(
+            key,
+            issue_id,
+            f"**Full spec resync** — `{fname}`\n\n- Sections 1–12 + metadata\n- Mermaid blocks: **{mermaid_n}**\n- Chars: **{len(desc)}**\n\nRe-sync: `python3 tasks/contest/scripts/sync-ctest-linear.py`",
         )
+
+audit = REPO / "audit" / "2026-06-02-ctest-linear-full-spec.md"
+if audit.exists():
+    audit.write_text(
+        audit.read_text().split("## Linear issues updated")[0].rstrip()
+        + "\n\n## Linear issues updated (latest resync)\n\n
 
 
 if __name__ == "__main__":
