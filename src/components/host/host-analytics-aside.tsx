@@ -5,7 +5,7 @@ import type { HostDashboardState } from "@/lib/types/host-dashboard";
  * Right column for /host/analytics — recommendations when present, else onboarding copy.
  */
 // skipcq: JS-0067 - ES module export; not browser global scope
-export function HostAnalyticsAside({ state }: { state: HostDashboardState }) {
+export function HostAnalyticsAside({ state }: { state: HostDashboardState }) { // skipcq: JS-0067
   if (state.recommendations.length > 0) {
     return <HostRecommendationsPanel state={state} />;
   }

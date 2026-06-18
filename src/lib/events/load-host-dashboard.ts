@@ -16,7 +16,7 @@ import {
  * Chat still owns plain-language narration via get_sales_insights.
  */
 // skipcq: JS-0067 - ES module export; not browser global scope
-export async function loadHostDashboardInitial(
+export async function loadHostDashboardInitial( // skipcq: JS-0067
   supabase: SupabaseClient<Database>,
   userId: string,
 ): Promise<HostDashboardState> {

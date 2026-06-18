@@ -30,7 +30,7 @@ type HostAnalyticsPromptChipsProps = {
 
 /** Quick prompts above host analytics chat — fills composer via hostOpsAgent. */
 // skipcq: JS-0067 - ES module export; not browser global scope
-export function HostAnalyticsPromptChips({ className }: HostAnalyticsPromptChipsProps) {
+export function HostAnalyticsPromptChips({ className }: HostAnalyticsPromptChipsProps) { // skipcq: JS-0067
   const { appendMessage, isLoading } = useHostOpsChat();
 
   const onChipClick = (message: string) => {
