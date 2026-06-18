@@ -1,0 +1,22 @@
+docs/upgradeV2/todo.md
+  s_f6e9bbcc4e4c47::t_1c0ab813fc4a34 179
+  s_f6e9bbcc4e4c47::t_07425e91ac4aee 182
+  s_f6e9bbcc4e4c47::t_2381470f28d567 181
+  s_f6e9bbcc4e4c47::t_d7afa24c7d56dc 180
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "1fbc3b7bffc8f838ab1c3d53d0160c68fa205520",
+  "prompts": {},
+  "sessions": {
+    "s_f6e9bbcc4e4c47": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6662a4eb-2170-4084-ba04-a6c4a64e984a",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
