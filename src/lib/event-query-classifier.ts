@@ -62,16 +62,15 @@ const NON_EVENT_FOOD_VENUE_RE =
   /\b(caf[eé]s?|coffee|espresso|barista|coffee shops?|specialty coffee|restaurants?|brunch spots?|best cafes?|quiet caf[eé]s?|juice bar|smoothie|dinner|lunch|rooftop|bistro|dine|eatery|lounge)\b/i;
 
 /** True when the message is clearly rental, food-venue, or map nightlife POI search — not ticketed events. */
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function looksLikeNonEventSearch(text: string): boolean {
   const t = text.trim();
   if (looksLikeEventVenueBookingQuery(t)) return true;
   if (/\bevents?\b/i.test(t)) return false;
-  return (
-    DAY_TRIP_RE.test(t) ||
-    NON_EVENT_RENTAL_RE.test(t) ||
-    NON_EVENT_FOOD_VENUE_RE.test(t) ||
-    looksLikeNightlifeGroundingSearch(t)
-  );
+  if (DAY_TRIP_RE.test(t)) return true;
+  if (NON_EVENT_RENTAL_RE.test(t)) return true;
+  if (NON_EVENT_FOOD_VENUE_RE.test(t)) return true;
+  return looksLikeNightlifeGroundingSearch(t);
 }
 
 /**

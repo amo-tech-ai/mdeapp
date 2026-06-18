@@ -90,15 +90,15 @@ function looksLikeEventCategoryNightlifeDiscovery(text: string): boolean {
   return NIGHTLIFE_TIME_RE.test(t) || /\b(this week|next week)\b/i.test(t);
 }
 
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function looksLikeNightlifeGroundingSearch(text: string): boolean {
   const t = text.trim();
   if (!t) return false;
   if (RENTAL_RE.test(t)) return false;
   if (looksLikeTicketedEventSearch(t)) return false;
   if (looksLikeEventCategoryNightlifeDiscovery(t)) return false;
-  return (
-    NIGHTLIFE_GROUNDING_RE.test(t) || looksLikeGenericNightlifeVenueSearch(t)
-  );
+  if (NIGHTLIFE_GROUNDING_RE.test(t)) return true;
+  return looksLikeGenericNightlifeVenueSearch(t);
 }
 
 export function looksLikeCafeSearch(text: string): boolean {
@@ -162,19 +162,17 @@ export function scoreRestaurantQuery(text: string): RestaurantSearchSignals {
 }
 
 /** Broader restaurant discovery — includes cuisine/vibe phrases without "restaurant" keyword. */
-export function looksLikeRestaurantDiscovery(text: string): boolean {
+export function looksLikeRestaurantDiscovery(text: string): boolean { // skipcq: JS-0067
   const t = text.trim();
   if (!t) return false;
   if (looksLikeNightlifeGroundingSearch(t)) return false;
   if (looksLikeCafeSearch(t)) return false;
   if (RENTAL_RE.test(t)) return false;
   if (EVENT_RE.test(t)) return false;
-  return (
-    looksLikeRestaurantSearch(t) ||
-    GENERIC_RESTAURANT_RE.test(t) ||
-    Boolean(scoreRestaurantQuery(t).cuisine) ||
-    Boolean(scoreRestaurantQuery(t).vibe)
-  );
+  if (looksLikeRestaurantSearch(t)) return true;
+  if (GENERIC_RESTAURANT_RE.test(t)) return true;
+  const signals = scoreRestaurantQuery(t);
+  return Boolean(signals.cuisine || signals.vibe);
 }
 
 /**

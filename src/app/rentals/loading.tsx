@@ -1,5 +1,12 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
+// Stable keys for fixed-length skeleton lists (no array-index keys — JS-0437).
+const NEIGHBORHOOD_SKELETON_KEYS = ["n-a", "n-b", "n-c", "n-d", "n-e"];
+const BEDS_SKELETON_KEYS = ["b-a", "b-b", "b-c", "b-d"];
+const PRICE_SKELETON_KEYS = ["p-a", "p-b", "p-c", "p-d"];
+const CARD_SKELETON_KEYS = ["c-a", "c-b", "c-c", "c-d", "c-e", "c-f"];
+
+// skipcq: JS-0067 - module-local skeleton component; not browser global scope
 function RentalCardSkeleton() {
   return (
     <div className="flex gap-3 rounded-xl border border-border bg-card p-3">
@@ -43,18 +50,18 @@ export default function RentalsLoading() {
         {/* Filter chips — neighborhoods + beds + price */}
         <div className="mt-4 flex flex-col gap-3">
           <div className="flex flex-wrap gap-2">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={`n-${i}`} className="h-8 w-24 rounded-full" />
+            {NEIGHBORHOOD_SKELETON_KEYS.map((key) => (
+              <Skeleton key={key} className="h-8 w-24 rounded-full" />
             ))}
           </div>
           <div className="flex flex-wrap gap-2">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={`b-${i}`} className="h-8 w-20 rounded-full" />
+            {BEDS_SKELETON_KEYS.map((key) => (
+              <Skeleton key={key} className="h-8 w-20 rounded-full" />
             ))}
           </div>
           <div className="flex flex-wrap gap-2">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={`p-${i}`} className="h-8 w-24 rounded-full" />
+            {PRICE_SKELETON_KEYS.map((key) => (
+              <Skeleton key={key} className="h-8 w-24 rounded-full" />
             ))}
           </div>
         </div>
@@ -65,8 +72,8 @@ export default function RentalsLoading() {
         {/* Card list */}
         <div className="mt-6 min-w-0 flex-1">
           <div className="grid gap-4 sm:grid-cols-2" aria-hidden="true">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <RentalCardSkeleton key={i} />
+            {CARD_SKELETON_KEYS.map((key) => (
+              <RentalCardSkeleton key={key} />
             ))}
           </div>
         </div>

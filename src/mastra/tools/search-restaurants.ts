@@ -245,6 +245,7 @@ function haversineKm(
   return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
+// skipcq: JS-0067 - module-local helper; not browser global scope
 function applyRestaurantFilters(rows: Restaurant[], query: RestaurantQuery): Restaurant[] {
   let results = rows.slice();
   if (query.cuisine) {
@@ -258,23 +259,27 @@ function applyRestaurantFilters(rows: Restaurant[], query: RestaurantQuery): Res
     results = results.filter((r) => r.priceTier === query.priceTier);
   }
   if (typeof query.maxPricePerPerson === 'number') {
-    results = results.filter((r) => r.avgPricePerPerson <= query.maxPricePerPerson!);
+    const maxPrice = query.maxPricePerPerson;
+    results = results.filter((r) => r.avgPricePerPerson <= maxPrice);
   }
   if (typeof query.minRating === 'number') {
-    results = results.filter((r) => r.rating >= query.minRating!);
+    const minRating = query.minRating;
+    results = results.filter((r) => r.rating >= minRating);
   }
   if (
     typeof query.userLatitude === 'number' &&
     typeof query.userLongitude === 'number'
   ) {
+    const userLatitude = query.userLatitude;
+    const userLongitude = query.userLongitude;
     results = results
       .map((r) => ({
         r,
         dist:
           r.latitude != null && r.longitude != null
             ? haversineKm(
-                query.userLatitude!,
-                query.userLongitude!,
+                userLatitude,
+                userLongitude,
                 r.latitude,
                 r.longitude,
               )

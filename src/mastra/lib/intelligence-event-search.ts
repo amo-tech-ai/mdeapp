@@ -91,7 +91,7 @@ export function resolveEventCategoryForQuery(
 }
 
 /** Extract salsa, live-music, neighborhood, and date-window signals from natural-language query text. */
-export function parseEventIntelligenceSlots(queryText: string): EventIntelligenceSlots {
+export function parseEventIntelligenceSlots(queryText: string): EventIntelligenceSlots { // skipcq: JS-0067
   const q = queryText.toLowerCase().replace(/-/g, " ");
   const slots: EventIntelligenceSlots = {};
   if (/laureles/.test(q)) slots.neighborhood = "Laureles";
@@ -158,7 +158,43 @@ function eventSignalBoost(slots: EventIntelligenceSlots, s: EventSignalRow): num
   return boost;
 }
 
-function hybridToEventCard(row: HybridEventRow, rankScore?: number, signalSource?: string): IntelligenceEventResult { // skipcq: JS-0067
+// skipcq: JS-0067 - ES module export; not browser global scope
+export function eventMatchesDateWindow(
+  eventStartTime: string | null,
+  window: { gte?: string; lte?: string },
+): boolean {
+  if (!window.gte && !window.lte) return true;
+  if (!eventStartTime) return false;
+  return isWithinDateWindow(eventStartTime, window);
+}
+
+// skipcq: JS-0067
+function neighborhoodRankMatch(
+  neighborhood: string | undefined,
+  hood: string | undefined,
+): number {
+  if (!neighborhood || !hood) return 0.5;
+  return hood.toLowerCase().includes(neighborhood.toLowerCase()) ? 1 : 0;
+}
+
+// skipcq: JS-0067
+function scoreHybridEventRow(
+  row: HybridEventRow,
+  idx: number,
+  signalMap: Map<string, EventSignalRow>,
+  slots: EventIntelligenceSlots,
+  neighborhood: string | undefined,
+) {
+  const sig = signalMap.get(row.id);
+  const semantic = row.similarity ?? Math.max(0, 1 - idx * 0.02);
+  const boost = sig ? eventSignalBoost(slots, sig) : 0;
+  const hood = extractNeighborhood(row.address, row.city);
+  const hoodMatch = neighborhoodRankMatch(neighborhood, hood);
+  const rankScore = semantic * 0.45 + boost * 0.35 + hoodMatch * 0.2;
+  return { row, rankScore, sig, hood };
+}
+
+function hybridToEventCard(row: HybridEventRow, rankScore?: number, signalSource?: string): IntelligenceEventResult { // skipcq: JS-R1005, JS-0067
   return hybridRowToEventCard(row, rankScore, signalSource);
 }
 
@@ -200,7 +236,7 @@ export async function searchEventsIntelligent( // skipcq: JS-R1005, JS-0067
   hybridUsed: boolean;
   rankExplanation: RankExplanationEntry[];
   slots: EventIntelligenceSlots;
-}> {
+}> { // skipcq: JS-R1005, JS-0067
   const limit = query.limit ?? 5;
   const queryText = query.queryText?.trim() ?? "";
   const slots = queryText ? parseEventIntelligenceSlots(queryText) : {};
@@ -304,20 +340,7 @@ export async function searchEventsIntelligent( // skipcq: JS-R1005, JS-0067
       if (!t) return false;
       return isWithinDateWindow(t, window);
     })
-    .map((row, idx) => {
-      const sig = signalMap.get(row.id);
-      const semantic = row.similarity ?? Math.max(0, 1 - idx * 0.02);
-      const boost = sig ? eventSignalBoost(slots, sig) : 0;
-      const hood = extractNeighborhood(row.address, row.city);
-      const hoodMatch =
-        neighborhood && hood
-          ? hood.toLowerCase().includes(neighborhood.toLowerCase())
-            ? 1
-            : 0
-          : 0.5;
-      const rankScore = semantic * 0.45 + boost * 0.35 + hoodMatch * 0.2;
-      return { row, rankScore, sig, hood };
-    });
+    .map((row, idx) => scoreHybridEventRow(row, idx, signalMap, slots, neighborhood));
 
   if (!scored.length && hybridRows.length && (window.gte || window.lte)) {
     rankExplanation.push({
@@ -325,20 +348,9 @@ export async function searchEventsIntelligent( // skipcq: JS-R1005, JS-0067
       score: 0,
       note: `no ${dw} matches — showing nearest ranked events`,
     });
-    scored = hybridRows.map((row, idx) => {
-      const sig = signalMap.get(row.id);
-      const semantic = row.similarity ?? Math.max(0, 1 - idx * 0.02);
-      const boost = sig ? eventSignalBoost(slots, sig) : 0;
-      const hood = extractNeighborhood(row.address, row.city);
-      const hoodMatch =
-        neighborhood && hood
-          ? hood.toLowerCase().includes(neighborhood.toLowerCase())
-            ? 1
-            : 0
-          : 0.5;
-      const rankScore = semantic * 0.45 + boost * 0.35 + hoodMatch * 0.2;
-      return { row, rankScore, sig, hood };
-    });
+    scored = hybridRows.map((row, idx) =>
+      scoreHybridEventRow(row, idx, signalMap, slots, neighborhood),
+    );
   }
 
   if (dw !== "any") {

@@ -30,25 +30,31 @@ function findBalancedJsonEnd(text: string, start: number): number {
   return -1;
 }
 
+// skipcq: JS-0067
+function groundingResultsContainPlaceId(results: unknown[]): boolean {
+  return results.some(
+    (r) =>
+      r &&
+      typeof r === "object" &&
+      ("placeId" in r || "place_id" in (r as object)),
+  );
+}
+
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function isToolLeakJson(value: unknown): boolean {
   if (typeof value !== "object" || value === null) return false;
   const o = value as Record<string, unknown>;
-  if (o.success === true || o.success === false) {
-    return Object.keys(o).length <= 2;
-  }
-  if (o.source === "grounding") return true;
-  if (
-    Array.isArray(o.results) &&
-    o.results.some(
-      (r) =>
-        r &&
-        typeof r === "object" &&
-        ("placeId" in r || "place_id" in (r as object)),
-    )
-  ) {
-    return true;
-  }
-  return false;
+  const validators: Record<string, (obj: Record<string, unknown>) => boolean> = {
+    success: (obj) => Object.keys(obj).length <= 2,
+    grounding: () => true,
+    default: (obj) => Array.isArray(obj.results) && groundingResultsContainPlaceId(obj.results)
+  };
+  const key = typeof o.success === "boolean"
+    ? "success"
+    : o.source === "grounding"
+      ? "grounding"
+      : "default";
+  return validators[key](o);
 }
 
 export function stripBalancedJsonObjects(

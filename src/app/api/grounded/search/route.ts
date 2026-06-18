@@ -15,6 +15,7 @@ const bodySchema = z.object({
 });
 
 /** Fast path — grounded café search without relying on conciergeAgent tool calls. */
+// skipcq: JS-0067, JS-R1005 - route handler; intentional validation branching, not a bug
 export async function POST(req: Request) {
   const rateLimited = checkSearchFastPathRateLimit(req);
   if (rateLimited) return rateLimited;
@@ -40,7 +41,14 @@ export async function POST(req: Request) {
     : query.trim();
 
   try {
-    const out = await searchGroundedPlacesTool.execute!(
+    const execute = searchGroundedPlacesTool.execute;
+    if (!execute) {
+      return NextResponse.json(
+        { error: "grounded search unavailable" },
+        { status: 500 },
+      );
+    }
+    const out = await execute(
       {
         query: searchQuery,
         pageSize: limit,

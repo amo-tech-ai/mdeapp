@@ -20,7 +20,7 @@ type Source = (typeof VALID_SOURCES)[number];
 
 const jr = jsonResponse;
 
-Deno.serve(async (req: Request) => {
+Deno.serve(async (req: Request) => { // skipcq: JS-R1005
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: getCorsHeaders(req) });
   }
@@ -81,11 +81,12 @@ Deno.serve(async (req: Request) => {
     typeof body.idempotency_key === "string" ? body.idempotency_key : null;
 
   if (
-    isScheduleViewingRequest(intent, listing_id, preferred_at)
+    isScheduleViewingRequest(intent, listing_id, preferred_at) &&
+    typeof preferred_at === "string"
   ) {
     const bridge = await createScheduleViewingBridge(serviceClient, {
-      listingId: listing_id!,
-      preferredAt: preferred_at!,
+      listingId: listing_id,
+      preferredAt: preferred_at,
       tripId: trip_id,
       idempotencyKey: idempotency_key,
       userId,

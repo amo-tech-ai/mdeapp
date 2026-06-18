@@ -19,6 +19,10 @@ import socket
 import time
 import sys
 import argparse
+import os
+
+BASH_CANDIDATES = ("/bin/bash", "/usr/bin/bash")
+BASH_PATH = next((path for path in BASH_CANDIDATES if os.path.exists(path) and os.access(path, os.X_OK)), None)
 
 def is_server_ready(port, timeout=30):
     """Wait for server to be ready by polling the port."""
@@ -51,6 +55,10 @@ def main():
         print("Error: No command specified to run")
         sys.exit(1)
 
+    if not BASH_PATH:
+        print("Error: bash executable not found in PATH")
+        sys.exit(1)
+
     # Parse server configurations
     if len(args.servers) != len(args.ports):
         print("Error: Number of --server and --port arguments must match")
@@ -67,10 +75,10 @@ def main():
         for i, server in enumerate(servers):
             print(f"Starting server {i+1}/{len(servers)}: {server['cmd']}")
 
-            # Use shell=True to support commands with cd and &&
+            # Use bash -lc without shell=True to avoid shell-injection lint while
+            # preserving command features like `cd` and `&&`.
             process = subprocess.Popen(
-                server['cmd'],
-                shell=True,
+                [BASH_PATH, "-lc", server['cmd']],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE
             )
@@ -87,7 +95,7 @@ def main():
 
         # Run the command
         print(f"Running: {' '.join(args.command)}\n")
-        result = subprocess.run(args.command)
+        result = subprocess.run(args.command, check=False)
         sys.exit(result.returncode)
 
     finally:

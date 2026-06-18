@@ -235,6 +235,7 @@ export type EventSearchResult = {
   rankExplanation?: import('../lib/search-logs').RankExplanationEntry[];
 };
 
+// skipcq: JS-0067 - ES module export; not browser global scope
 export async function searchEvents(
   query: EventQuery,
 ): Promise<EventSearchResult> {
@@ -243,12 +244,13 @@ export async function searchEvents(
   const normalizedQuery = category === query.category ? query : { ...query, category };
 
   if (normalizedQuery.queryText?.trim()) {
+    const queryText = normalizedQuery.queryText.trim();
     try {
       const started = Date.now();
       const intel = await searchEventsIntelligent(normalizedQuery);
       const latencyMs = Date.now() - started;
       await writeSearchLog({
-        queryText: normalizedQuery.queryText!.trim(),
+        queryText,
         slots: intel.slots,
         toolName: 'search-events',
         resultsCount: intel.results.length,

@@ -40,6 +40,7 @@ function isVercelAppOrigin(origin: string): boolean {
   }
 }
 
+// skipcq: JS-0067 - module-local helper; not browser global scope
 function isLocalDevOrigin(origin: string): boolean {
   if (IS_PRODUCTION) return false;
   try {
