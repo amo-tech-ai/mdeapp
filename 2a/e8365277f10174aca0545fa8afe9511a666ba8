@@ -1,0 +1,24 @@
+src/app/rentals/[id]/not-found.tsx
+  s_f1f9127cc71b2a::t_c54c9ac207ea37 4
+src/components/rentals/rental-browse-card.tsx
+  s_f1f9127cc71b2a::t_1d321593f04403 114
+src/app/rentals/[id]/page.tsx
+  s_f1f9127cc71b2a::t_184ab7157162c1 10
+  s_f1f9127cc71b2a::t_c79f8ab56183b6 23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "2ae8365277f10174aca0545fa8afe9511a666ba8",
+  "prompts": {},
+  "sessions": {
+    "s_f1f9127cc71b2a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ebcc0856-4735-47c8-9dfa-b58a8e933943",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
