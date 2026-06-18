@@ -184,6 +184,15 @@ const RentalHeader: React.FC<{ neighborhood?: string; title: string; address?: s
 );
 
 // skipcq: JS-0067, JS-R1005, JS-0415 - detail page composition is intentionally explicit for readability and UX sections
+function RentalDescription({ description }: { description?: string }) {
+  return (
+    <section aria-label="Description">
+      <h2 className="mb-1 font-serif text-base font-semibold">About this rental</h2>
+      <p className="text-sm leading-relaxed text-muted-foreground">{description ?? <Pending />}</p>
+    </section>
+  );
+}
+
 function RentalDetailInner({ detail }: { detail: RentalDetail }) {
   const { openScheduleViewing } = useRentalUi();
   const prices = formatRentalPrices(detail.priceNightly ?? undefined);
@@ -215,9 +224,7 @@ function RentalDetailInner({ detail }: { detail: RentalDetail }) {
 
           <RentalSpecs detail={detail} />
 
-          <section aria-label="Description">
-            <h2 className="mb-1 font-serif text-base font-semibold">About this rental</h2>
-            <p className="text-sm leading-relaxed text-muted-foreground">{detail.description ?? <Pending />}</p>
+          <RentalDescription description={detail.description} />
           </section>
 
           <section aria-label="Amenities">
