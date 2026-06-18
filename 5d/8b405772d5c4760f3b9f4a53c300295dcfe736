@@ -1,0 +1,26 @@
+docs/tasks/testing/evidence/2026-06-17/CK-V2-POST-249-VERIFICATION-RESULTS.md
+  s_f6e9bbcc4e4c47::t_81840e655befd2 1-57
+docs/upgradeV2/22-notes.md
+  s_f6e9bbcc4e4c47::t_e8dd7f5f5679e8 168,174-181,184
+docs/upgradeV2/todo.md
+  s_f6e9bbcc4e4c47::t_b94c8e777955c2 190
+  s_f6e9bbcc4e4c47::t_1d9ab97e1cc599 3-4
+  s_f6e9bbcc4e4c47::t_43c18cc1581063 44-45
+  s_f6e9bbcc4e4c47::t_6db0ca8a7bb674 34,36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "5d8b405772d5c4760f3b9f4a53c300295dcfe736",
+  "prompts": {},
+  "sessions": {
+    "s_f6e9bbcc4e4c47": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6662a4eb-2170-4084-ba04-a6c4a64e984a",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
