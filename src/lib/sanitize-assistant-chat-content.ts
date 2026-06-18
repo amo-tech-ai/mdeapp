@@ -44,11 +44,17 @@ function groundingResultsContainPlaceId(results: unknown[]): boolean {
 export function isToolLeakJson(value: unknown): boolean {
   if (typeof value !== "object" || value === null) return false;
   const o = value as Record<string, unknown>;
-  if (o.success === true || o.success === false) {
-    return Object.keys(o).length <= 2;
-  }
-  if (o.source === "grounding") return true;
-  return Array.isArray(o.results) && groundingResultsContainPlaceId(o.results);
+  const validators: Record<string, (obj: Record<string, unknown>) => boolean> = {
+    success: (obj) => Object.keys(obj).length <= 2,
+    grounding: () => true,
+    default: (obj) => Array.isArray(obj.results) && groundingResultsContainPlaceId(obj.results)
+  };
+  const key = typeof o.success === "boolean"
+    ? "success"
+    : o.source === "grounding"
+      ? "grounding"
+      : "default";
+  return validators[key](o);
 }
 
 export function stripBalancedJsonObjects(

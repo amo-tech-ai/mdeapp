@@ -105,13 +105,21 @@ export function parseEventIntelligenceSlots(queryText: string): EventIntelligenc
   return slots;
 }
 
-function eventSignalBoost(slots: EventIntelligenceSlots, s: EventSignalRow): number {
+export function eventSignalBoost(slots: EventIntelligenceSlots, s: EventSignalRow): number {
   if ((s.confidence ?? 0) < 0.6) return 0;
+  type SlotKey = 'wantsSalsa' | 'wantsLiveMusic' | 'wantsFashion' | 'wantsNetworking';
+  const boostFunctions: Record<SlotKey, (row: EventSignalRow) => number> = {
+    wantsSalsa: row => (row.music_energy ?? 0) * 0.35 + (row.nightlife_score ?? 0) * 0.2,
+    wantsLiveMusic: row => (row.music_energy ?? 0) * 0.3,
+    wantsFashion: row => (row.fashion_score ?? 0) * 0.35,
+    wantsNetworking: row => (row.networking_quality ?? 0) * 0.35,
+  };
   let boost = 0;
-  if (slots.wantsSalsa) boost += (s.music_energy ?? 0) * 0.35 + (s.nightlife_score ?? 0) * 0.2;
-  if (slots.wantsLiveMusic) boost += (s.music_energy ?? 0) * 0.3;
-  if (slots.wantsFashion) boost += (s.fashion_score ?? 0) * 0.35;
-  if (slots.wantsNetworking) boost += (s.networking_quality ?? 0) * 0.35;
+  (Object.keys(boostFunctions) as SlotKey[]).forEach(key => {
+    if (slots[key]) {
+      boost += boostFunctions[key](s);
+    }
+  });
   boost += (s.hype_score ?? 0) * 0.1;
   return boost;
 }
@@ -121,14 +129,21 @@ export function eventMatchesDateWindow(
   eventStartTime: string | null,
   window: { gte?: string; lte?: string },
 ): boolean {
-  if (!window.gte && !window.lte) return true;
-  if (!eventStartTime) return false;
+  const hasGte = Boolean(window.gte);
+  const hasLte = Boolean(window.lte);
+  const key = `${hasGte ? '1' : '0'}${hasLte ? '1' : '0'}`;
   // Compare real instants, not ISO strings — "Z" vs "+00:00" must not reorder
   // lexicographically and drop boundary events.
-  const t = Date.parse(eventStartTime);
-  if (window.gte && t < Date.parse(window.gte)) return false;
-  if (window.lte && t > Date.parse(window.lte)) return false;
-  return true;
+  const eventStartTimestamp = eventStartTime ? Date.parse(eventStartTime) : NaN;
+  const gteTime = window.gte ? Date.parse(window.gte) : NaN;
+  const lteTime = window.lte ? Date.parse(window.lte) : NaN;
+  const outcomes: Record<string, boolean> = {
+    '00': true,
+    '01': Boolean(eventStartTime) && eventStartTimestamp <= lteTime,
+    '10': Boolean(eventStartTime) && eventStartTimestamp >= gteTime,
+    '11': Boolean(eventStartTime) && eventStartTimestamp >= gteTime && eventStartTimestamp <= lteTime,
+  };
+  return outcomes[key];
 }
 
 // skipcq: JS-0067
@@ -201,32 +216,8 @@ export async function searchEventsIntelligent(
   }
 
   let hybridRows: HybridEventRow[] = [];
-  let hybridUsed = false;
-
-  if (queryText) {
-    const embedding = await embedQueryText(queryText);
-    if (embedding) {
-      const { data, error } = await client.rpc("hybrid_search_events", {
-        query_text: queryText,
-        query_embedding: vectorLiteral(embedding),
-        match_count: Math.max(limit * 4, 20),
-      });
-      if (!error && data?.length) {
-        hybridRows = data as HybridEventRow[];
-        hybridUsed = true;
-        rankExplanation.push({
-          factor: "hybrid_semantic",
-          score: hybridRows[0]?.similarity ?? 0,
-          note: "hybrid_search_events RPC",
-        });
-      } else if (error) {
-        console.warn("[intelligence-event-search] hybrid RPC:", error.message);
-      }
-    }
-  }
-
   if (!hybridUsed) {
-    let q = client
+    let eventQuery = client
       .from("events")
       .select(
         "id, name, event_type, address, city, event_start_time, ticket_price_min, currency, primary_image_url, latitude, longitude, maps_url",
@@ -235,23 +226,23 @@ export async function searchEventsIntelligent(
       .eq("status", "published")
       .order("event_start_time", { ascending: true })
       .limit(48);
-    if (neighborhood) q = q.ilike("address", `%${neighborhood}%`);
+    if (neighborhood) eventQuery = eventQuery.ilike("address", `%${neighborhood}%`);
     const window = dateWindow(dw);
-    if (window.gte) q = q.gte("event_start_time", window.gte);
-    if (window.lte) q = q.lte("event_start_time", window.lte);
-    const { data, error } = await q;
+    if (window.gte) eventQuery = eventQuery.gte("event_start_time", window.gte);
+    if (window.lte) eventQuery = eventQuery.lte("event_start_time", window.lte);
+    const { data, error } = await eventQuery;
     if (error) {
       throw new Error(`structured event query failed: ${error.message}`);
     }
-    hybridRows = (data ?? []).map((r: Record<string, unknown>) => ({
-      id: String(r.id),
-      name: String(r.name),
+    hybridRows = (data ?? []).map((record: Record<string, unknown>) => ({
+      id: String(record.id),
+      name: String(record.name),
       description: null,
-      event_type: r.event_type as string | null,
-      address: r.address as string | null,
-      city: r.city as string | null,
-      event_start_time: r.event_start_time as string | null,
-      ticket_price_min: r.ticket_price_min as number | null,
+      event_type: record.event_type as string | null,
+      address: record.address as string | null,
+      city: record.city as string | null,
+      event_start_time: record.event_start_time as string | null,
+      ticket_price_min: record.ticket_price_min as number | null,
       currency: r.currency as string | null,
       primary_image_url: r.primary_image_url as string | null,
       similarity: 0,
