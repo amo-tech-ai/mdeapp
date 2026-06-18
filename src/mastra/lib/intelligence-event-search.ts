@@ -172,7 +172,19 @@ function scoreHybridEventRow(
 }
 
 function hybridToEventCard(row: HybridEventRow, rankScore?: number, signalSource?: string): IntelligenceEventResult {
-  const defaults: Record<string, any> = {
+  const defaults: {
+    venue: string;
+    neighborhood: string;
+    startsAt: string;
+    pricePerTicket: number;
+    currency: string;
+    imageUrl: string;
+    latitude: number;
+    longitude: number;
+    mapsUrl: string | null;
+    sourceUrl?: string;
+    evidenceText: string | null;
+  } = {
     venue: row.address ?? "Medellin",
     neighborhood: extractNeighborhood(row.address, row.city),
     startsAt: row.event_start_time ?? new Date().toISOString(),
