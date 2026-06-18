@@ -201,7 +201,8 @@ function RentalDetailInner({ detail }: { detail: RentalDetail }) {
   const requestViewing = () =>
     openScheduleViewing({ listingId: detail.id, title: detail.title, neighborhood: detail.neighborhood });
 
-  return ( // skipcq: JS-0415 - detailed sectioned layout is intentional for readability and stable test selectors
+  return (
+    // skipcq: JS-0415 - detailed sectioned layout is intentional for readability and stable test selectors
     <main data-testid="rental-detail" className="mx-auto max-w-6xl px-4 pb-28 pt-6 sm:px-6 lg:pb-10">
       <Link
         href="/rentals"
