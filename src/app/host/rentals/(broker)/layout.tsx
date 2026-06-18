@@ -1,16 +1,12 @@
 import { redirect } from "next/navigation";
-import { BrokerRentalsGateError } from "@/components/host/rentals/broker-rentals-gate-error";
-import { brokerLoginNextPath } from "@/lib/rentals/broker-route-gate";
+import { HostRentalsShell } from "@/components/host/rentals/host-rentals-shell";
+import { BROKER_ONBOARDING_PATH, brokerLoginNextPath } from "@/lib/rentals/broker-route-gate";
 import { getBrokerContext } from "@/lib/rentals/get-broker-context";
 import { getBrokerRequestPathname } from "@/lib/rentals/get-broker-request-path";
 
-export const metadata = {
-  title: "Rentals host · mdeai",
-};
-
-/** RE-WIRE-001 — auth gate only; shell lives under `(broker)/layout`. */
+/** RE-WIRE-001 — broker shell + profile gate for inventory routes. */
 // skipcq: JS-0067
-export default async function HostRentalsLayout({
+export default async function HostRentalsBrokerLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -23,9 +19,12 @@ export default async function HostRentalsLayout({
   }
 
   if (ctx.state === "error") {
-    console.error("[host/rentals] broker context error:", ctx.message);
-    return <BrokerRentalsGateError />;
+    redirect(BROKER_ONBOARDING_PATH);
   }
 
-  return children;
+  if (!ctx.hasBrokerProfile) {
+    redirect(BROKER_ONBOARDING_PATH);
+  }
+
+  return <HostRentalsShell>{children}</HostRentalsShell>;
 }

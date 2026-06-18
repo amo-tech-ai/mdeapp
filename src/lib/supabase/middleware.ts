@@ -49,6 +49,7 @@ function isProtectedPath(pathname: string) {
   );
 }
 
+// skipcq: JS-0067
 export async function updateSession(request: NextRequest) {
   const authRelay = relaySupabaseAuthQuery(request);
   if (authRelay) {
@@ -93,5 +94,6 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
+  supabaseResponse.headers.set("x-pathname", request.nextUrl.pathname);
   return supabaseResponse;
 }

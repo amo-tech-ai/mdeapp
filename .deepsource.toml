@@ -1,0 +1,55 @@
+version = 1
+
+test_patterns = [
+  "**/__tests__/**",
+  "**/*.test.ts",
+  "**/*.test.tsx",
+  "**/*.spec.ts",
+  "**/tests/**",
+  "**/migrations/**",
+  "e2e/**",
+]
+
+exclude_patterns = [
+  "**/node_modules/**",
+  "**/dist/**",
+  "**/build/**",
+  "**/.next/**",
+  "**/coverage/**",
+  "**/out/**",
+  "**/__pycache__/**",
+  "**/.venv/**",
+  "**/venv/**",
+  "**/.tox/**",
+  "**/.pytest_cache/**",
+  "**/*.egg-info/**",
+  "**/.gradle/**",
+  "**/.mvn/**",
+  "**/target/**",
+  ".claude/skills/mde-maps/references/**",
+  "docs/**/evidence/**",
+  "plan.md",
+  "linear.md",
+  "scripts/**",
+  ".claude/hooks/**",
+]
+
+[[analyzers]]
+name = "javascript"
+enabled = true
+
+  [analyzers.meta]
+  plugins = ["react"]
+  environment = ["nodejs", "browser", "vitest"]
+  module_system = "es-modules"
+  dialect = "typescript"
+  dependency_file_paths = ["."]
+  skip_doc_coverage = [
+    "function-declaration",
+    "function-expression",
+    "arrow-function-expression",
+    "class-declaration",
+    "class-expression",
+    "method-definition",
+  ]
+  cyclomatic_complexity_threshold = "very-high"
