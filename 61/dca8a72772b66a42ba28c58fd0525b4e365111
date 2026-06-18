@@ -1,0 +1,23 @@
+src/mastra/lib/__tests__/intelligence-event-search.test.ts
+  s_f47ea5ebcd9235::t_e34b3071e3749e 104-118
+src/components/copilot/__tests__/search-tool-renders-v2.test.tsx
+  s_f47ea5ebcd9235::t_f0f1dc682e0315 27-29
+src/mastra/lib/__tests__/intelligence-event-search-coverage.test.ts
+  s_f47ea5ebcd9235::t_e34b3071e3749e 1-199
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "61dca8a72772b66a42ba28c58fd0525b4e365111",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
