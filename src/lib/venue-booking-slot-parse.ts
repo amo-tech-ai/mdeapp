@@ -4,6 +4,7 @@ const BOGOTA_OFFSET = "-05:00";
 
 export type ParsedVenueBookingSlots = {
   venueName?: string;
+  placeId?: string;
   partySize?: number;
   contactName?: string;
   contactEmail?: string;
@@ -90,7 +91,11 @@ const formatIso = (
   const paddedDay = String(day).padStart(2, "0");
   const paddedHour = String(hour).padStart(2, "0");
   const paddedMinute = String(minute).padStart(2, "0");
-  return `${paddedYear}-${paddedMonth}-${paddedDay}T${paddedHour}:${paddedMinute}:00${BOGOTA_OFFSET}`;
+  // Interpret the wall-clock time as Bogotá-local, then emit a UTC ("Z") instant
+  // so the value satisfies the live `z.string().datetime()` contract in
+  // src/lib/venues/venue-booking-form-schema.ts (default mode rejects offsets).
+  const localIso = `${paddedYear}-${paddedMonth}-${paddedDay}T${paddedHour}:${paddedMinute}:00${BOGOTA_OFFSET}`;
+  return new Date(localIso).toISOString();
 };
 
 const nextWeekdayAt = (
@@ -103,7 +108,12 @@ const nextWeekdayAt = (
   base.setHours(12, 0, 0, 0);
   const current = base.getDay();
   let delta = (weekday - current + 7) % 7;
-  if (delta === 0) delta = 7;
+  if (delta === 0) {
+    // Same weekday: keep today only if the requested time is still ahead of now.
+    const sameDay = new Date(now);
+    sameDay.setHours(hour, minute, 0, 0);
+    if (sameDay.getTime() <= now.getTime()) delta = 7;
+  }
   base.setDate(base.getDate() + delta);
   return formatIso(
     base.getFullYear(),
@@ -149,7 +159,7 @@ export const parseVenueBookingSlots = (text: string): ParsedVenueBookingSlots =>
 
   const placeIdMatch = trimmed.match(PLACE_ID_RE);
   if (placeIdMatch) {
-    return { venueName: placeIdMatch[1] };
+    return { placeId: placeIdMatch[1] };
   }
 
   const contact = trimmed.match(CONTACT_RE);

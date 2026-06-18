@@ -13,13 +13,20 @@ describe("parseVenueBookingSlots", () => {
     expect(slots.partySize).toBe(4);
     expect(slots.contactName).toBe("QA User");
     expect(slots.contactEmail).toBe("qa-landlord@mdeai.co");
-    expect(slots.requestedAtIso).toMatch(/T20:00:00-05:00$/);
+    // 8pm Bogotá (-05:00) emitted as a UTC "Z" instant → 01:00 next day.
+    expect(slots.requestedAtIso).toMatch(/T01:00:00\.000Z$/);
   });
 
   it("parses explicit date follow-up", () => {
     const iso = parseRequestedAtIso(
       "Friday June 13 2026 at 8pm, party of 4. Please submit the table booking request now.",
     );
-    expect(iso).toBe("2026-06-13T20:00:00-05:00");
+    expect(iso).toBe("2026-06-14T01:00:00.000Z");
+  });
+
+  it("stores an explicit place id in placeId, not venueName", () => {
+    const slots = parseVenueBookingSlots("Reserve a table place_id: ChIJxyz123 for 2");
+    expect(slots.placeId).toBe("ChIJxyz123");
+    expect(slots.venueName).toBeUndefined();
   });
 });
