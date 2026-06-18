@@ -1,0 +1,21 @@
+.claude/skills/testing/scripts/with_server.py
+  s_2e9704330dc5b7::t_080059b8debfe9 22-24,57-60,80
+src/mastra/lib/intelligence-event-search.ts
+  s_2e9704330dc5b7::t_7a24fa68adc124 165,168
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "a8965204c42008169aa1f9e9590ef65681242101",
+  "prompts": {},
+  "sessions": {
+    "s_2e9704330dc5b7": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "06a895ab-da7e-4b24-a8e2-bc5c7c9e4919",
+        "model": "gpt-5-mini"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
