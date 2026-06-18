@@ -158,7 +158,7 @@ function eventSignalBoost(slots: EventIntelligenceSlots, s: EventSignalRow): num
   return boost;
 }
 
-function hybridToEventCard(row: HybridEventRow, rankScore?: number, signalSource?: string): IntelligenceEventResult {
+function hybridToEventCard(row: HybridEventRow, rankScore?: number, signalSource?: string): IntelligenceEventResult { // skipcq: JS-0067
   return hybridRowToEventCard(row, rankScore, signalSource);
 }
 
