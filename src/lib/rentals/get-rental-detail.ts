@@ -37,6 +37,7 @@ export type RentalDetail = {
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+// skipcq: JS-0067 - module-local helper; not browser global scope
 const getClient = () => {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_ANON_KEY;
@@ -46,48 +47,61 @@ const getClient = () => {
   });
 };
 
-const num = (v: unknown): number | null => {
-  if (v == null) return null;
-  const n = Number(v);
-  return Number.isFinite(n) ? n : null;
+// skipcq: JS-0067 - module-local helper; not browser global scope
+const num = (value: unknown): number | null => {
+  if (value == null) return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
 };
 
-const strArray = (v: unknown): string[] => {
-  return Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
+// skipcq: JS-0067 - module-local helper; not browser global scope
+const strArray = (value: unknown): string[] => {
+  return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 };
 
-const str = (v: unknown): string | null => {
-  return typeof v === "string" && v.trim() ? v : null;
+// skipcq: JS-0067 - module-local helper; not browser global scope
+const str = (value: unknown): string | null => {
+  return typeof value === "string" && value.trim() ? value : null;
+};
+
+// skipcq: JS-0067 - module-local helper; not browser global scope
+const rentalSlugFromSourceUrl = (sourceUrl: string): string | null => {
+  try {
+    return new URL(sourceUrl).pathname.split("/").filter(Boolean).pop() ?? null;
+  } catch {
+    return sourceUrl.split("?")[0].split("/").filter(Boolean).pop() ?? null;
+  }
 };
 
 /** Map a raw `apartments` row to the detail view-model. Exported for unit tests. */
-export function mapApartmentRowToDetail(r: Record<string, unknown>): RentalDetail {
+// skipcq: JS-0067 - ES module export; not browser global scope
+export function mapApartmentRowToDetail(row: Record<string, unknown>): RentalDetail {
   return {
-    id: String(r.id),
-    slug: str(r.slug),
-    title: str(r.title) ?? "Rental",
-    neighborhood: str(r.neighborhood) ?? "",
-    address: str(r.address),
-    bedrooms: num(r.bedrooms),
-    bathrooms: num(r.bathrooms),
-    maxGuests: num(r.max_guests) ?? num(r.guests),
-    priceNightly: num(r.price_daily),
-    priceMonthly: num(r.price_monthly),
-    currency: str(r.currency) ?? "USD",
-    deposit: num(r.deposit_amount),
-    amenities: strArray(r.amenities),
-    buildingAmenities: strArray(r.building_amenities),
-    images: strArray(r.images),
-    description: str(r.description),
-    houseRules: str(r.house_rules),
-    hostName: str(r.host_name),
-    availableFrom: str(r.available_from),
-    availableTo: str(r.available_to),
-    minimumStayDays: num(r.minimum_stay_days),
-    maximumStayDays: num(r.maximum_stay_days),
-    latitude: num(r.latitude),
-    longitude: num(r.longitude),
-    status: str(r.status),
+    id: String(row.id),
+    slug: str(row.slug),
+    title: str(row.title) ?? "Rental",
+    neighborhood: str(row.neighborhood) ?? "",
+    address: str(row.address),
+    bedrooms: num(row.bedrooms),
+    bathrooms: num(row.bathrooms),
+    maxGuests: num(row.max_guests) ?? num(row.guests),
+    priceNightly: num(row.price_daily),
+    priceMonthly: num(row.price_monthly),
+    currency: str(row.currency) ?? "USD",
+    deposit: num(row.deposit_amount),
+    amenities: strArray(row.amenities),
+    buildingAmenities: strArray(row.building_amenities),
+    images: strArray(row.images),
+    description: str(row.description),
+    houseRules: str(row.house_rules),
+    hostName: str(row.host_name),
+    availableFrom: str(row.available_from),
+    availableTo: str(row.available_to),
+    minimumStayDays: num(row.minimum_stay_days),
+    maximumStayDays: num(row.maximum_stay_days),
+    latitude: num(row.latitude),
+    longitude: num(row.longitude),
+    status: str(row.status),
   };
 }
 
@@ -96,58 +110,53 @@ export function mapApartmentRowToDetail(r: Record<string, unknown>): RentalDetai
  * (RLS scopes anon reads to active listings). No Supabase env → dev/mock fallback
  * via the search tool's mock list (so the page renders locally without a DB).
  */
+// skipcq: JS-0067, JS-R1005 - ES module export; intentional db-path + mock-fallback branching, not a bug
 export async function getRentalDetail(idOrSlug: string): Promise<RentalDetail | null> {
   const client = getClient();
   if (!client) {
     return getMockRentalDetail(idOrSlug);
   }
+
   const apartmentsQuery = client.from("apartments").select("*").eq("status", "active").limit(1);
   const field = UUID_RE.test(idOrSlug) ? "id" : "slug";
   const { data, error } = await apartmentsQuery.eq(field, idOrSlug).maybeSingle();
   if (error) {
-    console.error("[get-rental-detail] supabase error:", error.message);
-    return null;
+    throw new Error(`[get-rental-detail] supabase error: ${error.message}`);
   }
   return data ? mapApartmentRowToDetail(data as Record<string, unknown>) : null;
 }
 
+// skipcq: JS-0067 - ES module export; testable mock fallback helper
 export async function getMockRentalDetail(idOrSlug: string): Promise<RentalDetail | null> {
   const { results } = await searchRentals({ limit: 24 });
-  const hit = results.find((r) => r.id === idOrSlug);
+  const hit = results.find((rental) => rental.id === idOrSlug || rentalSlugFromSourceUrl(rental.source_url) === idOrSlug);
   if (!hit) return null;
-  const FIELD_MAP: { [key in keyof RentalDetail]: keyof typeof hit | ((h: typeof hit) => RentalDetail[key]) } = {
-    id: "id",
-    slug: () => null,
-    title: "title",
-    neighborhood: "neighborhood",
-    address: () => null,
-    bedrooms: "bedrooms",
-    bathrooms: () => null,
-    maxGuests: () => null,
-    priceNightly: "nightly_price",
-    priceMonthly: "monthly_price",
-    currency: "currency",
-    deposit: () => null,
-    amenities: "amenities",
-    buildingAmenities: () => [],
-    images: (h) => (h.image ? [h.image] : []),
-    description: () => null,
-    houseRules: () => null,
-    hostName: "host_name",
-    availableFrom: () => null,
-    availableTo: () => null,
-    minimumStayDays: () => null,
-    maximumStayDays: () => null,
-    latitude: (h) => h.latitude ?? null,
-    longitude: (h) => h.longitude ?? null,
-    status: () => "active",
+
+  return {
+    id: hit.id,
+    slug: null,
+    title: hit.title,
+    neighborhood: hit.neighborhood,
+    address: null,
+    bedrooms: hit.bedrooms,
+    bathrooms: null,
+    maxGuests: null,
+    priceNightly: hit.nightly_price,
+    priceMonthly: null,
+    currency: hit.currency,
+    deposit: null,
+    amenities: hit.amenities,
+    buildingAmenities: [],
+    images: hit.image ? [hit.image] : [],
+    description: null,
+    houseRules: null,
+    hostName: hit.host_name,
+    availableFrom: null,
+    availableTo: null,
+    minimumStayDays: null,
+    maximumStayDays: null,
+    latitude: hit.latitude ?? null,
+    longitude: hit.longitude ?? null,
+    status: "active",
   };
-  const detail = {} as RentalDetail;
-  for (const key in FIELD_MAP) {
-    if (Object.prototype.hasOwnProperty.call(FIELD_MAP, key)) {
-      const mapper = FIELD_MAP[key];
-      detail[key] = typeof mapper === "function" ? (mapper as Function)(hit) : hit[mapper];
-    }
-  }
-  return detail;
 }
