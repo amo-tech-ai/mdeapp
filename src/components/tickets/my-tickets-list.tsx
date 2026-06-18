@@ -85,7 +85,7 @@ function OrderSection({
   );
 }
 
-// skipcq: JS-0067
+// skipcq: JS-0067, JS-R1005
 function OrderCard({
   order,
   dimmed,

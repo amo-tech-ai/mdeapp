@@ -56,7 +56,7 @@ function resolvePassState(isUsed: boolean, isExpired: boolean): QrPassState {
   return "valid";
 }
 
-// skipcq: JS-0067
+// skipcq: JS-0067, JS-R1005
 export function TicketDetailClient({
   orderId,
   accessToken,

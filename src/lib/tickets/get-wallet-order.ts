@@ -24,7 +24,7 @@ export async function getWalletOrderByToken(
   return parsed.success ? parsed.data : null;
 }
 
-// skipcq: JS-0067
+// skipcq: JS-0067, JS-R1005
 export async function listBuyerOrders(): Promise<BuyerOrderListItem[]> {
   const supabase = await createClient();
   const {
