@@ -1,0 +1,33 @@
+src/components/host/rentals/rentals-concierge-center.tsx
+  s_f1f9127cc71b2a::t_f7a7f3ae2da4e3 15
+src/app/host/rentals/(broker)/page.tsx
+  s_f1f9127cc71b2a::t_c8c20f9f0d16ec 13
+src/lib/rentals/get-broker-request-path.ts
+  s_f1f9127cc71b2a::t_f0a464e40afb8b 4,7-8
+src/components/host/rentals/rentals-dynamic-workspace.tsx
+  s_f1f9127cc71b2a::t_3afecf679bdc79 14
+src/components/host/rentals/rentals-conversation-history.tsx
+  s_f1f9127cc71b2a::t_bc1dda84d6c2f1 19
+src/components/host/rentals/__tests__/rentals-concierge-contract.test.ts
+  s_f1f9127cc71b2a::t_1b43c70e1c6449 7
+src/components/host/rentals/rentals-concierge-shell.tsx
+  s_f1f9127cc71b2a::t_af15670ea096f4 23
+src/lib/supabase/middleware.ts
+  s_f1f9127cc71b2a::t_6eb1941c000bab 97-101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "d4d18e7abe5f44e373ffa054edfdf96223cfe353",
+  "prompts": {},
+  "sessions": {
+    "s_f1f9127cc71b2a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ebcc0856-4735-47c8-9dfa-b58a8e933943",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
