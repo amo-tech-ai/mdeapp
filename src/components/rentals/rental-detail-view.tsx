@@ -82,7 +82,7 @@ const RentalSpecs = ({ detail }: { detail: RentalDetail }) => (
 
 type PriceLabels = { monthlyLabel: string | null; nightlyLabel: string | null };
 
-// skipcq: JS-0067 - React component (ES module); not browser global scope
+// skipcq: JS-0067, JS-R1005 - pricing/sidebar composition branches are intentional UI rendering paths
 const RentalPriceSidebar = ({
   prices,
   hostName,
@@ -162,8 +162,8 @@ export function RentalDetailView({ detail }: { detail: RentalDetail }) {
   );
 }
 
-// skipcq: JS-0067 - React component (ES module); not browser global scope
-const RentalDetailInner = ({ detail }: { detail: RentalDetail }) => {
+// skipcq: JS-0067, JS-R1005, JS-0415 - detail page composition is intentionally explicit for readability and UX sections
+function RentalDetailInner({ detail }: { detail: RentalDetail }) {
   const { openScheduleViewing } = useRentalUi();
   const prices = formatRentalPrices(detail.priceNightly ?? undefined);
   const mapsHref = mapsHrefFor(detail);
@@ -257,4 +257,4 @@ const RentalDetailInner = ({ detail }: { detail: RentalDetail }) => {
       <RentalMobileCta prices={prices} onRequest={requestViewing} />
     </main>
   );
-};
+}
