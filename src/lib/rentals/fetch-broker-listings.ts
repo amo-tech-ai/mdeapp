@@ -16,7 +16,7 @@ type DbClient = SupabaseClient<Database>;
 const BROKER_LISTINGS_LOAD_ERROR =
   "Couldn't load your listings. Try again in a moment.";
 
-function failListings(context: string, error: unknown): FetchBrokerListingsResult {
+function failListings(context: string, error: unknown): FetchBrokerListingsResult { // skipcq: JS-0067
   // skipcq: JS-0005 - server-only loader; raw error must not reach UI
   console.error(`[fetchBrokerListings] ${context}`, error);
   return { ok: false, message: BROKER_LISTINGS_LOAD_ERROR };

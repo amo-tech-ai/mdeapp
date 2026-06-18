@@ -14,21 +14,19 @@ const BROKER_DASHBOARD_LOAD_ERROR =
   "Couldn't load broker dashboard data. Try again in a moment.";
 
 function daysAgoIso(days: number): string { // skipcq: JS-0067 - module-local helper
-  const d = new Date();
-  d.setDate(d.getDate() - days);
-  return d.toISOString();
+  const date = new Date();
+  date.setDate(date.getDate() - days);
+  return date.toISOString();
 }
 
-function failDashboard(context: string, error: unknown): FetchBrokerDashboardResult {
+function failDashboard(context: string, error: unknown): FetchBrokerDashboardResult { // skipcq: JS-0067
   // skipcq: JS-0005 - server-only loader; raw error must not reach UI
   console.error(`[fetchBrokerDashboard] ${context}`, error);
   return { ok: false, message: BROKER_DASHBOARD_LOAD_ERROR };
 }
 
 /** Load broker dashboard metrics from Supabase (RLS-scoped). */
-// skipcq: JS-0044 - sequential Supabase reads; split when SAN-1093 wires partial loaders
-// skipcq: JS-R1005 - aggregate loader branches map 1:1 to KPI sources
-// skipcq: JS-0067 - server module export
+// skipcq: JS-0044, JS-R1005, JS-0067 - sequential Supabase reads; split when SAN-1093 wires partial loaders
 export async function fetchBrokerDashboard(
   supabase: DbClient,
   userId: string,

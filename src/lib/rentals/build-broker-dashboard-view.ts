@@ -46,7 +46,7 @@ function greetingFor(name: string | null): string { // skipcq: JS-0067 - module-
 }
 
 /** Pure builder — unit-tested without Supabase. */
-// skipcq: JS-0044 - attention queue branches; split later if SAN-1093 overview grows
+// skipcq: JS-0044, JS-R1005, JS-0067 - attention queue branches; split when SAN-1093 overview grows
 export function buildBrokerDashboardView(input: BuildBrokerDashboardInput): BrokerDashboardView {
   const drafts = input.listings.filter((l) => l.listingWorkflowStatus === "draft");
 
@@ -92,7 +92,7 @@ export function buildBrokerDashboardView(input: BuildBrokerDashboardInput): Brok
     attention.push({
       id: `draft-${listing.id}`,
       kind: "draft_missing_photos",
-      title: `Listing draft · missing photos`,
+      title: "Listing draft · missing photos",
       detail: listing.title || listing.address || "Untitled draft",
       href: `/host/rentals/listings?focus=${listing.id}`,
       ctaLabel: "Open listing",
