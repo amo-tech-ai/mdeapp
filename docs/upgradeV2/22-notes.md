@@ -159,16 +159,15 @@ no bare @copilotkit/react-core imports in src/**
 
 ---
 
-## Task 5 — (Backlog) Wire `check:mastra` into floor
+## Task 5 — Wire `check:mastra` into floor
 
-`check:mastra` is **not** in `npm run floor` today — that is why CI stayed green while local runs showed 17 false failures.
+`check:mastra` was **not** in `npm run floor` — CI stayed green while local runs could fail on guard drift.
 
-| Option | Action |
-|--------|--------|
-| A | Add `npm run check:mastra` to `floor` script in `package.json` |
-| B | Add a Floor workflow step in `.github/workflows/floor.yml` |
+**Fix:** add `npm run check:mastra` to the `floor` script in `package.json` (Option A). No separate `floor.yml` step needed — workflow already runs `npm run floor`.
 
-Do **after** #247 merges so the gate is not inverted on CI.
+**Status:** 🟡 PR open — wire into floor CI
+
+Do **after** #247 merges so the gate is not inverted on CI. ✅ #247 merged @ `81e2bead`.
 
 ---
 
