@@ -81,6 +81,7 @@ if (isPackageJson) {
 // package line + its server/agent APIs, which mdeai does NOT use (would break the Mastra runtime).
 if (isSrc) {
   const fullRewriteMarkers = [
+    { name: "bare @copilotkit/react-core (no /v2)", re: /from\s+["']@copilotkit\/react-core["']/ },
     { name: "@copilotkit/react (full-rewrite pkg)", re: /from\s+["']@copilotkit\/react["']/ },
     { name: "@copilotkit/core (full-rewrite pkg)", re: /from\s+["']@copilotkit\/core["']/ },
     { name: "@copilotkit/agent (full-rewrite pkg)", re: /from\s+["']@copilotkit\/agent["']/ },
