@@ -1,0 +1,26 @@
+docs/upgradeV2/todo.md
+  s_f6e9bbcc4e4c47::t_da2ef0f3066ea6 34-57
+  s_f6e9bbcc4e4c47::t_e87d9fb6488a6e 142
+  s_f6e9bbcc4e4c47::t_67fd9977c92490 188-190
+  s_f6e9bbcc4e4c47::t_52b2fbca05aca2 3
+docs/upgradeV2/22-notes.md
+  s_f6e9bbcc4e4c47::t_429d388f1d34a4 93-96
+.claude/hooks/copilotkit-version-pin.mjs
+  s_f6e9bbcc4e4c47::t_c5e7e3738b7a90 84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "44fd286ae02c509f8e2eeccdaf84c7084596bafd",
+  "prompts": {},
+  "sessions": {
+    "s_f6e9bbcc4e4c47": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6662a4eb-2170-4084-ba04-a6c4a64e984a",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
