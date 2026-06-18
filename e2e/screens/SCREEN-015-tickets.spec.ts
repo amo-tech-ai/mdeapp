@@ -98,6 +98,7 @@ test.describe(`${SCREEN_ID} my tickets + QR`, () => {
           }),
         });
       });
+      const errors = watchCriticalConsoleErrors(page);
       await page.goto(`/me/tickets/${MOCK_ORDER_ID}?token=mock-token`, {
         waitUntil: "domcontentloaded",
       });
@@ -108,6 +109,7 @@ test.describe(`${SCREEN_ID} my tickets + QR`, () => {
         page.locator('[data-testid="my-tickets-qr-overlay"]'),
       ).toContainText("Already scanned");
       await captureScreenEvidence(page, SCREEN_ID, "desktop-qr-used.png");
+      assertConsoleClean(errors);
     });
 
     test("ended event greys the QR as expired", async ({ page }) => {
@@ -125,6 +127,7 @@ test.describe(`${SCREEN_ID} my tickets + QR`, () => {
           }),
         });
       });
+      const errors = watchCriticalConsoleErrors(page);
       await page.goto(`/me/tickets/${MOCK_ORDER_ID}?token=mock-token`, {
         waitUntil: "domcontentloaded",
       });
@@ -134,6 +137,7 @@ test.describe(`${SCREEN_ID} my tickets + QR`, () => {
       await expect(
         page.locator('[data-testid="my-tickets-qr-overlay"]'),
       ).toContainText("Event ended");
+      assertConsoleClean(errors);
     });
   });
 

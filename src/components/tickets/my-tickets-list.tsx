@@ -144,7 +144,13 @@ function OrderCard({
             Show QR →
           </Link>
         ) : (
-          <p className="mt-2 text-sm text-muted-foreground">Processing payment…</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {order.status === "refunded"
+              ? "Refunded"
+              : order.status === "partial_refund"
+                ? "Partially refunded"
+                : "Processing payment…"}
+          </p>
         )}
       </div>
     </li>

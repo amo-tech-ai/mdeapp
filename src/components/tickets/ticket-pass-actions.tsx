@@ -29,6 +29,7 @@ export function TicketPassActions({
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share(data);
+        setShareNote(null);
         return;
       } catch {
         // user dismissed — fall through to copy

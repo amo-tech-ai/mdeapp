@@ -27,10 +27,10 @@ const upcomingOrder: BuyerOrderListItem = {
   totalCents: 4000000,
   currency: "cop",
   quantity: 2,
-  eventName: "Reina de Antioquia Finals",
+  eventName: "Grand Finals 2026",
   eventStartTime: "2099-02-24T01:00:00+00:00",
   imageUrl: "https://images.unsplash.com/photo-cover.jpg",
-  venue: "Medellín",
+  venue: "Test Venue",
 };
 
 const pastOrder: BuyerOrderListItem = {
@@ -40,7 +40,7 @@ const pastOrder: BuyerOrderListItem = {
   totalCents: 1500000,
   currency: "cop",
   quantity: 1,
-  eventName: "Feria de las Flores 2020",
+  eventName: "Flower Festival 2020",
   eventStartTime: "2020-08-07T01:00:00+00:00",
   imageUrl: null,
   venue: null,
@@ -80,8 +80,8 @@ describe("MyTicketsList", () => {
     );
     expect(html).toContain('data-testid="my-tickets-cover"');
     expect(html).toContain("photo-cover.jpg");
-    expect(html).toContain("Reina de Antioquia Finals");
-    expect(html).toContain("· Medellín");
+    expect(html).toContain("Grand Finals 2026");
+    expect(html).toContain("· Test Venue");
     expect(html).toContain('data-testid="my-tickets-show-qr"');
     expect(html).toContain(
       'href="/me/tickets/11111111-1111-1111-1111-111111111111"',
