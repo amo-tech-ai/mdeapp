@@ -51,7 +51,7 @@ const getRequiredElement = function <T extends Element>(
   container: HTMLElement,
   selector: string,
   label: string,
-): T {
+): T { // skipcq: JS-0067
   const node = container.querySelector(selector);
   if (!node) {
     throw new Error(`Missing required element: ${label} (${selector})`);
