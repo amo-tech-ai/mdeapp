@@ -1,0 +1,19 @@
+.deepsource.toml
+  s_f9d5f98a31145c::t_03b4b0eca9e8ed 1-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "f3e410964aa630d318be2b49f6b50d28bdce6b3c",
+  "prompts": {},
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
