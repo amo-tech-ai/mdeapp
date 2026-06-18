@@ -23,6 +23,28 @@ info()  { printf "ℹ️  %s\n" "$*"; }
 # match $1 against $FILTER (empty filter = match all)
 in_filter() { [ -z "$FILTER" ] || echo "$1" | grep -qi "$FILTER"; }
 
+probe_path() {
+  local path="$1"
+  local ok_msg="$2"
+  local fail_msg="$3"
+  if [ -e "$path" ]; then
+    ok "$ok_msg"
+  else
+    fail "$fail_msg"
+  fi
+}
+
+probe_optional_path() {
+  local path="$1"
+  local ok_msg="$2"
+  local warn_msg="$3"
+  if [ -e "$path" ]; then
+    ok "$ok_msg"
+  else
+    warn "$warn_msg"
+  fi
+}
+
 echo "=== task-verifier disk probe — $(date -u +%Y-%m-%dT%H:%M:%SZ) ==="
 echo "REPO=$REPO"
 [ -n "$FILTER" ] && echo "filter=$FILTER"
@@ -31,10 +53,10 @@ echo
 # ---------- Project structure ----------
 if in_filter struct; then
   echo "## Project structure"
-  [ -d "$APP" ] && ok "mdeapp/ present" || fail "mdeapp/ missing"
-  [ -d "$APP/.git" ] && ok "mdeapp/.git present" || fail "mdeapp/.git missing"
-  [ -f "$REPO/CLAUDE.md" ] && ok "CLAUDE.md present" || fail "CLAUDE.md missing"
-  [ -f "$REPO/tasks/INDEX.md" ] && ok "tasks/INDEX.md present" || fail "tasks/INDEX.md missing"
+  probe_path "$APP" "mdeapp/ present" "mdeapp/ missing"
+  probe_path "$APP/.git" "mdeapp/.git present" "mdeapp/.git missing"
+  probe_path "$REPO/CLAUDE.md" "CLAUDE.md present" "CLAUDE.md missing"
+  probe_path "$REPO/tasks/INDEX.md" "tasks/INDEX.md present" "tasks/INDEX.md missing"
   echo
 fi
 
@@ -103,7 +125,7 @@ if in_filter files; then
     ".env.local" \
     ".env.example" \
     "next.config.ts"; do
-    [ -f "$APP/$f" ] && ok "$f" || fail "$f missing"
+    probe_path "$APP/$f" "$f" "$f missing"
   done
 
   # Optional but commonly referenced
@@ -113,7 +135,7 @@ if in_filter files; then
     "tailwind.config.ts" \
     "src/lib/utils.ts" \
     "src/app/host/event/new/page.tsx"; do
-    [ -f "$APP/$f" ] && ok "$f present" || warn "$f absent (often expected absent on Tailwind v4 / pre-F07 / pre-F09 / pre-W3)"
+    probe_optional_path "$APP/$f" "$f present" "$f absent (often expected absent on Tailwind v4 / pre-F07 / pre-F09 / pre-W3)"
   done
   echo
 fi
@@ -121,7 +143,8 @@ fi
 # ---------- Task index sanity ----------
 if in_filter tasks; then
   echo "## tasks/core sanity"
-  for f in $(ls "$REPO/tasks/core/"F*.md 2>/dev/null); do
+  shopt -s nullglob
+  for f in "$REPO/tasks/core/"F*.md; do
     base=$(basename "$f" .md)
     status=$(awk '/^status:/{print $2; exit}' "$f")
     # Strip the leading "depends_on:" key AND any trailing "# comment"
@@ -138,16 +161,19 @@ if in_filter tasks; then
     for d in $(echo "$deps" | tr -d '[],' | xargs); do
       [ -z "$d" ] && continue
       # F09 matches F09-*.md; F09-supp matches F09-supp*.md (specific) before F09-*.md
-      hit=$(ls "$REPO/tasks/core/${d}-"*.md 2>/dev/null | head -1)
-      if [ -z "$hit" ]; then
-        # try exact F<id>.md fallback
-        [ -f "$REPO/tasks/core/${d}.md" ] && hit="$REPO/tasks/core/${d}.md"
+      dep_matches=("$REPO/tasks/core/${d}-"*.md)
+      hit=""
+      if ((${#dep_matches[@]} > 0)); then
+        hit="${dep_matches[0]}"
+      elif [ -f "$REPO/tasks/core/${d}.md" ]; then
+        hit="$REPO/tasks/core/${d}.md"
       fi
       if [ -z "$hit" ]; then
         fail "  $base depends_on $d → no matching file in tasks/core/"
       fi
     done
   done
+  shopt -u nullglob
   echo
 fi
 
@@ -162,14 +188,20 @@ if in_filter git; then
     if [ -n "$remote_url" ]; then
       info "origin=$remote_url"
       remote_sha=$(git -C "$APP" ls-remote origin "$branch" 2>/dev/null | awk '{print $1}' | head -1)
-      if [ "$local_sha" = "$remote_sha" ]; then ok "local SHA = remote SHA"
-      else warn "local≠remote (local=$local_sha remote=$remote_sha)"
+      if [ "$local_sha" = "$remote_sha" ]; then
+        ok "local SHA = remote SHA"
+      else
+        warn "local≠remote (local=$local_sha remote=$remote_sha)"
       fi
     else
       warn "no origin remote"
     fi
     dirty=$(git -C "$APP" status --porcelain | wc -l | tr -d ' ')
-    [ "$dirty" = "0" ] && ok "working tree clean" || warn "$dirty uncommitted files"
+    if [ "$dirty" = "0" ]; then
+      ok "working tree clean"
+    else
+      warn "$dirty uncommitted files"
+    fi
   else
     fail "mdeapp not a git repo"
   fi
@@ -194,8 +226,11 @@ if in_filter env; then
         ok "$v present in mdeapp/.env.local"
       fi
     else
-      [ "$v" = "SUPABASE_SERVICE_ROLE_KEY" ] && ok "$v correctly absent from mdeapp/.env.local" \
-        || warn "$v missing from mdeapp/.env.local"
+      if [ "$v" = "SUPABASE_SERVICE_ROLE_KEY" ]; then
+        ok "$v correctly absent from mdeapp/.env.local"
+      else
+        warn "$v missing from mdeapp/.env.local"
+      fi
     fi
   done
 
@@ -222,11 +257,11 @@ if in_filter beta; then
   echo "## Mastra beta API surface"
   CORE="$APP/node_modules/@mastra/core/dist"
   if [ -d "$CORE" ]; then
-    [ -d "$CORE/workspace" ]    && ok "@mastra/core/workspace present"    || warn "@mastra/core/workspace missing"
-    [ -d "$CORE/processors" ]   && ok "@mastra/core/processors present"   || warn "@mastra/core/processors missing"
-    [ -f "$CORE/processors/processors/token-limiter.d.ts" ] && ok "TokenLimiterProcessor available" || warn "TokenLimiterProcessor missing on beta"
-    [ -f "$CORE/processors/processors/moderation.d.ts" ] && ok "ModerationProcessor available" || warn "ModerationProcessor missing on beta"
-    [ -f "$CORE/processors/processors/system-prompt-scrubber.d.ts" ] && ok "SystemPromptScrubber available" || warn "SystemPromptScrubber missing on beta"
+    if [ -d "$CORE/workspace" ]; then ok "@mastra/core/workspace present"; else warn "@mastra/core/workspace missing"; fi
+    if [ -d "$CORE/processors" ]; then ok "@mastra/core/processors present"; else warn "@mastra/core/processors missing"; fi
+    if [ -f "$CORE/processors/processors/token-limiter.d.ts" ]; then ok "TokenLimiterProcessor available"; else warn "TokenLimiterProcessor missing on beta"; fi
+    if [ -f "$CORE/processors/processors/moderation.d.ts" ]; then ok "ModerationProcessor available"; else warn "ModerationProcessor missing on beta"; fi
+    if [ -f "$CORE/processors/processors/system-prompt-scrubber.d.ts" ]; then ok "SystemPromptScrubber available"; else warn "SystemPromptScrubber missing on beta"; fi
 
     if grep -q "scope" "$CORE/memory/types.d.ts" 2>/dev/null; then
       ok "memory scope literal present"

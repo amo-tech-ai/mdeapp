@@ -59,7 +59,7 @@ def gql(key: str, query: str, variables: dict | None = None) -> dict:
         method="POST",
     )
     with urllib.request.urlopen(req) as resp:
-        out = json.loads(resp.read())
+        out = json.load(resp)
     if "errors" in out:
         raise SystemExit(f"GraphQL errors: {out['errors']}")
     return out
@@ -248,7 +248,7 @@ def main() -> None:
         issue_id = resolve_issue_uuid(key, ident)
         result = gql(key, mutation, {"id": issue_id, "desc": desc})
         ok = result.get("data", {}).get("issueUpdate", {}).get("success")
-        url = result.get("data", {}).get("issueUpdate", {}).get("issue", {}).get("url", "")
+        _url = result.get("data", {}).get("issueUpdate", {}).get("issue", {}).get("url", "")
         mermaid_n = desc.count("```mermaid")
         secs = len(re.findall(r"^## \d+\.", desc, re.MULTILINE))
         line = f"{ident} {'OK' if ok else 'FAIL'} sections={secs} mermaid={mermaid_n} chars={len(desc)}"

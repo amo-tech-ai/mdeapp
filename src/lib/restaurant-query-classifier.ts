@@ -96,9 +96,8 @@ export function looksLikeNightlifeGroundingSearch(text: string): boolean {
   if (RENTAL_RE.test(t)) return false;
   if (looksLikeTicketedEventSearch(t)) return false;
   if (looksLikeEventCategoryNightlifeDiscovery(t)) return false;
-  return (
-    NIGHTLIFE_GROUNDING_RE.test(t) || looksLikeGenericNightlifeVenueSearch(t)
-  );
+  if (NIGHTLIFE_GROUNDING_RE.test(t)) return true;
+  return looksLikeGenericNightlifeVenueSearch(t);
 }
 
 export function looksLikeCafeSearch(text: string): boolean {
@@ -169,12 +168,12 @@ export function looksLikeRestaurantDiscovery(text: string): boolean {
   if (looksLikeCafeSearch(t)) return false;
   if (RENTAL_RE.test(t)) return false;
   if (EVENT_RE.test(t)) return false;
-  return (
-    looksLikeRestaurantSearch(t) ||
-    GENERIC_RESTAURANT_RE.test(t) ||
-    Boolean(scoreRestaurantQuery(t).cuisine) ||
-    Boolean(scoreRestaurantQuery(t).vibe)
-  );
+  if (looksLikeRestaurantSearch(t)) return true;
+  if (GENERIC_RESTAURANT_RE.test(t)) return true;
+  const signals = scoreRestaurantQuery(t);
+  if (signals.cuisine) return true;
+  if (signals.vibe) return true;
+  return false;
 }
 
 /**

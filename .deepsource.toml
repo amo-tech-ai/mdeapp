@@ -1,0 +1,34 @@
+version = 1
+
+test_patterns = [
+  "**/__tests__/**",
+  "**/*.test.ts",
+  "**/*.test.tsx",
+  "**/*.spec.ts",
+  "**/tests/**",
+  "**/migrations/**",
+]
+
+exclude_patterns = [
+  "**/node_modules/**",
+  "**/dist/**",
+  "**/build/**",
+  "**/.next/**",
+  "**/coverage/**",
+  "**/out/**",
+  "**/__pycache__/**",
+  "**/.venv/**",
+  "**/venv/**",
+  "**/.tox/**",
+  "**/.pytest_cache/**",
+  "**/*.egg-info/**",
+  "**/.gradle/**",
+  "**/.mvn/**",
+  "**/target/**",
+  ".claude/skills/mde-maps/references/**",
+  "docs/**/evidence/**",
+  "plan.md",
+  "linear.md",
+  "scripts/**",
+  ".claude/hooks/**",
+]

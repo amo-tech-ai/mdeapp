@@ -220,7 +220,7 @@ export function isScheduleViewingRequest(
   intent: string,
   listingId: unknown,
   preferredAt: unknown,
-): boolean {
+): listingId is string {
   return (
     intent === "rental" &&
     typeof listingId === "string" &&

@@ -30,6 +30,15 @@ function findBalancedJsonEnd(text: string, start: number): number {
   return -1;
 }
 
+function groundingResultsContainPlaceId(results: unknown[]): boolean {
+  return results.some(
+    (r) =>
+      r &&
+      typeof r === "object" &&
+      ("placeId" in r || "place_id" in (r as object)),
+  );
+}
+
 export function isToolLeakJson(value: unknown): boolean {
   if (typeof value !== "object" || value === null) return false;
   const o = value as Record<string, unknown>;
@@ -37,15 +46,7 @@ export function isToolLeakJson(value: unknown): boolean {
     return Object.keys(o).length <= 2;
   }
   if (o.source === "grounding") return true;
-  if (
-    Array.isArray(o.results) &&
-    o.results.some(
-      (r) =>
-        r &&
-        typeof r === "object" &&
-        ("placeId" in r || "place_id" in (r as object)),
-    )
-  ) {
+  if (Array.isArray(o.results) && groundingResultsContainPlaceId(o.results)) {
     return true;
   }
   return false;

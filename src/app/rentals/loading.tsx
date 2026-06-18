@@ -66,7 +66,7 @@ export default function RentalsLoading() {
         <div className="mt-6 min-w-0 flex-1">
           <div className="grid gap-4 sm:grid-cols-2" aria-hidden="true">
             {Array.from({ length: 6 }).map((_, i) => (
-              <RentalCardSkeleton key={i} />
+              <RentalCardSkeleton key={`rental-skeleton-${i}`} />
             ))}
           </div>
         </div>

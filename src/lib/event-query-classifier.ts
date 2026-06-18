@@ -66,12 +66,10 @@ export function looksLikeNonEventSearch(text: string): boolean {
   const t = text.trim();
   if (looksLikeEventVenueBookingQuery(t)) return true;
   if (/\bevents?\b/i.test(t)) return false;
-  return (
-    DAY_TRIP_RE.test(t) ||
-    NON_EVENT_RENTAL_RE.test(t) ||
-    NON_EVENT_FOOD_VENUE_RE.test(t) ||
-    looksLikeNightlifeGroundingSearch(t)
-  );
+  if (DAY_TRIP_RE.test(t)) return true;
+  if (NON_EVENT_RENTAL_RE.test(t)) return true;
+  if (NON_EVENT_FOOD_VENUE_RE.test(t)) return true;
+  return looksLikeNightlifeGroundingSearch(t);
 }
 
 /**

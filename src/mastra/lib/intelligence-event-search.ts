@@ -116,6 +116,41 @@ function eventSignalBoost(slots: EventIntelligenceSlots, s: EventSignalRow): num
   return boost;
 }
 
+function eventMatchesDateWindow(
+  eventStartTime: string | null,
+  window: { gte?: string; lte?: string },
+): boolean {
+  if (!window.gte && !window.lte) return true;
+  if (!eventStartTime) return false;
+  if (window.gte && eventStartTime < window.gte) return false;
+  if (window.lte && eventStartTime > window.lte) return false;
+  return true;
+}
+
+function neighborhoodRankMatch(
+  neighborhood: string | undefined,
+  hood: string | undefined,
+): number {
+  if (!neighborhood || !hood) return 0.5;
+  return hood.toLowerCase().includes(neighborhood.toLowerCase()) ? 1 : 0;
+}
+
+function scoreHybridEventRow(
+  row: HybridEventRow,
+  idx: number,
+  signalMap: Map<string, EventSignalRow>,
+  slots: EventIntelligenceSlots,
+  neighborhood: string | undefined,
+) {
+  const sig = signalMap.get(row.id);
+  const semantic = row.similarity ?? Math.max(0, 1 - idx * 0.02);
+  const boost = sig ? eventSignalBoost(slots, sig) : 0;
+  const hood = extractNeighborhood(row.address, row.city);
+  const hoodMatch = neighborhoodRankMatch(neighborhood, hood);
+  const rankScore = semantic * 0.45 + boost * 0.35 + hoodMatch * 0.2;
+  return { row, rankScore, sig, hood };
+}
+
 function hybridToEventCard(row: HybridEventRow, rankScore?: number, signalSource?: string): IntelligenceEventResult {
   return {
     id: row.id,
@@ -249,28 +284,8 @@ export async function searchEventsIntelligent(
 
   const window = dateWindow(dw);
   let scored = hybridRows
-    .filter((row) => {
-      if (!window.gte && !window.lte) return true;
-      const t = row.event_start_time;
-      if (!t) return false;
-      if (window.gte && t < window.gte) return false;
-      if (window.lte && t > window.lte) return false;
-      return true;
-    })
-    .map((row, idx) => {
-      const sig = signalMap.get(row.id);
-      const semantic = row.similarity ?? Math.max(0, 1 - idx * 0.02);
-      const boost = sig ? eventSignalBoost(slots, sig) : 0;
-      const hood = extractNeighborhood(row.address, row.city);
-      const hoodMatch =
-        neighborhood && hood
-          ? hood.toLowerCase().includes(neighborhood.toLowerCase())
-            ? 1
-            : 0
-          : 0.5;
-      const rankScore = semantic * 0.45 + boost * 0.35 + hoodMatch * 0.2;
-      return { row, rankScore, sig, hood };
-    });
+    .filter((row) => eventMatchesDateWindow(row.event_start_time, window))
+    .map((row, idx) => scoreHybridEventRow(row, idx, signalMap, slots, neighborhood));
 
   if (!scored.length && hybridRows.length && (window.gte || window.lte)) {
     rankExplanation.push({
@@ -278,20 +293,9 @@ export async function searchEventsIntelligent(
       score: 0,
       note: `no ${dw} matches — showing nearest ranked events`,
     });
-    scored = hybridRows.map((row, idx) => {
-      const sig = signalMap.get(row.id);
-      const semantic = row.similarity ?? Math.max(0, 1 - idx * 0.02);
-      const boost = sig ? eventSignalBoost(slots, sig) : 0;
-      const hood = extractNeighborhood(row.address, row.city);
-      const hoodMatch =
-        neighborhood && hood
-          ? hood.toLowerCase().includes(neighborhood.toLowerCase())
-            ? 1
-            : 0
-          : 0.5;
-      const rankScore = semantic * 0.45 + boost * 0.35 + hoodMatch * 0.2;
-      return { row, rankScore, sig, hood };
-    });
+    scored = hybridRows.map((row, idx) =>
+      scoreHybridEventRow(row, idx, signalMap, slots, neighborhood),
+    );
   }
 
   if (dw !== "any") {

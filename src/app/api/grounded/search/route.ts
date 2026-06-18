@@ -40,7 +40,14 @@ export async function POST(req: Request) {
     : query.trim();
 
   try {
-    const out = await searchGroundedPlacesTool.execute!(
+    const execute = searchGroundedPlacesTool.execute;
+    if (!execute) {
+      return NextResponse.json(
+        { error: "grounded search unavailable" },
+        { status: 500 },
+      );
+    }
+    const out = await execute(
       {
         query: searchQuery,
         pageSize: limit,

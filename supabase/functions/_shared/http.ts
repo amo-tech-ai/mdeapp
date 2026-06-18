@@ -45,11 +45,10 @@ function isLocalDevOrigin(origin: string): boolean {
   try {
     const u = new URL(origin);
     if (u.protocol !== "http:" && u.protocol !== "https:") return false;
-    return (
-      u.hostname === "localhost" ||
-      u.hostname === "127.0.0.1" ||
-      u.hostname === "[::1]"
-    );
+    if (u.hostname === "localhost") return true;
+    if (u.hostname === "127.0.0.1") return true;
+    if (u.hostname === "[::1]") return true;
+    return false;
   } catch {
     return false;
   }

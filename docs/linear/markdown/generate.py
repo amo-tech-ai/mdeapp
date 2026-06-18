@@ -69,7 +69,6 @@ def tech(row):
 
 def purpose(row):
     title = row.get("Title","")
-    labels = row.get("Labels","").lower()
     # strip prefix codes like "AUTH-011 — " or "CRM-001 — "
     import re
     clean = re.sub(r'^[A-Z0-9\-]+ [—–-]+ ', '', title).strip()
@@ -182,11 +181,11 @@ def build_core():
     ]
 
     sections_data = []
-    for (key, label) in sections:
-        section_rows = sorted(buckets.get(key, []), key=sort_key)
+    for (section_key, label) in sections:
+        section_rows = sorted(buckets.get(section_key, []), key=sort_key)
         sections_data.append((label, section_rows))
         if not section_rows: continue
-        done, wip, ns, fail, total, avg = section_stats(section_rows)
+        done, wip, ns, _fail, total, avg = section_stats(section_rows)
         lines.append(f"## {label}")
         lines.append(f"> {total} issues · 🟢 {done} done · 🟡 {wip} WIP · ⚪ {ns} not started · Score: **{avg}/100 {grade(avg)}**\n")
         lines.append(table_header())
@@ -256,11 +255,11 @@ def build_mvp():
     ]
 
     sections_data = []
-    for (key, label) in sections:
-        section_rows = sorted(buckets.get(key, []), key=sort_key)
+    for (section_key, label) in sections:
+        section_rows = sorted(buckets.get(section_key, []), key=sort_key)
         sections_data.append((label, section_rows))
         if not section_rows: continue
-        done, wip, ns, fail, total, avg = section_stats(section_rows)
+        done, wip, ns, _fail, total, avg = section_stats(section_rows)
         lines.append(f"## {label}")
         lines.append(f"> {total} issues · 🟢 {done} done · 🟡 {wip} WIP · ⚪ {ns} not started · Score: **{avg}/100 {grade(avg)}**\n")
         lines.append(table_header())
@@ -345,11 +344,11 @@ def build_adv():
     ]
 
     sections_data = []
-    for (key, label) in sections:
-        section_rows = sorted(buckets.get(key, []), key=sort_key)
+    for (section_key, label) in sections:
+        section_rows = sorted(buckets.get(section_key, []), key=sort_key)
         sections_data.append((label, section_rows))
         if not section_rows: continue
-        done, wip, ns, fail, total, avg = section_stats(section_rows)
+        done, wip, ns, _fail, total, avg = section_stats(section_rows)
         lines.append(f"## {label}")
         lines.append(f"> {total} issues · 🟢 {done} done · 🟡 {wip} WIP · ⚪ {ns} not started · Score: **{avg}/100 {grade(avg)}**\n")
         lines.append(table_header())
