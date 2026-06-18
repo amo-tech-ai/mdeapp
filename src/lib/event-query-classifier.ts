@@ -92,7 +92,6 @@ export function hasEventFastPathSignals(
     }
     return true;
   }
-  if (s.hasNeighborhood) return false;
   return false;
 }
 

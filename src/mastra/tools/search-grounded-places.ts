@@ -130,11 +130,10 @@ export function normalizeCafeGroundingQuery(query: string): string {
 }
 
 function isBarLoungeDistractor(title: string): boolean {
-  if (/\bskybar\b/i.test(title)) return true;
-  if (/\bbar\s*&\s*lounge\b/i.test(title)) return true;
-  if (/general cafe bar/i.test(title)) return true;
-  if (/\bcaf[eé]\s+noir\s+bar/i.test(title)) return true;
-  return false;
+  return /\bskybar\b/i.test(title) ||
+    /\bbar\s*&\s*lounge\b/i.test(title) ||
+    /general cafe bar/i.test(title) ||
+    /\bcaf[eé]\s+noir\s+bar/i.test(title);
 }
 
 function isCafeCandidateTitle(title: string): boolean {

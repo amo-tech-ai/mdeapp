@@ -40,8 +40,7 @@ export function shouldUsePostgresStorage(): boolean {
   const connectionString = normalizeDatabaseUrl();
   if (!connectionString) return false;
   if (process.env.NODE_ENV === "production") return true;
-  if (process.env.MASTRA_DEV_LIBSQL === "1") return false;
-  return true;
+  return process.env.MASTRA_DEV_LIBSQL !== "1";
 }
 
 export function createMastraStorage(id: string) {

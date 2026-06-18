@@ -147,10 +147,10 @@ export function isAvailableForStay(
   checkIn?: string,
   checkOut?: string,
 ): boolean {
-  if (!checkIn && !checkOut) return true;
-  if (checkOut && row.available_from && row.available_from > checkOut) return false;
-  if (checkIn && row.available_to && row.available_to < checkIn) return false;
-  return true;
+  return !(
+    (checkOut && row.available_from && row.available_from > checkOut) ||
+    (checkIn && row.available_to && row.available_to < checkIn)
+  );
 }
 
 export function sortForMonthlyStay<T extends Rental>(results: T[]): T[] {

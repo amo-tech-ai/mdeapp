@@ -185,19 +185,18 @@ export function hasRestaurantFastPathSignals(
   text: string,
   s: RestaurantSearchSignals,
 ): boolean {
-  if (s.nearMe) return true;
-  if (s.cuisine) return true;
-  if (s.vibe) return true;
-  if (s.priceTier) return true;
-  if (s.neighborhood) return true;
-  if (/\b(rooftop dinner|quiet dinner|steakhouse|fine dining)\b/i.test(text)) return true;
-  return false;
+  return Boolean(
+    s.nearMe ||
+    s.cuisine ||
+    s.vibe ||
+    s.priceTier ||
+    s.neighborhood ||
+    /\b(rooftop dinner|quiet dinner|steakhouse|fine dining)\b/i.test(text)
+  );
 }
 
 /** Generic = wants restaurants but no cuisine, vibe, area, or budget signal. */
 export function isGenericRestaurantQuery(text: string): boolean {
   const s = scoreRestaurantQuery(text);
-  if (!looksLikeRestaurantDiscovery(text)) return false;
-  if (hasRestaurantFastPathSignals(text, s)) return false;
-  return true;
+  return looksLikeRestaurantDiscovery(text) && !hasRestaurantFastPathSignals(text, s);
 }

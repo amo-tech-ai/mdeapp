@@ -25,20 +25,15 @@ export function needsSearchGrounding(
         q,
       );
     if (needsVerify) return true;
-    if ((options?.sqlEventCount ?? 0) >= 3) return false;
-    return true;
+    return (options?.sqlEventCount ?? 0) < 3;
   }
 
   const sqlEmpty = (options?.sqlEventCount ?? 0) === 0;
-  if (
+  return (
     sqlEmpty &&
     FRESHNESS_SIGNAL.test(q) &&
     /\b(event|festival|concert|rooftop|party|gig|show)\b/i.test(q)
-  ) {
-    return true;
-  }
-
-  return false;
+  );
 }
 
 export function classifySearchRoute(

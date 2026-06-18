@@ -56,11 +56,7 @@ function isLocalDevOrigin(origin: string): boolean {
 }
 
 export function isOriginAllowed(origin: string | null): boolean {
-  if (!origin) return true;
-  if (ALLOWED_ORIGINS.includes(origin)) return true;
-  if (isVercelAppOrigin(origin)) return true;
-  if (isLocalDevOrigin(origin)) return true;
-  return false;
+  return !origin || ALLOWED_ORIGINS.includes(origin) || isVercelAppOrigin(origin) || isLocalDevOrigin(origin);
 }
 
 function resolveAllowOrigin(origin: string | null): string {
