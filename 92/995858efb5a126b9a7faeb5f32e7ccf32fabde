@@ -1,0 +1,23 @@
+CLAUDE.md
+  s_c49f19da197d61::t_8e09899a628860 43
+lean.md
+  s_c49f19da197d61::t_2c43e1790813df 9,11,13-19,21
+package.json
+  s_c49f19da197d61::t_b205999245ee9f 53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "92995858efb5a126b9a7faeb5f32e7ccf32fabde",
+  "prompts": {},
+  "sessions": {
+    "s_c49f19da197d61": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8088fe41-4358-4795-bb8c-513179ce7f3b",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
