@@ -1,0 +1,62 @@
+src/lib/event-venue-booking-intent.ts
+  s_f6e9bbcc4e4c47::t_74fbe193de2b1f 71-75
+src/lib/event-query-classifier.ts
+  s_f6e9bbcc4e4c47::t_9fd03765866272 69-72
+supabase/functions/_shared/schedule-viewing-bridge.ts
+  s_f6e9bbcc4e4c47::t_d3502a1679a87a 223
+docs/linear/markdown/generate.py
+  s_f6e9bbcc4e4c47::t_4b3df4eba0e669 184-185,258-259,347-348
+  s_f6e9bbcc4e4c47::t_893c0db5838be0 188,262,351
+.claude/skills/task-verifier/scripts/probe-disk.sh
+  s_f6e9bbcc4e4c47::t_9f219606366516 26-47,56-59,128,138,146-147,164-169,176,191-194,200-204,229-233,260-264
+docs/tasks/contest/scripts/sync-ctest-linear.py
+  s_f6e9bbcc4e4c47::t_d21975ecae382f 62
+  s_f6e9bbcc4e4c47::t_5e2b0c539ed78d 251
+.claude/skills/testing/scripts/with_server.py
+  s_f6e9bbcc4e4c47::t_f838b8fddfb66f 30
+src/app/api/grounded/search/route.ts
+  s_f6e9bbcc4e4c47::t_d2dbe76d9320a1 43-50
+src/lib/restaurant-query-classifier.ts
+  s_f6e9bbcc4e4c47::t_7ca94b16e74efb 171-176
+  s_f6e9bbcc4e4c47::t_3f5ebce7527c00 99-100
+src/mastra/lib/intelligence-event-search.ts
+  s_f6e9bbcc4e4c47::t_991f911863dd27 119-153
+  s_f6e9bbcc4e4c47::t_2346097292f366 287-288,296-298
+src/mastra/tools/search-rentals.ts
+  s_f6e9bbcc4e4c47::t_3f1174b021fa4e 354-355,358-359
+src/mastra/tools/search-events.ts
+  s_f6e9bbcc4e4c47::t_3f1dd92f08ce48 246,252
+docs/upgradeV2/tasks/deepsource-audit.md
+  s_f6e9bbcc4e4c47::t_e90f22e0e75508 4-62
+  s_f6e9bbcc4e4c47::t_aedf180f0a9e0f 615
+  s_f6e9bbcc4e4c47::t_1a899ffe8c4c3d 374-394,412-609
+  s_f6e9bbcc4e4c47::t_504a5ccecf1077 395-411
+src/lib/sanitize-assistant-chat-content.ts
+  s_f6e9bbcc4e4c47::t_57c781f77876d3 33-41,49
+supabase/functions/_shared/http.ts
+  s_f6e9bbcc4e4c47::t_d1c2efa5460745 48-51
+.deepsource.toml
+  s_f6e9bbcc4e4c47::t_f507ea21178ec3 1-34
+src/app/rentals/loading.tsx
+  s_f6e9bbcc4e4c47::t_f364a21423f5d4 69
+supabase/functions/chat-lead-capture/index.ts
+  s_f6e9bbcc4e4c47::t_b9b380bcddcdc6 84-85,88-89
+src/mastra/tools/search-restaurants.ts
+  s_f6e9bbcc4e4c47::t_5d32650583c625 261-262,265-266,272-273,280-281
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "4a77ec7de61baa3314ee5ab08d559df9d6643a35",
+  "prompts": {},
+  "sessions": {
+    "s_f6e9bbcc4e4c47": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6662a4eb-2170-4084-ba04-a6c4a64e984a",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
