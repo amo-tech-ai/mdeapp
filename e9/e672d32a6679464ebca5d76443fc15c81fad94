@@ -1,0 +1,44 @@
+src/lib/rentals/__tests__/build-broker-dashboard-view.test.ts
+  s_f9d5f98a31145c::t_b64e10df955e35 30,37-59,64-66,68-96,107-110
+  s_f9d5f98a31145c::t_ff78433cbce14a 6
+src/lib/rentals/index.ts
+  s_f9d5f98a31145c::t_9b17f19aa50fa3 71
+src/lib/rentals/fetch-broker-listings.ts
+  s_f9d5f98a31145c::t_a3c85bfdfb83a0 16-24,26
+  s_f9d5f98a31145c::t_41e43b9d32b518 37
+  s_f9d5f98a31145c::t_637d29bfed77fc 49
+src/lib/rentals/build-broker-dashboard-view.ts
+  s_f9d5f98a31145c::t_34d1a2e186e974 192-194
+  s_f9d5f98a31145c::t_af21280be1e02c 76
+  s_f9d5f98a31145c::t_c6e4e451f6e455 42
+  s_f9d5f98a31145c::t_b772b314657db2 62
+  s_f9d5f98a31145c::t_f59cd7a7d03755 69
+  s_f9d5f98a31145c::t_256add25175d80 49
+  s_f9d5f98a31145c::t_1a5baa97914cfc 32-35
+  s_f9d5f98a31145c::t_7053ede44fd3c7 53
+src/app/host/rentals/(broker)/dashboard/page.tsx
+  s_f9d5f98a31145c::t_a68ac13c5f93d5 5
+src/app/host/rentals/(broker)/listings/page.tsx
+  s_f9d5f98a31145c::t_f2c8572932912b 14
+  s_f9d5f98a31145c::t_df8b2d0b7c920e 34
+src/lib/rentals/fetch-broker-dashboard.ts
+  s_f9d5f98a31145c::t_112c151fd7debd 29
+  s_f9d5f98a31145c::t_04df499295125f 13-15,22-25,34,37,40-69,72-75,77-78,88,90,92,94-95,97,108,119,123-134,145,153-156
+  s_f9d5f98a31145c::t_b1735275cae0e1 16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "e9e672d32a6679464ebca5d76443fc15c81fad94",
+  "prompts": {},
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
