@@ -111,7 +111,7 @@ describe("ClusteredCategoryMarkers (MAP-009)", () => {
 
     // Unmount triggers the useEffect cleanup → clusterer.clearMarkers()
     act(() => {
-      root!.unmount();
+      root?.unmount();
     });
 
     expect(mocks.clearMarkers).toHaveBeenCalledOnce();

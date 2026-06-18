@@ -112,8 +112,8 @@ test.describe(`${SCREEN_ID} mobile responsive shell`, () => {
 
       const box = await page.locator(FAB).boundingBox();
       expect(box).not.toBeNull();
-      expect(box!.height).toBeGreaterThanOrEqual(44);
-      expect(box!.width).toBeGreaterThanOrEqual(44);
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+      expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
     });
   });
 

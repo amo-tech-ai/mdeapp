@@ -39,7 +39,7 @@ describe("searchRestaurants fallback + envelope", () => {
 describe("searchRestaurantsTool execute", () => {
   it("UX-T-014 returns structured envelope for CopilotKit disabled render (no writer.custom)", async () => {
     const custom = vi.fn().mockResolvedValue(undefined);
-    const out = (await searchRestaurantsTool.execute!(
+    const out = (await searchRestaurantsTool.execute?.(
       { neighborhood: "Laureles", limit: 2 },
       { writer: { custom } },
     )) as { results: unknown[]; total: number; source: string };
@@ -60,7 +60,7 @@ describe("searchRestaurantsTool execute", () => {
     const { searchRestaurantsTool: tool } = await import("../search-restaurants.js");
 
     await expect(
-      tool.execute!({ neighborhood: "Laureles", limit: 3 }, {}),
+      tool.execute?.({ neighborhood: "Laureles", limit: 3 }, {}),
     ).resolves.toMatchObject({
       results: expect.any(Array),
       total: expect.any(Number),

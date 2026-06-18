@@ -78,7 +78,8 @@ export async function loadCafeListings(filters: {
   let results = rows.map(mapVenueAnchorToCafeListing);
   if (filters.feature) {
     results = results.filter((row) =>
-      matchesCafeFeature(row, filters.feature!),
+      filters.feature ? matchesCafeFeature(row, filters.feature) : true,
+    );
     );
   }
   return { results, error: null };

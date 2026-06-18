@@ -75,7 +75,7 @@ describe("embedQueryText", () => {
     );
     const result = await embedQueryText("hello");
     expect(result).toHaveLength(768);
-    expect(result![0]).toBeCloseTo(0);
+    expect(result?.[0]).toBeCloseTo(0);
   });
 });
 

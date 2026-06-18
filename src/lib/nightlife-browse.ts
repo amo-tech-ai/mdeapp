@@ -80,7 +80,7 @@ export async function loadNightlifeListings(filters: {
 
   let results = rows.map(mapVenueAnchorToNightlifeListing);
   if (filters.vibe) {
-    results = results.filter((row) => matchesNightlifeVibe(row, filters.vibe!));
+    results = filters.vibe ? results.filter((row) => matchesNightlifeVibe(row, filters.vibe)) : results;
   }
   return { results, error: null };
 }

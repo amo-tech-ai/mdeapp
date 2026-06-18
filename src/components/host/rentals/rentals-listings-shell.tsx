@@ -65,11 +65,12 @@ export function RentalsListingsShell({
       if (body.transition) {
         setListings((prev) =>
           prev.map((row) =>
-            row.id === body.transition!.apartmentId
+            row.id === body.transition?.apartmentId
               ? {
                   ...row,
-                  listingWorkflowStatus: body.transition!
-                    .listingWorkflowStatus as BrokerListingDetail["listingWorkflowStatus"],
+                  listingWorkflowStatus: body.transition
+                    ? (body.transition.listingWorkflowStatus as BrokerListingDetail["listingWorkflowStatus"])
+                    : row.listingWorkflowStatus,
                 }
               : row,
           ),

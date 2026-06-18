@@ -81,7 +81,7 @@ test.describe(`${SCREEN_ID} accessibility pass`, () => {
       await expect(trigger).toBeVisible();
       const label = await trigger.getAttribute("aria-label");
       expect(label).toBeTruthy();
-      expect(label!.length).toBeGreaterThan(3);
+      expect(label ? label.length : 0).toBeGreaterThan(3);
 
       await captureScreenEvidence(page, SCREEN_ID, "mobile-map-fab-a11y.png");
       assertConsoleClean(errors);

@@ -248,7 +248,7 @@ export async function searchEvents(
       const intel = await searchEventsIntelligent(normalizedQuery);
       const latencyMs = Date.now() - started;
       await writeSearchLog({
-        queryText: normalizedQuery.queryText!.trim(),
+        queryText: normalizedQuery.queryText?.trim() ?? '',
         slots: intel.slots,
         toolName: 'search-events',
         resultsCount: intel.results.length,

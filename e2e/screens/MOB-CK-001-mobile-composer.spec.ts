@@ -46,8 +46,8 @@ test.describe(`${SCREEN_ID} CopilotKit v1 mobile composer`, () => {
 
     const box = await page.locator(SEND_BTN).first().boundingBox();
     expect(box).not.toBeNull();
-    expect(box!.height).toBeGreaterThanOrEqual(44);
-    expect(box!.width).toBeGreaterThanOrEqual(44);
+    expect(box ? box.height : 0).toBeGreaterThanOrEqual(44);
+    expect(box ? box.width : 0).toBeGreaterThanOrEqual(44);
   });
 
   test("input container keeps a safe-area bottom padding floor", async ({
@@ -93,18 +93,30 @@ test.describe(`${SCREEN_ID} CopilotKit v1 mobile composer`, () => {
 
     const composer = page.locator(COMPOSER).first();
     await composer.click();
-    const before = (await composer.boundingBox())!.height;
+    const beforeBox = await composer.boundingBox();
+    if (!beforeBox) {
+      throw new Error("Composer bounding box not found before input");
+    }
+    const before = beforeBox.height;
 
     // Shift+Enter inserts newlines (plain Enter sends), so the box must grow.
     for (let i = 0; i < 5; i++) {
       await composer.pressSequentially(`line ${i}`);
       await composer.press("Shift+Enter");
     }
-    const grown = (await composer.boundingBox())!.height;
+    const grownBox = await composer.boundingBox();
+    if (!grownBox) {
+      throw new Error("Composer bounding box not found after growing");
+    }
+    const grown = grownBox.height;
     expect(grown).toBeGreaterThan(before);
 
     await composer.fill("");
-    const reset = (await composer.boundingBox())!.height;
+    const resetBox = await composer.boundingBox();
+    if (!resetBox) {
+      throw new Error("Composer bounding box not found after reset");
+    }
+    const reset = resetBox.height;
     expect(reset).toBeLessThan(grown);
   });
 

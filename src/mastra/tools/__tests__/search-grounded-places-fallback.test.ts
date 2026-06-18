@@ -48,7 +48,10 @@ async function runGrounded(
   query: string,
   intent?: "cafe" | "general" | "nightlife",
 ): Promise<GroundedOut> {
-  const out = await searchGroundedPlacesTool.execute!(
+  if (!searchGroundedPlacesTool.execute) {
+    throw new Error("searchGroundedPlacesTool.execute is undefined");
+  }
+  const out = await searchGroundedPlacesTool.execute(
     { query, ...(intent ? { intent } : {}) },
     {} as never,
   );

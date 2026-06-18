@@ -40,7 +40,12 @@ export async function POST(req: Request) {
     : query.trim();
 
   try {
-    const out = await searchGroundedPlacesTool.execute!(
+    const toolExecute = searchGroundedPlacesTool.execute;
+    if (!toolExecute) {
+      console.error("[api/grounded/search] searchGroundedPlacesTool.execute is undefined");
+      return NextResponse.json({ error: "service unavailable" }, { status: 500 });
+    }
+    const out = await toolExecute(
       {
         query: searchQuery,
         pageSize: limit,

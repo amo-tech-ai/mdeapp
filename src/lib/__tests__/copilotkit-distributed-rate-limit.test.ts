@@ -38,7 +38,7 @@ function mockRpcSequence(
 ): void {
   let index = 0;
   rpcMock.mockImplementation(async (_key: string, max: number) => {
-    const next = results[index] ?? results[results.length - 1]!;
+    const next = results[index] ?? results[results.length - 1] ?? {};
     index += 1;
     return {
       retryAfterSeconds: 0,

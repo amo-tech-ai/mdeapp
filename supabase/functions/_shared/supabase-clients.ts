@@ -1,8 +1,11 @@
 import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 export function getUserClient(authHeader: string): SupabaseClient {
-  const url = Deno.env.get("SUPABASE_URL")!;
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+  const url = Deno.env.get("SUPABASE_URL");
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!url || !anonKey) {
+    throw new Error("Environment variables SUPABASE_URL and SUPABASE_ANON_KEY must be defined");
+  }
 
   return createClient(url, anonKey, {
     global: { headers: { Authorization: authHeader } },
@@ -11,8 +14,15 @@ export function getUserClient(authHeader: string): SupabaseClient {
 }
 
 export function getServiceClient(): SupabaseClient {
-  const url = Deno.env.get("SUPABASE_URL")!;
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const url = Deno.env.get("SUPABASE_URL");
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+  if (!url) {
+    throw new Error("Environment variable SUPABASE_URL is not defined");
+  }
+  if (!serviceKey) {
+    throw new Error("Environment variable SUPABASE_SERVICE_ROLE_KEY is not defined");
+  }
 
   return createClient(url, serviceKey, {
     auth: { autoRefreshToken: false, persistSession: false },

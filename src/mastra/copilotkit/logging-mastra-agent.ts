@@ -42,7 +42,7 @@ function sanitizeHostEventAgUiInput(input: RunAgentInput): RunAgentInput {
 
   return {
     ...input,
-    messages: [userMessages[userMessages.length - 1]!],
+    messages: [userMessages?.[userMessages.length - 1]],
   };
 }
 

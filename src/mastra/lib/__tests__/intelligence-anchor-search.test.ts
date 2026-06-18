@@ -188,8 +188,8 @@ describe("DATA-041-R05 — intelligence-anchor-search", () => {
       signalMap,
     });
     for (let i = 1; i < ranked.length; i++) {
-      expect(ranked[i - 1]!.rankScore).toBeGreaterThanOrEqual(
-        ranked[i]!.rankScore,
+      expect(ranked[i - 1]?.rankScore).toBeGreaterThanOrEqual(
+        ranked[i]?.rankScore,
       );
     }
   });

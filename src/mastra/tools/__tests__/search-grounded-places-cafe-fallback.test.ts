@@ -46,7 +46,10 @@ type GroundedOut = {
 };
 
 async function runGrounded(query: string): Promise<GroundedOut> {
-  const out = await searchGroundedPlacesTool.execute!({ query }, {} as never);
+  if (!searchGroundedPlacesTool.execute) {
+    throw new Error('searchGroundedPlacesTool.execute is not available');
+  }
+  const out = await searchGroundedPlacesTool.execute({ query }, {} as never);
   return out as GroundedOut;
 }
 
