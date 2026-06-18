@@ -1,0 +1,20 @@
+src/components/partners/partner-signup-wizard.tsx
+  s_2e9704330dc5b7::t_78434b1fcb194c 376
+  s_2e9704330dc5b7::t_d35331426612ec 352,547,623
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "4d447db8db316e55a4beb5a8b9749b5f056d6da1",
+  "prompts": {},
+  "sessions": {
+    "s_2e9704330dc5b7": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "06a895ab-da7e-4b24-a8e2-bc5c7c9e4919",
+        "model": "gpt-5-mini"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
