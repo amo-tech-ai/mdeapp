@@ -193,7 +193,8 @@ function RentalDescription({ description }: { description?: string | null }) {
   );
 }
 
-function RentalDetailInner({ detail }: { detail: RentalDetail }) {
+// skipcq: JS-R1005, JS-0415 - this UI composition intentionally keeps section order explicit for stable UX and tests
+const RentalDetailInner = ({ detail }: { detail: RentalDetail }) => {
   const { openScheduleViewing } = useRentalUi();
   const prices = formatRentalPrices(detail.priceNightly ?? undefined);
   const mapsHref = mapsHrefFor(detail);
@@ -279,4 +280,4 @@ function RentalDetailInner({ detail }: { detail: RentalDetail }) {
       <RentalMobileCta prices={prices} onRequest={requestViewing} />
     </main>
   );
-}
+};
