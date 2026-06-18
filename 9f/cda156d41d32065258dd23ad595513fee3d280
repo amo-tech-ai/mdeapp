@@ -1,0 +1,22 @@
+.deepsource.toml
+  s_f47ea5ebcd9235::t_5fdebcb064c05a 1-55
+src/components/tickets/ticket-detail-client.tsx
+  s_f47ea5ebcd9235::t_1aa81c5eed6c96 117
+  s_f47ea5ebcd9235::t_172470f4344f5c 23,36-39,42-56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "9fcda156d41d32065258dd23ad595513fee3d280",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
