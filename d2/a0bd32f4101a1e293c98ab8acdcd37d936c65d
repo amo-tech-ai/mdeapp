@@ -1,0 +1,59 @@
+supabase/functions/_shared/http.ts
+  s_f1f9127cc71b2a::t_02341f5d9edec2 43,49-53
+src/lib/sanitize-assistant-chat-content.ts
+  s_f1f9127cc71b2a::t_049f738fca5cc8 43,51
+src/app/api/grounded/search/route.ts
+  s_f1f9127cc71b2a::t_4c1d9851d1d511 18
+src/mastra/tools/search-events.ts
+  s_f1f9127cc71b2a::t_e580107cbaafb0 238
+src/mastra/tools/search-restaurants.ts
+  s_f1f9127cc71b2a::t_8927a5a9510f3d 248
+src/lib/event-venue-booking-intent.ts
+  s_f1f9127cc71b2a::t_ba1f99dd425e29 62
+  s_f1f9127cc71b2a::t_5852babdbb79bb 74
+src/lib/__tests__/event-venue-booking-fast-path.test.ts
+  s_f1f9127cc71b2a::t_1cb7a3f6816a21 7-14
+src/mastra/lib/__tests__/intelligence-event-search.test.ts
+  s_f1f9127cc71b2a::t_acb008c886f2d8 3
+  s_f1f9127cc71b2a::t_6aec53f5c7d193 75-96
+src/lib/restaurant-query-classifier.ts
+  s_f1f9127cc71b2a::t_02aa2f6465faff 93
+  s_f1f9127cc71b2a::t_c600813c4cfeec 175
+src/mastra/tools/search-rentals.ts
+  s_f1f9127cc71b2a::t_ae0948c52c8e08 347
+src/lib/event-query-classifier.ts
+  s_f1f9127cc71b2a::t_036fc940bcc346 65
+supabase/functions/chat-lead-capture/index.ts
+  s_f1f9127cc71b2a::t_abc04bdc6dc775 23
+.claude/skills/testing/scripts/with_server.py
+  s_f1f9127cc71b2a::t_751510b29d8c9b 30-32
+src/app/rentals/loading.tsx
+  s_f1f9127cc71b2a::t_fbed8e3865bd0c 58-59
+  s_f1f9127cc71b2a::t_715ded0e84cd4a 53-54
+  s_f1f9127cc71b2a::t_6fcbc661028b37 63-64
+  s_f1f9127cc71b2a::t_4902f2212017ad 75-76
+  s_f1f9127cc71b2a::t_18b767d0c1b66d 3-9
+.claude/skills/task-verifier/scripts/probe-disk.sh
+  s_f1f9127cc71b2a::t_fb848b458dd579 147-151
+src/mastra/lib/intelligence-event-search.ts
+  s_f1f9127cc71b2a::t_efb72756b8febb 119-120
+  s_f1f9127cc71b2a::t_64c6d65373a91a 126-129,132
+  s_f1f9127cc71b2a::t_851309ab4ecb16 168
+  s_f1f9127cc71b2a::t_94f96849648636 130-131,133-139
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "d2a0bd32f4101a1e293c98ab8acdcd37d936c65d",
+  "prompts": {},
+  "sessions": {
+    "s_f1f9127cc71b2a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ebcc0856-4735-47c8-9dfa-b58a8e933943",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
