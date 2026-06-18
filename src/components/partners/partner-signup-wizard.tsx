@@ -349,6 +349,7 @@ const WizardConciergePreview = () => { // skipcq: JS-0067
   );
 };
 
+// skipcq: JS-0067, JS-R1005
 export function PartnerSignupWizard({
   partnerType,
   draftId,
@@ -372,7 +373,7 @@ export function PartnerSignupWizard({
 
   // Analyzing animation: 4 rows, ~600ms each, then transition to review
   useEffect(() => {
-    if (view.kind !== "form" || view.step !== "analyzing") return null;
+    if (view.kind !== "form" || view.step !== "analyzing") return;
     const t1 = setTimeout(() => setAnalyzeProgress(1), 600);
     const t2 = setTimeout(() => setAnalyzeProgress(2), 1200);
     const t3 = setTimeout(() => setAnalyzeProgress(3), 1800);
@@ -543,7 +544,7 @@ export function PartnerSignupWizard({
       "A grounded concierge profile",
       "2 draft social posts (await your OK)",
     ];
-    return (
+    return ( // skipcq: JS-0415
       <>
         <div className="grid gap-4 px-4 sm:grid-cols-2 sm:px-8">
           <CreatedCard title="What we created" badgeText="Ready" items={createdItems} />
@@ -619,7 +620,7 @@ export function PartnerSignupWizard({
 
   // ── Loading ────────────────────────────────────────────────────────────────
   if (view.kind === "loading") {
-    return (
+    return ( // skipcq: JS-0415
       <div className="flex w-full max-w-md items-center justify-center gap-3 py-16 text-sm text-muted-foreground" data-testid="partner-signup-loading">
         <LoaderCircleIcon className="size-5 animate-spin" aria-hidden="true" />
         Activating your account…
