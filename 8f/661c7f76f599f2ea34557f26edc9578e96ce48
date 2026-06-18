@@ -1,0 +1,23 @@
+src/components/tickets/ticket-detail-client.tsx
+  s_f47ea5ebcd9235::t_a4114bd10c2ffc 5-9
+  s_f47ea5ebcd9235::t_5f5f8068e42f7e 113-114,116,118-124,131,137,142-143,146-173,177-183,44,50,57
+  s_f47ea5ebcd9235::t_3b2a867126f1eb 115
+  s_f47ea5ebcd9235::t_172470f4344f5c 23,36-38,42-43,45-49,51-56
+  s_f47ea5ebcd9235::t_1aa81c5eed6c96 117
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "8f661c7f76f599f2ea34557f26edc9578e96ce48",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}

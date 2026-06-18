@@ -1,0 +1,39 @@
+src/lib/tickets/get-wallet-order.ts
+  s_f47ea5ebcd9235::t_11f27bd6816d31 39
+  s_f47ea5ebcd9235::t_faef0a96e3675d 48-55,69-70
+  s_f47ea5ebcd9235::t_919c6be2d48955 10,27,76
+src/components/tickets/ticket-qr-display.tsx
+  s_f47ea5ebcd9235::t_8ea0313d0504d4 4-6,11-16,21-26,31,33-47
+  s_f47ea5ebcd9235::t_908b3b4b6c2d36 20
+src/components/tickets/ticket-pass-actions.tsx
+  s_f47ea5ebcd9235::t_008220ab2e9cb8 1-15,17-32,34-112
+  s_f47ea5ebcd9235::t_a47e9a774da67c 33
+  s_f47ea5ebcd9235::t_0d86c861f17419 16
+src/components/tickets/my-tickets-list.tsx
+  s_f47ea5ebcd9235::t_001682fbfba4f5 2,4,38-39,41-57,62-87,89-95,98-101,103-149,157-158
+  s_f47ea5ebcd9235::t_081b34861b7305 150-156
+  s_f47ea5ebcd9235::t_eb2848da900ad2 18,61,88
+src/components/tickets/ticket-detail-client.tsx
+  s_f47ea5ebcd9235::t_a4114bd10c2ffc 5-9
+  s_f47ea5ebcd9235::t_5f5f8068e42f7e 116-117,119,121-127,134,140,145-146,149-176,180,182-187,45,52,60
+  s_f47ea5ebcd9235::t_3b2a867126f1eb 118
+  s_f47ea5ebcd9235::t_172470f4344f5c 24,37-39,43-44,47-51,54-59
+  s_f47ea5ebcd9235::t_1aa81c5eed6c96 120
+  s_f47ea5ebcd9235::t_f1840db95732ad 23,46,53,181
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "14193c95535b7751261d28d3d9d9b40de99ee7f7",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}

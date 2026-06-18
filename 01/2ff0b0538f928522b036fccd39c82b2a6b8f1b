@@ -1,0 +1,28 @@
+src/components/tickets/ticket-detail-client.tsx
+  s_f47ea5ebcd9235::t_a4114bd10c2ffc 5-9
+  s_f47ea5ebcd9235::t_5f5f8068e42f7e 122-123,125,127-133,140,146,151-152,155-182,186,188-193,51,58,66
+  s_f47ea5ebcd9235::t_3b2a867126f1eb 124
+  s_f47ea5ebcd9235::t_172470f4344f5c 24,39-41,49-50,53-57,60-65
+  s_f47ea5ebcd9235::t_1aa81c5eed6c96 126
+  s_f47ea5ebcd9235::t_f1840db95732ad 23,52,59,187
+  s_f47ea5ebcd9235::t_20f0603ea5967e 31-32,34,42-46
+.deepsource.toml
+  s_f47ea5ebcd9235::t_5fdebcb064c05a 1-7,9-56
+  s_f47ea5ebcd9235::t_9c32a1b1f9ffb4 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "012ff0b0538f928522b036fccd39c82b2a6b8f1b",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
