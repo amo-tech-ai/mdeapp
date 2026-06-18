@@ -19,9 +19,10 @@ import socket
 import time
 import sys
 import argparse
-import shutil
+import os
 
-BASH_PATH = shutil.which("bash")
+BASH_CANDIDATES = ("/bin/bash", "/usr/bin/bash")
+BASH_PATH = next((path for path in BASH_CANDIDATES if os.path.exists(path) and os.access(path, os.X_OK)), None)
 
 def is_server_ready(port, timeout=30):
     """Wait for server to be ready by polling the port."""
