@@ -1,0 +1,26 @@
+src/lib/rentals/build-broker-dashboard-view.ts
+  s_f9d5f98a31145c::t_312ab37956077f 49-50
+docs/tasks/testing/evidence/2026-06-16/RE-DES-004-RESULTS.md
+  s_f9d5f98a31145c::t_363baba1e353e8 1-25
+src/lib/rentals/fetch-broker-dashboard.ts
+  s_f9d5f98a31145c::t_3b6f9c3a8efe59 29-30
+  s_f9d5f98a31145c::t_dbe8cb29380330 75
+src/lib/rentals/fetch-broker-listings.ts
+  s_f9d5f98a31145c::t_ab83475a0e0b58 26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "bfaf45424a3c3e3dde22ad11b2b6dc73e67756e2",
+  "prompts": {},
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
