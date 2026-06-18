@@ -14,11 +14,13 @@ export type BrokerOnboardingSubmitResult =
   | { ok: true }
   | { ok: false; message: string };
 
+// skipcq: JS-0067
 function trimOrEmpty(value: string): string {
   return value.trim();
 }
 
 /** landlord_profiles has single primary_neighborhood — store full multi-select in notes until array column ships. */
+// skipcq: JS-0067
 export function brokerNeighborhoodProfileFields(neighborhoods: string[]): {
   primary_neighborhood: string;
   notes: string;

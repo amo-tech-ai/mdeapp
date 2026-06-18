@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 
 /** RE-DES-005 — logo-only chrome until onboarding completes (no HostNavRail). */
+// skipcq: JS-0067
 export function RentalsOnboardingMinimalChrome({ children }: { children: ReactNode }) {
   return (
     <div

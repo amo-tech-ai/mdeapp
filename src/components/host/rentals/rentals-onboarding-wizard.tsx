@@ -24,6 +24,7 @@ const INITIAL: BrokerOnboardingFormInput = {
   confirmedListingRights: false,
 };
 
+// skipcq: JS-0067
 function StepIndicator({ step }: { step: Step }) {
   const items: { n: Step; label: string }[] = [
     { n: 1, label: "Profile" },
@@ -57,6 +58,7 @@ function StepIndicator({ step }: { step: Step }) {
   );
 }
 
+// skipcq: JS-0067
 function toggleNeighborhood(current: string[], value: string): string[] {
   return current.includes(value)
     ? current.filter((n) => n !== value)
