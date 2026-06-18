@@ -1,0 +1,27 @@
+src/components/partners/__tests__/partner-signup-wizard.test.tsx
+  s_2e9704330dc5b7::t_d423cd3d1d2af2 182-184
+  s_2e9704330dc5b7::t_0f83de4f660803 287-292
+  s_2e9704330dc5b7::t_430b2fe00fa37b 50-61,95-96,98-99,107-108,110-111,113-114,116-117,154-165,167-169,171-173,175-181,185-186
+src/components/partners/partner-signup-wizard.tsx
+  s_2e9704330dc5b7::t_5e95ef483d5dd7 399-403,482,487,657,663,690
+  s_2e9704330dc5b7::t_461f6facc32951 516-532,534-571,573-592,594-602,604
+  s_2e9704330dc5b7::t_b32691b7c87a0d 375
+  s_2e9704330dc5b7::t_eb1c230e1722ed 492-508,510-511,513-515,605
+  s_2e9704330dc5b7::t_4b835668053be3 810,817
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "c66bd82009d13dbd9aaa541365096a3f4d81d90e",
+  "prompts": {},
+  "sessions": {
+    "s_2e9704330dc5b7": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "06a895ab-da7e-4b24-a8e2-bc5c7c9e4919",
+        "model": "gpt-5-mini"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
