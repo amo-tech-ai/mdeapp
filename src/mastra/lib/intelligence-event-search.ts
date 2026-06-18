@@ -1,5 +1,4 @@
 import { createClient } from "@supabase/supabase-js";
-import { embedQueryText, vectorLiteral } from "./query-embedding";
 import type { RankExplanationEntry } from "./search-logs";
 import {
   type EventCard,
@@ -173,10 +172,7 @@ function scoreHybridEventRow(
 }
 
 function hybridToEventCard(row: HybridEventRow, rankScore?: number, signalSource?: string): IntelligenceEventResult {
-  return {
-    id: row.id,
-    title: row.name,
-    category: mapCategory(row.event_type),
+  const defaults: Record<string, any> = {
     venue: row.address ?? "Medellin",
     neighborhood: extractNeighborhood(row.address, row.city),
     startsAt: row.event_start_time ?? new Date().toISOString(),
@@ -187,9 +183,16 @@ function hybridToEventCard(row: HybridEventRow, rankScore?: number, signalSource
     longitude: num(row.longitude),
     mapsUrl: row.maps_url ?? null,
     sourceUrl: row.maps_url ?? undefined,
+    evidenceText: signalSource ? `Signal source: ${signalSource}` : null,
+  };
+
+  return {
+    id: row.id,
+    title: row.name,
+    category: mapCategory(row.event_type),
+    ...defaults,
     rankScore,
     signalSource,
-    evidenceText: signalSource ? `Signal source: ${signalSource}` : null,
   };
 }
 
