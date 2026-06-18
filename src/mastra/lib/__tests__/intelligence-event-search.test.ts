@@ -101,6 +101,21 @@ describe("isWithinDateWindow", () => {
     expect(isWithinDateWindow("2026-06-18T05:00:00+00:00", window)).toBe(true);
     expect(isWithinDateWindow("2026-06-17T23:59:59.999Z", window)).toBe(false);
   });
+
+  it("rejects malformed event timestamps and ignores malformed bounds", () => {
+    const window = {
+      gte: "not-a-date",
+      lte: "also-not-a-date",
+    };
+
+    expect(isWithinDateWindow("not-a-date", window)).toBe(false);
+    expect(
+      isWithinDateWindow("2026-06-18T05:00:00.000Z", {
+        gte: "still-not-a-date",
+        lte: "2026-06-18T23:59:59.999Z",
+      }),
+    ).toBe(true);
+  });
 });
 
 describe("hybridRowToEventCard", () => {
