@@ -71,7 +71,7 @@ const STEP_NUMBER: Record<WizardStep, number> = {
 };
 const TOTAL_STEPS = 4;
 
-function WizardStepBar({ step }: { step: WizardStep | "done" }) {
+export function WizardStepBar({ step }: { step: WizardStep | "done" }) {
   const shown = step === "done" ? TOTAL_STEPS : (STEP_NUMBER[step] ?? TOTAL_STEPS);
   return (
     <div className="flex items-center gap-3 px-4 py-3 sm:px-6" aria-label="Signup progress">
@@ -101,7 +101,7 @@ function WizardStepBar({ step }: { step: WizardStep | "done" }) {
   );
 }
 
-function SourceChip({
+export function SourceChip({
   children,
   active,
 }: {
@@ -123,34 +123,52 @@ function SourceChip({
   );
 }
 
-function WizardDraftCard({ partnerType }: { partnerType: PartnerType }) {
+function DraftCardHeaderSection() {
+  return (
+    <div className="flex items-start justify-between gap-3">
+      <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-accent/15">
+        <SparklesIcon className="size-5 text-accent" aria-hidden="true" />
+      </div>
+      <div className="flex gap-2">
+        <Badge variant="secondary" className="text-xs">Example</Badge>
+        <Badge variant="outline" className="gap-1 text-xs text-accent border-accent/30 bg-accent/5">
+          <span aria-hidden="true">✦</span> AI draft
+        </Badge>
+      </div>
+    </div>
+  );
+}
+
+function DraftCardTags() {
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      <Badge variant="secondary">Rooftop bar</Badge>
+      <Badge variant="secondary">Provenza</Badge>
+      <Badge className="bg-primary/10 text-primary border-primary/20 text-xs">Open now</Badge>
+    </div>
+  );
+}
+
+function DetailRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-baseline justify-between border-b border-border pb-2">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-medium">{value}</span>
+    </div>
+  );
+}
+
+export function WizardDraftCard({ partnerType }: { partnerType: PartnerType }) {
   const label = PARTNER_TYPE_LABELS[partnerType];
   return (
     <Card data-testid="signup-wizard-draft-card">
       <CardHeader className="pb-3">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-accent/15">
-            <SparklesIcon className="size-5 text-accent" aria-hidden="true" />
-          </div>
-          <div className="flex gap-2">
-            <Badge variant="secondary" className="text-xs">Example</Badge>
-            <Badge variant="outline" className="gap-1 text-xs text-accent border-accent/30 bg-accent/5">
-              <span aria-hidden="true">✦</span> AI draft
-            </Badge>
-          </div>
-        </div>
+        <DraftCardHeaderSection />
         <CardTitle className="text-xl">Alma Rooftop</CardTitle>
-        <div className="flex flex-wrap gap-1.5">
-          <Badge variant="secondary">Rooftop bar</Badge>
-          <Badge variant="secondary">Provenza</Badge>
-          <Badge className="bg-primary/10 text-primary border-primary/20 text-xs">Open now</Badge>
-        </div>
+        <DraftCardTags />
       </CardHeader>
       <CardContent className="flex flex-col gap-3 text-sm">
-        <div className="flex items-baseline justify-between border-b border-border pb-2">
-          <span className="text-muted-foreground">Category</span>
-          <span className="font-medium">Bar · Rooftop</span>
-        </div>
+        <DetailRow label="Category" value="Bar · Rooftop" />
         <div className="flex items-baseline justify-between border-b border-border pb-2">
           <span className="text-muted-foreground">Address</span>
           <span className="font-medium">Cra. 35 #8A, Provenza</span>
@@ -268,7 +286,51 @@ function WizardVisibilityCard() {
   );
 }
 
-function WizardConciergePreview() {
+const QueryDisplay = ({ query }: { query: string }) => (
+  <div className="ml-auto w-fit rounded-2xl rounded-br-sm bg-accent/15 px-3 py-2 text-sm text-foreground">
+    {query}
+  </div>
+);
+
+const RecommendationCard = ({ name, subtitle, reason }: { name: string; subtitle: string; reason: React.ReactNode }) => (
+  <div className="rounded-xl border border-border bg-muted/30 p-3">
+    <div className="flex items-start gap-3">
+      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-accent/15">
+        <MapPinIcon className="size-4 text-accent" aria-hidden="true" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-semibold">{name}</p>
+        <p className="text-xs text-muted-foreground">{subtitle}</p>
+      </div>
+      <span className="shrink-0 rounded-md bg-primary px-2 py-1 text-xs font-medium text-primary-foreground">
+        Book
+      </span>
+    </div>
+    <p className="mt-2 text-xs text-muted-foreground">
+      {reason}
+    </p>
+  </div>
+);
+
+const GroundedInfo = () => (
+  <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+    <CheckIcon className="size-3.5 text-primary" aria-hidden="true" />
+    Grounded in Google Maps · example preview — your real listing appears here after approval
+  </p>
+);
+
+const WizardConciergePreview = () => {
+  const query = "Best rooftop for cocktails near Provenza tonight?";
+  const name = "Alma Rooftop";
+  const subtitle = "Rooftop bar · Provenza · open now";
+  const reason = (
+    <>
+      Why it&apos;s recommended: matches{" "}
+      <span className="font-medium text-foreground">&ldquo;rooftop&rdquo;</span> +{" "}
+      <span className="font-medium text-foreground">&ldquo;cocktails&rdquo;</span>, open now, a 4-minute walk away.
+    </>
+  );
+
   return (
     <Card data-testid="signup-wizard-concierge-preview">
       <CardHeader className="pb-3">
@@ -279,36 +341,13 @@ function WizardConciergePreview() {
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
-        <div className="ml-auto w-fit rounded-2xl rounded-br-sm bg-accent/15 px-3 py-2 text-sm text-foreground">
-          Best rooftop for cocktails near Provenza tonight?
-        </div>
-        <div className="rounded-xl border border-border bg-muted/30 p-3">
-          <div className="flex items-start gap-3">
-            <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-accent/15">
-              <MapPinIcon className="size-4 text-accent" aria-hidden="true" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold">Alma Rooftop</p>
-              <p className="text-xs text-muted-foreground">Rooftop bar · Provenza · open now</p>
-            </div>
-            <span className="shrink-0 rounded-md bg-primary px-2 py-1 text-xs font-medium text-primary-foreground">
-              Book
-            </span>
-          </div>
-          <p className="mt-2 text-xs text-muted-foreground">
-            Why it&apos;s recommended: matches{" "}
-            <span className="font-medium text-foreground">&ldquo;rooftop&rdquo;</span> +{" "}
-            <span className="font-medium text-foreground">&ldquo;cocktails&rdquo;</span>, open now, a 4-minute walk away.
-          </p>
-        </div>
-        <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <CheckIcon className="size-3.5 text-primary" aria-hidden="true" />
-          Grounded in Google Maps · example preview — your real listing appears here after approval
-        </p>
+        <QueryDisplay query={query} />
+        <RecommendationCard name={name} subtitle={subtitle} reason={reason} />
+        <GroundedInfo />
       </CardContent>
     </Card>
   );
-}
+};
 
 export function PartnerSignupWizard({
   partnerType,
@@ -333,7 +372,7 @@ export function PartnerSignupWizard({
 
   // Analyzing animation: 4 rows, ~600ms each, then transition to review
   useEffect(() => {
-    if (view.kind !== "form" || view.step !== "analyzing") return;
+    if (view.kind !== "form" || view.step !== "analyzing") return null;
     setAnalyzeProgress(0);
     const t1 = setTimeout(() => setAnalyzeProgress(1), 600);
     const t2 = setTimeout(() => setAnalyzeProgress(2), 1200);
@@ -439,30 +478,50 @@ export function PartnerSignupWizard({
     return (
       <div className="w-full max-w-2xl" data-testid="partner-signup-success">
         <WizardStepBar step="done" />
-        <div className="flex flex-col items-center gap-4 px-4 py-8 text-center sm:px-8">
-          <div className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <CheckCircle2Icon className="size-7" aria-hidden="true" />
-          </div>
-          <h1 className="text-2xl font-semibold tracking-tight">You&apos;re listed.</h1>
-          <Badge variant="secondary" className="gap-1.5 border border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-400">
-            <span className="size-1.5 rounded-full bg-current" aria-hidden="true" />
-            In review · live within ~24h
-          </Badge>
-          <p className="max-w-md text-sm text-muted-foreground">
-            You approved the draft. A quick human check keeps the concierge trustworthy — your listing is usually live within 24 hours.
-          </p>
-        </div>
+        <SuccessInfo />
+        <CreatedCardSection />
+      </div>
+    );
+  }
 
-        <div className="grid gap-4 px-4 sm:grid-cols-2 sm:px-8">
-          <Card data-testid="partner-signup-created-card">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center justify-between text-base">
-                What we created
-                <Badge className="bg-primary/10 text-primary border-primary/20 text-xs">Ready</Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="flex flex-col gap-2 text-sm">
+  const SuccessInfo = () => (
+    <div className="flex flex-col items-center gap-4 px-4 py-8 text-center sm:px-8">
+      <div className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+        <CheckCircle2Icon className="size-7" aria-hidden="true" />
+      </div>
+      <h1 className="text-2xl font-semibold tracking-tight">You&apos;re listed.</h1>
+      <Badge
+        variant="secondary"
+        className="gap-1.5 border border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-400"
+      >
+        <span className="size-1.5 rounded-full bg-current" aria-hidden="true" />
+        In review · live within ~24h
+      </Badge>
+      <p className="max-w-md text-sm text-muted-foreground">
+        You approved the draft. A quick human check keeps the concierge trustworthy — your listing is usually live within 24 hours.
+      </p>
+    </div>
+  );
+
+  const CreatedCardSection = () => (
+    <div className="grid gap-4 px-4 sm:grid-cols-2 sm:px-8">
+      <Card data-testid="partner-signup-created-card">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center justify-between text-base">
+            What we created
+            <Badge className="bg-primary/10 text-primary border-primary/20 text-xs">
+              Ready
+            </Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="flex flex-col gap-2 text-sm">
+            {/* list items */}
+          </ul>
+        </CardContent>
+      </Card>
+    </div>
+  );
                 {["Your listing + map pin", "A grounded concierge profile", "2 draft social posts (await your OK)"].map(
                   (item) => (
                     <li key={item} className="flex items-start gap-2">
@@ -710,33 +769,61 @@ export function PartnerSignupWizard({
   }
 
   // ── Step 4: Review & approve ───────────────────────────────────────────────
+
+  function ReviewHeader() {
+    return (
+      <div>
+        <p className="mb-1 text-sm font-semibold text-primary">Review &amp; approve</p>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+          From a link to a live-ready listing.
+        </h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          AI drafted this from your page. Check it over —{' '}
+          <strong>nothing goes live until you approve</strong>. Anything we can't verify is
+          marked “data pending”, never guessed.
+        </p>
+      </div>
+    );
+  }
+
+  function TransformStrip({businessUrl}: {businessUrl?: string}) {
+    return (
+      <div
+        className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 px-4 py-3 text-xs"
+        data-testid="signup-wizard-transform"
+      >
+        <div>
+          <span className="font-semibold text-muted-foreground">Before</span>
+          <br />
+          <span className="text-muted-foreground">
+            Just a link — {businessUrl || 'almarooftop.co'}
+          </span>
+        </div>
+        <ArrowRightIcon
+          className="size-4 shrink-0 text-muted-foreground"
+          aria-hidden="true"
+        />
+        <div>
+          <span className="font-semibold text-foreground">After · seconds</span>
+          <br />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full max-w-4xl" data-testid="signup-wizard-step-review">
+    <div
+      className="w-full max-w-4xl"
+      data-testid="signup-wizard-step-review"
+    >
       <WizardStepBar step="review" />
 
       <div className="flex flex-col gap-6 px-4 py-8 sm:px-8">
-        <div>
-          <p className="mb-1 text-sm font-semibold text-primary">Review &amp; approve</p>
-          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-            From a link to a live-ready listing.
-          </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            AI drafted this from your page. Check it over —{" "}
-            <strong>nothing goes live until you approve</strong>. Anything we couldn&apos;t verify is marked &ldquo;data pending&rdquo;, never guessed.
-          </p>
-        </div>
-
-        {/* Before → After transform strip */}
-        <div className="flex items-center gap-3 rounded-xl border border-border bg-muted/30 px-4 py-3 text-xs" data-testid="signup-wizard-transform">
-          <div>
-            <span className="font-semibold text-muted-foreground">Before</span>
-            <br />
-            <span className="text-muted-foreground">Just a link — {businessUrl || "almarooftop.co"}</span>
-          </div>
-          <ArrowRightIcon className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-          <div>
-            <span className="font-semibold text-foreground">After · seconds</span>
-            <br />
+        <ReviewHeader />
+        <TransformStrip businessUrl={businessUrl} />
+      </div>
+    </div>
+  );
             <span className="text-muted-foreground">A listing, map pin, visibility score &amp; concierge preview</span>
           </div>
         </div>

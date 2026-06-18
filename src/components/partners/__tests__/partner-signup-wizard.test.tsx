@@ -79,17 +79,17 @@ function mountWizard(
 }
 
 /** Skip to the review step via the "Or fill in manually" link. */
-async function advanceToReview(container: HTMLElement) {
+const advanceToReview = async (container: HTMLElement) => {
   const manualLink = container.querySelector(
     '[data-testid="signup-wizard-manual-link"]',
   ) as HTMLElement;
-  await act(async () => {
+  await act(() => {
     manualLink.click();
   });
-}
+};
 
 /** Fill businessName + click Approve from the review step. */
-async function approveWithName(container: HTMLElement, name: string) {
+const approveWithName = async (container: HTMLElement, name: string) => {
   const nameInput = container.querySelector(
     '[data-testid="signup-wizard-name-input"]',
   ) as HTMLInputElement;
@@ -100,7 +100,7 @@ async function approveWithName(container: HTMLElement, name: string) {
   await act(async () => {
     approveBtn.click();
   });
-}
+};
 
 describe("PartnerSignupWizard (static markup)", () => {
   it("shows auth gate when unauthenticated", () => {
