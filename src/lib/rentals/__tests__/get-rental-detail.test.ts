@@ -3,7 +3,7 @@ import { mapApartmentRowToDetail } from "../get-rental-detail";
 
 describe("SAN-1202 · mapApartmentRowToDetail", () => {
   it("maps a full apartments row to the detail view-model", () => {
-    const d = mapApartmentRowToDetail({
+    const rentalDetail = mapApartmentRowToDetail({
       id: "abc",
       slug: "laureles-2br",
       title: "Bright Laureles 2BR",
@@ -24,30 +24,30 @@ describe("SAN-1202 · mapApartmentRowToDetail", () => {
       longitude: -75.6,
       status: "active",
     });
-    expect(d.id).toBe("abc");
-    expect(d.bedrooms).toBe(2);
-    expect(d.priceMonthly).toBe(2400);
-    expect(d.amenities).toEqual(["wifi", "ac"]);
-    expect(d.buildingAmenities).toEqual(["gym"]);
-    expect(d.images).toHaveLength(2);
+    expect(rentalDetail.id).toBe("abc");
+    expect(rentalDetail.bedrooms).toBe(2);
+    expect(rentalDetail.priceMonthly).toBe(2400);
+    expect(rentalDetail.amenities).toEqual(["wifi", "ac"]);
+    expect(rentalDetail.buildingAmenities).toEqual(["gym"]);
+    expect(rentalDetail.images).toHaveLength(2);
   });
 
   it("returns null for unknown/blank fields so the UI can show Data pending — never faked", () => {
-    const d = mapApartmentRowToDetail({ id: "x", title: "Studio", neighborhood: "El Poblado" });
-    expect(d.bathrooms).toBeNull();
-    expect(d.maxGuests).toBeNull();
-    expect(d.priceMonthly).toBeNull();
-    expect(d.description).toBeNull();
-    expect(d.houseRules).toBeNull();
-    expect(d.availableFrom).toBeNull();
-    expect(d.minimumStayDays).toBeNull();
-    expect(d.amenities).toEqual([]);
-    expect(d.images).toEqual([]);
+    const detail = mapApartmentRowToDetail({ id: "x", title: "Studio", neighborhood: "El Poblado" });
+    expect(detail.bathrooms).toBeNull();
+    expect(detail.maxGuests).toBeNull();
+    expect(detail.priceMonthly).toBeNull();
+    expect(detail.description).toBeNull();
+    expect(detail.houseRules).toBeNull();
+    expect(detail.availableFrom).toBeNull();
+    expect(detail.minimumStayDays).toBeNull();
+    expect(detail.amenities).toEqual([]);
+    expect(detail.images).toEqual([]);
   });
 
   it("coerces numeric strings and rejects non-finite values", () => {
-    const d = mapApartmentRowToDetail({ id: "y", title: "T", neighborhood: "N", price_daily: "95", bedrooms: "nope" });
-    expect(d.priceNightly).toBe(95);
-    expect(d.bedrooms).toBeNull();
+    const rentalDetail = mapApartmentRowToDetail({ id: "y", title: "T", neighborhood: "N", price_daily: "95", bedrooms: "nope" });
+    expect(rentalDetail.priceNightly).toBe(95);
+    expect(rentalDetail.bedrooms).toBeNull();
   });
 });

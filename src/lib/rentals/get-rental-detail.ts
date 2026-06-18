@@ -37,28 +37,28 @@ export type RentalDetail = {
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-function getClient() {
+const getClient = () => {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_ANON_KEY;
   if (!url || !key) return null;
   return createClient(url, key, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
-}
+};
 
-function num(v: unknown): number | null {
+const num = (v: unknown): number | null => {
   if (v == null) return null;
   const n = Number(v);
   return Number.isFinite(n) ? n : null;
-}
+};
 
-function strArray(v: unknown): string[] {
+const strArray = (v: unknown): string[] => {
   return Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
-}
+};
 
-function str(v: unknown): string | null {
+const str = (v: unknown): string | null => {
   return typeof v === "string" && v.trim() ? v : null;
-}
+};
 
 /** Map a raw `apartments` row to the detail view-model. Exported for unit tests. */
 export function mapApartmentRowToDetail(r: Record<string, unknown>): RentalDetail {
@@ -98,46 +98,54 @@ export function mapApartmentRowToDetail(r: Record<string, unknown>): RentalDetai
  */
 export async function getRentalDetail(idOrSlug: string): Promise<RentalDetail | null> {
   const client = getClient();
-  if (client) {
-    let q = client.from("apartments").select("*").eq("status", "active").limit(1);
-    q = UUID_RE.test(idOrSlug) ? q.eq("id", idOrSlug) : q.eq("slug", idOrSlug);
-    const { data, error } = await q.maybeSingle();
-    if (error) {
-      console.error("[get-rental-detail] supabase error:", error.message);
-      return null;
-    }
-    return data ? mapApartmentRowToDetail(data as Record<string, unknown>) : null;
+  if (!client) {
+    return getMockRentalDetail(idOrSlug);
   }
+  const apartmentsQuery = client.from("apartments").select("*").eq("status", "active").limit(1);
+  const field = UUID_RE.test(idOrSlug) ? "id" : "slug";
+  const { data, error } = await apartmentsQuery.eq(field, idOrSlug).maybeSingle();
+  if (error) {
+    console.error("[get-rental-detail] supabase error:", error.message);
+    return null;
+  }
+  return data ? mapApartmentRowToDetail(data as Record<string, unknown>) : null;
+}
 
-  // No DB env (local dev / CI) — reuse the search tool's mock fallback.
+async function getMockRentalDetail(idOrSlug: string): Promise<RentalDetail | null> {
   const { results } = await searchRentals({ limit: 24 });
   const hit = results.find((r) => r.id === idOrSlug);
   if (!hit) return null;
-  return {
-    id: hit.id,
-    slug: null,
-    title: hit.title,
-    neighborhood: hit.neighborhood,
-    address: null,
-    bedrooms: hit.bedrooms,
-    bathrooms: null,
-    maxGuests: null,
-    priceNightly: hit.nightly_price,
-    priceMonthly: null,
-    currency: hit.currency,
-    deposit: null,
-    amenities: hit.amenities,
-    buildingAmenities: [],
-    images: hit.image ? [hit.image] : [],
-    description: null,
-    houseRules: null,
-    hostName: hit.host_name,
-    availableFrom: null,
-    availableTo: null,
-    minimumStayDays: null,
-    maximumStayDays: null,
-    latitude: hit.latitude ?? null,
-    longitude: hit.longitude ?? null,
-    status: "active",
+  const FIELD_MAP: { [key in keyof RentalDetail]: keyof typeof hit | ((h: typeof hit) => any) } = {
+    id: "id",
+    slug: () => null,
+    title: "title",
+    neighborhood: "neighborhood",
+    address: () => null,
+    bedrooms: "bedrooms",
+    bathrooms: () => null,
+    maxGuests: () => null,
+    priceNightly: "nightly_price",
+    priceMonthly: "monthly_price",
+    currency: "currency",
+    deposit: () => null,
+    amenities: "amenities",
+    buildingAmenities: () => [],
+    images: (h) => (h.image ? [h.image] : []),
+    description: () => null,
+    houseRules: () => null,
+    hostName: "host_name",
+    availableFrom: () => null,
+    availableTo: () => null,
+    minimumStayDays: () => null,
+    maximumStayDays: () => null,
+    latitude: (h) => h.latitude ?? null,
+    longitude: (h) => h.longitude ?? null,
+    status: () => "active",
   };
+  const detail = {} as RentalDetail;
+  for (const key in FIELD_MAP) {
+    const mapper = FIELD_MAP[key];
+    detail[key] = typeof mapper === "function" ? (mapper as Function)(hit) : hit[mapper];
+  }
+  return detail;
 }

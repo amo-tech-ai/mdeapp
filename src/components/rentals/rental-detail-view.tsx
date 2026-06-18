@@ -18,10 +18,10 @@ function Pending() {
   return <span className="text-muted-foreground">{PENDING}</span>;
 }
 
-function specLabel(n: number | null, one: string, many: string): React.ReactNode {
+const specLabel = (n: number | null, one: string, many: string): React.ReactNode => {
   if (n == null) return <Pending />;
   return `${n} ${n === 1 ? one : many}`;
-}
+};
 
 /** SAN-1202 · RE-DES-007 — consumer rental detail page. */
 export function RentalDetailView({ detail }: { detail: RentalDetail }) {
@@ -65,19 +65,60 @@ function RentalDetailInner({ detail }: { detail: RentalDetail }) {
       </Link>
 
       {/* Gallery */}
-      <section aria-label="Photos" className="mb-6">
-        {cover ? (
-          <div className="grid gap-2 sm:grid-cols-[2fr_1fr]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={cover}
-              alt={`${detail.title} in ${detail.neighborhood}`}
-              data-testid="rental-detail-cover"
-              className="aspect-[16/10] w-full rounded-xl bg-muted object-cover"
-              loading="eager"
-            />
-            {rest.length > 0 ? (
-              <div className="hidden grid-cols-2 gap-2 sm:grid">
+      <RentalGallery
+        cover={cover}
+        rest={rest}
+        title={detail.title}
+        neighborhood={detail.neighborhood}
+      />
+
+      {/* ...other sections... */}
+    </main>
+  );
+}
+
+function RentalGallery({
+  cover,
+  rest,
+  title,
+  neighborhood,
+}: {
+  cover?: string;
+  rest: string[];
+  title: string;
+  neighborhood: string;
+}) {
+  return (
+    <section aria-label="Photos" className="mb-6">
+      {cover ? (
+        <div className="grid gap-2 sm:grid-cols-[2fr_1fr]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={cover}
+            alt={`${title} in ${neighborhood}`}
+            data-testid="rental-detail-cover"
+            className="aspect-[16/10] w-full rounded-xl bg-muted object-cover"
+            loading="eager"
+          />
+          {rest.length > 0 ? (
+            <div className="hidden grid-cols-2 gap-2 sm:grid">
+              {rest.map((img, i) => (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  key={i}
+                  src={img}
+                  alt={`${title} in ${neighborhood}`}
+                  className="aspect-[16/10] w-full rounded-xl bg-muted object-cover"
+                  loading="lazy"
+                />
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+    </section>
+  );
+}
                 {rest.map((src, i) => (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img

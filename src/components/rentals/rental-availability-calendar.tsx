@@ -21,11 +21,11 @@ type DayState = "available" | "outside" | "unknown";
 
 function parseDate(value: string | null): Date | null {
   if (!value) return null;
-  const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? null : d;
+  const parsedDate = new Date(value);
+  return Number.isNaN(parsedDate.getTime()) ? null : parsedDate;
 }
 
-function startOfMonth(year: number, month: number): Date {
+export function startOfMonth(year: number, month: number): Date {
   return new Date(year, month, 1);
 }
 
@@ -50,11 +50,23 @@ export function RentalAvailabilityCalendar({
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
   function dayState(day: number): DayState {
-    if (!hasWindow) return "unknown";
-    const d = new Date(year, month, day);
-    if (from && d < new Date(from.getFullYear(), from.getMonth(), from.getDate())) return "outside";
-    if (to && d > new Date(to.getFullYear(), to.getMonth(), to.getDate())) return "outside";
-    return "available";
+    const targetDate = new Date(year, month, day);
+    const baselineFrom = from && new Date(from.getFullYear(), from.getMonth(), from.getDate());
+    const baselineTo = to && new Date(to.getFullYear(), to.getMonth(), to.getDate());
+    const stateMap: Record<string, DayState> = {
+      noWindow: "unknown",
+      beforeWindow: "outside",
+      afterWindow: "outside",
+      default: "available",
+    };
+    const key = !hasWindow
+      ? "noWindow"
+      : baselineFrom && targetDate < baselineFrom
+        ? "beforeWindow"
+        : baselineTo && targetDate > baselineTo
+          ? "afterWindow"
+          : "default";
+    return stateMap[key];
   }
 
   const monthLabel = viewMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" });
@@ -99,9 +111,17 @@ export function RentalAvailabilityCalendar({
       ) : null}
 
       <div className="grid grid-cols-7 gap-1 text-center text-xs" role="grid">
-        {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
-          <div key={`dow-${i}`} className="py-1 font-medium text-muted-foreground" role="columnheader">
-            {d}
+        {[
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday"
+        ].map((day) => (
+          <div key={day} className="py-1 font-medium text-muted-foreground" role="columnheader">
+            {day.charAt(0)}
           </div>
         ))}
         {cells.map((day, i) =>
@@ -109,7 +129,7 @@ export function RentalAvailabilityCalendar({
             <div key={`pad-${i}`} aria-hidden />
           ) : (
             <div
-              key={`day-${day}`}
+              key={day}
               role="gridcell"
               className={cn(
                 "rounded-md py-1.5 text-foreground",
@@ -121,6 +141,7 @@ export function RentalAvailabilityCalendar({
               {day}
             </div>
           ),
+        )}
         )}
       </div>
 
