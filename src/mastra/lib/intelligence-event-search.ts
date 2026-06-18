@@ -162,16 +162,10 @@ function eventSignalBoost(slots: EventIntelligenceSlots, s: EventSignalRow): num
 export function eventMatchesDateWindow(
   eventStartTime: string | null,
   window: { gte?: string; lte?: string },
-): boolean { // skipcq: JS-R1005
+): boolean {
   if (!window.gte && !window.lte) return true;
   if (!eventStartTime) return false;
-  // Compare real instants, not ISO strings — "Z" vs "+00:00" must not reorder
-  // lexicographically and drop boundary events.
-  const t = Date.parse(eventStartTime);
-  if (Number.isNaN(t)) return false;
-  if (window.gte && t < Date.parse(window.gte)) return false;
-  if (window.lte && t > Date.parse(window.lte)) return false;
-  return true;
+  return isWithinDateWindow(eventStartTime, window);
 }
 
 // skipcq: JS-0067

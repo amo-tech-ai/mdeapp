@@ -19,6 +19,9 @@ import socket
 import time
 import sys
 import argparse
+import shutil
+
+BASH_PATH = shutil.which("bash")
 
 def is_server_ready(port, timeout=30):
     """Wait for server to be ready by polling the port."""
@@ -51,6 +54,10 @@ def main():
         print("Error: No command specified to run")
         sys.exit(1)
 
+    if not BASH_PATH:
+        print("Error: bash executable not found in PATH")
+        sys.exit(1)
+
     # Parse server configurations
     if len(args.servers) != len(args.ports):
         print("Error: Number of --server and --port arguments must match")
@@ -70,7 +77,7 @@ def main():
             # Use bash -lc without shell=True to avoid shell-injection lint while
             # preserving command features like `cd` and `&&`.
             process = subprocess.Popen(
-                ["bash", "-lc", server['cmd']],
+                [BASH_PATH, "-lc", server['cmd']],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE
             )
