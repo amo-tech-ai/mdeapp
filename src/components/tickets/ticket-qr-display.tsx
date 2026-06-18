@@ -11,6 +11,7 @@ type TicketQrDisplayProps = {
   state?: QrPassState;
 };
 
+// skipcq: JS-0067
 const OVERLAY_LABEL: Record<Exclude<QrPassState, "valid">, string> = {
   used: "Already scanned",
   expired: "Event ended",
