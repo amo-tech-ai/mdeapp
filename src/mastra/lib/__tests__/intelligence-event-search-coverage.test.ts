@@ -15,7 +15,10 @@ vi.mock("../query-embedding", () => ({
   vectorLiteral: mocks.vectorLiteral,
 }));
 
-function makeQueryBuilder(result: { data: unknown; error: { message: string } | null }) {
+const makeQueryBuilder = (result: {
+  data: unknown;
+  error: { message: string } | null;
+}) => {
   const builder: Record<string, unknown> = {};
   for (const method of ["select", "eq", "order", "limit", "gte", "lte", "ilike", "in"] as const) {
     builder[method] = vi.fn(() => builder);
@@ -25,20 +28,20 @@ function makeQueryBuilder(result: { data: unknown; error: { message: string } | 
     onRejected?: (reason: unknown) => unknown,
   ) => Promise.resolve(result).then(onFulfilled, onRejected);
   return builder;
-}
+};
 
-function makeClient(options: {
+const makeClient = (options: {
   events: { data: unknown[]; error: { message: string } | null };
   signals: { data: unknown[]; error: { message: string } | null };
   rpc?: { data: unknown[] | null; error: { message: string } | null };
-}) {
+}) => {
   const eventsBuilder = makeQueryBuilder(options.events);
   const signalsBuilder = makeQueryBuilder(options.signals);
   return {
     from: vi.fn((table: string) => (table === "events" ? eventsBuilder : signalsBuilder)),
-    rpc: vi.fn(async () => options.rpc ?? { data: null, error: null }),
+    rpc: vi.fn(() => Promise.resolve(options.rpc ?? { data: null, error: null })),
   };
-}
+};
 
 describe("searchEventsIntelligent — coverage branches", () => {
   beforeEach(() => {

@@ -14,7 +14,8 @@ describe("CKV2-RE-001 — rental chat uses V2 hooks only", () => {
       const src = readFileSync(resolve(process.cwd(), rel), "utf8");
       expect(src).toMatch(/@copilotkit\/react-core\/v2/);
       expect(src).not.toMatch(/@copilotkit\/react-ui/);
-      expect(src).not.toMatch(/useCopilotAction\s*\(/);
+      // Block the v1 hook entirely — import token or call site, not just invocations.
+      expect(src).not.toMatch(/useCopilotAction/);
     });
   }
 
