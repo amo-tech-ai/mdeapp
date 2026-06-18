@@ -56,9 +56,6 @@ export function isHostNavActive(pathname: string, href: string): boolean {
   if (href === BROKER_HOME_PATH) {
     return pathname === BROKER_HOME_PATH;
   }
-  if (href.startsWith("/host/rentals/")) {
-    return pathname === href || pathname.startsWith(`${href}/`);
-  }
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
