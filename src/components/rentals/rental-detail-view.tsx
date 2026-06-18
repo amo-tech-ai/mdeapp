@@ -4,7 +4,8 @@ import Link from "next/link";
 import { ArrowLeft, Bed, Bath, Users, Building2, MapPin, Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useRentalUi } from "@/components/chat/rental-ui-context";
+import { RentalUiProvider, useRentalUi } from "@/components/chat/rental-ui-context";
+import { ScheduleViewingModal } from "@/components/modals/schedule-viewing-modal";
 import { RentalAvailabilityCalendar } from "@/components/rentals/rental-availability-calendar";
 import { formatRentalPrices } from "@/lib/rental-display";
 import type { RentalDetail } from "@/lib/rentals/get-rental-detail";
@@ -91,35 +92,18 @@ const RentalPriceSidebar = ({
   hostName: string | null;
   onRequest: () => void;
 }) => {
-  const priceDisplay: Record<string, React.ReactNode> = {
-    mn: (
-      <>
-        <div className="font-mono text-xl font-semibold">{prices.monthlyLabel}</div>
-        <div className="text-xs text-muted-foreground">{prices.nightlyLabel}</div>
-      </>
-    ),
-    m: <div className="font-mono text-xl font-semibold">{prices.monthlyLabel}</div>,
-    n: <div className="font-mono text-xl font-semibold">{prices.nightlyLabel}</div>,
-    default: (
-      <div className="font-mono text-xl font-semibold">
-        <Pending />
-      </div>
-    ),
-  };
-  const hasMonthly = Boolean(prices.monthlyLabel);
-  const hasNightly = Boolean(prices.nightlyLabel);
-  const key = hasMonthly ? (hasNightly ? 'mn' : 'm') : hasNightly ? 'n' : 'default';
+  const primary = prices.monthlyLabel ?? prices.nightlyLabel;
 
   return (
     <aside className="hidden lg:block">
       <div className="sticky top-6 space-y-3 rounded-xl border border-border bg-card p-4">
-        {priceDisplay[key]}
-        <Button
-          type="button"
-          className="w-full"
-          data-testid="rental-detail-request-cta"
-          onClick={onRequest}
-        >
+        <div>
+          <div className="font-mono text-xl font-semibold">{primary ?? <Pending />}</div>
+          {prices.monthlyLabel && prices.nightlyLabel ? (
+            <div className="text-xs text-muted-foreground">{prices.nightlyLabel}</div>
+          ) : null}
+        </div>
+        <Button type="button" className="w-full" data-testid="rental-detail-request-cta" onClick={onRequest}>
           Request viewing
         </Button>
         <Button
@@ -164,30 +148,63 @@ const RentalMobileCta = ({ prices, onRequest }: { prices: PriceLabels; onRequest
 // skipcq: JS-0067 - module-local helper; not browser global scope
 const mapsHrefFor = (detail: RentalDetail): string | null => {
   if (detail.latitude == null || detail.longitude == null) return null;
-return (
-  <main data-testid="rental-detail" className="mx-auto max-w-6xl px-4 pb-28 pt-6 sm:px-6 lg:pb-10">
-    <Link
-      href="/rentals"
-      data-testid="rental-detail-back"
-      className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-    >
-      <ArrowLeft className="size-4" aria-hidden /> Back to results
-    </Link>
+  return `https://www.google.com/maps/search/?api=1&query=${detail.latitude},${detail.longitude}`;
+};
 
-    <section aria-label="Photos" className="mb-6">
-      <RentalGallery detail={detail} />
-    </section>
+/** SAN-1202 · RE-DES-007 — consumer rental detail page. */
+// skipcq: JS-0067 - ES module export; not browser global scope
+export function RentalDetailView({ detail }: { detail: RentalDetail }) {
+  return (
+    <RentalUiProvider>
+      <RentalDetailInner detail={detail} />
+      <ScheduleViewingModal />
+    </RentalUiProvider>
+  );
+}
 
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
-      <div className="min-w-0 space-y-6">
-        <RentalDetailHeader detail={detail} />
+// skipcq: JS-0067 - React component (ES module); not browser global scope
+const RentalDetailInner = ({ detail }: { detail: RentalDetail }) => {
+  const { openScheduleViewing } = useRentalUi();
+  const prices = formatRentalPrices(detail.priceNightly ?? undefined);
+  const mapsHref = mapsHrefFor(detail);
+  const requestViewing = () =>
+    openScheduleViewing({ listingId: detail.id, title: detail.title, neighborhood: detail.neighborhood });
 
-        <RentalSpecs detail={detail} />
+  return (
+    <main data-testid="rental-detail" className="mx-auto max-w-6xl px-4 pb-28 pt-6 sm:px-6 lg:pb-10">
+      <Link
+        href="/rentals"
+        data-testid="rental-detail-back"
+        className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+      >
+        <ArrowLeft className="size-4" aria-hidden /> Back to results
+      </Link>
 
-        <RentalDescription description={detail.description} />
+      <section aria-label="Photos" className="mb-6">
+        <RentalGallery detail={detail} />
+      </section>
 
-        <section aria-label="Amenities">
-          <h2 className="mb-2 font-serif text-base font-semibold">Amenities</h2>
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="min-w-0 space-y-6">
+          <header>
+            <p className="text-sm font-medium text-muted-foreground">{detail.neighborhood || <Pending />}</p>
+            <h1 className="mt-0.5 font-serif text-2xl font-semibold tracking-tight">{detail.title}</h1>
+            {detail.address ? (
+              <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
+                <MapPin className="size-3.5" aria-hidden /> {detail.address}
+              </p>
+            ) : null}
+          </header>
+
+          <RentalSpecs detail={detail} />
+
+          <section aria-label="Description">
+            <h2 className="mb-1 font-serif text-base font-semibold">About this rental</h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">{detail.description ?? <Pending />}</p>
+          </section>
+
+          <section aria-label="Amenities">
+            <h2 className="mb-2 font-serif text-base font-semibold">Amenities</h2>
             {detail.amenities.length > 0 || detail.buildingAmenities.length > 0 ? (
               <div className="flex flex-wrap gap-1.5" data-testid="rental-detail-amenities">
                 {[...detail.amenities, ...detail.buildingAmenities].map((amenity) => (
