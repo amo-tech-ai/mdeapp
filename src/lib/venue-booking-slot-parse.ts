@@ -27,7 +27,7 @@ const WEEKDAY_ONLY_TIME_RE =
 const VENUE_NAME_RE =
   /\b(?:book|reserve|reservation(?:\s+at)?)\s+(?:a\s+table\s+at\s+)?(.+?)(?=\s+(?:on\s+)?(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)|\s+for\s+\d|\s+party\s+of|\s+contact\b|$)/i;
 
-function weekdayIndex(name: string): number {
+const weekdayIndex = (name: string): number => {
   const map: Record<string, number> = {
     sunday: 0,
     monday: 1,
@@ -38,9 +38,9 @@ function weekdayIndex(name: string): number {
     saturday: 6,
   };
   return map[name.toLowerCase()] ?? -1;
-}
+};
 
-function monthIndex(name: string): number {
+const monthIndex = (name: string): number => {
   const map: Record<string, number> = {
     january: 0,
     february: 1,
@@ -67,37 +67,38 @@ function monthIndex(name: string): number {
     dec: 11,
   };
   return map[name.toLowerCase()] ?? -1;
-}
+};
 
-function to24Hour(hour: number, ampm?: string): number {
+// skipcq: JS-R1005 — small am/pm normalization; flat branches read clearer than a lookup table.
+const to24Hour = (hour: number, ampm?: string): number => {
   if (!ampm) return hour;
   const lower = ampm.toLowerCase();
   if (lower === "pm" && hour < 12) return hour + 12;
   if (lower === "am" && hour === 12) return 0;
   return hour;
-}
+};
 
-function formatIso(
+const formatIso = (
   year: number,
   month: number,
   day: number,
   hour: number,
   minute: number,
-): string {
-  const y = String(year);
-  const m = String(month + 1).padStart(2, "0");
-  const d = String(day).padStart(2, "0");
-  const h = String(hour).padStart(2, "0");
-  const min = String(minute).padStart(2, "0");
-  return `${y}-${m}-${d}T${h}:${min}:00${BOGOTA_OFFSET}`;
-}
+): string => {
+  const paddedYear = String(year);
+  const paddedMonth = String(month + 1).padStart(2, "0");
+  const paddedDay = String(day).padStart(2, "0");
+  const paddedHour = String(hour).padStart(2, "0");
+  const paddedMinute = String(minute).padStart(2, "0");
+  return `${paddedYear}-${paddedMonth}-${paddedDay}T${paddedHour}:${paddedMinute}:00${BOGOTA_OFFSET}`;
+};
 
-function nextWeekdayAt(
+const nextWeekdayAt = (
   weekday: number,
   hour: number,
   minute: number,
   now = new Date(),
-): string {
+): string => {
   const base = new Date(now);
   base.setHours(12, 0, 0, 0);
   const current = base.getDay();
@@ -111,9 +112,10 @@ function nextWeekdayAt(
     hour,
     minute,
   );
-}
+};
 
-export function parseRequestedAtIso(text: string, now = new Date()): string | undefined {
+// skipcq: JS-R1005 — sequential date-format matchers; splitting would scatter the parse logic.
+export const parseRequestedAtIso = (text: string, now = new Date()): string | undefined => {
   const explicit = text.match(EXPLICIT_DATE_RE);
   if (explicit) {
     const [, monthName, dayStr, yearStr, hourStr, minuteStr, ampm] = explicit;
@@ -139,9 +141,9 @@ export function parseRequestedAtIso(text: string, now = new Date()): string | un
   }
 
   return undefined;
-}
+};
 
-export function parseVenueBookingSlots(text: string): ParsedVenueBookingSlots {
+export const parseVenueBookingSlots = (text: string): ParsedVenueBookingSlots => {
   const trimmed = text.trim();
   const slots: ParsedVenueBookingSlots = {};
 
@@ -169,8 +171,8 @@ export function parseVenueBookingSlots(text: string): ParsedVenueBookingSlots {
   slots.requestedAtIso = parseRequestedAtIso(trimmed);
 
   return slots;
-}
+};
 
-export function extractExplicitPlaceId(text: string): string | undefined {
+export const extractExplicitPlaceId = (text: string): string | undefined => {
   return text.match(PLACE_ID_RE)?.[1];
-}
+};
