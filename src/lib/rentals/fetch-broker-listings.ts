@@ -23,7 +23,7 @@ function failListings(context: string, error: unknown): FetchBrokerListingsResul
 }
 
 /** Load broker-scoped apartment inventory (RLS + explicit landlord filter). */
-// skipcq: JS-0067 - server module export
+// skipcq: JS-0067 - ES module export; not browser global scope
 export async function fetchBrokerListings(
   supabase: DbClient,
   userId: string,

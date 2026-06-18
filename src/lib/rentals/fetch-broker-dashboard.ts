@@ -26,7 +26,8 @@ function failDashboard(context: string, error: unknown): FetchBrokerDashboardRes
 }
 
 /** Load broker dashboard metrics from Supabase (RLS-scoped). */
-// skipcq: JS-0044, JS-R1005, JS-0067 - sequential Supabase reads; split when SAN-1093 wires partial loaders
+// skipcq: JS-0067 - ES module export; not browser global scope
+// skipcq: JS-0044, JS-R1005 - sequential Supabase reads; split when SAN-1093 wires partial loaders
 export async function fetchBrokerDashboard(
   supabase: DbClient,
   userId: string,
@@ -71,7 +72,7 @@ export async function fetchBrokerDashboard(
 
   const listingsResult = await fetchBrokerListings(supabase, userId);
   if (!listingsResult.ok) {
-    return failDashboard("listings", listingsResult.message);
+    return failDashboard("listings", listingsResult);
   }
 
   let leads7dCount = 0;

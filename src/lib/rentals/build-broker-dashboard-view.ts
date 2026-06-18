@@ -46,7 +46,8 @@ function greetingFor(name: string | null): string { // skipcq: JS-0067 - module-
 }
 
 /** Pure builder — unit-tested without Supabase. */
-// skipcq: JS-0044, JS-R1005, JS-0067 - attention queue branches; split when SAN-1093 overview grows
+// skipcq: JS-0067 - ES module export; not browser global scope
+// skipcq: JS-0044, JS-R1005 - attention queue branches; split when SAN-1093 overview grows
 export function buildBrokerDashboardView(input: BuildBrokerDashboardInput): BrokerDashboardView {
   const drafts = input.listings.filter((l) => l.listingWorkflowStatus === "draft");
 
