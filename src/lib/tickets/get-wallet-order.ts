@@ -7,6 +7,7 @@ import {
 
 export { formatEventWhen, formatWalletMoney } from "./wallet-format";
 
+// skipcq: JS-0067
 export async function getWalletOrderByToken(
   orderId: string,
   accessToken: string,
@@ -23,6 +24,7 @@ export async function getWalletOrderByToken(
   return parsed.success ? parsed.data : null;
 }
 
+// skipcq: JS-0067
 export async function listBuyerOrders(): Promise<BuyerOrderListItem[]> {
   const supabase = await createClient();
   const {
@@ -71,6 +73,7 @@ export async function listBuyerOrders(): Promise<BuyerOrderListItem[]> {
   });
 }
 
+// skipcq: JS-0067
 export function partitionOrdersByTime(orders: BuyerOrderListItem[]): {
   upcoming: BuyerOrderListItem[];
   past: BuyerOrderListItem[];

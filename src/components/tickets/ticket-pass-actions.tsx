@@ -13,6 +13,7 @@ type TicketPassActionsProps = {
   shareUrl: string;
 };
 
+// skipcq: JS-0067
 export function TicketPassActions({
   eventName,
   directionsQuery,

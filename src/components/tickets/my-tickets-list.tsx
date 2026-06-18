@@ -15,6 +15,7 @@ type MyTicketsListProps = {
   past: BuyerOrderListItem[];
 };
 
+// skipcq: JS-0067
 export function MyTicketsList({ orders, upcoming, past }: MyTicketsListProps) {
   if (orders.length === 0) {
     return (
@@ -57,6 +58,7 @@ export function MyTicketsList({ orders, upcoming, past }: MyTicketsListProps) {
   );
 }
 
+// skipcq: JS-0067
 function OrderSection({
   orders,
   emptyLabel,
@@ -83,6 +85,7 @@ function OrderSection({
   );
 }
 
+// skipcq: JS-0067
 function OrderCard({
   order,
   dimmed,

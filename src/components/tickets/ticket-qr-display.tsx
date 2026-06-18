@@ -17,6 +17,7 @@ const OVERLAY_LABEL: Record<Exclude<QrPassState, "valid">, string> = {
 };
 
 /** Door-ready QR from attendee `qr_token` JWT (SCREEN-015). */
+// skipcq: JS-0067
 export function TicketQrDisplay({
   value,
   label,

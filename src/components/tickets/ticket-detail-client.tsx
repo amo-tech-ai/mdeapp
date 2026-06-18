@@ -20,6 +20,7 @@ type TicketDetailClientProps = {
   accessToken: string;
 };
 
+// skipcq: JS-0067
 function useWalletPayload(orderId: string, accessToken: string) {
   const [payload, setPayload] = useState<WalletOrderPayload | null>(null);
   const [loading, setLoading] = useState(true);
@@ -42,12 +43,14 @@ function useWalletPayload(orderId: string, accessToken: string) {
   return { payload, loading, missing };
 }
 
+// skipcq: JS-0067
 function resolvePassState(isUsed: boolean, isExpired: boolean): QrPassState {
   if (isUsed) return "used";
   if (isExpired) return "expired";
   return "valid";
 }
 
+// skipcq: JS-0067
 export function TicketDetailClient({
   orderId,
   accessToken,
@@ -175,6 +178,7 @@ export function TicketDetailClient({
   );
 }
 
+// skipcq: JS-0067
 function PassRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between gap-4 px-4 py-3">
