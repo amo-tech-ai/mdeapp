@@ -1,0 +1,19 @@
+docs/tasks/testing/evidence/2026-06-18/RE-DES-002-RESULTS.md
+  s_f1f9127cc71b2a::t_b8a9e8ca894cca 1-46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "0b0368fe6bf1dd1c61c9daf48d66f00a4eb495d3",
+  "prompts": {},
+  "sessions": {
+    "s_f1f9127cc71b2a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ebcc0856-4735-47c8-9dfa-b58a8e933943",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
