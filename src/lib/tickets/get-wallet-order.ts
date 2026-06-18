@@ -44,6 +44,7 @@ export async function listBuyerOrders(): Promise<BuyerOrderListItem[]> {
 
   if (error || !data) return [];
 
+  // skipcq: JS-R1005
   return data.flatMap((row) => {
     type EventRow = {
       name: string;
