@@ -1,0 +1,35 @@
+src/lib/rental-failure-recovery.ts
+  s_f47ea5ebcd9235::t_d9ec69829badee 1-85
+src/lib/rental-intent-gemini.ts
+  s_f47ea5ebcd9235::t_d9ec69829badee 1-45
+src/lib/__tests__/rental-intent-schema.test.ts
+  s_f47ea5ebcd9235::t_d9ec69829badee 1-48
+src/lib/__tests__/rental-prompt-injection.test.ts
+  s_f47ea5ebcd9235::t_d9ec69829badee 1-38
+src/mastra/lib/__tests__/rental-search-engine.test.ts
+  s_f47ea5ebcd9235::t_d9ec69829badee 1-38
+src/lib/__tests__/rental-intent-gemini.test.ts
+  s_f47ea5ebcd9235::t_d9ec69829badee 1-60
+src/mastra/lib/rental-search-engine.ts
+  s_f47ea5ebcd9235::t_d9ec69829badee 1-57
+src/lib/rental-intent-schema.ts
+  s_f47ea5ebcd9235::t_d9ec69829badee 1-103
+src/lib/__tests__/rental-failure-recovery.test.ts
+  s_f47ea5ebcd9235::t_d9ec69829badee 1-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "b1aca5aa125cf883e9949fa9feca63879a2858d8",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
