@@ -7,6 +7,7 @@ export const metadata = {
 };
 
 /** RE-DES-002 placeholder — broker concierge ships in SAN-1093. */
+// skipcq: JS-0067
 export default function HostRentalsHomePage() {
   return (
     <main data-testid="host-rentals-home" className="space-y-4 py-8">

@@ -49,7 +49,7 @@
     "audit:copilotkit-v2": "node scripts/audit-copilotkit-v2-map.mjs",
     "audit:copilotkit-v2:depcruise": "depcruise --config .dependency-cruiser.cjs src && node scripts/audit-copilotkit-v2-no-new-v1.mjs",
     "audit:copilotkit-v2:depcruise:proof": "node scripts/audit-copilotkit-v2-depcruise-proof.mjs",
-    "floor": "npm run lint && npm run typecheck && npm run build && npm test && npm run audit:floor",
+    "floor": "npm run lint && npm run typecheck && npm run build && npm test && npm run check:mastra && npm run audit:floor",
     "graphify:update": "bash scripts/graphify-run.sh update .",
     "test:veb-mvp-010-integration": "node scripts/verify-veb-mvp-010-integration.mjs",
     "test:e2e": "playwright test",

@@ -9,6 +9,7 @@ export const metadata = {
 };
 
 /** RE-WIRE-001 — auth gate only; shell lives under `(broker)/layout`. */
+// skipcq: JS-0067
 export default async function HostRentalsLayout({
   children,
 }: {

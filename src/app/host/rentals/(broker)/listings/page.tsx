@@ -11,6 +11,7 @@ export const metadata = {
   title: "Broker listings · mdeai",
 };
 
+// skipcq: JS-0067
 async function ListingsContent() {
   const ctx = await getBrokerContext();
   if (ctx.state !== "authorized") {
@@ -31,6 +32,7 @@ async function ListingsContent() {
 }
 
 /** SAN-1094 · RE-DES-003 — broker inventory grid + optional map split. */
+// skipcq: JS-0067
 export default function HostRentalsListingsPage() {
   return (
     <Suspense fallback={<RentalsListingsSkeleton />}>

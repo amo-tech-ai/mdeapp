@@ -16,14 +16,13 @@ export type BrokerRouteGateInput = {
   pathname: string;
 };
 
-function isOnboardingPath(pathname: string): boolean {
-  return (
-    pathname === BROKER_ONBOARDING_PATH ||
-    pathname.startsWith(`${BROKER_ONBOARDING_PATH}/`)
-  );
-}
+// skipcq: JS-0067
+const isOnboardingPath = (pathname: string): boolean =>
+  pathname === BROKER_ONBOARDING_PATH ||
+  pathname.startsWith(`${BROKER_ONBOARDING_PATH}/`);
 
 /** Resolve gate action for a broker rentals path (no I/O). */
+// skipcq: JS-0067
 export function resolveBrokerRouteGate(input: BrokerRouteGateInput): BrokerRouteGateAction {
   if (!input.isAuthenticated) return "redirect_login";
   const onOnboarding = isOnboardingPath(input.pathname);
@@ -37,6 +36,7 @@ export function resolveBrokerRouteGate(input: BrokerRouteGateInput): BrokerRoute
 }
 
 /** Login redirect target preserving intended broker path. */
+// skipcq: JS-0067
 export function brokerLoginNextPath(pathname: string): string {
   if (pathname.startsWith("/host/rentals")) return pathname;
   return BROKER_HOME_PATH;

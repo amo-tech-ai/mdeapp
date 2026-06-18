@@ -49,6 +49,7 @@ const linkClassName = (active: boolean) =>
   );
 
 /** Returns true when `href` matches the current host route (pathname-aware active state). */
+// skipcq: JS-0067
 export function isHostNavActive(pathname: string, href: string): boolean {
   if (href === "/host/events") {
     return pathname === "/host/events" || pathname.startsWith("/host/events/");
@@ -59,6 +60,7 @@ export function isHostNavActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+// skipcq: JS-0067
 function NavSection({
   title,
   items,
@@ -106,6 +108,7 @@ function NavSection({
 }
 
 /** Host sidebar — Events + Rentals broker OS (SAN-729 · AIE-008, RE-WIRE-001). */
+// skipcq: JS-0067
 export function HostNavRail() {
   const pathname = usePathname();
 

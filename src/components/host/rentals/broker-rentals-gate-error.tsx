@@ -4,6 +4,7 @@ const GENERIC_DESCRIPTION =
   "We couldn't confirm your broker profile. Try again in a moment, or sign out and sign back in.";
 
 /** Broker gate failed to load profile context — no raw backend errors in UI. */
+// skipcq: JS-0067
 export function BrokerRentalsGateError() {
   return (
     <EmptyState

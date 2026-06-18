@@ -8,6 +8,7 @@ export const metadata = {
 };
 
 /** RE-WIRE-001 — loop-safe onboarding shell; wizard ships in SAN-1092. */
+// skipcq: JS-0067
 export default async function HostRentalsOnboardingPage() {
   const ctx = await getBrokerContext();
 

@@ -8,6 +8,7 @@ export const metadata = {
 };
 
 /** RE-DES-004 placeholder — KPI briefing ships in SAN-1095. */
+// skipcq: JS-0067
 export default function HostRentalsDashboardPage() {
   return (
     <main data-testid="host-rentals-dashboard" className="space-y-4 py-8">

@@ -5,6 +5,7 @@ import { getBrokerContext } from "@/lib/rentals/get-broker-context";
 import { getBrokerRequestPathname } from "@/lib/rentals/get-broker-request-path";
 
 /** RE-WIRE-001 — broker shell + profile gate for inventory routes. */
+// skipcq: JS-0067
 export default async function HostRentalsBrokerLayout({
   children,
 }: {

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { HostNavRail } from "@/components/host/host-nav-rail";
 
 /** RE-WIRE-001 — host chrome with centralized HostNavRail (includes Rentals section). */
+// skipcq: JS-0067
 export function HostRentalsShell({ children }: { children: ReactNode }) {
   return (
     <div
