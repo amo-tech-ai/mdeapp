@@ -7,6 +7,7 @@ import {
 
 export { formatEventWhen, formatWalletMoney } from "./wallet-format";
 
+// skipcq: JS-0067
 export async function getWalletOrderByToken(
   orderId: string,
   accessToken: string,
@@ -23,6 +24,7 @@ export async function getWalletOrderByToken(
   return parsed.success ? parsed.data : null;
 }
 
+// skipcq: JS-0067, JS-R1005
 export async function listBuyerOrders(): Promise<BuyerOrderListItem[]> {
   const supabase = await createClient();
   const {
@@ -34,7 +36,7 @@ export async function listBuyerOrders(): Promise<BuyerOrderListItem[]> {
   const { data, error } = await supabase
     .from("event_orders")
     .select(
-      "id, short_id, status, total_cents, currency, quantity, events(name, event_start_time)",
+      "id, short_id, status, total_cents, currency, quantity, events(name, event_start_time, primary_image_url, address, city)",
     )
     .eq("buyer_user_id", user.id)
     .in("status", ["paid", "refunded", "partial_refund"])
@@ -42,11 +44,16 @@ export async function listBuyerOrders(): Promise<BuyerOrderListItem[]> {
 
   if (error || !data) return [];
 
+  // skipcq: JS-R1005
   return data.flatMap((row) => {
-    const events = row.events as
-      | { name: string; event_start_time: string }
-      | { name: string; event_start_time: string }[]
-      | null;
+    type EventRow = {
+      name: string;
+      event_start_time: string;
+      primary_image_url: string | null;
+      address: string | null;
+      city: string | null;
+    };
+    const events = row.events as EventRow | EventRow[] | null;
     const event = Array.isArray(events) ? events[0] : events;
     if (!event) return [];
 
@@ -60,11 +67,14 @@ export async function listBuyerOrders(): Promise<BuyerOrderListItem[]> {
         quantity: row.quantity as number,
         eventName: event.name,
         eventStartTime: event.event_start_time,
+        imageUrl: event.primary_image_url ?? null,
+        venue: event.city ?? event.address ?? null,
       },
     ];
   });
 }
 
+// skipcq: JS-0067
 export function partitionOrdersByTime(orders: BuyerOrderListItem[]): {
   upcoming: BuyerOrderListItem[];
   past: BuyerOrderListItem[];

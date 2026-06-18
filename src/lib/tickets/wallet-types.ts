@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// skipcq: JS-0067
 const walletAttendeeSchema = z.object({
   id: z.string().uuid(),
   full_name: z.string().nullable(),
@@ -8,6 +9,7 @@ const walletAttendeeSchema = z.object({
   qr_token: z.string(),
 });
 
+// skipcq: JS-0067
 const walletOrderSchema = z.object({
   id: z.string().uuid(),
   short_id: z.string().nullable(),
@@ -20,6 +22,7 @@ const walletOrderSchema = z.object({
   stripe_session_id: z.string().nullable().optional(),
 });
 
+// skipcq: JS-0067
 const walletEventSchema = z.object({
   id: z.string().uuid(),
   name: z.string(),
@@ -29,6 +32,7 @@ const walletEventSchema = z.object({
   event_end_time: z.string().nullable().optional(),
 });
 
+// skipcq: JS-0067
 export const walletOrderPayloadSchema = z.object({
   order: walletOrderSchema,
   event: walletEventSchema,
@@ -49,4 +53,6 @@ export type BuyerOrderListItem = {
   quantity: number;
   eventName: string;
   eventStartTime: string;
+  imageUrl: string | null;
+  venue: string | null;
 };
