@@ -1,0 +1,35 @@
+src/lib/rentals/broker-route-gate.ts
+  s_f9d5f98a31145c::t_0be0240a0a1548 6-7
+src/lib/rentals/__tests__/build-broker-dashboard-view.test.ts
+  s_f9d5f98a31145c::t_97bed54205b42d 1-119
+src/lib/rentals/build-broker-dashboard-view.ts
+  s_f9d5f98a31145c::t_97bed54205b42d 1-204
+src/lib/rentals/broker-dashboard-types.ts
+  s_f9d5f98a31145c::t_97bed54205b42d 1-50
+src/lib/rentals/fetch-broker-dashboard.ts
+  s_f9d5f98a31145c::t_97bed54205b42d 1-164
+src/lib/rentals/fetch-broker-listings.ts
+  s_f9d5f98a31145c::t_97bed54205b42d 16-24,26,37,49
+src/app/host/rentals/(broker)/dashboard/page.tsx
+  s_f9d5f98a31145c::t_97bed54205b42d 1-2,4-5,7
+src/app/host/rentals/(broker)/listings/page.tsx
+  s_f9d5f98a31145c::t_97bed54205b42d 14,34
+src/lib/rentals/index.ts
+  s_f9d5f98a31145c::t_97bed54205b42d 61,65,71-81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "6ba4f739a87c445d4a91b8c5408f3d6c76f94c45",
+  "prompts": {},
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
