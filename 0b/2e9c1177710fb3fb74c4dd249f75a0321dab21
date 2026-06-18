@@ -1,0 +1,19 @@
+src/mastra/lib/intelligence-event-search.ts
+  s_f9d5f98a31145c::t_8b374a8369f6e3 161
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "0b2e9c1177710fb3fb74c4dd249f75a0321dab21",
+  "prompts": {},
+  "sessions": {
+    "s_f9d5f98a31145c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "fbb98583-5552-4e0c-b507-9ba8e770ce86",
+        "model": "default"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
