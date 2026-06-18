@@ -5,16 +5,13 @@ export function isSchemaUnavailableError(
   if (!error) return false;
   const msg = (error.message ?? "").toLowerCase();
   const code = error.code ?? "";
-  if (
+  return (
     code === "42P01" ||
     code === "42703" ||
     code === "PGRST205" ||
-    code === "PGRST204"
-  ) {
-    return true;
-  }
-  if (msg.includes("does not exist")) return true;
-  if (msg.includes("schema cache")) return true;
-  if (msg.includes("could not find")) return true;
-  return false;
+    code === "PGRST204" ||
+    msg.includes("does not exist") ||
+    msg.includes("schema cache") ||
+    msg.includes("could not find")
+  );
 }

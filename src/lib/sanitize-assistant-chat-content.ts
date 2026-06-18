@@ -37,18 +37,13 @@ export function isToolLeakJson(value: unknown): boolean {
     return Object.keys(o).length <= 2;
   }
   if (o.source === "grounding") return true;
-  if (
-    Array.isArray(o.results) &&
+  return Array.isArray(o.results) &&
     o.results.some(
       (r) =>
         r &&
         typeof r === "object" &&
         ("placeId" in r || "place_id" in (r as object)),
-    )
-  ) {
-    return true;
-  }
-  return false;
+    );
 }
 
 export function stripBalancedJsonObjects(
@@ -138,12 +133,14 @@ export function sanitizeAssistantChatContent(content: string): string {
 }
 
 export function isToolPayloadChatContent(content: string): boolean {
-  if (!content.trim()) return false;
-  if (shouldHideAssistantChatContent(content)) return true;
-  if (/"source"\s*:\s*"grounding"/.test(content)) return true;
-  if (/"placeId"\s*:\s*"ChIJ/.test(content)) return true;
-  if (/^\s*\{\s*"success"\s*:\s*true\s*\}\s*$/i.test(content.trim())) return true;
-  return false;
+  const trimmed = content.trim();
+  return Boolean(
+    trimmed &&
+    (shouldHideAssistantChatContent(content)
+      || /"source"\s*:\s*"grounding"/.test(content)
+      || /"placeId"\s*:\s*"ChIJ/.test(content)
+      || /^\s*\{\s*"success"\s*:\s*true\s*\}\s*$/i.test(trimmed))
+  );
 }
 
 export function shouldHideAssistantChatContent(content: string): boolean {

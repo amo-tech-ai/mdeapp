@@ -60,18 +60,12 @@ export function shouldInvokeFlashClassifier(
   regex: RouterIntentClassification,
   text: string,
 ): boolean {
-  if (!isFlashRouteEnabled()) return false;
-
-  const confidence = regex.confidence;
-  if (confidence >= FLASH_HIGH_CONFIDENCE) return false;
-
-  if (confidence >= FLASH_AMBIGUOUS_MIN) return true;
-
-  if (regex.routingTarget === "agent" && VENUE_COLLISION_RE.test(text.trim())) {
-    return true;
-  }
-
-  return false;
+  return isFlashRouteEnabled()
+    && regex.confidence < FLASH_HIGH_CONFIDENCE
+    && (
+      regex.confidence >= FLASH_AMBIGUOUS_MIN
+      || (regex.routingTarget === "agent" && VENUE_COLLISION_RE.test(text.trim()))
+    );
 }
 
 function intentToRoutingTarget(intent: RouterIntent): RouterRoutingTarget {

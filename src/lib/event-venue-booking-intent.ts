@@ -45,35 +45,34 @@ const NEIGHBORHOOD_PATTERNS: Array<{ neighborhood: string; re: RegExp }> = [
 /** Ticketed catalogue discovery — not private venue hire. */
 function looksLikeTicketedEventDiscovery(text: string): boolean {
   const t = text.trim();
-  if (/\b(?:salsa|concert|festival|gig|tickets?)\b/i.test(t)) return true;
-  if (/\b(?:music|nightlife|sport|culture|food)\s+events?\b/i.test(t)) return true;
-  if (/\bevents?\s+(?:this\s+weekend|tonight|in\s+medell)/i.test(t)) return true;
-  if (/\bwhat'?s on\b/i.test(t)) return true;
-  if (/\bshow all events\b/i.test(t)) return true;
-  if (
-    /\b(?:clubs?|nightlife|party\s+events?|parties\s+this)\b/i.test(t) &&
-    !VENUE_SEEKING_RE.test(t)
-  ) {
-    return true;
-  }
-  return false;
+  return (
+    /\b(?:salsa|concert|festival|gig|tickets?)\b/i.test(t) ||
+    /\b(?:music|nightlife|sport|culture|food)\s+events?\b/i.test(t) ||
+    /\bevents?\s+(?:this\s+weekend|tonight|in\s+medell)/i.test(t) ||
+    /\bwhat'?s on\b/i.test(t) ||
+    /\bshow all events\b/i.test(t) ||
+    (
+      /\b(?:clubs?|nightlife|party\s+events?|parties\s+this)\b/i.test(t) &&
+      !VENUE_SEEKING_RE.test(t)
+    )
+  );
 }
 
 function hasPrivateEventVenueSignals(text: string): boolean {
   const t = text.trim();
-  if (VENUE_SEEKING_RE.test(t) && PRIVATE_EVENT_TYPE_RE.test(t)) return true;
-  if (VENUE_FOR_EVENT_RE.test(t)) return true;
-  if (RESTAURANT_FOR_EVENT_RE.test(t)) return true;
-  if (RESTAURANT_GROUP_VENUE_RE.test(t)) return true;
-  if (EVENT_VENUE_NOUN_RE.test(t)) return true;
-  if (VENUE_SEEKING_RE.test(t) && GUEST_COUNT_EVENT_RE.test(t)) return true;
-  if (PRIVATE_EVENT_TYPE_RE.test(t) && /\bvenue\b/i.test(t)) return true;
-  if (SUGGEST_VENUES_RE.test(t) && (/\bpart(?:y|ies)\b/i.test(t) || GUEST_COUNT_EVENT_RE.test(t)))
-    return true;
-  if (PRIVATE_EVENT_SPACE_RE.test(t)) return true;
-  if (SOMEWHERE_BIRTHDAY_RE.test(t)) return true;
-  if (BOOK_NAMED_VENUE_FOR_GUESTS_RE.test(t)) return true;
-  return false;
+  return (
+    (VENUE_SEEKING_RE.test(t) && PRIVATE_EVENT_TYPE_RE.test(t)) ||
+    VENUE_FOR_EVENT_RE.test(t) ||
+    RESTAURANT_FOR_EVENT_RE.test(t) ||
+    RESTAURANT_GROUP_VENUE_RE.test(t) ||
+    EVENT_VENUE_NOUN_RE.test(t) ||
+    (VENUE_SEEKING_RE.test(t) && GUEST_COUNT_EVENT_RE.test(t)) ||
+    (PRIVATE_EVENT_TYPE_RE.test(t) && /\bvenue\b/i.test(t)) ||
+    (SUGGEST_VENUES_RE.test(t) && (/\bpart(?:y|ies)\b/i.test(t) || GUEST_COUNT_EVENT_RE.test(t))) ||
+    PRIVATE_EVENT_SPACE_RE.test(t) ||
+    SOMEWHERE_BIRTHDAY_RE.test(t) ||
+    BOOK_NAMED_VENUE_FOR_GUESTS_RE.test(t)
+  );
 }
 
 export function looksLikeEventVenueBookingQuery(text: string): boolean {
