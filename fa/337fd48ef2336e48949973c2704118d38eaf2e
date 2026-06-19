@@ -1,0 +1,23 @@
+e2e/schedule-prefill-proof.spec.ts
+  s_f47ea5ebcd9235::t_d977660b4a1c10 26,35
+src/components/modals/schedule-viewing-modal.tsx
+  s_f47ea5ebcd9235::t_300cedb525f8d4 7,11-34,36
+  s_f47ea5ebcd9235::t_1b11ccffe5d7a9 53,55-63,65-71
+  s_f47ea5ebcd9235::t_6e838f1399f2ba 207
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "fa337fd48ef2336e48949973c2704118d38eaf2e",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
