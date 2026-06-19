@@ -1,13 +1,39 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRentalUi } from "@/components/chat/rental-ui-context";
 import { submitScheduleViewing } from "@/lib/leads/submit-schedule-viewing";
+import { buildSchedulePrefill, type SchedulePrefill } from "@/lib/leads/schedule-prefill";
+import { createClient } from "@/lib/supabase/client";
 import { useModalA11y } from "@/lib/use-modal-a11y";
 
+/**
+ * Look up the signed-in user + profile and build their contact prefill.
+ * Returns `null` when signed out (caller clears the form in that case).
+ * Best-effort: any lookup failure resolves to `null` rather than throwing.
+ */
+const loadPrefillForCurrentUser = async (): Promise<SchedulePrefill | null> => {
+  try {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return null;
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name,email")
+      .eq("id", user.id)
+      .maybeSingle();
+    return buildSchedulePrefill(user, profile);
+  } catch {
+    // Prefill is best-effort; a failed lookup just leaves fields blank.
+    return null;
+  }
+};
+
 /** SCREEN-008 — schedule viewing modal → POST /api/leads/schedule-viewing (G2). */
-export function ScheduleViewingModal() {
+export const ScheduleViewingModal = () => {
   const { scheduleTarget, closeScheduleViewing, setLeadConfirmation } = useRentalUi();
   const panelRef = useRef<HTMLDivElement>(null);
   useModalA11y(Boolean(scheduleTarget), closeScheduleViewing, panelRef);
@@ -17,6 +43,38 @@ export function ScheduleViewingModal() {
   const [preferredAt, setPreferredAt] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  const isOpen = Boolean(scheduleTarget);
+
+  // When the modal opens for a signed-in user, seed contact fields from their
+  // profile + auth account. Only fills blanks (`prev || …`) so it never clobbers
+  // what the user has already typed, and signed-out users keep blank fields.
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    let cancelled = false;
+    const applyPrefill = (prefill: SchedulePrefill | null) => {
+      if (!prefill) {
+        // Signed out: clear any values prefilled for a previous user so
+        // their name/email can't leak across sessions on a shared browser.
+        setName("");
+        setEmail("");
+        setPhone("");
+        return;
+      }
+      // `prev || …` only fills blanks, so it never clobbers what the user
+      // typed and a blank prefill value is a no-op (no per-field guards needed).
+      setName((prev) => prev || prefill.name);
+      setEmail((prev) => prev || prefill.email);
+      setPhone((prev) => prev || prefill.phone);
+    };
+    (async () => {
+      const prefill = await loadPrefillForCurrentUser();
+      if (!cancelled) applyPrefill(prefill);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen]);
 
   if (!scheduleTarget) return null;
 
@@ -148,4 +206,4 @@ export function ScheduleViewingModal() {
       </div>
     </div>
   );
-}
+};
