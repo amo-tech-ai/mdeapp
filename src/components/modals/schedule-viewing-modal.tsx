@@ -53,7 +53,6 @@ export const ScheduleViewingModal = () => {
     if (!isOpen) return undefined;
     let cancelled = false;
     const applyPrefill = (prefill: SchedulePrefill | null) => {
-      if (cancelled) return;
       if (!prefill) {
         // Signed out: clear any values prefilled for a previous user so
         // their name/email can't leak across sessions on a shared browser.
@@ -62,13 +61,16 @@ export const ScheduleViewingModal = () => {
         setPhone("");
         return;
       }
-      // Only fills blanks (`prev || …`) so it never clobbers what the user
-      // has already typed.
-      if (prefill.name) setName((prev) => prev || prefill.name);
-      if (prefill.email) setEmail((prev) => prev || prefill.email);
-      if (prefill.phone) setPhone((prev) => prev || prefill.phone);
+      // `prev || …` only fills blanks, so it never clobbers what the user
+      // typed and a blank prefill value is a no-op (no per-field guards needed).
+      setName((prev) => prev || prefill.name);
+      setEmail((prev) => prev || prefill.email);
+      setPhone((prev) => prev || prefill.phone);
     };
-    void loadPrefillForCurrentUser().then(applyPrefill);
+    (async () => {
+      const prefill = await loadPrefillForCurrentUser();
+      if (!cancelled) applyPrefill(prefill);
+    })();
     return () => {
       cancelled = true;
     };
