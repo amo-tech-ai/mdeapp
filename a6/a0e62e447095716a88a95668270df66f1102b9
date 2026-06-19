@@ -1,0 +1,29 @@
+docs/tasks/testing/evidence/2026-06-19/rental-intent-verification.json
+  s_f47ea5ebcd9235::t_c0da1e3a8dd0e9 1-46
+docs/tasks/testing/evidence/2026-06-19/RESULTS.md
+  s_f47ea5ebcd9235::t_4148ef1019924f 1-207
+docs/tasks/testing/evidence/2026-06-19/prefill-verification.json
+  s_f47ea5ebcd9235::t_1a9dc95ce1e64a 1,3-5,8,10-12,15-29
+  s_f47ea5ebcd9235::t_cc64832a674017 2,6-7,9,13-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "a6a0e62e447095716a88a95668270df66f1102b9",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
