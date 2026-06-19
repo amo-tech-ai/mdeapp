@@ -1,0 +1,19 @@
+.design-sync/previews/Command.tsx
+  s_6f1363889f2b7e::t_c85ba550a8afe3 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "f018d4a43b7fefb6f59b6cd6bd8b2900202bd933",
+  "prompts": {},
+  "sessions": {
+    "s_6f1363889f2b7e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5f54003d-fc39-4f3a-b66c-e34a0af990cb",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
