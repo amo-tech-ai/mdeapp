@@ -1,9 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRentalUi } from "@/components/chat/rental-ui-context";
 import { submitScheduleViewing } from "@/lib/leads/submit-schedule-viewing";
+import { buildSchedulePrefill } from "@/lib/leads/schedule-prefill";
+import { createClient } from "@/lib/supabase/client";
 import { useModalA11y } from "@/lib/use-modal-a11y";
 
 /** SCREEN-008 — schedule viewing modal → POST /api/leads/schedule-viewing (G2). */
@@ -17,6 +19,40 @@ export function ScheduleViewingModal() {
   const [preferredAt, setPreferredAt] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  const isOpen = Boolean(scheduleTarget);
+
+  // When the modal opens for a signed-in user, seed contact fields from their
+  // profile + auth account. Only fills blanks (`prev || …`) so it never clobbers
+  // what the user has already typed, and signed-out users keep blank fields.
+  useEffect(() => {
+    if (!isOpen) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) return; // signed out — leave fields blank
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("full_name,email")
+          .eq("id", user.id)
+          .maybeSingle();
+        if (cancelled) return;
+        const prefill = buildSchedulePrefill(user, profile);
+        if (prefill.name) setName((prev) => prev || prefill.name);
+        if (prefill.email) setEmail((prev) => prev || prefill.email);
+        if (prefill.phone) setPhone((prev) => prev || prefill.phone);
+      } catch {
+        // Prefill is best-effort; a failed lookup just leaves fields blank.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen]);
 
   if (!scheduleTarget) return null;
 
