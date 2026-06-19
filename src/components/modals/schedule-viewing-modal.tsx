@@ -34,7 +34,16 @@ export function ScheduleViewingModal() {
         const {
           data: { user },
         } = await supabase.auth.getUser();
-        if (!user) return; // signed out — leave fields blank
+        if (!user) {
+          // Signed out: clear any values prefilled for a previous user so
+          // their name/email can't leak across sessions on a shared browser.
+          if (!cancelled) {
+            setName("");
+            setEmail("");
+            setPhone("");
+          }
+          return;
+        }
         const { data: profile } = await supabase
           .from("profiles")
           .select("full_name,email")
