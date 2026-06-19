@@ -1,0 +1,19 @@
+src/components/modals/schedule-viewing-modal.tsx
+  s_f47ea5ebcd9235::t_20db6ae7bd08e5 64-68,70-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "60dcd9bcbbd37870bf508bfe0f7e2152157a81db",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
