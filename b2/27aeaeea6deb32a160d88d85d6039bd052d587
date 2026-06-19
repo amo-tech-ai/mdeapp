@@ -1,0 +1,21 @@
+.design-sync/tag-framework-vars.cjs
+  s_6f1363889f2b7e::t_63d2dbbd1f2e4b 15-19
+.design-sync/NOTES.md
+  s_6f1363889f2b7e::t_5c10177b3b2ed0 31-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "b227aeaeea6deb32a160d88d85d6039bd052d587",
+  "prompts": {},
+  "sessions": {
+    "s_6f1363889f2b7e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5f54003d-fc39-4f3a-b66c-e34a0af990cb",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
