@@ -1,0 +1,23 @@
+docs/audits/san-1194-host-dashboard-readiness.md
+  s_f47ea5ebcd9235::t_33da43445918b9 1-112
+docs/audits/events-platform-next-priority-report.md
+  s_f47ea5ebcd9235::t_50985bf990a13a 1-167
+docs/audits/design-source-tracking-decision.md
+  s_f47ea5ebcd9235::t_92e3b0d07fcd9e 1-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "379ea1c2ac02405fac79d2be1f0c143367212787",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
