@@ -1,0 +1,66 @@
+.design-sync/previews/Separator.tsx
+  s_6f1363889f2b7e::t_8a36ab9965b5a9 1-19
+.design-sync/previews/Toggle.tsx
+  s_6f1363889f2b7e::t_a1e647da37842f 1-14
+.design-sync/previews/Skeleton.tsx
+  s_6f1363889f2b7e::t_d30bf051de24fe 1-13
+.design-sync/config.json
+  s_6f1363889f2b7e::t_67fe29ff1d0073 28
+  s_6f1363889f2b7e::t_4e8df9cba21183 1-7,11-27,29-34
+  s_6f1363889f2b7e::t_640dbeaac2d629 8
+  s_6f1363889f2b7e::t_466bf492d54870 10
+  s_6f1363889f2b7e::t_3aab280544fbe3 9
+.gitignore
+  s_6f1363889f2b7e::t_b1fe3d92300632 100-104
+.design-sync/previews/Label.tsx
+  s_6f1363889f2b7e::t_e8e18cf0ad0909 1-10
+.design-sync/previews/Badge.tsx
+  s_6f1363889f2b7e::t_ab8da2fd53c796 1-13
+.design-sync/previews/Command.tsx
+  s_6f1363889f2b7e::t_c1792544daf990 1-30
+.design-sync/previews/Card.tsx
+  s_6f1363889f2b7e::t_96418665d18b26 1-31
+.design-sync/previews/Input.tsx
+  s_6f1363889f2b7e::t_8ff4b5f1016e5d 1-16
+.design-sync/previews/Avatar.tsx
+  s_6f1363889f2b7e::t_3b330331a3b5a0 1-43
+.design-sync/NOTES.md
+  s_6f1363889f2b7e::t_fd1725ca845c17 1-37
+.design-sync/conventions.md
+  s_6f1363889f2b7e::t_a15064f9ad1025 28-30
+  s_6f1363889f2b7e::t_a2eb9c5f6a9d4d 1-27,31-62
+.design-sync/css-src.css
+  s_6f1363889f2b7e::t_1986492f415f39 7-11
+  s_6f1363889f2b7e::t_4294d07d42df07 1-6,12-145
+.design-sync/previews/Tabs.tsx
+  s_6f1363889f2b7e::t_a8cd929e856e57 1-20
+.design-sync/previews/Tooltip.tsx
+  s_6f1363889f2b7e::t_bedcc14d0f8e55 1-20
+.design-sync/previews/Button.tsx
+  s_6f1363889f2b7e::t_1f2555d04430a9 1-24
+.design-sync/previews/InputGroup.tsx
+  s_6f1363889f2b7e::t_bca21d117add18 1-44
+.design-sync/previews/Textarea.tsx
+  s_6f1363889f2b7e::t_4b4747aa4bc6f0 1-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "b174a667d9db3dd3fb022257503a2c378d2303cd",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_6f1363889f2b7e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5f54003d-fc39-4f3a-b66c-e34a0af990cb",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
