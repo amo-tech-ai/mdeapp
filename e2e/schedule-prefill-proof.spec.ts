@@ -23,7 +23,7 @@ import {
 const SIGNED_IN_EMAIL = "ai@socialmediaville.ca";
 
 /** /rentals → first card → detail → open the request-viewing modal. */
-async function openModalFromDetail(page: import("@playwright/test").Page) {
+const openModalFromDetail = async (page: import("@playwright/test").Page) => {
   await page.goto("/rentals", { waitUntil: "domcontentloaded" });
   const cardLink = page.locator('[data-testid^="rental-card-link-"]').first();
   await expect(cardLink).toBeVisible();
@@ -32,7 +32,7 @@ async function openModalFromDetail(page: import("@playwright/test").Page) {
   await expect(page.locator('[data-testid="rental-detail"]')).toBeVisible({ timeout: 30_000 });
   await page.locator('[data-testid="rental-detail-request-cta"]').click();
   await expect(page.locator('[data-testid="schedule-viewing-modal"]')).toBeVisible();
-}
+};
 
 test.describe("schedule-viewing prefill", () => {
   test("signed-in user sees name + email prefilled, phone blank, fields editable", async ({
