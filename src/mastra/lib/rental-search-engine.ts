@@ -12,17 +12,15 @@ import {
 const inFlight = new Map<string, Promise<RentalSearchResult>>();
 let searchInvocationCount = 0;
 
-export function resetRentalSearchEngineForTests() {
+export const resetRentalSearchEngineForTests = (): void => {
   inFlight.clear();
   searchInvocationCount = 0;
-}
+};
 
-export function getRentalSearchInvocationCount(): number {
-  return searchInvocationCount;
-}
+export const getRentalSearchInvocationCount = (): number => searchInvocationCount;
 
-function dedupeKey(query: RentalQuery): string {
-  return JSON.stringify({
+const dedupeKey = (query: RentalQuery): string =>
+  JSON.stringify({
     neighborhood: query.neighborhood,
     minBedrooms: query.minBedrooms,
     maxPricePerNight: query.maxPricePerNight,
@@ -32,10 +30,9 @@ function dedupeKey(query: RentalQuery): string {
     checkOut: query.checkOut,
     stayType: query.stayType,
   });
-}
 
 export const rentalSearchEngine = {
-  async search(query: RentalQuery): Promise<RentalSearchResult> {
+  search(query: RentalQuery): Promise<RentalSearchResult> {
     const key = dedupeKey(query);
     const existing = inFlight.get(key);
     if (existing) return existing;
@@ -48,7 +45,7 @@ export const rentalSearchEngine = {
     return pending;
   },
 
-  async searchFromIntent(
+  searchFromIntent(
     intent: RentalIntent,
     limit = 8,
   ): Promise<RentalSearchResult> {

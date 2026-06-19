@@ -6,11 +6,13 @@ import {
 } from "@/mastra/lib/rental-search-engine";
 
 vi.mock("@/mastra/tools/search-rentals", () => ({
-  searchRentals: vi.fn(async () => ({
-    results: [{ id: "r1" }],
-    total: 1,
-    source: "mock" as const,
-  })),
+  searchRentals: vi.fn(() =>
+    Promise.resolve({
+      results: [{ id: "r1" }],
+      total: 1,
+      source: "mock" as const,
+    }),
+  ),
 }));
 
 describe("MASTRA-RE-002 · RentalSearchEngine", () => {
@@ -20,10 +22,10 @@ describe("MASTRA-RE-002 · RentalSearchEngine", () => {
   });
 
   it("dedupes identical concurrent search queries", async () => {
-    const q = { neighborhood: "Laureles", minBedrooms: 1, maxPricePerNight: 80 };
+    const query = { neighborhood: "Laureles", minBedrooms: 1, maxPricePerNight: 80 };
     const [a, b] = await Promise.all([
-      rentalSearchEngine.search(q),
-      rentalSearchEngine.search(q),
+      rentalSearchEngine.search(query),
+      rentalSearchEngine.search(query),
     ]);
     expect(a.total).toBe(1);
     expect(b.total).toBe(1);

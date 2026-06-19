@@ -63,23 +63,31 @@ const MATRIX: Record<RentalFailureKind, Omit<RentalFailureRecovery, "kind">> = {
   },
 };
 
-export function rentalFailureRecovery(kind: RentalFailureKind): RentalFailureRecovery {
-  return { kind, ...MATRIX[kind] };
-}
+export const rentalFailureRecovery = (
+  kind: RentalFailureKind,
+): RentalFailureRecovery => ({ kind, ...MATRIX[kind] });
 
-export function classifyHttpStatusForRentalFailure(status: number): RentalFailureKind {
+export const classifyHttpStatusForRentalFailure = (
+  status: number,
+): RentalFailureKind => {
   if (status === 429) return "gemini_rate_limit";
   if (status >= 500) return "rental_search_api";
   if (status === 408) return "supabase_slow";
   return "rental_search_api";
-}
+};
 
-export function classifyRentalSearchError(err: unknown): RentalFailureKind {
-  if (err instanceof Error) {
-    const m = err.message.toLowerCase();
-    if (m.includes("429") || m.includes("rate")) return "gemini_rate_limit";
-    if (m.includes("timeout") || m.includes("timed out")) return "gemini_timeout";
-    if (m.includes("supabase")) return "supabase_error";
+/** Error-message substrings → failure kind, in priority order. */
+const ERROR_MATCHERS: ReadonlyArray<readonly [readonly string[], RentalFailureKind]> = [
+  [["429", "rate"], "gemini_rate_limit"],
+  [["timeout", "timed out"], "gemini_timeout"],
+  [["supabase"], "supabase_error"],
+];
+
+export const classifyRentalSearchError = (err: unknown): RentalFailureKind => {
+  if (!(err instanceof Error)) return "rental_search_api";
+  const message = err.message.toLowerCase();
+  for (const [needles, kind] of ERROR_MATCHERS) {
+    if (needles.some((needle) => message.includes(needle))) return kind;
   }
   return "rental_search_api";
-}
+};

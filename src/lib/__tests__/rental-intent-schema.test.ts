@@ -22,7 +22,8 @@ describe("GEM-RE-002 · RentalIntentSchema", () => {
   it("round-trips intent → search params", () => {
     const intent = parseRentalIntentFromText("2BR provenza under $120/night", {});
     expect(intent?.action).toBe("search_now");
-    const api = rentalIntentToSearchParams(intent!);
+    if (!intent) throw new Error("expected a parsed intent");
+    const api = rentalIntentToSearchParams(intent);
     expect(api.neighborhood).toBe("El Poblado");
     expect(api.minBedrooms).toBe(2);
     expect(api.maxPricePerNight).toBe(120);

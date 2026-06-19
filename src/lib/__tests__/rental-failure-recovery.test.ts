@@ -7,15 +7,15 @@ import {
 
 describe("SAN-1059 · RE-FAIL-002 · rental failure recovery matrix", () => {
   it("maps Gemini 429 to rate-limit copy", () => {
-    const r = rentalFailureRecovery(classifyHttpStatusForRentalFailure(429));
-    expect(r.telemetryTag).toBe("gemini_rate_limited");
-    expect(r.userMessage).toMatch(/try again/i);
+    const recovery = rentalFailureRecovery(classifyHttpStatusForRentalFailure(429));
+    expect(recovery.telemetryTag).toBe("gemini_rate_limited");
+    expect(recovery.userMessage).toMatch(/try again/i);
   });
 
   it("maps 5xx to fast-path failed copy", () => {
-    const r = rentalFailureRecovery(classifyHttpStatusForRentalFailure(503));
-    expect(r.telemetryTag).toBe("fast_path_failed");
-    expect(r.fallback).toBe("agent_once");
+    const recovery = rentalFailureRecovery(classifyHttpStatusForRentalFailure(503));
+    expect(recovery.telemetryTag).toBe("fast_path_failed");
+    expect(recovery.fallback).toBe("agent_once");
   });
 
   it("classifies timeout errors", () => {
@@ -35,9 +35,9 @@ describe("SAN-1059 · RE-FAIL-002 · rental failure recovery matrix", () => {
       "rental_search_api",
     ] as const;
     for (const kind of kinds) {
-      const r = rentalFailureRecovery(kind);
-      expect(r.userMessage.length).toBeGreaterThan(10);
-      expect(r.telemetryTag).toBeTruthy();
+      const recovery = rentalFailureRecovery(kind);
+      expect(recovery.userMessage.length).toBeGreaterThan(10);
+      expect(recovery.telemetryTag).toBeTruthy();
     }
   });
 });

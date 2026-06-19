@@ -42,10 +42,10 @@ export type RentalSearchParams = z.infer<typeof rentalSearchParamsSchema>;
 const HERO_PROMPT = "1BR in Laureles under $80/night";
 
 /** Normalize user text + working memory into one schema shape. */
-export function parseRentalIntentFromText(
+export const parseRentalIntentFromText = (
   text: string,
   memory: ConciergeWorkingMemory = {},
-): RentalIntent | null {
+): RentalIntent | null => {
   if (!looksLikeRentalSearch(text)) return null;
 
   const signals = scoreRentalQuery(text);
@@ -75,12 +75,12 @@ export function parseRentalIntentFromText(
     confidence: signals.confidence,
     action: "search_now",
   });
-}
+};
 
-export function rentalIntentToSearchParams(
+export const rentalIntentToSearchParams = (
   intent: RentalIntent,
   limit = 8,
-): RentalSearchApiParams {
+): RentalSearchApiParams => {
   return {
     neighborhood: intent.neighborhood,
     minBedrooms: intent.minBedrooms,
@@ -91,13 +91,13 @@ export function rentalIntentToSearchParams(
     queryText: intent.queryText,
     limit,
   };
-}
+};
 
 /** RE-021 row 1 — canonical hero slots for parity tests. */
-export function heroRentalIntent(): RentalIntent {
+export const heroRentalIntent = (): RentalIntent => {
   const parsed = parseRentalIntentFromText(HERO_PROMPT, {});
   if (!parsed || parsed.action !== "search_now") {
     throw new Error("hero rental intent parse failed");
   }
   return parsed;
-}
+};
