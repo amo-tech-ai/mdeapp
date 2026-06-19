@@ -1,0 +1,39 @@
+src/lib/rental-failure-recovery.ts
+  s_f47ea5ebcd9235::t_5b04232aa01016 66-68,70-72,77-84,86-90,93
+src/lib/rental-intent-gemini.ts
+  s_f47ea5ebcd9235::t_49529549c07c9e 18,21,33-43,46-49
+src/lib/__tests__/rental-failure-recovery.test.ts
+  s_f47ea5ebcd9235::t_03577864515d4b 16-18
+  s_f47ea5ebcd9235::t_f33fec26787e93 38-40
+  s_f47ea5ebcd9235::t_b489cdb22f7788 10-12
+src/lib/rental-intent-schema.ts
+  s_f47ea5ebcd9235::t_8c088774b2c726 45,48
+  s_f47ea5ebcd9235::t_3c5ec18c6428fb 78,80,83
+  s_f47ea5ebcd9235::t_d4a3ab2bed0e59 94,97,103
+src/lib/__tests__/rental-intent-schema.test.ts
+  s_f47ea5ebcd9235::t_b87f7f4e7e6e5f 25-26
+src/mastra/lib/rental-search-engine.ts
+  s_f47ea5ebcd9235::t_4defa1c4b61625 15,18,20,22-23,35,48
+src/lib/__tests__/rental-intent-gemini.test.ts
+  s_f47ea5ebcd9235::t_d86f9d898cf22e 35-36
+  s_f47ea5ebcd9235::t_ada4a5bc18ac3a 55,60-61
+src/mastra/lib/__tests__/rental-search-engine.test.ts
+  s_f47ea5ebcd9235::t_1568bf98d77aed 9-15
+  s_f47ea5ebcd9235::t_783bf951670ceb 25,27-28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "823bc9971776eaf9cc59b9a3ca5d1e484ad7deac",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
