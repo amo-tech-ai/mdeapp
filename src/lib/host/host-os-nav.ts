@@ -43,18 +43,21 @@ export function isHostOsNavActive(pathname: string, href: string): boolean {
 /**
  * True when `pathname` should render inside the unified Host OS shell.
  *
- * The OS frame wraps the workspace routes (Overview · Events · Analytics). Three
- * areas stay passthrough — they own their own chrome/provider this phase:
- *  - `/host`            → public marketing landing (no host chat)
- *  - `/host/event*`     → the AI event wizard (own HostEventProvider/hostEventAgent)
- *  - `/host/rentals*`   → the real-estate broker area (out of scope for SAN-1209)
+ * Only explicitly listed workspace routes get the shell. All other `/host/*`
+ * paths (venues, settings, rentals, public marketing landing, the event wizard)
+ * stay passthrough — they own their own chrome/provider.
+ *
+ * Phase-0 shell routes:
+ *  - `/host/dashboard`  → Overview workspace
+ *  - `/host/events`     → Events list + detail
+ *  - `/host/analytics`  → Analytics dashboard
  */
 // skipcq: JS-0067, JS-R1005 - ES module export; flat route guards read clearer than a table
 export function isHostOsShellRoute(pathname: string): boolean {
-  if (pathname === "/host") return false;
-  if (pathname === "/host/event" || pathname.startsWith("/host/event/")) return false;
-  if (pathname === "/host/rentals" || pathname.startsWith("/host/rentals/")) return false;
-  return pathname.startsWith("/host/");
+  if (pathname === "/host/dashboard" || pathname.startsWith("/host/dashboard/")) return true;
+  if (pathname === "/host/events" || pathname.startsWith("/host/events/")) return true;
+  if (pathname === "/host/analytics" || pathname.startsWith("/host/analytics/")) return true;
+  return false;
 }
 
 /**

@@ -99,8 +99,8 @@ describe("isHostOsShellRoute", () => {
     expect(isHostOsShellRoute("/host/rentals/onboarding")).toBe(false);
   });
 
-  it("catches future /host/* routes in the OS shell by default", () => {
-    expect(isHostOsShellRoute("/host/venues")).toBe(true);
-    expect(isHostOsShellRoute("/host/settings")).toBe(true);
+  it("excludes non-workspace /host/* routes (venues, settings)", () => {
+    expect(isHostOsShellRoute("/host/venues")).toBe(false);
+    expect(isHostOsShellRoute("/host/settings")).toBe(false);
   });
 });
