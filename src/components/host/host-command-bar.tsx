@@ -20,16 +20,13 @@ type HostCommandBarProps = {
   onAskAi?: () => void;
 };
 
+const EDITABLE_TAGS = new Set(["INPUT", "TEXTAREA", "SELECT"]);
+
+// skipcq: JS-0067 - ES module export; not browser global scope
 function isEditableTarget(el: EventTarget | null): boolean {
   const target = el as HTMLElement | null;
   if (!target) return false;
-  return (
-    target.tagName === "INPUT" ||
-    target.tagName === "TEXTAREA" ||
-    target.tagName === "SELECT" ||
-    target.isContentEditable ||
-    target.getAttribute("role") === "textbox"
-  );
+  return EDITABLE_TAGS.has(target.tagName) || target.isContentEditable || target.getAttribute("role") === "textbox";
 }
 
 // skipcq: JS-0067 - ES module export; not browser global scope
