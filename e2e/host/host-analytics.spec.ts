@@ -51,15 +51,16 @@ describeAuthed(`${SCREEN_ID} · AIE-008 — Host Analytics dashboard`, () => {
     await expect(page.getByTestId("host-os-nav")).toBeVisible();
 
     // KPI canvas renders in a valid state — real cards when this host has sales
-    // (the QA host does), otherwise the "ask about your sales" empty prompt, or
-    // the error card on a loader failure. Never a fabricated number.
+    // (the QA host does), otherwise the "ask about your sales" empty prompt.
+    // Never a fabricated number, and never the error card (that would mean a
+    // loader failure, which must fail the test).
     await expect(
       page
         .getByTestId("host-kpi-grid")
         .or(page.getByTestId("host-kpi-empty"))
-        .or(page.getByTestId("host-kpi-error"))
         .first(),
     ).toBeVisible();
+    await expect(page.getByTestId("host-kpi-error")).not.toBeVisible();
 
     // The single persistent Host OS chat surface is mounted
     await expect(page.getByTestId("host-os-chat-region")).toBeVisible();

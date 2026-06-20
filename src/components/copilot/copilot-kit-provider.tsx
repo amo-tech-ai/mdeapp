@@ -24,7 +24,7 @@ function CopilotKitWithThread({ children }: { children: ReactNode }) {
   // the root provider (isHostOsShellRoute returns false for them).
   if (
     pathname === "/chat" ||
-    pathname.startsWith("/host/event") ||
+    pathname === "/host/event" || pathname.startsWith("/host/event/") ||
     isHostOsShellRoute(pathname)
   ) {
     return <>{children}</>;
