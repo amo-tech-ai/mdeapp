@@ -1,0 +1,33 @@
+docs/testing/host-os-blank-body-verification.md
+  s_f47ea5ebcd9235::t_919c1394e18784 1-82
+src/components/host/__tests__/host-os-body.test.tsx
+  s_f47ea5ebcd9235::t_73c413c56666d1 99-100
+  s_f47ea5ebcd9235::t_d5994a4f920901 1-98,101-142
+src/components/host/host-error-boundary.tsx
+  s_f47ea5ebcd9235::t_404bc04e7c1778 1-62
+src/components/host/host-os-body.tsx
+  s_f47ea5ebcd9235::t_446f35a25d2fc1 8,17-51
+  s_f47ea5ebcd9235::t_c34a02122330bb 62-66,76-90
+src/app/host/error.tsx
+  s_f47ea5ebcd9235::t_f4eea78973a58f 1-55
+src/components/host/host-os-shell.tsx
+  s_f47ea5ebcd9235::t_562afc8a3637e1 6
+  s_f47ea5ebcd9235::t_75a23a1ee7e848 30-41
+  s_f47ea5ebcd9235::t_fd6ff4ee81ba02 60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "dbaab1b4a1f5741a0288410252bd0025a6de3163",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
