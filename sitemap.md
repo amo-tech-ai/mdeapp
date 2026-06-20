@@ -84,6 +84,7 @@ prod: https://www.mdeai.co
 
 ```
 /host
+├── /host/dashboard                  ✅ LIVE    Roberto's "is my business healthy today?" home — figure-free AI daily briefing + KPI snapshot + needs-attention triage + quick links + concierge chat (**SAN-1194 · HOST-DASH-001 — Host Dashboard OS**); auth required (307 when logged out)
 ├── /host/event/new                  ✅ LIVE    Roberto's AI publish wizard (HITL, CopilotKit)
 │   └── [overlay] approval-panel    ✅ LIVE    Roberto approves AI-drafted event before publish
 ├── /host/events                     ✅ LIVE    Host event list — Roberto sees published events (**SAN-118**, **SAN-366**)
