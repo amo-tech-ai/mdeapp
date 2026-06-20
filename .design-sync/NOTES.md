@@ -28,8 +28,9 @@ Repo-specific gotchas for syncing `src/components/ui` to Claude Design.
 - Plan: compile a standalone stylesheet from `globals.css` scanning `src/components/ui` + authored
   previews, emit to a file, point `cfg.cssEntry` at it. Without this the cards render unstyled.
 - **CSS build is TWO steps** (run both before `package-build`): (1) Tailwind CLI compile
-  `css-src.css → .cache/compiled.css`; (2) `node .design-sync/tag-framework-vars.mjs
-  .design-sync/.cache/compiled.css`. Step 2 appends `/* @kind other */` to Tailwind
+  `css-src.css → .cache/compiled.css`; (2) `node .design-sync/tag-framework-vars.cjs
+  .design-sync/.cache/compiled.css` (CommonJS `.cjs` — DeepSource analyzes this repo as
+  module_system=commonjs, so an ESM `.mjs` trips a JS-0833 parse error). Step 2 appends `/* @kind other */` to Tailwind
   framework-internal custom-property declarations (`--tw-*`, `--animate-*`, `--ease-*`,
   `--default-transition-*`, `--aspect-*`) so Claude Design's `check_design_system` stops flagging
   them as unclassifiable tokens. It ONLY tags — never removes them (utilities reference them at

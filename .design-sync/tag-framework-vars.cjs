@@ -12,8 +12,11 @@
 // reorders, or rewrites any value. @property registration blocks are left alone
 // (the checker doesn't flag them). Idempotent — re-running tags nothing new.
 //
-// Usage: node .design-sync/tag-framework-vars.mjs <compiled.css>
-import { readFileSync, writeFileSync } from "node:fs";
+// Usage: node .design-sync/tag-framework-vars.cjs <compiled.css>
+// CommonJS (.cjs) on purpose: DeepSource analyzes this repo with
+// module_system=commonjs, so an ESM .mjs trips a JS-0833 parse error. require()
+// parses cleanly there and runs identically under Node.
+const { readFileSync, writeFileSync } = require("node:fs");
 
 const file = process.argv[2];
 if (!file) {
