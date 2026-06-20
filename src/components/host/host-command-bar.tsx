@@ -52,16 +52,10 @@ export function HostCommandBar({ onAskAi }: HostCommandBarProps) {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  const run = useCallback((action: () => void) => {
-    setOpen(false);
-    action();
-  }, []);
-
   const askAi = useCallback(() => {
     if (onAskAi) onAskAi();
   }, [onAskAi]);
 
-  // skipcq: JS-0415 - trigger button + command dialog are siblings under one fragment
   return (
     <>
       <button
@@ -86,58 +80,89 @@ export function HostCommandBar({ onAskAi }: HostCommandBarProps) {
         description="Jump to a workspace or ask the assistant."
       >
         <CommandInput placeholder="Type a command or search…" data-testid="host-command-bar-input" />
-        <CommandList>
-          <CommandEmpty>No matching commands.</CommandEmpty>
-          <CommandGroup heading="Go to">
-            <CommandItem
-              data-testid="host-command-open-dashboard"
-              onSelect={() => run(() => router.push("/host/dashboard"))}
-            >
-              <LayoutDashboard className="size-4" aria-hidden />
-              Open Dashboard
-            </CommandItem>
-            <CommandItem
-              data-testid="host-command-view-sales"
-              onSelect={() => run(() => router.push("/host/analytics"))}
-            >
-              <TrendingUp className="size-4" aria-hidden />
-              View Sales
-            </CommandItem>
-          </CommandGroup>
-          <CommandSeparator />
-          <CommandGroup heading="Create">
-            <CommandItem
-              data-testid="host-command-create-event"
-              onSelect={() => run(() => router.push("/host/event/new"))}
-            >
-              <CalendarPlus className="size-4" aria-hidden />
-              Create Event
-            </CommandItem>
-          </CommandGroup>
-          <CommandSeparator />
-          <CommandGroup heading="Ask the assistant">
-            <CommandItem
-              data-testid="host-command-find-venue"
-              onSelect={() => run(askAi)}
-            >
-              <MapPin className="size-4" aria-hidden />
-              Find Venue
-            </CommandItem>
-            <CommandItem
-              data-testid="host-command-find-attendees"
-              onSelect={() => run(askAi)}
-            >
-              <Users className="size-4" aria-hidden />
-              Find Attendees
-            </CommandItem>
-            <CommandItem data-testid="host-command-ask-ai" onSelect={() => run(askAi)}>
-              <MessageSquare className="size-4" aria-hidden />
-              Ask AI
-              <CommandShortcut>⌘K</CommandShortcut>
-            </CommandItem>
-          </CommandGroup>
-        </CommandList>
+        <HostCommandItems
+          close={() => setOpen(false)}
+          openDashboard={() => router.push("/host/dashboard")}
+          viewSales={() => router.push("/host/analytics")}
+          createEvent={() => router.push("/host/event/new")}
+          askAi={askAi}
+        />
       </CommandDialog>
     </>
+  );
+}
+
+type HostCommandItemsProps = {
+  close: () => void;
+  openDashboard: () => void;
+  viewSales: () => void;
+  createEvent: () => void;
+  askAi: () => void;
+};
+
+function HostCommandItems({
+  close,
+  openDashboard,
+  viewSales,
+  createEvent,
+  askAi,
+}: HostCommandItemsProps) {
+  const pick = (action: () => void) => () => {
+    close();
+    action();
+  };
+
+  return (
+    <CommandList>
+      <CommandEmpty>No matching commands.</CommandEmpty>
+      <CommandGroup heading="Go to">
+        <CommandItem
+          data-testid="host-command-open-dashboard"
+          onSelect={pick(openDashboard)}
+        >
+          <LayoutDashboard className="size-4" aria-hidden />
+          Open Dashboard
+        </CommandItem>
+        <CommandItem
+          data-testid="host-command-view-sales"
+          onSelect={pick(viewSales)}
+        >
+          <TrendingUp className="size-4" aria-hidden />
+          View Sales
+        </CommandItem>
+      </CommandGroup>
+      <CommandSeparator />
+      <CommandGroup heading="Create">
+        <CommandItem
+          data-testid="host-command-create-event"
+          onSelect={pick(createEvent)}
+        >
+          <CalendarPlus className="size-4" aria-hidden />
+          Create Event
+        </CommandItem>
+      </CommandGroup>
+      <CommandSeparator />
+      <CommandGroup heading="Ask the assistant">
+        <CommandItem
+          data-testid="host-command-find-venue"
+          onSelect={pick(askAi)}
+        >
+          <MapPin className="size-4" aria-hidden />
+          Find Venue
+        </CommandItem>
+        <CommandItem
+          data-testid="host-command-find-attendees"
+          onSelect={pick(askAi)}
+        >
+          <Users className="size-4" aria-hidden />
+          Find Attendees
+        </CommandItem>
+        <CommandItem data-testid="host-command-ask-ai" onSelect={pick(askAi)}>
+          <MessageSquare className="size-4" aria-hidden />
+          Ask AI
+          <CommandShortcut>⌘K</CommandShortcut>
+        </CommandItem>
+      </CommandGroup>
+    </CommandList>
   );
 }

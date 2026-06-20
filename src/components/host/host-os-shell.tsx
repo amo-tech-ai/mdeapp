@@ -36,11 +36,87 @@ const HOST_OS_CHAT_LABELS = {
 
 const CHAT_REGION_ID = "host-os-chat-region";
 
+function HostOsHeader({
+  routeLabel,
+  onAskAi,
+}: {
+  routeLabel: string;
+  onAskAi: () => void;
+}) {
+  return (
+    <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-4 py-3 sm:px-6">
+      <div className="min-w-0">
+        <Link href="/" className="text-xs text-muted-foreground hover:text-foreground">
+          ← mdeai
+        </Link>
+        <h1
+          data-testid="host-os-route-label"
+          className="text-lg font-semibold sm:text-xl"
+        >
+          {routeLabel}
+        </h1>
+      </div>
+      <div className="flex shrink-0 items-center gap-3">
+        <HostCommandBar onAskAi={onAskAi} />
+        <AuthStatus />
+      </div>
+    </header>
+  );
+}
+
+function HostOsBody({
+  children,
+  routeLabel,
+}: {
+  children: ReactNode;
+  routeLabel: string;
+}) {
+  return (
+    <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+      <HostOsNav />
+      <section
+        aria-label={`${routeLabel} workspace`}
+        className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto"
+      >
+        {children}
+      </section>
+      <aside
+        id={CHAT_REGION_ID}
+        data-testid="host-os-chat-region"
+        aria-label="Host concierge"
+        aria-live="polite"
+        aria-relevant="additions"
+        className="flex h-[60vh] shrink-0 flex-col gap-3 overflow-hidden border-t border-border p-3 md:h-auto md:w-80 md:border-l md:border-t-0 lg:w-96"
+      >
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+          <div className="mb-2 shrink-0">
+            <p className="text-sm font-semibold text-foreground">
+              <span aria-hidden="true" className="mr-1 text-accent-foreground">
+                ✦
+              </span>
+              {HOST_OS_CHAT_LABELS.title}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Persistent across your host workspace.
+            </p>
+          </div>
+          <CopilotChat
+            agentId="hostOpsAgent"
+            className="copilotKitChat--center mde-center-copilot-chat min-h-0 flex-1"
+            labels={{
+              modalHeaderTitle: HOST_OS_CHAT_LABELS.title,
+              welcomeMessageText: HOST_OS_CHAT_LABELS.initial,
+            }}
+          />
+        </div>
+        <HostInboxPlaceholder />
+      </aside>
+    </div>
+  );
+}
+
 // skipcq: JS-0067 - ES module export; not browser global scope
 export function HostOsShell({ children }: { children: ReactNode }) {
-  // One stable thread for the whole OS session so the conversation persists
-  // across Overview ↔ Events ↔ Analytics. The layout instance is not remounted
-  // on client-side route changes, so this id is held for the session.
   const [threadId] = useState(() => crypto.randomUUID());
   const pathname = usePathname();
   const routeLabel = deriveHostOsRouteLabel(pathname);
@@ -52,7 +128,6 @@ export function HostOsShell({ children }: { children: ReactNode }) {
     input?.focus();
   }, []);
 
-  // skipcq: JS-0415 - the OS frame (provider → context → header → nav → chat) is intentionally one tree
   return (
     <CopilotKit
       {...getCopilotKitClientProps("hostOpsAgent")}
@@ -64,72 +139,8 @@ export function HostOsShell({ children }: { children: ReactNode }) {
           data-testid="host-os-shell"
           className="flex min-h-screen flex-col bg-background text-foreground"
         >
-          <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-4 py-3 sm:px-6">
-            <div className="min-w-0">
-              <Link href="/" className="text-xs text-muted-foreground hover:text-foreground">
-                ← mdeai
-              </Link>
-              <h1
-                data-testid="host-os-route-label"
-                className="text-lg font-semibold sm:text-xl"
-              >
-                {routeLabel}
-              </h1>
-            </div>
-            <div className="flex shrink-0 items-center gap-3">
-              <HostCommandBar onAskAi={focusChat} />
-              <AuthStatus />
-            </div>
-          </header>
-
-          <div className="flex min-h-0 flex-1 flex-col md:flex-row">
-            <HostOsNav />
-
-            <section
-              aria-label={`${routeLabel} workspace`}
-              className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto"
-            >
-              {children}
-            </section>
-
-            {/*
-              The persistent Host OS right rail: ONE CopilotChat (one hostOpsAgent
-              subscription) plus the reserved inbox slot. Stacks below content on
-              mobile, becomes the right column on desktop. This is the single
-              CopilotChat mounted under the OS routes.
-            */}
-            <aside
-              id={CHAT_REGION_ID}
-              data-testid="host-os-chat-region"
-              aria-label="Host concierge"
-              aria-live="polite"
-              aria-relevant="additions"
-              className="flex h-[60vh] shrink-0 flex-col gap-3 overflow-hidden border-t border-border p-3 md:h-auto md:w-80 md:border-l md:border-t-0 lg:w-96"
-            >
-              <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-                <div className="mb-2 shrink-0">
-                  <p className="text-sm font-semibold text-foreground">
-                    <span aria-hidden="true" className="mr-1 text-accent-foreground">
-                      ✦
-                    </span>
-                    {HOST_OS_CHAT_LABELS.title}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Persistent across your host workspace.
-                  </p>
-                </div>
-                <CopilotChat
-                  agentId="hostOpsAgent"
-                  className="copilotKitChat--center mde-center-copilot-chat min-h-0 flex-1"
-                  labels={{
-                    modalHeaderTitle: HOST_OS_CHAT_LABELS.title,
-                    welcomeMessageText: HOST_OS_CHAT_LABELS.initial,
-                  }}
-                />
-              </div>
-              <HostInboxPlaceholder />
-            </aside>
-          </div>
+          <HostOsHeader routeLabel={routeLabel} onAskAi={focusChat} />
+          <HostOsBody routeLabel={routeLabel}>{children}</HostOsBody>
         </div>
       </HostContextProvider>
     </CopilotKit>
