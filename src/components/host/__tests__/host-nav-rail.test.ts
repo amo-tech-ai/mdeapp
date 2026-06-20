@@ -18,6 +18,14 @@ describe("isHostNavActive", () => {
     expect(isHostNavActive("/host/event/new", "/host/event/new")).toBe(true);
   });
 
+  it("marks /host/dashboard active on the dashboard route", () => {
+    expect(isHostNavActive("/host/dashboard", "/host/dashboard")).toBe(true);
+  });
+
+  it("does not mark /host/dashboard active on the rentals dashboard", () => {
+    expect(isHostNavActive("/host/rentals/dashboard", "/host/dashboard")).toBe(false);
+  });
+
   it("marks rentals home only on exact /host/rentals", () => {
     expect(isHostNavActive("/host/rentals", "/host/rentals")).toBe(true);
     expect(isHostNavActive("/host/rentals/listings", "/host/rentals")).toBe(false);

@@ -13,6 +13,7 @@ type NavItem =
   | { href: string; label: string; testId: string; disabled: true };
 
 const HOST_NAV_ITEMS: NavItem[] = [
+  { href: "/host/dashboard", label: "Dashboard", testId: "host-nav-link-dashboard" },
   { href: "/host/events", label: "Events", testId: "host-nav-link-events" },
   { href: "/host/event/new", label: "New event", testId: "host-nav-link-new-event" },
   { href: "/host/analytics", label: "Analytics", testId: "host-nav-link-analytics" },
