@@ -9,6 +9,7 @@ type HostOsHeaderProps = {
   onAskAi: () => void;
 };
 
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function HostOsHeader({ routeLabel, onAskAi }: HostOsHeaderProps) {
   return (
     <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-4 py-3 sm:px-6">

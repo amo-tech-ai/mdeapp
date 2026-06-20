@@ -54,10 +54,11 @@ export function isHostOsNavActive(pathname: string, href: string): boolean {
  */
 // skipcq: JS-0067, JS-R1005 - ES module export; flat route guards read clearer than a table
 export function isHostOsShellRoute(pathname: string): boolean {
-  if (pathname === "/host/dashboard" || pathname.startsWith("/host/dashboard/")) return true;
-  if (pathname === "/host/events" || pathname.startsWith("/host/events/")) return true;
-  if (pathname === "/host/analytics" || pathname.startsWith("/host/analytics/")) return true;
-  return false;
+  return (
+    pathname === "/host/dashboard" || pathname.startsWith("/host/dashboard/") ||
+    pathname === "/host/events" || pathname.startsWith("/host/events/") ||
+    pathname === "/host/analytics" || pathname.startsWith("/host/analytics/")
+  );
 }
 
 /**
