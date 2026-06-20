@@ -25,6 +25,7 @@ type HostCommandItemsProps = {
   askAi: () => void;
 };
 
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function HostCommandItems({
   close,
   openDashboard,

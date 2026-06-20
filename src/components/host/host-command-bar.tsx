@@ -20,6 +20,18 @@ type HostCommandBarProps = {
   onAskAi?: () => void;
 };
 
+function isEditableTarget(el: EventTarget | null): boolean {
+  const target = el as HTMLElement | null;
+  if (!target) return false;
+  return (
+    target.tagName === "INPUT" ||
+    target.tagName === "TEXTAREA" ||
+    target.tagName === "SELECT" ||
+    target.isContentEditable ||
+    target.getAttribute("role") === "textbox"
+  );
+}
+
 // skipcq: JS-0067 - ES module export; not browser global scope
 export function HostCommandBar({ onAskAi }: HostCommandBarProps) {
   const router = useRouter();
@@ -27,14 +39,7 @@ export function HostCommandBar({ onAskAi }: HostCommandBarProps) {
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
-      const target = event.target as HTMLElement | null;
-      const isEditable =
-        target?.tagName === "INPUT" ||
-        target?.tagName === "TEXTAREA" ||
-        target?.tagName === "SELECT" ||
-        target?.isContentEditable ||
-        target?.getAttribute("role") === "textbox";
-      if (isEditable) return;
+      if (isEditableTarget(event.target)) return;
 
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();

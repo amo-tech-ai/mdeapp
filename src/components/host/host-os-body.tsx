@@ -18,6 +18,7 @@ type HostOsBodyProps = {
   routeLabel: string;
 };
 
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function HostOsBody({ children, routeLabel }: HostOsBodyProps) {
   return (
     <div className="flex min-h-0 flex-1 flex-col md:flex-row">
