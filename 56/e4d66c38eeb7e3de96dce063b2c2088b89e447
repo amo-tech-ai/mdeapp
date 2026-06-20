@@ -1,0 +1,19 @@
+src/components/host/host-command-bar.tsx
+  s_24776469c0f35f::t_79b44601c2bfbd 23-25,29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "56e4d66c38eeb7e3de96dce063b2c2088b89e447",
+  "prompts": {},
+  "sessions": {
+    "s_24776469c0f35f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_11e02221fffextOwbGWreFyWRE",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
