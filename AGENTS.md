@@ -23,8 +23,8 @@ This is a **planning + application workspace** building a brand-new mdeai app (`
 | Item | State |
 |---|---|
 | Phase | Phase 1 — **MVP exit** (Tier 1 + UX 1C); foundation shipped (IMP-001–078) |
-| MVP readiness | **72/100** forensic — **No-Go** until G1/G3/EVP-001 + UX P0 ([`progress/may30.md`](progress/may30.md)) |
-| Plan / queue | [`plan.md`](plan.md) · [`todo.md`](todo.md) · [`tasks/progres.md`](tasks/progres.md) |
+| MVP readiness | **72/100** forensic — **No-Go** until G1/G3/EVP-001 + UX P0 ([`docs/tasks/progres.md`](docs/tasks/progres.md)) |
+| Plan / queue | [`plan.md`](plan.md) · [`todo.md`](todo.md) · [`docs/tasks/progres.md`](docs/tasks/progres.md) |
 | PRD / roadmap | [`prd.md`](prd.md) · [`roadmap.md`](roadmap.md) |
 | Skills routing | [`index-skills.md`](index-skills.md) — load ≤5 per task |
 | App path | `/home/sk/mdeai/mdeapp/` @ **`8c99ded`** |
@@ -42,7 +42,7 @@ This is a **planning + application workspace** building a brand-new mdeai app (`
 - **EVERY** `<AdvancedMarker>` has a `mapId` on parent `<Map>`.
 - **CopilotKit pinned at `1.55.2`** for Phase 1. Migrate to v2 in Phase 2 only when Mastra integration ships on v2. **Do not mix v1 and v2 imports.**
 - **One worktree, one PR.** See `mde-worktree-pr-flow` skill.
-- **Localhost runtime proof required for Done** (rule added 2026-05-20). No task flips `status: Done` without an evidence entry showing `npm run dev` booted clean AND the relevant surface responded (e.g. `curl :3001/` HTTP 200, `POST :3001/api/copilotkit` HTTP 400/200, persona-visible path reachable). This is anti-fake-done gate 9 in [`/home/sk/mdeai/.Codex/skills/task-verifier/references/anti-fake-done-checklist.md`](.Codex/skills/task-verifier/references/anti-fake-done-checklist.md). N/A only for pure-doc tasks that touch zero source/config/hook files, AND that fact is recorded explicitly in evidence.
+- **Localhost runtime proof required for Done** (rule added 2026-05-20). No task flips `status: Done` without an evidence entry showing `npm run dev` booted clean AND the relevant surface responded (e.g. `curl :3001/` HTTP 200, `POST :3001/api/copilotkit` HTTP 400/200, persona-visible path reachable). This is anti-fake-done gate 9 in [`.claude/skills/task-verifier/references/anti-fake-done-checklist.md`](.claude/skills/task-verifier/references/anti-fake-done-checklist.md). N/A only for pure-doc tasks that touch zero source/config/hook files, AND that fact is recorded explicitly in evidence.
 
 ## Commands (from `mdeapp/`)
 
@@ -147,13 +147,13 @@ The `d0236592-…` hash that appeared in older session tool lists was the same `
 
 Next.js 16 (App Router, React 19, Turbopack, Tailwind v4) wires CopilotKit 1.55.2's React UI to a local Mastra agent over the AG-UI protocol. **Phase 1 hero flow: Roberto creating an event via AI form-fill at `/host/event/new`** (W3–W4); **Camila's rentals + chat at `/rentals` + `/chat`** (W5–W7).
 
-Data flow (after F02 + F03 land):
+Data flow (shipped — current as of 2026-06-20; see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full diagram):
 
-1. **UI** — `src/app/page.tsx` mounts `<CopilotSidebar>` from `@copilotkit/react-ui`. **Phase 1 = English** (`<html lang="en">`). Spanish/Lingui i18n is Phase 2+ (W7+) per PRD §1 vision; the PRD reference to Spanish-first is **deferred until Phase 2**. Uses `useCoAgent<MdeState>({ name: "pingAgent" })` in W1, replaced by `useCoAgent<EventDraftState>({ name: "hostEventAgent" })` in W3, then `useCoAgentState<MapState>` (read-only) for the chat path in W6.
-2. **Runtime endpoint** — `src/app/api/copilotkit/route.ts` builds `CopilotRuntime` per request, bridges Mastra via `MastraAgent.getLocalAgents({ mastra })` from `@ag-ui/mastra`. Uses `ExperimentalEmptyAdapter` (agents are local — no second orchestrator).
-3. **Mastra core** — `src/mastra/index.ts` constructs `Mastra` with in-memory LibSQL storage + `ConsoleLogger` honoring `LOG_LEVEL`.
-4. **Agent** — `src/mastra/agents/index.ts` defines `pingAgent` (was `weatherAgent`) using `google("gemini-3.5-flash")` (NOT OpenAI). Memory has `scope: "thread"` working-memory with Zod schema `MdeState = { lastQuery: string, hint: string }`. The schema mirrors `src/lib/types.ts` — keep in sync.
-5. **Tools** — empty in W1. W3 adds `set_event_basics`, `set_venue`, `add_ticket_tier`, `preview_and_publish` (HITL via `renderAndWaitForResponse`). W5+ adds `search_rentals`, `search_events`, `search_grounded_places`.
+1. **UI** — `src/app/page.tsx` mounts `<CopilotChat>` in a geo-chat shell with map column; `/chat` redirects to `/`. **Phase 1 = English** (`<html lang="en">`); Spanish/Lingui i18n is Phase 2+ (W7+), **deferred until Phase 2**. `useCoAgent({ name: "conciergeAgent" })` dispatches all chat; Roberto's event wizard is a separate surface at `/host/event/new`.
+2. **Runtime** — `src/app/api/copilotkit/route.ts` builds `CopilotRuntime` per request, bridges Mastra via `getLocalAgentsWithLogging` from `@ag-ui/mastra`. Uses `ExperimentalEmptyAdapter` (agents are local — no second orchestrator).
+3. **Mastra core** — `src/mastra/index.ts` constructs `Mastra` with 8 registered agents + 4 workflows + in-memory LibSQL storage + `ConsoleLogger` honoring `LOG_LEVEL`.
+4. **Agents** — `conciergeAgent` (default), `routerAgent`, `rentalAgent`, `eventAgent`, `hostEventAgent`, `hostOpsAgent`, `evaluationAgent`, `pingAgent` (smoke/health) — all on `google("gemini-3.5-flash")` (NOT OpenAI). Working-memory Zod schemas mirror `src/lib/types.ts` — keep in sync.
+5. **Tools/workflows** — `search_rentals`, `search_events`, `search_attractions`, `search_restaurants`, `search_grounded_places` + `rentalSearchWorkflow`, `eventDiscoveryWorkflow`, `eventVenueBookingWorkflow`, `salesInsightWorkflow`. Event wizard at `/host/event/new` adds `set_event_basics` / `set_venue` / `add_ticket_tier` / `preview_and_publish` (HITL via `renderAndWaitForResponse`).
 
 Key invariants:
 
@@ -214,4 +214,4 @@ Empty/full database tables get the same treatment: name **which persona's action
 
 ## Legacy app freeze (2026-05-26)
 
-See [`/home/sk/mde/FREEZE.md`](../mde/FREEZE.md). After **2026-05-26**, `/home/sk/mde/` accepts only P0 security fixes (data exposure, auth bypass, payment failure, Sentry P0). All non-P0 work belongs in `/home/sk/mdeai/mdeapp/`. The hook `.Codex/hooks/guard-sensitive-paths.mjs` already blocks `Edit/Write/MultiEdit` into the legacy tree — that protection stays on. The 5-min onboarding for the new app lives at [`mdeapp/docs/ARCHITECTURE.md`](mdeapp/docs/ARCHITECTURE.md).
+See [`/home/sk/mde/FREEZE.md`](../../mde/FREEZE.md). After **2026-05-26**, `/home/sk/mde/` accepts only P0 security fixes (data exposure, auth bypass, payment failure, Sentry P0). All non-P0 work belongs in `/home/sk/mdeai/mdeapp/`. The hook `.claude/hooks/guard-sensitive-paths.mjs` already blocks `Edit/Write/MultiEdit` into the legacy tree — that protection stays on. The 5-min onboarding for the new app lives at [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
