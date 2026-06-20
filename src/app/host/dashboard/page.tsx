@@ -18,7 +18,5 @@ export default async function HostDashboardPage() { // skipcq: JS-0067
 
   const initialDashboard = await loadHostDashboardInitial(supabase, user.id);
 
-  return (
-    <HostDashboardOsShell userEmail={user.email} initialDashboard={initialDashboard} />
-  );
+  return <HostDashboardOsShell initialDashboard={initialDashboard} />;
 }

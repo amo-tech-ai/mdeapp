@@ -31,10 +31,11 @@ const HOST_EVENT_PROMPT =
   "Create a salsa event this Friday in Laureles with general tickets at COP 50000";
 const ANALYTICS_PROMPT = "how are my sales?";
 
+// skipcq: JS-0067 - module-local test helper; not browser global scope
 async function sendHostChat(page: import("@playwright/test").Page, text: string) {
   const region = page
     .locator(
-      '[data-testid="host-copilot-chat-region"], [data-testid="host-ops-chat-region"]',
+      '[data-testid="host-copilot-chat-region"], [data-testid="host-ops-chat-region"], [data-testid="host-os-chat-region"]',
     )
     .first();
   const input = region.getByTestId("copilot-chat-textarea");
@@ -174,7 +175,7 @@ test.describe("SAN-896 · CK-V2-008 evidence", () => {
       await waitForCopilotRuntime(page);
 
       await expect(page.getByTestId("host-analytics")).toBeVisible();
-      await expect(page.getByTestId("host-ops-chat-region")).toBeVisible();
+      await expect(page.getByTestId("host-os-chat-region")).toBeVisible();
 
       const kpiEmpty = page.getByTestId("host-kpi-empty");
       const kpiGrid = page.getByTestId("host-kpi-grid");

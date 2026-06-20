@@ -45,18 +45,28 @@ describeAuthed(`${SCREEN_ID} · AIE-008 — Host Analytics dashboard`, () => {
     const errors = watchCriticalConsoleErrors(page);
     await gotoAnalytics(page);
 
-    // Three-panel shell present
+    // Analytics content inside the unified Host OS frame
+    await expect(page.getByTestId("host-os-shell")).toBeVisible();
     await expect(page.getByTestId("host-analytics")).toBeVisible();
-    await expect(page.getByTestId("host-nav-rail")).toBeVisible();
+    await expect(page.getByTestId("host-os-nav")).toBeVisible();
 
-    // Before any chat, KPI canvas shows the "ask about your sales" empty state
-    await expect(page.getByTestId("host-kpi-empty")).toBeVisible();
+    // KPI canvas renders in a valid state — real cards when this host has sales
+    // (the QA host does), otherwise the "ask about your sales" empty prompt.
+    // Never a fabricated number, and never the error card (that would mean a
+    // loader failure, which must fail the test).
+    await expect(
+      page
+        .getByTestId("host-kpi-grid")
+        .or(page.getByTestId("host-kpi-empty"))
+        .first(),
+    ).toBeVisible();
+    await expect(page.getByTestId("host-kpi-error")).not.toBeVisible();
 
-    // Chat surface is mounted
-    await expect(page.getByTestId("host-ops-chat-region")).toBeVisible();
+    // The single persistent Host OS chat surface is mounted
+    await expect(page.getByTestId("host-os-chat-region")).toBeVisible();
 
-    // The Analytics nav item is now a live link, marked current on this route
-    await expect(page.getByTestId("host-nav-link-analytics")).toHaveAttribute(
+    // The Analytics nav item is marked current on this route
+    await expect(page.getByTestId("host-os-nav-analytics")).toHaveAttribute(
       "aria-current",
       "page",
     );

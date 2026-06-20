@@ -67,7 +67,9 @@ describeAuthed(`${SCREEN_ID} host navigation rail`, () => {
       await page.getByTestId("host-nav-link-events").click();
       await expect(page).toHaveURL(/\/host\/events$/);
       await expect(page.getByTestId("host-events")).toBeVisible();
-      await expect(page.getByTestId("host-nav-link-events")).toHaveAttribute(
+      // /host/events is an OS-shell route — the wizard rail handed off to the
+      // unified Host OS nav, where Events is marked current.
+      await expect(page.getByTestId("host-os-nav-events")).toHaveAttribute(
         "aria-current",
         "page",
       );

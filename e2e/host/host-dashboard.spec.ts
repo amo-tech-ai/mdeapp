@@ -53,9 +53,10 @@ describeAuthed(`${SCREEN_ID} · HOST-DASH-001 — Host Dashboard OS`, () => {
     const errors = watchCriticalConsoleErrors(page);
     await gotoDashboard(page);
 
-    // Aggregated overview shell present
+    // Aggregated overview shell present, inside the unified Host OS frame
+    await expect(page.getByTestId("host-os-shell")).toBeVisible();
     await expect(page.getByTestId("host-dashboard")).toBeVisible();
-    await expect(page.getByTestId("host-nav-rail")).toBeVisible();
+    await expect(page.getByTestId("host-os-nav")).toBeVisible();
 
     // Figure-free briefing placeholder (no narrative yet on first load)
     await expect(page.getByTestId("dashboard-briefing-pending")).toBeVisible();
@@ -89,8 +90,8 @@ describeAuthed(`${SCREEN_ID} · HOST-DASH-001 — Host Dashboard OS`, () => {
     await expect(page.getByTestId("dashboard-portfolio-pending")).toBeVisible();
     await expect(page.getByTestId("dashboard-health-pending")).toBeVisible();
 
-    // Dashboard nav item is now live and marked current on this route
-    await expect(page.getByTestId("host-nav-link-dashboard")).toHaveAttribute(
+    // Overview nav item (the dashboard route) is marked current on this route
+    await expect(page.getByTestId("host-os-nav-overview")).toHaveAttribute(
       "aria-current",
       "page",
     );
@@ -109,8 +110,8 @@ describeAuthed(`${SCREEN_ID} · HOST-DASH-001 — Host Dashboard OS`, () => {
 
     await page.setViewportSize(VIEWPORTS.mobile);
     await expect(page.getByTestId("host-dashboard")).toBeVisible();
-    // On mobile the concierge chat moves below the overview
-    await expect(page.getByTestId("host-dashboard-chat-region")).toBeVisible();
+    // On mobile the persistent Host OS concierge chat stacks below the overview
+    await expect(page.getByTestId("host-os-chat-region")).toBeVisible();
     await captureScreenEvidence(page, SCREEN_ID, "mobile-390-host-dashboard.png");
 
     assertConsoleClean(errors);
