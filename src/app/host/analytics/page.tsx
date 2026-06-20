@@ -18,7 +18,5 @@ export default async function HostAnalyticsPage() { // skipcq: JS-0067
 
   const initialDashboard = await loadHostDashboardInitial(supabase, user.id);
 
-  return (
-    <HostAnalyticsShell userEmail={user.email} initialDashboard={initialDashboard} />
-  );
+  return <HostAnalyticsShell initialDashboard={initialDashboard} />;
 }
