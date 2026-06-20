@@ -38,6 +38,7 @@ export type HostFocusInput = {
  * Compact, JSON-serializable summary handed to `hostOpsAgent`. Only includes
  * fields that are actually in focus, so the agent never sees empty noise.
  */
+// skipcq: JS-0067, JS-R1005 - ES module export; sequential focus-field guards kept inline
 export function buildHostFocusSummary(
   value: HostFocusInput,
 ): Record<string, JsonValue> {

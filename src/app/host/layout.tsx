@@ -18,6 +18,7 @@ import { isHostOsShellRoute } from "@/lib/host/host-os-nav";
  * layout to a subset of sibling segments without route groups, and we must keep
  * the wizard's separate provider intact rather than restructure those folders.
  */
+// skipcq: JS-0067 - ES module export; not browser global scope
 export default function HostLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
@@ -25,5 +26,5 @@ export default function HostLayout({ children }: { children: ReactNode }) {
     return <HostOsShell>{children}</HostOsShell>;
   }
 
-  return <>{children}</>;
+  return children;
 }

@@ -54,6 +54,7 @@ const EMPTY_FILTERS: Record<string, string> = {};
 
 const HostContext = createContext<HostContextValue | null>(null);
 
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function HostContextProvider({ children }: { children: ReactNode }) {
   const [currentOrganization, setOrganization] = useState<HostFocusRef | null>(null);
   const [currentEvent, setEvent] = useState<HostFocusRef | null>(null);
@@ -111,6 +112,7 @@ export function HostContextProvider({ children }: { children: ReactNode }) {
 }
 
 /** Read the host focus. Throws if used outside HostContextProvider. */
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function useHostContext(): HostContextValue {
   const ctx = useContext(HostContext);
   if (!ctx) {

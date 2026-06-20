@@ -9,6 +9,7 @@ import { reportConciergeError } from "@/lib/concierge-error-store";
 import { ThreadNavProvider, useThreadNav } from "@/lib/chat/thread-nav-context";
 import { isHostOsShellRoute } from "@/lib/host/host-os-nav";
 
+// skipcq: JS-0067 - module-local helper; not browser global scope
 function CopilotKitWithThread({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const { activeThreadId } = useThreadNav();

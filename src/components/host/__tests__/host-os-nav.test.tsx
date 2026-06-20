@@ -25,6 +25,7 @@ vi.mock("next/link", () => ({
   ),
 }));
 
+// skipcq: JS-0067 - module-local test helper; not browser global scope
 function renderNav(pathname: string): string {
   mocks.pathname = pathname;
   return renderToStaticMarkup(<HostOsNav />);

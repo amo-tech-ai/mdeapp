@@ -25,6 +25,7 @@ const linkClassName = (active: boolean) =>
     active ? "bg-primary/10 text-primary" : "text-foreground hover:bg-muted",
   );
 
+// skipcq: JS-0067 - module-local helper; not browser global scope
 function NavLink({ item, pathname }: { item: HostOsNavItem; pathname: string }) {
   if (item.disabled) {
     return (
@@ -51,6 +52,7 @@ function NavLink({ item, pathname }: { item: HostOsNavItem; pathname: string }) 
   );
 }
 
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function HostOsNav() {
   const pathname = usePathname();
 

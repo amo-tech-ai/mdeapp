@@ -31,6 +31,7 @@ const HOST_EVENT_PROMPT =
   "Create a salsa event this Friday in Laureles with general tickets at COP 50000";
 const ANALYTICS_PROMPT = "how are my sales?";
 
+// skipcq: JS-0067 - module-local test helper; not browser global scope
 async function sendHostChat(page: import("@playwright/test").Page, text: string) {
   const region = page
     .locator(

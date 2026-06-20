@@ -20,6 +20,7 @@ const INBOX_SLOTS: { icon: typeof Bell; label: string; testId: string }[] = [
   { icon: TriangleAlert, label: "Warnings", testId: "host-inbox-slot-warnings" },
 ];
 
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function HostInboxPlaceholder() {
   return (
     <section

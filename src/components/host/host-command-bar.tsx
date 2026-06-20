@@ -36,6 +36,7 @@ type HostCommandBarProps = {
   onAskAi?: () => void;
 };
 
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function HostCommandBar({ onAskAi }: HostCommandBarProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -60,6 +61,7 @@ export function HostCommandBar({ onAskAi }: HostCommandBarProps) {
     if (onAskAi) onAskAi();
   }, [onAskAi]);
 
+  // skipcq: JS-0415 - trigger button + command dialog are siblings under one fragment
   return (
     <>
       <button

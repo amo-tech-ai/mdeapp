@@ -31,6 +31,7 @@ export const HOST_OS_NAV_PLACEHOLDERS: HostOsNavItem[] = [
 ];
 
 /** True when `href` is the active host OS destination for `pathname`. */
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function isHostOsNavActive(pathname: string, href: string): boolean {
   if (href === "/host/events") {
     // Events list owns its nested detail routes, but NOT the /host/event wizard.
@@ -48,6 +49,7 @@ export function isHostOsNavActive(pathname: string, href: string): boolean {
  *  - `/host/event*`     → the AI event wizard (own HostEventProvider/hostEventAgent)
  *  - `/host/rentals*`   → the real-estate broker area (out of scope for SAN-1209)
  */
+// skipcq: JS-0067, JS-R1005 - ES module export; flat route guards read clearer than a table
 export function isHostOsShellRoute(pathname: string): boolean {
   if (pathname === "/host") return false;
   if (pathname === "/host/event" || pathname.startsWith("/host/event/")) return false;
@@ -59,6 +61,7 @@ export function isHostOsShellRoute(pathname: string): boolean {
  * Human label for the route-aware context strip in the shell header. Lets the
  * host always see which workspace they're in even as content swaps underneath.
  */
+// skipcq: JS-0067, JS-R1005 - ES module export; sequential label matchers kept together
 export function deriveHostOsRouteLabel(pathname: string): string {
   if (pathname === "/host/dashboard" || pathname.startsWith("/host/dashboard/")) {
     return "Overview";

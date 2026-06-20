@@ -36,6 +36,7 @@ const HOST_OS_CHAT_LABELS = {
 
 const CHAT_REGION_ID = "host-os-chat-region";
 
+// skipcq: JS-0067 - ES module export; not browser global scope
 export function HostOsShell({ children }: { children: ReactNode }) {
   // One stable thread for the whole OS session so the conversation persists
   // across Overview ↔ Events ↔ Analytics. The layout instance is not remounted
@@ -51,6 +52,7 @@ export function HostOsShell({ children }: { children: ReactNode }) {
     input?.focus();
   }, []);
 
+  // skipcq: JS-0415 - the OS frame (provider → context → header → nav → chat) is intentionally one tree
   return (
     <CopilotKit
       {...getCopilotKitClientProps("hostOpsAgent")}
