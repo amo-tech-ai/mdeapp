@@ -35,6 +35,7 @@ import { deriveHostOsRouteLabel } from "@/lib/host/host-os-nav";
  * connection fails silently. We log a diagnostic breadcrumb; the page body and
  * the persistent rail are still protected by <HostErrorBoundary> in HostOsBody.
  */
+// skipcq: JS-0067 - module-local error handler; not browser global scope
 function handleHostCopilotError(errorEvent: CopilotErrorEvent): void {
   console.error("[hostOpsAgent copilot error]", errorEvent);
 }

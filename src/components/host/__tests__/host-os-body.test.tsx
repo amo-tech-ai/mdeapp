@@ -54,7 +54,9 @@ beforeEach(() => {
   document.body.appendChild(container);
   root = createRoot(container);
   // React logs caught boundary errors to console.error; silence + capture.
-  consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+  consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {
+    /* swallow React's caught-boundary logs; assertions read the spy's calls */
+  });
 });
 
 afterEach(() => {

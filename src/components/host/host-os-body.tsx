@@ -16,6 +16,7 @@ type HostOsBodyProps = {
 };
 
 /** Shown when the page body subtree throws — body must never blank silently. */
+// skipcq: JS-0067 - module-local fallback; not browser global scope
 function HostBodyFallback() {
   return (
     <div
@@ -33,6 +34,7 @@ function HostBodyFallback() {
 }
 
 /** Shown when the persistent Copilot rail throws — page body stays intact. */
+// skipcq: JS-0067 - module-local fallback; not browser global scope
 function HostRailFallback() {
   return (
     <div
