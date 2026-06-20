@@ -1,0 +1,27 @@
+e2e/host/host-dashboard.spec.ts
+  s_f47ea5ebcd9235::t_a35b2388abf345 74-75,80
+src/components/host/host-dashboard-overview.tsx
+  s_f47ea5ebcd9235::t_f268e055654f4a 99-106
+src/components/host/host-dashboard-os-shell.tsx
+  s_f47ea5ebcd9235::t_5940cf9fc0731a 90-94,96-97,99-101,114
+sitemap.md
+  s_f47ea5ebcd9235::t_cb8fd1dff207bb 87
+src/components/host/__tests__/host-dashboard-overview.test.tsx
+  s_f47ea5ebcd9235::t_f09376ee52e9a7 76-83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "58bb9a28a3d7730d916d936c67eca46e1dd88ef1",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
