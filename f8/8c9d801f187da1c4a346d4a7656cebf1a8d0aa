@@ -1,0 +1,22 @@
+src/components/host/host-command-bar.tsx
+  s_24776469c0f35f::t_9ce80bff755105 83-89,95-102,104-114,121,128,138,148,155,160
+  s_24776469c0f35f::t_624324078f1bb6 94,103,115-120,122-127,129-137,139-147,149-154,156-159,161-166
+src/components/host/host-os-shell.tsx
+  s_24776469c0f35f::t_fff658a5dde31c 39-117,142-143
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "f88c9d801f187da1c4a346d4a7656cebf1a8d0aa",
+  "prompts": {},
+  "sessions": {
+    "s_24776469c0f35f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_11e02221fffextOwbGWreFyWRE",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
