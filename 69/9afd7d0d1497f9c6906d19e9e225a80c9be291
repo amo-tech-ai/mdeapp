@@ -1,0 +1,26 @@
+src/components/host/host-os-body.tsx
+  s_24776469c0f35f::t_4f4375e774aa79 7
+  s_24776469c0f35f::t_1d6fb9d4dbb1e8 36
+src/components/host/host-os-header.tsx
+  s_24776469c0f35f::t_f25e524cfce280 12
+src/lib/host/host-os-nav.ts
+  s_24776469c0f35f::t_8baad9f98f274d 57-61
+src/components/host/host-os-chat-title.tsx
+  s_24776469c0f35f::t_7ccce8bba8338b 1-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "699afd7d0d1497f9c6906d19e9e225a80c9be291",
+  "prompts": {},
+  "sessions": {
+    "s_24776469c0f35f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_11e02221fffextOwbGWreFyWRE",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
