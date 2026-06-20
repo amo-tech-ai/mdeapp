@@ -1,0 +1,45 @@
+src/lib/host/host-os-nav.ts
+  s_f47ea5ebcd9235::t_ec10c11c290aaa 64
+  s_f47ea5ebcd9235::t_3347a401d1a471 52
+  s_f47ea5ebcd9235::t_2433ef4a845759 34
+src/components/copilot/copilot-kit-provider.tsx
+  s_f47ea5ebcd9235::t_ea9cdd5bf509c0 12
+src/components/host/host-inbox-placeholder.tsx
+  s_f47ea5ebcd9235::t_13086981b3e614 23
+src/components/host/host-context-provider.tsx
+  s_f47ea5ebcd9235::t_1043d87a7737f7 57
+  s_f47ea5ebcd9235::t_a4c3911493b2ea 115
+src/components/host/host-os-nav.tsx
+  s_f47ea5ebcd9235::t_b2f1922e09330b 55
+  s_f47ea5ebcd9235::t_e3790bed306307 28
+src/app/host/layout.tsx
+  s_f47ea5ebcd9235::t_503ca1e8308601 21,29
+src/components/host/__tests__/host-os-nav.test.tsx
+  s_f47ea5ebcd9235::t_14ba918d937b08 28
+e2e/san-896-ck-v2-evidence.spec.ts
+  s_f47ea5ebcd9235::t_a909e0286e9353 34
+src/components/host/host-command-bar.tsx
+  s_f47ea5ebcd9235::t_97fbcdc1224803 39
+  s_f47ea5ebcd9235::t_e3e1a2845d5df9 64
+src/lib/host/host-focus-summary.ts
+  s_f47ea5ebcd9235::t_eac968a87c6ba8 41
+src/components/host/host-os-shell.tsx
+  s_f47ea5ebcd9235::t_8fb7a419c4cc00 55
+  s_f47ea5ebcd9235::t_99f87e27182f98 39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "c564138ab1f81ecaf2afc076c5ee4557bb42c25c",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
