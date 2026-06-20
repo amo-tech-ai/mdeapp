@@ -33,6 +33,7 @@ exclude_patterns = [
   "linear.md",
   "scripts/**",
   ".claude/hooks/**",
+  ".design-sync/**",
 ]
 
 [[analyzers]]
