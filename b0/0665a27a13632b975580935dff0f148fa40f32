@@ -1,0 +1,24 @@
+src/components/host/host-dashboard-os-shell.tsx
+  s_f47ea5ebcd9235::t_a91bc48e1eef8d 62
+src/components/host/host-dashboard-overview.tsx
+  s_f47ea5ebcd9235::t_cbb5ef23981668 33-34
+  s_f47ea5ebcd9235::t_f4ca1ea52e0825 54-55
+src/components/host/__tests__/host-dashboard-overview.test.tsx
+  s_f47ea5ebcd9235::t_24ba71a7f8fd06 8-9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "b00665a27a13632b975580935dff0f148fa40f32",
+  "prompts": {},
+  "sessions": {
+    "s_f47ea5ebcd9235": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "974975f2-4df8-4074-95f3-9921c234a1a3",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
