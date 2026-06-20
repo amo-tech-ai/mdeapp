@@ -101,3 +101,8 @@ docs/docs-vault/
 # SAN-CLEAN-001: regenerable tool caches
 pr-agent-env/
 .firecrawl/
+.ds-sync/
+ds-bundle/
+.design-sync/.cache/
+.design-sync/learnings/
+.design-sync/node_modules
