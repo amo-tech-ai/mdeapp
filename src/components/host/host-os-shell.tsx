@@ -3,6 +3,7 @@
 import { useCallback, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { CopilotKit } from "@copilotkit/react-core/v2";
+import type { CopilotErrorEvent } from "@copilotkit/shared";
 import { getCopilotKitClientProps } from "@/lib/copilotkit-client-props";
 import { HostContextProvider } from "@/components/host/host-context-provider";
 import { HostOsHeader } from "@/components/host/host-os-header";
@@ -26,6 +27,19 @@ import { deriveHostOsRouteLabel } from "@/lib/host/host-os-nav";
  */
 
 
+/**
+ * Module-level (stable reference) so passing it to <CopilotKit> doesn't create a
+ * new prop identity each render — a fresh `onError` ref can retrigger the agent
+ * connect loop. In CopilotKit v2 agent-discovery / runtime errors surface here
+ * (the provider does NOT throw), so without this handler a failed hostOpsAgent
+ * connection fails silently. We log a diagnostic breadcrumb; the page body and
+ * the persistent rail are still protected by <HostErrorBoundary> in HostOsBody.
+ */
+// skipcq: JS-0067 - module-local error handler; not browser global scope
+function handleHostCopilotError(errorEvent: CopilotErrorEvent): void {
+  console.error("[hostOpsAgent copilot error]", errorEvent);
+}
+
 // skipcq: JS-0067 - ES module export; not browser global scope
 export function HostOsShell({ children }: { children: ReactNode }) {
   const [threadId] = useState(() => crypto.randomUUID());
@@ -44,6 +58,7 @@ export function HostOsShell({ children }: { children: ReactNode }) {
       {...getCopilotKitClientProps("hostOpsAgent")}
       threadId={threadId}
       enableInspector={false}
+      onError={handleHostCopilotError}
     >
       <HostContextProvider>
         <div
