@@ -59,6 +59,7 @@ export function HostDashboardOsShell({ // skipcq: JS-0067
       initialState={initialDashboard}
     >
       {({ state }) => (
+        // skipcq: JS-0415 - dashboard chrome + render-prop layout is intentional
         <div
           data-testid="host-dashboard"
           className="flex min-h-screen flex-col bg-background text-foreground"

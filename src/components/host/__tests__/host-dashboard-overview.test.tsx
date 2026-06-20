@@ -5,7 +5,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { HostDashboardOverview } from "@/components/host/host-dashboard-overview";
 import { EMPTY_HOST_DASHBOARD, type HostDashboardState } from "@/lib/types/host-dashboard";
 
-function state(over: Partial<HostDashboardState> = {}): HostDashboardState {
+// skipcq: JS-0067 - module-local test helper; not browser global scope
+function state(over: Partial<HostDashboardState> = {}): HostDashboardState { // skipcq: JS-0067
   return { ...EMPTY_HOST_DASHBOARD, ...over };
 }
 

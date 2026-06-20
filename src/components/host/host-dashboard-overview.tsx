@@ -30,7 +30,8 @@ export const DASHBOARD_QUICK_LINKS: ReadonlyArray<{
 ];
 
 /** Honest "not wired yet" tile — dashed, muted, never a fake number. */
-function DataPendingCard({
+// skipcq: JS-0067 - module-local helper; not browser global scope
+function DataPendingCard({ // skipcq: JS-0067
   testId,
   title,
   description,
@@ -50,7 +51,8 @@ function DataPendingCard({
   );
 }
 
-function SectionHeading({ children }: { children: React.ReactNode }) {
+// skipcq: JS-0067 - module-local helper; not browser global scope
+function SectionHeading({ children }: { children: React.ReactNode }) { // skipcq: JS-0067
   return (
     <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
       {children}
