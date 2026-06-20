@@ -139,4 +139,26 @@ describe("HostOsBody", () => {
     // The rail next to a crashed body is unaffected.
     expect(container.querySelector('[data-testid="copilot-chat-mock"]')).not.toBeNull();
   });
+
+  it("recovers the body fallback on route change (boundary is not sticky)", () => {
+    // One screen crashes...
+    mocks.pathname = "/host/dashboard";
+    render(
+      <HostOsBody routeLabel="Overview">
+        <Boom />
+      </HostOsBody>,
+    );
+    expect(container.querySelector('[data-testid="host-os-body-fallback"]')).not.toBeNull();
+
+    // ...navigating to a healthy screen must NOT stay stuck on the fallback.
+    // The shell stays mounted; only the pathname-keyed boundary remounts.
+    mocks.pathname = "/host/events";
+    render(
+      <HostOsBody routeLabel="Events">
+        <main data-testid="routed-page">events body</main>
+      </HostOsBody>,
+    );
+    expect(container.querySelector('[data-testid="host-os-body-fallback"]')).toBeNull();
+    expect(container.querySelector('[data-testid="routed-page"]')).not.toBeNull();
+  });
 });

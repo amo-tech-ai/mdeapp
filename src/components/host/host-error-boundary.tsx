@@ -19,6 +19,12 @@ import { Component, type ErrorInfo, type ReactNode } from "react";
  *
  * Class component because React error boundaries require it; there is no hooks
  * equivalent for componentDidCatch.
+ *
+ * Reset strategy: this boundary has no internal recovery — once it catches, it
+ * stays on the fallback for its lifetime. Recovery is the consumer's job. The
+ * Host OS shell stays mounted across /host/* navigation, so HostOsBody keys the
+ * page-body boundary by pathname (`key={pathname}`) to remount it with fresh
+ * state on each route change; the host segment `error.tsx` exposes `reset()`.
  */
 
 type HostErrorBoundaryProps = {

@@ -1,6 +1,7 @@
 "use client";
 
 import { type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import { CopilotChat } from "@copilotkit/react-core/v2";
 import { HostOsNav } from "@/components/host/host-os-nav";
 import { HostInboxPlaceholder } from "@/components/host/host-inbox-placeholder";
@@ -52,6 +53,13 @@ function HostRailFallback() {
 
 // skipcq: JS-0067 - ES module export; not browser global scope
 export function HostOsBody({ children, routeLabel }: HostOsBodyProps) {
+  // The Host OS shell (and this boundary) stays mounted across /host/* route
+  // changes, so a sticky `hasError` would keep blanking every later screen.
+  // Keying the page-body boundary by pathname remounts it (fresh state) on each
+  // navigation, so a crash on one screen never poisons the next. The rail
+  // boundary is intentionally NOT keyed — the concierge is persistent across
+  // routes and must keep its thread.
+  const pathname = usePathname();
   return (
     <div className="flex min-h-0 flex-1 flex-col md:flex-row">
       <HostOsNav />
@@ -61,7 +69,7 @@ export function HostOsBody({ children, routeLabel }: HostOsBodyProps) {
       >
         {/* The page body must survive even if a routed page subtree throws —
             otherwise one bad render blanks Roberto's whole workspace. */}
-        <HostErrorBoundary label="page-body" fallback={<HostBodyFallback />}>
+        <HostErrorBoundary key={pathname} label="page-body" fallback={<HostBodyFallback />}>
           {children}
         </HostErrorBoundary>
       </section>
