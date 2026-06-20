@@ -97,3 +97,7 @@ docs/tasks/design/mdeapp/
 docs/.obsidian/
 docs/screenshots/
 docs/docs-vault/
+
+# SAN-CLEAN-001: regenerable tool caches
+pr-agent-env/
+.firecrawl/
