@@ -1,0 +1,28 @@
+docs/audits/linear-skill-activation-2026-06-20.md
+  s_1563fa256063e5::t_34f1a6bda9ee2e 1-107
+.claude/skills/archive/linear/MANIFEST.md
+  s_1563fa256063e5::t_0ee4d94244760c 1-53
+docs/audits/linear-skill-consolidation-2026-06-20.md
+  s_1563fa256063e5::t_38a2950e767333 1-152
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "651fd450ae60b9fa172600618d1f3c7bf08141fb",
+  "prompts": {},
+  "humans": {
+    "h_712413820f8934": {
+      "author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_1563fa256063e5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7bdb7eda-aca4-47b4-a8b2-a9d298909802",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
