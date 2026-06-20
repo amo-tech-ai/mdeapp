@@ -85,29 +85,20 @@ export function HostDashboardOsShell({ // skipcq: JS-0067
               className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden"
             >
               <HostDashboardOverview state={state} />
-
-              {/* Right-rail concierge moves below on mobile via flex order; read-only overview */}
-              <div
-                id="host-dashboard-chat-region"
-                data-testid="host-dashboard-chat-region"
-                aria-live="polite"
-                aria-relevant="additions"
-                className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden border-t border-border px-2 pb-2 pt-1 sm:px-4 md:hidden"
-              >
-                <CopilotChat
-                  agentId="hostOpsAgent"
-                  className="copilotKitChat--center mde-center-copilot-chat min-h-0 flex-1"
-                  labels={{
-                    modalHeaderTitle: DASHBOARD_LABELS.title,
-                    welcomeMessageText: DASHBOARD_LABELS.initial,
-                  }}
-                />
-              </div>
             </section>
 
+            {/*
+              Single concierge chat (one CopilotChat → one hostOpsAgent subscription).
+              The parent flex is `flex-col md:flex-row`, so this aside stacks below the
+              overview on mobile and becomes the right rail on desktop.
+            */}
             <aside
+              id="host-dashboard-chat-region"
+              data-testid="host-dashboard-chat-region"
               aria-label="Daily concierge"
-              className="hidden shrink-0 flex-col overflow-hidden border-l border-border md:flex md:w-80 lg:w-96"
+              aria-live="polite"
+              aria-relevant="additions"
+              className="flex h-[60vh] shrink-0 flex-col overflow-hidden border-t border-border md:h-auto md:w-80 md:border-l md:border-t-0 lg:w-96"
             >
               <div className="border-b border-border px-4 py-3">
                 <p className="text-sm font-semibold text-foreground">
@@ -120,11 +111,7 @@ export function HostDashboardOsShell({ // skipcq: JS-0067
                   Read-only overview · actions link out.
                 </p>
               </div>
-              <div
-                aria-live="polite"
-                aria-relevant="additions"
-                className="flex min-h-0 flex-1 flex-col overflow-hidden px-2 pb-2 pt-1"
-              >
+              <div className="flex min-h-0 flex-1 flex-col overflow-hidden px-2 pb-2 pt-1 sm:px-4 md:px-2">
                 <CopilotChat
                   agentId="hostOpsAgent"
                   className="copilotKitChat--center mde-center-copilot-chat min-h-0 flex-1"

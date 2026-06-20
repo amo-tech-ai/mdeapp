@@ -73,6 +73,14 @@ describe("HostDashboardOverview — needs attention triage", () => {
     expect(html).toContain('data-testid="host-recommendations"');
     expect(html).not.toContain('data-testid="dashboard-allclear"');
   });
+
+  it("error with no recommendations → triage-error card, never a false all-clear", () => {
+    const html = renderToStaticMarkup(
+      <HostDashboardOverview state={state({ workflowStatus: "error" })} />,
+    );
+    expect(html).toContain('data-testid="dashboard-triage-error"');
+    expect(html).not.toContain('data-testid="dashboard-allclear"');
+  });
 });
 
 describe("HostDashboardOverview — quick links + honest placeholders", () => {

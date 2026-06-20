@@ -96,6 +96,14 @@ export function HostDashboardOverview({ state }: { state: HostDashboardState }) 
         <SectionHeading>Needs attention</SectionHeading>
         {state.recommendations.length > 0 ? (
           <HostRecommendationsPanel state={state} />
+        ) : state.workflowStatus === "error" ? (
+          <div
+            data-testid="dashboard-triage-error"
+            className="rounded-lg border border-destructive/40 bg-destructive/5 p-4 text-sm text-foreground"
+          >
+            We couldn&rsquo;t check your portfolio just now, so this list may be
+            incomplete. Refresh, or ask the concierge to retry.
+          </div>
         ) : (
           <div
             data-testid="dashboard-allclear"

@@ -71,11 +71,13 @@ describeAuthed(`${SCREEN_ID} · HOST-DASH-001 — Host Dashboard OS`, () => {
         .first(),
     ).toBeVisible();
 
-    // Needs-attention triage renders either ranked recommendations or all-clear
+    // Needs-attention triage renders ranked recommendations, all-clear, or (on
+    // loader failure) the error card — never a false all-clear when status=error
     await expect(
       page
         .getByTestId("host-recommendations")
         .or(page.getByTestId("dashboard-allclear"))
+        .or(page.getByTestId("dashboard-triage-error"))
         .first(),
     ).toBeVisible();
 
