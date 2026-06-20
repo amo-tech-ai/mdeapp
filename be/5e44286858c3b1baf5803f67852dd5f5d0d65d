@@ -1,0 +1,19 @@
+.deepsource.toml
+  s_c4024b3b3efc73::t_028e38a7658b56 36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.9",
+  "base_commit_sha": "be5e44286858c3b1baf5803f67852dd5f5d0d65d",
+  "prompts": {},
+  "sessions": {
+    "s_c4024b3b3efc73": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "78d98f43-d4d5-49a5-96c7-ba4c12329b5f",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "amo-tech-ai <214654688+amo-tech-ai@users.noreply.github.com>"
+    }
+  }
+}
