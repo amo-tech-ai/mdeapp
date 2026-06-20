@@ -1,0 +1,23 @@
+{
+  "skill_name": "mde-linear",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Create a Linear issue for VEB-MVP-001 router hijack fix — it's a launch P0 in Events Platform, backend + CopilotKit.",
+      "expected_output": "Issue titled with SPEC-ID prefix, phase:launch + prefix:EVT + stack labels, six-section description with AC, assigned to Events Platform project, uses MCP save_issue after validate-description",
+      "files": ["docs/events/tasks/MVP/VEB-MVP-001-router-hijack-fix.md"]
+    },
+    {
+      "id": 2,
+      "prompt": "Mark SAN-366 Done — we merged the host publish PR.",
+      "expected_output": "Agent refuses to set Done without proof; suggests In Review or asks for PR link + prod SQL proof per anti-fake-done; references SAN-366 · EVT-002 full title",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Post the Friday project update for Events Platform.",
+      "expected_output": "Uses linear-reference.md project update template with Health field, Shipped/In Progress/Blocked/Floor/Next sections; names milestones and SAN-### · titles",
+      "files": ["linear-reference.md"]
+    }
+  ]
+}
