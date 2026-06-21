@@ -1,0 +1,55 @@
+# Docs link check — fails a PR only if a markdown file it CHANGES contains a broken
+# internal link. The repo-wide legacy backlog in untouched files does not block merges;
+# this prevents NEW breakage and keeps cleaned docs clean. Full report via manual dispatch.
+name: Docs Link Check
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "**/*.md"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  changed-docs:
+    name: changed-docs
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate links in changed markdown files
+        run: |
+          BASE="origin/${{ github.base_ref }}"
+          git fetch --no-tags --depth=1 origin "${{ github.base_ref }}"
+          mapfile -t CHANGED < <(git diff --name-only --diff-filter=ACMR "$BASE"...HEAD -- '*.md')
+          if [ ${#CHANGED[@]} -eq 0 ]; then
+            echo "No changed markdown files — nothing to check."
+            exit 0
+          fi
+          printf 'Checking %d changed markdown file(s):\n' "${#CHANGED[@]}"
+          printf '  %s\n' "${CHANGED[@]}"
+          node scripts/check-docs-links.mjs "${CHANGED[@]}"
+
+  full-report:
+    name: full-report
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Full docs link report (non-blocking)
+        run: node scripts/check-docs-links.mjs --all
