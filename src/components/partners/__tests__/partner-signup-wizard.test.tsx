@@ -47,6 +47,18 @@ const defaultProps = {
   loginNextPath: "/partners/signup?type=host",
 };
 
+const getRequiredElement = function <T extends Element>(
+  container: HTMLElement,
+  selector: string,
+  label: string,
+): T { // skipcq: JS-0067
+  const node = container.querySelector(selector);
+  if (!node) {
+    throw new Error(`Missing required element: ${label} (${selector})`);
+  }
+  return node as T;
+};
+
 function setInputValue(input: HTMLInputElement, value: string) {
   const setter = Object.getOwnPropertyDescriptor(
     HTMLInputElement.prototype,
@@ -78,16 +90,35 @@ function mountWizard(
   };
 }
 
-async function submitActivateForm(container: HTMLElement) {
-  const businessName = container.querySelector(
-    "#businessName",
-  ) as HTMLInputElement;
-  setInputValue(businessName, "Roof Events");
-  const form = container.querySelector("form") as HTMLFormElement;
-  await act(async () => {
-    form.requestSubmit();
+/** Skip to the review step via the "Or fill in manually" link. */
+const advanceToReview = async (container: HTMLElement) => {
+  const manualLink = getRequiredElement<HTMLElement>(
+    container,
+    '[data-testid="signup-wizard-manual-link"]',
+    "manual review link",
+  );
+  await act(() => {
+    manualLink.click();
   });
-}
+};
+
+/** Fill businessName + click Approve from the review step. */
+const approveWithName = async (container: HTMLElement, name: string) => {
+  const nameInput = getRequiredElement<HTMLInputElement>(
+    container,
+    '[data-testid="signup-wizard-name-input"]',
+    "business name input",
+  );
+  setInputValue(nameInput, name);
+  const approveBtn = getRequiredElement<HTMLButtonElement>(
+    container,
+    '[data-testid="signup-wizard-approve-btn"]',
+    "approve button",
+  );
+  await act(async () => {
+    approveBtn.click();
+  });
+};
 
 describe("PartnerSignupWizard (static markup)", () => {
   it("shows auth gate when unauthenticated", () => {
@@ -102,7 +133,7 @@ describe("PartnerSignupWizard (static markup)", () => {
     expect(html).toContain("/login?next=");
   });
 
-  it("renders activate form with hidden partner type", () => {
+  it("renders URL paste step (Step 2) as initial view when authenticated", () => {
     const html = renderToStaticMarkup(
       <PartnerSignupWizard
         partnerType="host"
@@ -111,23 +142,48 @@ describe("PartnerSignupWizard (static markup)", () => {
         loginNextPath="/partners/signup?type=host"
       />,
     );
-    expect(html).toContain('data-testid="partner-signup-wizard"');
-    expect(html).toContain('value="host"');
-    expect(html).toContain('value="33333333-3333-4333-a333-333333333333"');
-    expect(html).toContain('data-testid="partner-signup-submit"');
+    expect(html).toContain('data-testid="signup-wizard-step-url"');
+    expect(html).toContain('data-testid="signup-wizard-analyze-btn"');
+    expect(html).toContain('data-testid="signup-wizard-progress"');
   });
 
-  it("initializes the category field from initialCategory", () => {
-    const html = renderToStaticMarkup(
-      <PartnerSignupWizard
-        partnerType="venue"
-        initialCategory="Restaurant"
-        isAuthenticated
-        loginNextPath="/partners/signup?type=venue&category=restaurant"
-      />,
-    );
-    expect(html).toContain('id="category"');
-    expect(html).toContain('value="Restaurant"');
+  it("initializes the category field from initialCategory when advancing to review", () => {
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+    let root!: Root;
+    try {
+      act(() => {
+        root = createRoot(container);
+        root.render(
+          <PartnerSignupWizard
+            partnerType="venue"
+            initialCategory="Restaurant"
+            isAuthenticated
+            loginNextPath="/partners/signup?type=venue&category=restaurant"
+          />,
+        );
+      });
+
+      act(() => {
+        getRequiredElement<HTMLElement>(
+          container,
+          '[data-testid="signup-wizard-manual-link"]',
+          "manual review link",
+        ).click();
+      });
+
+      const categoryInput = getRequiredElement<HTMLInputElement>(
+        container,
+        '[data-testid="signup-wizard-category-input"]',
+        "category input",
+      );
+      expect(categoryInput.value).toBe("Restaurant");
+    } finally {
+      if (root) {
+        act(() => root.unmount());
+      }
+      document.body.removeChild(container);
+    }
   });
 
   it("does not show internal roadmap copy in the form footer", () => {
@@ -156,18 +212,14 @@ describe("PartnerSignupWizard (submit flow)", () => {
 
   it("rejects whitespace-only business name", async () => {
     const { container, unmount } = mountWizard();
-    const businessName = container.querySelector(
-      "#businessName",
-    ) as HTMLInputElement;
-    setInputValue(businessName, "   ");
-    const form = container.querySelector("form") as HTMLFormElement;
-    await act(async () => {
-      form.requestSubmit();
-    });
+    await advanceToReview(container);
+    // Business name is empty ("") when skipping URL step manually
+    await approveWithName(container, "   ");
 
     expect(mocks.activatePartnerRequest).not.toHaveBeenCalled();
-    expect(container.querySelector('[data-testid="partner-signup-error"]'))
-      .toBeTruthy();
+    expect(
+      container.querySelector('[data-testid="partner-signup-error"]'),
+    ).toBeTruthy();
     expect(container.textContent).toContain("Business name is required.");
     unmount();
   });
@@ -180,10 +232,12 @@ describe("PartnerSignupWizard (submit flow)", () => {
     });
 
     const { container, unmount } = mountWizard();
-    await submitActivateForm(container);
+    await advanceToReview(container);
+    await approveWithName(container, "Roof Events");
 
-    expect(container.querySelector('[data-testid="partner-signup-error"]'))
-      .toBeTruthy();
+    expect(
+      container.querySelector('[data-testid="partner-signup-error"]'),
+    ).toBeTruthy();
     expect(container.textContent).toContain("Validation failed");
     unmount();
   });
@@ -196,7 +250,8 @@ describe("PartnerSignupWizard (submit flow)", () => {
     });
 
     const { container, unmount } = mountWizard();
-    await submitActivateForm(container);
+    await advanceToReview(container);
+    await approveWithName(container, "Roof Events");
 
     expect(mocks.push).toHaveBeenCalledWith(
       "/login?next=%2Fpartners%2Fsignup%3Ftype%3Dhost",
@@ -218,15 +273,23 @@ describe("PartnerSignupWizard (submit flow)", () => {
     });
 
     const { container, unmount } = mountWizard();
-    await submitActivateForm(container);
+    await advanceToReview(container);
+    await approveWithName(container, "Roof Events");
 
     expect(mocks.push).not.toHaveBeenCalled();
-    expect(container.querySelector('[data-testid="partner-signup-success"]'))
-      .toBeTruthy();
+    expect(
+      container.querySelector('[data-testid="partner-signup-success"]'),
+    ).toBeTruthy();
     expect(container.textContent).toContain(PARTNER_ID);
     expect(
       container.querySelector('[data-testid="partner-signup-dashboard-next"]'),
     ).toBeTruthy();
+    const goDashboardLink = getRequiredElement<HTMLAnchorElement>(
+      container,
+      '[data-testid="partner-signup-go-dashboard"]',
+      "go to dashboard link",
+    );
+    expect(goDashboardLink.getAttribute("href")).toBe("/dashboard");
     unmount();
   });
 
@@ -244,7 +307,8 @@ describe("PartnerSignupWizard (submit flow)", () => {
     });
 
     const { container, unmount } = mountWizard();
-    await submitActivateForm(container);
+    await advanceToReview(container);
+    await approveWithName(container, "Roof Events");
 
     expect(mocks.push).toHaveBeenCalledWith("/host/events");
     unmount();
