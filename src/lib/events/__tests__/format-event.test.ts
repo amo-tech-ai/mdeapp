@@ -34,7 +34,7 @@ describe("formatEventCardPrice", () => {
 
   it("defaults unknown/null currency to USD form", () => {
     expect(formatEventCardPrice(50, null)).toBe("$50");
-    expect(formatEventCardPrice(50, undefined)).toBe("$50");
+    expect(formatEventCardPrice(50)).toBe("$50");
   });
 });
 

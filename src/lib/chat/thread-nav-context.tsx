@@ -22,7 +22,7 @@ export function ThreadNavProvider({ children }: { children: ReactNode }) {
   const [activeThreadId, setActiveThreadId] = useState<string | undefined>();
 
   const clearActiveThread = useCallback(() => {
-    setActiveThreadId(undefined);
+    setActiveThreadId();
   }, []);
 
   return (

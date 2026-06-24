@@ -73,7 +73,7 @@ describe("parseInsightResult — tool-result parsing (every payload shape)", () 
 
   it("null / undefined / number payloads → ok:false, never throw", () => {
     expect(parseInsightResult(null)).toEqual({ ok: false });
-    expect(parseInsightResult(undefined)).toEqual({ ok: false });
+    expect(parseInsightResult()).toEqual({ ok: false });
     expect(parseInsightResult(42)).toEqual({ ok: false });
   });
 });
@@ -95,7 +95,7 @@ describe("toolRenderSignature — dedupe key (prevents the render loop)", () => 
   });
   it("never throws on null/undefined/unserializable", () => {
     expect(() => toolRenderSignature("complete", null)).not.toThrow();
-    expect(() => toolRenderSignature("complete", undefined)).not.toThrow();
+    expect(() => toolRenderSignature("complete")).not.toThrow();
     const cyclic: Record<string, unknown> = {};
     cyclic.self = cyclic;
     expect(() => toolRenderSignature("complete", cyclic)).not.toThrow();

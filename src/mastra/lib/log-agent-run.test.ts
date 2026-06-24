@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("./ai-runs", () => ({
-  recordMastraRun: vi.fn().mockResolvedValue(undefined),
+  recordMastraRun: vi.fn().mockResolvedValue(),
 }));
 
 import { recordMastraRun } from "./ai-runs";

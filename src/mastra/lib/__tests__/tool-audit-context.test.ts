@@ -17,6 +17,6 @@ describe("tool-audit-context", () => {
   });
 
   it("returns null when context missing", () => {
-    expect(getAuditUserId(undefined)).toBeNull();
+    expect(getAuditUserId()).toBeNull();
   });
 });

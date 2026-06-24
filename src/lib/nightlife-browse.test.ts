@@ -51,7 +51,7 @@ describe("nightlife-browse", () => {
 
   it("normalizeSearchParam accepts first value when duplicated", () => {
     expect(normalizeSearchParam([" salsa ", "rooftop"])).toBe("salsa");
-    expect(normalizeSearchParam(undefined)).toBeUndefined();
+    expect(normalizeSearchParam()).toBeUndefined();
     expect(normalizeSearchParam("  Provenza  ")).toBe("Provenza");
   });
 

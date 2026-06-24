@@ -33,7 +33,7 @@ function workflowStub(result: unknown) {
 
 describe("get_sales_insights tool", () => {
   it("fails safe when the host is not signed in (no context)", async () => {
-    await expect(execute({}, undefined)).rejects.toThrow(/sign in/i);
+    await expect(execute({})).rejects.toThrow(/sign in/i);
   });
 
   it("returns an empty-state insight WITHOUT running the workflow when there are no sales", async () => {

@@ -25,7 +25,7 @@ describe("category-map-marker config", () => {
   it("mutes only when openNow is explicitly false on grounded", () => {
     expect(isClosedGroundedPin("grounded", false)).toBe(true);
     expect(isClosedGroundedPin("grounded", true)).toBe(false);
-    expect(isClosedGroundedPin("grounded", undefined)).toBe(false);
+    expect(isClosedGroundedPin("grounded")).toBe(false);
     expect(isClosedGroundedPin("rental", false)).toBe(false);
   });
 

@@ -41,8 +41,7 @@ describe("requestVenueBookingTool", () => {
 
   it("returns sign-in message when user is anonymous", async () => {
     const result = await requestVenueBookingTool.execute!(
-      validInput,
-      undefined,
+      validInput
     );
     expect(result).toEqual({
       success: false,

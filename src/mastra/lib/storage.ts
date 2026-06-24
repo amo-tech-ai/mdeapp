@@ -93,7 +93,7 @@ export function getMastraStorage() {
 export function resetMastraStorageForTests() {
   sharedStorage = undefined;
   storageModeLogged = false;
-  setStorageGlobal(undefined);
+  setStorageGlobal();
 }
 
 /** Close Postgres pool then reset — use in integration tests to avoid pooler EMAXCONN. */
