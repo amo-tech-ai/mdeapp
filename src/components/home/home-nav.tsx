@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { MenuIcon, BookmarkIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -50,19 +51,41 @@ export function HomeNav() {
 
         {/* Desktop right actions */}
         <div className="ml-auto hidden items-center gap-2 sm:flex">
-          <Link
-            href="/saved"
-            className="flex min-h-[44px] items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-reduce:transition-none"
+          <Button
+            variant="ghost"
+            size="sm"
+            className="min-h-[44px] rounded-full text-muted-foreground"
+            nativeButton={false}
+            render={<Link href="/saved" />}
           >
             <BookmarkIcon className="size-3.5" aria-hidden="true" />
             Saved
-          </Link>
-          <Link
-            href="/host/event/new"
-            className="flex min-h-[44px] items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground transition-all duration-150 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 motion-reduce:transition-none"
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="min-h-[44px] rounded-full"
+            nativeButton={false}
+            render={<Link href="/login" />}
+          >
+            Log in
+          </Button>
+          <Button
+            size="sm"
+            className="min-h-[44px] rounded-full"
+            nativeButton={false}
+            render={<Link href="/signup" />}
+          >
+            Sign up
+          </Button>
+          <Button
+            size="sm"
+            className="min-h-[44px] rounded-full"
+            nativeButton={false}
+            render={<Link href="/host/event/new" />}
           >
             Host
-          </Link>
+          </Button>
         </div>
 
         {/* Mobile — Sheet handles animation + focus trap + Escape + aria-modal */}
@@ -92,22 +115,40 @@ export function HomeNav() {
               ))}
 
               {/* Bottom actions */}
-              <div className="mt-3 flex gap-2 border-t border-border pt-3">
-                <Link
-                  href="/saved"
-                  onClick={() => setOpen(false)}
-                  className="flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-full border border-border text-sm font-medium text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                >
-                  <BookmarkIcon className="size-3.5" aria-hidden="true" />
-                  Saved
-                </Link>
-                <Link
-                  href="/host/event/new"
-                  onClick={() => setOpen(false)}
-                  className="flex min-h-[44px] flex-1 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                >
-                  Host an event
-                </Link>
+              <div className="mt-3 flex flex-col gap-2 border-t border-border pt-3">
+                <div className="flex gap-2">
+                  <Link
+                    href="/login"
+                    onClick={() => setOpen(false)}
+                    className="flex min-h-[44px] flex-1 items-center justify-center rounded-full border border-border text-sm font-medium text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    href="/signup"
+                    onClick={() => setOpen(false)}
+                    className="flex min-h-[44px] flex-1 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  >
+                    Sign up
+                  </Link>
+                </div>
+                <div className="flex gap-2">
+                  <Link
+                    href="/saved"
+                    onClick={() => setOpen(false)}
+                    className="flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-full border border-border text-sm font-medium text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  >
+                    <BookmarkIcon className="size-3.5" aria-hidden="true" />
+                    Saved
+                  </Link>
+                  <Link
+                    href="/host/event/new"
+                    onClick={() => setOpen(false)}
+                    className="flex min-h-[44px] flex-1 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  >
+                    Host an event
+                  </Link>
+                </div>
               </div>
             </nav>
           </SheetContent>
