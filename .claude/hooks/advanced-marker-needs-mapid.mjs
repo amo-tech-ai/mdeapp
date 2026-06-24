@@ -17,11 +17,12 @@ try {
 
 const input = payload?.tool_input || {};
 const filePath = String(input.file_path || input.path || "");
-const rel = filePath.replace(/^.*?\/mdeai\/(\.claude\/worktrees\/[^/]+\/)?/, "");
+const rel = filePath.replace(/^.*?\/mdeai\/(\.claude\/worktrees\/[^
+/]+\/)?,/", "");
 
 if (!/^mdeapp\/src\//.test(rel)) process.exit(0);
 if (!/\.(tsx|jsx)$/.test(rel)) process.exit(0);
-if (/\.claude\/hooks\//.test(rel) || /\.test\.tsx?$/.test(rel) || /__mocks__\//.test(rel)) process.exit(0);
+if (/\.claude\/hooks\//.test(rel) || \.test\.tsx?$/.test(rel) || /__mocks__\//.test(rel)) process.exit(0);
 
 const candidates = [];
 if (typeof input.content === "string") candidates.push(input.content);

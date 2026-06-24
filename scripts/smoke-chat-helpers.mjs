@@ -24,7 +24,7 @@ export function assertSmokeEnv() {
   }
 }
 
-export async function hideCopilotWebInspector(page) {
+export const hideCopilotWebInspector = async (page) => {
   await page.addStyleTag({
     content:
       "cpk-web-inspector { display: none !important; pointer-events: none !important; }",

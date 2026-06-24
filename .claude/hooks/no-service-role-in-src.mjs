@@ -16,7 +16,7 @@ try {
 
 const input = payload?.tool_input || {};
 const filePath = String(input.file_path || input.path || "");
-const rel = filePath.replace(/^.*?\/mdeai\/(\.claude\/worktrees\/[^/]+\/)?/, "");
+const rel = filePath.replace(/^.*?\/mdeai\/(\.claude\/worktrees\/[^ ]+\/)?/, "");
 
 // Police writes under mdeapp/src/** only. Edge functions, scripts, tests can use service role.
 if (!/^mdeapp\/src\//.test(rel)) process.exit(0);
@@ -28,8 +28,8 @@ if (/^mdeapp\/src\/lib\/supabase\/service(-env)?\.ts$/.test(rel)) process.exit(0
 
 // Allowlist test fixtures, mocks, this hook itself.
 if (
-  /\.test\.tsx?$/.test(rel) ||
-  /\.spec\.tsx?$/.test(rel) ||
+  \/\.test\/.tsx?\$/.test(rel) ||
+  \/\.spec\/.tsx?\$/.test(rel) ||
   /__mocks__\//.test(rel) ||
   /__tests__\//.test(rel) ||
   /\.claude\/hooks\//.test(rel)

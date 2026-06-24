@@ -30,7 +30,7 @@ function classify(text) {
   return "critical";
 }
 
-async function main() {
+const main = async () => {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
   const errors = [];

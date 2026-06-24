@@ -28,7 +28,7 @@ function parseEnv(path) {
   return out;
 }
 
-function mask(v) {
+const mask = (v) => {
   if (!v) return "(missing)";
   if (v.length < 12) return `(${v.length} chars)`;
   return `${v.slice(0, 8)}…${v.slice(-4)}`;

@@ -29,7 +29,7 @@ const rel = filePath.replace(/^.*?\/mdeai\/(\.claude\/worktrees\/[^/]+\/)?/, "")
 
 // Allow this hook itself and example/lock files to mention patterns.
 const allowPath =
-  /\.claude\/hooks\/scan-secrets\.mjs$/.test(rel) ||
+  \/\.claude\/hooks\/scan-secrets\\.mjs$\/.test(rel) ||
   /\.env\.example$/.test(rel) ||
   /(^|\/)package-lock\.json$/.test(rel) ||
   /(^|\/)pnpm-lock\.yaml$/.test(rel) ||

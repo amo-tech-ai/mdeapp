@@ -28,7 +28,7 @@ const checks = [
   {
     id: "DATA-041-count",
     label: "venue_signals >= 30 (20 restaurant + 5 cafe + 5 nightclub)",
-    async run() {
+    run: async () => {
       const { data, error } = await admin.from("venue_signals").select("venue_kind, restaurant_id");
       if (error) throw new Error(error.message);
       const rows = data ?? [];

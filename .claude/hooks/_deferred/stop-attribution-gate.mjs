@@ -17,10 +17,10 @@ if (payload?.stop_hook_active) process.exit(0);
 
 const mdeapp = "/home/sk/mdeai/mdeapp";
 
-function sh(args) {
+const sh = (args) => {
   const r = spawnSync("git", args, { cwd: mdeapp, encoding: "utf8", timeout: 5000 });
   return r.status === 0 ? (r.stdout || "").trim() : "";
-}
+};
 
 // Only check commits made today (avoids noise on rebase/cherry-pick).
 const todayCommits = sh(["log", "--since=12 hours ago", "--pretty=%H%n%B%n---END---"])

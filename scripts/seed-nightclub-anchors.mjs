@@ -26,13 +26,13 @@ const writeSqlIdx = process.argv.indexOf("--write-sql");
 const sqlOut =
   writeSqlIdx >= 0 ? resolve(process.argv[writeSqlIdx + 1]) : null;
 
-function sqlEscape(s) {
+const sqlEscape = (s) => {
   return s.replace(/'/g, "''");
-}
+};
 
-function jsonSql(obj) {
+const jsonSql = (obj) => {
   return `'${sqlEscape(JSON.stringify(obj))}'::jsonb`;
-}
+};
 
 async function searchPlace(textQuery) {
   const res = await fetch("https://places.googleapis.com/v1/places:searchText", {

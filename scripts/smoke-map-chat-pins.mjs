@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Browser smoke: send Laureles rental query, expect rental card + ≥2 map pins.
+ * Browser smoke: send Laureles rental query, expect rental card + 	62 map pins.
  * Requires: dev on :3001, GOOGLE_GENERATIVE_AI_API_KEY, NEXT_PUBLIC_GOOGLE_MAPS_API_KEY.
  *
  * Usage: node --env-file=.env.local scripts/smoke-map-chat-pins.mjs

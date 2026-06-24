@@ -12,7 +12,7 @@ const EVIDENCE = path.resolve(
   "docs/tasks/testing/evidence/2026-06-11/SAN-869-bookings-idempotency-duplicate-proof.json",
 );
 
-async function main() {
+const main = async () => {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;

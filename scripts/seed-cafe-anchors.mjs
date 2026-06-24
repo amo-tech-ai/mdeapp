@@ -25,9 +25,9 @@ const writeSqlIdx = process.argv.indexOf("--write-sql");
 const sqlOut =
   writeSqlIdx >= 0 ? resolve(process.argv[writeSqlIdx + 1]) : null;
 
-function sqlEscape(s) {
+const sqlEscape = (s) => {
   return s.replace(/'/g, "''");
-}
+};
 
 function jsonSql(obj) {
   return `'${sqlEscape(JSON.stringify(obj))}'::jsonb`;

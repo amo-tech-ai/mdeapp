@@ -25,7 +25,7 @@ const EXPECT = {
   partner_helpers: 3,
 };
 
-async function main() {
+const main = async () => {
   const client = new pg.Client({ connectionString: dbUrl });
   try {
     await client.connect();

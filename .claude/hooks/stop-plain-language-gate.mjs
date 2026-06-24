@@ -36,6 +36,12 @@ if (payload.transcript_path) {
       text = blocks
         .filter((b) => b && b.type === "text" && typeof b.text === "string")
         .map((b) => b.text)
+      
+    }
+  } catch {
+    process.exit(0);
+  }
+}
         .join("\n");
       if (text) break;
     }
